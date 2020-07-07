@@ -8,7 +8,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -280,7 +280,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
             .not.toBe(-1);
     });
 
-it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
+    it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
+        resizeObserverIgnoreError();
         fixture.componentInstance.data = [
             { ID: 0, ChildLevels: 3, ProductName: 'Product: A0 ' },
             { ID: 1, ChildLevels: 3, ProductName: 'Product: A0 ' },
@@ -299,10 +300,10 @@ it('should update scroll height after expanding/collapsing row in a nested child
         expect(scrHeight).toBe(0);
 
         (hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0] as HTMLElement).click();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
         hierarchicalGrid.verticalScrollContainer.scrollNext();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -311,14 +312,14 @@ it('should update scroll height after expanding/collapsing row in a nested child
 
         // expand
         (childGrid1.dataRowList.toArray()[0].nativeElement.children[0] as HTMLElement).click();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
 
         // collapse
         (childGrid1.dataRowList.toArray()[0].nativeElement.children[0] as HTMLElement).click();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
@@ -336,7 +337,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
         expect(childRowComponent.index).toBe(4);
 
         hierarchicalGrid.verticalScrollContainer.scrollNext();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
         childRowComponent = fixture.debugElement.query(By.css('igx-child-grid-row')).componentInstance;
         expect(childRowComponent.rowData.rowID).toBe('3');
