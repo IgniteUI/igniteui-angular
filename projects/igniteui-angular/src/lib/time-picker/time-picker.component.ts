@@ -507,10 +507,10 @@ export class IgxTimePickerComponent implements
     @ViewChild(IgxInputDirective, { read: ElementRef })
     private _inputElementRef: ElementRef;
 
-    @ViewChild(IgxInputDirective, { read: IgxInputDirective})
+    @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private _inputDirective: IgxInputDirective;
 
-    @ContentChild(IgxInputDirective, { read: IgxInputDirective})
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective })
     private _inputDirectiveUserTemplate: IgxInputDirective;
 
     @ViewChild(IgxInputGroupComponent, { read: IgxInputGroupComponent })
@@ -1271,7 +1271,7 @@ export class IgxTimePickerComponent implements
     public convertMinMaxValue(value: string): Date {
         if (!value) {
             return;
-        } else {
+        }
         const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
         const sections = value.split(/[\s:]+/);
         let hour, minutes, seconds, amPM;
@@ -1311,7 +1311,6 @@ export class IgxTimePickerComponent implements
         }
 
         return date;
-    }
     }
 
     private _isValueValid(value: Date): boolean {
