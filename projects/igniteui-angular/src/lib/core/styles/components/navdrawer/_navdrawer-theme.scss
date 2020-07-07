@@ -185,7 +185,7 @@
         transition: width, transform;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: --var($theme, 'shadow');
-        @if $variant != 'indigo-design'{
+        @if $variant != 'indigo-design' {
             border-#{$right}: 1px solid --var($theme, 'border-color');
         }
         border-radius: --var($theme, 'border-radius');
