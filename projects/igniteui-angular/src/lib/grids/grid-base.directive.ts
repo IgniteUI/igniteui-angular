@@ -2987,8 +2987,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['selectedRows'] && this.selectedRows.length > 0) {
-            this.selectRows(this.selectedRows);
+        if (changes['selectedRows']) {
+            this.selectedRows.length > 0
+                ? this.selectRows(this.selectedRows, true)
+                : this.deselectAllRows();
         }
     }
 
