@@ -2,7 +2,22 @@
 
 # Current Milestone
 
-## Milestone 11 (Due by April 30th, 2020)
+## Milestone 12 (Due by August, 2020)
+
+1. Accept ISO 8601 Date-only string as input for igx-calendar and igx-datepicker [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
+2. igxCombo has to include caseSensitive property in filter search [#7282](https://github.com/IgniteUI/igniteui-angular/issues/7282)
+3. igxCombo default positioning strategy [#7225](https://github.com/IgniteUI/igniteui-angular/issues/7225)
+To Be Updated
+
+
+## Going down the road
+
+1. Tile Manager
+2. Visual Cell merging
+3. RTL Support across Ignite UI for Angular components
+# Previous Milestones 
+
+## Milestone 11 (Released June 2nd, 2020)
 
 1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
 2. Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
@@ -14,14 +29,9 @@
 8. Data Analysis Directive [#1752](https://github.com/IgniteUI/igniteui-angular-samples/issues/1752)
 9. Slider does not support RTL [#5212](https://github.com/igniteui/igniteui-angular/issues/5212)
 10. Circular Progress Indicator does not support RTL [#5903](https://github.com/igniteui/igniteui-angular/issues/5903)
-
-
-## Going down the road
-
-1. Tile Manager
-2. Visual Cell merging
-3. RTL Support across Ignite UI for Angular components
-# Previous Milestones 
+11. Action Strip [#6941](https://github.com/IgniteUI/igniteui-angular/issues/6941)
+12. Theme igx-component scrollbars [#6675](https://github.com/IgniteUI/igniteui-angular/issues/6675)
+13. Use CSS variables by default [#6803](https://github.com/IgniteUI/igniteui-angular/issues/6675)
 
 ## Milestone 10 (Released February 10th, 2020)
 

@@ -172,6 +172,7 @@ export class IgxGridNavigationService {
 
     focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
+        if (gridRows < 1) { this.activeNode = null; return; }
         if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.activeNode = { row: 0, column: 0 };
             this.grid.navigateTo(0, 0, (obj) => {
@@ -182,7 +183,8 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
+        if (this.grid.dataView.length && this.activeNode &&
+            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
         this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
                 level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
         this.performHorizontalScrollToCell(0);
@@ -359,6 +361,7 @@ export class IgxGridNavigationService {
     }
 
     protected findLastDataRowIndex(): number {
+        if ((this.grid as any).totalItemCount) { return (this.grid as any).totalItemCount - 1;  }
         let i = this.grid.dataView.length;
         while (i--) {
             if (this.isDataRow(i)) {
@@ -376,7 +379,8 @@ export class IgxGridNavigationService {
     }
 
     protected isValidPosition(rowIndex: number, colIndex: number): boolean {
-        if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
+        const length = (this.grid as any).totalItemCount ?? this.grid.dataView.length;
+        if (rowIndex < 0 || colIndex < 0 || length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;

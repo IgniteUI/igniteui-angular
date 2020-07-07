@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { compareMaps } from '../../core/utils';
 
 interface ISearchInfo {

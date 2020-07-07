@@ -713,6 +713,22 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(firstPinnedHeader.classes[GRID_MRL_BLOCK_CLASS]).toBeTruthy();
                 expect(firstPinnedHeader.classes[`${HEADER_PINNED_CLASS}-first`]).toBeTruthy();
             }));
+
+            it('should correctly add pinned colmns to the right of the already fixed one', () => {
+                fix = TestBed.createComponent(GridPinningMRLComponent);
+                fix.componentInstance.grid.pinning = { columns: ColumnPinningPosition.Start };
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+                grid.unpinColumn('ID');
+                fix.detectChanges();
+
+                grid.pinColumn('Country');
+                grid.pinColumn('ID');
+                fix.detectChanges();
+                expect(grid.pinnedColumns).toBeTruthy();
+                expect(grid.pinnedColumns[1].field).toBe('Country');
+                expect(grid.pinnedColumns[6].field).toBe('ID');
+            });
         });
     });
 });
