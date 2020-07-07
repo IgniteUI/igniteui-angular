@@ -36,7 +36,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 RowSelectionWithoutPrimaryKeyComponent,
                 SingleRowSelectionComponent,
                 SelectionWithTransactionsComponent,
-                GridCustomSelectorsComponent,
+                GridCustomSelectorsComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1703,6 +1703,20 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows.length).toBe(9);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(grid, false, true);
         }));
+
+        it('Should bind selectedRows properly', () => {
+            fix.componentInstance.selectedRows = [1, 2, 3];
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(0).selected).toBeTrue();
+            expect(grid.getRowByIndex(4).selected).toBeFalse();
+
+            fix.componentInstance.selectedRows = [4, 5, 6];
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(3).selected).toBeTrue();
+            expect(grid.getRowByIndex(0).selected).toBeFalse();
+        });
     });
 
     describe('Integration with CRUD and transactions', () => {

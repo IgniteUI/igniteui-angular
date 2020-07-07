@@ -269,6 +269,22 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         }));
+
+        it('Should bind selectedRows properly', () => {
+            fix.componentInstance.selectedRows = [147, 19, 957];
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).selected).toBeTrue();
+            expect(treeGrid.getRowByIndex(7).selected).toBeTrue();
+            expect(treeGrid.getRowByIndex(4).selected).toBeFalse();
+
+            fix.componentInstance.selectedRows = [847, 711];
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).selected).toBeFalse();
+            expect(treeGrid.getRowByIndex(4).selected).toBeTrue();
+            expect(treeGrid.getRowByIndex(8).selected).toBeTrue();
+        });
     });
 
     describe('UI Row Selection', () => {
@@ -475,6 +491,15 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
+        }));
+
+        it('Should update selectedRows when selecting rows from UI', fakeAsync(() => {
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows.length).toBe(3);
         }));
     });
 
