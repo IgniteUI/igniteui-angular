@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxNavbar`:
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
 ### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
