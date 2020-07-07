@@ -243,7 +243,7 @@
             @if $variant == 'indigo-design' {
                 max-width: rem(32px);
                 // important is needed to override the typography margins
-                margin: rem(7.5px) auto !important;
+                margin: rem(14px) auto !important;
 
                 igx-icon {
                     margin-#{$left}: 0;
@@ -305,7 +305,7 @@
             padding: rem(4px) rem(4px);
 
             // important is needed to override the typography margins
-            margin: rem(7.5px) $drawer-item-margin !important;
+            margin: rem(15px) $drawer-item-margin !important;
         }
 
         cursor: pointer;
