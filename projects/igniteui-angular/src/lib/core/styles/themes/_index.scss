@@ -61,6 +61,7 @@
 @import '../components/input/input-group-theme';
 @import '../components/icon/icon-theme';
 @import '../components/time-picker/time-picker-theme';
+@import '../components/watermark/watermark-theme';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -527,6 +528,14 @@
             $dropdown-shadow: if($elevation == false, none, null),
         ));
     }
+
+    @if not(index($exclude, 'igx-watermark')) {
+        @include igx-watermark(igx-watermark-theme(
+            $palette,
+            $schema,
+            $border-radius: $roundness,
+        ));
+    }
 }
 
 /// Creates a global theme that can be used with light backgrounds.
@@ -781,6 +790,84 @@
             $grays: #fff
         ),
         $schema: $dark-bootstrap-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+/// Creates a global indigo theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
+@mixin igx-indigo-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: false,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: "'Nunito Sans', sans-serif",
+        $type-scale: $indigo-type-scale
+    );
+
+    @include igx-card-typography($indigo-type-scale, $categories: (
+        title: 'h5'
+    ));
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #fff),
+            $grays: #060716,
+        ),
+        $schema: $light-indigo-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+/// Creates a global indigo theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
+@mixin igx-indigo-dark-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: false,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: "'Nunito Sans', sans-serif",
+        $type-scale: $indigo-type-scale
+    );
+
+    @include igx-card-typography($indigo-type-scale, $categories: (
+        title: 'h5',
+    ));
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #3b3d47, $surface, #3b3d47),
+            $grays: #fff
+        ),
+        $schema: $dark-indigo-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,

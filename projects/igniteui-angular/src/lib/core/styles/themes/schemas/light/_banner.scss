@@ -64,6 +64,19 @@ $_bootstrap-banner: extend(
 
 /// Generates a indigo banner schema.
 /// @type {Map}
+/// @property {Map} banner-message-color [igx-color: ('grays', 900)]- The color used for banner label.
+/// @property {Map} banner-illustration-color [igx-color: ('grays', 600)] - The color used banner illustration.
 /// @requires {function} extend
 /// @requires $_light-banner
-$_indigo-banner: extend($_light-banner);
+$_indigo-banner: extend(
+    $_light-banner,
+    (
+        banner-message-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        banner-illustration-color: (
+            igx-color: ('grays', 600)
+        )
+    )
+);

@@ -264,6 +264,9 @@
 
     $transition-timing: .25s $ease-out-cubic;
 
+    $variant: map-get($theme, variant);
+    $indigo-theme: $variant == 'indigo-design';
+
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
@@ -410,7 +413,17 @@
 
     %form-group-display--disabled {
         user-select: none;
-        color: --var($theme, 'disabled-text-color');
+        color: --var($theme, 'disabled-text-color') !important;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--disabled;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--disabled;
+        }
     }
 
     %form-group-bundle {
@@ -441,6 +454,34 @@
         }
     }
 
+    %form-group-bundle--indigo {
+        padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        background: transparent;
+        transition: background $transition-timing, box-shadow $transition-timing;
+        box-shadow: inset 0 -1px 0 0 --var($theme, 'idle-bottom-line-color');
+
+        &:hover,
+        &:focus {
+            background: --var($theme, 'box-background');
+        }
+    }
+
+    %indigo--box-focused {
+        background: --var($theme, 'box-background');
+    }
+
+    %form-group-bundle-success--indigo {
+        box-shadow: inset 0 -2px 0 0 --var($theme, 'success-secondary-color');
+    }
+
+    %form-group-bundle-error--indigo {
+        box-shadow: inset 0 -2px 0 0 --var($theme, 'error-secondary-color');
+    }
+
+    %form-group-helper--indigo--disabled {
+        color: --var($theme, 'disabled-text-color');
+    }
+
     %form-group-bundle--box-cosy {
         padding: 0 rem(16px, map-get($base-scale-size, 'cosy'));
     }
@@ -451,12 +492,20 @@
 
     %form-group-bundle--hover {
         cursor: pointer;
-        box-shadow: inset 0 -2px 0 0 --var($theme, 'hover-bottom-line-color');
+        @if not $indigo-theme {
+            box-shadow: inset 0 -2px 0 0 --var($theme, 'hover-bottom-line-color');
+        } @else {
+            box-shadow: inset 0 -1px 0 0 --var($theme, 'hover-bottom-line-color');
+        }
     }
 
     %form-group-bundle--focus {
         caret-color: --var($theme, 'focused-secondary-color');
-        box-shadow: inset 0 -2px 0 0 --var($theme, 'interim-bottom-line-color');
+        @if not $indigo-theme {
+            box-shadow: inset 0 -2px 0 0 --var($theme, 'interim-bottom-line-color');
+        } @else {
+            box-shadow: inset 0 -2px 0 0 --var($theme, 'focused-bottom-line-color');
+        }
     }
 
     %form-group-bundle--success {
@@ -470,7 +519,11 @@
     }
 
     %form-group-bundle--disabled {
-        box-shadow: none;
+        @if not $indigo-theme {
+            box-shadow: none;
+        } @else {
+            box-shadow: inset 0 -1px 0 0 --var($theme, 'disabled-bottom-line-color');
+        }
         background-image: linear-gradient(to #{$left}, --var($theme, 'disabled-bottom-line-color') 40%, transparent 10%);
         background-position: bottom;
         background-size: 4px 1px;
@@ -478,7 +531,11 @@
     }
 
     %form-group-bundle--box-disabled {
-        background: --var($theme, 'box-disabled-background');
+        @if not $indigo-theme {
+            background: --var($theme, 'box-disabled-background');
+        } @else {
+            background: transparent;
+        }
     }
 
     %form-group-bundle--border {
@@ -497,19 +554,35 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 2px --var($theme, 'hover-border-color');
+        @if not $indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'hover-border-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'hover-border-color');
+        }
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 2px --var($theme, 'focused-border-color');
+        @if not $indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'focused-border-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-border--error {
-        box-shadow: inset 0 0 0 2px --var($theme, 'error-secondary-color');
+        @if not $indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'error-secondary-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-bundle-border--success {
-        box-shadow: inset 0 0 0 2px --var($theme, 'success-secondary-color');
+        @if not $indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'success-secondary-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'success-secondary-color');
+        }
     }
 
     %form-group-bundle-border--disabled {
@@ -655,6 +728,7 @@
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
         position: relative;
+        align-items: stretch;
     }
 
     %form-group-bundle--fluent--hover {
@@ -695,11 +769,14 @@
 
     %form-group-bundle-main--fluent {
         padding-#{$left}: rem(8px);
+        align-self: center;
     }
 
     igx-prefix + %form-group-bundle-main--fluent,
     [igx-prefix] + %form-group-bundle-main--fluent {
-        padding-#{$left}: 0;
+        @if $variant != 'fluent' {
+            padding-#{$left}: 0;
+        }
     }
 
     %fluent-placeholder-label {
@@ -889,6 +966,7 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -899,10 +977,6 @@
         border-top: rem(3px) solid transparent;
         padding-bottom: rem(3px);
 
-        &:not([type='date']) {
-            line-height: 0 !important; /* resets typography styles */
-        }
-
         &::-webkit-input-placeholder {
             line-height: normal;
         }
@@ -910,7 +984,6 @@
         &::placeholder {
             color: --var($theme, 'placeholder-color');
             opacity: 1;
-            line-height: normal; /* Fix placeholder position in Safari */
         }
     }
 
@@ -953,7 +1026,7 @@
     }
 
     %form-group-input--disabled {
-        color: --var($theme, 'disabled-text-color');
+        color: --var($theme, 'disabled-text-color') !important;
 
         &::placeholder {
             color: --var($theme, 'disabled-placeholder-color');
@@ -1297,6 +1370,11 @@
 
     %form-group-helper-item--end {
         order: 1;
+    }
+
+    %form-group-prefix--disabled,
+    %form-group-suffix--disabled {
+        color: --var($theme, 'disabled-text-color');
     }
 
     // Bootstrap

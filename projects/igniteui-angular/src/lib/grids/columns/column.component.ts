@@ -1750,10 +1750,12 @@ export class IgxColumnComponent implements AfterContentInit {
      * column.autosize();
      * ```
      * @memberof IgxColumnComponent
+     * @param byHeader Set if column should be autized based only on the header content
      */
-    public autosize() {
+    public autosize(byHeader = false) {
         if (!this.columnGroup) {
-            this.width = this.getLargestCellWidth();
+            this.width = !byHeader ? this.getLargestCellWidth() :
+                (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
             this.grid.reflow();
         }
     }
@@ -1767,6 +1769,36 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         this.cacheCalcWidth();
         return this._calcWidth;
+    }
+
+
+    /**
+     * @hidden
+     * Returns the width and padding of a header cell.
+     */
+    public getHeaderCellWidths() {
+        const range = this.grid.document.createRange();
+        let headerWidth;
+        if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
+            headerWidth = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+                .map((child) => getNodeSizeViaRange(range, child)));
+        } else {
+            headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+        }
+
+        if (this.sortable || this.filterable) {
+            headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
+        }
+
+        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+        const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+            parseFloat(headerStyle.borderRightWidth);
+
+        // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
+        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement);
+        const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
+
+        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};
     }
 
     /**
@@ -1795,29 +1827,14 @@ export class IgxColumnComponent implements AfterContentInit {
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
-                parseFloat(cellStyle.borderRightWidth);
+                parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
 
             largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
 
         if (this.headerCell) {
-            let headerCell;
-            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-                headerCell = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
-                    .map((child) => getNodeSizeViaRange(range, child)));
-            } else {
-                headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
-            }
-
-            if (this.sortable || this.filterable) {
-                headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
-            }
-
-            const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
-            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
-                parseFloat(headerStyle.borderRightWidth);
-            largest.set(headerCell, headerPadding);
-
+            const headerCellWidths = this.getHeaderCellWidths();
+            largest.set(headerCellWidths.width, headerCellWidths.padding);
         }
 
         const largestCell = Math.max(...Array.from(largest.keys()));

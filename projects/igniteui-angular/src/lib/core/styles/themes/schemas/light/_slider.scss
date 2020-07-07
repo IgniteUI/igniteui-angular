@@ -164,4 +164,49 @@ $_bootstrap-slider: extend(
     )
 );
 
+/// Generates an indigo slider schema.
+/// @type {Map}
+///
+/// @property {map} track-hover-color [igx-color: ('primary', 400)] - The color of the track on hover.
+/// @property {map} disabled-thumb-color [igx-color: ('grays', 300), to-opaque: ( igx-color: 'surface')] - The thumb color when its disabled.
+/// @property {map} base-track-color [igx-color: ('grays', 400)] - The base background color of the track.
+/// @property {map} base-track-hover-color [igx-color: ('grays', 500)] - The base background color of the track on hover.
+/// @property {map} disabled-base-track-color [igx-color: ('grays', 300), to-opaque: ( igx-color: 'surface')] - The base background color of the track when is disabled.
+///
+/// @requires {function} @extend
+/// @requires $_light-slider
+
+$_indigo-slider: extend(
+    $_light-slider,
+    (
+        variant: 'indigo-design',
+
+        track-hover-color: (
+            igx-color: ('primary', 400)
+        ),
+
+        base-track-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        base-track-hover-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-thumb-color: (
+            igx-color: ('grays', 300),
+            to-opaque: (
+                igx-color: 'surface'
+            )
+        ),
+
+        disabled-base-track-color: (
+            igx-color: ('grays', 300),
+            to-opaque: (
+                igx-color: 'surface'
+            )
+        )
+    )
+);
+
 

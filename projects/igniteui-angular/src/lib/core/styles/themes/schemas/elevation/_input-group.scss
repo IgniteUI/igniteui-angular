@@ -18,3 +18,10 @@ $_fluent-elevation-input-group: (
     search-disabled-elevation: 0,
 );
 
+/// @type Map
+$_indigo-elevation-input-group: (
+    search-resting-elevation: 1,
+    search-hover-elevation: 1,
+    search-disabled-elevation: 1,
+);
+

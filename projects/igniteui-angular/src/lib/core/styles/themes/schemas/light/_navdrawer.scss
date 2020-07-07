@@ -30,6 +30,8 @@ $_light-navdrawer: extend(
     $_default-shape-navdrawer,
     $_default-elevation-navdrawer,
     (
+        variant: 'material',
+
         background: (
             igx-color: 'surface'
         ),
@@ -91,11 +93,90 @@ $_light-navdrawer: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-navdrawer
-$_fluent-navdrawer: extend($_light-navdrawer);
+$_fluent-navdrawer: extend(
+    $_light-navdrawer,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap navdrawer schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-navdrawer
-$_bootstrap-navdrawer: extend($_light-navdrawer);
+$_bootstrap-navdrawer: extend(
+    $_light-navdrawer,
+    (
+        variant: 'bootstrap',
+    )
+);
 
+/// Generates a indigo navdrawer schema.
+/// @type {Map}
+/// @prop {map} background [igx-color: ('grays', 700), hexrgba: #fff] - The navigation drawer background color.
+/// @prop {map} item-header-text-color [igx-contrast-color: ('grays', 700)] - The header's idle text color.
+/// @prop {map} item-text-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's idle text color.
+/// @prop {map} item-icon-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's icon color.
+/// @prop {map} item-active-text-color [igx-contrast-color: ('grays', 700)] - The item's active text color.
+/// @prop {map} item-active-background [igx-contrast-color: ('grays', 700), rgba: .2] - The item's active background color.
+/// @prop {map} item-active-icon-color [igx-contrast-color: ('grays', 700)] - The item's icon active color.
+/// @prop {map} item-hover-background [transparent] - The item's hover background color.
+/// @prop {map} item-hover-text-color [igx-contrast-color: ('grays', 700)] - The item's hover text color.
+/// @prop {map} item-hover-icon-color [igx-contrast-color: ('grays', 700)] - The item's hover icon color.
+/// @prop {map} elevation [0] - The elevation level of the drawer, between 0 - 24.
+/// @prop {Number} item-border-radius [1] - The border radius fraction, between 0 - 36 to be used for the navdrawer component.
+
+/// @requires {function} extend
+/// @requires $_light-navdrawer
+/// @requires $_indigo-shape-navdrawer
+/// @requires $_indigo-elevation-navdrawer
+$_indigo-navdrawer: extend(
+    $_light-navdrawer,
+    $_indigo-shape-navdrawer,
+    $_indigo-elevation-navdrawer,
+    (
+        variant: 'indigo-design',
+
+        background: (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        item-header-text-color: (
+            igx-contrast-color: ('grays', 700)
+        ),
+
+        item-text-color: (
+            igx-contrast-color: ('grays', 700),
+            rgba: .8
+        ),
+
+        item-icon-color: (
+            igx-contrast-color: ('grays', 700),
+            rgba: .8
+        ),
+
+        item-active-background: (
+            igx-contrast-color: ('grays', 700),
+            rgba: .2
+        ),
+
+        item-active-text-color: (
+            igx-contrast-color: ('grays', 700)
+        ),
+
+        item-active-icon-color: (
+            igx-contrast-color: ('grays', 700)
+        ),
+
+        item-hover-background: transparent,
+
+        item-hover-text-color: (
+            igx-contrast-color: ('grays', 700)
+        ),
+
+        item-hover-icon-color: (
+            igx-contrast-color: ('grays', 700)
+        ),
+    )
+);
