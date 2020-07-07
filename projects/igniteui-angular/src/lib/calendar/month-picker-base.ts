@@ -35,6 +35,11 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     @ViewChildren('yearsBtn')
     public yearsBtns: QueryList<ElementRef>;
 
+    /**
+     * @hidden @internal
+     */
+    public previousViewDate: Date;
+
 
     @Input()
     /**
@@ -83,7 +88,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public changeYear(event: Date) {
-        const previousValue = this.viewDate;
+        this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
         this.activeView = CalendarView.DEFAULT;
 
@@ -91,8 +96,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
             if (this.yearsBtns && this.yearsBtns.length) {
                 this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx).nativeElement.focus();
             }
-            this.onViewDateChanged.emit({ previousValue, currentValue: this.viewDate });
-            this.onActiveViewChanged.emit(this.activeView);
         });
     }
 
@@ -102,9 +105,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     public activeViewDecade(activeViewIdx = 0): void {
         this.activeView = CalendarView.DECADE;
         this.activeViewIdx = activeViewIdx;
-        requestAnimationFrame(() => {
-            this.onActiveViewChanged.emit(this.activeView);
-        });
     }
 
     /**
