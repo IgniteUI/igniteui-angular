@@ -3,7 +3,8 @@ import {
     IgxCalendarComponent,
     DateRangeType,
     IgxDaysViewComponent,
-    IgxMonthPickerComponent
+    IgxMonthPickerComponent,
+    CalendarView
 } from 'igniteui-angular';
 
 @Component({
@@ -98,5 +99,13 @@ export class CalendarViewsSampleComponent implements OnInit {
     deselectDV() {
         this.daysView.deselectDate(new Date(2019, 1, 13));
         // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
+    }
+
+    public onViewDateChanged(event: Date) {
+        const date = event;
+        console.log(date);
+    }
+
+    public onActiveViewChanged(event: CalendarView) {
     }
 }

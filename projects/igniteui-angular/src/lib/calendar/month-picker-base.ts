@@ -1,5 +1,5 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { HostBinding, Directive, ViewChildren, ElementRef, QueryList } from '@angular/core';
+import { HostBinding, Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -36,8 +36,12 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     public yearsBtns: QueryList<ElementRef>;
 
 
+    @Input()
     /**
      * Gets the current active view.
+     * ```typescript
+     * this.activeView = calendar.activeView;
+     * ```
      */
     public get activeView(): CalendarView {
         return this._activeView;
@@ -45,6 +49,12 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 
     /**
      * Sets the current active view.
+     * ```html
+     * <igx-calendar [activeView]="1" #calendar></igx-calendar>
+     * ```
+     * ```typescript
+     * calendar.activeView = CalendarView.YEAR;
+     * ```
      */
     public set activeView(val: CalendarView) {
         this._activeView = val;
@@ -73,6 +83,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public changeYear(event: Date) {
+        const previousValue = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
         this.activeView = CalendarView.DEFAULT;
 
@@ -80,6 +91,8 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
             if (this.yearsBtns && this.yearsBtns.length) {
                 this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx).nativeElement.focus();
             }
+            this.onViewDateChanged.emit({ previousValue, currentValue: this.viewDate });
+            this.onActiveViewChanged.emit(this.activeView);
         });
     }
 
@@ -87,8 +100,11 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public activeViewDecade(activeViewIdx = 0): void {
-        this._activeView = CalendarView.DECADE;
+        this.activeView = CalendarView.DECADE;
         this.activeViewIdx = activeViewIdx;
+        requestAnimationFrame(() => {
+            this.onActiveViewChanged.emit(this.activeView);
+        });
     }
 
     /**

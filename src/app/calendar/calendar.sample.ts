@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, DateRangeDescriptor, DateRangeType } from 'igniteui-angular';
+import { IgxCalendarComponent, DateRangeType, CalendarView } from 'igniteui-angular';
+import { IViewDateChangeEventArgs } from '../../../projects/igniteui-angular/src/lib/calendar/calendar-base';
+import { CalendarView } from '../../../projects/igniteui-angular/src/lib/calendar/public_api';
 
 @Component({
     selector: 'app-calendar-sample',
@@ -34,6 +36,17 @@ export class CalendarSampleComponent implements OnInit {
 
     public showHide() {
         this.calendar.hideOutsideDays = !this.calendar.hideOutsideDays;
+    }
+
+    public onSelection(event: Date) {
+        const date = event;
+    }
+
+    public onViewDateChanged(event: IViewDateChangeEventArgs) {
+        console.log(event);
+    }
+
+    public onActiveViewChanged(event: CalendarView) {
     }
 
     public setSelection(args: string) {
