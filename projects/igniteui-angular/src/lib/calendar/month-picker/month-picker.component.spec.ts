@@ -76,7 +76,7 @@ describe('IgxMonthPicker', () => {
         };
 
         expect(monthPicker.value).toBeUndefined();
-        expect(monthPicker.viewDate.getDate()).toEqual(instance.viewDate.getDate());
+        expect(monthPicker.viewDate.getDate()).toEqual(1);
         expect(monthPicker.locale).toEqual('en');
 
         const today = new Date(Date.now());
