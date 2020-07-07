@@ -58,8 +58,14 @@ $_indigo-highlight: extend(
         ),
 
         active-color: (
-            igx-color: ('primary', 500),
-            text-contrast: ()
+            igx-contrast-color: ('primary', 500),
+        ),
+
+        resting-color: (
+            igx-contrast-color: (
+                igx-color: ('grays', 300),
+                to-opaque: 'surface'
+            )
         )
     )
 );
