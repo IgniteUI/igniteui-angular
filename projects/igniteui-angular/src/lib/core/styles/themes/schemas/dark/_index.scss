@@ -453,7 +453,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-list [$_dark-indigo-list],
 /// @property {Map} geo-map [$_dark-bootstrap-geo-map]
 /// @property {map} igx-navbar [$_dark-indigo-navbar],
-/// @property {map} igx-navdrawer [$_dark-bootstrap-navdrawer],
+/// @property {map} igx-navdrawer [$_dark-indigo-navdrawer],
 /// @property {map} igx-overlay [$_dark-bootstrap-overlay],
 /// @property {map} igx-linear-bar [$_dark-indigo-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-indigo-progress-circular],
@@ -510,7 +510,7 @@ $dark-indigo-schema: (
     igx-list: $_dark-indigo-list,
     geo-map: $_dark-bootstrap-geo-map,
     igx-navbar: $_dark-indigo-navbar,
-    igx-navdrawer: $_dark-bootstrap-navdrawer,
+    igx-navdrawer: $_dark-indigo-navdrawer,
     igx-overlay: $_dark-bootstrap-overlay,
     igx-linear-bar: $_dark-indigo-progress-linear,
     igx-circular-bar: $_dark-indigo-progress-circular,
