@@ -40,3 +40,16 @@ $_dark-bootstrap-highlight: extend($_bootstrap-highlight, (
 
 ));
 
+/// Generates a dark indigo highlight schema.
+/// @type {Map}
+/// @property {Map} resting-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The icon color used for the highlight in its resting state.
+/// @requires {function} extend
+/// @requires $_indigo-highlight
+$_dark-indigo-highlight: extend($_indigo-highlight, (
+    resting-color: (
+        igx-color: ('grays', 300),
+        hexrgba: (#222),
+        text-contrast: ()
+    )
+));
+
