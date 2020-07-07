@@ -23,7 +23,6 @@ export class WorksheetDataDictionary {
 
     public stringsCount: number;
 
-    // TODO Switch to fixed column width since auto-calculation takes a lot of time
     constructor(columnCount: number, columnWidth: number, columnWidthsList: number[]) {
         this._dictionary = {};
         this._widthsDictionary = {};

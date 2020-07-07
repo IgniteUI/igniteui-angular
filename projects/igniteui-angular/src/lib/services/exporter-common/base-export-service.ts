@@ -117,7 +117,7 @@ export abstract class IgxBaseExporter {
 
         const columns = grid.columnList.toArray();
         this._columnList = new Array<any>(columns.length);
-        this._columnWidthList = new Array<any>(columns.length);
+        this._columnWidthList = new Array<any>(columns.filter(c => !c.hidden).length);
 
         const hiddenColumns = [];
         let lastVisbleColumnIndex = -1;

@@ -112,9 +112,12 @@ export class WorksheetFile implements IExcelFile {
             for (let i = 0; i < worksheetData.columnCount; i++) {
                 const width = dictionary.columnWidths[i];
                 // Use the width provided in the options if it exists
-                const widthInTwips = worksheetData.options.columnWidth ?
-                                    worksheetData.options.columnWidth :
-                                    Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                let widthInTwips = worksheetData.options.columnWidth !== undefined ?
+                                        worksheetData.options.columnWidth :
+                                        Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                if (widthInTwips === 0 || widthInTwips === null) {
+                    widthInTwips = WorksheetFile.MIN_WIDTH;
+                }
 
                 cols.push(`<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`);
             }
@@ -175,9 +178,12 @@ export class WorksheetFile implements IExcelFile {
             for (let i = 0; i < worksheetData.columnCount; i++) {
                 const width = dictionary.columnWidths[i];
                 // Use the width provided in the options if it exists
-                const widthInTwips = worksheetData.options.columnWidth ?
-                                    worksheetData.options.columnWidth :
-                                    Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                let widthInTwips = worksheetData.options.columnWidth !== undefined ?
+                                        worksheetData.options.columnWidth :
+                                        Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                if (widthInTwips === 0 || widthInTwips === null) {
+                    widthInTwips = WorksheetFile.MIN_WIDTH;
+                }
 
                 cols += `<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`;
             }
