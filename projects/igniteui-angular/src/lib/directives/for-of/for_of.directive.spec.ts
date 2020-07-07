@@ -1142,6 +1142,47 @@ describe('IgxForOf directive -', () => {
             expect(firstInnerDisplayContainer.children[0].textContent).toBe('0');
         });
     });
+
+    describe('on create new instance', () => {
+        let fix: ComponentFixture<VerticalVirtualCreateComponent>;
+
+        configureTestSuite();
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    VerticalVirtualCreateComponent
+                ],
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(VerticalVirtualCreateComponent);
+            fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+
+        });
+
+        it('should reset scroll position if new component is created.', async () => {
+            const scrollComponent = fix.debugElement.query(By.css(VERTICAL_SCROLLER)).componentInstance;
+            expect(scrollComponent.scrollAmount).toBe(0);
+            expect(scrollComponent.destroyed).toBeFalsy();
+
+            scrollComponent.nativeElement.scrollTop = 500;
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+            expect(scrollComponent.scrollAmount).toBe(500);
+
+            fix.componentInstance.exists = true;
+            fix.detectChanges();
+            await wait();
+            const secondForOf = fix.componentInstance.secondForOfDir;
+            expect(secondForOf.state.startIndex).toBe(0);
+        });
+});
 });
 
 class DataGenerator {
@@ -1403,6 +1444,45 @@ export class VerticalVirtualComponent extends VirtualComponent {
 })
 export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
     public exists = true;
+}
+
+@Component({
+    template: `
+    <div #container [style.width]='width' [style.height]='height'>
+        <ng-template #scrollContainer igxFor let-rowData [igxForOf]="data"
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='height'
+            [igxForItemSize]='itemSize'>
+            <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
+                <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
+                <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
+                <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
+                <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
+                <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
+            </div>
+        </ng-template>
+    </div>
+        <div *ngIf='exists' #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer2 igxFor let-rowData [igxForOf]="data"
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='itemSize'>
+                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
+                    <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
+                    <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
+                    <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
+                    <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
+                    <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
+                </div>
+            </ng-template>
+        </div>
+    `
+})
+export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
+    public exists = false;
+
+    @ViewChild('scrollContainer2', { read: IgxForOfDirective, static: false })
+    public secondForOfDir: IgxForOfDirective<any>;
 }
 
 /** Only horizontally virtualized component */
