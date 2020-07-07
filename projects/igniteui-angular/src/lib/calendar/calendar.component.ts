@@ -466,9 +466,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public previousMonth(isKeydownTrigger = false) {
+        const previousValue = this.viewDate;
         this.viewDate = this.calendarModel.getPrevMonth(this.viewDate);
         this.animationAction = ScrollMonth.PREV;
         this.isKeydownTrigger = isKeydownTrigger;
+        requestAnimationFrame(() => {
+            this.onViewDateChanged.emit({ previousValue, currentValue: this.viewDate });
+        });
     }
 
     /**
@@ -478,9 +482,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public nextMonth(isKeydownTrigger = false) {
+        const previousValue = this.viewDate;
         this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
         this.isKeydownTrigger = isKeydownTrigger;
+        requestAnimationFrame(() => {
+            this.onViewDateChanged.emit({ previousValue, currentValue: this.viewDate });
+        });
     }
 
     /**
@@ -609,7 +617,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             if (day) {
                 this.daysView.daysNavService.focusNextDate(day.nativeElement, args.key, true);
             }
+            this.onViewDateChanged.emit({previousValue, currentValue: this.viewDate});
         };
+        const previousValue = this.viewDate;
         this.viewDate = this.nextDate;
     }
 
@@ -618,12 +628,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @intenal
      */
     public changeMonth(event: Date) {
+        const previousValue = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
             const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx);
             if (elem) { elem.nativeElement.focus(); }
+            this.onViewDateChanged.emit({previousValue, currentValue: this.viewDate});
+            this.onActiveViewChanged.emit(this.activeView);
         });
     }
 
@@ -637,6 +650,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         requestAnimationFrame(() => {
             this.monthsView.date = args;
             this.focusMonth(event.target);
+            this.onActiveViewChanged.emit(this.activeView);
         });
     }
 
@@ -813,6 +827,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         const isPageDown = event.key === 'PageDown';
         const step = isPageDown ? 1 : -1;
+        const previousValue = this.viewDate;
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
 
         this.animationAction = isPageDown ? ScrollMonth.NEXT : ScrollMonth.PREV;
@@ -849,6 +864,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                 if (dayItem && dayItem.isFocusable) { dayItem.nativeElement.focus(); }
             };
         }
+
+        requestAnimationFrame(() => {
+            this.onViewDateChanged.emit({previousValue, currentValue: this.viewDate});
+        });
     }
 
     /**
