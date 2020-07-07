@@ -73,6 +73,15 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 recordsWithSummary.push(record);
             }
 
+            if (summaryPosition === GridSummaryPosition.bottom && showSummary && (groupByRecord && !grid.isExpandedGroup(groupByRecord))) {
+                const records = this.removeDeletedRecord(grid, groupByRecord.records.slice());
+                const summaries = grid.summaryService.calculateSummaries(recordId, records);
+                const summaryRecord: ISummaryRecord = {
+                    summaries: summaries,
+                    max: maxSummaryHeight
+                };
+                recordsWithSummary.push(summaryRecord);
+            }
             if (summaryPosition === GridSummaryPosition.bottom && lastChildMap.has(recordId)) {
                 const groupRecords = lastChildMap.get(recordId);
 
@@ -90,7 +99,6 @@ export class IgxGridSummaryPipe implements PipeTransform {
             }
 
             const showSummaries = showSummary ? false : (groupByRecord && !grid.isExpandedGroup(groupByRecord));
-
             if (groupByRecord === null || showSummaries) {
                 continue;
             }
@@ -105,7 +113,6 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 recordsWithSummary.push(summaryRecord);
             } else if (summaryPosition === GridSummaryPosition.bottom) {
                 let lastChild = groupByRecord;
-                debugger;
 
                 while (lastChild.groups && lastChild.groups.length > 0 && grid.isExpandedGroup(lastChild)) {
                     lastChild = lastChild.groups[lastChild.groups.length - 1];
