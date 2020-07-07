@@ -68,7 +68,8 @@ export class IgxForOfContext<T> {
 
 }
 
-@Directive({ selector: '[igxFor][igxForOf]' })
+@Directive({ selector: '[igxFor][igxForOf]',
+providers: [ IgxForOfScrollSyncService ] })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
