@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onDataPreLoad",
+            "replaceWith": "onScroll",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        }
+    ]
+}
