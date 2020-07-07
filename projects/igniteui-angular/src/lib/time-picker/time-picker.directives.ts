@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 import { InteractionMode } from '../core/enums';
+import { DatePickerUtil } from '../date-picker/date-picker.utils';
 
 /** @hidden */
 @Directive({
@@ -268,7 +269,7 @@ export class IgxHourItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForHours(): boolean {
-        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+        if (!this.minValueDate || !this.maxValueDate) {
             return false;
         }
         let hour = parseInt(this.value, 10);
@@ -277,7 +278,7 @@ export class IgxHourItemDirective {
         }
         const date = new Date(this.minValueDate);
         date.setHours(hour);
-        return !(date <= this.maxValueDate && date >= this.minValueDate);
+        return (DatePickerUtil.lessThanMinValue(date, this.minValueDate) || DatePickerUtil.greaterThanMaxValue(date, this.maxValueDate));
     }
 
     get isSelectedHour(): boolean {
@@ -336,7 +337,7 @@ export class IgxMinuteItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForMinutes(): boolean {
-        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+        if (!this.minValueDate || !this.maxValueDate) {
             return false;
         }
         const minute = parseInt(this.value, 10);
@@ -347,7 +348,7 @@ export class IgxMinuteItemDirective {
         const date = new Date(this.minValueDate);
         date.setHours(hour);
         date.setMinutes(minute);
-        return !(date <= this.maxValueDate && date >= this.minValueDate);
+        return (DatePickerUtil.lessThanMinValue(date, this.minValueDate) || DatePickerUtil.greaterThanMaxValue(date, this.maxValueDate));
     }
 
     get isSelectedMinute(): boolean {
@@ -409,7 +410,7 @@ export class IgxSecondsItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForSeconds(): boolean {
-        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+        if (!this.minValueDate || !this.maxValueDate) {
             return false;
         }
         const minute = parseInt(this.selectedMinute, 10);
@@ -422,7 +423,7 @@ export class IgxSecondsItemDirective {
         date.setHours(hour);
         date.setMinutes(minute);
         date.setSeconds(second);
-        return !(date <= this.maxValueDate && date >= this.minValueDate);
+        return (DatePickerUtil.lessThanMinValue(date, this.minValueDate) || DatePickerUtil.greaterThanMaxValue(date, this.maxValueDate));
     }
 
     get isSelectedSeconds(): boolean {
@@ -484,7 +485,7 @@ export class IgxAmPmItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForAmPm(): boolean {
-        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+        if (!this.minValueDate || !this.maxValueDate) {
             return false;
         }
         const minute = parseInt(this.selectedMinute, 10);
@@ -498,7 +499,7 @@ export class IgxAmPmItemDirective {
         date.setHours(hour);
         date.setMinutes(minute);
         date.setSeconds(second);
-        return !(date <= this.maxValueDate && date >= this.minValueDate);
+        return (DatePickerUtil.lessThanMinValue(date, this.minValueDate) || DatePickerUtil.greaterThanMaxValue(date, this.maxValueDate));
     }
 
     get isSelectedAmPm(): boolean {

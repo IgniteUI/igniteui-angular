@@ -578,10 +578,6 @@ export class IgxTimePickerComponent implements
      */
     public selectedAmPm: string;
 
-    public minValueConverted: Date;
-
-    public maxValueConverted: Date;
-
     /** @hidden @internal */
     private _value: Date;
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
@@ -1271,8 +1267,9 @@ export class IgxTimePickerComponent implements
         return date;
     }
 
+    /** @hidden @internal */
     public convertMinMaxValue(value: string): Date {
-        if (value == null) {
+        if (!value) {
             return;
         } else {
         const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
