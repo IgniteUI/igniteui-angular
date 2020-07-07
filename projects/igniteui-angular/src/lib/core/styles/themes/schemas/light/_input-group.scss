@@ -312,14 +312,14 @@ $_bootstrap-input-group: extend(
 /// Generates a indigo input-group schema.
 /// @type {Map}
 /// @prop {map} border-color [igx-color: ('grays', 400)] - The border color for input groups of type border and fluent.
-/// @prop {map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
-/// @prop {map} focused-border-color [igx-color: ('primary', 400)] - The focused input border color for input groups of type border and fluent.
+/// @prop {map} box-background [igx-color: ('grays', 100)] - The background color of an input group of type box.
 /// @prop {map} disabled-border-color [igx-color: ('grays', 300)] - The disabled border color for input groups of type border and fluent.
-/// @prop {map} idle-text-color [igx-color: ('grays', 500)] - The input text color in the idle state.
-/// @prop {map} disabled-text-color [igx-color: ('grays', 300)] - The input text color in the disabled state.
-/// @prop {map} hover-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the hover state.
 /// @prop {map} disabled-bottom-line-color [igx-color: ('grays', 300)] - The bottom line and border colors in the disabled state.
-
+/// @prop {map} disabled-text-color [igx-color: ('grays', 300)] - The input text color in the disabled state.
+/// @prop {map} focused-border-color [igx-color: ('primary', 400)] - The focused input border color for input groups of type border and fluent.
+/// @prop {map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
+/// @prop {map} hover-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the hover state.
+/// @prop {map} idle-text-color [igx-color: ('grays', 500)] - The input text color in the idle state.
 /// @requires {function} extend
 /// @requires {map} $_light-input-group
 $_indigo-input-group: extend(
@@ -366,4 +366,3 @@ $_indigo-input-group: extend(
         )
     )
 );
-
