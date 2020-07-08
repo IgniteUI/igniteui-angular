@@ -16,7 +16,7 @@ import { HelperTestFunctions } from './calendar-helper-utils';
 import { CalendarView } from './month-picker-base';
 import { IViewDateChangeEventArgs } from './calendar-base';
 
-fdescribe('IgxCalendar - ', () => {
+describe('IgxCalendar - ', () => {
 
     it('Should create proper calendar model', () => {
         const calendar = new Calendar();
@@ -1556,49 +1556,29 @@ fdescribe('IgxCalendar - ', () => {
                 dom = fixture.debugElement;
             }));
 
-            fit('Should navigate to the previous/next month via KB.', fakeAsync(() => {
-                fixture.detectChanges();
-                const next = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS))[0];
+            it('Should navigate to the previous/next month via KB.', fakeAsync(() => {
                 const prev = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS))[0];
-
-                let previousValue = fixture.componentInstance.calendar.viewDate;
                 prev.nativeElement.focus();
-                spyOn(calendar.onViewDateChanged, 'emit').and.callThrough();
 
                 expect(prev.nativeElement).toBe(document.activeElement);
-
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', prev.nativeElement);
-                fixture.detectChanges();
-                const tt = flush();
                 tick(100);
+                fixture.detectChanges();
 
-                let eventArgs: IViewDateChangeEventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                 expect(calendar.viewDate.getMonth()).toEqual(4);
-
+                const next = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS))[0];
                 next.nativeElement.focus();
-                previousValue = fixture.componentInstance.calendar.viewDate;
                 expect(next.nativeElement).toBe(document.activeElement);
 
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
 
                 fixture.detectChanges();
                 tick(100);
-
-                eventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
-
-                previousValue = fixture.componentInstance.calendar.viewDate;
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
-
-                fixture.detectChanges();
                 tick(100);
+                fixture.detectChanges();
 
-                eventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
+
                 expect(calendar.viewDate.getMonth()).toEqual(6);
             }));
 
