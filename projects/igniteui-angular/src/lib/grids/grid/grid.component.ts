@@ -12,6 +12,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -167,6 +168,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     set filteredData(value) {
         this._filteredData = value;
     }
+
+    /**
+     * Emitted when a new chunk of data is loaded from virtualization.
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     * ```
+     */
+    @Output()
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Gets/Sets the total number of records in the data source.
@@ -1036,6 +1047,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         super.ngDoCheck();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
     }
 
     /**

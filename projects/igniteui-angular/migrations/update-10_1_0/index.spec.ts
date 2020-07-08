@@ -105,4 +105,18 @@ describe('Update 10.1.0', () => {
             .toEqual(expectedFileContent);
     });
 
+    it('should replace onDataPreLoad with onScroll ', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/tree-grid.component.html`,
+            '<igx-tree-grid (onDataPreLoad)="handleEvent($event)"></igx-tree-grid>'
+        );
+
+        const tree = await schematicRunner.runSchematicAsync('migration-16', {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/tree-grid.component.html'))
+            .toEqual('<igx-tree-grid (onScroll)="handleEvent($event)"></igx-tree-grid>');
+
+    });
+
 });
