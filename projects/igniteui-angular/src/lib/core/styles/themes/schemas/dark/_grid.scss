@@ -260,7 +260,7 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} sortable-header-icon-hover-color [igx-contrast-color: 'surface'] - The icon color on hover in grid header when the column is sortable.
 ///
 /// @prop {Map} row-selected-background [igx-color: 'primary'] - The selected row background color.
-/// @prop {Color} row-selected-text-color [igx-color: 'primary'] - The selected row text color.
+/// @prop {Color} row-selected-text-color [igx-contrast-color: 'primary'] - The selected row text color.
 /// @prop {Color} row-selected-hover-text-color [igx-contrast-color: ('primary', 400)] - The selected row text color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('primary', 400)] - The selected row hover background.
 /// @prop {Color} row-odd-background [igx-color: ('grays', 100), to-opaque: (igx-color: 'surface')] - The background color of odd rows.
