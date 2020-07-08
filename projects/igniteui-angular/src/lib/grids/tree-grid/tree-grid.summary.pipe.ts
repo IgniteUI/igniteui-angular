@@ -55,7 +55,6 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                     cellIndentation: record.level + 1
                 };
                 recordsWithSummary.push(summaryRecord);
-                continue;
             }
             const isExpanded = record.children && record.children.length > 0 && record.expanded;
             if (summaryPosition === GridSummaryPosition.bottom && !isExpanded) {
