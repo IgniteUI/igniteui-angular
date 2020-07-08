@@ -57,3 +57,27 @@ $_fluent-pagination: extend(
 /// @requires {map} $_light-pagination
 $_bootstrap-pagination: extend($_light-pagination);
 
+/// Generates an indigo pagination schema.
+/// @type {Map}
+/// @prop {Map} text-color [igx-color: ('grays', 700)] - The text color.
+/// @prop {Map} background-color [igx-color: ('grays', 100), to-opaque: ()] - The background color of the paging panel.
+/// @prop {Map} border-color [igx-color: ('grays', 100)] - The border color of the paging panel.
+/// @requires {function} extend
+/// @requires {map} $_light-pagination
+$_indigo-pagination: extend(
+    $_light-pagination,
+    (
+        text-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        background-color: (
+            igx-color: ('grays', 100),
+            to-opaque: ()
+        ),
+
+        border-color: (
+            igx-color: ('grays', 100)
+        )
+    )
+);

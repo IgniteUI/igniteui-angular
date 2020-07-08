@@ -85,3 +85,30 @@ $_fluent-grid-summary: extend(
 /// @requires {map} $_light-grid-summary
 $_bootstrap-grid-summary: extend($_light-grid-summary);
 
+/// Generates an indigo grid-summary schema.
+/// @type {Map}
+/// @property {Color} background-color [igx-color: ('grays', 100), to-opaque: ()] - The summaries background color is inherited form igx-grid__tfoot.
+/// @property {map} border-color [igx-color: ('primary', 50)] - The summaries border color.
+/// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
+/// @requires {function} extend
+/// @requires {map} $_light-grid-summary
+$_indigo-grid-summary: extend(
+    $_light-grid-summary,
+    (
+        variant: 'indigo-design',
+
+        background-color: (
+            igx-color: ('grays', 100),
+            to-opaque: ()
+        ),
+
+        border-color: (
+            igx-color: ('primary', 50)
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
+

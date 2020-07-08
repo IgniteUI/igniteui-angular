@@ -23,3 +23,9 @@ $_dark-fluent-grid-filtering: extend($_fluent-grid-filtering);
 /// @requires extend
 /// @requires $_bootstrap-grid-filtering
 $_dark-bootstrap-grid-filtering: extend($_bootstrap-grid-filtering);
+
+/// Generates a dark indigo grid-filtering schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-grid-filtering
+$_dark-indigo-grid-filtering: extend($_indigo-grid-filtering);

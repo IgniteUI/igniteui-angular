@@ -79,3 +79,9 @@ $_fluent-grid-filtering: extend(
 /// @requires {map} $_light-grid-filtering
 $_bootstrap-grid-filtering: extend($_light-grid-filtering);
 
+/// Generates an indigo grid-filtering schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-filtering
+$_indigo-grid-filtering: extend($_light-grid-filtering);
+

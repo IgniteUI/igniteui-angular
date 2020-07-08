@@ -35,3 +35,19 @@ $_dark-fluent-grid-toolbar: extend($_fluent-grid-toolbar, $_base-dark-grid-toolb
 /// @requires $_bootstrap-grid-toolbar
 /// @requires $_base-dark-grid-toolbar
 $_dark-bootstrap-grid-toolbar: extend($_bootstrap-grid-toolbar, $_base-dark-grid-toolbar);
+
+/// Generates a dark indigo grid-toolbar schema.
+/// @type {Map}
+/// @property {map} background-color [igx-color: 'surface'] - The toolbar background color.
+/// @requires {function} extend
+/// @requires $_indigo-grid-toolbar
+/// @requires $_base-dark-grid-toolbar
+$_dark-indigo-grid-toolbar: extend(
+    $_indigo-grid-toolbar,
+    $_base-dark-grid-toolbar,
+    (
+        background-color: (
+            igx-color: 'surface',
+        )
+    )
+);

@@ -142,7 +142,7 @@
     @return $rgba;
 }
 
-/// alias hexrbga
+/// @alias hexrbga
 @function to-opaque($rgba, $background: #fff) {
     @return hexrgba($rgba, $background);
 }

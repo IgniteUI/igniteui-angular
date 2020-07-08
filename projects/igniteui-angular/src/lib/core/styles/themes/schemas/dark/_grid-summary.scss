@@ -24,3 +24,38 @@ $_dark-fluent-grid-summary: extend($_fluent-grid-summary);
 /// @requires {function} extend
 /// @requires $_bootstrap-grid-summary
 $_dark-bootstrap-grid-summary: extend($_bootstrap-grid-summary);
+
+/// Generates a dark indigo grid-summary schema.
+/// @type {Map}
+/// @property {Color} background-color [igx-color: 'surface'] - The summaries background color is inherited form igx-grid__tfoot.
+/// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
+/// @property {map} label-color [igx-color: ('primary', 200)] - The summaries label color.
+/// @property {Color} result-color [igx-color: 'surface'] - The summaries value/result color.
+/// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
+/// @requires {function} extend
+/// @requires $_indigo-grid-summary
+$_dark-indigo-grid-summary: extend(
+    $_indigo-grid-summary,
+    (
+        background-color: (
+            igx-color: 'surface',
+        ),
+
+        focus-background-color: (
+            igx-color: ('grays', 100)
+        ),
+
+        label-color: (
+            igx-color: ('primary', 200),
+        ),
+
+        result-color: (
+            igx-color: 'surface',
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
+

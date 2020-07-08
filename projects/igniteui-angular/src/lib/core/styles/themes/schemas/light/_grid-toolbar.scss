@@ -80,3 +80,24 @@ $_bootstrap-grid-toolbar: extend(
     )
 );
 
+/// Generates an indigo grid-toolbar schema.
+/// @type {Map}
+/// @property {map} background-color [igx-color: ('grays', 100)] - The toolbar background color.
+/// @property {map} title-text-color [igx-color: ('primary', 500)] - The toolbar title text color.
+/// @requires {function} extend
+/// @requires {map} $_light-grid-toolbar
+$_indigo-grid-toolbar: extend(
+    $_light-grid-toolbar,
+    (
+        variant: 'indigo-design',
+
+        background-color: (
+            igx-color: ('grays', 100)
+        ),
+
+        title-text-color: (
+            igx-color: ('primary', 500)
+        )
+    )
+);
+

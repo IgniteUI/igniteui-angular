@@ -326,11 +326,11 @@ $light-indigo-schema: (
     radial-gauge: $_indigo-radial-gauge,
     financial-chart: $_indigo-financial-chart,
     bullet-graph: $_indigo-graph,
-    igx-grid: $_bootstrap-grid,
-    igx-grid-filtering: $_bootstrap-grid-filtering,
-    igx-paginator: $_bootstrap-pagination,
-    igx-grid-summary: $_bootstrap-grid-summary,
-    igx-grid-toolbar: $_bootstrap-grid-toolbar,
+    igx-grid: $_indigo-grid,
+    igx-grid-filtering: $_indigo-grid-filtering,
+    igx-paginator: $_indigo-pagination,
+    igx-grid-summary: $_indigo-grid-summary,
+    igx-grid-toolbar: $_indigo-grid-toolbar,
     igx-highlight: $_indigo-highlight,
     igx-icon: $_indigo-icon,
     igx-input-group: $_indigo-input-group,
@@ -357,4 +357,3 @@ $light-indigo-schema: (
     igx-tooltip: $_indigo-tooltip,
     igx-watermark: $_indigo-watermark
 );
-
