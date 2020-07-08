@@ -185,8 +185,8 @@ $_bootstrap-tabs: extend(
 /// @property {map} item-active-color [igx-color: ('grays', 900)] - The color used for the active tabs text.
 /// @property {map} item-active-icon-color [igx-color: ('primary', 400)] - The color used for the active tabs icon.
 /// @property {map} indicator-color [igx-color: ('primary', 400)] - The color used for the tabs borders.
-/// @property {map} border-color [igx-color: ('grays', 300)] - The color used for the tab items bottom border.
-/// @property {map} border-color--hover [igx-color: ('grays', 300)] - The color used for the tab items bottom border on hover.
+/// @property {map} border-color [igx-color: ('grays', 300), to-opaque: (igx-color: 'surface')] - The color used for the tab items bottom border.
+/// @property {map} border-color--hover [igx-color: ('grays', 300), to-opaque: (igx-color: 'surface')] - The color used for the tab items bottom border on hover.
 /// @property {map} button-color [igx-color: ('grays', 700)] - The color used for the button icon/text color.
 /// @property {map} button-hover-color [igx-color: ('grays', 900)] - The color used for the button icon/text color on hover.
 /// @property {Color} button-background [transparent] - The color used for the button background.
@@ -226,11 +226,17 @@ $_indigo-tabs: extend(
         ),
 
         border-color:  (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 300),
+            to-opaque: (
+                igx-color: 'surface'
+            )
         ),
 
         border-color--hover:  (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 300),
+            to-opaque: (
+                igx-color: 'surface'
+            )
         ),
 
         button-color: (

@@ -272,7 +272,7 @@
         align-items: center;
         min-width: 100%;
 
-        @if $bootstrap-theme {
+        @if $bootstrap-theme or $indigo-theme {
             &::after {
                 content: '';
                 position: absolute;
