@@ -39,3 +39,9 @@ $_fluent-overlay: extend(
 /// @requires $_light-overlay
 $_bootstrap-overlay: extend($_light-overlay);
 
+/// Generates an indigo overlay schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-overlay
+$_indigo-overlay: extend($_light-overlay);
+

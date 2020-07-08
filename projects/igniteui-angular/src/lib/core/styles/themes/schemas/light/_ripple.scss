@@ -39,3 +39,11 @@ $_bootstrap-ripple: extend($_light-ripple, (
     variant: 'bootstrap'
 ));
 
+/// Generates an indigo ripple schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-ripple
+$_indigo-ripple: extend($_light-ripple, (
+    variant: 'indigo-design'
+));
+
