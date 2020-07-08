@@ -641,14 +641,12 @@ export class IgxGridSelectionService {
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
         if (clearPrevSelection) { this.rowSelection.clear(); }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
-        if (this.grid) { this.grid.selectedRows = this.rowSelection; }
         this.allRowsSelected = undefined;
     }
 
     /** Deselect specified rows. No event is emitted. */
     deselectRowsWithNoEvent(rowIDs: any[]): void {
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
-        if (this.grid) { this.grid.selectedRows = this.rowSelection; }
         this.allRowsSelected = undefined;
     }
 
@@ -726,7 +724,6 @@ export class IgxGridSelectionService {
     /** Clear rowSelection and update checkbox state */
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
-        if (this.grid) { this.grid.selectedRows = this.rowSelection; }
         this.clearHeaderCBState();
     }
 

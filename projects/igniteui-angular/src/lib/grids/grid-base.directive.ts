@@ -172,7 +172,7 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
     selector: '[igxGridBaseComponent]'
 })
 export class IgxGridBaseDirective extends DisplayDensityBase implements
-    OnChanges, OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+    OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _cdrRequests = false;
@@ -1074,14 +1074,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set selectedRows(rowIDs: any[]) {
-        this._selectedRows = new Set(rowIDs);
+        rowIDs.length > 0
+            ? this.selectRows(rowIDs, true)
+            : this.deselectAllRows();
     }
 
     public get selectedRows(): any[] {
-        return [...this._selectedRows];
+        return this.selectionService.getSelectedRows();
     }
-
-    private _selectedRows = new Set<any>();
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked.
@@ -2983,15 +2983,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
-    }
-
-    /** @hidden @internal */
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['selectedRows']) {
-            this.selectedRows.length > 0
-                ? this.selectRows(this.selectedRows, true)
-                : this.deselectAllRows();
-        }
     }
 
     /**

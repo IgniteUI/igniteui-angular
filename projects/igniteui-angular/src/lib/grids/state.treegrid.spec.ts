@@ -206,7 +206,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
 
         state.setState(rowSelectionState);
         gridState = state.getState(false, 'rowSelection');
-        HelperFunctions.verifyRowSelection(grid.selectedRows(), gridState as IGridState);
+        HelperFunctions.verifyRowSelection(grid.selectedRows, gridState as IGridState);
         gridState = state.getState(true, 'rowSelection');
         expect(gridState).toBe(rowSelectionState);
     });
