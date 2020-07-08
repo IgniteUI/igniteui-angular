@@ -5,6 +5,14 @@ All notable changes for each version of this project will be documented in this 
 ## 10.1.0
 
 ### New Features
+- `IgxCalendar` and `IgxMonthPicker`
+    - `onViewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
+    - `onActiveViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
+    - `viewDate` day value is always 1.
+    - `activeView` setter is now available as an input property.
+- `IgxGridState` directive
+    - Added support for expansion states, column selection and row pinning.
+    - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
 - `IgxColumn`
     - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
 - `IgxToast`
