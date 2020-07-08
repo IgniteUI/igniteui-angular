@@ -39,3 +39,8 @@ $_dark-bootstrap-tabs: extend($_bootstrap-tabs, (
     ),
 ));
 
+/// Generates a dark indigo tabs schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-tabs
+$_dark-indigo-tabs: extend($_indigo-tabs);
