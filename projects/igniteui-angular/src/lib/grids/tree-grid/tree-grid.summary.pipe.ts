@@ -45,7 +45,6 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
 
             const isCollapsed = !record.expanded && record.children && record.children.length > 0 && showSummaryOnCollapse;
             if (isCollapsed) {
-                console.log(record.rowID, record.expanded);
                 let childData = record.children.filter(r => !r.isFilteredOutParent).map(r => r.data);
                 childData = this.removeDeletedRecord(grid, record.rowID, childData);
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
