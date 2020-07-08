@@ -238,7 +238,6 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} header-border-color [igx-color: ('grays', 100)] - The color used for header borders.
 ///
 /// @prop {Map} filtering-header-text-color [igx-color: ('grays', 100), to-opaque: (igx-color: 'surface'), text-contrast: ()] - The text color color of the filtered column header.
-/// @prop {Map} filtering-background-or [igx-color: 'warn'] - The background color of advanced filtering "OR" condition.
 /// @prop {Map} filtering-background-or--focus [igx-color: 'warn', darken: 8%] - The background color on focus/selected of advanced filtering "OR" condition.
 ///
 /// @prop {Map} edited-row-indicator [igx-color: 'primary'] - The indicator's color of edited row.
@@ -500,4 +499,3 @@ $_dark-indigo-grid: extend(
         ),
     )
 );
-
