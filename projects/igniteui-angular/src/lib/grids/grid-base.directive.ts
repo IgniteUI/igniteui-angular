@@ -138,7 +138,8 @@ import {
     ICellPosition,
     IRowToggleEventArgs,
     IColumnSelectionEventArgs,
-    IPinRowEventArgs
+    IPinRowEventArgs,
+    IGridScrollEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -359,6 +360,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
+     * Emitted when grid is scrolled horizontally/vertically.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *              (onScroll)="onScroll($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
     /**
      * Gets/Sets the advanced filtering state.
@@ -1299,16 +1311,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
-
-    /**
-     * Emitted when a new chunk of data is loaded from virtualization.
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
-     * ```
-     */
-    @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when column is resized.
@@ -2683,6 +2685,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = false;
 
         this.hideOverlays();
+        const args: IGridScrollEventArgs = {
+            direction: 'vertical',
+            event: event,
+            scrollPosition: this.verticalScrollContainer.scrollPosition
+        };
+        this.onScroll.emit(args);
     }
 
     private horizontalScrollHandler = (event) => {
@@ -2698,6 +2706,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.hideOverlays();
+        const args: IGridScrollEventArgs = { direction: 'horizontal', event: event, scrollPosition: this.headerContainer.scrollPosition  };
+        this.onScroll.emit(args);
     }
 
     /**
@@ -3238,13 +3248,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const vertScrDC = this.verticalScrollContainer.displayContainer;
             vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
         });
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
     }
 
     /**

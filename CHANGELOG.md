@@ -13,6 +13,11 @@ All notable changes for each version of this project will be documented in this 
     - Added `closeOnEscapeKey` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
 - `IgxNavbar`:
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
+- `igxGrid`
+    - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
+- `igxTreeGrid`
+    - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
+
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
