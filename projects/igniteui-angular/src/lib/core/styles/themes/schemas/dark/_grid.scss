@@ -275,11 +275,13 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} body-summaries-text-color [igx-contrast-color: 'surface'] - The text color of the summary groups located the body.
 /// @prop {Map} group-row-background [igx-color: 'surface'] - The grid group row background color.
 /// @prop {Map} group-row-selected-background [igx-color: ('primary', 100), rgba: .12, to-opaque: (igx-color: 'surface')] - The drop area background on drop color.
+/// @prop {Map} group-count-text-color [igx-contrast-color: ('primary', 300)] - The grid group row cont badge text color.
 ///
 /// @prop {Map} group-label-column-name-text [igx-contrast-color: 'surface'] - The grid group row column name text color.
 /// @prop {Map} group-label-icon [igx-contrast-color: 'surface'] - The grid group row icon color.
 /// @prop {Map} group-label-text [igx-color: ('grays', 700)] - The grid group row text color.
-/// @prop {Map} expand-icon-hover-color [igx-color: ('primary', 200)] - The grid row expand icon hover color.
+/// @prop {Map} expand-icon-color [igx-color: ('grays', 600)] - The grid row expand icon color.
+/// @prop {Map} expand-icon-hover-color [igx-color: ('grays', 900)] - The grid row expand icon hover color.
 /// @prop {Color} filtering-row-background [igx-color: 'surface'] - The background color of the filtering row.
 ///
 /// @requires {function} extend
@@ -435,10 +437,6 @@ $_dark-indigo-grid: extend(
             igx-color: ('grays', 700)
         ),
 
-        expand-icon-hover-color: (
-            igx-color: ('primary', 200)
-        ),
-
         filtering-row-background: (
             igx-color: 'surface',
         ),
@@ -485,6 +483,18 @@ $_dark-indigo-grid: extend(
 
         body-summaries-text-color: (
             igx-contrast-color: 'surface',
+        ),
+
+        group-count-text-color: (
+            igx-contrast-color: ('primary', 300),
+        ),
+
+        expand-icon-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        expand-icon-hover-color: (
+            igx-color: ('grays', 900)
         ),
     )
 );

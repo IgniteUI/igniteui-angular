@@ -89,8 +89,7 @@ $_bootstrap-grid-summary: extend($_light-grid-summary);
 /// @type {Map}
 /// @property {Color} background-color [igx-color: ('grays', 100), to-opaque: ()] - The summaries background color is inherited form igx-grid__tfoot.
 /// @property {map} border-color [igx-color: ('primary', 50)] - The summaries border color.
-/// @property {map} pinned-border-color [igx-color: 'primary'] - The border color of the summary panel.
-/// @property {String} pinned-border-width [rem(4px)] - The border width of the summary panel.
+/// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
 /// @requires {function} extend
 /// @requires {map} $_light-grid-summary
 $_indigo-grid-summary: extend(
@@ -108,10 +107,8 @@ $_indigo-grid-summary: extend(
         ),
 
         pinned-border-color: (
-            igx-color: ('primary', 500)
+            igx-color: ('primary', 200)
         ),
-
-        pinned-border-width: rem(4px)
     )
 );
 
