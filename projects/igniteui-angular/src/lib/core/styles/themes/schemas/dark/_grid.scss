@@ -249,7 +249,6 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Color} content-background [igx-color: 'surface'] - The table body background color.
 ///
 /// @prop {Map} row-border-color [igx-color: ('grays', 100)] - The row bottom border color.
-/// @prop {Map} row-ghost-background [igx-color: ('primary', 50)] - The background color of the dragged row.
 /// @prop {Map} row-hover-background [igx-color: ('primary', 100), rgba: .12, to-opaque: (igx-color: 'surface')] - The hover row background color.
 ///
 /// @prop {Map} sorted-header-icon-color [igx-contrast-color: 'surface'] - The sorted table header icon color.
