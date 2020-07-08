@@ -55,7 +55,7 @@ export class ThemeFile implements IExcelFile {
  * @hidden
  */
 export class WorksheetFile implements IExcelFile {
-    private static MIN_WIDTH = 8.34;
+    private static MIN_WIDTH = 8.43;
     private maxOutlineLevel = 0;
     private dimension = '';
     private freezePane = '';
@@ -115,7 +115,7 @@ export class WorksheetFile implements IExcelFile {
                 let widthInTwips = worksheetData.options.columnWidth !== undefined ?
                                         worksheetData.options.columnWidth :
                                         Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
-                if (widthInTwips === 0 || widthInTwips === null) {
+                if (!(widthInTwips > 0)) {
                     widthInTwips = WorksheetFile.MIN_WIDTH;
                 }
 
@@ -181,7 +181,7 @@ export class WorksheetFile implements IExcelFile {
                 let widthInTwips = worksheetData.options.columnWidth !== undefined ?
                                         worksheetData.options.columnWidth :
                                         Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
-                if (widthInTwips === 0 || widthInTwips === null) {
+                if (!(widthInTwips > 0)) {
                     widthInTwips = WorksheetFile.MIN_WIDTH;
                 }
 
