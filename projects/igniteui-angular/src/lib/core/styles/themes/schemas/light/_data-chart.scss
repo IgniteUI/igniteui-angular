@@ -67,3 +67,9 @@ $_fluent-data-chart: extend($_light-data-chart);
 /// @requires $_light-data-chart
 $_bootstrap-data-chart: extend($_light-data-chart);
 
+/// Generates an indigo data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-data-chart
+$_indigo-data-chart: extend($_light-data-chart);
+

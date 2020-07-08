@@ -24,3 +24,9 @@ $_dark-fluent-graph: extend($_fluent-graph);
 /// @requires $_bootstrap-graph
 $_dark-bootstrap-graph: extend($_bootstrap-graph);
 
+/// Generates a dark indigo graph schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-graph
+$_dark-indigo-graph: extend($_indigo-graph);
+
