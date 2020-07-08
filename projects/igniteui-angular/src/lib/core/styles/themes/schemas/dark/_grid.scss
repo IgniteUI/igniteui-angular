@@ -245,7 +245,6 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} cell-selected-text-color [igx-color: ('grays', 200), to-opaque: (igx-color: 'surface'), text-contrast: ()] - The selected cell text color.
 /// @prop {Color} cell-editing-background [igx-color: 'surface'] - The background for the cell in editing mode.
 ///
-/// @prop {Map} ghost-header-icon-color [igx-contrast-color: 'primary'] - The dragged header icon color.
 /// @prop {Color} filtering-header-background [igx-color: ('grays', 100), to-opaque: (igx-color: 'surface')] - The background color of the filtered column header.
 /// @prop {Color} content-background [igx-color: 'surface'] - The table body background color.
 ///
