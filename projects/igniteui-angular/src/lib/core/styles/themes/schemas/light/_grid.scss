@@ -620,7 +620,7 @@ $_bootstrap-grid: extend(
 /// @prop {Map} row-border-color [igx-color: ('primary', 50)] - The row bottom border color.
 /// @prop {map} row-highlight [igx-color: 'primary'] - The grid row highlight color.
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
-/// @prop {Map} row-hover-background [igx-color: ('primary', 50, rgba: .12, to-opaque: (igx-color: 'surface')] - The hover row background color.
+/// @prop {Map} row-hover-background [igx-color: ('primary', 50), rgba: .12, to-opaque: (igx-color: 'surface')] - The hover row background color.
 ///
 /// @prop {Map} sorted-header-icon-color [igx-color: 'primary'] - The sorted table header icon color.
 /// @prop {Map} sortable-header-icon-hover-color [igx-color: 'primary'] - The icon color on hover in grid header when the column is sortable.
