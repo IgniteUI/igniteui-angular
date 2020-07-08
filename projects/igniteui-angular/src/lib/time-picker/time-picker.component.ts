@@ -636,6 +636,81 @@ export class IgxTimePickerComponent implements
     }
 
     /** @hidden @internal */
+    applyDisabledStyleForHours(hourString: string): boolean {
+        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
+        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
+        if (!minValueDate || !maxValueDate) {
+            return false;
+        }
+        let hour = parseInt(hourString, 10);
+        if (this.selectedAmPm === 'PM') {
+            hour += 12;
+        }
+        const date = new Date(minValueDate);
+        date.setHours(hour);
+        return date < minValueDate || date > maxValueDate;
+    }
+
+    /** @hidden @internal */
+    applyDisabledStyleForMinutes(minuteString: string): boolean {
+        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
+        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
+        if (!minValueDate || !maxValueDate) {
+            return false;
+        }
+        const minute = parseInt(minuteString, 10);
+        let hour = parseInt(this.selectedHour, 10);
+        if (this.selectedAmPm === 'PM') {
+            hour += 12;
+        }
+        const date = new Date(minValueDate);
+        date.setHours(hour);
+        date.setMinutes(minute);
+        return date < minValueDate || date > maxValueDate;
+    }
+
+    /** @hidden @internal */
+    applyDisabledStyleForSeconds(secondsString: string): boolean {
+        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
+        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
+        if (!minValueDate || !maxValueDate) {
+            return false;
+        }
+        const minute = parseInt(this.selectedMinute, 10);
+        let hour = parseInt(this.selectedHour, 10);
+        const second = parseInt(secondsString, 10);
+        if (this.selectedAmPm === 'PM') {
+            hour += 12;
+        }
+        const date = new Date(minValueDate);
+        date.setHours(hour);
+        date.setMinutes(minute);
+        date.setSeconds(second);
+        return date < minValueDate || date > maxValueDate;
+    }
+
+    /** @hidden @internal */
+    applyDisabledStyleForAmPm(selectedAmPm): boolean {
+        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
+        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
+        if (!minValueDate || !maxValueDate) {
+            return false;
+        }
+        const minute = parseInt(this.selectedMinute, 10);
+        let hour = parseInt(this.selectedHour, 10);
+        const second = parseInt(this.selectedSeconds, 10);
+        const amPM = selectedAmPm;
+        if (amPM === 'PM') {
+            hour += 12;
+        }
+        const date = new Date(minValueDate);
+        date.setHours(hour);
+        date.setMinutes(minute);
+        date.setSeconds(second);
+        return date < minValueDate || date > maxValueDate;
+    }
+
+    /** @hidden @internal */
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
 
     /** @hidden @internal */

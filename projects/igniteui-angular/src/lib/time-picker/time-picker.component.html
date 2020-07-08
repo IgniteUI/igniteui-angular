@@ -62,35 +62,22 @@
         <div class="igx-time-picker__body">
             <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
                 <span [igxHourItem]="hour"
-                [minValueDate]="convertMinMaxValue(minValue)"
-                [maxValueDate]="convertMinMaxValue(maxValue)"
-                [selectedAmPm]="selectedAmPm"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForHours(hour)}"
                 *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxMinuteItem]="minute"
-                [minValueDate]="convertMinMaxValue(minValue)"
-                [maxValueDate]="convertMinMaxValue(maxValue)"
-                [selectedHour]="selectedHour"
-                [selectedAmPm]="selectedAmPm"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForMinutes(minute)}"
                 *ngFor="let minute of minuteView" >{{ minute }}</span>
             </div>
             <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
                 <span [igxSecondsItem]="seconds"
-                [minValueDate]="convertMinMaxValue(minValue)"
-                [maxValueDate]="convertMinMaxValue(maxValue)"
-                [selectedHour]="selectedHour"
-                [selectedMinute]="selectedMinute"
-                [selectedAmPm]="selectedAmPm"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForSeconds(seconds)}"
                 *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm"
-                [minValueDate]="convertMinMaxValue(minValue)"
-                [maxValueDate]="convertMinMaxValue(maxValue)"
-                [selectedHour]="selectedHour"
-                [selectedMinute]="selectedMinute"
-                [selectedSecond]="selectedSeconds"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForAmPm(ampm)}"
                 *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
