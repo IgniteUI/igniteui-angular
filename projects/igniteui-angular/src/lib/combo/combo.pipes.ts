@@ -13,18 +13,19 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
-    public transform(collection: any[], searchValue: any, displayKey: any, shouldFilter: boolean) {
+    public transform(collection: any[], searchValue: any, displayKey: any, shouldFilter: boolean, caseSensitive: boolean) {
         if (!collection) {
             return [];
         }
         if (!searchValue || !shouldFilter) {
             return collection;
         } else {
-            const searchTerm = searchValue.toLowerCase().trim();
+            const searchTerm = caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
             if (displayKey != null) {
-                return collection.filter(e => e[displayKey].toLowerCase().includes(searchTerm));
+                return collection.filter(e => caseSensitive ? e[displayKey].includes(searchTerm) :
+                                         e[displayKey].toLowerCase().includes(searchTerm));
             } else {
-                return collection.filter(e => e.toLowerCase().includes(searchTerm));
+                return collection.filter(e => caseSensitive ? e.includes(searchTerm) : e.toLowerCase().includes(searchTerm));
             }
         }
     }

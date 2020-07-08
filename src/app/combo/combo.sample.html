@@ -23,6 +23,7 @@
                             [allowCustomValues]="customValuesFlag"
                             [displayDensity]="'comfortable'"
                             [autoFocusSearch]="autoFocusSearch"
+                            (onSearchInput)="handleSearchInputEvent($event)"
                             [filterable]="filterableFlag" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
                                 [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">

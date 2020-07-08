@@ -103,6 +103,12 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs {
     newCollection: any[];
 }
 
+/** Event emitted when the igx-combo's search input changes */
+export interface IComboSearchInputEventArgs extends CancelableEventArgs {
+    /** The change that has been made to the search input */
+    change: string;
+}
+
 /**
  * When called with sets A & B, returns A - B (as array);
  * @hidden
@@ -484,7 +490,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onSearchInput = new EventEmitter();
+    public onSearchInput = new EventEmitter<IComboSearchInputEventArgs>();
 
     /**
      * Emitted when new chunk of data is loaded from the virtualization
@@ -691,6 +697,22 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @Input()
     public searchPlaceholder = 'Enter a Search Term';
+
+    /**
+     * Sets the caseSensitive option of the combo filtering
+     *
+     * ```typescript
+     * // get
+     * let myComboCaseSensitiveFilter = this.combo.caseSensitive;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [caseSensitive]='true'></igx-combo>
+     * ```
+     */
+    @Input()
+    public caseSensitive = false;
 
     /**
      * Combo data source.
@@ -982,8 +1004,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleInputChange(event?: string) {
         if (event !== undefined) {
-            this.onSearchInput.emit(event);
+        const args: IComboSearchInputEventArgs = {
+            change: event,
+            cancel: false
+        };
+        this.onSearchInput.emit(args);
+        if (args.cancel) {
+            this.searchValue = null;
+            return;
         }
+    }
         this.checkMatch();
     }
 
@@ -1437,8 +1467,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /** Returns a string that should be populated in the combo's text box */
     private concatDisplayText(selection: any[]): string {
         const value = this.displayKey !== null && this.displayKey !== undefined ?
-        this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
-        selection.join(', ');
+            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            selection.join(', ');
         return value;
     }
 

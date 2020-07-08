@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
 import { IgxComboComponent, IComboSelectionChangeEventArgs,
     DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
-    scaleInCenter, scaleOutCenter, ElasticPositionStrategy
+    scaleInCenter, scaleOutCenter, ElasticPositionStrategy, CancelableEventArgs
 } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
@@ -156,9 +156,10 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             console.log('Closed log!');
         });
 
-        this.igxCombo.onSearchInput.subscribe((e) => {
-            console.log(e);
-        });
+        // this.igxCombo.onSearchInput.subscribe((e) => {
+        //     e.cancel = true;
+        //     console.log(e);
+        // });
     }
 
     ngAfterViewInit() {
@@ -193,5 +194,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     handleSelectionChange(event: IComboSelectionChangeEventArgs) {
         console.log(event);
+    }
+
+    handleSearchInputEvent(event: CancelableEventArgs) {
+        // event.cancel = true;
     }
 }

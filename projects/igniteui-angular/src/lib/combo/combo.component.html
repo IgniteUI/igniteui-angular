@@ -39,6 +39,11 @@
             [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
             (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
+            <igx-suffix igxButton="icon" (click)="caseSensitive=!caseSensitive">
+                <igx-icon fontSet="material">
+                    {{ caseSensitive ? 'format_size' : 'format_clear'}}
+                </igx-icon>
+            </igx-suffix>
     </igx-input-group>
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
@@ -47,7 +52,7 @@
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [itemHeight]='itemHeight'
             *igxFor="let item of data
-            | comboFiltering:searchValue:displayKey:filterable
+            | comboFiltering:searchValue:displayKey:filterable:caseSensitive
             | comboGrouping:groupKey:valueKey;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
