@@ -24,3 +24,9 @@ $_dark-fluent-shape-chart: extend($_fluent-shape-chart);
 /// @requires $_bootstrap-shape-chart
 $_dark-bootstrap-shape-chart: extend($_bootstrap-shape-chart);
 
+/// Generates a dark indigo shape-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-shape-chart
+$_dark-indigo-shape-chart: extend($_indigo-shape-chart);
+

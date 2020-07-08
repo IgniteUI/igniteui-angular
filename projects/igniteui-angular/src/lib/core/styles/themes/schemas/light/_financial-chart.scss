@@ -139,3 +139,9 @@ $_fluent-financial-chart: extend($_light-financial-chart);
 /// @requires $_light-financial-chart
 $_bootstrap-financial-chart: extend($_light-financial-chart);
 
+/// Generates an indigo financial-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-financial-chart
+$_indigo-financial-chart: extend($_light-financial-chart);
+

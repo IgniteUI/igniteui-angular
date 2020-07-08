@@ -1,4 +1,5 @@
 @import '../light/date-range-picker';
+
 ////
 /// @group schemas
 /// @access private
@@ -22,3 +23,9 @@ $_dark-fluent-date-range-picker: extend($_fluent-date-range-picker);
 /// @requires {function} extend
 /// @requires $_bootstrap-date-range-picker
 $_dark-bootstrap-date-range-picker: extend($_bootstrap-date-range-picker);
+
+/// Generates a dark indigo date-range-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-date-range-picker
+$_dark-indigo-date-range-picker: extend($_indigo-date-range-picker);

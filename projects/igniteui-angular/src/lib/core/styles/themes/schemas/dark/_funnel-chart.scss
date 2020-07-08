@@ -23,3 +23,10 @@ $_dark-fluent-funnel-chart: extend($_fluent-funnel-chart);
 /// @requires {function} extend
 /// @requires $_bootstrap-funnel-chart
 $_dark-bootstrap-funnel-chart: extend($_bootstrap-funnel-chart);
+
+/// Generates a dark indigo funnel-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-funnel-chart
+$_dark-indigo-funnel-chart: extend($_indigo-funnel-chart);
+

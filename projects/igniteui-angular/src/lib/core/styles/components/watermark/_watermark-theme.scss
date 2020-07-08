@@ -105,10 +105,9 @@
         background-repeat: repeat;
         background-position: rem(16px) rem(16px);
         // Target only IE 10,11.
-        @media all and (-ms-high-contrast:none)
+        @media all and (-ms-high-contrast: none)
         {
             background-image: none;
         }
-        // END Target only IE 10,11.
     }
 }

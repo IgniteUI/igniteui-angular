@@ -26,3 +26,10 @@ $_fluent-date-range-picker: extend($_light-date-range-picker);
 /// @requires {map} $_light-date-range-picker
 /// @see $bootstrap-palette
 $_bootstrap-date-range-picker: extend($_light-date-range-picker);
+
+/// Generates an indigo date-range-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-date-range-picker
+/// @see $light-indigo-palette
+$_indigo-date-range-picker: extend($_light-date-range-picker);

@@ -43,3 +43,10 @@ $_fluent-funnel-chart: extend($_light-funnel-chart);
 /// @requires {function} extend
 /// @requires $_light-funnel-chart
 $_bootstrap-funnel-chart: extend($_light-funnel-chart);
+
+/// Generates an indigo funnel-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-funnel-chart
+$_indigo-funnel-chart: extend($_light-funnel-chart);
+

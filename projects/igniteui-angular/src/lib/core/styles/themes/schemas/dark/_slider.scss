@@ -49,3 +49,16 @@ $_dark-bootstrap-slider: extend($_bootstrap-slider, (
         hexrgba: #222
     ),
 ));
+
+/// Generates a dark indigo slider schema.
+/// @type {Map}
+///
+/// @property {map} base-track-hover-color [igx-color: ('grays', 600)] - The base background color of the track on hover.
+///
+/// @requires {function} extend
+/// @requires $_indigo-slider
+$_dark-indigo-slider: extend($_indigo-slider, (
+    base-track-hover-color: (
+        igx-color: ('grays', 600)
+    ),
+));

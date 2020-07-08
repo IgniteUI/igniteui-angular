@@ -3,6 +3,13 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-elevation-navdrawer: (
     elevation: 16
+);
+
+/// @type Map
+$_indigo-elevation-navdrawer: (
+    elevation: 0
 );

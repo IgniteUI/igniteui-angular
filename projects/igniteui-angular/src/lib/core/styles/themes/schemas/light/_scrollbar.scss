@@ -40,12 +40,27 @@ $_fluent-scrollbar: extend(
 /// Generates a bootstrap scrollbar schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-avatar
-/// @requires $_bootstrap-shape-avatar
+/// @requires $_light-scrollbar
 $_bootstrap-scrollbar: extend(
     $_light-scrollbar,
     (
         variant: 'bootstrap',
+    )
+);
+
+/// Generates an indigo scrollbar schema.
+/// @type {Map}
+/// @property {Map} thumb-background [igx-color: ('grays', 300)] - The background color used for the thumb.
+/// @requires {function} extend
+/// @requires $_light-avatar
+$_indigo-scrollbar: extend(
+    $_light-scrollbar,
+    (
+        variant: 'indigo-design',
+
+        thumb-background: (
+            igx-color: ('grays', 300)
+        )
     )
 );
 

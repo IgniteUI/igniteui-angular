@@ -230,3 +230,10 @@ $_fluent-category-chart: extend($_light-category-chart);
 /// @requires {function} extend
 /// @requires $_light-category-chart
 $_bootstrap-category-chart: extend($_light-category-chart);
+
+/// Generates an indigo category-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-category-chart
+$_indigo-category-chart: extend($_light-category-chart);
+
