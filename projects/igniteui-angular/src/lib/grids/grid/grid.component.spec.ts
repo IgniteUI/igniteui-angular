@@ -1597,6 +1597,48 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(200);
         });
+
+        it('should emit onScroll event when scrolling horizontally/vertically', async() => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(30, 10);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            grid.height = '300px';
+            grid.width = '300px';
+            fix.detectChanges();
+
+            spyOn(grid.onScroll, 'emit').and.callThrough();
+            let verticalScrollEvent;
+            let horizontalScrollEvent;
+            grid.verticalScrollContainer.getScroll().addEventListener('scroll', (evt) => verticalScrollEvent = evt);
+            grid.headerContainer.getScroll().addEventListener('scroll', (evt) => horizontalScrollEvent = evt);
+
+            grid.navigateTo(20, 0);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+
+            expect(grid.onScroll.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onScroll.emit).toHaveBeenCalledWith({
+                direction: 'vertical',
+                scrollPosition: grid.verticalScrollContainer.getScrollForIndex(20, true),
+                event: verticalScrollEvent
+            });
+
+            grid.navigateTo(20, 6);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+
+            expect(grid.onScroll.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onScroll.emit).toHaveBeenCalledWith({
+                direction: 'horizontal',
+                scrollPosition: grid.headerContainer.getScrollForIndex(6, true),
+                event: horizontalScrollEvent
+            });
+
+        });
     });
 
     describe('IgxGrid - Integration with other Igx Controls', () => {

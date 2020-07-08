@@ -23,7 +23,7 @@
         tabindex="0"
         *ngIf="!column.pinned">
         <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
-        <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+        <igx-icon fontSet="pinning-icons" name="pin"></igx-icon>
     </div>
 
     <div class="igx-excel-filter__actions-unpin"
@@ -31,7 +31,7 @@
         tabindex="0"
         *ngIf="column.pinned">
         <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
-        <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+        <igx-icon fontSet="pinning-icons" name="unpin"></igx-icon>
     </div>
 </ng-template>
 
@@ -101,14 +101,14 @@
                 (click)="onPin()"
                 [disabled]="!isColumnPinnable"
                 tabindex="0">
-                <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+                <igx-icon fontSet="pinning-icons" name="pin"></igx-icon>
             </button>
             <button *ngIf="!column.disablePinning && column.pinned"
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"
                 (click)="onPin()"
                 tabindex="0">
-                <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+                <igx-icon fontSet="pinning-icons" name="unpin"></igx-icon>
             </button>
             <button *ngIf="!column.disableHiding"
                 igxButton="icon"

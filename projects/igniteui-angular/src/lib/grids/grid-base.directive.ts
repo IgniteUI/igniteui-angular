@@ -140,7 +140,8 @@ import {
     ICellPosition,
     IRowToggleEventArgs,
     IColumnSelectionEventArgs,
-    IPinRowEventArgs
+    IPinRowEventArgs,
+    IGridScrollEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -157,7 +158,6 @@ import { showMessage } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
-let warningShown = false;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
 // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
 // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
@@ -362,6 +362,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
+     * Emitted when grid is scrolled horizontally/vertically.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *              (onScroll)="onScroll($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
     /**
      * Gets/Sets the advanced filtering state.
@@ -1283,16 +1294,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
-
-    /**
-     * Emitted when a new chunk of data is loaded from virtualization.
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
-     * ```
-     */
-    @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when column is resized.
@@ -2678,6 +2679,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = false;
 
         this.hideOverlays();
+        const args: IGridScrollEventArgs = {
+            direction: 'vertical',
+            event: event,
+            scrollPosition: this.verticalScrollContainer.scrollPosition
+        };
+        this.onScroll.emit(args);
     }
 
     private horizontalScrollHandler = (event) => {
@@ -2693,6 +2700,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.hideOverlays();
+        const args: IGridScrollEventArgs = { direction: 'horizontal', event: event, scrollPosition: this.headerContainer.scrollPosition  };
+        this.onScroll.emit(args);
     }
 
     /**
@@ -3236,13 +3245,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
-    }
-
-    /**
      * Toggles the specified column's visibility.
      * @example
      * ```typescript
@@ -3566,7 +3568,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasColumnLayouts) {
             return '';
         }
-        const colWidth = parseInt(column.calcWidth, 10);
+        const colWidth = parseFloat(column.calcWidth);
         const minWidth = this.defaultHeaderGroupMinWidth;
 
         if (colWidth < minWidth) {
@@ -3851,19 +3853,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * grid.moveColumn(compName, persDetails);
      * ```
      */
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
 
         if (column === dropTarget) {
             return;
         }
         let position = pos;
-        if (position === DropPosition.None) {
-            warningShown = showMessage(
-                'DropPosition.None is deprecated.' +
-                'Use DropPosition.AfterDropTarget instead.',
-                warningShown);
-            position = DropPosition.AfterDropTarget;
-        }
         if ((column.level !== dropTarget.level) ||
             (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
@@ -3883,8 +3878,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (!this.isPinningToStart) {
                 if (pos === DropPosition.AfterDropTarget) {
                     position = DropPosition.AfterDropTarget;
-                } else {
-                    position = DropPosition.None;
                 }
             }
             this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
@@ -3907,8 +3900,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 position = DropPosition.BeforeDropTarget;
             } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
                 position = DropPosition.AfterDropTarget;
-            } else {
-                position = DropPosition.None;
             }
         }
 

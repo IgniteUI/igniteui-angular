@@ -1,4 +1,3 @@
-import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
@@ -30,7 +29,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/inpu
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
-import { OverlaySettings, AbsoluteScrollStrategy } from '../services/public_api';
+import { OverlaySettings, AbsoluteScrollStrategy, AutoPositionStrategy } from '../services/public_api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -156,7 +155,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _onTouchedCallback: () => void = noop;
     private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(),
+        positionStrategy: new AutoPositionStrategy(),
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true
