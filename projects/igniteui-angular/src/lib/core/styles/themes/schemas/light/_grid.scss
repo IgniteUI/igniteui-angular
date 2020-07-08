@@ -625,7 +625,7 @@ $_bootstrap-grid: extend(
 /// @prop {Map} sorted-header-icon-color [igx-color: 'primary'] - The sorted table header icon color.
 /// @prop {Map} sortable-header-icon-hover-color [igx-color: 'primary'] - The icon color on hover in grid header when the column is sortable.
 ///
-/// @prop {Map} row-selected-background [ igx-color: ('primary', 50), rgba: .72, to-opaque: ()] - The selected row background color.
+/// @prop {Map} row-selected-background [igx-color: ('primary', 50), rgba: .72, to-opaque: ()] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('primary', 50)] - The selected row hover background.
 ///
 /// @prop {Map} pinned-border-color [igx-color: 'primary'] - The color of the pinned border.
@@ -809,4 +809,3 @@ $_indigo-grid: extend(
         )
     )
 );
-
