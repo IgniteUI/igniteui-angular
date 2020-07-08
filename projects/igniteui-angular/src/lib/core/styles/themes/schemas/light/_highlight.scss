@@ -47,7 +47,8 @@ $_bootstrap-highlight: extend($_light-highlight);
 /// Generates an indigo highlight schema.
 /// @type {Map}
 /// @property {Map} active-background [igx-color: ('primary', 500)] - The background color used for the highlight in its active state.
-/// @property {Map} active-color [igx-color: ('primary', 500), text-contrast: ()] - The text color used for the highlight in its active state.
+/// @property {Map} active-color [igx-contrast-color: ('primary', 500)] - The text color used for the highlight in its active state.
+/// @property {Map} resting-color [igx-contrast-color: ( igx-color: ('grays', 300), to-opaque: 'surface' )] - The icon color used for the highlight in its resting state.
 /// @requires {function} extend
 /// @requires $_light-highlight
 $_indigo-highlight: extend(
@@ -58,7 +59,7 @@ $_indigo-highlight: extend(
         ),
 
         active-color: (
-            igx-contrast-color: ('primary', 500),
+            igx-contrast-color: ('primary', 500)
         ),
 
         resting-color: (
