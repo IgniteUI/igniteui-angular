@@ -26,3 +26,10 @@ $_dark-fluent-geo-map: extend($_fluent-geo-map);
 /// @see $_bootstrap-geo-map
 $_dark-bootstrap-geo-map: extend($_bootstrap-geo-map);
 
+/// Generates a dark indigo geo map schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-geo-map
+/// @see $_indigo-geo-map
+$_dark-indigo-geo-map: extend($_indigo-geo-map);
+

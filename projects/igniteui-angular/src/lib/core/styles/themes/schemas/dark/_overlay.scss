@@ -30,3 +30,9 @@ $_dark-fluent-overlay: extend(
 /// @requires {function} extend
 /// @requires $_bootstrap-overlay
 $_dark-bootstrap-overlay: extend($_bootstrap-overlay);
+
+/// Generates a dark indigo overlay schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-overlay
+$_dark-indigo-overlay: extend($_indigo-overlay);

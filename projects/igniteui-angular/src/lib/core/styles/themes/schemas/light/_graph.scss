@@ -87,3 +87,9 @@ $_fluent-graph: extend($_light-graph);
 /// @requires $_light-graph
 $_bootstrap-graph: extend($_light-graph);
 
+/// Generates an indigo graph schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-graph
+$_indigo-graph: extend($_light-graph);
+
