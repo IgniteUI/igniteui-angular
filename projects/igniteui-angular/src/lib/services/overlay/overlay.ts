@@ -49,7 +49,8 @@ export class IgxOverlayService implements OnDestroy {
         positionStrategy: new GlobalPositionStrategy(),
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
-        closeOnOutsideClick: true
+        closeOnOutsideClick: true,
+        closeOnEsc: true
     };
 
     /**
@@ -265,7 +266,7 @@ export class IgxOverlayService implements OnDestroy {
         const info: OverlayInfo = this.getOverlayById(id);
 
         if (!info) {
-           return;
+            return;
         }
 
         info.transformX += deltaX;
@@ -323,7 +324,14 @@ export class IgxOverlayService implements OnDestroy {
         this.addResizeHandler(info.id);
 
         if (info.settings.modal) {
-            this.setupModalWrapper(info);
+            const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
+            wrapperElement.classList.remove('igx-overlay__wrapper');
+            this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
+            wrapperElement.classList.add('igx-overlay__wrapper--modal');
+        }
+
+        if (info.settings.closeOnEsc) {
+            this.setUpCloseOnEscape(info);
         }
 
         if (info.settings.positionStrategy.settings.openAnimation) {
@@ -467,15 +475,12 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private setupModalWrapper(info: OverlayInfo) {
+    private setUpCloseOnEscape(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
         fromEvent(wrapperElement, 'keydown').pipe(
             filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
             takeUntil(this.destroy$)
         ).subscribe(() => this.hide(info.id));
-        wrapperElement.classList.remove('igx-overlay__wrapper');
-        this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
-        wrapperElement.classList.add('igx-overlay__wrapper--modal');
     }
 
     private onCloseDone(info: OverlayInfo) {
