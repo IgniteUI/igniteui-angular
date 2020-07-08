@@ -24,3 +24,9 @@ $_dark-fluent-data-chart: extend($_fluent-data-chart);
 /// @requires $_bootstrap-data-chart
 $_dark-bootstrap-data-chart: extend($_bootstrap-data-chart);
 
+/// Generates a dark indigo data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-data-chart
+$_dark-indigo-data-chart: extend($_indigo-data-chart);
+

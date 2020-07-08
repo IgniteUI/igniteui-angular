@@ -68,3 +68,9 @@ $_fluent-sparkline: extend($_light-sparkline);
 /// @requires $_light-sparkline
 $_bootstrap-sparkline: extend($_light-sparkline);
 
+/// Generates an indigo sparkline schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-sparkline
+$_indigo-sparkline: extend($_light-sparkline);
+

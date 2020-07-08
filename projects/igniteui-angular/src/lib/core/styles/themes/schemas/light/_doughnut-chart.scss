@@ -46,4 +46,9 @@ $_fluent-doughnut-chart: extend($_light-doughnut-chart);
 /// @requires $_light-doughnut-chart
 $_bootstrap-doughnut-chart: extend($_light-doughnut-chart);
 
+/// Generates an indigo doughnut-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-doughnut-chart
+$_indigo-doughnut-chart: extend($_light-doughnut-chart);
 
