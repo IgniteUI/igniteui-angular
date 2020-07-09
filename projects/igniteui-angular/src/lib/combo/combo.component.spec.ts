@@ -18,6 +18,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
+import { CancelableEventArgs } from '../core/utils';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -530,20 +531,40 @@ describe('igxCombo', () => {
             expect(matchSpy).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(0);
 
+            const args = {
+                change: 'Fake',
+                cancel: false
+            };
             combo.handleInputChange('Fake');
             expect(matchSpy).toHaveBeenCalledTimes(2);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSearchInput.emit).toHaveBeenCalledWith('Fake');
+            expect(combo.onSearchInput.emit).toHaveBeenCalledWith(args);
 
+            args.change = '';
             combo.handleInputChange('');
             expect(matchSpy).toHaveBeenCalledTimes(3);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSearchInput.emit).toHaveBeenCalledWith('');
+            expect(combo.onSearchInput.emit).toHaveBeenCalledWith(args);
 
             combo.filterable = false;
             combo.handleInputChange();
             expect(matchSpy).toHaveBeenCalledTimes(4);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
+        });
+        it('should be able to cancel onSearchInput', () => {
+            combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.filterable = true;
+            combo.onSearchInput.subscribe((e) => {
+                e.cancel = true;
+            });
+            const matchSpy = spyOn<any>(combo, 'checkMatch').and.callThrough();
+            spyOn(combo.onSearchInput, 'emit').and.callThrough();
+
+            combo.handleInputChange('Item1');
+            expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
+            expect(matchSpy).toHaveBeenCalledTimes(0);
         });
     });
     describe('Initialization and rendering tests: ', () => {
