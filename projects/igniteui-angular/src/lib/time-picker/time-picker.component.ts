@@ -50,6 +50,7 @@ import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
+import { TimeParts } from './time-picker.common';
 
 let NEXT_ID = 0;
 const ITEMS_COUNT = 7;
@@ -636,78 +637,43 @@ export class IgxTimePickerComponent implements
     }
 
     /** @hidden @internal */
-    applyDisabledStyleForHours(hourString: string): boolean {
-        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
-        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
-        if (!minValueDate || !maxValueDate) {
+    applyDisabledStyleForItem(period: string, value: string) {
+        if (!this.minValue || !this.maxValue) {
             return false;
         }
-        let hour = parseInt(hourString, 10);
-        if (this.selectedAmPm === 'PM') {
-            hour += 12;
-        }
+        const minValueDate: Date = this.convertMinMaxValue(this.minValue);
+        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue);
+        let hour: number = parseInt(this.selectedHour, 10);
+        let minute: number = parseInt(this.selectedMinute, 10);
+        let seconds: number = parseInt(this.selectedSeconds, 10);
+        let amPM: string = this.selectedAmPm;
         const date = new Date(minValueDate);
-        date.setHours(hour);
-        return date < minValueDate || date > maxValueDate;
-    }
+        switch (period) {
+            case TimeParts.Hour:
+                hour = parseInt(value, 10);
+                break;
 
-    /** @hidden @internal */
-    applyDisabledStyleForMinutes(minuteString: string): boolean {
-        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
-        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
-        if (!minValueDate || !maxValueDate) {
-            return false;
-        }
-        const minute = parseInt(minuteString, 10);
-        let hour = parseInt(this.selectedHour, 10);
-        if (this.selectedAmPm === 'PM') {
-            hour += 12;
-        }
-        const date = new Date(minValueDate);
-        date.setHours(hour);
-        date.setMinutes(minute);
-        return date < minValueDate || date > maxValueDate;
-    }
+            case TimeParts.Minute:
+                minute = parseInt(value, 10);
+                break;
 
-    /** @hidden @internal */
-    applyDisabledStyleForSeconds(secondsString: string): boolean {
-        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
-        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
-        if (!minValueDate || !maxValueDate) {
-            return false;
-        }
-        const minute = parseInt(this.selectedMinute, 10);
-        let hour = parseInt(this.selectedHour, 10);
-        const second = parseInt(secondsString, 10);
-        if (this.selectedAmPm === 'PM') {
-            hour += 12;
-        }
-        const date = new Date(minValueDate);
-        date.setHours(hour);
-        date.setMinutes(minute);
-        date.setSeconds(second);
-        return date < minValueDate || date > maxValueDate;
-    }
+            case TimeParts.Seconds:
+                seconds = parseInt(value, 10);
+                break;
 
-    /** @hidden @internal */
-    applyDisabledStyleForAmPm(selectedAmPm): boolean {
-        const minValueDate: Date = this.convertMinMaxValue(this.minValue)
-        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue)
-        if (!minValueDate || !maxValueDate) {
-            return false;
+            case TimeParts.amPM:
+                amPM = value;
+                break;
         }
-        const minute = parseInt(this.selectedMinute, 10);
-        let hour = parseInt(this.selectedHour, 10);
-        const second = parseInt(this.selectedSeconds, 10);
-        const amPM = selectedAmPm;
+
         if (amPM === 'PM') {
             hour += 12;
         }
-        const date = new Date(minValueDate);
         date.setHours(hour);
         date.setMinutes(minute);
-        date.setSeconds(second);
+        date.setSeconds(seconds);
         return date < minValueDate || date > maxValueDate;
+
     }
 
     /** @hidden @internal */

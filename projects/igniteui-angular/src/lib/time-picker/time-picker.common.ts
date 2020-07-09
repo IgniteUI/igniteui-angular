@@ -40,3 +40,11 @@ export interface IgxTimePickerBase {
     parseMask(preserveAmPm?: boolean): string;
 }
 
+/** @hidden */
+export const enum TimeParts {
+    Hour = 'hour',
+    Minute = 'minute',
+    Seconds = 'seconds',
+    amPM = 'ampm'
+}
+
