@@ -11,6 +11,7 @@
             <div class="density-chooser" style="margin-bottom: 16px">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
             </div>
+            <button (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse"> {{ grid1.showSummaryOnCollapse }}</button>
 
             <igx-tree-grid #grid1 [allowFiltering]='true' [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
                 [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [showToolbar]="true"

@@ -163,6 +163,99 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, rootSummaryIndex]);
         });
 
+        it('should be able to show/hide summaries for collapsed parent rows runtime', () => {
+            treeGrid.summaryCalculationMode = 'childLevelsOnly';
+            fix.detectChanges();
+
+            let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(0);
+
+            treeGrid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(4);
+
+            treeGrid.showSummaryOnCollapse = false;
+            fix.detectChanges();
+
+            summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(0);
+        });
+
+        it('should position correctly summary row for collapsed rows -- bottom position', () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            treeGrid.summaryCalculationMode = 'childLevelsOnly';
+            fix.detectChanges();
+
+            let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(4);
+
+            treeGrid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            fix.detectChanges();
+
+            summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(4);
+
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+
+            treeGrid.summaryPosition = 'top';
+            fix.detectChanges();
+
+            summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(4);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
+        });
+
+        it('should position correctly summary row for collapsed rows -- top position', () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            treeGrid.summaryCalculationMode = 'childLevelsOnly';
+            fix.detectChanges();
+
+            treeGrid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(4);
+
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            fix.detectChanges();
+
+            treeGrid.summaryPosition = 'top';
+            fix.detectChanges();
+
+            summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+            expect(summaries.length).toBe(4);
+
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['3', 'Jul 19, 2009', 'Sep 18, 2014']);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
+        });
+
         it('should be able to enable/disable summaries at runtime', () => {
             treeGrid.expandAll();
             fix.detectChanges();
