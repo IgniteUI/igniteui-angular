@@ -173,9 +173,8 @@ $_bootstrap-slider: extend(
 /// @property {map} base-track-hover-color [igx-color: ('grays', 500)] - The base background color of the track on hover.
 /// @property {map} disabled-base-track-color [igx-color: ('grays', 300), to-opaque: ( igx-color: 'surface')] - The base background color of the track when is disabled.
 ///
-/// @requires {function} @extend
+/// @requires {function} extend
 /// @requires $_light-slider
-
 $_indigo-slider: extend(
     $_light-slider,
     (

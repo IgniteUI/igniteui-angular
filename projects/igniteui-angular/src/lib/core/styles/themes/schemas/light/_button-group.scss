@@ -211,6 +211,8 @@ $_bootstrap-button-group: extend(
     )
 );
 
+/// Generates an indigo light button-group schema.
+/// @type Map
 $_indigo-button-group: extend(
     $_light-button-group,
     $_indigo-shape-button-group,

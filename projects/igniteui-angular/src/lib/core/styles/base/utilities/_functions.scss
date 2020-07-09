@@ -2,6 +2,7 @@
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
 /// Converts pixels to relative values (em).
 /// @access public
 /// @param {number|string} $pixels - The pixel value to be converted.
@@ -142,7 +143,7 @@
     @return $rgba;
 }
 
-/// @alias hexrbga
+/// @alias hexrgba
 @function to-opaque($rgba, $background: #fff) {
     @return hexrgba($rgba, $background);
 }

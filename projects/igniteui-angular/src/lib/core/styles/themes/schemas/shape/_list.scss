@@ -3,27 +3,33 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-list: (
     border-radius: 0,
     item-border-radius: 0,
 );
 
+/// @type Map
 $_round-shape-list: (
     border-radius: 1,
     item-border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-list: (
     border-radius: 0%,
     item-border-radius: 0%,
 );
 
+/// @type Map
 $_bootstrap-shape-list: (
     border-radius: rem(4px),
     item-border-radius: 0%,
 );
 
+/// @type Map
 $_indigo-shape-list: (
     border-radius: 0,
     item-border-radius: 2px
-)
+);

@@ -1,5 +1,4 @@
 /// Default theme palette.
-/// Will be the one used if no theme palette is specified.
 /// @group palettes
 /// @access public
 /// @type Map
@@ -69,7 +68,7 @@ $default-dark-palette: igx-palette(
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
 /// @access public
 /// @group palettes
-/// @alias $default-palette
+/// @alias default-palette
 $light-palette: $default-palette;
 
 /// Same as $light-palette but with modified grays and surface colors.
@@ -86,10 +85,10 @@ $light-palette: $default-palette;
 /// @group palettes
 $dark-palette: $default-dark-palette;
 
-/// @alias $light-palette
+/// @alias light-palette
 $light-material-palette: $default-palette;
 
-/// @alias $dark-palette
+/// @alias dark-palette
 $dark-material-palette: $default-dark-palette;
 
 /// @ignore

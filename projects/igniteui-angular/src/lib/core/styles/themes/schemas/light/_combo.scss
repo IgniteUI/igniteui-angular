@@ -45,7 +45,6 @@ $_fluent-combo: extend($_light-combo);
 /// @prop {Map} empty-list-placeholder-color [igx-color: ('grays', 600)] - The combo placeholder text color.
 /// @requires {function} extend
 /// @requires {map} $_light-combo
-/// @see $bootstrap-palette
 $_bootstrap-combo: extend(
     $_light-combo,
     (
@@ -65,5 +64,4 @@ $_bootstrap-combo: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_indigo-combo
-/// @see $indigo-palette
 $_indigo-combo: extend($_light-combo);
