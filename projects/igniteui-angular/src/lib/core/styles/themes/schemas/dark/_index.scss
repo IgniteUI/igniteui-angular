@@ -180,6 +180,9 @@ $dark-schema: (
     igx-watermark: $_dark-watermark,
 );
 
+// @alias $dark-schema;
+$dark-material-schema: $dark-schema;
+
 /// The default dark fluent schema for all components.
 /// @type {Map}
 /// @property {map} igx-avatar [$_dark-fluent-avatar],

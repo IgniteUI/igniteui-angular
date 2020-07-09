@@ -181,6 +181,9 @@ $light-schema: (
     igx-watermark: $_light-watermark
 );
 
+// @alias $light-schema;
+$light-material-schema: $light-schema;
+
 $light-fluent-schema: (
     igx-avatar: $_fluent-avatar,
     igx-action-strip: $_fluent-action-strip,

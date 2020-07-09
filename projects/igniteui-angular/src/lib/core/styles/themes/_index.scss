@@ -617,7 +617,7 @@
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
-@mixin igx-fluent-theme(
+@mixin igx-fluent-light-theme(
     $palette,
     $exclude: (),
     $legacy-support: false,
@@ -688,7 +688,7 @@
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
-@mixin igx-bootstrap-theme(
+@mixin igx-bootstrap-light-theme(
     $palette,
     $exclude: (),
     $legacy-support: false,
@@ -806,7 +806,7 @@
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
-@mixin igx-indigo-theme(
+@mixin igx-indigo-light-theme(
     $palette,
     $exclude: (),
     $legacy-support: false,
