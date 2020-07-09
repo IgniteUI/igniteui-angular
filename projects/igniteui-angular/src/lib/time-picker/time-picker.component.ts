@@ -99,6 +99,7 @@ const noop = () => { };
         }`
     ]
 })
+
 export class IgxTimePickerComponent implements
     IgxTimePickerBase,
     ControlValueAccessor,
@@ -153,6 +154,7 @@ export class IgxTimePickerComponent implements
             this.onValidationFailed.emit(args);
         }
     }
+    TimeParts: any = Object.assign({}, TimeParts);
 
     /**
      * An accessor that returns the value of `igx-time-picker` component.

@@ -41,7 +41,7 @@ export interface IgxTimePickerBase {
 }
 
 /** @hidden */
-export const enum TimeParts {
+export enum TimeParts {
     Hour = 'hour',
     Minute = 'minute',
     Seconds = 'seconds',
