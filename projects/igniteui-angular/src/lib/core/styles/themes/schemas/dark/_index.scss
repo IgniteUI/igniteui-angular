@@ -443,6 +443,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-date-range-picker [$_dark-indigo-date-range-picker],
 /// @property {map} igx-drop-down [$_dark-indigo-drop-down],
 /// @property {map} igx-divider [$_dark-indigo-divider],
+/// @property {map} igc-dock-manager $_dark-indigo-dock-manager,
 /// @property {map} igx-expansion-panel [$_dark-indigo-expansion-panel],
 /// @property {Map} linear-gauge [$_dark-indigo-linear-gauge]
 /// @property {Map} radial-gauge [$_dark-indigo-radial-gauge]
@@ -500,6 +501,7 @@ $dark-indigo-schema: (
     igx-date-range: $_dark-indigo-date-range-picker,
     igx-drop-down: $_dark-indigo-drop-down,
     igx-divider: $_dark-indigo-divider,
+    igc-dock-manager: $_dark-indigo-dock-manager,
     igx-expansion-panel: $_dark-indigo-expansion-panel,
     linear-gauge: $_dark-indigo-linear-gauge,
     radial-gauge: $_dark-indigo-radial-gauge,
