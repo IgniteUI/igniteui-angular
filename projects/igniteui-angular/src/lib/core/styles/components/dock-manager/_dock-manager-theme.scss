@@ -10,6 +10,7 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $accent-color [null] - Sets the pinned header background color, the joystick background and border colors, as well as the context menu background color.
+/// @param {Color} $active-color [null] - Sets the active text and border colors for tabs, panes, and menus.
 /// @param {Color} $border-color [null] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
 /// @param {Color} $button-text [null] - Sets the button text color.
 /// @param {Color} $context-menu-background [null] - Sets the background color for context menus.
