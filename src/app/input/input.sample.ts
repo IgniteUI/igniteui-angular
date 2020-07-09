@@ -15,7 +15,8 @@ export class InputSampleComponent {
         lastName: 'Doe',
         password: '1337s3cr3t',
         registered: false,
-        subscribed: false
+        subscribed: false,
+        dateOfBirth: new Date('07 July, 1987')
     };
 
     user2 = {
@@ -25,8 +26,10 @@ export class InputSampleComponent {
         lastName: 'Doe',
         password: '1337s3cr3t',
         registered: true,
-        subscribed: false
+        subscribed: false,
+        dateOfBirth: new Date('01 July, 1954')
     };
+
 
     settings = [{
         name: 'WiFi',

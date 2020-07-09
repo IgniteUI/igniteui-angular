@@ -23,6 +23,7 @@
 @import './doughnut-chart';
 @import './date-range-picker';
 @import './divider';
+@import './dock-manager';
 @import './drop-down';
 @import './expansion-panel';
 @import './gauge';
@@ -81,6 +82,7 @@
 /// @property {Map} doughnut-chart [$_dark-doughnut-chart]
 /// @property {Map} igx-date-range-picker [$_dark-date-range-picker]
 /// @property {Map} igx-divider [$_dark-divider]
+/// @property {Map} igc-dock-manager [$_dark-dock-manager]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
 /// @property {Map} linear-gauge [$_dark-linear-gauge]
@@ -138,6 +140,7 @@ $dark-schema: (
     doughnut-chart: $_dark-doughnut-chart,
     igx-date-range: $_dark-date-range-picker,
     igx-divider: $_dark-divider,
+    igc-dock-manager: $_dark-dock-manager,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
     linear-gauge: $_dark-linear-gauge,
@@ -199,6 +202,7 @@ $dark-schema: (
 /// @property {Map} doughnut-chart [$_dark-fluent-doughnut-chart]
 /// @property {map} igx-date-range-picker [$_dark-fluent-date-range-picker],
 /// @property {map} igx-divider [$_dark-fluent-divider],
+/// @property {map} igc-dock-manager [$_dark-fluent-dock-manager],
 /// @property {map} igx-drop-down [$_dark-fluent-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-fluent-expansion-panel],
 /// @property {Map} linear-gauge [$_dark-fluent-linear-gauge]
@@ -256,6 +260,7 @@ $dark-fluent-schema: (
     doughnut-chart: $_dark-fluent-doughnut-chart,
     igx-date-range: $_dark-fluent-date-range-picker,
     igx-divider: $_dark-fluent-divider,
+    igc-dock-manager: $_dark-fluent-dock-manager,
     igx-drop-down: $_dark-fluent-drop-down,
     igx-expansion-panel: $_dark-fluent-expansion-panel,
     linear-gauge: $_dark-fluent-linear-gauge,
@@ -317,6 +322,7 @@ $dark-fluent-schema: (
 /// @property {Map} doughnut-chart [$_dark-bootstrap-doughnut-chart]
 /// @property {map} igx-date-range-picker [$_dark-bootstrap-date-range-picker],
 /// @property {map} igx-divider [$_dark-bootstrap-divider],
+/// @property {map} igc-dock-manager [$_dark-bootstrap-dock-manager],
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
 /// @property {Map} linear-gauge [$_dark-bootstrap-linear-gauge]
@@ -374,6 +380,7 @@ $dark-bootstrap-schema: (
     doughnut-chart: $_dark-bootstrap-doughnut-chart,
     igx-date-range: $_dark-bootstrap-date-range-picker,
     igx-divider: $_dark-bootstrap-divider,
+    igc-dock-manager: $_dark-bootstrap-dock-manager,
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
     linear-gauge: $_dark-bootstrap-linear-gauge,
