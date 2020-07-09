@@ -30,16 +30,16 @@ export class IgxGridSummaryPipe implements PipeTransform {
         hasSummary: boolean,
         summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
-        id: string, pipeTrigger: number, summaryPipeTrigger: number): any[] {
+        id: string, showSummary, pipeTrigger: number, summaryPipeTrigger: number): any[] {
 
         if (!collection.data || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return collection.data;
         }
 
-        return this.addSummaryRows(id, collection, summaryPosition);
+        return this.addSummaryRows(id, collection, summaryPosition, showSummary);
     }
 
-    private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition): any[] {
+    private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
         const grid: IgxGridComponent = this.gridAPI.grid;
@@ -73,6 +73,15 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 recordsWithSummary.push(record);
             }
 
+            if (summaryPosition === GridSummaryPosition.bottom && showSummary && (groupByRecord && !grid.isExpandedGroup(groupByRecord))) {
+                const records = this.removeDeletedRecord(grid, groupByRecord.records.slice());
+                const summaries = grid.summaryService.calculateSummaries(recordId, records);
+                const summaryRecord: ISummaryRecord = {
+                    summaries: summaries,
+                    max: maxSummaryHeight
+                };
+                recordsWithSummary.push(summaryRecord);
+            }
             if (summaryPosition === GridSummaryPosition.bottom && lastChildMap.has(recordId)) {
                 const groupRecords = lastChildMap.get(recordId);
 
@@ -89,7 +98,8 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 }
             }
 
-            if (groupByRecord === null || !grid.isExpandedGroup(groupByRecord)) {
+            const showSummaries = showSummary ? false : (groupByRecord && !grid.isExpandedGroup(groupByRecord));
+            if (groupByRecord === null || showSummaries) {
                 continue;
             }
 
@@ -123,7 +133,6 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 groupRecords.unshift(groupByRecord);
             }
         }
-
         return recordsWithSummary;
     }
 
