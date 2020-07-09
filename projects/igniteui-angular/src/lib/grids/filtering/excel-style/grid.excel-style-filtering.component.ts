@@ -56,51 +56,16 @@ export class FilterListItem {
 }
 
 @Directive({
-    selector: '[igxExcelStyleSorting]'
+    selector: '[igxExcelStyleColumnOperations]'
 })
-export class IgxExcelStyleSortingTemplateDirective {
+export class IgxExcelStyleColumnOperationsTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleMoving]'
+    selector: '[igxExcelStyleFilterOperations]'
 })
-export class IgxExcelStyleMovingTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxExcelStyleHiding]'
-})
-export class IgxExcelStyleHidingTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxExcelStyleSelecting]'
-})
-export class IgxExcelStyleSelectingTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxExcelStylePinning]'
-})
-export class IgxExcelStylePinningTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxExcelStyleConditionalFilter]'
-})
-export class IgxExcelStyleConditionalFilterTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxExcelStyleSearch]'
-})
-export class IgxExcelStyleSearchTemplateDirective {
+export class IgxExcelStyleFilterOperationsTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
@@ -302,44 +267,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
+    @ViewChild('defaultExcelStyleColumnOperationsTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleColumnOperationsTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultExcelStyleSelectingTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStyleSelectingTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStylePinningTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultExcelStyleConditionalFilterTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStyleConditionalFilterTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultExcelStyleSearchTemplate', { read: TemplateRef, static: true })
-    protected defaultExcelStyleSearchTemplate: TemplateRef<any>;
+    @ViewChild('defaultExcelStyleFilterOperationsTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleFilterOperationsTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -855,77 +790,22 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    get sortingTemplate() {
-        if (this.grid.excelStyleSortingTemplateDirective) {
-            return this.grid.excelStyleSortingTemplateDirective.template;
+    get columnOperationsTemplate() {
+        if (this.grid.excelStyleColumnOperationsTemplateDirective) {
+            return this.grid.excelStyleColumnOperationsTemplateDirective.template;
         } else {
-            return this.defaultExcelStyleSortingTemplate;
+            return this.defaultExcelStyleColumnOperationsTemplate;
         }
     }
 
     /**
      * @hidden @internal
      */
-    get movingTemplate() {
-        if (this.grid.excelStyleMovingTemplateDirective) {
-            return this.grid.excelStyleMovingTemplateDirective.template;
+    get filterOperationsTemplate() {
+        if (this.grid.excelStyleFilterOperationsTemplateDirective) {
+            return this.grid.excelStyleFilterOperationsTemplateDirective.template;
         } else {
-            return this.defaultExcelStyleMovingTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get pinningTemplate() {
-        if (this.grid.excelStylePinningTemplateDirective) {
-            return this.grid.excelStylePinningTemplateDirective.template;
-        } else {
-            return this.defaultExcelStylePinningTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get hidingTemplate() {
-        if (this.grid.excelStyleHidingTemplateDirective) {
-            return this.grid.excelStyleHidingTemplateDirective.template;
-        } else {
-            return this.defaultExcelStyleHidingTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get selectingTemplate() {
-        if (this.grid.excelStyleSelectingTemplateDirective) {
-            return this.grid.excelStyleSelectingTemplateDirective.template;
-        } else {
-            return this.defaultExcelStyleSelectingTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get conditionalFilterTemplate() {
-        if (this.grid.excelStyleConditionalFilterTemplateDirective) {
-            return this.grid.excelStyleConditionalFilterTemplateDirective.template;
-        } else {
-            return this.defaultExcelStyleConditionalFilterTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get searchTemplate() {
-        if (this.grid.excelStyleSearchTemplateDirective) {
-            return this.grid.excelStyleSearchTemplateDirective.template;
-        } else {
-            return this.defaultExcelStyleSearchTemplate;
+            return this.defaultExcelStyleFilterOperationsTemplate;
         }
     }
 

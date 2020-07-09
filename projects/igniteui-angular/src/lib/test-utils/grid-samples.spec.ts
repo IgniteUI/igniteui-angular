@@ -1134,16 +1134,12 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
-        <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
-        <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
-        <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
-        <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
-        <ng-template igxExcelStyleSelecting><div class="esf-custom-column-selection">Column Selection Template</div></ng-template>
-        <ng-template igxExcelStyleConditionalFilter>
-            <div class="esf-custom-conditional-filter">Conditional Filter Template</div>
+
+        <ng-template igxExcelStyleColumnOperations>
+            <div class="esf-custom-column-operations">Column Operations Template</div>
         </ng-template>
-        <ng-template igxExcelStyleSearch>
-            <div class="esf-custom-search">Search Template</div>
+        <ng-template igxExcelStyleFilterOperations>
+            <div class="esf-custom-filter-operations">Filter Operations Template</div>
         </ng-template>
     </igx-grid>`
 })

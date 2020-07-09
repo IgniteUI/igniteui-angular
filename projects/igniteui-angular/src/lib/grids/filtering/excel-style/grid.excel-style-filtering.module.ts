@@ -3,13 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './excel-style-search.component';
 import {
     IgxGridExcelStyleFilteringComponent,
-    IgxExcelStyleSortingTemplateDirective,
-    IgxExcelStyleHidingTemplateDirective,
-    IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStylePinningTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective,
-    IgxExcelStyleConditionalFilterTemplateDirective,
-    IgxExcelStyleSearchTemplateDirective
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective
 } from './grid.excel-style-filtering.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleColumnMovingComponent } from './excel-style-column-moving.component';
@@ -48,25 +43,15 @@ import { IgxSelectModule } from './../../../select/select.module';
         IgxExcelStyleCustomDialogComponent,
         IgxExcelStyleDefaultExpressionComponent,
         IgxExcelStyleDateExpressionComponent,
-        IgxExcelStyleSortingTemplateDirective,
-        IgxExcelStyleHidingTemplateDirective,
-        IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective,
-        IgxExcelStyleSelectingTemplateDirective,
-        IgxExcelStyleConditionalFilterTemplateDirective,
-        IgxExcelStyleSearchTemplateDirective,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleFilterOperationsTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleSearchFilterPipe
     ],
     exports: [
         IgxGridExcelStyleFilteringComponent,
-        IgxExcelStyleSortingTemplateDirective,
-        IgxExcelStyleHidingTemplateDirective,
-        IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective,
-        IgxExcelStyleSelectingTemplateDirective,
-        IgxExcelStyleConditionalFilterTemplateDirective,
-        IgxExcelStyleSearchTemplateDirective,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleFilterOperationsTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleDateExpressionComponent
     ],

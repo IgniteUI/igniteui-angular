@@ -4357,35 +4357,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickExcelFilterIcon(fix, column.field);
                 tick(100);
                 fix.detectChanges();
-
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-                // Verify custom sorting template is used.
-                expect(excelMenu.querySelector('.esf-custom-sorting')).not.toBeNull();
+
+                // Verify custom column operations template is used.
+                expect(excelMenu.querySelector('.esf-custom-column-operations')).not.toBeNull();
+
+                // Verify custom filter operations template is used.
+                expect(excelMenu.querySelector('.esf-custom-filter-operations')).not.toBeNull();
+
+                // Verify components in default ESF template are not present.
                 expect(GridFunctions.getExcelFilteringSortComponent(fix, excelMenu)).toBeNull();
-
-                // Verify custom hiding template is used.
-                expect(excelMenu.querySelector('.esf-custom-hiding')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringHideContainer(fix, excelMenu)).toBeNull();
-
-                // Verify custom moving template is used.
-                expect(excelMenu.querySelector('.esf-custom-moving')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringMoveComponent(fix, excelMenu)).toBeNull();
-
-                // Verify custom pinning template is used.
-                expect(excelMenu.querySelector('.esf-custom-pinning')).not.toBeNull();
-                expect(GridFunctions.getExcelFilteringPinContainer(fix, excelMenu)).toBeNull();
                 expect(GridFunctions.getExcelFilteringUnpinContainer(fix, excelMenu)).toBeNull();
-
-                // Verify column selection custom template application.
-                expect(excelMenu.querySelector('.esf-custom-column-selection')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringColumnSelectionContainer(fix, excelMenu)).toBeNull();
-
-                // Verify custom conditional filter template is used.
-                expect(excelMenu.querySelector('.esf-custom-conditional-filter')).not.toBeNull();
-                expect(GridFunctions.getExcelFilteringConditionalFilterContainer(fix, excelMenu)).toBeNull();
-
-                // Verify custom search template is used.
-                expect(excelMenu.querySelector('.esf-custom-search')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringSearchContainer(fix, excelMenu)).toBeNull();
             }
         }));

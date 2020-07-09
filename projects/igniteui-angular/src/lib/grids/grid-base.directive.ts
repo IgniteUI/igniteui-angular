@@ -93,13 +93,8 @@ import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import {
-    IgxExcelStyleSortingTemplateDirective,
-    IgxExcelStylePinningTemplateDirective,
-    IgxExcelStyleHidingTemplateDirective,
-    IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective,
-    IgxExcelStyleConditionalFilterTemplateDirective,
-    IgxExcelStyleSearchTemplateDirective
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
@@ -166,8 +161,6 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
-
-
 
 @Directive({
     selector: '[igxGridBaseComponent]'
@@ -1468,50 +1461,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
-    public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
+    @ContentChild(IgxExcelStyleColumnOperationsTemplateDirective, { read: IgxExcelStyleColumnOperationsTemplateDirective })
+    public excelStyleColumnOperationsTemplateDirective: IgxExcelStyleColumnOperationsTemplateDirective;
 
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
-    public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
-    public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleSelectingTemplateDirective, { read: IgxExcelStyleSelectingTemplateDirective })
-    public excelStyleSelectingTemplateDirective: IgxExcelStyleSelectingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
-    public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
+    @ContentChild(IgxExcelStyleFilterOperationsTemplateDirective, { read: IgxExcelStyleFilterOperationsTemplateDirective })
+    public excelStyleFilterOperationsTemplateDirective: IgxExcelStyleFilterOperationsTemplateDirective;
 
     /**
      * @hidden @internal
      */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleConditionalFilterTemplateDirective, { read: IgxExcelStyleConditionalFilterTemplateDirective, static: true })
-    public excelStyleConditionalFilterTemplateDirective: IgxExcelStyleConditionalFilterTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleSearchTemplateDirective, { read: IgxExcelStyleSearchTemplateDirective, static: true })
-    public excelStyleSearchTemplateDirective: IgxExcelStyleSearchTemplateDirective;
 
     /**
      * @hidden @internal
