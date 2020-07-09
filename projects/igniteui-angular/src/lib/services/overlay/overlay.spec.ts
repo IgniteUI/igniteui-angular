@@ -216,7 +216,8 @@ describe('igxOverlay', () => {
 
             overlay.show(overlay.attach(SimpleDynamicComponent), {
                 outlet: button,
-                modal: false
+                modal: false,
+                closeOnEsc: false
             });
             tick();
             let wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
@@ -224,7 +225,7 @@ describe('igxOverlay', () => {
             expect(wrapper.parentNode).toBe(button.nativeElement);
             overlay.hideAll();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent), { modal: false });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { modal: false, closeOnEsc: false });
             tick();
             wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             expect(wrapper).toBeDefined();
@@ -236,6 +237,7 @@ describe('igxOverlay', () => {
             fixture.debugElement.nativeElement.appendChild(outlet);
             overlay.show(overlay.attach(SimpleDynamicComponent), {
                 modal: false,
+                closeOnEsc: false,
                 outlet: new IgxOverlayOutletDirective(new ElementRef(outlet))
             });
             tick();
@@ -686,6 +688,7 @@ describe('igxOverlay', () => {
             tick();
 
             fix.componentInstance.overlaySettings.outlet = fix.componentInstance.elementRef;
+            fix.componentInstance.overlaySettings.closeOnEsc = false;
 
             const buttonElement: HTMLElement = fix.componentInstance.buttonElement.nativeElement;
             buttonElement.click();
@@ -1075,6 +1078,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const positionSettings: PositionSettings = {
@@ -1301,6 +1305,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const positionSettings: PositionSettings = {
@@ -1327,6 +1332,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
@@ -1454,6 +1460,7 @@ describe('igxOverlay', () => {
                     positionStrategy: new GlobalPositionStrategy(),
                     scrollStrategy: scrollStrat,
                     modal: false,
+                    closeOnEsc: false,
                     closeOnOutsideClick: false
                 };
                 const overlay = fixture.componentInstance.overlay;
@@ -1483,6 +1490,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: scrollStrat,
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const buttonElement = fixture.componentInstance.buttonElement.nativeElement;
@@ -1660,6 +1668,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new AutoPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
 
@@ -1688,6 +1697,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const positionSettings: PositionSettings = {
@@ -1933,6 +1943,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new AutoPositionStrategy(positionSettings),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
@@ -1989,6 +2000,7 @@ describe('igxOverlay', () => {
                     positionStrategy: new AutoPositionStrategy(positionSettings),
                     scrollStrategy: new NoOpScrollStrategy(),
                     modal: false,
+                    closeOnEsc: false,
                     closeOnOutsideClick: false
                 };
                 overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2031,6 +2043,7 @@ describe('igxOverlay', () => {
                     positionStrategy: new AutoPositionStrategy(positionSettings),
                     scrollStrategy: new NoOpScrollStrategy(),
                     modal: false,
+                    closeOnEsc: false,
                     closeOnOutsideClick: false
                 };
                 overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2132,6 +2145,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new ElasticPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
 
@@ -2160,6 +2174,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const positionSettings: PositionSettings = {
@@ -2423,6 +2438,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new ElasticPositionStrategy(positionSettings),
                 scrollStrategy: new NoOpScrollStrategy(),
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
@@ -2479,6 +2495,7 @@ describe('igxOverlay', () => {
                     positionStrategy: new ElasticPositionStrategy(positionSettings),
                     scrollStrategy: new NoOpScrollStrategy(),
                     modal: false,
+                    closeOnEsc: false,
                     closeOnOutsideClick: false
                 };
                 overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2522,6 +2539,7 @@ describe('igxOverlay', () => {
                     positionStrategy: new ElasticPositionStrategy(positionSettings),
                     scrollStrategy: new NoOpScrollStrategy(),
                     modal: false,
+                    closeOnEsc: false,
                     closeOnOutsideClick: false
                 };
                 overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2714,11 +2732,12 @@ describe('igxOverlay', () => {
             button.dispatchEvent(new MouseEvent('click'));
         }));
 
-        it('Should closes the component when esc key is pressed.', fakeAsync(() => {
+        it('Should close the component when esc key is pressed.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: true,
+                closeOnEsc: true,
                 positionStrategy: new GlobalPositionStrategy()
             };
 
@@ -2742,12 +2761,42 @@ describe('igxOverlay', () => {
             tick();
         }));
 
+        it('Should not close the component when esc key is pressed and closeOnEsc is false', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                modal: true,
+                closeOnEsc: false,
+                positionStrategy: new GlobalPositionStrategy()
+            };
+            const targetButton = 'Escape';
+            const escEvent = new KeyboardEvent('keydown', {
+                key: targetButton
+            });
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+
+            let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
+                if (event.key === targetButton) {
+                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+                }
+            });
+            overlayWrapper.dispatchEvent(escEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayWrapper).toBeTruthy();
+        }));
+
         // Test #1883 #1820
         it('It should close the component when esc key is pressed and there were other keys pressed prior to esc.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: true,
+                closeOnEsc: true,
                 positionStrategy: new GlobalPositionStrategy()
             };
 
@@ -2789,6 +2838,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: false,
+                closeOnEsc: false
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2817,6 +2867,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: false,
+                closeOnEsc: false,
                 positionStrategy: new GlobalPositionStrategy()
             };
             const targetEvent = 'keydown';
@@ -2935,6 +2986,7 @@ describe('igxOverlay', () => {
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: scrollStrat,
                 modal: false,
+                closeOnEsc: false,
                 closeOnOutsideClick: false
             };
             const overlay = fixture.componentInstance.overlay;
@@ -3353,6 +3405,7 @@ describe('igxOverlay', () => {
 
                 const overlaySettings: OverlaySettings = {
                     modal: false,
+                    closeOnEsc: false
                 };
                 const overlay = fixture.componentInstance.overlay;
 
@@ -3394,7 +3447,8 @@ describe('igxOverlay', () => {
                 const overlaySettings: OverlaySettings = {
                     positionStrategy: new GlobalPositionStrategy(),
                     scrollStrategy: scrollStrategy,
-                    modal: false
+                    modal: false,
+                    closeOnEsc: false
                 };
 
                 overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -3434,7 +3488,8 @@ describe('igxOverlay', () => {
                     positionStrategy: new GlobalPositionStrategy(),
                     scrollStrategy: scrollStrategy,
                     closeOnOutsideClick: false,
-                    modal: false
+                    modal: false,
+                    closeOnEsc: false
                 };
 
                 overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -3468,7 +3523,8 @@ describe('igxOverlay', () => {
             const overlaySettings: OverlaySettings = {
                 positionStrategy: new GlobalPositionStrategy(),
                 scrollStrategy: scrollStrategy,
-                modal: false
+                modal: false,
+                closeOnEsc: false
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -3506,6 +3562,7 @@ describe('igxOverlay', () => {
                 const overlay = fixture.componentInstance.overlay;
                 const overlaySettings: OverlaySettings = {
                     modal: false,
+                    closeOnEsc: false,
                     scrollStrategy: scrollStrategy,
                     positionStrategy: new GlobalPositionStrategy()
                 };
@@ -3547,6 +3604,7 @@ describe('igxOverlay', () => {
             const overlaySettings: OverlaySettings = {
                 closeOnOutsideClick: false,
                 modal: false,
+                closeOnEsc: false,
                 positionStrategy: new ConnectedPositioningStrategy(),
                 scrollStrategy: scrollStrategy
             };
@@ -3821,7 +3879,7 @@ export class TopLeftOffsetComponent {
     </div>`
 })
 export class TwoButtonsComponent {
-    private _setting: OverlaySettings = { modal: false };
+    private _setting: OverlaySettings = { modal: false, closeOnEsc: false };
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 

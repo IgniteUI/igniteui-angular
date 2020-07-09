@@ -67,3 +67,8 @@ export interface GridType extends IGridDataBindable {
     isDetailRecord(rec: any): boolean;
     isGroupByRecord(rec: any): boolean;
 }
+
+export interface GridSVGIcon {
+    name: string;
+    value: string;
+}

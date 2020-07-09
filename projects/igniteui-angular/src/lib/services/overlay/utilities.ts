@@ -50,14 +50,16 @@ export interface PositionSettings {
 }
 
 export interface OverlaySettings {
-    /** Position strategy to use with this settings */
+    /** Position strategy to use with these settings */
     positionStrategy?: IPositionStrategy;
-    /** Scroll strategy to use with this settings */
+    /** Scroll strategy to use with these settings */
     scrollStrategy?: IScrollStrategy;
     /** Set if the overlay should be in modal mode */
     modal?: boolean;
-    /** Set if the overlay should closed on outside click */
+    /** Set if the overlay should close on outside click */
     closeOnOutsideClick?: boolean;
+    /** Set if the overlay should close when `Esc` key is pressed */
+    closeOnEsc?: boolean;
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
