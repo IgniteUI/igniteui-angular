@@ -20,6 +20,11 @@
                 </igx-input-group>
 
                 <igx-input-group>
+                    <input igxInput name="dateOfBirth" type="date" [(ngModel)]="user.dateOfBirth" required />
+                    <label igxLabel for="dateOfBirth">Date of Birth</label>
+                </igx-input-group>
+
+                <igx-input-group>
                     <input igxInput name="password" type="password" placeholder="{{placeholder}}" [(ngModel)]="user.password" required/>
                     <label igxLabel for="password">Password</label>
                 </igx-input-group>
