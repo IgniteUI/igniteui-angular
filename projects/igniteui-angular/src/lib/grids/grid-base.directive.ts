@@ -139,7 +139,8 @@ import {
     IRowToggleEventArgs,
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
-    IGridScrollEventArgs
+    IGridScrollEventArgs,
+    IActiveNodeChangeEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -1458,6 +1459,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
+     * Emmited when the active node is changed.
+     *
+     * @example
+     * ```
+     * <igx-grid [data]="data" [autoGenerate]="true" (onActiveNodeChange)="activeNodeChange($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public onActiveNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
 
     /**
      * @hidden @internal
@@ -5848,23 +5860,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNavigationArguments(row, visibleColIndex) {
-        let targetType, target;
+        let targetType: GridKeydownTargetType, target;
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
-                targetType = GridKeydownTargetType.groupRow;
+                targetType = 'groupRow';
                 target = row;
                 break;
             case 'igx-grid-summary-row':
-                targetType = GridKeydownTargetType.summaryCell;
+                targetType = 'summaryCell';
                 target = visibleColIndex !== -1 ?
                     row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
                 break;
             case 'igx-child-grid-row':
-                targetType = GridKeydownTargetType.hierarchicalRow;
+                targetType = 'hierarchicalRow';
                 target = row;
                 break;
             default:
-                targetType = GridKeydownTargetType.dataCell;
+                targetType = 'dataCell';
                 target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
                 break;
         }
@@ -6359,7 +6371,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const rowIndex = activeCell.row;
             const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
             this.navigateTo(rowIndex, visibleColIndex, (c) => {
-                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
+                if (c.targetType === 'dataCell' && c.target) {
                     c.target.activate();
                 }
             });

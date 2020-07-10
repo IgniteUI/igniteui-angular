@@ -15,12 +15,11 @@ export enum GridSummaryCalculationMode {
     rootAndChildLevels = 'rootAndChildLevels'
 }
 
-export enum GridKeydownTargetType {
-    dataCell = 'dataCell',
-    summaryCell = 'summaryCell',
-    groupRow = 'groupRow',
-    hierarchicalRow = 'hierarchicalRow'
-}
+export type GridKeydownTargetType =
+    'dataCell' |
+    'summaryCell' |
+    'groupRow' |
+    'hierarchicalRow';
 
 export enum GridSelectionMode {
     none = 'none',

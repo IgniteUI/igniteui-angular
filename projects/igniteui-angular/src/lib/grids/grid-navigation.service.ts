@@ -8,6 +8,8 @@ import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { ColumnType } from './common/column.interface';
+import { IActiveNodeChangeEventArgs } from './common/events';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -43,8 +45,8 @@ export class IgxGridNavigationService {
         const ctrl = event.ctrlKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
-        const type = this.isDataRow(this.activeNode.row) ? GridKeydownTargetType.dataCell :
-            this.isDataRow(this.activeNode.row, true) ? GridKeydownTargetType.summaryCell : GridKeydownTargetType.groupRow;
+        const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
+            this.isDataRow(this.activeNode.row, true) ? 'summaryCell' : 'groupRow';
         if (this.emitKeyDown(type, this.activeNode.row, event)) {
             return;
         }
@@ -157,7 +159,7 @@ export class IgxGridNavigationService {
         event.preventDefault();
         this.activeNode.row = rowIndex;
         if (rowIndex > 0) {
-            if (this.emitKeyDown(GridKeydownTargetType.summaryCell, this.activeNode.row, event)) {
+            if (this.emitKeyDown('summaryCell', this.activeNode.row, event)) {
                 return;
             }
         }
@@ -335,16 +337,34 @@ export class IgxGridNavigationService {
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
 
+    public setActiveNode(column: ColumnType) {
+        if (this.activeNode) {
+            Object.assign(this.grid.navigation.activeNode, {row: this.activeNode.row, column: this.activeNode.column});
+        } else {
+            const layout = column.columnLayoutChild ? this.grid.navigation.layout(this.activeNode.column) : null;
+            this.activeNode = { row: this.activeNode.row, column: this.activeNode.column, layout: layout };
+        }
+
+        const args: IActiveNodeChangeEventArgs = {
+            row: this.activeNode.row,
+            column: this.activeNode.column,
+            level: this.activeNode.level,
+            tag: 'dataCell'
+        };
+
+        this.grid.onActiveNodeChange.emit(args);
+    }
+
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
         const row = this.grid.summariesRowList.toArray().concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) { return; }
 
-        const target = type === GridKeydownTargetType.groupRow ? row :
-            type === GridKeydownTargetType.dataCell ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
+        const target = type === 'groupRow' ? row :
+            type === 'dataCell' ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
                 row.summaryCells?.find(c => c.visibleColumnIndex === this.activeNode.column);
         const keydownArgs = { targetType: type, event: event, cancel: false, target: target };
         this.grid.onGridKeydown.emit(keydownArgs);
-        if (keydownArgs.cancel && type === GridKeydownTargetType.dataCell) {
+        if (keydownArgs.cancel && type === 'dataCell') {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;
             return keydownArgs.cancel;
