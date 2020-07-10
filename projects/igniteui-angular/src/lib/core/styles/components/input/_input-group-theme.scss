@@ -590,7 +590,7 @@
         box-shadow: inset 0 0 0 1px --var($theme, 'disabled-border-color');
     }
 
-    /// FLUENT ///
+    // FLUENT START
     %igx-input-group-fluent {
         display: flex;
         flex-direction: column;
@@ -1034,12 +1034,22 @@
     }
 
     %form-group-textarea {
-        min-height: rem(82px, map-get($base-scale-size, 'comfortable')); /* 3 lines * 22px + 8px bottom padding + 8px top padding */
-        margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'comfortable'))}; /* this fixes resizing in chrome !?!? */
-        line-height: normal !important; /* resets typography styles */
+        // 3 lines * 22px + 8px bottom padding + 8px top padding
+        min-height: rem(82px, map-get($base-scale-size, 'comfortable'));
+
+        // this fixes resizing in chrome !?!?
+        margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
+
         height: auto;
         resize: vertical;
         overflow: hidden;
+
+        // resets typography styles
+        line-height: normal !important;
+
+        &:not([type='*']) {
+            line-height: normal !important; /* resets typography styles */
+        }
     }
 
     %form-group-textarea--cosy {
@@ -1255,7 +1265,7 @@
     %form-group-suffix-fluent--compact {
         padding: rem(8px, map-get($base-scale-size, 'compact'));
     }
-    /// FLUENT END ///
+    // FLUENT END
 
     %form-group-prefix--box {
         @include if-ltr() {

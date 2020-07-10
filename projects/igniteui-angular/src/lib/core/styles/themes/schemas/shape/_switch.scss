@@ -3,18 +3,22 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-switch: (
     border-radius-track: 1,
     border-radius-thumb: 1,
     border-radius-ripple: 1
 );
 
+/// @type Map
 $_round-shape-switch: (
     border-radius-track: 1,
     border-radius-thumb: 1,
     border-radius-ripple: 1
 );
 
+/// @type Map
 $_square-shape-switch: (
     border-radius-track: 0%,
     border-radius-thumb: 0%,
@@ -26,12 +30,14 @@ $_fluent-shape-switch: (
     border-radius-track: 10px,
 );
 
+/// @type Map
 $_bootstrap-shape-switch: (
     border-radius-track: 4px,
     border-radius-thumb: 2px,
 );
 
+/// @type Map
 $_indigo-shape-switch: (
     border-radius-track: 8px,
     border-radius-thumb: 1
-)
+);

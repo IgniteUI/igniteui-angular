@@ -118,8 +118,6 @@ $_fluent-tabs: extend($_light-tabs, $_fluent-shape-tabs);
 /// @property {map} item-active-background [igx-color: ('surface')] - The color used for the active/focused tab background.
 /// @property {map} border-color [igx-color: ('grays', 300)] - The color used for the tab items border.
 /// @property {map} border-color--hover [igx-color: ('grays', 200)] - The color used for the tab items border on hover.
-
-///
 /// @property {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for list component.
 /// @requires {function} extend
 /// @requires $_light-tabs

@@ -3,14 +3,18 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-tooltip: (
     border-radius: .25,
 );
 
+/// @type Map
 $_round-shape-tooltip: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-tooltip: (
     border-radius: 0%,
 );
@@ -20,10 +24,12 @@ $_fluent-shape-tooltip: (
     border-radius: 2px,
 );
 
+/// @type Map
 $_bootstrap-shape-tooltip: (
     border-radius: 4px,
 );
 
+/// @type Map
 $_indigo-shape-tooltip: (
     border-radius: 3px
 );

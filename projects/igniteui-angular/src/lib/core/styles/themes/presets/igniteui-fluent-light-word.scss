@@ -1,4 +1,4 @@
 @import '../index';
 
 @include igx-core();
-@include igx-fluent-theme($fluent-word-palette);
+@include igx-fluent-light-theme($light-fluent-word-palette);

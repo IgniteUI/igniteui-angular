@@ -9,14 +9,17 @@ $_default-shape-carousel: (
     border-radius: 0,
 );
 
+/// @type Map
 $_round-shape-carousel: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-carousel: (
     border-radius: 0%,
 );
 
+/// @type Map
 $_bootstrap-shape-carousel: (
     border-radius: 4px
 );
