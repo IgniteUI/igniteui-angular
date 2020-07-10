@@ -18,6 +18,27 @@ All notable changes for each version of this project will be documented in this 
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 
+### New Theme
+Ignite UI for Angular now has a new theme based on our own design system.
+You can use one of the following mixins to include a dark or light indigo theme:
+`igx-indigo-light-theme` and `igx-indigo-dark-theme`
+
+We also added two new palettes that go with the new theme, `$light-indigo-palette` and `$dark-indigo-palette`.
+
+The following example shows how you can use the Indigo theme:
+
+```scss
+// Light version
+.indigo-theme {
+    @include igx-indigo-light-theme($light-indigo-palette);
+}
+
+// Dark version
+.indigo-dark-theme {
+    @include igx-indigo-dark-theme($dark-indigo-palette);
+}
+```
+
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
@@ -488,7 +509,7 @@ Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design
 Depending on your use case you can use one of the following mixins:
 `igx-fluent-theme` and `igx-fluent-dark-theme`
 
-We also added two new pallets that go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`.
+We also added two new palettes that go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`.
 
 Next example shows how you can use the Fluent theme.
 
