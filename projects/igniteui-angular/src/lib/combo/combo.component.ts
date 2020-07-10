@@ -692,6 +692,24 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public searchPlaceholder = 'Enter a Search Term';
 
     /**
+     * Sets the caseSensitive option of the combo filtering
+     *
+     * ```typescript
+     * // get
+     * let myComboCaseSensitiveFilter = this.combo.caseSensitive;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-combo [caseSensitive]='true'></igx-combo>
+     * ```
+     */
+
+    @Input()
+    public caseSensitive = false;
+
+
+    /**
      * Combo data source.
      *
      * ```html
