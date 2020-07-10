@@ -3,6 +3,7 @@
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
 @import './action-strip';
 @import './avatar';
 @import './badge';
@@ -60,8 +61,9 @@
 @import './tooltip';
 @import './watermark';
 
-/// The default dark schema for all components.
-/// @type {Map}
+/// Used to create Material Design themes.
+/// Use with dark palettes.
+/// @type Map
 /// @property {Map} igx-avatar [$_dark-avatar]
 /// @property {Map} igx-action-strip [$_dark-action-strip]
 /// @property {Map} igx-badge [$_dark-badge]
@@ -180,8 +182,14 @@ $dark-schema: (
     igx-watermark: $_dark-watermark,
 );
 
-/// The default dark fluent schema for all components.
-/// @type {Map}
+/// An alias of $dark-schema.
+/// @alias dark-schema
+/// @see $dark-schema
+$dark-material-schema: $dark-schema;
+
+/// Used to create fluent component themes.
+/// Use in combination with dark palettes.
+/// @type Map
 /// @property {map} igx-avatar [$_dark-fluent-avatar],
 /// @property {Map} igx-action-strip [$_dark-fluent-action-strip]
 /// @property {map} igx-badge [$_dark-fluent-badge],
@@ -297,20 +305,21 @@ $dark-fluent-schema: (
     igx-time-picker: $_dark-fluent-time-picker,
     igx-toast: $_dark-fluent-toast,
     igx-tooltip: $_dark-fluent-tooltip,
-    igx-watermark: $_dark-fluent-watermark
+    igx-watermark: $_dark-fluent-watermark,
 );
 
-/// The default dark bootstrap schema for all components.
-/// @type {Map}
-/// @property {map} igx-avatar [$_dark-bootstrap-avatar],
+/// Used to create bootstrap component themes.
+/// Use in combination with dark palettes.
+/// @type Map
+/// @property {map} igx-avatar [$_dark-bootstrap-avatar]
 /// @property {Map} igx-action-strip [$_dark-bootstrap-action-strip]
-/// @property {map} igx-badge [$_dark-bootstrap-badge],
-/// @property {map} igx-banner [$_dark-bootstrap-banner],
-/// @property {map} igx-bottom-nav [$_dark-bootstrap-bottom-nav],
-/// @property {map} igx-button [$_dark-bootstrap-button],
-/// @property {map} igx-button-group [$_dark-bootstrap-button-group],
-/// @property {map} igx-calendar [$_dark-bootstrap-calendar],
-/// @property {map} igx-card [$_dark-bootstrap-card],
+/// @property {map} igx-badge [$_dark-bootstrap-badge]
+/// @property {map} igx-banner [$_dark-bootstrap-banner]
+/// @property {map} igx-bottom-nav [$_dark-bootstrap-bottom-nav]
+/// @property {map} igx-button [$_dark-bootstrap-button]
+/// @property {map} igx-button-group [$_dark-bootstrap-button-group]
+/// @property {map} igx-calendar [$_dark-bootstrap-calendar]
+/// @property {map} igx-card [$_dark-bootstrap-card]
 /// @property {map} igx-carousel [$_dark-bootstrap-carousel],
 /// @property {map} category-chart [$_dark-bootstrap-category-chart]
 /// @property {map} igx-checkbox [$_dark-bootstrap-checkbox],
@@ -417,11 +426,12 @@ $dark-bootstrap-schema: (
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-bootstrap-toast,
     igx-tooltip: $_dark-bootstrap-tooltip,
-    igx-watermark: $_dark-bootstrap-watermark
+    igx-watermark: $_dark-bootstrap-watermark,
 );
 
-/// The default dark indigo schema for all components.
-/// @type {Map}
+/// Used to create indigo component themes.
+/// Use in combination with dark palettes.
+/// @type Map
 /// @property {map} igx-avatar [$_dark-indigo-avatar],
 /// @property {Map} igx-action-strip [$_dark-indigo-action-strip]
 /// @property {map} igx-badge [$_dark-indigo-badge],
@@ -537,5 +547,6 @@ $dark-indigo-schema: (
     igx-time-picker: $_dark-indigo-time-picker,
     igx-toast: $_dark-indigo-toast,
     igx-tooltip: $_dark-indigo-tooltip,
-    igx-watermark: $_dark-indigo-watermark
+    igx-watermark: $_dark-indigo-watermark,
 );
+

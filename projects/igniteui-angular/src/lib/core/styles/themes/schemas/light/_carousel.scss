@@ -62,7 +62,6 @@ $_light-carousel: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-carousel
-/// @requires {map} $_fluent-shape-carousel
 /// @requires {map} $_fluent-elevation-carousel
 /// @see $default-palette
 $_fluent-carousel: extend(
@@ -75,7 +74,6 @@ $_fluent-carousel: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-carousel
-/// @see $bootstrap-palette
 $_bootstrap-carousel: extend(
     $_light-carousel,
     $_bootstrap-shape-carousel,

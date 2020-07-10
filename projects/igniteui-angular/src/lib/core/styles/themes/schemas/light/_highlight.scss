@@ -63,9 +63,9 @@ $_indigo-highlight: extend(
         ),
 
         resting-color: (
-            igx-contrast-color: (
-                igx-color: ('grays', 300),
-                to-opaque: 'surface'
+            igx-contrast-color: ('grays', 300),
+            to-opaque: (
+                igx-color: 'surface'
             )
         )
     )

@@ -10,9 +10,11 @@
                         [formatViews]="formatViews"
                         [formatOptions]="formatOptions"
                         [locale]="localeDe"
-                        (onSelection)="onSelection($event)">
+                        (onSelection)="onSelection($event)"
+                        (onViewDateChanged)="onViewDateChanged($event)"
+                        (onActiveViewChanged)="onActiveViewChanged($event)" >
                     </igx-month-picker>
-            </div>
+                </div>
             {{ date1 }}
         </article>
 

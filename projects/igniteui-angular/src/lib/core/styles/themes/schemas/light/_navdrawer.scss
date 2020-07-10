@@ -125,7 +125,6 @@ $_bootstrap-navdrawer: extend(
 /// @prop {map} item-hover-icon-color [igx-contrast-color: ('grays', 700)] - The item's hover icon color.
 /// @prop {map} elevation [0] - The elevation level of the drawer, between 0 - 24.
 /// @prop {Number} item-border-radius [1] - The border radius fraction, between 0 - 36 to be used for the navdrawer component.
-
 /// @requires {function} extend
 /// @requires $_light-navdrawer
 /// @requires $_indigo-shape-navdrawer

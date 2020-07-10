@@ -110,7 +110,7 @@ $_dark-bootstrap-button-group: extend($_bootstrap-button-group);
 
 /// Generates a dark indigo button-group schema
 /// @type {Map}
-///
 /// @requires {function} extend
 /// @requires $_indigo-button-group
 $_dark-indigo-button-group: extend($_indigo-button-group);
+
