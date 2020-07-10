@@ -4,6 +4,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
 import { isDate } from '../core/utils';
+import { CalendarView } from './month-picker-base';
 
 /**
  * Sets the selction type - single, multi or range.
@@ -18,6 +19,11 @@ export enum ScrollMonth {
     PREV = 'prev',
     NEXT = 'next',
     NONE = 'none'
+}
+
+export interface IViewDateChangeEventArgs {
+    previousValue: Date;
+    currentValue: Date;
 }
 
 /** @hidden @internal */
@@ -168,7 +174,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the date that will be presented in the default view when the component renders.
      */
     public set viewDate(value: Date) {
-        this._viewDate = this.getDateOnly(value);
+        const date = this.getDateOnly(value).setDate(1);
+        this._viewDate = new Date(date);
     }
 
     /**
@@ -239,6 +246,34 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     @Output()
     public onSelection = new EventEmitter<Date | Date[]>();
+
+    /**
+     * Emits an event when the month in view is changed.
+     * ```html
+     * <igx-calendar (onViewDateChanged)="viewDateChanged($event)"></igx-calendar>
+     * ```
+     * ```typescript
+     * public viewDateChanged(event: IViewDateChangeEventArgs) {
+     *  let newDate = event.newViewDate;
+     * }
+     * ```
+     */
+    @Output()
+    public onViewDateChanged = new EventEmitter<IViewDateChangeEventArgs>();
+
+    /**
+     * Emits an event when the active view is changed.
+     * ```html
+     * <igx-calendar (onActiveViewChanged)="activeViewChanged($event)"></igx-calendar>
+     * ```
+     * ```typescript
+     * public activeViewChanged(event: CalendarView) {
+     *  let activeView = event;
+     * }
+     * ```
+     */
+    @Output()
+    public onActiveViewChanged  = new EventEmitter<CalendarView>();
 
     /**
      * @hidden
