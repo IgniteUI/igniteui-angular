@@ -243,8 +243,8 @@ $_dark-bootstrap-dock-manager: extend(
     )
 );
 
-/// Generates a dark Indigo dock-manager schema.
-/// @type {Map}
+/// Generates a dark indigo dock-manager schema.
+/// @type Map
 /// @prop {Color} background-color [igx-color: 'surface'] - Sets the base dock manager color as well as the pane headers and tabs background colors.
 /// @prop {Color} border-color [igx-color: ('grays', 100), to-opaque: (igx-color: 'surface')] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
 /// @prop {Color} button-text [igx-color: ('primary', 200)] - Sets the button text color.
@@ -259,30 +259,30 @@ $_dark-bootstrap-dock-manager: extend(
 /// @requires {function} extend
 /// @requires $_indigo-dock-manager
 $_dark-indigo-dock-manager: extend(
-    $_indigo-dock-manager, 
+    $_indigo-dock-manager,
     (
         background-color: (
             igx-color: 'surface',
         ),
         border-color: (
-            igx-color: (grays, 100),
+            igx-color: ('grays', 100),
             to-opaque: (
-                igx-color: 'surface'
+                igx-color: 'surface',
             )
         ),
         button-text: (
-            igx-color: (primary, 200),
+            igx-color: ('primary', 200),
         ),
         context-menu-background: (
-            igx-color: (grays, 300),
+            igx-color: ('grays', 300),
             to-opaque: (
-                igx-color: 'surface'
+                igx-color: 'surface',
             )
         ),
         joystick-background: (
-            igx-color: (grays, 300),
+            igx-color: ('grays', 300),
             to-opaque: (
-                igx-color: 'surface'
+                igx-color: 'surface',
             )
         ),
         joystick-border-color: (
@@ -292,18 +292,18 @@ $_dark-indigo-dock-manager: extend(
             igx-contrast-color: 'surface',
         ),
         pane-content-background: (
-            igx-color: (grays, 100),
+            igx-color: ('grays', 100),
             to-opaque: (
-                igx-color: 'surface'
+                igx-color: 'surface',
             )
         ),
         pinned-header-background: (
             igx-color: 'surface',
         ),
         tab-background-active: (
-            igx-color: (grays, 100),
+            igx-color: ('grays', 100),
             to-opaque: (
-                igx-color: 'surface'
+                igx-color: 'surface',
             )
         ),
         tab-background: (
@@ -311,3 +311,4 @@ $_dark-indigo-dock-manager: extend(
         ),
     )
 );
+
