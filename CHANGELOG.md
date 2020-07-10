@@ -19,6 +19,8 @@ All notable changes for each version of this project will be documented in this 
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 
 ### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
