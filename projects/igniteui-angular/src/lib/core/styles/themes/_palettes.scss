@@ -1,6 +1,9 @@
-/// Default theme palette.
+////
 /// @group palettes
-/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Default theme palette.
 /// @type Map
 /// @prop {Map} primary - The primary sub-palette created from the primary color.
 /// @prop {Map} secondary - The secondary sub-palette created from the secondary color.
@@ -48,7 +51,7 @@
 /// @requires igx-palette
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
-/// @ignore
+/// @access private
 $default-dark-palette: igx-palette(
     $primary: igx-color($default-palette, 'primary'),
     $secondary: igx-color($default-palette, 'secondary'),
@@ -85,19 +88,25 @@ $light-palette: $default-palette;
 /// @group palettes
 $dark-palette: $default-dark-palette;
 
+/// An alias of $light-palette
+/// @group palettes
 /// @alias light-palette
-$light-material-palette: $default-palette;
+/// @see $light-palette
+$light-material-palette: $light-palette;
 
+/// An alias of $dark-palette
+/// @group palettes
 /// @alias dark-palette
+/// @see $dark-palette
 $dark-material-palette: $default-dark-palette;
 
-/// @ignore
+/// @access private
 $green-palette: igx-palette(
     $primary: #09f,
     $secondary: #72da67
 ) !default;
 
-/// @ignore
+/// @access private
 $green-dark-palette: igx-palette(
     $primary: igx-color($green-palette, 'primary'),
     $secondary: igx-color($green-palette, 'secondary'),
@@ -133,13 +142,13 @@ $light-green-palette: $green-palette;
 /// @group palettes
 $dark-green-palette: $green-dark-palette;
 
-/// @ignore
+/// @access private
 $purple-palette: igx-palette(
     $primary: #00b4d6,
     $secondary: #514590
 ) !default;
 
-/// @ignore
+/// @access private
 $purple-dark-palette: igx-palette(
     $primary: igx-color($purple-palette, 'primary'),
     $secondary: igx-color($purple-palette, 'secondary'),
@@ -175,7 +184,7 @@ $light-purple-palette: $purple-palette;
 /// @group palettes
 $dark-purple-palette: $purple-dark-palette;
 
-/// @ignore
+/// @access private
 $fluent-excel-palette: igx-palette(
     $primary: #217346,
     $secondary: #217346,
@@ -185,7 +194,7 @@ $fluent-excel-palette: igx-palette(
     $variant: 'fluent'
 ) !default;
 
-/// @ignore
+/// @access private
 $fluent-excel-dark-palette: igx-palette(
     $primary: igx-color($fluent-excel-palette, 'primary'),
     $secondary: igx-color($fluent-excel-palette, 'secondary'),
@@ -225,7 +234,7 @@ $light-fluent-excel-palette: $fluent-excel-palette;
 /// @group palettes
 $dark-fluent-excel-palette: $fluent-excel-dark-palette;
 
-/// @ignore
+/// @access private
 $fluent-word-palette: igx-palette(
     $primary: #2b579a,
     $secondary: #2b579a,
@@ -235,7 +244,7 @@ $fluent-word-palette: igx-palette(
     $variant: 'fluent'
 ) !default;
 
-/// @ignore
+/// @access private
 $fluent-word-dark-palette: igx-palette(
     $primary: igx-color($fluent-word-palette, 'primary'),
     $secondary: igx-color($fluent-word-palette, 'secondary'),
@@ -275,7 +284,7 @@ $light-fluent-word-palette: $fluent-word-palette;
 /// @group palettes
 $dark-fluent-word-palette: $fluent-word-dark-palette;
 
-// @ignore
+/// @access private
 $bootstrap-palette: igx-palette(
     $primary: #007bff,
     $secondary: #6c757d,
@@ -287,7 +296,7 @@ $bootstrap-palette: igx-palette(
     $variant: 'bootstrap'
 ) !default;
 
-/// @ignore
+/// @access private
 $bootstrap-dark-palette: igx-palette(
     $primary: igx-color($bootstrap-palette, 'primary'),
     $secondary: igx-color($bootstrap-palette, 'secondary'),
@@ -376,11 +385,10 @@ $dark-indigo-palette: igx-palette(
     $variant: 'indigo-design'
 ) !default;
 
-/// Global Overlay Color
+/// Global Overlay Color.
+/// Assigned to the 500 variant of the grays color form the current $default-palette.
 /// @group palettes
 /// @type Color
-/// @prop {Map} $palette [$default-palette] - The palette used to extract the color from.
-/// @prop {String} $color [grays] - The name of the sub-palette to take the color from.
 /// @requires igx-color
 $overlay-color: igx-color($default-palette, 'grays') !default;
 

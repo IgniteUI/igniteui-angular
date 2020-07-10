@@ -61,8 +61,9 @@
 @import './tooltip';
 @import './watermark';
 
-/// The default light schema for all components.
-/// @type {Map}
+/// The default schema. Used to create Material Design themes.
+/// Use with light palettes.
+/// @type Map
 /// @property {Map} igx-avatar [$_light-avatar]
 /// @property {Map} igx-action-strip [$_light-action-strip]
 /// @property {Map} igx-badge [$_light-badge]
@@ -181,9 +182,14 @@ $light-schema: (
     igx-watermark: $_light-watermark
 );
 
-// @alias $light-schema;
+/// An alias of $light-schema.
+/// @alias light-schema
+/// @see $light-schema
 $light-material-schema: $light-schema;
 
+/// Used to create fluent component themes.
+/// Use in combination with light palettes.
+/// @type Map
 $light-fluent-schema: (
     igx-avatar: $_fluent-avatar,
     igx-action-strip: $_fluent-action-strip,
@@ -245,6 +251,9 @@ $light-fluent-schema: (
     igx-watermark: $_fluent-watermark
 );
 
+/// Used to create bootstrap component themes.
+/// Use in combination with light palettes.
+/// @type Map
 $light-bootstrap-schema: (
     igx-avatar: $_bootstrap-avatar,
     igx-action-strip: $_bootstrap-action-strip,
@@ -306,6 +315,9 @@ $light-bootstrap-schema: (
     igx-watermark: $_bootstrap-watermark
 );
 
+/// Used to create indigo component themes.
+/// Use in combination with light palettes.
+/// @type Map
 $light-indigo-schema: (
     igx-avatar: $_indigo-avatar,
     igx-action-strip: $_indigo-action-strip,
@@ -365,3 +377,4 @@ $light-indigo-schema: (
     igx-tooltip: $_indigo-tooltip,
     igx-watermark: $_indigo-watermark
 );
+

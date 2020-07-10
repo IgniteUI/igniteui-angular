@@ -71,40 +71,9 @@
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
-/// @requires {variable} $components
-/// @requires {variable} $default-palette
+/// @requires $components
+/// @requires $default-palette
 /// @requires {function} is-component
-/// @requires {mixin} igx-avatar
-/// @requires {mixin} igx-badge
-/// @requires {mixin} igx-button
-/// @requires {mixin} igx-button-group
-/// @requires {mixin} igx-calendar
-/// @requires {mixin} igx-card
-/// @requires {mixin} igx-carousel
-/// @requires {mixin} igx-checkbox
-/// @requires {mixin} igx-date-picker
-/// @requires {mixin} igx-date-range-picker
-/// @requires {mixin} igx-dialog
-/// @requires {mixin} igx-drop-down
-/// @requires {mixin} igx-expansion-panel
-/// @requires {mixin} igx-grid
-/// @requires {mixin} igx-grid-summary
-/// @requires {mixin} igx-paginator
-/// @requires {mixin} igx-icon
-/// @requires {mixin} igx-input-group
-/// @requires {mixin} igx-list
-/// @requires {mixin} igx-navbar
-/// @requires {mixin} igx-navdrawer
-/// @requires {mixin} igx-progress-linear
-/// @requires {mixin} igx-progress-circular
-/// @requires {mixin} igx-radio
-/// @requires {mixin} igx-ripple
-/// @requires {mixin} igx-slider
-/// @requires {mixin} igx-snackbar
-/// @requires {mixin} igx-switch
-/// @requires {mixin} igx-tabs
-/// @requires {mixin} igx-bottom-nav
-/// @requires {mixin} igx-toast
 @mixin igx-theme(
     $palette,
     $schema: $light-schema,
@@ -543,7 +512,7 @@
     }
 }
 
-/// Creates a global theme that can be used with light backgrounds.
+/// Creates a global material theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
@@ -578,7 +547,7 @@
     );
 }
 
-/// Creates a global theme that can be used with dark backgrounds.
+/// Creates a global material theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
@@ -879,3 +848,4 @@
         $elevation: $elevation,
     );
 }
+
