@@ -2,4 +2,4 @@
 
 // Generate a palette
 @include igx-core();
-@include igx-bootstrap-light-theme($light-bootstrap-palette);
+@include igx-dark-theme($dark-material-palette);
