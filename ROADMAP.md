@@ -2,12 +2,29 @@
 
 # Current Milestone
 
-## Milestone 12 (Due by August, 2020)
+## Milestone 12 (Due by August 17th, 2020)
 
-1. Accept ISO 8601 Date-only string as input for igx-calendar and igx-datepicker [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
+1. igx-grid improve IGridEditEventArgs [#4965](https://github.com/IgniteUI/igniteui-angular/issues/4965)
 2. igxCombo has to include caseSensitive property in filter search [#7282](https://github.com/IgniteUI/igniteui-angular/issues/7282)
 3. igxCombo default positioning strategy [#7225](https://github.com/IgniteUI/igniteui-angular/issues/7225)
-To Be Updated
+4. igxSelect Add igxHint support [#5584](https://github.com/IgniteUI/igniteui-angular/issues/5584)
+5. igxGrid Hide the group area row [#5561](https://github.com/IgniteUI/igniteui-angular/issues/5561)
+6. igxDateRangePickerComponent calendar should display selected range if both start and end are filled and valid [#7593](https://github.com/IgniteUI/igniteui-angular/issues/7593)
+7. Add support for mixing px and % column widths [#5486](https://github.com/IgniteUI/igniteui-angular/issues/5486)
+8. Do not close modal overlay on ESC key press [#7697](https://github.com/IgniteUI/igniteui-angular/issues/7697)
+9. Themes: Add Dock Manager Support [#7541](https://github.com/IgniteUI/igniteui-angular/issues/7541)
+10. igx-grid - pre-select rows [#6653](https://github.com/IgniteUI/igniteui-angular/issues/6653)
+11. Average and Sum are shown on the Ship country level [#7334](https://github.com/IgniteUI/igniteui-angular/issues/7334)
+12. Dock Manager Better Default Themes [#7578](https://github.com/IgniteUI/igniteui-angular/issues/7578)
+13. Expose templates for all ESF UI parts [#7221](https://github.com/IgniteUI/igniteui-angular/issues/7221)
+14. Calendar events when user changes month/year [#7039](https://github.com/IgniteUI/igniteui-angular/issues/7039)
+15. igxGrid default column display templates per-type [#7224](https://github.com/IgniteUI/igniteui-angular/issues/7224)
+16. Provide "Unfreeze All" option under Freeze button on Data Grid & Tree Grid
+To Be Updated [#6549](https://github.com/IgniteUI/igniteui-angular/issues/6549)
+17. Exposing onActiveNodeChange output in the Grid [#7601](https://github.com/IgniteUI/igniteui-angular/issues/7601)
+18. Refactor commit method of IgxHierarchicalTransactionService to accept same parameters as base type [#5205](https://github.com/IgniteUI/igniteui-angular/issues/5205)
+19. Tooltip for grid cell text content [#6215](https://github.com/IgniteUI/igniteui-angular/issues/6215)
+20. Add tooltip to column summary [#6505](https://github.com/IgniteUI/igniteui-angular/issues/6505)
 
 
 ## Going down the road
