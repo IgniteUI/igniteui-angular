@@ -88,7 +88,7 @@ The default value is `en`.
 
 - `viewDate: Date`
 
-Controls the year/month that will be presented in the default view when the month picker renders. By default it is the current year/month.
+Controls the year/month that will be presented in the default view when the month picker renders. By default it is the first day of the current year/month.
 
 - `value: Date`
 
@@ -121,3 +121,13 @@ The default values are listed below.
 
 Event fired when a value is selected through UI interaction.
 Returns the selected value (depending on the type of selection).
+
+- `onViewDateChanged(): IViewDateChangeEventArgs`
+
+Event fired after the the month/year presented in the view is changed.
+Emits an object containing the previous and current value of the `viewDate` property.
+
+- `onActiveViewChanged(): CalendarView`
+
+Event fired after the active view is changed.
+Emits an CalendarView enum, indicating the `activeView` property value.
