@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, HostListener, Input, NgModule, ChangeDetectorRef, OnInit,
-    Output, EventEmitter, Optional, HostBinding, Inject
+    Output, EventEmitter, Optional, HostBinding, Inject, OnDestroy
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IBaseEventArgs } from '../../core/utils';
+import { Subscription } from 'rxjs';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -41,7 +42,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]'
 })
-export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit {
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -180,6 +181,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         super(_element, _navigationService);
     }
 
+    private s: Subscription;
+
+
     /**
      * @hidden
      */
@@ -196,6 +200,15 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
+        this.target.onClosing.subscribe(() => {
+            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            this.onTooltipHide.emit(hidingArgs);
+        });
+    }
+
+
+    ngOnDestroy() {
+        this.s.unsubscribe();
     }
 
     private checkOutletAndOutsideClick() {
@@ -221,7 +234,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             clearTimeout(this.target.timeoutId);
 
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            // this.onTooltipHide.emit(hidingArgs);
 
             if (hidingArgs.cancel) {
                 return true;
@@ -252,19 +265,19 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('document:keydown.escape', ['$event'])
-    public onKeydownEscape(event) {
-        const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipHide.emit(hidingArgs);
+    // @HostListener('document:keydown.escape', ['$event'])
+    // public onKeydownEscape(event) {
+    //     const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+    //     this.onTooltipHide.emit(hidingArgs);
 
-        if (hidingArgs.cancel) {
-            return;
-        }
+    //     if (hidingArgs.cancel) {
+    //         return;
+    //     }
 
-        this.target.toBeHidden = true;
-        this.target.close();
-        this.target.toBeHidden = false;
-    }
+    //     this.target.toBeHidden = true;
+    //     this.target.close();
+    //     this.target.toBeHidden = false;
+    // }
 
     /**
      * @hidden
@@ -273,7 +286,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     public onClick() {
         if (!this.target.collapsed) {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            // this.onTooltipHide.emit(hidingArgs);
 
             if (hidingArgs.cancel) {
                 return;
@@ -328,7 +341,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipHide.emit(hidingArgs);
+        // this.onTooltipHide.emit(hidingArgs);
 
         if (hidingArgs.cancel) {
             return;
@@ -381,7 +394,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         if (!this.target.collapsed) {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            // this.onTooltipHide.emit(hidingArgs);
 
             if (hidingArgs.cancel) {
                 return;
@@ -422,7 +435,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipHide.emit(hidingArgs);
+        // this.onTooltipHide.emit(hidingArgs);
 
         if (hidingArgs.cancel) {
             return;

@@ -477,7 +477,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private setUpCloseOnEscape(info: OverlayInfo) {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-        fromEvent(wrapperElement, 'keydown').pipe(
+        fromEvent(document, 'keydown').pipe(
             filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
             takeUntil(this.destroy$)
         ).subscribe(() => this.hide(info.id));
