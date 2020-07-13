@@ -106,6 +106,7 @@ import {
     HierarchicalGridRemoteVirtualizationComponent
 } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
+import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 
 const appRoutes = [
     {
@@ -505,6 +506,10 @@ const appRoutes = [
     {
         path: 'dateRange',
         component: DateRangeSampleComponent
+    },
+    {
+        path: 'grid-nested-props',
+        component: GridNestedPropsSampleComponent
     }
 ];
 
