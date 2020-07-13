@@ -6,6 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { resolveNestedPath } from '../../core/utils';
+import { Component, ViewChild } from '@angular/core';
 
 function first<T>(array: T[]): T {
     return array[0];
@@ -78,16 +79,22 @@ const DATA = [
     }
 ];
 
+@Component({
+    template: `<igx-grid></igx-grid>`
+})
+class NestedPropertiesGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+}
 
-xdescribe('Grid - nested data source properties', () => {
+
+describe('Grid - nested data source properties', () => {
 
     const NAMES = 'John Jane Ivan Bianka'.split(' ');
     const AGES = [30, 23, 33, 21];
 
 
     describe('API', () => {
-        configureTestSuite();
-
 
         it('should correctly resolve key paths in nested data', () => {
             expect(
@@ -101,7 +108,7 @@ xdescribe('Grid - nested data source properties', () => {
 
     describe('Grid base cases', () => {
 
-        let fixture: ComponentFixture<IgxGridComponent>;
+        let fixture: ComponentFixture<NestedPropertiesGridComponent>;
         let grid: IgxGridComponent;
 
         const setupData = (data: Array<any>) => {
@@ -115,17 +122,16 @@ xdescribe('Grid - nested data source properties', () => {
 
         beforeAll(async(() => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, IgxGridModule]
+                declarations: [NestedPropertiesGridComponent],
+                imports: [IgxGridModule, NoopAnimationsModule]
             }).compileComponents();
         }));
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(IgxGridComponent);
+            fixture = TestBed.createComponent(NestedPropertiesGridComponent);
             fixture.detectChanges();
-            grid = fixture.componentInstance;
+            grid = fixture.componentInstance.grid;
         });
-
-        afterEach(() => fixture.destroy());
 
         it('should support column API with complex field', () => {
             setupData(DATA);
@@ -182,6 +188,21 @@ xdescribe('Grid - nested data source properties', () => {
 
             expect(grid.dataView.length).toEqual(1);
             expect(first(column.cells).value).toEqual('Jane');
+        });
+
+        it('should support copy/paste operations', () => {
+            setupData(DATA);
+
+            grid.getColumnByName('user').field = 'user.name.first';
+            fixture.detectChanges();
+
+
+            grid.setSelection({ columnStart: 'user.name.first',  columnEnd: 'user.name.first', rowStart: 0, rowEnd: 0 });
+            fixture.detectChanges();
+
+            const selected = grid.getSelectedData();
+            expect(selected.length).toEqual(1);
+            expect(first(selected)['user.name.first']).toMatch('John');
         });
 
         it('should work with editing (cell)', () => {
