@@ -17,9 +17,15 @@ import { IgxIconModule } from '../icon/public_api';
  */
 @Directive({
     // tslint:disable-next-line:directive-selector
-    selector: 'igx-action-icon'
+    selector: 'igx-navbar-action,[igxNavbarAction]'
 })
-export class IgxActionIconDirective { }
+export class IgxNavbarActionDirective { }
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: 'igx-navbar-title,[igxNavbarTitle]'
+})
+export class IgxNavbarTitleDirective { }
 
 let NEXT_ID = 0;
 /**
@@ -81,6 +87,10 @@ export class IgxNavbarComponent {
         return this.isVisible;
     }
 
+    public get isTitleContentVisible(): boolean {
+        return this.titleContent ? true : false;
+    }
+
     /**
      * Sets whether the action button of the `IgxNavbarComponent` is visible.
      * ```html
@@ -133,8 +143,14 @@ export class IgxNavbarComponent {
     /**
      * @hidden
      */
-    @ContentChild(IgxActionIconDirective, { read: IgxActionIconDirective })
-    protected actionIconTemplate: IgxActionIconDirective;
+    @ContentChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
+    protected actionIconTemplate: IgxNavbarActionDirective;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxNavbarTitleDirective, { read: IgxNavbarTitleDirective })
+    protected titleContent: IgxNavbarTitleDirective;
 
     /**
      * @hidden
@@ -148,8 +164,8 @@ export class IgxNavbarComponent {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxNavbarComponent, IgxActionIconDirective],
-    exports: [IgxNavbarComponent, IgxActionIconDirective],
+    declarations: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective],
+    exports: [IgxNavbarComponent, IgxNavbarActionDirective, IgxNavbarTitleDirective],
     imports: [IgxButtonModule, IgxIconModule, CommonModule]
 })
 export class IgxNavbarModule {

@@ -9,6 +9,7 @@
 @import '../components/button/button-theme';
 @import '../components/calendar/calendar-theme';
 @import '../components/card/card-theme';
+@import '../components/charts/category-chart-theme';
 @import '../components/charts/data-chart-theme';
 @import '../components/charts/financial-chart-theme';
 @import '../components/charts/funnel-chart-theme';
@@ -20,6 +21,7 @@
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/date-range-picker/date-range-picker-theme';
 @import '../components/dialog/dialog-theme';
+@import '../components/dock-manager/dock-manager-theme';
 @import '../components/drop-down/drop-down-theme';
 @import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/grid/excel-filtering-theme';
@@ -94,12 +96,14 @@
     @include igx-button-typography($type-scale);
     @include igx-calendar-typography($type-scale);
     @include igx-card-typography($type-scale);
+    @include igx-category-chart-typography($type-scale);
     @include igx-checkbox-typography($type-scale);
     @include igx-chip-typography($type-scale);
     @include igx-column-hiding-typography($type-scale);
     @include igx-data-chart-typography($type-scale);
     @include igx-date-range-typography($type-scale);
     @include igx-dialog-typography($type-scale);
+    @include igx-dock-manager-typography();
     @include igx-drop-down-typography($type-scale);
     @include igx-expansion-panel-typography($type-scale);
     @include igx-financial-chart-typography($type-scale);

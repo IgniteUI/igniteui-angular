@@ -16,12 +16,10 @@
     }
 
     @include e(left) {
-        @extend %igx-navbar-bundle !optional;
-        @extend %igx-navbar-icon-display !optional;
+        @extend %igx-navbar-left !optional;
     }
 
     @include e(right) {
-        @extend %igx-navbar-bundle !optional;
-        @extend %igx-navbar-icon-display !optional;
+        @extend %igx-navbar-right !optional;
     }
 }
