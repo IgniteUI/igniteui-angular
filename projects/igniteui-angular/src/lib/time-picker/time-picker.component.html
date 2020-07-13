@@ -62,22 +62,22 @@
         <div class="igx-time-picker__body">
             <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
                 <span [igxHourItem]="hour"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(TimeParts.Hour, hour)}"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Hour, hour)}"
                 *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxMinuteItem]="minute"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(TimeParts.Minute, minute)}"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Minute, minute)}"
                 *ngFor="let minute of minuteView" >{{ minute }}</span>
             </div>
             <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
                 <span [igxSecondsItem]="seconds"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(TimeParts.Seconds, seconds)}"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Seconds, seconds)}"
                 *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(TimeParts.amPM, ampm)}"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.amPM, ampm)}"
                 *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>

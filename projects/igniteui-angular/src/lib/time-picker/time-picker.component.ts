@@ -37,7 +37,7 @@ import {
 } from './time-picker.directives';
 import { Subject, fromEvent, interval, animationFrameScheduler, Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, TimeParts } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -50,7 +50,6 @@ import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
-import { TimeParts } from './time-picker.common';
 
 let NEXT_ID = 0;
 const ITEMS_COUNT = 7;
@@ -154,7 +153,10 @@ export class IgxTimePickerComponent implements
             this.onValidationFailed.emit(args);
         }
     }
-    TimeParts: any = Object.assign({}, TimeParts);
+    /**
+     * @hidden @internal
+     */
+    timeParts: any = Object.assign({}, TimeParts);
 
     /**
      * An accessor that returns the value of `igx-time-picker` component.
