@@ -20,6 +20,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `message` property has been deprecated. You can place the *message text* in the snackbar content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
+- `IgxTimePicker`
+    - Added a functionality which renders time parts outside of the minimum and maximum range value as disabled.
 
 ## 10.0.0
 
