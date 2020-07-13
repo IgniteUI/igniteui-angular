@@ -1814,7 +1814,7 @@ export class GridFunctions {
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
-        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS)).parent;
         sortIcon.triggerEventHandler('click', new Event('click'));
     }
 
