@@ -39,10 +39,10 @@
             [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
             (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
-            <igx-suffix igxButton="icon" (click)="caseSensitive=!caseSensitive">
-                <igx-icon fontSet="material">
-                    {{ caseSensitive ? 'format_size' : 'format_clear'}}
-                </igx-icon>
+            <igx-suffix *ngIf="showSearchCaseIcon">
+                <igx-chip [selectable]="true" (click)="caseSensitive=!this.selected">
+                    <span>Aa</span>
+                </igx-chip>
             </igx-suffix>
     </igx-input-group>
     <ng-container *ngTemplateOutlet="headerTemplate">

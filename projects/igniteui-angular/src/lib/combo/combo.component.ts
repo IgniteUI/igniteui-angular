@@ -138,6 +138,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public defaultFallbackGroup = 'Other';
+    /**
+     * @hidden @internal
+     */
+    public caseSensitive = false;
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
@@ -692,21 +696,21 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public searchPlaceholder = 'Enter a Search Term';
 
     /**
-     * Sets the caseSensitive option of the combo filtering
+     * Defines whether the caseSensitive icon should be shown in the search input
      *
      * ```typescript
      * // get
-     * let myComboCaseSensitiveFilter = this.combo.caseSensitive;
+     * let myComboShowSearchCaseIcon = this.combo.showSearchCaseIcon;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [caseSensitive]='true'></igx-combo>
+     * <igx-combo [showSearchCaseIcon]='false'></igx-combo>
      * ```
      */
 
     @Input()
-    public caseSensitive = false;
+    public showSearchCaseIcon = true;
 
 
     /**
