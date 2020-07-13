@@ -7,12 +7,15 @@
     </ng-container>
 </span>
 <div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
-    <igx-icon [attr.draggable]="false"
-        class="sort-icon"
-        *ngIf="column.sortable"
-        (click)="onSortingIconClick($event)">
-        {{sortingIcon}}
-    </igx-icon>
+
+    <div (click)="onSortingIconClick($event)">
+        <igx-icon class="sort-icon" [attr.draggable]="false">
+            {{sortingIcon}}
+        </igx-icon>
+        <ng-template [ngIf]="column | hasSortingIndex:grid.sortingExpressions">
+            <span [attr.draggable]="false">{{column | sortingIndex:grid.sortingExpressions}}</span>
+        </ng-template>
+    </div>
 
     <igx-icon [ngClass]="filterIconClassName" [attr.draggable]="false" (click)="onFilteringIconClick($event)"
         *ngIf="grid.allowFiltering == true && column.filterable && grid.filterMode == 'excelStyleFilter'">

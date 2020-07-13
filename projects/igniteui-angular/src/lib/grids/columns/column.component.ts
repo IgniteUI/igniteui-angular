@@ -1177,6 +1177,18 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
+    public hasSortingIndex = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public sortingIndex: number;
+
+    /**
+     * @hidden
+     * @internal
+     */
     public expanded = true;
 
     /**
