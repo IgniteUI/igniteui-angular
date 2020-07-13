@@ -1,15 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxColumnComponent } from '../public_api';
+import { IgxColumnComponent } from '../columns/column.component';
 
 @Pipe({
-  name: 'sortingIndex'
+  name: 'sortingIndex',
+  pure: true
 })
 export class SortingIndexPipe implements PipeTransform {
 
   transform(value: IgxColumnComponent, sortingExpressions: ISortingExpression[]): number {
-    const index = sortingExpressions.findIndex(expression => expression.fieldName === value.field) + 1;
+    const grid = value.grid;
+    const index = sortingExpressions.filter(expression => grid.getColumnByName(expression.fieldName) ?? false)
+                                    .findIndex(expression => expression.fieldName === value.field) + 1;
     value.sortingIndex = index;
     return index;
   }
@@ -17,7 +19,8 @@ export class SortingIndexPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'hasSortingIndex'
+  name: 'hasSortingIndex',
+  pure: true
 })
 export class HasSortingIndexPipe implements PipeTransform {
   transform(value: IgxColumnComponent, sortingExpressions: ISortingExpression[]): boolean {
@@ -25,6 +28,8 @@ export class HasSortingIndexPipe implements PipeTransform {
     if (!isColumnSorted) {
        value.hasSortingIndex = false;
        value.sortingIndex = null;
+    } else {
+      value.hasSortingIndex = true;
     }
     value.grid.notifyChanges();
     return isColumnSorted;
