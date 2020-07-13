@@ -150,3 +150,15 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
     /** Whether or noy the row is pinned or unpinned. */
     readonly isPinned: boolean;
 }
+
+/**
+ * Event emitted when a grid is scrolled.
+ */
+export interface IGridScrollEventArgs extends IBaseEventArgs {
+    /** The scroll direction - vertical or horizontal. */
+    direction: string;
+    /** The original browser scroll event. */
+    event: Event;
+    /** The new scroll position */
+    scrollPosition: number;
+}

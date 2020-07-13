@@ -7,8 +7,20 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `igxCombo`
     - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
+- `IgxOverlay`
+    - Added new property - `closeOnEsc` - in `OverlaySettings`. The overlay can now be prevented from closing, on escape keypress, by setting the property to `false`, by default it's `true`.
+- `igxDialog`
+    - Added `closeOnEscapeKey` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
+- `IgxNavbar`:
+    - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
+- `igxGrid`
+    - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
+- `igxTreeGrid`
+    - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 
 ### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
@@ -21,7 +33,14 @@ All notable changes for each version of this project will be documented in this 
     - `message` property has been deprecated. You can place the *message text* in the snackbar content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
 - `IgxTimePicker`
-    - Added a functionality which renders time parts outside of the minimum and maximum range value as disabled.
+    - Added a functionality which visually represents time parts outside of the minimum and maximum range value as disabled.
+- `IgxNavbar`
+    - Added new `igx-navbar-title, igxNavbarTitle` directive that can be used to provide custom content for navbar title. It would override the value of `title` input property.
+- `IgxCalendar` and `IgxMonthPicker`
+    - `onViewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
+    - `onActiveViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
+    - `viewDate` day value is always 1.
+    - `activeView` setter is now available as an input property.
 
 ## 10.0.0
 

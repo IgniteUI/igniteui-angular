@@ -24,7 +24,7 @@
 
                 </div>
                 <igx-card>
-                    <igx-calendar #calendar weekStart="1" selection="multi" [hideOutsideDays]="false" [monthsViewNumber]="3"></igx-calendar>
+                    <igx-calendar #calendar weekStart="1" selection="single" (onViewDateChanged)="onViewDateChanged($event)" (onActiveViewChanged)="onActiveViewChanged($event)" (onSelection)="onSelection($event)" [hideOutsideDays]="false" [monthsViewNumber]="3"></igx-calendar>
                 </igx-card>
             </div>
 
