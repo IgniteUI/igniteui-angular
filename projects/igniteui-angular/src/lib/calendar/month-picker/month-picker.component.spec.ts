@@ -76,7 +76,7 @@ describe('IgxMonthPicker', () => {
         };
 
         expect(monthPicker.value).toBeUndefined();
-        expect(monthPicker.viewDate.getDate()).toEqual(instance.viewDate.getDate());
+        expect(monthPicker.viewDate.getDate()).toEqual(1);
         expect(monthPicker.locale).toEqual('en');
 
         const today = new Date(Date.now());
@@ -89,7 +89,7 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.locale).toEqual('fr');
         expect(monthPicker.formatOptions.year).toEqual('2-digit');
         expect(monthPicker.value.getDate()).toEqual(today.getDate());
-        expect(monthPicker.viewDate.getDate()).toEqual(today.getDate());
+        expect(monthPicker.viewDate.getDate()).toEqual(1);
     });
 
     it('should properly set formatOptions and formatViews', () => {
@@ -173,7 +173,7 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.onSelection.emit).toHaveBeenCalled();
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Mar');
 
-        const nextDay = new Date(2019, 2, 7);
+        const nextDay = new Date(2019, 2, 1);
         expect(fixture.componentInstance.model.getDate()).toEqual(nextDay.getDate());
     });
 

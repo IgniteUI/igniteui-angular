@@ -1,8 +1,6 @@
 import { Injectable, OnDestroy, NgModuleRef } from '@angular/core';
-import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
@@ -19,8 +17,10 @@ import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-
-const FILTERING_ICONS_FONT_SET = 'filtering-icons';
+import { IgxGridIconService } from '../common/grid-icon.service';
+import { GridIconsFeature } from '../common/enums';
+import { FILTERING_ICONS_FONT_SET, FILTERING_ICONS} from './grid-filtering-icons';
+import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
 
 /**
  * @hidden
@@ -60,7 +60,7 @@ export class IgxFilteringService implements OnDestroy {
     grid: IgxGridBaseDirective;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
-        private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
+        private iconService: IgxGridIconService,  private _overlayService: IgxOverlayService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -255,14 +255,8 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        if (!this._filterIconsRegistered) {
-            for (const icon of icons) {
-                if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
-                    this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
-                }
-            }
-            this._filterIconsRegistered = true;
-        }
+        this.iconService.registerSVGIcons(GridIconsFeature.Filtering, FILTERING_ICONS, FILTERING_ICONS_FONT_SET);
+        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
     }
 
     /**

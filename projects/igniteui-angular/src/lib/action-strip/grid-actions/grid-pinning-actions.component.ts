@@ -1,6 +1,8 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
-
+import { GridIconsFeature } from '../../grids/common/enums';
+import { PINNING_ACTIONS_ICONS_FONT_SET, PINNING_ACTIONS_ICONS, } from './grid-pinning-actions-icons';
+import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../../grids/pinning/pinning-icons';
 @Component({
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',
@@ -29,7 +31,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         if (context && !this.iconsRendered) {
-            this.renderIcons();
+            this.registerSVGIcons();
             this.iconsRendered = true;
         }
         return context && context.pinned;
@@ -110,14 +112,15 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
-    private renderIcons(): void {
+    private registerSVGIcons(): void {
         if (!this.isRow(this.strip.context)) {
             return;
         }
         const context = this.strip.context;
         const grid = context.grid;
         if (grid) {
-            grid.filteringService.registerSVGIcons();
+            this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+            this.iconService.registerSVGIcons(GridIconsFeature.RowPinningActions, PINNING_ACTIONS_ICONS, PINNING_ACTIONS_ICONS_FONT_SET);
         }
     }
 }
