@@ -163,12 +163,19 @@ export class IgxGridNavigationService {
                 return;
             }
         }
+        let newActiveNode = this.activeNode.column;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-            this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
+            newActiveNode = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
         }
         if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
-            this.activeNode.column = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
+            newActiveNode = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
         }
+
+        if (this.activeNode.column === newActiveNode) {
+            return;
+        }
+
+        this.setActiveNode({row: this.activeNode.row, column: newActiveNode}, 'headerCell');
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
@@ -337,22 +344,22 @@ export class IgxGridNavigationService {
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
 
-    public setActiveNode(column: ColumnType) {
-        if (this.activeNode) {
-            Object.assign(this.grid.navigation.activeNode, {row: this.activeNode.row, column: this.activeNode.column});
+    public setActiveNode(activeNode: IActiveNode, tag: GridKeydownTargetType) {
+        if (this.activeNode === undefined) {
+            this.activeNode = activeNode;
         } else {
-            const layout = column.columnLayoutChild ? this.grid.navigation.layout(this.activeNode.column) : null;
-            this.activeNode = { row: this.activeNode.row, column: this.activeNode.column, layout: layout };
+            Object.assign(this.activeNode, activeNode);
         }
+
 
         const args: IActiveNodeChangeEventArgs = {
             row: this.activeNode.row,
             column: this.activeNode.column,
             level: this.activeNode.level,
-            tag: 'dataCell'
+            tag: tag
         };
 
-        this.grid.onActiveNodeChange.emit(args);
+        this.grid.activeNodeChange.emit(args);
     }
 
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
@@ -448,6 +455,10 @@ export class IgxGridNavigationService {
     }
 
     private handleMCHeaderNav(key: string, ctrl: boolean) {
+        const newHeaderNode: ColumnGroupsCache = {
+            visibleIndex: this.activeNode.mchCache.visibleIndex,
+            level: this.activeNode.mchCache.level
+        };
         const activeCol = this.currentActiveColumn;
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
                 filter(c => c.level <= this.activeNode.level).map(col => col.visibleIndex));
@@ -455,27 +466,37 @@ export class IgxGridNavigationService {
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             nextCol =  this.getNextColumnMCH(index);
-            this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
+            newHeaderNode.visibleIndex = nextCol.visibleIndex;
         }
         if ((key.includes('right') || key === 'end') && activeCol.visibleIndex < lastGroupIndex) {
             const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
             activeCol.visibleIndex + 1;
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
-            this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
+            newHeaderNode.visibleIndex = nextCol.visibleIndex;
         }
         if (!ctrl && key.includes('up') && this.activeNode.level > 0) {
             nextCol = activeCol.parent;
-            this.activeNode.mchCache.level = nextCol.level;
+            newHeaderNode.level = nextCol.level;
         }
         if (!ctrl && key.includes('down') && activeCol.children) {
-            nextCol = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
+            nextCol = activeCol.children.find(c => c.visibleIndex === newHeaderNode.visibleIndex) ||
             activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
-            .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
-            this.activeNode.mchCache.level = nextCol.level;
+            .filter(col => col.visibleIndex < newHeaderNode.visibleIndex)[0];
+            newHeaderNode.level = nextCol.level;
         }
-        this.activeNode.column = nextCol.visibleIndex;
-        this.activeNode.level = nextCol.level;
-        this.performHorizontalScrollToCell(this.activeNode.column);
+
+        if (this.activeNode.mchCache.visibleIndex === newHeaderNode.visibleIndex &&
+            this.activeNode.mchCache.level === newHeaderNode.level) {
+            return;
+        }
+
+        this.setActiveNode({
+            row: this.activeNode.row,
+            column: nextCol.visibleIndex,
+            level: nextCol.level,
+            mchCache: newHeaderNode},
+            'headerCell');
+        this.performHorizontalScrollToCell(nextCol.visibleIndex);
     }
 
     private handleMCHExpandCollapse(key, column) {

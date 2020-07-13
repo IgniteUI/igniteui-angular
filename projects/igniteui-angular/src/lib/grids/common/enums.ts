@@ -19,7 +19,8 @@ export type GridKeydownTargetType =
     'dataCell' |
     'summaryCell' |
     'groupRow' |
-    'hierarchicalRow';
+    'hierarchicalRow' |
+    'headerCell';
 
 export enum GridSelectionMode {
     none = 'none',

@@ -1465,11 +1465,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```
-     * <igx-grid [data]="data" [autoGenerate]="true" (onActiveNodeChange)="activeNodeChange($event)"></igx-grid>
+     * <igx-grid [data]="data" [autoGenerate]="true" (activeNodeChange)="activeNodeChange($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onActiveNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
+    public activeNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
 
     /**
      * @hidden @internal

@@ -846,7 +846,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-        this.grid.navigation.setActiveNode(this.column);
+        this.setActiveNode();
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
@@ -868,6 +868,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.grid.cdr.detectChanges();
     }
+
 
     /**
      * If the provided string matches the text in the cell, the text gets highlighted.
@@ -910,5 +911,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const meta = new Map<string, any>();
         meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
         return meta;
+    }
+
+    private setActiveNode() {
+        if (this.grid.navigation.activeNode) {
+            this.grid.navigation.setActiveNode({row: this.rowIndex, column: this.visibleColumnIndex}, 'dataCell');
+        } else {
+            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, 'dataCell');
+        }
     }
 }
