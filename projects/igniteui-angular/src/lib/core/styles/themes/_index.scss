@@ -30,6 +30,7 @@
 @import '../components/charts/shape-chart-theme';
 @import '../components/checkbox/checkbox-theme';
 @import '../components/chip/chip-theme';
+@import '../components/column-actions/column-actions-theme';
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/combo/combo-theme';
 @import '../components/date-picker/date-picker-theme';
@@ -326,6 +327,10 @@
             $border-radius: $roundness,
             $ghost-shadow: if($elevation == false, none, null),
         ));
+    }
+
+    @if not(index($exclude, 'igx-column-actions')) {
+        @include igx-column-actions(igx-column-actions-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-column-hiding')) {

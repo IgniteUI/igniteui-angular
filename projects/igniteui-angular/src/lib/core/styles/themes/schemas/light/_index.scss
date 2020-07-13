@@ -17,6 +17,7 @@
 @import './category-chart';
 @import './checkbox';
 @import './chip';
+@import './column-actions';
 @import './column-hiding';
 @import './combo';
 @import './dialog';
@@ -79,6 +80,7 @@
 /// @property {Map} funnel-chart [$_light-funnel-chart]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
+/// @property {Map} igx-column-actions [$_light-column-actions]
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
@@ -137,6 +139,7 @@ $light-schema: (
     funnel-chart: $_light-funnel-chart,
     igx-checkbox: $_light-checkbox,
     igx-chip: $_light-chip,
+    igx-column-actions: $_light-column-actions,
     igx-column-hiding: $_light-column-hiding,
     igx-combo: $_light-combo,
     igx-dialog: $_light-dialog,
@@ -195,6 +198,7 @@ $light-fluent-schema: (
     category-chart: $_fluent-category-chart,
     igx-checkbox: $_fluent-checkbox,
     igx-chip: $_fluent-chip,
+    igx-column-actions: $_fluent-column-actions,
     igx-column-hiding: $_fluent-column-hiding,
     igx-combo: $_fluent-combo,
     igx-dialog: $_fluent-dialog,
@@ -256,6 +260,7 @@ $light-bootstrap-schema: (
     category-chart: $_bootstrap-category-chart,
     igx-checkbox: $_bootstrap-checkbox,
     igx-chip: $_bootstrap-chip,
+    igx-column-actions: $_bootstrap-column-actions,
     igx-column-hiding: $_bootstrap-column-hiding,
     igx-combo: $_bootstrap-combo,
     igx-dialog: $_bootstrap-dialog,

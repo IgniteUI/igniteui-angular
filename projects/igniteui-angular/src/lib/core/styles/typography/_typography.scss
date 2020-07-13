@@ -18,6 +18,7 @@
 @import '../components/charts/shape-chart-theme';
 @import '../components/checkbox/checkbox-theme';
 @import '../components/chip/chip-theme';
+@import '../components/column-actions/column-actions-theme';
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/date-range-picker/date-range-picker-theme';
 @import '../components/dialog/dialog-theme';
@@ -99,6 +100,7 @@
     @include igx-category-chart-typography($type-scale);
     @include igx-checkbox-typography($type-scale);
     @include igx-chip-typography($type-scale);
+    @include igx-column-actions-typography($type-scale);
     @include igx-column-hiding-typography($type-scale);
     @include igx-data-chart-typography($type-scale);
     @include igx-date-range-typography($type-scale);

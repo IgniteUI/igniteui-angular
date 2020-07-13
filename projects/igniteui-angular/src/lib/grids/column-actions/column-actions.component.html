@@ -1,7 +1,7 @@
 <div class="igx-column-actions__header">
     <h4 class="igx-column-actions__header-title" *ngIf="title">{{ title }}</h4>
 
-    <igx-input-group class="igx-column-actions__header-input" *ngIf="!disableFilter">
+    <igx-input-group class="igx-column-actions__header-input" *ngIf="!hideFilter">
         <input igxInput
             type="text"
             [(ngModel)]="filterCriteria"
@@ -18,12 +18,11 @@
             | filterActionColumns:filterCriteria:pipeTrigger
             | sortActionColumns:columnDisplayOrder:pipeTrigger"
         class="igx-column-actions__columns-item"
-        (onColumnVisibilityChanged)="onVisibilityChanged($event)"
-        (change)="checkColumn(column)"
-        [checked]="columnChecked(column)"
-        [disabled]="columnItem.disabled"
-        [style.margin-left.px]="columnItem.calcIndent">
-        {{ columnItem.name }}
+    
+        (change)="actionsDirective.checkColumn(column)"
+        [checked]="actionsDirective.columnChecked(column)"
+        [style.margin-left.px]="column.level * indentation">
+        {{ column.header || column.field }}
     </igx-checkbox>
 </div>
 

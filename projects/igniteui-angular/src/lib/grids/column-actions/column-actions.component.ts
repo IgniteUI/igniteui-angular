@@ -7,7 +7,7 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild
+    Inject
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
@@ -27,6 +27,10 @@ import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 })
 export class IgxColumnActionsComponent implements OnDestroy {
 
+
+/* todo
+    <!-- (onColumnVisibilityChanged)="onVisibilityChanged($event)" -->
+*/
     /**
      * @hidden @internal
      */
@@ -51,7 +55,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
      */
     public set columns(value: IgxColumnComponent[]) {
         if (value) {
-            this.columns = value;
+            this._columns = value;
             this._pipeTrigger++;
             this.cdr.detectChanges();
         }
@@ -179,7 +183,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
      * Gets/sets the text of the button that unchecks all columns.
      * @example
      * ```html
-     * <igx-column-actions [uncheckAllText] = "'Show Columns'"></igx-column-actions>
+     * <igx-column-actions [uncheckAllText]="'Show Columns'"></igx-column-actions>
      * ```
      */
     @Input()
@@ -189,11 +193,21 @@ export class IgxColumnActionsComponent implements OnDestroy {
      * Gets/sets the text of the button that checks all columns.
      * @example
      * ```html
-     * <igx-column-actions [checkAllText] = "'Hide Columns'"></igx-column-actions>
+     * <igx-column-actions [checkAllText]="'Hide Columns'"></igx-column-actions>
      * ```
      */
     @Input()
     public checkAllText = 'Check All';
+
+    /**
+     * Gets/sets the indentation of columns in the column list based on their hierarchy level.
+     * @example
+     * ```
+     * <igx-column-actions [indentation]="15"></igx-column-actions>
+     * ```
+     */
+    @Input()
+    public indentation = 30;
 
     /**
      * An event that is emitted after the columns visibility is changed.
@@ -227,6 +241,11 @@ export class IgxColumnActionsComponent implements OnDestroy {
     }
 
     /**
+     * @hidden @internal
+     */
+    public actionsDirective: IgxColumnActionsBaseDirective;
+
+    /**
      * Sets/Gets the css class selector.
      * By default the value of the `class` attribute is `"igx-column-hiding"`.
      * ```typescript
@@ -237,18 +256,12 @@ export class IgxColumnActionsComponent implements OnDestroy {
      * ```
      */
     @HostBinding('attr.class')
-    public cssClass = 'igx-column-hiding';
+    public cssClass = 'igx-column-actions';
 
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxColumnActionsBaseDirective)
-    public actionsDirective: IgxColumnActionsBaseDirective;
-
-    /**
-     * @hidden @internal
-     */
-    private get checkAllDisabled(): boolean {
+    public get checkAllDisabled(): boolean {
         return false;
     /*    if (!this.columnItems || this.columnItems.length < 1 ||
             this.hiddenColumnsCount === this.columns.length) {
@@ -263,7 +276,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    private get uncheckAllDisabled(): boolean {
+    public get uncheckAllDisabled(): boolean {
         return false;
       /*  if (!this.columnItems || this.columnItems.length < 1 ||
             this.hiddenColumnsCount < 1 || this.hidableColumns.length < 1) {
@@ -279,8 +292,8 @@ export class IgxColumnActionsComponent implements OnDestroy {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     ngOnDestroy() {
        // for (const item of this._currentColumns) {
        //     item.valueChanged.unsubscribe();
@@ -317,9 +330,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
       //  }
     }
 
-    /*get name() {
-        return (this.column) ? ((this.column.header) ? this.column.header : this.column.field) : '';
-    }
+    /*
 
     get level() {
         return this.column.level;

@@ -16,6 +16,7 @@
 @import './category-chart';
 @import './checkbox';
 @import './chip';
+@import './column-actions';
 @import './column-hiding';
 @import './combo';
 @import './dialog';
@@ -74,6 +75,7 @@
 /// @property {Map} category-chart [$_dark-category-chart]
 /// @property {Map} igx-checkbox [$_dark-checkbox]
 /// @property {Map} igx-chip [$_dark-chip]
+/// @property {Map} igx-column-actions [$_dark-column-actions]
 /// @property {Map} igx-column-hiding [$_dark-column-hiding]
 /// @property {Map} igx-combo [$_dark-combo]
 /// @property {Map} igx-dialog [$_dark-dialog]
@@ -132,6 +134,7 @@ $dark-schema: (
     category-chart: $_dark-category-chart,
     igx-checkbox: $_dark-checkbox,
     igx-chip: $_dark-chip,
+    igx-column-actions: $_dark-column-actions,
     igx-column-hiding: $_dark-column-hiding,
     igx-combo: $_dark-combo,
     igx-dialog: $_dark-dialog,
@@ -193,6 +196,7 @@ $dark-schema: (
 /// @property {map} category-chart [$_dark-fluent-category-chart]
 /// @property {map} igx-checkbox [$_dark-fluent-checkbox],
 /// @property {map} igx-chip [$_dark-fluent-chip],
+/// @property {map} igx-column-actions [$_dark-fluent-column-actions],
 /// @property {map} igx-column-hiding [$_dark-fluent-column-hiding],
 /// @property {map} igx-combo [$_dark-fluent-combo],
 /// @property {map} igx-dialog [$_dark-fluent-dialog],
@@ -251,6 +255,7 @@ $dark-fluent-schema: (
     category-chart: $_dark-fluent-category-chart,
     igx-checkbox: $_dark-fluent-checkbox,
     igx-chip: $_dark-fluent-chip,
+    igx-column-actions: $_dark-fluent-column-actions,
     igx-column-hiding: $_dark-fluent-column-hiding,
     igx-combo: $_dark-fluent-combo,
     igx-dialog: $_dark-fluent-dialog,
@@ -312,6 +317,7 @@ $dark-fluent-schema: (
 /// @property {map} category-chart [$_dark-bootstrap-category-chart]
 /// @property {map} igx-checkbox [$_dark-bootstrap-checkbox],
 /// @property {map} igx-chip [$_dark-bootstrap-chip],
+/// @property {map} igx-column-actions [$_dark-bootstrap-column-actions],
 /// @property {map} igx-column-hiding [$_dark-bootstrap-column-hiding],
 /// @property {map} igx-combo [$_dark-bootstrap-combo],
 /// @property {map} igx-dialog [$_dark-bootstrap-dialog],
@@ -370,6 +376,7 @@ $dark-bootstrap-schema: (
     category-chart: $_dark-bootstrap-category-chart,
     igx-checkbox: $_dark-bootstrap-checkbox,
     igx-chip: $_dark-bootstrap-chip,
+    igx-column-actions: $_dark-bootstrap-column-actions,
     igx-column-hiding: $_dark-bootstrap-column-hiding,
     igx-combo: $_dark-bootstrap-combo,
     igx-dialog: $_dark-bootstrap-dialog,

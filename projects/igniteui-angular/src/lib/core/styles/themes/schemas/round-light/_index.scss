@@ -16,6 +16,7 @@
 @import '../light/carousel';
 @import '../light/checkbox';
 @import '../light/chip';
+@import '../light/column-actions';
 @import '../light/column-hiding';
 @import '../light/combo';
 @import '../light/dialog';
@@ -59,6 +60,7 @@
 /// @property {Map} igx-carousel [$_light-carousel]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
+/// @property {Map} igx-column-actions [$_light-column-actions]
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
@@ -102,6 +104,7 @@ $light-round-schema: (
     igx-carousel: extend($_light-carousel, $_round-shape-carousel),
     igx-checkbox: extend($_light-checkbox, $_round-shape-checkbox),
     igx-chip: extend($_light-chip, $_round-shape-chip),
+    igx-column-actions: extend($_light-column-actions, $_round-shape-column-actions),
     igx-column-hiding: extend($_light-column-hiding, $_round-shape-column-hiding),
     igx-combo: extend($_light-combo, $_round-shape-combo),
     igx-dialog: extend($_light-dialog, $_round-shape-dialog),

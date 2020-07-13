@@ -257,7 +257,7 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
         collection: IgxColumnComponent[],
         actionFilter: (value: IgxColumnComponent, index: number, array: IgxColumnComponent[]) => boolean,
         pipeTrigger: number
-    ) {
+    ): IgxColumnComponent[] {
         const copy = collection.slice(0);
         if (actionFilter) {
             return copy.filter(actionFilter);
@@ -274,8 +274,14 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number) {
-
+    public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
+        if (filterCriteria && filterCriteria.length > 0) {
+            return collection.filter((c) => {
+                const filterText = c.header || c.field;
+                return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0;
+            });
+        }
+        return collection;
     }
 }
 
@@ -287,7 +293,10 @@ export class IgxSortActionColumnsPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    public transform(collection: IgxColumnComponent[], displayOrder: ColumnDisplayOrder, pipeTrigger: number) {
-
+    public transform(collection: IgxColumnComponent[], displayOrder: ColumnDisplayOrder, pipeTrigger: number): IgxColumnComponent[] {
+        if (displayOrder === ColumnDisplayOrder.Alphabetical) {
+            return collection.sort((a, b) => (a.header || a.field).localeCompare(b.header || b.field));
+        }
+        return collection;
     }
 }
