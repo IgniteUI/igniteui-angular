@@ -57,11 +57,13 @@
     "@types/source-map": "0.5.2",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.6.11",
+    "core-js-pure": "^3.6.5",
     "hammerjs": "^2.0.8",
     "igniteui-trial-watermark": "^1.0.3",
     "jszip": "^3.4.0",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.5.4",
+    "setimmediate": "^1.0.5",
     "tslib": "^1.13.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.10.3"
