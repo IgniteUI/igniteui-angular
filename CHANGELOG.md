@@ -17,8 +17,8 @@ All notable changes for each version of this project will be documented in this 
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
-- `IgxTimePicker`	- `IgxTimePicker`
-    - Added a functionality which renders time parts outside of the minimum and maximum range value as disabled.
+- `IgxTimePicker`
+    - Added a functionality which visually represents time parts outside of the minimum and maximum range value as disabled.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
