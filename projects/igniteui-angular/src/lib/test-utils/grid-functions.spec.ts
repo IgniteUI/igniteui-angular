@@ -64,6 +64,7 @@ const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
+const SORT_INDEX_CLASS = '.sort-index';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -1887,6 +1888,14 @@ export class GridFunctions {
 
     public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
         return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
+    }
+
+    public static getColumnSortingIndex(columnHeader: DebugElement): number {
+        const indicatorContainer = columnHeader.query(By.css(SORT_INDEX_CLASS));
+        if (indicatorContainer) {
+            return parseInt(indicatorContainer.nativeElement.textContent.trim(), 10);
+        }
+        return null;
     }
 
     public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
