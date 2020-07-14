@@ -346,7 +346,7 @@ export class FileContentData {
             `<tableColumn id="1" name="value"/></tableColumns>`;
 
         this._worksheetData = `<dimension ref="A1:A4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
-            `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.34" ` +
+            `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="8.43" ` +
             `customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="s"><v>1</v>` +
             `</c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v></c></row></sheetData>`;
 
@@ -611,11 +611,10 @@ export class FileContentData {
                 wsDataColSettings =
                     `<cols><col min="1" max="1" width="200" customWidth="1"/></cols>`;
                 break;
-            case undefined:
             case null:
             case 0:
                 wsDataColSettings =
-                    `<cols><col min="1" max="1" width="8.34" customWidth="1"/></cols>`;
+                    `<cols><col min="1" max="1" width="8.43" customWidth="1"/></cols>`;
                 break;
         }
 
