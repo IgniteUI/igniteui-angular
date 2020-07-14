@@ -15,7 +15,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number): string {
+    transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -44,7 +44,7 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number): { [prop: string]: any } {
+    transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): { [prop: string]: any } {
         const css = {};
         if (!styles) {
             return css;
