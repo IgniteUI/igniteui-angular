@@ -18,7 +18,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 - `IgxTimePicker`
-    - Added a functionality which visually represents time parts outside of the minimum and maximum range as disabled.
+    - Added a disabled style for time parts outside of the minimum and maximum range.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
