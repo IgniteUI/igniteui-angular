@@ -136,7 +136,7 @@ export class IgxGridNavigationService {
     }
 
     summaryNav(event: KeyboardEvent) {
-        this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length);
+        this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length, 'summaryCell');
     }
 
     headerNavigation(event: KeyboardEvent) {
@@ -150,10 +150,10 @@ export class IgxGridNavigationService {
 
         this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt, event);
         if (shift || alt || (ctrl && (key.includes('down') || key.includes('down')))) { return; }
-        !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl);
+        !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1, 'headerCell') : this.handleMCHeaderNav(key, ctrl);
     }
 
-    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
+    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number, tag: GridKeydownTargetType) {
         const ctrl = event.ctrlKey;
         if (!HORIZONTAL_NAV_KEYS.has(event.key.toLowerCase())) { return; }
         event.preventDefault();
@@ -175,7 +175,7 @@ export class IgxGridNavigationService {
             return;
         }
 
-        this.setActiveNode({row: this.activeNode.row, column: newActiveNode}, 'headerCell');
+        this.setActiveNode({row: this.activeNode.row, column: newActiveNode}, tag);
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 

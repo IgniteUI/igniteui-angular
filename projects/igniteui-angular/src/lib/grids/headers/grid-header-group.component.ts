@@ -300,7 +300,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
-    @HostListener('pointerdown', ['$event'])
+    // @HostListener('pointerdown', ['$event'])
     public pointerdown(event): void {
         event.stopPropagation();
         this.activate();
@@ -312,7 +312,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public activate() {
-        this.grid.navigation.activeNode = this.activeNode;
+        const currActiveNode = this.grid.navigation.activeNode;
+        if (currActiveNode.column === this.activeNode.column && currActiveNode.level === this.activeNode.level) {
+            return;
+        }
+
+        this.grid.navigation.setActiveNode(this.activeNode);
         this.grid.theadRow.nativeElement.focus();
     }
 

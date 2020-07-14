@@ -29,6 +29,7 @@ import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
+import { retry } from 'rxjs/operators';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -914,11 +915,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private setActiveNode() {
-        if (this.grid.navigation.activeNode) {
-            this.grid.navigation.setActiveNode({row: this.rowIndex, column: this.visibleColumnIndex}, 'dataCell');
-        } else {
-            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, 'dataCell');
+        const activeNode = this.grid.navigation.activeNode;
+        if ((activeNode && activeNode.row === this.rowIndex && activeNode.column === this.visibleColumnIndex) &&
+            (activeNode && activeNode.layout && activeNode.layout.columnVisibleIndex === this.visibleColumnIndex)) {
+            return;
         }
+
+        // if (this.grid.navigation.activeNode) {
+        //     this.grid.navigation.setActiveNode({row: this.rowIndex, column: this.visibleColumnIndex}, 'dataCell');
+        // } else {
+        const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+        this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, 'dataCell');
+        // }
     }
 }

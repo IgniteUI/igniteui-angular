@@ -56,7 +56,12 @@ export class IgxSummaryCellComponent {
 
     @HostListener('pointerdown')
     public activate() {
-        this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex};
+        const currNode = this.grid.navigation.activeNode;
+        if (currNode && this.rowIndex === currNode.row && this.visibleColumnIndex === currNode.column) {
+            return;
+        }
+
+        this.grid.navigation.setActiveNode({row: this.rowIndex, column: this.visibleColumnIndex}, 'summaryCell');
         this.grid.cdr.detectChanges();
     }
 
