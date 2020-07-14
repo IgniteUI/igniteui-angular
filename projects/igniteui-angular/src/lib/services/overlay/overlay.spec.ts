@@ -2735,11 +2735,12 @@ describe('igxOverlay', () => {
             overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (event.key === targetButton) {
                     overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+                    expect(overlayWrapper).toBeFalsy();
                 }
             });
             tick();
             expect(overlayWrapper).toBeTruthy();
-            overlayWrapper.dispatchEvent(escEvent);
+            document.dispatchEvent(escEvent);
             tick();
         }));
 
@@ -2764,7 +2765,7 @@ describe('igxOverlay', () => {
                     overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
                 }
             });
-            overlayWrapper.dispatchEvent(escEvent);
+            document.dispatchEvent(escEvent);
             tick();
             fixture.detectChanges();
 
@@ -2774,22 +2775,25 @@ describe('igxOverlay', () => {
         it('Should close the opened overlays consecutively on escape keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent), { modal: false, closeOnEsc: true });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent), { modal: true, closeOnEsc: true });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
             tick();
 
-            const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv.children.length).toBe(2);
+
             const escEvent = new KeyboardEvent('keydown', {
                 key: 'Escape'
             });
-            overlayWrapper.dispatchEvent(escEvent);
-            tick();
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0]).toBeFalsy();
 
             document.dispatchEvent(escEvent);
             tick();
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0]).toBeFalsy();
+            expect(overlayDiv.children.length).toBe(1);
+
+            document.dispatchEvent(escEvent);
+            tick();
+            expect(overlayDiv.children.length).toBe(0);
         }));
 
         // Test #1883 #1820
@@ -2828,10 +2832,10 @@ describe('igxOverlay', () => {
             tick();
             expect(overlayWrapper).toBeTruthy();
 
-            overlayWrapper.dispatchEvent(enterEvent);
-            overlayWrapper.dispatchEvent(aEvent);
-            overlayWrapper.dispatchEvent(arrowUpEvent);
-            overlayWrapper.dispatchEvent(escEvent);
+            document.dispatchEvent(enterEvent);
+            document.dispatchEvent(aEvent);
+            document.dispatchEvent(arrowUpEvent);
+            document.dispatchEvent(escEvent);
         }));
 
         // 3.2 Non - Modal

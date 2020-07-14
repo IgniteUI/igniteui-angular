@@ -331,9 +331,7 @@ export class IgxOverlayService implements OnDestroy {
             wrapperElement.classList.add('igx-overlay__wrapper--modal');
         }
 
-        if (info.settings.closeOnEsc) {
-            this.setUpCloseOnEscape(info);
-        }
+        this.setUpCloseOnEscape();
 
         if (info.settings.positionStrategy.settings.openAnimation) {
             this.playOpenAnimation(info);
@@ -476,13 +474,11 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private setUpCloseOnEscape(info: OverlayInfo) {
-        if (!info.settings.modal) {
+    private setUpCloseOnEscape() {
+        if (this._overlayInfos.length - this._overlayInfos.filter(x => x.closeAnimationPlayer
+            && x.closeAnimationPlayer.hasStarted()).length === 1) {
             this.subscribeOnEscape(this._document);
-            return;
         }
-        const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-        this.subscribeOnEscape(wrapperElement);
     }
 
     private subscribeOnEscape(target: FromEventTarget<unknown>) {
@@ -491,7 +487,9 @@ export class IgxOverlayService implements OnDestroy {
             takeUntil(this.destroy$)
         ).subscribe(() => {
             const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
-            this.hide(targetOverlay.id);
+            if (targetOverlay.settings.closeOnEsc) {
+                this.hide(targetOverlay.id);
+            }
         });
     }
 
@@ -710,6 +708,14 @@ export class IgxOverlayService implements OnDestroy {
                 this._document.addEventListener('click', this.documentClicked, true);
             }
         }
+    }
+
+    private hasRemainingOverlaysAfterClose(): boolean {
+        //  if all overlays minus closing overlays equals one add the handler
+        return this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
+            this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
+                x.closeAnimationPlayer &&
+                x.closeAnimationPlayer.hasStarted()).length === 1;
     }
 
     private removeOutsideClickListener(info: OverlayInfo) {
