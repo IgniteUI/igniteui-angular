@@ -12,8 +12,8 @@
         <igx-icon class="sort-icon" [attr.draggable]="false">
             {{sortingIcon}}
         </igx-icon>
-        <ng-template [ngIf]="column | hasSortingIndex:grid.sortingExpressions">
-            <span [attr.draggable]="false">{{column | sortingIndex:grid.sortingExpressions}}</span>
+        <ng-template [ngIf]="column.field | hasSortingIndex:grid.sortingExpressions">
+            <span class="sort-index" [attr.draggable]="false">{{column.field | sortingIndex:grid.sortingExpressions}}</span>
         </ng-template>
     </div>
 

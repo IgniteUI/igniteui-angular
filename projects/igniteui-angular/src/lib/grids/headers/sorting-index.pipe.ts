@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from '../columns/column.component';
+import { IgxGridHeaderComponent } from './grid-header.component';
 
 @Pipe({
   name: 'sortingIndex',
@@ -8,11 +8,11 @@ import { IgxColumnComponent } from '../columns/column.component';
 })
 export class SortingIndexPipe implements PipeTransform {
 
-  transform(value: IgxColumnComponent, sortingExpressions: ISortingExpression[]): number {
-    const grid = value.grid;
+  constructor(private igxHeader: IgxGridHeaderComponent) {}
+  transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
+    const grid = this.igxHeader.grid;
     const index = sortingExpressions.filter(expression => grid.getColumnByName(expression.fieldName) ?? false)
-                                    .findIndex(expression => expression.fieldName === value.field) + 1;
-    value.sortingIndex = index;
+                                    .findIndex(expression => expression.fieldName === columnField) + 1;
     return index;
   }
 
@@ -23,16 +23,8 @@ export class SortingIndexPipe implements PipeTransform {
   pure: true
 })
 export class HasSortingIndexPipe implements PipeTransform {
-  transform(value: IgxColumnComponent, sortingExpressions: ISortingExpression[]): boolean {
-    const isColumnSorted = sortingExpressions.some(expression => expression.fieldName === value.field);
-    if (!isColumnSorted) {
-       value.hasSortingIndex = false;
-       value.sortingIndex = null;
-    } else {
-      value.hasSortingIndex = true;
-    }
-    value.grid.notifyChanges();
-    return isColumnSorted;
+  transform(columnField: string, sortingExpressions: ISortingExpression[]): boolean {
+    return sortingExpressions.some(expression => expression.fieldName === columnField);
   }
 
 }
