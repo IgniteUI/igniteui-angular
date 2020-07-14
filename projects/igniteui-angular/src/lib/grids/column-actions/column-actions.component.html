@@ -16,10 +16,10 @@
         *ngFor="let column of columns
             | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
             | filterActionColumns:filterCriteria:pipeTrigger
-            | sortActionColumns:columnDisplayOrder:pipeTrigger"
+            | sortActionColumns:columnDisplayOrder:pipeTrigger; trackBy: actionsDirective.trackByFunction"
         class="igx-column-actions__columns-item"
     
-        (change)="actionsDirective.checkColumn(column)"
+        (change)="actionsDirective.toggleColumn(column)"
         [checked]="actionsDirective.columnChecked(column)"
         [style.margin-left.px]="column.level * indentation">
         {{ column.header || column.field }}

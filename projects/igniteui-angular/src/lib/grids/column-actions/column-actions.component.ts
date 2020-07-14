@@ -20,10 +20,8 @@ import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
  *  public columnActions: IgxColumnActionsComponent;
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-column-actions',
-    templateUrl: './column-actions.component.html',
-    providers: []
+    templateUrl: './column-actions.component.html'
 })
 export class IgxColumnActionsComponent implements OnDestroy {
 

@@ -2,7 +2,7 @@ import { Directive } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 
 @Directive()
-export class IgxColumnActionsBaseDirective {
+export abstract class IgxColumnActionsBaseDirective {
 
     /**
      * @hidden @internal
@@ -16,20 +16,25 @@ export class IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public columnChecked(column: IgxColumnComponent): boolean { return false; }
+    public trackByFunction: (index: number, item: IgxColumnComponent) => boolean;
 
     /**
      * @hidden @internal
      */
-    public checkColumn(column: IgxColumnComponent) { }
+    public abstract columnChecked(column: IgxColumnComponent): boolean;
 
     /**
      * @hidden @internal
      */
-    public uncheckAll() { }
+    public abstract toggleColumn(column: IgxColumnComponent);
 
     /**
      * @hidden @internal
      */
-    public checkAll() { }
+    public abstract uncheckAll();
+
+    /**
+     * @hidden @internal
+     */
+    public abstract checkAll();
 }

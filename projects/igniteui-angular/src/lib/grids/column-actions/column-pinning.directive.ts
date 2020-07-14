@@ -22,6 +22,11 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
+    public trackByFunction = (index: number, item: IgxColumnComponent) => item.pinned;
+
+    /**
+     * @hidden @internal
+     */
     public checkAll() {
         this.gridAPI.grid.columns.forEach(c => c.pinned = true);
     }
@@ -48,7 +53,7 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkColumn(column: IgxColumnComponent) {
-        column.pinned = true;
+    public toggleColumn(column: IgxColumnComponent) {
+        column.pinned = !column.pinned;
     }
 }

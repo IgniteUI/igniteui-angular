@@ -22,6 +22,11 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
+    public trackByFunction = (index: number, item: IgxColumnComponent) => item.hidden;
+
+    /**
+     * @hidden @internal
+     */
     public checkAll() {
         this.gridAPI.grid.columns.forEach(c => c.hidden = true);
     }
@@ -48,7 +53,8 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkColumn(column: IgxColumnComponent) {
-        column.hidden = true;
+    public toggleColumn(column: IgxColumnComponent) {
+        column.hidden = !column.hidden;
+        this.gridAPI.grid.markForCheck();
     }
 }
