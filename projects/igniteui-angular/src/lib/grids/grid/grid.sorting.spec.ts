@@ -47,8 +47,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(0, lastNameColumn).value).toEqual('Smith');
             expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual('BRown');
-            expect(grid.getColumnByName(currentColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(currentColumn).sortingIndex).toEqual(1);
 
             // Ignore case on sorting set to true
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
@@ -82,10 +80,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(grid.getCellByColumn(0, 'Name').value).toEqual('Jane');
             expect(grid.getCellByColumn(grid.data.length - 1, 'Name').value).toEqual('Connor');
-            grid.columns.forEach(col => {
-                expect(col.hasSortingIndex).toBeFalsy();
-                expect(col.sortingIndex).toBeNull();
-            });
         });
 
         it('Should sort grid by current column by expression (Ascending)', () => {
@@ -98,8 +92,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual(1);
-            expect(grid.getColumnByName(currentColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(currentColumn).sortingIndex).toEqual(1);
         });
 
         it('Should sort grid by current column by expression (Descending with ignoreCase)', () => {
@@ -113,8 +105,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual('Alex');
-            expect(grid.getColumnByName(currentColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(currentColumn).sortingIndex).toEqual(1);
         });
 
         it('Should sort grid by multiple expressions and clear sorting through API', () => {
@@ -134,45 +124,26 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(6);
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('Jones');
 
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toEqual(1);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toEqual(2);
-            expect(grid.getColumnByName(thirdColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(thirdColumn).sortingIndex).toBeNull();
-
             // Clear sorting on a column
             grid.clearSort(firstColumn);
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(1);
             expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toBeNull();
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toEqual(1);
 
             grid.sortingExpressions = [
-                { fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true },
-                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true }
+                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
             ];
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(2);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toEqual(1);
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toEqual(2);
 
             // Clear sorting on all columns
             grid.clearSort();
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(0);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toBeNull();
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toBeNull();
         });
 
         it('Should sort grid by multiple expressions through API using ignoreCase for the second expression', () => {
@@ -194,23 +165,10 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('BRown');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
 
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toEqual(1);
-            expect(grid.getColumnByName(thirdColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(thirdColumn).sortingIndex).toEqual(2);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toBeNull();
-
             grid.clearSort();
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(0);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toBeNull();
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toBeNull();
-            expect(grid.getColumnByName(thirdColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(thirdColumn).sortingIndex).toBeNull();
 
             grid.sort(exprs);
             fixture.detectChanges();
@@ -221,13 +179,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('BRown');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
-
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toEqual(1);
-            expect(grid.getColumnByName(thirdColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(thirdColumn).sortingIndex).toEqual(2);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toBeNull();
         });
 
         // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
@@ -236,11 +187,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const firstColumn = 'ID';
             const secondColumn = 'Name';
             const thirdColumn = 'LastName';
-            const invalidColumn = 'Age';
             const invalidAndValidExp = [
                 { fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false },
-                { fieldName: invalidColumn, dir: SortingDirection.Asc, ignoreCase: true },
-                { fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true }
             ];
 
             grid.sort(invalidAndValidExp);
@@ -253,12 +202,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('ALex');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('Smith');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(5);
-
-
-            expect(grid.getColumnByName(secondColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(secondColumn).sortingIndex).toEqual(1);
-            expect(grid.getColumnByName(firstColumn).hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName(firstColumn).sortingIndex).toEqual(2);
         });
 
         it(`Should allow sorting using a custom Sorting Strategy.`, () => {
@@ -283,8 +226,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
             expect(isFirstHalfOdd).toEqual(true);
             expect(isSecondHalfEven).toEqual(true);
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName('ID').sortingIndex).toEqual(1);
         });
     });
 
@@ -305,9 +246,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowFirstCell)).toEqual('7');
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Rick');
-
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName('ID').sortingIndex).toEqual(1);
         });
 
         it('Should sort grid descending by clicking twice on sort icon UI', () => {
@@ -336,8 +274,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName('ID').sortingIndex).toEqual(1);
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
 
@@ -346,9 +282,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Connor');
-
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName('ID').sortingIndex).toBeNull();
 
         });
 
@@ -364,13 +297,10 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, true);
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName('ID').sortingIndex).toEqual(1);
+
             grid.clearSort();
             fixture.detectChanges();
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName('ID').sortingIndex).toBeNull();
         });
 
         it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
@@ -393,8 +323,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, true);
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(7);
-            expect(grid.getColumnByName('ID').hasSortingIndex).toBeTruthy();
-            expect(grid.getColumnByName('ID').sortingIndex).toEqual(1);
 
             const secondHeaderCell = GridFunctions.getColumnHeader('Name', fixture);
             UIInteractions.simulateClickAndSelectEvent(secondHeaderCell);
@@ -416,8 +344,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
             // tslint:disable-next-line: max-line-length
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
-            expect(grid.getColumnByName('Name').hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName('Name').sortingIndex).toBeNull();
+
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
 
@@ -425,9 +352,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
             // tslint:disable-next-line: max-line-length
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
-
-            expect(grid.getColumnByName('Name').hasSortingIndex).toBeFalsy();
-            expect(grid.getColumnByName('Name').sortingIndex).toBeNull();
         });
     });
 });

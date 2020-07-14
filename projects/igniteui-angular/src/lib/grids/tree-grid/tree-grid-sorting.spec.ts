@@ -31,7 +31,6 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
     }));
 
-    // TO DO: Add tests for column sorting indicators
     describe('API sorting', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {
             treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false,
