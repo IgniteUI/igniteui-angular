@@ -10,7 +10,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-fdescribe('IgxGrid - Grid Sorting #grid', () => {
+describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite();
     let fixture;
