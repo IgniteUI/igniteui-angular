@@ -285,6 +285,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return `${this.row.gridID}_${this.rowIndex}_${ this.visibleColumnIndex}`;
     }
 
+    @HostBinding('attr.title')
+    public get title() {
+        return this.editMode || this.cellTemplate ? '' : this.value;
+    }
+
     /**
      * Returns a reference to the nativeElement of the cell.
      * ```typescript
