@@ -83,6 +83,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._isModal = val;
     }
 
+    @Input()
     get closeOnEscapeKey() {
         return this._closeOnEscapeKey;
     }

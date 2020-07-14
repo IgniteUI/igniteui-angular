@@ -30,6 +30,7 @@ import { fromEvent, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 import { showMessage } from '../../core/deprecateDecorators';
+import { FromEventTarget } from 'rxjs/internal/observable/fromEvent';
 
 let warningShown = false;
 
@@ -50,7 +51,7 @@ export class IgxOverlayService implements OnDestroy {
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
         closeOnOutsideClick: true,
-        closeOnEsc: true
+        closeOnEsc: false
     };
 
     /**
@@ -476,11 +477,22 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private setUpCloseOnEscape(info: OverlayInfo) {
+        if (!info.settings.modal) {
+            this.subscribeOnEscape(this._document);
+            return;
+        }
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
-        fromEvent(wrapperElement, 'keydown').pipe(
+        this.subscribeOnEscape(wrapperElement);
+    }
+
+    private subscribeOnEscape(target: FromEventTarget<unknown>) {
+        fromEvent(target, 'keydown').pipe(
             filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
             takeUntil(this.destroy$)
-        ).subscribe(() => this.hide(info.id));
+        ).subscribe(() => {
+            const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
+            this.hide(targetOverlay.id);
+        });
     }
 
     private onCloseDone(info: OverlayInfo) {
