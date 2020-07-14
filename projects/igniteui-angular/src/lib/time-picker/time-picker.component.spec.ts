@@ -1,4 +1,4 @@
-import { Component, ViewChild, NgModule, ElementRef, EventEmitter } from '@angular/core';
+import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { IgxHourItemDirective, IgxMinuteItemDirective, IgxSecondsItemDirective, IgxAmPmItemDirective } from './time-picker.directives';
 
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
@@ -1667,6 +1668,53 @@ describe('IgxTimePicker', () => {
             expect(input).not.toEqual(document.activeElement);
             expect(dummyInput).toEqual(document.activeElement);
         }));
+
+        it('should apply disabled style for time outside the min and max values', fakeAsync(() => {
+            timePicker = new IgxTimePickerComponent(null, null);
+            fixture.detectChanges();
+            timePicker.format = 'hh:mm:ss tt';
+            const date = new Date(2018, 10, 27, 9, 50, 58);
+            timePicker.value = date;
+
+            timePicker.minValue = '09:15:10 AM';
+            timePicker.maxValue = '11:15:10 AM';
+
+            timePicker.selectedHour = '06';
+            timePicker.selectedMinute = '25';
+            timePicker.selectedSeconds = '00';
+            timePicker.selectedAmPm = 'AM';
+
+            fixture.detectChanges();
+
+            // The selected time is 06:25:00 AM
+            // Testing 09:25:00 AM
+            expect(timePicker.applyDisabledStyleForItem('hour', '9')).toBe(false);
+
+            timePicker.selectedHour = '9'; // The selected time is 09:25:00 AM
+
+            // Testing 10:25:00 AM
+            expect(timePicker.applyDisabledStyleForItem('hour', '10')).toBe(false);
+
+            timePicker.selectedHour = '10';
+            timePicker.selectedMinute = '10'; // The selected time is 10:10:00 AM
+
+            // Testing 11:10:00 AM
+            expect(timePicker.applyDisabledStyleForItem('hour', '11')).toBe(false);
+
+            timePicker.selectedHour = '11'; // The selected time is 11:10:00 AM
+
+            // Testing 12:11:00 AM
+            expect(timePicker.applyDisabledStyleForItem('hour', '12')).toBe(true);
+            // Testing 11:28:00 AM
+            expect(timePicker.applyDisabledStyleForItem('minute', '28')).toBe(true);
+            // Testing 11:10:28 AM
+            expect(timePicker.applyDisabledStyleForItem('seconds', '28')).toBe(false);
+
+            timePicker.selectedAmPm = 'PM'; // The selected time is 11:10:00 PM
+
+            // Testing 11:10:00 AM
+            expect(timePicker.applyDisabledStyleForItem('ampm', 'AM')).toBe(false);
+        }));
     });
 
     describe('Timepicker with outlet', () => {
@@ -2248,7 +2296,7 @@ export class IgxTimePickerRetemplatedComponent { }
     `
 })
 export class IgxTimePickerDropDownComponent {
-    itemsDelta = { hours: 1, minutes: 5 };
+    itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
     format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
