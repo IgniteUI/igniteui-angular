@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 
-import { cloneValue, IBaseEventArgs, resolveNestedPath } from '../../core/utils';
+import { cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 
 import { ExportUtilities } from './export-utilities';
@@ -66,9 +66,12 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
     skipFormatter: boolean;
 }
 
+const DEFAULT_COLUMN_WIDTH = 8.43;
+
 export abstract class IgxBaseExporter {
     private _columnList: any[];
     private flatRecords = [];
+    private _columnWidthList: number[];
 
     protected _isTreeGrid = false;
     protected _indexOfLastPinnedColumn = -1;
@@ -96,6 +99,10 @@ export abstract class IgxBaseExporter {
      */
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
+    public get columnWidthList() {
+        return this._columnWidthList;
+    }
+
     /**
      * Method for exporting IgxGrid component's data.
      * ```typescript
@@ -110,6 +117,7 @@ export abstract class IgxBaseExporter {
 
         const columns = grid.columnList.toArray();
         this._columnList = new Array<any>(columns.length);
+        this._columnWidthList = new Array<any>(columns.filter(c => !c.hidden).length);
 
         const hiddenColumns = [];
         let lastVisbleColumnIndex = -1;
@@ -118,6 +126,7 @@ export abstract class IgxBaseExporter {
             const columnHeader = column.header !== '' ? column.header : column.field;
             const exportColumn = !column.hidden || options.ignoreColumnsVisibility;
             const index = options.ignoreColumnsOrder ? column.index : column.visibleIndex;
+            const columnWidth = Number(column.width.slice(0, -2));
 
             const columnInfo = {
                 header: columnHeader,
@@ -129,6 +138,7 @@ export abstract class IgxBaseExporter {
 
             if (index !== -1) {
                 this._columnList[index] = columnInfo;
+                this._columnWidthList[index] = columnWidth;
                 lastVisbleColumnIndex = Math.max(lastVisbleColumnIndex, index);
             } else {
                 hiddenColumns.push(columnInfo);
@@ -163,6 +173,7 @@ export abstract class IgxBaseExporter {
         if (!this._columnList || this._columnList.length === 0) {
             const keys = ExportUtilities.getKeysFromData(data);
             this._columnList = keys.map((k) => ({ header: k, field: k, skip: false }));
+            this._columnWidthList = new Array<number>(keys.length).fill(DEFAULT_COLUMN_WIDTH);
         }
 
         let skippedPinnedColumnsCount = 0;
@@ -202,12 +213,13 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
         const isSpecialData = ExportUtilities.isSpecialData(data);
 
-        data.forEach((row, index) => {
-            this.exportRow(dataToExport, row, index, isSpecialData);
+        yieldingLoop(data.length, 1000, (i) => {
+            const row = data[i];
+            this.exportRow(dataToExport, row, i, isSpecialData);
+        }, () => {
+            this.exportDataImplementation(dataToExport, options);
+            this.resetDefaults();
         });
-
-        this.exportDataImplementation(dataToExport, options);
-        this.resetDefaults();
     }
 
     protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;

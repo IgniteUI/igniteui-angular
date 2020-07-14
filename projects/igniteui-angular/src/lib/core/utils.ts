@@ -2,6 +2,7 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
+import { setImmediate } from 'core-js-pure';
 
 /**
  * @hidden
@@ -417,4 +418,20 @@ export function reverseMapper(key: string, value: any) {
         _key = part;
     });
     return obj;
+}
+
+export function yieldingLoop(count: number, chunkSize: number, callback: (index: number) => void, done: () => void) {
+    let i = 0;
+    const chunk = () => {
+        const end = Math.min(i + chunkSize, count);
+        for ( ; i < end; ++i) {
+            callback(i);
+        }
+        if (i < count) {
+            setImmediate(chunk);
+        } else {
+            done();
+        }
+    };
+    chunk();
 }
