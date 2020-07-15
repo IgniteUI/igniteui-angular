@@ -29,6 +29,7 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         { name: '@types/hammerjs', target: PackageTarget.DEV },
         { name: '@types/jszip', target: PackageTarget.DEV },
         { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
+        { name: 'core-js-pure', target: PackageTarget.NONE },
         // peerDependencies
         { name: '@angular/forms', target: PackageTarget.NONE },
         { name: '@angular/common', target: PackageTarget.NONE },
