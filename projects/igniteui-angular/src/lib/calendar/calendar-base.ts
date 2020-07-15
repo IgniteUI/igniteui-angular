@@ -250,21 +250,21 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Emits an event when the month in view is changed.
      * ```html
-     * <igx-calendar (onViewDateChanged)="viewDateChanged($event)"></igx-calendar>
+     * <igx-calendar (viewDateChanged)="viewDateChanged($event)"></igx-calendar>
      * ```
      * ```typescript
      * public viewDateChanged(event: IViewDateChangeEventArgs) {
-     *  let newDate = event.newViewDate;
+     *  let viewDate = event.currentValue;
      * }
      * ```
      */
     @Output()
-    public onViewDateChanged = new EventEmitter<IViewDateChangeEventArgs>();
+    public viewDateChanged = new EventEmitter<IViewDateChangeEventArgs>();
 
     /**
      * Emits an event when the active view is changed.
      * ```html
-     * <igx-calendar (onActiveViewChanged)="activeViewChanged($event)"></igx-calendar>
+     * <igx-calendar (activeViewChanged)="activeViewChanged($event)"></igx-calendar>
      * ```
      * ```typescript
      * public activeViewChanged(event: CalendarView) {
@@ -273,7 +273,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * ```
      */
     @Output()
-    public onActiveViewChanged  = new EventEmitter<CalendarView>();
+    public activeViewChanged  = new EventEmitter<CalendarView>();
 
     /**
      * @hidden
