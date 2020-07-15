@@ -385,38 +385,63 @@ export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
     return match;
 }
 
-// TODO: RK. Clean up and document before the final PR
-
-export function resolveNestedPath(obj: any, key: string) {
-    const parts = key?.split('.') ?? [];
+/**
+ *
+ * Given a property access path in the format `x.y.z` resolves and returns
+ * the value of the `z` property in the passed object.
+ *
+ * @hidden
+ * @internal
+ */
+export function resolveNestedPath(obj: any, path: string) {
+    const parts = path?.split('.') ?? [];
     let current = obj[parts.shift()];
-    parts.forEach(part => {
+
+    parts.forEach(prop => {
         if (current) {
-            current = current[part];
+            current = current[prop];
         }
     });
+
     return current;
 }
 
-export function reverseMapper(key: string, value: any) {
-    const parts = key?.split('.') ?? [];
-    let _key = parts.shift();
+
+/**
+ *
+ * Given a property access path in the format `x.y.z` and a value
+ * this functions builds and returns an object following the access path.
+ *
+ * @example
+ * ```typescript
+ * console.log('x.y.z.', 42);
+ * >> { x: { y: { z: 42 } } }
+ * ```
+ *
+ * @hidden
+ * @internal
+ */
+export function reverseMapper(path: string, value: any) {
     const obj = {};
-    let mapping;
+    const parts = path?.split('.') ?? [];
+
+    let _prop = parts.shift();
+    let mapping: any;
 
     // Initial binding for first level bindings
-    obj[_key] = value;
+    obj[_prop] = value;
     mapping = obj;
 
-    parts.forEach(part => {
+    parts.forEach(prop => {
         // Start building the hierarchy
-        mapping[_key] = {};
+        mapping[_prop] = {};
         // Go down a level
-        mapping = mapping[_key];
+        mapping = mapping[_prop];
         // Bind the value and move the key
-        mapping[part] = value;
-        _key = part;
+        mapping[prop] = value;
+        _prop = prop;
     });
+
     return obj;
 }
 

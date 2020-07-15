@@ -80,7 +80,8 @@
         "@angular/core": "^10.0.0",
         "@angular/animations": "^10.0.0",
         "@angular/forms": "^10.0.0",
-        "web-animations-js": "^2.3.2"
+        "web-animations-js": "^2.3.2",
+        "lodash.merge": "^4.6.2"
     },
     "igxDevDependencies": {
         "@igniteui/angular-schematics": "~10.0.600"

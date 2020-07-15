@@ -24,6 +24,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
     - Added support for tooltips on data cells default template and summary cells.
+    - Added support for binding columns to properties in nested data objects.
+    Data operations (filtering/sorting/updating/etc) are supported for the nested properties.
+    ```html
+        <igx-column field="foo.bar.baz"></igx-column>
+    ```
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
