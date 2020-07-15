@@ -21,6 +21,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `message` property has been deprecated. You can place the *message text* in the snackbar content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
+- `IgxNavbar`
+    - Added new `igx-navbar-title, igxNavbarTitle` directive that can be used to provide custom content for navbar title. It would override the value of `title` input property.
+- `IgxCalendar` and `IgxMonthPicker`
+    - `viewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
+    - `activeViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
+    - `viewDate` day value is always 1.
+    - `activeView` setter is now available as an input property.
 
 ## 10.0.0
 
