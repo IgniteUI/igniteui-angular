@@ -45,8 +45,6 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(firstCell.nativeElement).toBeDefined();
             expect(firstCell.nativeElement.textContent).toMatch('1');
             expect(firstCell.readonly).toBe(true);
-            // TODO: Remove assertion
-            // expect(firstCell.describedby).toMatch(`${grid.id}_${firstCell.column.field}`);
         });
 
         it('selection and selection events', () => {

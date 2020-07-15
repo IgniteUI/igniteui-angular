@@ -5,7 +5,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
 import { Injectable } from '@angular/core';
 import { ColumnType } from '../common/column.interface';
-import merge from 'lodash.merge';
+import { mergeObjects } from '../../core/utils';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
@@ -181,7 +181,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            merge(rowValueInDataSource, rowNewValue);
+            mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
 

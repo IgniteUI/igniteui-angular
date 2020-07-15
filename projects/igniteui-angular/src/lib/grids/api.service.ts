@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, isEqual, reverseMapper } from '../core/utils';
+import { cloneArray, isEqual, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -17,7 +17,7 @@ import { IRowToggleEventArgs } from './common/events';
 import {
     ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
 } from '../core/utils';
-import merge from 'lodash.merge';
+
 /**
  * @hidden
  */
@@ -195,7 +195,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            merge(rowValueInDataSource, rowNewValue);
+            mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
 

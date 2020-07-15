@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
 import { setImmediate } from 'core-js-pure';
+import merge from 'lodash.merge';
 
 /**
  * @hidden
@@ -47,19 +48,7 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @hidden
  */
 export function mergeObjects(obj1: {}, obj2: {}): any {
-    if (!isObject(obj1)) {
-        throw new Error(`Cannot merge into ${obj1}. First param must be an object.`);
-    }
-
-    if (!isObject(obj2)) {
-        return obj1;
-    }
-
-    for (const key of Object.keys(obj2)) {
-        obj1[key] = cloneValue(obj2[key]);
-    }
-
-    return obj1;
+    return merge(obj1, obj2);
 }
 
 /**
