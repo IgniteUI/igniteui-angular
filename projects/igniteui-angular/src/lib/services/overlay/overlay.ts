@@ -323,6 +323,7 @@ export class IgxOverlayService implements OnDestroy {
 
         this.addOutsideClickListener(info);
         this.addResizeHandler(info.id);
+        this.addCloseOnEscapeListener();
 
         if (info.settings.modal) {
             const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
@@ -331,7 +332,6 @@ export class IgxOverlayService implements OnDestroy {
             wrapperElement.classList.add('igx-overlay__wrapper--modal');
         }
 
-        this.setUpCloseOnEscape();
 
         if (info.settings.positionStrategy.settings.openAnimation) {
             this.playOpenAnimation(info);
@@ -472,25 +472,6 @@ export class IgxOverlayService implements OnDestroy {
         if (info.initialSize.width !== 0) {
             info.elementRef.nativeElement.parentElement.style.width = info.initialSize.width + 'px';
         }
-    }
-
-    private setUpCloseOnEscape() {
-        if (this._overlayInfos.length - this._overlayInfos.filter(x => x.closeAnimationPlayer
-            && x.closeAnimationPlayer.hasStarted()).length === 1) {
-            this.subscribeOnEscape(this._document);
-        }
-    }
-
-    private subscribeOnEscape(target: FromEventTarget<unknown>) {
-        fromEvent(target, 'keydown').pipe(
-            filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
-            takeUntil(this.destroy$)
-        ).subscribe(() => {
-            const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
-            if (targetOverlay.settings.closeOnEsc) {
-                this.hide(targetOverlay.id);
-            }
-        });
     }
 
     private onCloseDone(info: OverlayInfo) {
@@ -710,14 +691,6 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private hasRemainingOverlaysAfterClose(): boolean {
-        //  if all overlays minus closing overlays equals one add the handler
-        return this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
-            this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
-                x.closeAnimationPlayer &&
-                x.closeAnimationPlayer.hasStarted()).length === 1;
-    }
-
     private removeOutsideClickListener(info: OverlayInfo) {
         if (info.settings.modal === false) {
             let shouldRemoveClickEventListener = true;
@@ -750,6 +723,22 @@ export class IgxOverlayService implements OnDestroy {
                 .length;
         if (this._overlayInfos.length - closingOverlaysCount === 1) {
             this._document.defaultView.removeEventListener('resize', this.repositionAll);
+        }
+    }
+
+    private addCloseOnEscapeListener() {
+        //  if all overlays minus closing overlays equals one add the handler
+        if (this._overlayInfos.length - this._overlayInfos.filter(x => x.closeAnimationPlayer
+            && x.closeAnimationPlayer.hasStarted()).length === 1) {
+            fromEvent(this._document, 'keydown').pipe(
+                filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
+                takeUntil(this.destroy$)
+            ).subscribe(() => {
+                const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
+                if (targetOverlay.settings.closeOnEsc) {
+                    this.hide(targetOverlay.id);
+                }
+            });
         }
     }
 

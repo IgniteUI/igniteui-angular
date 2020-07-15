@@ -9,7 +9,7 @@ import {
     ComponentRef
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, async, inject } from '@angular/core/testing';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
 import { IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './../../directives/toggle/toggle.directive';
@@ -2718,61 +2718,43 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                modal: true,
                 closeOnEsc: true,
-                positionStrategy: new GlobalPositionStrategy()
             };
-
-            const targetButton = 'Escape';
-            const escEvent = new KeyboardEvent('keydown', {
-                key: targetButton
-            });
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
             tick();
 
             let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
-                if (event.key === targetButton) {
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-                    expect(overlayWrapper).toBeFalsy();
-                }
-            });
-            tick();
             expect(overlayWrapper).toBeTruthy();
-            document.dispatchEvent(escEvent);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
+
+            overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            expect(overlayWrapper).toBeFalsy();
         }));
 
         it('Should not close the component when esc key is pressed and closeOnEsc is false', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                modal: true,
-                positionStrategy: new GlobalPositionStrategy()
+                closeOnEsc: false
             };
-            const targetButton = 'Escape';
-            const escEvent = new KeyboardEvent('keydown', {
-                key: targetButton
-            });
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
             tick();
 
             let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
-                if (event.key === targetButton) {
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-                }
-            });
-            document.dispatchEvent(escEvent);
-            tick();
-            fixture.detectChanges();
+            expect(overlayWrapper).toBeTruthy();
 
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
+            tick();
+
+            overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
             expect(overlayWrapper).toBeTruthy();
         }));
 
-        it('Should close the opened overlays consecutively on escape keypress', fakeAsync(() => {
+        it('Should close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
@@ -2783,17 +2765,35 @@ describe('igxOverlay', () => {
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             expect(overlayDiv.children.length).toBe(2);
 
-            const escEvent = new KeyboardEvent('keydown', {
-                key: 'Escape'
-            });
-
-            document.dispatchEvent(escEvent);
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
             expect(overlayDiv.children.length).toBe(1);
 
-            document.dispatchEvent(escEvent);
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
             expect(overlayDiv.children.length).toBe(0);
+        }));
+
+        it('Should not close the opened overlays consecutively on esc keypress', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
+            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: false });
+            tick();
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
+            tick();
+
+            const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv.children.length).toBe(3);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
+            tick();
+            expect(overlayDiv.children.length).toBe(2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
+            tick();
+            expect(overlayDiv.children.length).toBe(2);
         }));
 
         // Test #1883 #1820
@@ -2801,41 +2801,34 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                modal: true,
                 closeOnEsc: true,
-                positionStrategy: new GlobalPositionStrategy()
             };
-
-            const escEvent = new KeyboardEvent('keydown', {
-                key: 'Escape'
-            });
-            const enterEvent = new KeyboardEvent('keydown', {
-                key: 'Enter'
-            });
-            const arrowUpEvent = new KeyboardEvent('keydown', {
-                key: 'ArrowUp'
-            });
-            const aEvent = new KeyboardEvent('keydown', {
-                key: 'a'
-            });
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
             tick();
 
             let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
-                if (event.key === 'Escape') {
-                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-                    expect(overlayWrapper).toBeFalsy();
-                }
-            });
-            tick();
             expect(overlayWrapper).toBeTruthy();
 
-            document.dispatchEvent(enterEvent);
-            document.dispatchEvent(aEvent);
-            document.dispatchEvent(arrowUpEvent);
-            document.dispatchEvent(escEvent);
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', document);
+            tick();
+            overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            expect(overlayWrapper).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('a', document);
+            tick();
+            overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            expect(overlayWrapper).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document);
+            tick();
+            overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            expect(overlayWrapper).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
+            tick();
+            overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            expect(overlayWrapper).toBeFalsy();
         }));
 
         // 3.2 Non - Modal
