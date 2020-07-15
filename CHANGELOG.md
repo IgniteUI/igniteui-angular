@@ -17,6 +17,8 @@ All notable changes for each version of this project will be documented in this 
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
+- `IgxTimePicker`
+    - Added a disabled style for time parts outside of the minimum and maximum range.
 
 ### New Theme
 Ignite UI for Angular now has a new theme based on our own design system.
@@ -42,6 +44,7 @@ The following example shows how you can use the Indigo theme:
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
+    - Added support for tooltips on data cells default template and summary cells.
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)

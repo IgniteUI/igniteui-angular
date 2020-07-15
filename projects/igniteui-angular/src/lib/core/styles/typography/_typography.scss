@@ -47,48 +47,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    $this: bem--selector-to-string(&);
-    $selector: bem--extract-first-selector($this);
-
-    // Maps type scale typographic categories
-    // to native elements.
-    $category-element-map: (
-        h1: 'h1',
-        h2: 'h2',
-        h3: 'h3',
-        h4: 'h4',
-        h5: 'h5',
-        h6: 'h6',
-        body-1: 'p'
-    );
-
-    @each $category, $type-style in $type-scale {
-        // Get the native element that uses typographic styles directly
-        // as mapped in the $category-element-map
-        $e: map-get($category-element-map, $category);
-
-        // Create a placeholder selector with styles for each
-        // typographic style to be able to easily extend it
-        // elsewhere.
-        %#{$category} {
-            @include igx-type-style($type-scale, $category);
-        }
-
-        // Add native element typographic styles.
-        @if $e != null {
-            #{$e} {
-                @extend %#{$category};
-            }
-        }
-
-        // Add class selector typographic styles.
-        @if ($selector == '.igx-typography') {
-            @include e(#{$category}) {
-                @extend %#{$category};
-            }
-        }
-    }
-
     // Call the individual component styles with the type scale
     @include _excel-filtering-typography($type-scale);
     @include igx-banner-typography($type-scale);
@@ -142,6 +100,44 @@
         // and all typographic elements.
         @include b(igx-typography) {
             @include _igx-typography-styles($font-family, $type-scale);
+
+            // Maps type scale typographic categories
+            // to native elements.
+            $category-element-map: (
+                h1: 'h1',
+                h2: 'h2',
+                h3: 'h3',
+                h4: 'h4',
+                h5: 'h5',
+                h6: 'h6',
+                body-1: 'p'
+            );
+
+            @each $category, $type-style in $type-scale {
+                // Get the native element that uses typographic styles directly
+                // as mapped in the $category-element-map
+                $e: map-get($category-element-map, $category);
+
+                // Create a placeholder selector with styles for each
+                // typographic style to be able to easily extend it
+                // elsewhere.
+                %#{$category} {
+                    @include igx-type-style($type-scale, $category);
+                }
+
+                // Add native element typographic styles.
+                @if $e != null {
+                    // stylelint-disable-next-line max-nesting-depth
+                    #{$e} {
+                        @extend %#{$category};
+                    }
+                }
+
+                // Add class selector typographic styles.
+                @include e(#{$category}) {
+                    @extend %#{$category};
+                }
+            }
         }
     } @else {
         @include _igx-typography-styles($font-family, $type-scale);
