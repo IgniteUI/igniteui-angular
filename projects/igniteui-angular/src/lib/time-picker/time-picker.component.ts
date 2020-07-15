@@ -37,7 +37,7 @@ import {
 } from './time-picker.directives';
 import { Subject, fromEvent, interval, animationFrameScheduler, Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, TimeParts } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -98,6 +98,7 @@ const noop = () => { };
         }`
     ]
 })
+
 export class IgxTimePickerComponent implements
     IgxTimePickerBase,
     ControlValueAccessor,
@@ -152,6 +153,10 @@ export class IgxTimePickerComponent implements
             this.onValidationFailed.emit(args);
         }
     }
+    /**
+     * @hidden @internal
+     */
+    timeParts: any = Object.assign({}, TimeParts);
 
     /**
      * An accessor that returns the value of `igx-time-picker` component.
@@ -507,10 +512,10 @@ export class IgxTimePickerComponent implements
     @ViewChild(IgxInputDirective, { read: ElementRef })
     private _inputElementRef: ElementRef;
 
-    @ViewChild(IgxInputDirective, { read: IgxInputDirective})
+    @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private _inputDirective: IgxInputDirective;
 
-    @ContentChild(IgxInputDirective, { read: IgxInputDirective})
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective })
     private _inputDirectiveUserTemplate: IgxInputDirective;
 
     @ViewChild(IgxInputGroupComponent, { read: IgxInputGroupComponent })
@@ -633,6 +638,46 @@ export class IgxTimePickerComponent implements
         if (this.mode === InteractionMode.DropDown) {
             this.displayValue = this._formatTime(this.value, this.format);
         }
+    }
+
+    /** @hidden @internal */
+    applyDisabledStyleForItem(period: string, value: string) {
+        if (!this.minValue || !this.maxValue) {
+            return false;
+        }
+        const minValueDate: Date = this.convertMinMaxValue(this.minValue);
+        const maxValueDate: Date = this.convertMinMaxValue(this.maxValue);
+        let hour: number = parseInt(this.selectedHour, 10);
+        let minute: number = parseInt(this.selectedMinute, 10);
+        let seconds: number = parseInt(this.selectedSeconds, 10);
+        let amPM: string = this.selectedAmPm;
+        const date = new Date(minValueDate);
+        switch (period) {
+            case TimeParts.Hour:
+                hour = parseInt(value, 10);
+                break;
+
+            case TimeParts.Minute:
+                minute = parseInt(value, 10);
+                break;
+
+            case TimeParts.Seconds:
+                seconds = parseInt(value, 10);
+                break;
+
+            case TimeParts.amPM:
+                amPM = value;
+                break;
+        }
+
+        if (amPM === 'PM') {
+            hour += 12;
+        }
+        date.setHours(hour);
+        date.setMinutes(minute);
+        date.setSeconds(seconds);
+        return date < minValueDate || date > maxValueDate;
+
     }
 
     /** @hidden @internal */
@@ -1267,7 +1312,11 @@ export class IgxTimePickerComponent implements
         return date;
     }
 
-    private _convertMinMaxValue(value: string): Date {
+    /** @hidden @internal */
+    public convertMinMaxValue(value: string): Date {
+        if (!value) {
+            return;
+        }
         const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
         const sections = value.split(/[\s:]+/);
         let hour, minutes, seconds, amPM;
@@ -1310,9 +1359,9 @@ export class IgxTimePickerComponent implements
     }
 
     private _isValueValid(value: Date): boolean {
-        if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
+        if (this.maxValue && value > this.convertMinMaxValue(this.maxValue)) {
             return false;
-        } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
+        } else if (this.minValue && value < this.convertMinMaxValue(this.minValue)) {
             return false;
         } else {
             return true;
@@ -1484,7 +1533,7 @@ export class IgxTimePickerComponent implements
 
     private _onDropDownClosed(): void {
         const oldValue = this.value;
-        const newVal = this._convertMinMaxValue(this.displayValue);
+        const newVal = this.convertMinMaxValue(this.displayValue);
 
         if (this.displayValue === this.parseMask(false)) {
             return;
@@ -1922,7 +1971,7 @@ export class IgxTimePickerComponent implements
         // timepicker own value property if it is a valid Date
         if (val.indexOf(this.promptChar) === -1) {
             if (this._isEntryValid(val)) {
-                const newVal = this._convertMinMaxValue(val);
+                const newVal = this.convertMinMaxValue(val);
                 if (oldVal.getTime() !== newVal.getTime()) {
                     this.value = newVal;
                 }
@@ -1970,7 +2019,7 @@ export class IgxTimePickerComponent implements
 
             if (value && value !== this.parseMask()) {
                 if (this._isEntryValid(value)) {
-                    const newVal = this._convertMinMaxValue(value);
+                    const newVal = this.convertMinMaxValue(value);
                     if (!this.value || this.value.getTime() !== newVal.getTime()) {
                         this.value = newVal;
                     }
@@ -2007,8 +2056,8 @@ export class IgxTimePickerComponent implements
         let sign: number;
         let displayVal: string;
         const currentVal = new Date(this.value);
-        const min = this.minValue ? this._convertMinMaxValue(this.minValue) : this._convertMinMaxValue('00:00');
-        const max = this.maxValue ? this._convertMinMaxValue(this.maxValue) : this._convertMinMaxValue('24:00');
+        const min = this.minValue ? this.convertMinMaxValue(this.minValue) : this.convertMinMaxValue('00:00');
+        const max = this.maxValue ? this.convertMinMaxValue(this.maxValue) : this.convertMinMaxValue('24:00');
 
         const cursor = this._getCursorPosition();
 

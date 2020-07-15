@@ -9,6 +9,7 @@
 @import '../components/button/button-theme';
 @import '../components/calendar/calendar-theme';
 @import '../components/card/card-theme';
+@import '../components/charts/category-chart-theme';
 @import '../components/charts/data-chart-theme';
 @import '../components/charts/financial-chart-theme';
 @import '../components/charts/funnel-chart-theme';
@@ -20,6 +21,7 @@
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/date-range-picker/date-range-picker-theme';
 @import '../components/dialog/dialog-theme';
+@import '../components/dock-manager/dock-manager-theme';
 @import '../components/drop-down/drop-down-theme';
 @import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/grid/excel-filtering-theme';
@@ -45,48 +47,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    $this: bem--selector-to-string(&);
-    $selector: bem--extract-first-selector($this);
-
-    // Maps type scale typographic categories
-    // to native elements.
-    $category-element-map: (
-        h1: 'h1',
-        h2: 'h2',
-        h3: 'h3',
-        h4: 'h4',
-        h5: 'h5',
-        h6: 'h6',
-        body-1: 'p'
-    );
-
-    @each $category, $type-style in $type-scale {
-        // Get the native element that uses typographic styles directly
-        // as mapped in the $category-element-map
-        $e: map-get($category-element-map, $category);
-
-        // Create a placeholder selector with styles for each
-        // typographic style to be able to easily extend it
-        // elsewhere.
-        %#{$category} {
-            @include igx-type-style($type-scale, $category);
-        }
-
-        // Add native element typographic styles.
-        @if $e != null {
-            #{$e} {
-                @extend %#{$category};
-            }
-        }
-
-        // Add class selector typographic styles.
-        @if ($selector == '.igx-typography') {
-            @include e(#{$category}) {
-                @extend %#{$category};
-            }
-        }
-    }
-
     // Call the individual component styles with the type scale
     @include _excel-filtering-typography($type-scale);
     @include igx-banner-typography($type-scale);
@@ -94,12 +54,14 @@
     @include igx-button-typography($type-scale);
     @include igx-calendar-typography($type-scale);
     @include igx-card-typography($type-scale);
+    @include igx-category-chart-typography($type-scale);
     @include igx-checkbox-typography($type-scale);
     @include igx-chip-typography($type-scale);
     @include igx-column-hiding-typography($type-scale);
     @include igx-data-chart-typography($type-scale);
     @include igx-date-range-typography($type-scale);
     @include igx-dialog-typography($type-scale);
+    @include igx-dock-manager-typography();
     @include igx-drop-down-typography($type-scale);
     @include igx-expansion-panel-typography($type-scale);
     @include igx-financial-chart-typography($type-scale);
@@ -138,6 +100,44 @@
         // and all typographic elements.
         @include b(igx-typography) {
             @include _igx-typography-styles($font-family, $type-scale);
+
+            // Maps type scale typographic categories
+            // to native elements.
+            $category-element-map: (
+                h1: 'h1',
+                h2: 'h2',
+                h3: 'h3',
+                h4: 'h4',
+                h5: 'h5',
+                h6: 'h6',
+                body-1: 'p'
+            );
+
+            @each $category, $type-style in $type-scale {
+                // Get the native element that uses typographic styles directly
+                // as mapped in the $category-element-map
+                $e: map-get($category-element-map, $category);
+
+                // Create a placeholder selector with styles for each
+                // typographic style to be able to easily extend it
+                // elsewhere.
+                %#{$category} {
+                    @include igx-type-style($type-scale, $category);
+                }
+
+                // Add native element typographic styles.
+                @if $e != null {
+                    // stylelint-disable-next-line max-nesting-depth
+                    #{$e} {
+                        @extend %#{$category};
+                    }
+                }
+
+                // Add class selector typographic styles.
+                @include e(#{$category}) {
+                    @extend %#{$category};
+                }
+            }
         }
     } @else {
         @include _igx-typography-styles($font-family, $type-scale);
