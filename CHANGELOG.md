@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `igxCombo`
     - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
-    - **Breaking Change** - Make `onSearchInput` event cancellable. The event args type has been changed to `IComboSearchInputEventArgs`, which have two properties: `change` - holds the change in the search input and `cancel` - indicates whether the event should be canceled.
+    - Make `onSearchInput` event cancellable. The event args type has been changed to `IComboSearchInputEventArgs`, which have two properties: `change` - holds the change in the search input and `cancel` - indicates whether the event should be canceled.
 - `IgxOverlay`
     - Added new property - `closeOnEsc` - in `OverlaySettings`. The overlay can now be prevented from closing, on escape keypress, by setting the property to `false`, by default it's `true`.
 - `igxDialog`
