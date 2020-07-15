@@ -61,7 +61,7 @@ Write-Host "Check file exists: " ([System.IO.File]::Exists($filePath))
 Write-Host "Check dir exists:" ([System.IO.Directory]::Exists($angularDocsRootFolder));
 
 if([System.IO.File]::Exists($filePath) -and [System.IO.Directory]::Exists($angularDocsRootFolder)) {
-    $folders = Get-ChildItem -Path $angularDocsRootFolder -Directory -Exclude $tagFolder,"sass","typescript";
+    $folders = Get-ChildItem -Path $angularDocsRootFolder -Directory -Exclude $tagFolder,"sass","typescript" -Name | Sort-Object @{Expression = {[double]($_.Substring(0, $_.LastIndexOf('.'))) }};
     $textToUpdate = "";
     foreach($item in $folders) {
         $textToUpdate += '"' + $item.Name + '"'; 
