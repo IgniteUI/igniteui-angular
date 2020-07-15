@@ -41,11 +41,11 @@ export class CalendarSampleComponent implements OnInit {
         const date = event;
     }
 
-    public onViewDateChanged(event: IViewDateChangeEventArgs) {
+    public viewDateChanged(event: IViewDateChangeEventArgs) {
         console.log(event);
     }
 
-    public onActiveViewChanged(event: CalendarView) {
+    public activeViewChanged(event: CalendarView) {
     }
 
     public setSelection(args: string) {

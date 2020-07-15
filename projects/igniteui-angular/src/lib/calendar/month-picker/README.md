@@ -122,12 +122,12 @@ The default values are listed below.
 Event fired when a value is selected through UI interaction.
 Returns the selected value (depending on the type of selection).
 
-- `onViewDateChanged(): IViewDateChangeEventArgs`
+- `viewDateChanged(): IViewDateChangeEventArgs`
 
-Event fired after the the month/year presented in the view is changed.
+Event fired after the month/year presented in the view is changed.
 Emits an object containing the previous and current value of the `viewDate` property.
 
-- `onActiveViewChanged(): CalendarView`
+- `activeViewChanged(): CalendarView`
 
 Event fired after the active view is changed.
 Emits an CalendarView enum, indicating the `activeView` property value.
