@@ -32,6 +32,9 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridIconService } from '../common/grid-icon.service';
 import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
 import { GridIconsFeature } from '../common/enums';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
+import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -101,13 +104,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     public columnHidingDropdown: IgxDropDownComponent;
 
     /**
-     * Provides a reference to the `IgxColumnHidingComponent`.
+     * Provides a reference to the `IgxColumnActionsComponent` for column hiding.
      * ```typescript
      * const hidingUI = this.grid.toolbar.columnHidingUI;
      * ```
      */
-    @ViewChild(IgxColumnHidingComponent)
-    public columnHidingUI: IgxColumnHidingComponent;
+    @ViewChild(IgxColumnHidingDirective, { read: IgxColumnActionsComponent })
+    public columnHidingUI: IgxColumnActionsComponent;
 
     /**
      * Provides a reference to the Column Hiding button.
@@ -146,13 +149,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     public columnPinningDropdown: IgxDropDownComponent;
 
     /**
-     * Provides a reference to the `IgxColumnPinningComponent`.
+     * Provides a reference to the `IgxColumnActionsComponent` for column pinning.
      * ```typescript
      * const pinningUI = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild(IgxColumnPinningComponent)
-    public columnPinningUI: IgxColumnPinningComponent;
+    @ViewChild(IgxColumnPinningDirective, { read: IgxColumnActionsComponent })
+    public columnPinningUI: IgxColumnActionsComponent;
 
     /**
      * Provides a reference to the Column Pinning button.

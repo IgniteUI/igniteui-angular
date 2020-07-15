@@ -234,13 +234,13 @@ describe('Column Pinning UI #grid', () => {
             fix.detectChanges();
 
             let toolbar = grid.toolbar.columnPinningUI;
-            expect(toolbar.pinnableColumns.length).toBe(5);
+            expect(toolbar.columnItems.length).toBe(5);
 
             grid.columns[0].disablePinning = true;
             fix.detectChanges();
 
             toolbar = grid.toolbar.columnPinningUI;
-            expect(toolbar.pinnableColumns.length).toBe(4);
+            expect(toolbar.columnItems.length).toBe(4);
         });
     });
 

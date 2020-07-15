@@ -7,11 +7,15 @@ import {
     Input,
     OnDestroy,
     Output,
-    Inject
+    Inject,
+    ViewChild,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 
 /**
  * Providing reference to `IgxColumnActionsComponent`:
@@ -90,19 +94,14 @@ export class IgxColumnActionsComponent implements OnDestroy {
     public hideFilter = false;
 
     /**
-     * @hidden @internal
-     */
-    // private _currentColumns = [];
-    /**
-     * Gets the items of the selected columns.
+     * Gets the column items currently present in the dropdown
+     * @example
      * ```typescript
-     * let columnItems =  this.columnHidingUI.columnItems;
+     * let columnItems =  this.columnActions.columnItems;
      * ```
      */
-    // @Input()
-    // get columnItems() {
-    //   return this._currentColumns;
-    // }
+    @ViewChildren('columnItem', { read: IgxCheckboxComponent })
+    public columnItems: QueryList<IgxCheckboxComponent>;
 
     /**
      * @hidden @internal
@@ -307,10 +306,6 @@ export class IgxColumnActionsComponent implements OnDestroy {
      */
     public uncheckAllColumns() {
         this.actionsDirective.uncheckAll();
-       // const collection = this.hidableColumns;
-      //  for (const col of collection) {
-     //       col.value = false;
-      //  }
     }
 
     /**
@@ -322,10 +317,6 @@ export class IgxColumnActionsComponent implements OnDestroy {
      */
     public checkAllColumns() {
         this.actionsDirective.checkAll();
-     //   const collection = this.hidableColumns;
-     //   for (const col of collection) {
-     //       col.value = true;
-      //  }
     }
 
     /*

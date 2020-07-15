@@ -12,7 +12,7 @@
 
 <div class="igx-column-actions__columns"
     [style.max-height]="columnsAreaMaxHeight">
-    <igx-checkbox
+    <igx-checkbox #columnItem
         *ngFor="let column of columns
             | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
             | filterActionColumns:filterCriteria:pipeTrigger
