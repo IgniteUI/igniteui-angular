@@ -1,0 +1,14 @@
+<div [ngClass]="pinClass()"
+    (click)="onPin()"
+    tabindex="0"
+    *ngIf="!column.pinned">
+    <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
+    <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+</div>
+<div class="igx-excel-filter__actions-unpin"
+    (click)="onPin()"
+    tabindex="0"
+    *ngIf="column.pinned">
+    <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
+    <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+</div>

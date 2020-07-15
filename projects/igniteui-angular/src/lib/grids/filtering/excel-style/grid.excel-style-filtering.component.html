@@ -18,46 +18,27 @@
         </igx-excel-style-column-moving>
     </div>
 
-    <!-- pinning -->
     <div *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
-        <div [ngClass]="pinClass()"
-            (click)="onPin()"
-            tabindex="0"
-            *ngIf="!column.pinned">
-            <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
-            <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
-        </div>
-        <div class="igx-excel-filter__actions-unpin"
-            (click)="onPin()"
-            tabindex="0"
-            *ngIf="column.pinned">
-            <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
-            <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
-        </div>
+        <igx-excel-style-pinning
+            [column]="column"
+            [grid]="grid"
+            [isColumnPinnable]="isColumnPinnable">
+        </igx-excel-style-pinning>
     </div>
-    <!-- pinning -->
 
-    <!-- hiding -->
     <div *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
-        <div class="igx-excel-filter__actions-hide"
-            tabindex="0"
-            (click)="onHideToggle()">
-            <span>{{ column.hidden ? grid.resourceStrings.igx_grid_excel_show : grid.resourceStrings.igx_grid_excel_hide }}</span>
-            <igx-icon>{{ column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
-        </div>
+        <igx-excel-style-hiding
+            [column]="column"
+            [grid]="grid">
+        </igx-excel-style-hiding>
     </div>
-    <!-- hiding -->
 
-    <!-- selecting -->
     <div *ngIf="columnSelectable() && grid.displayDensity==='comfortable'">
-        <div [ngClass]="selectedClass()"
-            tabindex="0"
-            (click)="onSelect()">
-            <span>{{grid.resourceStrings.igx_grid_excel_select }}</span>
-            <igx-icon fontSet="material"  >done</igx-icon>
-        </div>
+        <igx-excel-style-selecting
+            [column]="column"
+            [grid]="grid">
+        </igx-excel-style-selecting>
     </div>
-    <!-- selecting -->
 </ng-template>
 
 <ng-template #defaultExcelStyleFilterOperationsTemplate>

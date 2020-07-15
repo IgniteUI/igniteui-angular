@@ -35,6 +35,9 @@ import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
+import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
+import { IgxExcelStyleHidingComponent } from './excel-style-hiding.component';
+import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.component';
 import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -263,6 +266,24 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('excelStylePinning', { read: IgxExcelStylePinningComponent })
+    protected excelStylePinning: IgxExcelStylePinningComponent;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('excelStyleHiding', { read: IgxExcelStyleHidingComponent })
+    protected excelStyleHiding: IgxExcelStyleHidingComponent;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('excelStyleSelecting', { read: IgxExcelStyleSelectingComponent })
+    protected excelStyleSelecting: IgxExcelStyleSelectingComponent;
 
     /**
      * @hidden @internal
