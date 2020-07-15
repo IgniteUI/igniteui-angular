@@ -1,4 +1,5 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
+import { yieldingLoop } from '../../core/utils';
 
 /**
  * @hidden
@@ -36,6 +37,26 @@ export class CharSeparatedValueData {
         return this._headerRecord + this._dataRecords;
     }
 
+    public prepareDataAsync(done: (result: string) => void) {
+        if (!this._data || this._data.length === 0) {
+            done('');
+        }
+
+        const keys = ExportUtilities.getKeysFromData(this._data);
+
+        if (keys.length === 0) {
+            done('');
+        }
+
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
+        this._escapeCharacters.push(this._delimiter);
+
+        this._headerRecord = this.processHeaderRecord(keys, this._escapeCharacters);
+        this.processDataRecordsAsync(this._data, keys, this._escapeCharacters, (dr) => {
+            done(this._headerRecord + dr);
+        });
+    }
+
     private processField(value, escapeChars): string {
         let safeValue = ExportUtilities.hasValue(value) ? String(value) : '';
         if (escapeChars.some((v) => safeValue.includes(v))) {
@@ -54,23 +75,37 @@ export class CharSeparatedValueData {
     }
 
     private processRecord(record, keys, escapeChars): string {
-        let recordData = '';
-        for (const keyName of keys) {
-
-            const value = (record[keyName] !== undefined) ? record[keyName] : this._isSpecialData ? record : '';
-            recordData += this.processField(value, this._escapeCharacters);
+        const recordData = new Array(keys.length);
+        for (let index = 0; index < keys.length; index++) {
+            const value = (record[keys[index]] !== undefined) ? record[keys[index]] : this._isSpecialData ? record : '';
+            recordData[index] = this.processField(value, this._escapeCharacters);
         }
 
-        return recordData.slice(0, -this._delimiterLength) + this._eor;
+        return recordData.join('').slice(0, -this._delimiterLength) + this._eor;
     }
 
     private processDataRecords(currentData, keys, escapeChars) {
-        let dataRecords = '';
-        for (const row of currentData) {
-            dataRecords += this.processRecord(row, keys, escapeChars);
+        const dataRecords = new Array(currentData.length);
+
+        for (let i = 0; i < currentData.length; i++) {
+            const row = currentData[i];
+            dataRecords[i] = this.processRecord(row, keys, escapeChars);
         }
 
-        return dataRecords;
+        return dataRecords.join('');
+    }
+
+    private processDataRecordsAsync(currentData, keys, escapeChars, done: (result: string) => void) {
+        const dataRecords = new Array(currentData.length);
+
+        yieldingLoop(currentData.length, 1000,
+            (i) => {
+                const row = currentData[i];
+                dataRecords[i] = this.processRecord(row, keys, escapeChars);
+            },
+            () => {
+                done(dataRecords.join(''));
+            });
     }
 
     private setDelimiter(value) {

@@ -9,6 +9,7 @@ import { IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
+import { WorksheetFile } from './excel-files';
 
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx: JSZip;
@@ -53,16 +54,20 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     @Output()
     public onExportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 
-    private static populateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
+    private static async populateFolderAsync(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {
-            const folderIntance = ExcelElementsFactory.getExcelFolder(childFolder);
-            const zipFolder = zip.folder(folderIntance.folderName);
-            IgxExcelExporterService.populateFolder(folderIntance, zipFolder, worksheetData);
+            const folderInstance = ExcelElementsFactory.getExcelFolder(childFolder);
+            const zipFolder = zip.folder(folderInstance.folderName);
+            await IgxExcelExporterService.populateFolderAsync(folderInstance, zipFolder, worksheetData);
         }
 
         for (const childFile of folder.childFiles(worksheetData)) {
             const fileInstance = ExcelElementsFactory.getExcelFile(childFile);
-            fileInstance.writeElement(zip, worksheetData);
+            if (fileInstance instanceof WorksheetFile) {
+                await (fileInstance as WorksheetFile).writeElementAsync(zip, worksheetData);
+            } else {
+                fileInstance.writeElement(zip, worksheetData);
+            }
         }
     }
 
@@ -77,16 +82,19 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             }
         }
 
-        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
+        const worksheetData =
+            new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
+
         this._xlsx = new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
-        IgxExcelExporterService.populateFolder(rootFolder, this._xlsx, worksheetData);
 
-        this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
-            this.saveFile(result, options.fileName);
-
-            this.onExportEnded.emit({ xlsx: this._xlsx });
+        IgxExcelExporterService.populateFolderAsync(rootFolder, this._xlsx, worksheetData)
+        .then(() => {
+            this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
+                this.saveFile(result, options.fileName);
+                this.onExportEnded.emit({ xlsx: this._xlsx });
+            });
         });
     }
 
