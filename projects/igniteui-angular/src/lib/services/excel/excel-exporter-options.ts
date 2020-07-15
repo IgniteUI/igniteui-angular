@@ -44,8 +44,8 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
     }
 
     /**
-     * Sets the width of the columns in the exported excel file. If left unspecified or 0,
-     * the width of the largest string in the column will be used.
+     * Sets the width of the columns in the exported excel file. If left unspecified,
+     * the width of the column or the default width of the excel columns will be used.
      * ```typescript
      * this.exportOptions.columnWidth = 55;
      * ```

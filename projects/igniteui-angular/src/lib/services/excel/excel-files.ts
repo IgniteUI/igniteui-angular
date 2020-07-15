@@ -3,6 +3,7 @@ import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
+import { yieldingLoop } from '../../core/utils';
 
 /**
  * @hidden
@@ -54,7 +55,11 @@ export class ThemeFile implements IExcelFile {
  * @hidden
  */
 export class WorksheetFile implements IExcelFile {
-    private static MIN_WIDTH = 8.34;
+    private static MIN_WIDTH = 8.43;
+    private maxOutlineLevel = 0;
+    private dimension = '';
+    private freezePane = '';
+    private rowHeight = '';
 
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const sheetData = [];
@@ -107,9 +112,12 @@ export class WorksheetFile implements IExcelFile {
             for (let i = 0; i < worksheetData.columnCount; i++) {
                 const width = dictionary.columnWidths[i];
                 // Use the width provided in the options if it exists
-                const widthInTwips = worksheetData.options.columnWidth ?
-                                    worksheetData.options.columnWidth :
-                                    Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                let widthInTwips = worksheetData.options.columnWidth !== undefined ?
+                                        worksheetData.options.columnWidth :
+                                        Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                if (!(widthInTwips > 0)) {
+                    widthInTwips = WorksheetFile.MIN_WIDTH;
+                }
 
                 cols.push(`<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`);
             }
@@ -129,6 +137,110 @@ export class WorksheetFile implements IExcelFile {
         folder.file('sheet1.xml',
                     ExcelStrings.getSheetXML(dimension, freezePane, cols.join(''), sheetData.join(''), hasTable,
                     worksheetData.isTreeGridData, maxOutlineLevel));
+    }
+
+    public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
+        return new Promise(resolve => {
+            this.prepareDataAsync(worksheetData, (cols, rows) => {
+                const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+                folder.file('sheet1.xml', ExcelStrings.getSheetXML(
+                    this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
+                resolve();
+            });
+        });
+    }
+
+    private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
+        let sheetData = '';
+        let cols = '';
+        const dictionary = worksheetData.dataDictionary;
+
+        if (worksheetData.isEmpty) {
+            sheetData += '<sheetData/>';
+            this.dimension = 'A1';
+            done('', sheetData);
+        } else {
+            sheetData += '<sheetData>';
+            const height =  worksheetData.options.rowHeight;
+            this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
+            sheetData += `<row r="1"${this.rowHeight}>`;
+
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const column = ExcelStrings.getExcelColumn(i) + 1;
+                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
+                sheetData += `<c r="${column}" t="s"><v>${value}</v></c>`;
+            }
+            sheetData += '</row>';
+
+            this.dimension = 'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + worksheetData.rowCount;
+            cols += '<cols>';
+
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const width = dictionary.columnWidths[i];
+                // Use the width provided in the options if it exists
+                let widthInTwips = worksheetData.options.columnWidth !== undefined ?
+                                        worksheetData.options.columnWidth :
+                                        Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+                if (!(widthInTwips > 0)) {
+                    widthInTwips = WorksheetFile.MIN_WIDTH;
+                }
+
+                cols += `<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`;
+            }
+
+            cols += '</cols>';
+
+            if (worksheetData.indexOfLastPinnedColumn !== -1 &&
+                !worksheetData.options.ignorePinning &&
+                !worksheetData.options.ignoreColumnsOrder) {
+                const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
+                const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
+                this.freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+            }
+
+            this.processDataRecordsAsync(worksheetData, (rows) => {
+                sheetData += rows;
+                sheetData += '</sheetData>';
+                done(cols, sheetData);
+            });
+        }
+    }
+
+    private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
+        const rowDataArr = new Array(worksheetData.rowCount - 1);
+        const height =  worksheetData.options.rowHeight;
+        this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
+
+        yieldingLoop(worksheetData.rowCount - 1, 1000,
+            (i) => {
+                rowDataArr[i] = this.processRow(worksheetData, i + 1);
+            },
+            () => {
+                done(rowDataArr.join(''));
+            });
+    }
+
+    private processRow(worksheetData: WorksheetData, i: number) {
+        const rowData = new Array(worksheetData.columnCount + 2);
+        if (!worksheetData.isTreeGridData) {
+            rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}>`;
+        } else {
+            const originalData = worksheetData.data[i - 1].originalRowData;
+            const sCollapsed = (!originalData.expanded) ? '' : (originalData.expanded === true) ? '' : ` collapsed="1"`;
+            const sHidden = (originalData.parent && this.hasCollapsedParent(originalData)) ? ` hidden="1"` : '';
+            const rowOutlineLevel = originalData.level ? originalData.level : 0;
+            const sOutlineLevel = rowOutlineLevel > 0 ? ` outlineLevel="${rowOutlineLevel}"` : '';
+            this.maxOutlineLevel = this.maxOutlineLevel < rowOutlineLevel ? rowOutlineLevel : this.maxOutlineLevel;
+            rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${sOutlineLevel}${sCollapsed}${sHidden}>`;
+        }
+
+        for (let j = 0; j < worksheetData.columnCount; j++) {
+            const cellData = WorksheetFile.getCellData(worksheetData, i, j);
+            rowData[j + 1] = cellData;
+        }
+        rowData[worksheetData.columnCount + 1] = '</row>';
+
+        return rowData.join('');
     }
 
     private hasCollapsedParent(rowData) {
