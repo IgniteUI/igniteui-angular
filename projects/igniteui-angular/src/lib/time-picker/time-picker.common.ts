@@ -5,6 +5,14 @@ import { InteractionMode } from '../core/enums';
 export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
 
 /** @hidden */
+export enum TimeParts {
+    Hour = 'hour',
+    Minute = 'minute',
+    Seconds = 'seconds',
+    amPM = 'ampm'
+}
+
+/** @hidden */
 export interface IgxTimePickerBase {
     hourList: ElementRef;
     minuteList: ElementRef;
