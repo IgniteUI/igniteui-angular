@@ -133,7 +133,7 @@ The calendar header will not be rendered when the selection is either `multi` or
 
 - `viewDate: Date`
 
-Controls the year/month that will be presented in the default view when the calendar renders. By default it is the current year/month.
+Controls the year/month that will be presented in the default view when the calendar renders. By default it is the first day of the current year/month.
 
 - `value: Date | Date[]`
 
@@ -173,7 +173,17 @@ Controls the visibility of the dates that do not belong to the current month.
 - `onSelection(): Date | Date[]`
 
 Event fired when a value is selected through UI interaction.
-Returns the selected value (depending on the type of selection).
+Emits the selected value (depending on the type of selection).
+
+- `viewDateChanged(): IViewDateChangeEventArgs`
+
+Event fired after the month/year presented in the view is changed.
+Emits an object containing the previous and current value of the `viewDate` property.
+
+- `activeViewChanged(): CalendarView`
+
+Event fired after the active view is changed.
+Emits an CalendarView enum, indicating the `activeView` property value.
 
 
 ### Methods
