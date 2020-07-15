@@ -163,8 +163,6 @@ export class IgxGridGroupByRowComponent {
     @HostListener('pointerdown')
     public activate() {
         this.grid.navigation.setActiveNode({row: this.index}, 'groupRow');
-        // this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row = this.index :
-        //     this.grid.navigation.activeNode = {row: this.index};
     }
 
     /**

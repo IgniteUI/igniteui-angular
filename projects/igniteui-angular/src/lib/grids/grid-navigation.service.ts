@@ -171,10 +171,6 @@ export class IgxGridNavigationService {
             newActiveNode = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
         }
 
-        if (this.activeNode.column === newActiveNode) {
-            return;
-        }
-
         this.setActiveNode({row: this.activeNode.row, column: newActiveNode}, tag);
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
@@ -345,12 +341,15 @@ export class IgxGridNavigationService {
     }
 
     public setActiveNode(activeNode: IActiveNode, tag: GridKeydownTargetType) {
-        if (this.activeNode === undefined) {
-            this.activeNode = activeNode;
-        } else {
-            Object.assign(this.activeNode, activeNode);
+        if (!this.isActiveNodeChanged(activeNode)) {
+            return;
         }
 
+        if (!this.activeNode) {
+            this.activeNode = activeNode;
+        }
+
+        Object.assign(this.activeNode, activeNode);
 
         const args: IActiveNodeChangeEventArgs = {
             row: this.activeNode.row,
@@ -361,6 +360,43 @@ export class IgxGridNavigationService {
 
         this.grid.activeNodeChange.emit(args);
     }
+
+    public isActiveNodeChanged(activeNode: IActiveNode) {
+        let isChanged = false;
+        const checkInnerProp = (aciveNode: ColumnGroupsCache | IMultiRowLayoutNode, prop) => {
+            if (!aciveNode) {
+                isChanged = true;
+                return;
+            }
+
+            props = Object.getOwnPropertyNames(aciveNode);
+            for (let i = 0; i < props.length; i++) {
+                const propName = props[i];
+                if (this.activeNode[prop][propName] !== aciveNode[propName]) {
+                    isChanged = true;
+                }
+            }
+        };
+
+        if (!this.activeNode) {
+            return isChanged = true;
+        }
+
+        let props = Object.getOwnPropertyNames(activeNode);
+        for (let i = 0; i < props.length; i++) {
+            const propName = props[i];
+
+            if (this.activeNode[propName] !== activeNode[propName] && typeof this.activeNode[propName] === 'object') {
+                checkInnerProp(activeNode[propName], propName);
+            } else if (this.activeNode[propName] !== activeNode[propName]) {
+                isChanged = true;
+            }
+        }
+
+        return isChanged;
+    }
+
+
 
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
         const row = this.grid.summariesRowList.toArray().concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);

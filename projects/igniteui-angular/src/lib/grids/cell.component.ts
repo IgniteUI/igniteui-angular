@@ -915,17 +915,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private setActiveNode() {
-        const activeNode = this.grid.navigation.activeNode;
-        if ((activeNode && activeNode.row === this.rowIndex && activeNode.column === this.visibleColumnIndex) &&
-            (activeNode && activeNode.layout && activeNode.layout.columnVisibleIndex === this.visibleColumnIndex)) {
-            return;
+        if (this.grid.navigation.activeNode) {
+            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex}, 'dataCell');
+        } else {
+            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, 'dataCell');
         }
-
-        // if (this.grid.navigation.activeNode) {
-        //     this.grid.navigation.setActiveNode({row: this.rowIndex, column: this.visibleColumnIndex}, 'dataCell');
-        // } else {
-        const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-        this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, 'dataCell');
-        // }
     }
 }

@@ -244,8 +244,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if ((key.includes('right') || key === 'end') && this.activeNode.column !== this.lastIndexPerRow) {
             this.activeNode.column = ctrl || key === 'end' ? this.lastIndexPerRow : this.getNextHorizontalCellPosition().column;
         }
-        const newLayout = this.layout(this.activeNode.column);
-        Object.assign(this.activeNode.layout, {colStart: newLayout.colStart, rowEnd: newLayout.rowEnd});
+        const layout = this.layout(this.activeNode.column);
+        const newLayout = {...this.activeNode.layout, colStart: layout.colStart, rowEnd: layout.rowEnd};
+        this.grid.navigation.setActiveNode({row: this.activeNode.row, layout: newLayout}, 'headerCell');
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
