@@ -163,6 +163,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
+    - Make `onSearchInput` event cancellable. The event args type has been changed to `IComboSearchInputEventArgs`, which have two properties: `change` - holds the change in the search input and `cancel` - indicates whether the event should be canceled.
 
 - `IgxToast`:
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
