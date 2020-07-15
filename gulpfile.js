@@ -137,7 +137,7 @@ module.exports.copySchematics = (cb) => {
 const typedocBuildTheme = (cb) => {
     spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH,
     "--tsconfig",
-    "tsconfig.base.json"], { stdio: 'inherit', shell: true });
+    path.join(__dirname,"tsconfig.base.json")], { stdio: 'inherit', shell: true });
     cb();
 };
 typedocBuildTheme.displayName = 'typedoc-build:theme';
@@ -180,13 +180,26 @@ const TYPEDOC = {
 };
 
 function typedocBuildExportFn(cb) {
-    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-json", TYPEDOC.EXPORT_JSON_PATH, "--tags", "--params"],
+    spawnSync('typedoc', [
+        TYPEDOC.PROJECT_PATH,
+        "--generate-json",
+        TYPEDOC.EXPORT_JSON_PATH,
+        "--tags",
+        "--params",
+        "--tsconfig",
+        path.join(__dirname,"tsconfig.base.json")],
         { stdio: 'inherit', shell: true });
     cb();
 }
 
 function typedocImportJsonFn(cb) {
-    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-from-json", TYPEDOC.EXPORT_JSON_PATH, "--warns"],
+    spawnSync('typedoc', [
+        TYPEDOC.PROJECT_PATH,
+        "--generate-from-json",
+        TYPEDOC.EXPORT_JSON_PATH,
+        "--warns",
+        "--tsconfig",
+        path.join(__dirname,"tsconfig.base.json")],
         { stdio: 'inherit', shell: true});
     cb();
 }
@@ -212,7 +225,7 @@ function typedocBuildDocsJA (cb) {
             '--localize',
             'jp',
             "--tsconfig",
-            "tsconfig.base.json"], { stdio: 'inherit', shell: true });
+            path.join(__dirname,"tsconfig.base.json")], { stdio: 'inherit', shell: true });
 
         cb();
 }
@@ -223,7 +236,7 @@ function typedocBuildDocsEN (cb) {
             '--localize',
             'en',
             "--tsconfig",
-            "tsconfig.base.json"], { stdio: 'inherit', shell: true});
+            path.join(__dirname,"tsconfig.base.json")], { stdio: 'inherit', shell: true});
 
         cb();
 }
