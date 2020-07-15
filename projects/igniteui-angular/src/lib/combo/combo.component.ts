@@ -100,7 +100,7 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
 /** Event emitted when the igx-combo's search input changes */
 export interface IComboSearchInputEventArgs extends CancelableEventArgs {
     /** The change that has been made to the search input */
-    change: string;
+    searchTerm: string;
 }
 
 export interface IComboItemAdditionEvent extends IBaseEventArgs {
@@ -989,7 +989,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public handleInputChange(event?: string) {
         if (event !== undefined) {
             const args: IComboSearchInputEventArgs = {
-                change: event,
+                searchTerm: event,
                 cancel: false
             };
             this.onSearchInput.emit(args);
