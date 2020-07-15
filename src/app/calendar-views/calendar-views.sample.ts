@@ -101,11 +101,11 @@ export class CalendarViewsSampleComponent implements OnInit {
         // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 
-    public onViewDateChanged(event: Date) {
+    public viewDateChanged(event: Date) {
         const date = event;
         console.log(date);
     }
 
-    public onActiveViewChanged(event: CalendarView) {
+    public activeViewChanged(event: CalendarView) {
     }
 }
