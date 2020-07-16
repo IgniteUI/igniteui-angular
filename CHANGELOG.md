@@ -8,7 +8,8 @@ All notable changes for each version of this project will be documented in this 
 - `igxCombo`
     - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
 - `IgxOverlay`
-    - **Behavioral Change** - Added new property `closeOnEscape` in `OverlaySettings`. Should overlay close or not on escape keypress can now be controlled via this new property. By default `closeOnEscape` is set to `false`.
+    - Added new property `closeOnEscape` in `OverlaySettings` that controls whether the overlay should close on escape keypress. By default `closeOnEsc` is set to `false`.
+    - **Behavioral Change** - `modal` overlays shown directly through the Overlay Service no longer close on Escape by default. That behavior can now be specified using the `closeOnEscape` property.
 - `igxDialog`
     - Added `closeOnEscape` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
 - `IgxNavbar`:
