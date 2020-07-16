@@ -6139,10 +6139,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
-                const value = c.formatter ? c.formatter(dataRow[c.field]) :
-                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
-                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
-                            : dataRow[c.field];
+                const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
+                    c.dataType === 'number' ? numberPipe.transform(resolveNestedPath(dataRow, c.field), this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(resolveNestedPath(dataRow, c.field), this.locale)
+                            : resolveNestedPath(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 
