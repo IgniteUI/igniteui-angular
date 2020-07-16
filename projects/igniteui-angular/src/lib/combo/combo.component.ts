@@ -81,7 +81,7 @@ export enum IgxComboState {
 }
 
 /** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventonSeaArgs {
     /** An array containing the values that are currently selected */
     oldSelection: any[];
     /** An array containing the values that will be selected after this event */
@@ -97,9 +97,9 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
 }
 
 /** Event emitted when the igx-combo's search input changes */
-export interface IComboSearchInputEventArgs extends CancelableEventArgs {
-    /** The change that has been made to the search input */
-    searchTerm: string;
+export interface IComboSearchInputEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    /** The text that has been typed into the search input */
+    searchText: string;
 }
 
 export interface IComboItemAdditionEvent extends IBaseEventArgs {
@@ -489,7 +489,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onSearchInput = new EventEmitter<IComboSearchInputEventArgs>();
+    public onSearchInput = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted when new chunk of data is loaded from the virtualization
@@ -988,7 +988,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public handleInputChange(event?: string) {
         if (event !== undefined) {
             const args: IComboSearchInputEventArgs = {
-                searchTerm: event,
+                searchText: event,
                 cancel: false
             };
             this.onSearchInput.emit(args);
