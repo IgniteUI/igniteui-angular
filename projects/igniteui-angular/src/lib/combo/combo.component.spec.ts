@@ -532,7 +532,7 @@ describe('igxCombo', () => {
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(0);
 
             const args = {
-                searchTerm: 'Fake',
+                searchText: 'Fake',
                 cancel: false
             };
             combo.handleInputChange('Fake');
@@ -540,7 +540,7 @@ describe('igxCombo', () => {
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledWith(args);
 
-            args.searchTerm = '';
+            args.searchText = '';
             combo.handleInputChange('');
             expect(matchSpy).toHaveBeenCalledTimes(3);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
