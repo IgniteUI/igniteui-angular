@@ -81,7 +81,7 @@ export enum IgxComboState {
 }
 
 /** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventonSeaArgs {
+export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /** An array containing the values that are currently selected */
     oldSelection: any[];
     /** An array containing the values that will be selected after this event */
@@ -489,7 +489,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onSearchInput = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onSearchInput = new EventEmitter<IComboSearchInputEventArgs>();
 
     /**
      * Emitted when new chunk of data is loaded from the virtualization
