@@ -990,6 +990,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (event !== undefined) {
             const args: IComboSearchInputEventArgs = {
                 searchText: event,
+                owner: this,
                 cancel: false
             };
             this.onSearchInput.emit(args);
