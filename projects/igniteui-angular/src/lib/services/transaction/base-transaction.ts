@@ -158,12 +158,10 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @param second Value to merge
      */
     protected mergeValues<U>(first: U, second: U): U {
-        let result: U;
         if (isObject(first) || isObject(second)) {
-            result = mergeObjects(mergeObjects({}, first), second);
+            return mergeObjects(mergeObjects({}, first), second);
         } else {
-            result = second ? second : first;
+            return second ? second : first;
         }
-        return result;
     }
 }
