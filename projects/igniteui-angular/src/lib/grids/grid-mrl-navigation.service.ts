@@ -227,8 +227,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             const col = key.includes('down') ? this.getNextRowIndex(children, false) : this.getPreviousRowIndex(children, false);
             if (!col) { return; }
             this.activeNode.column = col.visibleIndex;
-            const newLayout = this.layout(this.activeNode.column);
-            Object.assign(this.activeNode.layout, {rowStart: newLayout.rowStart, rowEnd: newLayout.rowEnd});
+            const layout = this.layout(this.activeNode.column);
+            const nextLayout = {...this.activeNode.layout, rowStart: layout.rowStart, rowEnd: layout.rowEnd};
+            this.setActiveNode({row: this.activeNode.row, layout: nextLayout}, 'headerCell');
             return;
         }
         this.horizontalNav(event, key, -1);

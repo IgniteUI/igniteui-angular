@@ -179,7 +179,7 @@ export class IgxGridNavigationService {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
         if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
-            this.activeNode = { row: 0, column: 0 };
+            this.setActiveNode({ row: 0, column: 0 }, 'dataCell');
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
                 obj.target.activate(event);
@@ -190,8 +190,9 @@ export class IgxGridNavigationService {
     focusFirstCell(header = true) {
         if (this.grid.dataView.length && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
-        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
-                level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
+            const type = header ? 'headerCell' : 'summaryCell';
+        this.setActiveNode({ row: header ? -1 : this.grid.dataView.length, column: 0,
+                level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} }, type);
         this.performHorizontalScrollToCell(0);
     }
 
@@ -304,7 +305,7 @@ export class IgxGridNavigationService {
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
-        this.grid.navigateTo(this.activeNode.row = rowIndex, this.activeNode.column = visibleColIndex, cb);
+        this.grid.navigateTo(rowIndex, visibleColIndex, cb);
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
