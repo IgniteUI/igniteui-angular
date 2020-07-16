@@ -98,8 +98,8 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
 }
 
 /** Event emitted when the igx-combo's search input changes */
-export interface IComboSearchInputEventArgs extends CancelableEventArgs {
-    /** The change that has been made to the search input */
+export interface IComboSearchInputEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    /** The text that has been typed into the search input */
     searchTerm: string;
 }
 
