@@ -261,3 +261,21 @@ export class IgxStringReplacePipe implements PipeTransform {
         return value.replace(search, replacement);
     }
 }
+
+@Pipe({ name: 'transactionState' })
+export class IgxGridTransactionStatePipe implements PipeTransform {
+
+    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any) {
+        if (rowEditable) {
+            const rowCurrentState = transactions.getAggregatedValue(row_id, false);
+            if (rowCurrentState) {
+                const value = resolveNestedPath(rowCurrentState, field);
+                return value !== undefined && value !== null;
+            }
+        } else {
+            const transaction = transactions.getState(row_id);
+            const value = resolveNestedPath(transaction?.value ?? {}, field);
+            return transaction && transaction.value && (value || value === 0 || value === false);
+        }
+    }
+}

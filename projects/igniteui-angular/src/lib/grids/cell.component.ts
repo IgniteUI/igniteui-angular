@@ -16,13 +16,10 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import {
-    getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil
-} from '../core/utils';
-import { State } from '../services/public_api';
+import { getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
-import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
+import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
@@ -461,24 +458,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('class.igx-grid__td--column-selected')
     get columnSelected() {
         return this.selectionService.isColumnSelected(this.column.field);
-    }
-
-    @HostBinding('class.igx-grid__td--edited')
-    get dirty() {
-        if (this.grid.rowEditable) {
-            const rowCurrentState = this.grid.transactions.getAggregatedValue(this.row.rowID, false);
-            if (rowCurrentState) {
-                return rowCurrentState[this.column.field] !== undefined && rowCurrentState[this.column.field] !== null;
-            }
-        } else {
-            const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
-                return rowTransaction && rowTransaction.value &&
-                (rowTransaction.value[this.column.field] ||
-                 rowTransaction.value[this.column.field] === 0 ||
-                 rowTransaction.value[this.column.field] === false);
-        }
-
-        return false;
     }
 
     /**
