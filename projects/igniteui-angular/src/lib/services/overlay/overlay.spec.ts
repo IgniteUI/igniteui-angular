@@ -2718,7 +2718,7 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                closeOnEsc: true,
+                closeOnEscape: true,
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2738,7 +2738,7 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                closeOnEsc: false
+                closeOnEscape: false
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
@@ -2757,9 +2757,9 @@ describe('igxOverlay', () => {
         it('Should close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEscape: true });
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEscape: true });
             tick();
 
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
@@ -2777,11 +2777,11 @@ describe('igxOverlay', () => {
         it('Should not close the opened overlays consecutively on esc keypress', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
-            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEscape: true });
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: false });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEscape: false });
             tick();
-            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEsc: true });
+            overlay.show(overlay.attach(SimpleDynamicComponent), { closeOnEscape: true });
             tick();
 
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
@@ -2801,7 +2801,7 @@ describe('igxOverlay', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
-                closeOnEsc: true,
+                closeOnEscape: true,
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);

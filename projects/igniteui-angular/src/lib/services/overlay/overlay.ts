@@ -1,15 +1,5 @@
+import { AnimationAnimateRefMetadata, AnimationBuilder, AnimationMetadataType, AnimationReferenceMetadata } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import {
-    OverlaySettings,
-    OverlayEventArgs,
-    OverlayInfo,
-    OverlayAnimationEventArgs,
-    OverlayCancelableEventArgs,
-    OverlayClosingEventArgs
-} from './utilities';
-
 import {
     ApplicationRef,
     ComponentFactory,
@@ -20,17 +10,22 @@ import {
     Inject,
     Injectable,
     Injector,
-    Type,
-    OnDestroy,
     NgModuleRef,
-    NgZone
+    NgZone, OnDestroy, Type
 } from '@angular/core';
-import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
-import { fromEvent, Subject } from 'rxjs';
+import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 import { showMessage } from '../../core/deprecateDecorators';
-import { FromEventTarget } from 'rxjs/internal/observable/fromEvent';
+import { GlobalPositionStrategy } from './position/global-position-strategy';
+import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
+import {
+    OverlayAnimationEventArgs,
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs, OverlayEventArgs,
+    OverlayInfo, OverlaySettings
+} from './utilities';
+
 
 let warningShown = false;
 
@@ -44,6 +39,7 @@ export class IgxOverlayService implements OnDestroy {
     private _overlayInfos: OverlayInfo[] = [];
     private _overlayElement: HTMLElement;
     private _document: Document;
+    private _keyPressEventListener: Subscription;
     private destroy$ = new Subject<boolean>();
 
     private _defaultSettings: OverlaySettings = {
@@ -51,7 +47,7 @@ export class IgxOverlayService implements OnDestroy {
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
         closeOnOutsideClick: true,
-        closeOnEsc: false
+        closeOnEscape: false
     };
 
     /**
@@ -322,7 +318,7 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         this.addOutsideClickListener(info);
-        this.addResizeHandler(info.id);
+        this.addResizeHandler();
         this.addCloseOnEscapeListener();
 
         if (info.settings.modal) {
@@ -359,7 +355,8 @@ export class IgxOverlayService implements OnDestroy {
         //  TODO: synchronize where these are added/attached and where removed/detached
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
-        this.removeResizeHandler(info.id);
+        this.removeResizeHandler();
+        this.removeCloseOnEscapeListener();
 
         const child: HTMLElement = info.elementRef.nativeElement;
         if (info.settings.modal) {
@@ -706,7 +703,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private addResizeHandler(id: string) {
+    private addResizeHandler() {
         const closingOverlaysCount =
             this._overlayInfos
                 .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
@@ -716,7 +713,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private removeResizeHandler(id: string) {
+    private removeResizeHandler() {
         const closingOverlaysCount =
             this._overlayInfos
                 .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
@@ -730,15 +727,24 @@ export class IgxOverlayService implements OnDestroy {
         //  if all overlays minus closing overlays equals one add the handler
         if (this._overlayInfos.length - this._overlayInfos.filter(x => x.closeAnimationPlayer
             && x.closeAnimationPlayer.hasStarted()).length === 1) {
-            fromEvent(this._document, 'keydown').pipe(
-                filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
-                takeUntil(this.destroy$)
+            this._keyPressEventListener = fromEvent(this._document, 'keydown').pipe(
+                filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc')
             ).subscribe(() => {
                 const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
-                if (targetOverlay.settings.closeOnEsc) {
+                if (targetOverlay.settings.closeOnEscape) {
                     this.hide(targetOverlay.id);
                 }
             });
+        }
+    }
+
+    private removeCloseOnEscapeListener() {
+        const closingOverlaysCount =
+            this._overlayInfos
+                .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
+                .length;
+        if (this._overlayInfos.length - closingOverlaysCount === 1 && !this._keyPressEventListener.closed) {
+            this._keyPressEventListener.unsubscribe();
         }
     }
 
