@@ -533,6 +533,7 @@ describe('igxCombo', () => {
 
             const args = {
                 searchText: 'Fake',
+                owner: combo,
                 cancel: false
             };
             combo.handleInputChange('Fake');
