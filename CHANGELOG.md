@@ -38,8 +38,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxNavbar`
     - Added new `igx-navbar-title, igxNavbarTitle` directive that can be used to provide custom content for navbar title. It would override the value of `title` input property.
 - `IgxCalendar` and `IgxMonthPicker`
-    - `onViewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
-    - `onActiveViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
+    - `viewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
+    - `activeViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
     - `viewDate` day value is always 1.
     - `activeView` setter is now available as an input property.
 
