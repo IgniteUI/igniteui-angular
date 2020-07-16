@@ -1,4 +1,8 @@
 @import '../index';
 
+:root {
+    @include igx-palette-vars($dark-fluent-word-palette, $contrast: true);
+}
+
 @include igx-core();
 @include igx-fluent-dark-theme($dark-fluent-word-palette);
