@@ -31,12 +31,12 @@ import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
@@ -151,8 +151,6 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
-import { isNumber } from 'util';
-import { showMessage } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -6290,8 +6288,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this.crudService.row) {
             return 0;
         }
+        const f = (obj: any) => {
+            let changes = 0;
+            Object.keys(obj).forEach(key => isObject(obj[key]) ? changes += f(obj[key]) : changes++);
+            return changes;
+        };
         const rowChanges = this.transactions.getAggregatedValue(this.crudService.row.id, false);
-        return rowChanges ? Object.keys(rowChanges).length : 0;
+        return rowChanges ? f(rowChanges) : 0;
     }
 
     protected writeToData(rowIndex: number, value: any) {
