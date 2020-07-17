@@ -214,6 +214,7 @@ $_bootstrap-chip: extend(
 /// @prop {Number} border-radius [3px] - The border radius fraction used for chip component.
 /// @prop {Color} text-color [#fff] - The chip text color.
 /// @prop {Map} background [igx-color: ('grays', 600)] - The chip background color.
+/// @prop {Map} ghost-background [igx-color: ('grays', 800), to-opaque: (igx-color: 'surface')] - The chip ghost background color.
 /// @prop {Color} hover-text-color [#fff] - The chip text hover color.
 /// @prop {Map} hover-background [igx-color: ('grays', 800)] - The chip hover background color.
 /// @prop {Color} focus-text-color [#fff] The focused chip text color.
@@ -237,6 +238,14 @@ $_indigo-chip: extend(
 
         background: (
             igx-color: ('grays', 600)
+        ),
+
+        ghost-background: (
+            igx-color: ('grays', 800),
+
+            to-opaque: (
+                igx-color: 'surface',
+            )
         ),
 
         text-color: #fff,
