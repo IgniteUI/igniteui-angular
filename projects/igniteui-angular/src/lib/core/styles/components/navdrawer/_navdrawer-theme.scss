@@ -297,15 +297,15 @@
         color: --var($theme, 'item-text-color');
         max-height: $drawer-item-max-h;
         min-width: $drawer-item-min-w;
-        margin: $drawer-item-margin;
 
         @if $variant != 'indigo-design' {
+            // important is needed to override the typography margins
+            margin: $drawer-item-margin !important;
             padding: rem(12px) rem(8px);
         } @else {
-            padding: rem(4px) rem(4px);
-
             // important is needed to override the typography margins
             margin: rem(15px) $drawer-item-margin !important;
+            padding: rem(4px) rem(4px);
         }
 
         cursor: pointer;
@@ -319,13 +319,23 @@
         justify-content: flex-start;
 
         > igx-icon + span {
-            margin-#{$left}: rem(32px);
+            @if $variant == 'indigo-design' {
+                margin-#{$left}: rem(28px);
+            } @else {
+                margin-#{$left}: rem(32px);
+            }
+        }
+
+        span {
+            @if $variant == 'indigo-design' {
+                padding-#{$left}: rem(4px);
+            }
         }
 
         igx-icon {
             color: --var($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
-                margin-#{$left}: rem(4px);
+                margin-#{$left}: rem(2px);
             }
         }
 
