@@ -21,6 +21,8 @@ All notable changes for each version of this project will be documented in this 
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 - `IgxTimePicker`
     - Added a disabled style for time parts outside of the minimum and maximum range.
+- `igxDatePicker`
+    -  Added new property - `editorTabIndex`, that allows setting tabindex for the default editor.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
