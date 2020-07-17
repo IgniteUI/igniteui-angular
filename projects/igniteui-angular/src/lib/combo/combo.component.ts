@@ -96,6 +96,12 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
     event?: Event;
 }
 
+/** Event emitted when the igx-combo's search input changes */
+export interface IComboSearchInputEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    /** The text that has been typed into the search input */
+    searchText: string;
+}
+
 export interface IComboItemAdditionEvent extends IBaseEventArgs {
     oldCollection: any[];
     addedItem: any;
@@ -483,7 +489,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onSearchInput = new EventEmitter();
+    public onSearchInput = new EventEmitter<IComboSearchInputEventArgs>();
 
     /**
      * Emitted when new chunk of data is loaded from the virtualization
@@ -981,7 +987,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleInputChange(event?: string) {
         if (event !== undefined) {
-            this.onSearchInput.emit(event);
+            const args: IComboSearchInputEventArgs = {
+                searchText: event,
+                owner: this,
+                cancel: false
+            };
+            this.onSearchInput.emit(args);
+            if (args.cancel) {
+                this.searchValue = null;
+                return;
+            }
         }
         this.checkMatch();
     }
@@ -1436,8 +1451,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /** Returns a string that should be populated in the combo's text box */
     private concatDisplayText(selection: any[]): string {
         const value = this.displayKey !== null && this.displayKey !== undefined ?
-        this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
-        selection.join(', ');
+            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            selection.join(', ');
         return value;
     }
 
