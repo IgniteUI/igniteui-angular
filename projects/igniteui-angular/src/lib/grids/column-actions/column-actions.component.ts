@@ -142,7 +142,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
      * Gets the display order of the columns.
      * @example
      * ```typescript
-     * let columnDisplayOrder  =  this.columnActions.columnDisplayOrder;
+     * let columnDisplayOrder = this.columnActions.columnDisplayOrder;
      * ```
      */
     @Input()
@@ -177,24 +177,62 @@ export class IgxColumnActionsComponent implements OnDestroy {
     public columnsAreaMaxHeight = '100%';
 
     /**
-     * Gets/sets the text of the button that unchecks all columns.
+     * @hidden @internal
+     */
+    private _uncheckAllText: string;
+    /**
+     * Gets the text of the button that unchecks all columns.
+     * @remarks
+     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
      * @example
-     * ```html
-     * <igx-column-actions [uncheckAllText]="'Show Columns'"></igx-column-actions>
+     * ```typescript
+     * let uncheckAllText = this.columnActions.uncheckAllText;
      * ```
      */
     @Input()
-    public uncheckAllText = 'Uncheck All';
+    public get uncheckAllText() {
+        return this._uncheckAllText || this.actionsDirective.uncheckAllLabel;
+    }
+    /**
+     * Sets the text of the button that unchecks all columns.
+     * @example
+     * ```html
+     * <igx-column-actions [uncheckAllText]="'Show All'"></igx-column-actions>
+     * ```
+     */
+    public set uncheckAllText(value: string) {
+        this._uncheckAllText = value;
+    }
 
     /**
-     * Gets/sets the text of the button that checks all columns.
+     * @hidden @internal
+     */
+    private _checkAllText: string;
+    /**
+     * Gets the text of the button that checks all columns.
+     * @remarks
+     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
      * @example
-     * ```html
-     * <igx-column-actions [checkAllText]="'Hide Columns'"></igx-column-actions>
+     * ```typescript
+     * let uncheckAllText = this.columnActions.uncheckAllText;
      * ```
      */
     @Input()
-    public checkAllText = 'Check All';
+    public get checkAllText() {
+        return this._checkAllText || this.actionsDirective.checkAllLabel;
+    }
+    /**
+     * Sets the text of the button that checks all columns.
+     * @remarks
+     * If unset it is obtained from the IgxColumnActionsBased derived directive applied.
+     * @example
+     * ```html
+     * <igx-column-actions [checkAllText]="'Hide All'"></igx-column-actions>
+     * ```
+     */
+    public set checkAllText(value: string) {
+        this._checkAllText = value;
+    }
 
     /**
      * Gets/sets the indentation of columns in the column list based on their hierarchy level.

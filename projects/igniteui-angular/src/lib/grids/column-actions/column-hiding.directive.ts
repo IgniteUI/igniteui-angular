@@ -22,6 +22,16 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
+    public checkAllLabel = this.gridAPI.grid ? this.gridAPI.grid.resourceStrings.igx_grid_hiding_check_all_label : 'Hide All';
+
+    /**
+     * @hidden @internal
+     */
+    public uncheckAllLabel = this.gridAPI.grid ? this.gridAPI.grid.resourceStrings.igx_grid_hiding_uncheck_all_label : 'Show All';
+
+    /**
+     * @hidden @internal
+     */
     public trackByFunction = (index: number, item: IgxColumnComponent) => item.hidden;
 
     /**

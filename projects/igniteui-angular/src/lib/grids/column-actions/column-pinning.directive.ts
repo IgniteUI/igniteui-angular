@@ -22,6 +22,16 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
+    public checkAllLabel = this.gridAPI.grid ? this.gridAPI.grid.resourceStrings.igx_grid_pinning_check_all_label : 'Pin All';
+
+    /**
+     * @hidden @internal
+     */
+    public uncheckAllLabel = this.gridAPI.grid ? this.gridAPI.grid.resourceStrings.igx_grid_pinning_uncheck_all_label : 'Unpin All';
+
+    /**
+     * @hidden @internal
+     */
     public trackByFunction = (index: number, item: IgxColumnComponent) => item.pinned;
 
     /**

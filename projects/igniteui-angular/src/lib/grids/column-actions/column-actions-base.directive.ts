@@ -16,6 +16,16 @@ export abstract class IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
+    public checkAllLabel: string;
+
+    /**
+     * @hidden @internal
+     */
+    public uncheckAllLabel: string;
+
+    /**
+     * @hidden @internal
+     */
     public trackByFunction: (index: number, item: IgxColumnComponent) => boolean;
 
     /**

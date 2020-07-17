@@ -73,7 +73,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         this._filterColumnsPrompt = value;
     }
 
-    private _filterColumnsPrompt = 'Filter columns list ...';
+    private _filterColumnsPrompt = this.grid.resourceStrings.igx_grid_toolbar_actions_filter_prompt;
 
     /**
      * @hidden
