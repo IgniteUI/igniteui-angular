@@ -63,12 +63,19 @@ $_dark-indigo-list: extend(
 
         item-background-hover: (
             igx-color: ('primary', 500),
-            rgba: .5
+            rgba: .5,
+            to-opaque: (
+                igx-color: 'surface',
+            )
+
         ),
 
         item-background-active: (
             igx-color: ('primary', 500),
-            rgba: .5
+            rgba: .5,
+            to-opaque: (
+                igx-color: 'surface',
+            )
         )
     )
 );

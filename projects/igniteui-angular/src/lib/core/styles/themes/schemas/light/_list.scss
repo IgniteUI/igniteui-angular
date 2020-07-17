@@ -214,12 +214,18 @@ $_indigo-list: extend(
 
         item-background-hover: (
             igx-color: ('primary', 500),
-            rgba: .15
+            rgba: .15,
+            to-opaque: (
+                igx-color: 'surface',
+            )
         ),
 
         item-background-active: (
             igx-color: ('primary', 500),
-            rgba: .15
+            rgba: .15,
+            to-opaque: (
+                igx-color: 'surface',
+            )
         ),
 
         item-text-color: (
