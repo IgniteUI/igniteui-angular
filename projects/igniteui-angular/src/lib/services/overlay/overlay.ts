@@ -356,7 +356,6 @@ export class IgxOverlayService implements OnDestroy {
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
         this.removeResizeHandler();
-        this.removeCloseOnEscapeListener();
 
         const child: HTMLElement = info.elementRef.nativeElement;
         if (info.settings.modal) {
@@ -502,6 +501,7 @@ export class IgxOverlayService implements OnDestroy {
         if (this._overlayInfos.length === 0 && this._overlayElement && this._overlayElement.parentElement) {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
+            this.removeCloseOnEscapeListener();
         }
     }
 
@@ -737,11 +737,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private removeCloseOnEscapeListener() {
-        const closingOverlaysCount =
-        this._overlayInfos
-            .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
-            .length;
-        if (this._overlayInfos.length - closingOverlaysCount === 1 && this._keyPressEventListener) {
+        if (this._keyPressEventListener) {
             this._keyPressEventListener.unsubscribe();
             this._keyPressEventListener = null;
         }
