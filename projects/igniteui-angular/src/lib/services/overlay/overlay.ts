@@ -741,7 +741,7 @@ export class IgxOverlayService implements OnDestroy {
         this._overlayInfos
             .filter(o => o.closeAnimationPlayer && o.closeAnimationPlayer.hasStarted())
             .length;
-        if (this._overlayInfos.length - closingOverlaysCount === 1 && this._keyPressEventListener && !this._keyPressEventListener.closed) {
+        if (this._overlayInfos.length - closingOverlaysCount === 1 && this._keyPressEventListener) {
             this._keyPressEventListener.unsubscribe();
             this._keyPressEventListener = null;
         }
