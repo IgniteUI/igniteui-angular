@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -21,11 +21,11 @@ $_light-column-hiding: (
 /// Generates a fluent column hiding schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-column-hiding
+/// @requires {Map} $_light-column-hiding
 $_fluent-column-hiding: extend($_light-column-hiding);
 
 /// Generates a bootstrap column hiding schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-column-hiding
+/// @requires {Map} $_light-column-hiding
 $_bootstrap-column-hiding: extend($_light-column-hiding);

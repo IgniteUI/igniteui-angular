@@ -3,7 +3,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -21,10 +21,7 @@
 /// @prop {Color} indicator-active-dot-color [#fff] - The active indicator dot color.
 /// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
-///
-/// @requires {function} extend
-/// @requires {map} $_default-shape-carousel
-/// @requires {map} $_default-elevation-carousel
+/// @see $default-palette
 $_light-carousel: extend(
     $_default-shape-carousel,
     $_default-elevation-carousel,
@@ -61,9 +58,7 @@ $_light-carousel: extend(
 /// Generates a fluent carousel schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-carousel
-/// @requires {map} $_fluent-elevation-carousel
-/// @see $default-palette
+/// @requires {Map} $_light-carousel
 $_fluent-carousel: extend(
     $_light-carousel,
     $_square-shape-carousel,
@@ -73,7 +68,7 @@ $_fluent-carousel: extend(
 /// Generates a bootstrap carousel schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-carousel
+/// @requires {Map} $_light-carousel
 $_bootstrap-carousel: extend(
     $_light-carousel,
     $_bootstrap-shape-carousel,
@@ -85,7 +80,7 @@ $_bootstrap-carousel: extend(
 /// Generates an indigo carousel schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-carousel
+/// @requires {Map} $_light-carousel
 $_indigo-carousel: extend(
     $_light-carousel,
     $_square-shape-carousel,

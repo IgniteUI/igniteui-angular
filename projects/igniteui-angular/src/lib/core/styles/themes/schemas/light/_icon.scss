@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -14,31 +14,29 @@
 /// @property {Color} disabled-color ["'currentColor'"] - The disabled icon color.
 ///
 /// @see $default-palette
-
 $_light-icon: (
-    color: "'"'currentColor'"'",
+    color: "'currentColor'",
     size: rem(24px),
     disabled-color: "'currentColor'"
 );
 
 /// Generates a fluent icon schema.
 /// @type {Map}
-///
 /// @requires {function} extend
-/// @requires {map} $_light-icon
+/// @requires {Map} $_light-icon
 $_fluent-icon: extend($_light-icon);
 
 /// Generates a bootstrap icon schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-icon
+/// @requires {Map} $_light-icon
 $_bootstrap-icon: extend($_light-icon);
 
 /// Generates an indigo icon schema.
 /// @type {Map}
 /// @property {Map} disabled-color [igx-color: ('grays', 400)] - The disabled icon color.
 /// @requires {function} extend
-/// @requires {map} $_light-icon
+/// @requires {Map} $_light-icon
 $_indigo-icon: extend(
     $_light-icon,
     (
