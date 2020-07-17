@@ -475,7 +475,6 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                closeOnEsc: true,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
                 excludePositionTarget: true
             };
@@ -499,7 +498,6 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                closeOnEsc: true,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
                 excludePositionTarget: true
             };
@@ -535,7 +533,6 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                closeOnEsc: true,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
                 excludePositionTarget: true
             };
@@ -594,7 +591,6 @@ describe('IgxToggle', () => {
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
-                closeOnEsc: true,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
                 outlet: jasmine.any(IgxOverlayOutletDirective) as any,
                 excludePositionTarget: true

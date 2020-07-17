@@ -717,7 +717,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public animationDone(event) {
         if ((event.fromState === ScrollMonth.NONE && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT)) ||
              (event.fromState === 'void' && event.toState === ScrollMonth.NONE)) {
-            this.onViewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
+            this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
         }
 
         if (this.monthScrollDirection !== ScrollMonth.NONE) {
@@ -751,7 +751,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     public viewRendered(event) {
         if (event.fromState !== 'void') {
-            this.onActiveViewChanged.emit(this.activeView);
+            this.activeViewChanged.emit(this.activeView);
         }
     }
 

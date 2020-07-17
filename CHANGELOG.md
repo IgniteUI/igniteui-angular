@@ -7,20 +7,27 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `igxCombo`
     - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
+    - Make `onSearchInput` event cancellable. The event args type has been changed to `IComboSearchInputEventArgs`, which have the following properties: `searchText` - holds the text typed into the search input, `owner` - holds a reference to the combo component and `cancel` - indicates whether the event should be canceled.
 - `IgxOverlay`
-    - Added new property - `closeOnEsc` - in `OverlaySettings`. The overlay can now be prevented from closing, on escape keypress, by setting the property to `false`, by default it's `true`.
+    - Added new property `closeOnEscape` in `OverlaySettings` that controls whether the overlay should close on escape keypress. By default `closeOnEsc` is set to `false`.
+    - **Behavioral Change** - `modal` overlays shown directly through the Overlay Service no longer close on Escape by default. That behavior can now be specified using the `closeOnEscape` property.
 - `igxDialog`
-    - Added `closeOnEscapeKey` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
+    - Added `closeOnEscape` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
 - `IgxNavbar`:
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
 - `igxGrid`
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
+- `IgxTimePicker`
+    - Added a disabled style for time parts outside of the minimum and maximum range.
+- `igxDatePicker`
+    -  Added new property - `editorTabIndex`, that allows setting tabindex for the default editor.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
+    - Added support for tooltips on data cells default template and summary cells.
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
@@ -35,8 +42,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxNavbar`
     - Added new `igx-navbar-title, igxNavbarTitle` directive that can be used to provide custom content for navbar title. It would override the value of `title` input property.
 - `IgxCalendar` and `IgxMonthPicker`
-    - `onViewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
-    - `onActiveViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
+    - `viewDateChanged` emitted after the month/year presented in the view is changed after user interaction.
+    - `activeViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
     - `viewDate` day value is always 1.
     - `activeView` setter is now available as an input property.
 
