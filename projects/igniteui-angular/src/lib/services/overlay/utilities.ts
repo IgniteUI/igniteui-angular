@@ -59,7 +59,7 @@ export interface OverlaySettings {
     /** Set if the overlay should close on outside click */
     closeOnOutsideClick?: boolean;
     /** Set if the overlay should close when `Esc` key is pressed */
-    closeOnEsc?: boolean;
+    closeOnEscape?: boolean;
     /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
