@@ -8,7 +8,6 @@ import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
-import { ColumnType } from './common/column.interface';
 import { IActiveNodeChangeEventArgs } from './common/events';
 export interface ColumnGroupsCache {
     level: number;
@@ -136,7 +135,9 @@ export class IgxGridNavigationService {
     }
 
     summaryNav(event: KeyboardEvent) {
-        this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length, 'summaryCell');
+        if (this.grid.hasSummarizedColumns) {
+            this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length, 'summaryCell');
+        }
     }
 
     headerNavigation(event: KeyboardEvent) {
@@ -305,7 +306,8 @@ export class IgxGridNavigationService {
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
-        this.grid.navigateTo(rowIndex, visibleColIndex, cb);
+        this.setActiveNode({ row: rowIndex, column: visibleColIndex}, 'dataCell');
+        this.grid.navigateTo(this.activeNode.row, this.activeNode.column, cb);
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {

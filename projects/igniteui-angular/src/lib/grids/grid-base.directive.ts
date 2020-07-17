@@ -5853,6 +5853,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     cb(cbArgs);
                 });
             }
+
             return;
         }
         const args = this.getNavigationArguments(row, visibleColIndex);
