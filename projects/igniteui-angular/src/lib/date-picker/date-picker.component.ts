@@ -792,8 +792,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
-            closeOnEsc: true,
             modal: true,
+            closeOnEscape: true,
             outlet: this.outlet
         };
 

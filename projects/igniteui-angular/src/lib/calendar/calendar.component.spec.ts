@@ -1588,14 +1588,14 @@ describe('IgxCalendar - ', () => {
 
                 expect(year.nativeElement).toBe(document.activeElement);
 
-                spyOn(calendar.onActiveViewChanged, 'emit').and.callThrough();
+                spyOn(calendar.activeViewChanged, 'emit').and.callThrough();
 
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
                 tick();
 
-                expect(calendar.onActiveViewChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onActiveViewChanged.emit).toHaveBeenCalledWith(CalendarView.DECADE);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(CalendarView.DECADE);
 
                 const years = dom.queryAll(By.css(HelperTestFunctions.YEAR_CSSCLASS));
                 let currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
@@ -1617,7 +1617,7 @@ describe('IgxCalendar - ', () => {
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2016');
 
                 const previousValue = fixture.componentInstance.calendar.viewDate;
-                spyOn(calendar.onViewDateChanged, 'emit').and.callThrough();
+                spyOn(calendar.viewDateChanged, 'emit').and.callThrough();
 
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', currentYear.nativeElement);
 
@@ -1625,15 +1625,15 @@ describe('IgxCalendar - ', () => {
                 tick();
 
                 const eventArgs: IViewDateChangeEventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
             }));
 
             it('Should open months view, navigate through and select a month via KB.', fakeAsync(() => {
                 const month = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[0];
                 month.nativeElement.focus();
-                spyOn(calendar.onActiveViewChanged, 'emit').and.callThrough();
+                spyOn(calendar.activeViewChanged, 'emit').and.callThrough();
 
                 expect(month.nativeElement).toBe(document.activeElement);
 
@@ -1641,8 +1641,8 @@ describe('IgxCalendar - ', () => {
                 fixture.detectChanges();
                 tick();
 
-                expect(calendar.onActiveViewChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onActiveViewChanged.emit).toHaveBeenCalledWith(CalendarView.YEAR);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(CalendarView.YEAR);
 
                 const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
                 const currentMonth = dom.query(By.css(HelperTestFunctions.CURRENT_MONTH_CSSCLASS));
@@ -1672,15 +1672,15 @@ describe('IgxCalendar - ', () => {
                 expect(document.activeElement.textContent.trim()).toMatch('Sep');
 
                 const previousValue = fixture.componentInstance.calendar.viewDate;
-                spyOn(calendar.onViewDateChanged, 'emit').and.callThrough();
+                spyOn(calendar.viewDateChanged, 'emit').and.callThrough();
 
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
                 tick();
 
                 const eventArgs: IViewDateChangeEventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.onViewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                 expect(calendar.viewDate.getMonth()).toEqual(8);
             }));
 
