@@ -143,7 +143,12 @@
     @return $rgba;
 }
 
+/// Converts a rgba color to a hexidecimal color.
+///
+/// An alias of hexrgba.
+/// @access public
 /// @alias hexrgba
+/// @see hexrgba
 @function to-opaque($rgba, $background: #fff) {
     @return hexrgba($rgba, $background);
 }
@@ -272,7 +277,7 @@
 }
 
 /// Extends a Map object with the properties of another Map object.
-/// @access private
+/// @access public
 /// @param {Map...} $maps - The source map to get extended.
 /// @returns {Map} - Returns the merged maps.
 @function extend($maps...) {
