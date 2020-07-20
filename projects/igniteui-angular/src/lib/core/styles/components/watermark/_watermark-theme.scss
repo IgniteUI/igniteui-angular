@@ -7,6 +7,10 @@
 /// Returns a map containing all style properties related to the theming the watermark directive.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Number} $border-radius [null] - The border radius used for the link.
+/// @param {Color} $border-color [null] - The border color used for the  link.
+/// @param {Color} $link-background [null] - The background color used for the link.
+/// @param {Color} $color [null] - The color used for the link text.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -15,10 +19,10 @@
 /// @requires text-contrast
 /// @requires round-borders
 ///
-/// @example scss Change the watermark background
-///   $my-watermark-theme: igx-watermark-theme($background: magenta);
+/// @example scss Change the watermark link background
+///   $my-watermark-theme: igx-watermark-theme($link-background: magenta);
 ///   // Pass the theme to the igx-watermark component mixin
-///   @include igx-watermark($my-checkbox-theme);
+///   @include igx-watermark($my-watermark-theme);
 @function igx-watermark-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -85,6 +89,7 @@
         font-size: rem(14px);
         padding: rem(2px) rem(4px);
         line-height: normal;
+        border-radius: --var($theme, 'border-radius');
         border: 1px solid --var($theme, 'border-color');
         color: --var($theme, 'color');
         z-index: 10002;
@@ -111,3 +116,4 @@
         }
     }
 }
+

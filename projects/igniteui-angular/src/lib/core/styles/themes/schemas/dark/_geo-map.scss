@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
 ////
 
 /// Generates a dark base geo map schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-geo-map
 /// @see $_light-geo-map
 $_dark-geo-map: extend($_light-geo-map);

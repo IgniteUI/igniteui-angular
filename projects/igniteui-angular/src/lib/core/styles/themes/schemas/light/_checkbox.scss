@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -17,8 +17,6 @@
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-10 to be used for checkbox.
 /// @prop {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
 ///
-/// @requires {function} extend
-/// @requires {map} $_default-shape-checkbox
 /// @see $default-palette
 $_light-checkbox: extend(
     $_default-shape-checkbox,
@@ -57,8 +55,7 @@ $_light-checkbox: extend(
 /// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-checkbox
-/// @requires {map} $_fluent-shape-checkbox
+/// @requires {Map} $_light-checkbox
 $_fluent-checkbox: extend(
     $_light-checkbox,
     $_fluent-shape-checkbox,
@@ -87,7 +84,7 @@ $_fluent-checkbox: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for checkbox.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-checkbox
+/// @requires {Map} $_light-checkbox
 $_bootstrap-checkbox: extend(
     $_light-checkbox,
     $_bootstrap-shape-checkbox,
@@ -119,8 +116,7 @@ $_bootstrap-checkbox: extend(
 /// @prop {Number} border-radius [3px] - The border radius used for the checkbox.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-checkbox
-/// @requires {map} $_indigo-shape-checkbox
+/// @requires {Map} $_light-checkbox
 $_indigo-checkbox: extend(
     $_light-checkbox,
     $_indigo-shape-checkbox,

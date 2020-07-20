@@ -1,31 +1,31 @@
 @import '../light/dialog';
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark dialog schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-dialog
 /// @see $default-palette
 $_dark-dialog: extend($_light-dialog);
 
 /// Generates a dark fluent dialog schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-dialog
 $_dark-fluent-dialog: extend($_fluent-dialog);
 
 /// Generates a dark bootstrap dialog schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_bootstrap-dialog
 $_dark-bootstrap-dialog: extend($_bootstrap-dialog);
 
 /// Generates a dark indigo dialog schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_indigo-dialog
 $_dark-indigo-dialog: extend($_indigo-dialog);
