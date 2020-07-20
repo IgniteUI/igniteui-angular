@@ -30,6 +30,7 @@ $_dark-bootstrap-grid-summary: extend($_bootstrap-grid-summary);
 /// @property {Color} background-color [igx-color: 'surface'] - The summaries background color is inherited form igx-grid__tfoot.
 /// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
 /// @property {Map} label-color [igx-color: ('primary', 200)] - The summaries label color.
+/// @property {map} label-hover-color [igx-color: ('primary', 100)] - The summaries hover label color.
 /// @property {Color} result-color [igx-color: 'surface'] - The summaries value/result color.
 /// @property {Map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
 /// @requires {function} extend
@@ -47,6 +48,10 @@ $_dark-indigo-grid-summary: extend(
 
         label-color: (
             igx-color: ('primary', 200),
+        ),
+
+        label-hover-color: (
+            igx-color: ('primary', 100),
         ),
 
         result-color: (
