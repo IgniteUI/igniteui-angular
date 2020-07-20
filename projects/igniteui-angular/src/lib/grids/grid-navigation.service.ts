@@ -188,10 +188,12 @@ export class IgxGridNavigationService {
         }
     }
 
-    focusFirstCell(header = true) {
+    focusFirstCell(header = true, footer = false) {
         if (this.grid.dataView.length && this.activeNode &&
-            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
-            const type = header ? 'headerCell' : 'summaryCell';
+            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
+            (footer && !this.grid.hasSummarizedColumns))) { return; }
+
+        const type = header ? 'headerCell' : 'summaryCell';
         this.setActiveNode({ row: header ? -1 : this.grid.dataView.length, column: 0,
                 level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} }, type);
         this.performHorizontalScrollToCell(0);
