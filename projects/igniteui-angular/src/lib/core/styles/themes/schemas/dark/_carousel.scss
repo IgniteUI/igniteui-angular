@@ -51,10 +51,12 @@ $_dark-bootstrap-carousel: extend($_bootstrap-carousel, $_base-dark-carousel);
 /// Generates a dark indigo carousel schema based on a mix of $_indigo-carousel and $_base-dark-carousel
 /// @type {Map}
 /// @prop {Color} slide-background [#222] - The slide background color.
-/// @prop {Color} button-background [igx-color: ('grays', 500)] - The previous/next buttons idle background color.
-/// @prop {Color} button-hover-background [igx-color: ('grays', 300)] - The previous/next buttons hover background color.
-/// @prop {Color} indicator-dot-color [igx-color: ('grays', 600)] - The idle indicator dot color.
-/// @prop {Color} indicator-active-dot-color [igx-color: ('grays', 900)] - The active indicator dot color.
+/// @prop {Map} button-background [igx-color: ('grays', 400)] - The previous/next buttons idle background color.
+/// @prop {Map} button-hover-background [igx-color: ('grays', 200)] - The previous/next buttons hover background color.
+/// @prop {Map} button-arrow-color [igx-color: ('grays', 800)] - The previous/next buttons idle arrow color.
+/// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 900)] - The previous/next buttons hover arrow color.
+/// @prop {Map} indicator-dot-color [igx-color: ('grays', 600)] - The idle indicator dot color.
+/// @prop {Map} indicator-active-dot-color [igx-color: ('grays', 900)] - The active indicator dot color.
 /// @requires extend
 /// @requires $_indigo-carousel
 /// @requires $_base-dark-carousel
@@ -62,11 +64,19 @@ $_dark-indigo-carousel: extend($_indigo-carousel, (
     slide-background: #222,
 
     button-background: (
-        igx-color: ('grays' 500),
+        igx-color: ('grays' 400),
     ),
 
     button-hover-background: (
-        igx-color: ('grays' 300),
+        igx-color: ('grays' 200),
+    ),
+
+    button-arrow-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    button-hover-arrow-color: (
+        igx-color: ('grays', 900)
     ),
 
     indicator-dot-color: (
