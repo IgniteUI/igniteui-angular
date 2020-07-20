@@ -39,8 +39,8 @@
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
-/// @prop {Number} $border-color [transparent] - The list border color.
-/// @prop {Color} $border-width [0] - The list border width.
+/// @prop {Number} border-color [transparent] - The list border color.
+/// @prop {Color} border-width [0] - The list border width.
 ///
 /// @see $default-palette
 $_light-list: extend(
@@ -139,8 +139,8 @@ $_fluent-list: extend($_light-list);
 ///
 /// @prop {Number} border-radius [rem(4px)] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
-/// @prop {Number} $border-color [igx-color: ('grays', 300)] - The list border color.
-/// @prop {Color} $border-width [rem(1px)] - The list border width.
+/// @prop {Number} border-color [igx-color: ('grays', 300)] - The list border color.
+/// @prop {Color} border-width [rem(1px)] - The list border width.
 /// @requires {function} extend
 /// @requires {Map} $_light-list
 $_bootstrap-list: extend(
