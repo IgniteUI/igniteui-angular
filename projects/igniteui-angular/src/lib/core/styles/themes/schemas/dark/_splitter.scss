@@ -2,12 +2,14 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark splitter schema.
 /// @type {Map}
+/// @property {Map} handle-color [igx-color: 'surface', lighten: 20%] - The color for the bar drag handle.
+/// @property {Map} expander-color [igx-color: 'surface', lighten: 20%] - The color for the arrow expander's.
 /// @requires {function} extend
 /// @requires $_light-splitter
 $_dark-splitter: extend(
@@ -39,8 +41,8 @@ $_dark-bootstrap-splitter: extend($_bootstrap-splitter);
 
 /// Generates a dark indigo splitter schema.
 /// @type {Map}
-/// @property {Map} $handle-color [igx-color: 'surface'] - The color for the bar drag handle.
-/// @property {Map} $expander-color [igx-color: 'surface'] - The color for the bar drag handle.
+/// @property {Map} handle-color [igx-color: 'surface'] - The color for the bar drag handle.
+/// @property {Map} expander-color [igx-color: 'surface'] - The color for the bar drag handle.
 /// @requires {function} extend
 /// @requires $_indigo-splitter
 $_dark-indigo-splitter: extend(

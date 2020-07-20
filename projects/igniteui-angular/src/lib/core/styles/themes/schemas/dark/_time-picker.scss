@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -27,19 +27,24 @@ $_dark-bootstrap-time-picker: extend($_bootstrap-time-picker);
 
 /// Generates a dark indigo time-picker schema.
 /// @type {Map}
-/// @prop {Map} selected-text-color [igx-contrast-color: ('surface')] -  The text color of a selected item in time picker.
-/// @prop {Map} hover-text-color [igx-contrast-color: ('surface')] - The hover text color of a open time picker.
+/// @prop {Map} text-color [igx-contrast-color: ('surface')] - The text color of an open time picker.
+/// @prop {Map} selected-text-color [igx-color: ('primary', 300)] -  The text color of a selected item in time picker.
+/// @prop {Map} hover-text-color [igx-color: ('primary', 300)] - The hover text color of an open time picker.
 /// @requires {function} extend
 /// @requires $_indigo-time-picker
 $_dark-indigo-time-picker: extend(
     $_indigo-time-picker,
     (
-        hover-text-color: (
+        text-color: (
             igx-contrast-color: ('surface')
         ),
 
+        hover-text-color: (
+            igx-color: ('primary', 300)
+        ),
+
         selected-text-color: (
-            igx-contrast-color: ('surface')
+            igx-color: ('primary', 300)
         ),
     )
 );

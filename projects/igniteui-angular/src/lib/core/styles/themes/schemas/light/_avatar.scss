@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -40,14 +40,13 @@ $_light-avatar: extend(
 /// Generates a fluent avatar schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-avatar
+/// @requires {Map} $_light-avatar
 $_fluent-avatar: extend($_light-avatar);
 
 /// Generates a bootstrap avatar schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-avatar
-/// @requires $_bootstrap-shape-avatar
+/// @requires {Map} $_light-avatar
 $_bootstrap-avatar: extend(
     $_light-avatar,
     $_bootstrap-shape-avatar,
@@ -59,7 +58,7 @@ $_bootstrap-avatar: extend(
 /// Generates an indigo avatar schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-avatar
+/// @requires {Map} $_light-avatar
 $_indigo-avatar: extend(
     $_light-avatar,
     (

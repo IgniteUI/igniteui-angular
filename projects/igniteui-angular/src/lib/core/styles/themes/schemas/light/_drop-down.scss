@@ -3,7 +3,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -29,9 +29,6 @@
 /// @prop {Map} $border-color [igx-color: ('grays', 300)] - The border color used for drop-down component.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for drop-down component.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items.
-/// @requires {function} extend
-/// @requires {map} $_default-shape-drop-down
-/// @requires {map} $_default-elevation-drop-down
 /// @see $default-palette
 $_light-drop-down: extend(
     $_default-shape-drop-down,
@@ -126,9 +123,7 @@ $_light-drop-down: extend(
 /// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the drop-down shadow.
 /// @prop {Number} border-radius [2px] - The border radius used for drop-down component.
 /// @requires {function} extend
-/// @requires {map} $_light-drop-down
-/// @requires {map} $_fluent-shape-drop-down
-/// @requires {map} $_fluent-elevation-drop-down
+/// @requires {Map} $_light-drop-down
 $_fluent-drop-down: extend(
     $_light-drop-down,
     $_fluent-shape-drop-down,
