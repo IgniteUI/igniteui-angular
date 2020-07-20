@@ -39,7 +39,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return merge({}, this._rowData, this.grid.transactions.getAggregatedValue(this.rowID, false));
+            return merge({...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
         }
         return this._rowData;
     }
