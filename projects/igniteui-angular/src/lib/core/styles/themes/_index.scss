@@ -838,7 +838,7 @@
         $palette: igx-palette(
             $primary,
             $secondary,
-            $surface: if($surface != #3b3d47, $surface, #3b3d47),
+            $surface: if($surface != #2a2b2f, $surface, #2a2b2f),
             $grays: #fff
         ),
         $schema: $dark-indigo-schema,
