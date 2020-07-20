@@ -8,6 +8,7 @@
 
 /// Generates a dark shape chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-shape-chart
 /// @see $default-palette
 $_dark-shape-chart: extend($_light-shape-chart);

@@ -8,6 +8,7 @@
 
 /// Generates a dark financial chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-financial-chart
 /// @see $default-palette
 $_dark-financial-chart: extend($_light-financial-chart);

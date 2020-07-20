@@ -8,7 +8,7 @@
 /// Generates a dark calendar schema.
 /// @type {Map}
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .38] - The text color for disabled dates.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-calendar
 /// @see $default-palette
 $_dark-calendar: extend($_light-calendar, (
@@ -21,13 +21,15 @@ $_dark-calendar: extend($_light-calendar, (
 
 /// Generates a dark fluent calendar schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-calendar
 $_dark-fluent-calendar: extend($_fluent-calendar);
 
 /// Generates a dark bootstrap calendar schema.
 /// @type {Map}
-/// @requires extend
+/// @prop {Map} content-background [#222] - The main content background color.
+/// @prop {Map} picker-text-color [#fff]- The idle picker month/year color.
+/// @requires {function} extend
 /// @requires $_bootstrap-calendar
 $_dark-bootstrap-calendar: extend(
     $_bootstrap-calendar,
@@ -54,7 +56,7 @@ $_dark-bootstrap-calendar: extend(
 /// @prop {Map} year-current-text-color [igx-contrast-color: ('surface')] - The text color for the current/selected year.
 /// @prop {Map} month-current-text-color [igx-contrast-color: ('surface')]- The text color for the current/selected month.
 /// @prop {Map} month-hover-current-text-color [igx-contrast-color: ('surface')]- The text color for the current/selected month on hover.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_indigo-calendar
 $_dark-indigo-calendar: extend(
     $_indigo-calendar,

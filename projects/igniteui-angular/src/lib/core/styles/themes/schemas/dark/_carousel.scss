@@ -28,7 +28,7 @@ $_base-dark-carousel: (
 
 /// Generates a dark carousel schema based on a mix of $_light-carousel and $_base-dark-carousel
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-carousel
 /// @requires $_base-dark-carousel
 /// @see $default-palette
@@ -36,14 +36,14 @@ $_dark-carousel: extend($_light-carousel, $_base-dark-carousel);
 
 /// Generates a dark fluent carousel schema based on a mix of $_fluent-carousel and $_base-dark-carousel
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-carousel
 /// @requires $_base-dark-carousel
 $_dark-fluent-carousel: extend($_fluent-carousel, $_base-dark-carousel);
 
 /// Generates a dark bootstrap carousel schema based on a mix of $_bootstrap-carousel and $_base-dark-carousel
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_bootstrap-carousel
 /// @requires $_base-dark-carousel
 $_dark-bootstrap-carousel: extend($_bootstrap-carousel, $_base-dark-carousel);
@@ -55,7 +55,7 @@ $_dark-bootstrap-carousel: extend($_bootstrap-carousel, $_base-dark-carousel);
 /// @prop {Color} button-hover-background [igx-color: ('grays', 300)] - The previous/next buttons hover background color.
 /// @prop {Color} indicator-dot-color [igx-color: ('grays', 600)] - The idle indicator dot color.
 /// @prop {Color} indicator-active-dot-color [igx-color: ('grays', 900)] - The active indicator dot color.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_indigo-carousel
 /// @requires $_base-dark-carousel
 $_dark-indigo-carousel: extend($_indigo-carousel, (

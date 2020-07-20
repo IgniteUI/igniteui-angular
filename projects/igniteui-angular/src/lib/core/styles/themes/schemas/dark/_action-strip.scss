@@ -9,6 +9,8 @@
 /// Generates a dark action-strip schema.
 /// @type {Map}
 /// @property {Map} actions-background [igx-color: ('grays', 200), hexrgba: #000, rgba: .8]- actions container background.
+/// @requires {function} extend
+/// @requires $_light-action-strip
 /// @see $default-palette
 $_dark-action-strip: extend(
     $_light-action-strip,

@@ -7,20 +7,21 @@
 
 /// Generates a dark banner schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-banner
 /// @see $default-palette
 $_dark-banner: extend($_light-banner);
 
 /// Generates a dark fluent banner schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-banner
 $_dark-fluent-banner: extend($_fluent-banner);
 
 /// Generates a dark bootstrap banner schema.
 /// @type {Map}
-/// @requires extend
+/// @property {Map} banner-background [#333]- The background color used banner background.
+/// @requires {function} extend
 /// @requires $_bootstrap-banner
 $_dark-bootstrap-banner: extend(
     $_bootstrap-banner,
@@ -31,6 +32,6 @@ $_dark-bootstrap-banner: extend(
 
 /// Generates a dark indigo banner schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_indigo-banner
 $_dark-indigo-banner: extend($_indigo-banner);

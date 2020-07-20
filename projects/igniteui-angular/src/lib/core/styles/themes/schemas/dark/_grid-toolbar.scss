@@ -7,8 +7,8 @@
 
 /// Generates a base dark grid-toolbar schema.
 /// @type {Map}
-/// @prop {map} background-color [#222] - The toolbar background color.
-/// @prop {map} dropdown-background [#222] - The toolbar drop-down background color.
+/// @prop {Map} background-color [#222] - The toolbar background color.
+/// @prop {Map} dropdown-background [#222] - The toolbar drop-down background color.
 $_base-dark-grid-toolbar: (
     background-color: #222,
     dropdown-background: #222
@@ -38,7 +38,7 @@ $_dark-bootstrap-grid-toolbar: extend($_bootstrap-grid-toolbar, $_base-dark-grid
 
 /// Generates a dark indigo grid-toolbar schema.
 /// @type {Map}
-/// @property {map} background-color [igx-color: 'surface'] - The toolbar background color.
+/// @property {Map} background-color [igx-color: 'surface'] - The toolbar background color.
 /// @requires {function} extend
 /// @requires $_indigo-grid-toolbar
 /// @requires $_base-dark-grid-toolbar

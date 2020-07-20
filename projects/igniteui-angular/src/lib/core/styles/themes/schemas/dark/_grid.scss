@@ -146,7 +146,7 @@ $_base-dark-grid: (
 
 /// Generates a dark grid schema based on a mix of $_light-grid and $_base-dark-grid.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-grid
 /// @requires $_base-dark-grid
 /// @see $default-palette
@@ -159,7 +159,7 @@ $_dark-grid: extend($_light-grid, $_base-dark-grid);
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #222] - The hover row background color.
 /// @prop {Map} row-selected-background [igx-color: ('grays', 200), hexrgba: #222] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('grays', '300'), hexrgba: #222] - The selected row background color on hover.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-grid
 /// @requires $_base-dark-grid
 $_dark-fluent-grid: extend(
@@ -265,7 +265,7 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} pinned-border-color [igx-color: ('primary', 200)] - The color of the pinned border.
 ///
 /// @prop {Map} grouparea-background [igx-color: 'surface'] - The grid group area background color.
-/// @prop {map} grouparea-color [igx-contrast-color: 'surface'] - The grid group area color.
+/// @prop {Map} grouparea-color [igx-contrast-color: 'surface'] - The grid group area color.
 /// @prop {Map} drop-area-background [igx-color: ('grays', 200)] - The drop area background color.
 /// @prop {Map} drop-area-text-color [igx-color: ('grays', 200), to-opaque: (igx-color: 'surface'), text-contrast: (), rgba: .87] - The drop area text color.
 /// @prop {Map} drop-area-icon-color [igx-color: ('grays', 200), to-opaque: (igx-color: 'surface'), text-contrast: (), rgba: .87] - The drop area icon color.

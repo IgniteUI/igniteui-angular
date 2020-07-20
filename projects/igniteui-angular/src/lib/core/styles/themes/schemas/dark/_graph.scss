@@ -8,6 +8,7 @@
 
 /// Generates a dark graph schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-graph
 /// @see $default-palette
 $_dark-graph: extend($_light-graph);

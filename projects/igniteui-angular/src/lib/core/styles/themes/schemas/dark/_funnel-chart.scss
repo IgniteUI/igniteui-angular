@@ -8,6 +8,7 @@
 
 /// Generates a dark funnel chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-funnel-chart
 /// @see $default-palette
 $_dark-funnel-chart: extend($_light-funnel-chart);

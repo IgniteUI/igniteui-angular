@@ -45,6 +45,9 @@ $_fluent-banner: extend($_light-banner);
 
 /// Generates a bootstrap banner schema.
 /// @type {Map}
+/// @property {Map} banner-background [#fff]- The background color used banner background.
+/// @property {Map} banner-message-color [igx-color: ('grays', 800)]- The color used for banner label.
+/// @property {Map} banner-illustration-color [igx-color: ('grays', 800)] - The color used banner illustration.
 /// @requires {function} extend
 /// @requires {Map} $_light-banner
 $_bootstrap-banner: extend(
@@ -62,7 +65,7 @@ $_bootstrap-banner: extend(
     )
 );
 
-/// Generates a indigo banner schema.
+/// Generates an indigo banner schema.
 /// @type {Map}
 /// @property {Map} banner-message-color [igx-color: ('grays', 900)]- The color used for banner label.
 /// @property {Map} banner-illustration-color [igx-color: ('grays', 600)] - The color used banner illustration.

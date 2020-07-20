@@ -17,7 +17,7 @@
 /// @property {Map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #fff] - The color of the thumb when the switch is disabled.
 /// @property {Map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
 /// @property {Map} label-color [gx-color: ('grays', 900)] - The color of the switch label
-/// @property {Map} label-disabled-color [gx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
+/// @property {Map} label-disabled-color [igx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
 /// @property {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @property {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
 /// @property {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
@@ -184,6 +184,7 @@ $_bootstrap-switch: extend(
 /// @property {Color} border-disabled-color [igx-color: ('grays', 300)] - The border color of the disabled switch.
 /// @property {Color} border-on-color [igx-color: ('primary', 500)] - The border color of the on-switch.
 /// @property {Color} border-on-hover-color [igx-color: ('primary', 500)] - The border color of the  on-switch.
+/// @property {Map} label-disabled-color [igx-color: ('grays', 300)] - The color of the switch label when the switch is disabled
 ///
 /// @requires {function} extend
 /// @requires $_light-switch

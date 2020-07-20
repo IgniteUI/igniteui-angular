@@ -17,7 +17,7 @@ $_base-dark-chip: (
 
 /// Generates a dark chip schema based on a mix of $_light-chip and $_base-dark-chip.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-chip
 /// @requires $_base-dark-chip
 /// @see $default-palette
@@ -25,14 +25,14 @@ $_dark-chip: extend($_light-chip, $_base-dark-chip);
 
 /// Generates a dark fluent chip schema based on a mix of $_fluent-chip and $_base-dark-chip.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-chip
 /// @requires $_base-dark-chip
 $_dark-fluent-chip: extend($_fluent-chip, $_base-dark-chip);
 
 /// Generates a dark bootstrap chip schema based on a mix of $_bootstrap-chip and $_base-dark-chip.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_bootstrap-chip
 /// @requires $_base-dark-chip
 $_dark-bootstrap-chip: extend($_bootstrap-chip, $_base-dark-chip);
@@ -42,7 +42,7 @@ $_dark-bootstrap-chip: extend($_bootstrap-chip, $_base-dark-chip);
 /// @prop {Map} background [igx-color: ('grays', 500)] - The chip background color.
 /// @prop {Map} hover-background [igx-color: ('grays', 300)] - The chip hover background color.
 /// @prop {Map} focus-background [igx-color: ('grays', 300)] The focused chip background color.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_indigo-chip
 /// @requires $_base-dark-chip
 $_dark-indigo-chip: extend(

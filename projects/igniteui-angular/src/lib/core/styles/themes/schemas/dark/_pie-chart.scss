@@ -8,6 +8,7 @@
 
 /// Generates a dark base pie chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-pie-chart
 /// @see $_light-pie-chart
 $_dark-pie-chart: extend($_light-pie-chart);

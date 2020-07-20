@@ -40,6 +40,9 @@ $_dark-fluent-list: extend($_fluent-list, $_base-dark-list);
 /// Generates a base dark bootstrap list schema based on a mix of $_bootstrap-list and $_base-dark-list..
 /// @type {Map}
 /// @requires {function} extend
+/// @property {Map} background [#222] - The list background color.
+/// @property {Map} item-background [#222] - The list item background color.
+/// @property {Map} header-background [#222] - The list header background color.
 /// @requires $_bootstrap-list
 /// @requires $_base-dark-list
 $_dark-bootstrap-list: extend(
@@ -54,6 +57,9 @@ $_dark-bootstrap-list: extend(
 
 /// Generates a dark indigo list schema
 /// @type {Map}
+/// @property {Map} header-text-color [#fff] - The list header text color.
+/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .5] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('primary', 500), rgba: .5] - The active list item background color.
 /// @requires {function} extend
 /// @requires $_indigo-list
 $_dark-indigo-list: extend(

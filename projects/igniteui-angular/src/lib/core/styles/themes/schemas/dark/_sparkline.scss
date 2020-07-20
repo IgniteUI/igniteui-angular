@@ -8,6 +8,7 @@
 
 /// Generates a dark sparkline schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-sparkline
 /// @see $default-palette
 $_dark-sparkline: extend($_light-sparkline);

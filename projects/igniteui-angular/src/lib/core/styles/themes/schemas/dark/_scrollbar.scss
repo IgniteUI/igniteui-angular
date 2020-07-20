@@ -11,6 +11,7 @@
 /// @property {Color} thumb-background [igx-color: surface, lighten: 20%] - The background color used for the thumb.
 /// @property {Color} track-background [igx-color: 'surface', lighten: 5%] - The background color used for the track.
 /// @property {String | Number} size [16px] - The size of the track.
+/// @requires {function} extend
 /// @requires $_light-scrollbar
 /// @see $default-palette
 $_dark-scrollbar: extend(
