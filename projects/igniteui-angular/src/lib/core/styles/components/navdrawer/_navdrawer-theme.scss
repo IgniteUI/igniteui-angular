@@ -306,7 +306,7 @@
         } @else {
             // important is needed to override the typography margins
             margin: rem(15px) $drawer-item-margin !important;
-            padding: rem(4px) rem(4px);
+            padding: rem(4px);
         }
 
         cursor: pointer;
