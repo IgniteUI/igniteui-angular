@@ -59,6 +59,7 @@ $_light-carousel: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-carousel
+/// @see $default-palette
 $_fluent-carousel: extend(
     $_light-carousel,
     $_square-shape-carousel,
@@ -72,23 +73,33 @@ $_fluent-carousel: extend(
 $_bootstrap-carousel: extend(
     $_light-carousel,
     $_bootstrap-shape-carousel,
-    $_fluent-elevation-carousel, (
+    $_bootstrap-elevation-carousel, (
         variant: 'bootstrap'
     )
 );
 
 /// Generates an indigo carousel schema.
 /// @type {Map}
+/// @prop {Map} button-background [igx-color: 'surface', rgba: .4] - The previous/next buttons idle background color.
+/// @prop {Map} button-hover-background [igx-color: 'surface', rgba: .65] - The previous/next buttons hover background color.
+/// @prop {Color} button-disabled-background [transparent] - The previous/next buttons disabled background color.
+/// @prop {Map} button-arrow-color [igx-color: ('grays', 600)] - The previous/next buttons idle arrow color.
+/// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 700)] - The previous/next buttons hover arrow color.
+/// @prop {Map} button-disabled-arrow-color [igx-color: ('grays' 400)] - The previous/next buttons disabled color.
+/// @prop {Map} indicator-dot-color [igx-color: 'surface', rgba: .6] - The idle indicator dot color.
+/// @prop {Map} indicator-active-dot-color [igx-color: 'surface'] - The active indicator dot color.
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
+///
 /// @requires {function} extend
 /// @requires {Map} $_light-carousel
 $_indigo-carousel: extend(
     $_light-carousel,
-    $_square-shape-carousel,
+    $_default-shape-carousel,
     $_indigo-elevation-carousel, (
         variant: 'indigo-design',
 
         button-background: (
-            igx-color: #fff,
+            igx-color: 'surface',
             rgba: .4
         ),
 
@@ -97,7 +108,7 @@ $_indigo-carousel: extend(
         ),
 
         button-hover-background: (
-            igx-color: #fff,
+            igx-color: 'surface',
             rgba: .65,
         ),
 
@@ -112,11 +123,13 @@ $_indigo-carousel: extend(
         ),
 
         indicator-dot-color: (
-            igx-color: #fff,
+            igx-color: 'surface',
             rgba: .6
         ),
 
-        indicator-active-dot-color: #fff,
+        indicator-active-dot-color:(
+            igx-color: 'surface'
+        ),
     )
 );
 
