@@ -178,6 +178,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Input() public locale: 'en';
 
     /**
+     * Gets/Sets the default template editor's tabindex.
+     * @example
+     * ```html
+     * <igx-date-picker editorTabIndex="1"></igx-date-picker>
+     * ```
+     */
+    @Input() public editorTabIndex: number;
+
+    /**
      * Gets/Sets on which day the week starts.
      * @example
      * ```html
@@ -783,8 +792,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
-            closeOnEsc: true,
             modal: true,
+            closeOnEscape: true,
             outlet: this.outlet
         };
 
