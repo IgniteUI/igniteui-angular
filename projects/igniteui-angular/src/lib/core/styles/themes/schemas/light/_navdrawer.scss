@@ -118,7 +118,7 @@ $_bootstrap-navdrawer: extend(
 /// @prop {Map} item-text-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's idle text color.
 /// @prop {Map} item-icon-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's icon color.
 /// @prop {Map} item-active-text-color [igx-contrast-color: ('grays', 700)] - The item's active text color.
-/// @prop {Map} item-active-background [igx-contrast-color: ('grays', 700), rgba: .2] - The item's active background color.
+/// @prop {Map} item-active-background [igx-contrast-color: ('grays', 700), rgba: .1] - The item's active background color.
 /// @prop {Map} item-active-icon-color [igx-contrast-color: ('grays', 700)] - The item's icon active color.
 /// @prop {Map} item-hover-background [transparent] - The item's hover background color.
 /// @prop {Map} item-hover-text-color [igx-contrast-color: ('grays', 700)] - The item's hover text color.
@@ -155,7 +155,7 @@ $_indigo-navdrawer: extend(
 
         item-active-background: (
             igx-contrast-color: ('grays', 700),
-            rgba: .2
+            rgba: .1
         ),
 
         item-active-text-color: (
