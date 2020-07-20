@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -16,7 +16,7 @@ $_dark-icon: extend($_light-icon);
 /// Generates a dark fluent icon schema.
 /// @type {Map}
 /// @property {Color} color [#fff] - The icon color.
-/// @property {map} disabled-color [igx-color: ('grays' 500)] - The icon color.
+/// @property {Map} disabled-color [igx-color: ('grays' 500)] - The icon color.
 /// @requires {function} extend
 /// @requires $_light-icon
 $_dark-fluent-icon: extend(

@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -30,7 +30,7 @@ $_dark-bootstrap-progress-linear: extend($_bootstrap-progress-linear);
 /// Generates a dark indigo progress-linear schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @property {color} stripes-color [rgba(#222, .35)] - The track stripes color.
+/// @property {Color} stripes-color [rgba(#222, .35)] - The track stripes color.
 /// @requires $_indigo-progress-linear
 /// @see $default-palette
 $_dark-indigo-progress-linear: extend(

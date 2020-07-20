@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -15,7 +15,7 @@ $_dark-overlay: extend($_light-overlay);
 
 /// Generates a dark fluent overlay schema.
 /// @type {Map}
-/// @property {color} background-color [rgba(0, 0, 0, .4)] - The background color used for modal overlays.
+/// @property {Color} background-color [rgba(0, 0, 0, .4)] - The background color used for modal overlays.
 /// @requires {function} extend
 /// @requires $_fluent-overlay
 $_dark-fluent-overlay: extend(

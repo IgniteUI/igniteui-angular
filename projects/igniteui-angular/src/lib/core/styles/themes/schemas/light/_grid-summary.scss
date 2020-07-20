@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -20,7 +20,6 @@
 /// @property {map} pinned-border-color [igx-color: ('grays', 400)] - The border color of the summary panel.
 ///
 /// @see $default-palette
-
 $_light-grid-summary: extend(
     $_default-shape-grid-summary,
     (
@@ -60,7 +59,7 @@ $_light-grid-summary: extend(
 /// @property {map} pinned-border-color [igx-color: ('grays', 300), hexrgba: #fff] - The border color of the summary panel.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-grid-summary
+/// @requires {Map} $_light-grid-summary
 $_fluent-grid-summary: extend(
     $_light-grid-summary,
     (
@@ -82,7 +81,7 @@ $_fluent-grid-summary: extend(
 /// Generates a bootstrap grid-summary schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-grid-summary
+/// @requires {Map} $_light-grid-summary
 $_bootstrap-grid-summary: extend($_light-grid-summary);
 
 /// Generates an indigo grid-summary schema.
@@ -91,7 +90,7 @@ $_bootstrap-grid-summary: extend($_light-grid-summary);
 /// @property {map} border-color [igx-color: ('primary', 50)] - The summaries border color.
 /// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
 /// @requires {function} extend
-/// @requires {map} $_light-grid-summary
+/// @requires {Map} $_light-grid-summary
 $_indigo-grid-summary: extend(
     $_light-grid-summary,
     (

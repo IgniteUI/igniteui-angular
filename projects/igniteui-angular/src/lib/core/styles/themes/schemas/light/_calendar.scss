@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -51,8 +51,6 @@
 ///
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
-/// @requires {function} extend
-/// @requires {map} $_default-shape-calendar
 /// @see $default-palette
 $_light-calendar: extend(
     $_default-shape-calendar,
@@ -190,15 +188,14 @@ $_light-calendar: extend(
 /// @type {Map}
 /// @prop {Color} date-current-text-color [#fff] - The text color for the current date.
 /// @prop {Map} date-current-bg-color [igx-color: ('primary', 500)] - The background color for the current date.
-/// @prop {map} date-selected-background [igx-color: ('primary', 100), rgba: .5, hexrgba: #fff] - The background color for the selected date.
+/// @prop {Map} date-selected-background [igx-color: ('primary', 100), rgba: .5, hexrgba: #fff] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-color: ('primary', 100)] - The text color for the selected date.
 ///
 /// @prop {Number} border-radius [0%] - The border radius used for calendar.
 /// @prop {Number} date-border-radius [0%] - The border radius used for calendar dates.
 /// @prop {Number} month-border-radius [0%] - The border radius used for month picker month.
 /// @requires {function} extend
-/// @requires {map} $_light-calendar
-/// @requires {map} $_fluent-shape-calendar
+/// @requires {Map} $_light-calendar
 $_fluent-calendar: extend(
     $_light-calendar,
     $_fluent-shape-calendar,
@@ -254,7 +251,7 @@ $_fluent-calendar: extend(
 /// @prop {Number} date-border-radius [4px] - The border radius for calendar dates.
 /// @prop {Number} month-border-radius [4px] - The border radius month picker month.
 /// @requires {function} extend
-/// @requires {map} $_light-calendar
+/// @requires {Map} $_light-calendar
 $_bootstrap-calendar: extend(
     $_light-calendar,
     $_bootstrap-shape-calendar,
@@ -355,7 +352,7 @@ $_bootstrap-calendar: extend(
 /// @prop {Map} content-text-color [igx-color: ('grays', 900)] - The main content text color.
 /// @prop {Map} date-current-text-color [igx-color: ('primary', 300)] - The text color for the current date.
 /// @prop {Color} date-current-bg-color [transparent] - The background color for the current date.
-/// @prop {map} date-selected-background [igx-color: ('primary', 500)] - The background color for the selected date.
+/// @prop {Map} date-selected-background [igx-color: ('primary', 500)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-contrast-color: ('primary', 500)] - The text color for the selected date.
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 300)] - The text color for disabled dates.
 /// @prop {Map} inactive-text-color [igx-color: ('grays', 600)] - The text color for previous and next month dates.
@@ -368,8 +365,7 @@ $_bootstrap-calendar: extend(
 /// @prop {Number} date-border-radius [1] - The border radius used for calendar dates.
 /// @prop {Number} month-border-radius [1] - The border radius used for month picker month.
 /// @requires {function} extend
-/// @requires {map} $_light-calendar
-/// @requires {map} $_indigo-shape-calendar
+/// @requires {Map} $_light-calendar
 $_indigo-calendar: extend(
     $_light-calendar,
     $_indigo-shape-calendar,

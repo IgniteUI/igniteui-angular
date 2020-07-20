@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -37,21 +37,21 @@ $_light-pie-chart: extend(
 /// Generates a fluent pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-pie-chart
+/// @requires {Map} $_light-pie-chart
 /// @see $_light-pie-chart
 $_fluent-pie-chart: extend($_light-pie-chart);
 
 /// Generates a bootstrap pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-pie-chart
+/// @requires {Map} $_light-pie-chart
 /// @see $_light-pie-chart
 $_bootstrap-pie-chart: extend($_light-pie-chart);
 
 /// Generates an indigo pie chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-pie-chart
+/// @requires {Map} $_light-pie-chart
 /// @see $_light-pie-chart
 $_indigo-pie-chart: extend($_light-pie-chart);
 

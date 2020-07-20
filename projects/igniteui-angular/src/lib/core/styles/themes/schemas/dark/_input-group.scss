@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -56,9 +56,9 @@ $_dark-bootstrap-input-group: extend(
 
 /// Generates an dark indigo input-group schema
 /// @type {Map}
-/// @prop {map} success-secondary-color [igx-color: ('success'), rgba: .7, hexrgba: #fff] - The success color used in the valid state.
-/// @prop {map} warning-secondary-color [igx-color: ('warn'), rgba: .7, hexrgba: #fff] - The warning color used in the warning state.
-/// @prop {map} error-secondary-color [igx-color: ('error'), rgba: .7, hexrgba: #fff] - The error color used in the error state.
+/// @prop {Map} success-secondary-color [igx-color: ('success'), rgba: .7, hexrgba: #fff] - The success color used in the valid state.
+/// @prop {Map} warning-secondary-color [igx-color: ('warn'), rgba: .7, hexrgba: #fff] - The warning color used in the warning state.
+/// @prop {Map} error-secondary-color [igx-color: ('error'), rgba: .7, hexrgba: #fff] - The error color used in the error state.
 /// @requires {function} extend
 /// @requires $_indigo-input-group
 /// @see $default-palette
