@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -34,7 +34,7 @@ $_light-pagination: (
 /// @prop {Map} background-color [igx-color: 'surface'] - The background color of the paging panel.
 /// @prop {Map} border-color [igx-color: ('grays', 100), hexrgba: #fff] - The border color of the paging panel.
 /// @requires {function} extend
-/// @requires {map} $_light-pagination
+/// @requires {Map} $_light-pagination
 $_fluent-pagination: extend(
     $_light-pagination,
     (
@@ -54,7 +54,7 @@ $_fluent-pagination: extend(
 /// Generates a bootstrap pagination schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-pagination
+/// @requires {Map} $_light-pagination
 $_bootstrap-pagination: extend($_light-pagination);
 
 /// Generates an indigo pagination schema.
@@ -63,7 +63,7 @@ $_bootstrap-pagination: extend($_light-pagination);
 /// @prop {Map} background-color [igx-color: ('grays', 100), to-opaque: ()] - The background color of the paging panel.
 /// @prop {Map} border-color [igx-color: ('grays', 100)] - The border color of the paging panel.
 /// @requires {function} extend
-/// @requires {map} $_light-pagination
+/// @requires {Map} $_light-pagination
 $_indigo-pagination: extend(
     $_light-pagination,
     (

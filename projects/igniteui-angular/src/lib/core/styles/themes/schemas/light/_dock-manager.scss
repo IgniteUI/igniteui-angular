@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -39,6 +39,7 @@
 /// @prop {Color} tab-text [null] - Sets the text color for tabs.
 /// @prop {Color} tab-text-active [null] - Sets the text color for active tabs.
 /// @prop {Color} text-color [igx-color: ('grays', 800)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
+/// @see $default-palette
 $_light-dock-manager: (
     accent-color: null,
     active-color: (
@@ -129,7 +130,7 @@ $_light-dock-manager: (
 /// @prop {Color} tab-text-active [igx-color: 'surface'] - Sets the text color for active tabs.
 /// @prop {Color} tab-text [igx-color: ('grays', 700)] - Sets the text color for tabs.
 /// @requires {function} extend
-/// @requires $_light-dock-manager
+/// @requires {Map} $_light-dock-manager
 $_fluent-dock-manager: extend(
     $_light-dock-manager,
     (
@@ -237,7 +238,7 @@ $_fluent-dock-manager: extend(
 /// @prop {Color} tab-text-active [igx-color: ('grays', 800)] - Sets the text color for active tabs.
 /// @prop {Color} tab-text [igx-color: 'primary'] - Sets the text color for tabs.
 /// @requires {function} extend
-/// @requires $_light-dock-manager
+/// @requires {Map} $_light-dock-manager
 $_bootstrap-dock-manager: extend(
     $_light-dock-manager,
     (
@@ -337,7 +338,7 @@ $_bootstrap-dock-manager: extend(
 /// @prop {Color} tab-text [igx-color: ('grays', 700)] - Sets the text color for tabs.
 /// @prop {Color} text-color [igx-color: ('grays', 900)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
 /// @requires {function} extend
-/// @requires $_light-dock-manager
+/// @requires {Map} $_light-dock-manager
 $_indigo-dock-manager: extend(
     $_light-dock-manager,
     (

@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -59,18 +59,18 @@ $_light-sparkline: extend(
 /// Generates a fluent sparkline schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-sparkline
+/// @requires {Map} $_light-sparkline
 $_fluent-sparkline: extend($_light-sparkline);
 
 /// Generates a bootstrap sparkline schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-sparkline
+/// @requires {Map} $_light-sparkline
 $_bootstrap-sparkline: extend($_light-sparkline);
 
 /// Generates an indigo sparkline schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-sparkline
+/// @requires {Map} $_light-sparkline
 $_indigo-sparkline: extend($_light-sparkline);
 

@@ -3,19 +3,34 @@
 /// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @type Map
 $_round-shape-watermark: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-watermark: (
     border-radius: 0,
 );
 
+/// @type Map
+$_material-shape-watermark: (
+    border-radius: 0,
+);
+
+/// @type Map
 $_fluent-shape-watermark: (
     border-radius: 2px,
 );
 
+/// @type Map
 $_bootstrap-shape-watermark: (
     border-radius: 4px,
+);
+
+/// @type Map
+$_indigo-shape-watermark: (
+    border-radius: 1,
 );
 

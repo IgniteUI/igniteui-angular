@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark doughnut chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-doughnut-chart
 /// @see $default-palette
 $_dark-doughnut-chart: extend($_light-doughnut-chart);

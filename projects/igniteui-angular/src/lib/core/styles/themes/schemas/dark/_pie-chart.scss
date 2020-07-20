@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark base pie chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-pie-chart
 /// @see $_light-pie-chart
 $_dark-pie-chart: extend($_light-pie-chart);
