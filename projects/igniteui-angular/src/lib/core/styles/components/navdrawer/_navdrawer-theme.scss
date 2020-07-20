@@ -336,7 +336,7 @@
         igx-icon {
             color: --var($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
-                margin-#{$left}: rem(2px);
+                margin-#{$left}: rem(4px);
             }
         }
 
