@@ -328,7 +328,7 @@
 
         span {
             @if $variant == 'indigo-design' {
-                padding-#{$left}: rem(4px);
+                padding-#{$left}: rem(8px);
             }
         }
 
