@@ -103,7 +103,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public animationDone(event) {
         if ((event.fromState === 'void' && event.toState === '') ||
         (event.fromState === '' && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT))) {
-            this.onViewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
+            this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
         }
         this.yearAction = '';
     }
@@ -113,7 +113,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public viewRendered(event) {
         if (event.fromState !== 'void') {
-            this.onActiveViewChanged.emit(this.activeView);
+            this.activeViewChanged.emit(this.activeView);
         }
     }
 
