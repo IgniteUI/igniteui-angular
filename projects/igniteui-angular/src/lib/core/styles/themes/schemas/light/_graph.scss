@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -78,18 +78,18 @@ $_light-graph: extend(
 /// Generates a fluent graph schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-graph
+/// @requires {Map} $_light-graph
 $_fluent-graph: extend($_light-graph);
 
 /// Generates a bootstrap graph schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-graph
+/// @requires {Map} $_light-graph
 $_bootstrap-graph: extend($_light-graph);
 
 /// Generates an indigo graph schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-graph
+/// @requires {Map} $_light-graph
 $_indigo-graph: extend($_light-graph);
 

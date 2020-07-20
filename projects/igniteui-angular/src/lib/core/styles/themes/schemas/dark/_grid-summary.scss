@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -29,9 +29,9 @@ $_dark-bootstrap-grid-summary: extend($_bootstrap-grid-summary);
 /// @type {Map}
 /// @property {Color} background-color [igx-color: 'surface'] - The summaries background color is inherited form igx-grid__tfoot.
 /// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
-/// @property {map} label-color [igx-color: ('primary', 200)] - The summaries label color.
+/// @property {Map} label-color [igx-color: ('primary', 200)] - The summaries label color.
 /// @property {Color} result-color [igx-color: 'surface'] - The summaries value/result color.
-/// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
+/// @property {Map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
 /// @requires {function} extend
 /// @requires $_indigo-grid-summary
 $_dark-indigo-grid-summary: extend(

@@ -3,25 +3,25 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a light navdrawer schema.
 /// @type {Map}
 ///
-/// @prop {map} background [igx-color: 'surface'] - The navigation drawer background color.
+/// @prop {Map} background [igx-color: 'surface'] - The navigation drawer background color.
 /// @prop {Color} border-color [rgba(0, 0, 0, .14)] - The navigation drawer right border color.
-/// @prop {map} item-header-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The header's idle text color.
-/// @prop {map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's idle text color.
-/// @prop {map} item-icon-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's icon color.
-/// @prop {map} item-active-text-color [igx-color: ('primary', 500)] - The item's active text color.
-/// @prop {map} item-active-background [igx-color: ('primary', 500), rgba: .12] - The item's active background color.
-/// @prop {map} item-active-icon-color [igx-color: ('primary', 500)] - The item's icon active color.
-/// @prop {map} item-hover-background [ igx-color: 'surface', text-contrast: (), rgba: .08] - The item's hover background color.
-/// @prop {map} item-hover-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover text color.
-/// @prop {map} item-hover-icon-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover icon color.
-/// @prop {map} elevation [16] - The elevation level of the drawer, between 0 - 24.
+/// @prop {Map} item-header-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The header's idle text color.
+/// @prop {Map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's idle text color.
+/// @prop {Map} item-icon-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's icon color.
+/// @prop {Map} item-active-text-color [igx-color: ('primary', 500)] - The item's active text color.
+/// @prop {Map} item-active-background [igx-color: ('primary', 500), rgba: .12] - The item's active background color.
+/// @prop {Map} item-active-icon-color [igx-color: ('primary', 500)] - The item's icon active color.
+/// @prop {Map} item-hover-background [ igx-color: 'surface', text-contrast: (), rgba: .08] - The item's hover background color.
+/// @prop {Map} item-hover-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover text color.
+/// @prop {Map} item-hover-icon-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The item's hover icon color.
+/// @prop {Map} elevation [16] - The elevation level of the drawer, between 0 - 24.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0 - 36 to be used for the navdrawer component.
 /// @prop {Number} item-border-radius [.16667] - The border radius fraction, between 0 - 24 to be used for the navdrawer item.
 ///
@@ -92,7 +92,7 @@ $_light-navdrawer: extend(
 /// Generates a fluent navdrawer schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-navdrawer
+/// @requires {Map} $_light-navdrawer
 $_fluent-navdrawer: extend(
     $_light-navdrawer,
     (
@@ -103,7 +103,7 @@ $_fluent-navdrawer: extend(
 /// Generates a bootstrap navdrawer schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-navdrawer
+/// @requires {Map} $_light-navdrawer
 $_bootstrap-navdrawer: extend(
     $_light-navdrawer,
     (
@@ -111,24 +111,22 @@ $_bootstrap-navdrawer: extend(
     )
 );
 
-/// Generates a indigo navdrawer schema.
+/// Generates an indigo navdrawer schema.
 /// @type {Map}
-/// @prop {map} background [igx-color: ('grays', 700), hexrgba: #fff] - The navigation drawer background color.
-/// @prop {map} item-header-text-color [igx-contrast-color: ('grays', 700)] - The header's idle text color.
-/// @prop {map} item-text-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's idle text color.
-/// @prop {map} item-icon-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's icon color.
-/// @prop {map} item-active-text-color [igx-contrast-color: ('grays', 700)] - The item's active text color.
-/// @prop {map} item-active-background [igx-contrast-color: ('grays', 700), rgba: .2] - The item's active background color.
-/// @prop {map} item-active-icon-color [igx-contrast-color: ('grays', 700)] - The item's icon active color.
-/// @prop {map} item-hover-background [transparent] - The item's hover background color.
-/// @prop {map} item-hover-text-color [igx-contrast-color: ('grays', 700)] - The item's hover text color.
-/// @prop {map} item-hover-icon-color [igx-contrast-color: ('grays', 700)] - The item's hover icon color.
-/// @prop {map} elevation [0] - The elevation level of the drawer, between 0 - 24.
+/// @prop {Map} background [igx-color: ('grays', 700), hexrgba: #fff] - The navigation drawer background color.
+/// @prop {Map} item-header-text-color [igx-contrast-color: ('grays', 700)] - The header's idle text color.
+/// @prop {Map} item-text-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's idle text color.
+/// @prop {Map} item-icon-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's icon color.
+/// @prop {Map} item-active-text-color [igx-contrast-color: ('grays', 700)] - The item's active text color.
+/// @prop {Map} item-active-background [igx-contrast-color: ('grays', 700), rgba: .2] - The item's active background color.
+/// @prop {Map} item-active-icon-color [igx-contrast-color: ('grays', 700)] - The item's icon active color.
+/// @prop {Map} item-hover-background [transparent] - The item's hover background color.
+/// @prop {Map} item-hover-text-color [igx-contrast-color: ('grays', 700)] - The item's hover text color.
+/// @prop {Map} item-hover-icon-color [igx-contrast-color: ('grays', 700)] - The item's hover icon color.
+/// @prop {Map} elevation [0] - The elevation level of the drawer, between 0 - 24.
 /// @prop {Number} item-border-radius [1] - The border radius fraction, between 0 - 36 to be used for the navdrawer component.
 /// @requires {function} extend
-/// @requires $_light-navdrawer
-/// @requires $_indigo-shape-navdrawer
-/// @requires $_indigo-elevation-navdrawer
+/// @requires {Map} $_light-navdrawer
 $_indigo-navdrawer: extend(
     $_light-navdrawer,
     $_indigo-shape-navdrawer,

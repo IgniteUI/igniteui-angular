@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark data chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-data-chart
 /// @see $default-palette
 $_dark-data-chart: extend($_light-data-chart);

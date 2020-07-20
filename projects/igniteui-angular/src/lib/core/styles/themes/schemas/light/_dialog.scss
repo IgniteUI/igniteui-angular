@@ -3,7 +3,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -14,12 +14,10 @@
 /// @prop {Map} message-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The dialog message text color.
 /// @prop {map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
 ///
-/// @prop {number} elevation [24] - The elevation level for the dialog.
+/// @prop {Number} elevation [24] - The elevation level for the dialog.
 /// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for dialog component.
 ///
-/// @requires {function} extend
-/// @requires {map} $_default-shape-dialog
-/// @requires {map} $_default-elevation-dialog
+/// @see $default-palette
 $_light-dialog: extend(
     $_default-shape-dialog,
     $_default-elevation-dialog,
@@ -50,8 +48,7 @@ $_light-dialog: extend(
 /// @prop {Number} border-radius [2px] - The border radius for dialog component.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-dialog
-/// @requires {map} $_fluent-shape-dialog
+/// @requires {Map} $_light-dialog
 $_fluent-dialog: extend(
     $_light-dialog,
     $_fluent-shape-dialog,
@@ -62,11 +59,11 @@ $_fluent-dialog: extend(
 
 /// Generates a bootstrap dialog schema.
 /// @type {Map}
-/// @prop {map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
-/// @prop {number} elevation [0] - The elevation level for the dialog.
+/// @prop {Map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
+/// @prop {Number} elevation [0] - The elevation level for the dialog.
 /// @prop {Number} border-radius [4px] - The border radius for dialog component.
 /// @requires {function} extend
-/// @requires {map} $_light-dialog
+/// @requires {Map} $_light-dialog
 $_bootstrap-dialog: extend(
     $_light-dialog,
     $_bootstrap-shape-dialog,
@@ -79,12 +76,12 @@ $_bootstrap-dialog: extend(
     )
 );
 
-/// Generates a indigo dialog schema.
+/// Generates an indigo dialog schema.
 /// @type {Map}
 /// @prop {Map} title-color ['grays', 900)] - The dialog title text color.
 /// @prop {Map} message-color [igx-color: ('grays', 700)] - The dialog message text color.
 /// @requires {function} extend
-/// @requires {map} $_light-dialog
+/// @requires {Map} $_light-dialog
 $_indigo-dialog: extend(
     $_light-dialog,
     $_indigo-shape-dialog,

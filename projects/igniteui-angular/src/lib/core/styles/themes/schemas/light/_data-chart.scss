@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -58,18 +58,18 @@ $_light-data-chart: extend(
 /// Generates a fluent data-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-data-chart
+/// @requires {Map} $_light-data-chart
 $_fluent-data-chart: extend($_light-data-chart);
 
 /// Generates a bootstrap data-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-data-chart
+/// @requires {Map} $_light-data-chart
 $_bootstrap-data-chart: extend($_light-data-chart);
 
 /// Generates an indigo data-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-data-chart
+/// @requires {Map} $_light-data-chart
 $_indigo-data-chart: extend($_light-data-chart);
 

@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -11,6 +11,7 @@ $_light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3
 
 /// Generates a light watermark schema.
 /// @type {Map}
+/// @see $default-palette
 /// @prop {Number} $border-radius [0] - The border radius fraction, between 0-1 to be used for the link.
 /// @prop {Map} $border-color [igx-color: ('primary')] - The border color used for the link.
 /// @prop {Map} $link-background [igx-color: ('primary')] - The background color used for the link.

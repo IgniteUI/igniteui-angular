@@ -3,7 +3,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -82,7 +82,6 @@ $_light-time-picker: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-time-picker
-/// @requires $_fluent-shape-time-picker
 $_fluent-time-picker: extend(
     $_light-time-picker,
     $_fluent-shape-time-picker,
@@ -130,7 +129,6 @@ $_bootstrap-time-picker: extend(
 /// @prop {Number} active-item-border-radius [20px] - The border-radius used for the highlight of the active item in the time-picker.
 /// @requires {function} extend
 /// @requires $_light-time-picker
-/// @requires $_indigo-shape-time-picker
 $_indigo-time-picker: extend(
     $_light-time-picker,
     $_indigo-shape-time-picker,

@@ -72,6 +72,7 @@ $default-dark-palette: igx-palette(
 /// @access public
 /// @group palettes
 /// @alias default-palette
+/// @see $default-palette
 $light-palette: $default-palette;
 
 /// Same as $light-palette but with modified grays and surface colors.
