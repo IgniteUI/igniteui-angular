@@ -367,7 +367,7 @@ $light-indigo-palette: igx-palette(
 /// @prop {Color} primary [#3f51b5] - The 500 variant of the `primary` color (default).
 /// @prop {Color} secondary [#3f51b5] - The 500 variant of the `secondary` color (default).
 /// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
-/// @prop {Color} surface [#3b3d47] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} surface [#2a2b2f] - The color used as a background in components, such as cards, sheets, and menus.
 /// @prop {Color} info [#9208bc] - The `info` color. Default for every palette if not specified.
 /// @prop {Color} success [#689f38] - The `success` color. Default for every palette if not specified.
 /// @prop {Color} warn [#ff9800] - The `warn` color. Default for every palette if not specified.
@@ -381,7 +381,7 @@ $dark-indigo-palette: igx-palette(
     $success: igx-color($light-indigo-palette, 'success'),
     $warn: igx-color($light-indigo-palette, 'warn'),
     $error: igx-color($light-indigo-palette, 'error'),
-    $surface: #3b3d47,
+    $surface: #2a2b2f,
     $grays: #fff,
     $variant: 'indigo-design'
 ) !default;
