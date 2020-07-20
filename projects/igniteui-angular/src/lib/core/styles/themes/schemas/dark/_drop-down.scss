@@ -48,6 +48,14 @@ $_dark-bootstrap-drop-down: extend(
 
 /// Generates a dark indigo drop-down schema.
 /// @type {Map}
+/// @prop {Map} header-text-color [igx-contrast-color: 'surface'] - The drop-down header text color.
 /// @requires {function} extend
 /// @requires $_indigo-drop-down
-$_dark-indigo-drop-down: extend($_indigo-drop-down);
+$_dark-indigo-drop-down: extend(
+    $_indigo-drop-down,
+    (
+        header-text-color: (
+            igx-contrast-color: 'surface'
+        ),
+    )
+);
