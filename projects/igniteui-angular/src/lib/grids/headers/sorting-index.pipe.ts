@@ -11,20 +11,9 @@ export class SortingIndexPipe implements PipeTransform {
   constructor(private igxHeader: IgxGridHeaderComponent) {}
   transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
     const grid = this.igxHeader.grid;
-    const index = sortingExpressions.filter(expression => grid.getColumnByName(expression.fieldName) ?? false)
-                                    .findIndex(expression => expression.fieldName === columnField) + 1;
-    return index;
-  }
-
-}
-
-@Pipe({
-  name: 'hasSortingIndex',
-  pure: true
-})
-export class HasSortingIndexPipe implements PipeTransform {
-  transform(columnField: string, sortingExpressions: ISortingExpression[]): boolean {
-    return sortingExpressions.some(expression => expression.fieldName === columnField);
+    let sortIndex = sortingExpressions.filter(expression => grid.getColumnByName(expression.fieldName) ?? false)
+                                      .findIndex(expression => expression.fieldName === columnField);
+    return sortIndex !== -1 ? ++sortIndex : null;
   }
 
 }

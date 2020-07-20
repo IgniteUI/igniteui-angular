@@ -5,14 +5,13 @@ import { IgxGridSharedModules } from '../common/shared.module';
 import { IgxColumnMovingModule } from '../moving/moving.module';
 import { IgxGridFilteringModule } from '../filtering/base/filtering.module';
 import { IgxGridResizingModule } from '../resizing/resize.module';
-import { SortingIndexPipe, HasSortingIndexPipe } from './sorting-index.pipe';
+import { SortingIndexPipe } from './sorting-index.pipe';
 
 @NgModule({
     declarations: [
         IgxGridHeaderComponent,
         IgxGridHeaderGroupComponent,
-        SortingIndexPipe,
-        HasSortingIndexPipe
+        SortingIndexPipe
     ],
     imports: [
         IgxGridSharedModules,
