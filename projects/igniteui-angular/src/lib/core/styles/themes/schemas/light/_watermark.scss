@@ -11,7 +11,7 @@ $_light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3
 
 /// Generates a light watermark schema.
 /// @type {Map}
-/// @requires {function} extend
+/// @see $default-palette
 $_light-watermark: extend(
     $_square-shape-watermark,
     (
@@ -35,7 +35,7 @@ $_light-watermark: extend(
 /// Generates a light fluent watermark schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-watermark
+/// @requires {Map} $_light-watermark
 $_fluent-watermark: extend(
     $_light-watermark,
     $_fluent-shape-watermark,
@@ -49,7 +49,7 @@ $_fluent-watermark: extend(
 /// Generates a bootstrap watermark schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-watermark
+/// @requires {Map} $_light-watermark
 $_bootstrap-watermark: extend(
     $_light-watermark,
     $_bootstrap-shape-watermark,
@@ -63,7 +63,7 @@ $_bootstrap-watermark: extend(
 /// Generates an indigo watermark schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-watermark
+/// @requires {Map} $_light-watermark
 $_indigo-watermark: extend(
     $_light-watermark,
     (
