@@ -38,6 +38,7 @@ $_light-watermark: extend(
 
 /// Generates a light fluent watermark schema.
 /// @type {Map}
+/// @prop {Number} $border-radius [2px] - The border radius used for the link.
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
 $_fluent-watermark: extend(
@@ -52,6 +53,7 @@ $_fluent-watermark: extend(
 
 /// Generates a bootstrap watermark schema.
 /// @type {Map}
+/// @prop {Number} $border-radius [4px] - The border radius used for the link.
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
 $_bootstrap-watermark: extend(
@@ -67,6 +69,7 @@ $_bootstrap-watermark: extend(
 /// Generates an indigo watermark schema.
 /// @type {Map}
 /// @prop {Map} $border-color [igx-color: ('primary', 300)] - The border color for the link.
+/// @prop {Number} $border-radius [1] - The border radius fraction, between 0-1 to be used for the link.
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
 $_indigo-watermark: extend(
