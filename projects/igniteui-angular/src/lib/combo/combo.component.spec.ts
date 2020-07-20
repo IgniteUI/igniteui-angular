@@ -2439,6 +2439,13 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             });
+            it('should not open on click if combo is disabled', () => {
+                combo.disabled = true;
+                fixture.detectChanges();
+                UIInteractions.simulateClickEvent(combo.comboInput.nativeElement);
+                fixture.detectChanges();
+                expect(combo.dropdown.collapsed).toBeTruthy();
+            });
             it('should be possible to be enabled/disabled when used as a form control', () => {
                 const form = fixture.componentInstance.reactiveForm;
                 const comboFormReference = form.controls.townCombo;
