@@ -6,8 +6,8 @@
 @import 'app-layout';
 
 /* autoprefixer grid: on */
-$palette: $light-material-palette;
-$schema: $light-material-schema;
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
 
 $igx-background-color: igx-color($palette, 'surface');
 $igx-foreground-color: igx-color($palette, 'grays', 900);
@@ -19,10 +19,6 @@ body {
 
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
-@include igx-typography(
-    $font-family: "'Nunito Sans', sans-serif",
-    $type-scale: $indigo-type-scale
-);
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {
@@ -32,38 +28,3 @@ body {
     }
 }
 
-// @media print {
-//     html,
-//     body,
-//     app-root {
-//         min-height: 100vh;
-//         min-width: 100vw;
-//         margin: 0;
-//         display: block;
-//         background: transparent !important;
-//     }
-
-//     .sample-content,
-//     .sample-column,
-//     .wrapper {
-//         margin: 0;
-//         padding: 0;
-//     }
-
-//     .sample-header,
-//     .sample-description,
-//     .sample-title,
-//     .no-print,
-//     .igx-nav-drawer,
-//     .form-title {
-//         display: none !important;
-//     }
-
-//     ::-webkit-scrollbar {
-//         background-color: #fff !important;
-//     }
-
-//     ::-webkit-scrollbar-thumb {
-//         background-color: #fff !important;
-//     }
-// }
