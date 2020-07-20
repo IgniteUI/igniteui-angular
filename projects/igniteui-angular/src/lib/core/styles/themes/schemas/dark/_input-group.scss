@@ -61,7 +61,7 @@ $_dark-bootstrap-input-group: extend(
 /// @prop {map} error-secondary-color [igx-color: ('error'), rgba: .7, hexrgba: #fff] - The error color used in the error state.
 /// @prop {map} $idle-secondary-color [igx-contrast-color: ('surface')] - The label color in the idle state.
 /// @prop {map} $filled-secondary-color [igx-contrast-color: ('surface')] - The label color in the filled state.
-/// @prop {map} $focused-secondary-color [igx-contrast-color('surface')] - The label color in the focused state.
+/// @prop {map} $focused-secondary-color [igx-contrast-color: ('surface')] - The label color in the focused state.
 /// @requires {function} extend
 /// @requires $_indigo-input-group
 /// @see $default-palette
