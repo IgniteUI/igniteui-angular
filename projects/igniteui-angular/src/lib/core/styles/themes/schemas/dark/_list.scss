@@ -54,21 +54,34 @@ $_dark-bootstrap-list: extend(
 
 /// Generates a dark indigo list schema
 /// @type {Map}
+/// @property {Map} header-text-color [igx-contrast-color: 'surface'] - The list header text color.
+/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .5, to-opaque: (igx-color: 'surface')] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('primary', 500), rgba: .5, to-opaque: (igx-color: 'surface')] - The active list item background color.
+
 /// @requires {function} extend
 /// @requires $_indigo-list
 $_dark-indigo-list: extend(
     $_indigo-list,
     (
-        header-text-color: #fff,
+        header-text-color: (
+            igx-contrast-color: 'surface'
+        ),
 
         item-background-hover: (
             igx-color: ('primary', 500),
-            rgba: .5
+            rgba: .5,
+            to-opaque: (
+                igx-color: 'surface',
+            )
+
         ),
 
         item-background-active: (
             igx-color: ('primary', 500),
-            rgba: .5
+            rgba: .5,
+            to-opaque: (
+                igx-color: 'surface',
+            )
         )
     )
 );
