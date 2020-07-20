@@ -16,7 +16,6 @@ $_light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3
 /// @prop {Map} $link-background [igx-color: ('primary')] - The background color used for the link.
 /// @prop {Color} $color [#fff] - The color used for the link text.
 /// @requires {function} extend
-/// @requires {Map} $_material-shape-watermark
 $_light-watermark: extend(
     $_material-shape-watermark,
     (
@@ -40,7 +39,6 @@ $_light-watermark: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
-/// @requires {Map} $_fluent-shape-watermark
 $_fluent-watermark: extend(
     $_light-watermark,
     $_fluent-shape-watermark,
@@ -55,7 +53,6 @@ $_fluent-watermark: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
-/// @requires {Map} $_bootstrap-shape-watermark
 $_bootstrap-watermark: extend(
     $_light-watermark,
     $_bootstrap-shape-watermark,
@@ -71,7 +68,6 @@ $_bootstrap-watermark: extend(
 /// @prop {Map} $border-color [igx-color: ('primary', 300)] - The border color for the link.
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
-/// @requires {Map} $_indigo-shape-watermark
 $_indigo-watermark: extend(
     $_light-watermark,
     $_indigo-shape-watermark,
