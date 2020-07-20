@@ -183,8 +183,8 @@ $_bootstrap-list: extend(
 ///
 /// @property {Map} header-text-color [igx-color: ('primary', 500)] - The list header text color.
 ///
-/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .15] - The list item hover background.
-/// @property {Map} item-background-active [igx-color: ('primary', 500), rgba: .15] - The active list item background color.
+/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .15, to-opaque: (igx-color: 'surface')] - The list item hover background.
+/// @property {Map} item-background-active [ igx-color: ('primary', 500), rgba: .15, to-opaque: (igx-color: 'surface')] - The active list item background color.
 ///
 /// @property {Map} item-text-color [igx-color: ('grays', 900)] - The list item text color.
 /// @property {Map} item-text-color-hover [igx-color: ('grays', 900)] - The list item text color.
@@ -218,12 +218,18 @@ $_indigo-list: extend(
 
         item-background-hover: (
             igx-color: ('primary', 500),
-            rgba: .15
+            rgba: .15,
+            to-opaque: (
+                igx-color: 'surface',
+            )
         ),
 
         item-background-active: (
             igx-color: ('primary', 500),
-            rgba: .15
+            rgba: .15,
+            to-opaque: (
+                igx-color: 'surface',
+            )
         ),
 
         item-text-color: (
