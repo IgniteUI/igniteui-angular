@@ -62,6 +62,7 @@ $_dark-bootstrap-input-group: extend(
 /// @prop {Map} $idle-secondary-color [igx-contrast-color: ('surface')] - The label color in the idle state.
 /// @prop {Map} $filled-secondary-color [igx-contrast-color: ('surface')] - The label color in the filled state.
 /// @prop {Map} $focused-secondary-color [igx-contrast-color: ('surface')] - The label color in the focused state.
+/// @prop {Map} focused-bottom-line-color [igx-contrast-color: ('surface'), rgba: .38] - The bottom line and border colors in the focused state.
 /// @requires {function} extend
 /// @requires $_indigo-input-group
 /// @see $default-palette
@@ -98,7 +99,13 @@ $_dark-indigo-input-group: extend(
 
         focused-secondary-color: (
             igx-contrast-color: ('surface')
-        )
+        ),
+
+        focused-bottom-line-color: (
+            igx-contrast-color: ('surface'),
+            rgba: .38
+        ),
+
     )
 );
 
