@@ -868,7 +868,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     onInputClick(event: Event) {
         event.stopPropagation();
         event.preventDefault();
-        this.toggle();
+        if (!this.disabled) {
+            this.toggle();
+        }
     }
 
     /**
