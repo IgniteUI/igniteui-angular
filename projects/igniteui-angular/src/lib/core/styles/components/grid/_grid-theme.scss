@@ -703,6 +703,8 @@
         indigo-design: 600,
     ), $variant);
 
+    $mobile-view: rem(432px);
+
     %grid-display {
         position: relative;
         display: grid;
@@ -2374,7 +2376,9 @@
         }
 
         igx-input-group {
-            flex: 0 0 200px;
+            width: 100%;
+            max-width: rem(200px);
+            min-width: rem(100px);
         }
 
         igx-prefix:focus {
@@ -2409,6 +2413,7 @@
         flex: 1;
         overflow: hidden;
         max-width: calc(100% - 176px);
+        min-width: rem(56px);
 
         igx-chips-area {
             transition: transform .25s $ease-out-back;
@@ -2640,4 +2645,29 @@
 
     @include _excel-filtering($theme, $palette);
     @include _advanced-filtering($theme, $palette);
+
+
+    %igx-grid__filtering-row-editing-buttons {
+        display: flex;
+        align-items: center;
+
+        [igxButton='icon'] {
+            display: none;
+        }
+
+        @media only screen and (max-width: $mobile-view) {
+            [igxButton] {
+                display: none;
+            }
+
+            [igxButton='icon'] {
+                display: flex;
+
+                &:not([disabled]) {
+                    color: --var($theme, 'sorted-header-icon-color');
+                }
+            }
+        }
+    }
 }
+
