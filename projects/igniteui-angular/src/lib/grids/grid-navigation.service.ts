@@ -308,7 +308,9 @@ export class IgxGridNavigationService {
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
-        this.setActiveNode({ row: rowIndex, column: visibleColIndex}, 'dataCell');
+        const currRow = this.grid.dataView[rowIndex];
+        const type: GridKeydownTargetType = this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'dataCell';
+        this.setActiveNode({ row: rowIndex, column: visibleColIndex}, type);
         this.grid.navigateTo(this.activeNode.row, this.activeNode.column, cb);
     }
 

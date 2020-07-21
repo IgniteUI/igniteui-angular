@@ -26,7 +26,7 @@ import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators'
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
-import { GridSelectionMode } from './common/enums';
+import { GridSelectionMode, GridKeydownTargetType } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 import { retry } from 'rxjs/operators';
@@ -920,11 +920,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private setActiveNode() {
+        const currRow = this.grid.dataView[this.rowIndex];
+        const type: GridKeydownTargetType = this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'dataCell';
         if (this.grid.navigation.activeNode) {
-            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex}, 'dataCell');
+            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex}, type);
         } else {
             const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, 'dataCell');
+            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, type);
         }
     }
 }
