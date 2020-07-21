@@ -1,0 +1,8 @@
+@import '../index';
+
+:root {
+    @include igx-palette-vars($dark-indigo-palette, $contrast: true);
+}
+
+@include igx-core();
+@include igx-indigo-dark-theme($dark-indigo-palette);

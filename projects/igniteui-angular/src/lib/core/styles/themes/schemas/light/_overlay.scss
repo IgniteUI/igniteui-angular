@@ -2,15 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a light overlay schema.
 /// @type {Map}
-/// @property {map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
-/// @requires {function} extend
-/// @requires $_fluent-overlay
+/// @property {Map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
 /// @see $default-palette
 $_light-overlay: extend(
     $_default-shape-overlay,
@@ -25,7 +23,7 @@ $_light-overlay: extend(
 /// @type {Map}
 /// @property {Color} background-color [rgba(255, 255, 255, .4)] - The background color used for modal overlays.
 /// @requires {function} extend
-/// @requires $_light-overlay
+/// @requires {Map} $_light-overlay
 $_fluent-overlay: extend(
     $_light-overlay,
     (
@@ -36,6 +34,12 @@ $_fluent-overlay: extend(
 /// Generates a bootstrap overlay schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-overlay
+/// @requires {Map} $_light-overlay
 $_bootstrap-overlay: extend($_light-overlay);
+
+/// Generates an indigo overlay schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-overlay
+$_indigo-overlay: extend($_light-overlay);
 

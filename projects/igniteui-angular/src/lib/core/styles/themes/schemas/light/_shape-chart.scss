@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -105,12 +105,18 @@ $_light-shape-chart: extend(
 /// Generates a fluent shaep-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-shape-chart
+/// @requires {Map} $_light-shape-chart
 $_fluent-shape-chart: extend($_light-shape-chart);
 
 /// Generates a bootstrap shape-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-shape-chart
+/// @requires {Map} $_light-shape-chart
 $_bootstrap-shape-chart: extend($_light-shape-chart);
+
+/// Generates an indigo shape-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-shape-chart
+$_indigo-shape-chart: extend($_light-shape-chart);
 

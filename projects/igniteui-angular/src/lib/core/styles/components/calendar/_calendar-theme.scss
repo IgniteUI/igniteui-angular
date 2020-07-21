@@ -330,18 +330,21 @@
         material: em(16px),
         fluent: em(16px),
         bootstrap: em(8px),
+        indigo-design: em(16px),
     ), $variant);
 
     $cal-value-w: map-get((
         material: em(40px),
         fluent: em(40px),
         bootstrap: em(32px),
+        indigo-design: em(40px),
     ), $variant);
 
     $border-width: map-get((
         material: 0,
         fluent: 0,
-        bootstrap: 1px
+        bootstrap: 1px,
+        indigo-design: 0
     ), $variant);
 
     $cal-value-h: $cal-value-w;
@@ -358,13 +361,15 @@
     $current-color-variant: map-get((
         material: --var($theme, 'date-selected-background'),
         fluent: --var($theme, 'date-current-bg-color'),
-        bootstrap: --var($theme, 'date-current-bg-color')
+        bootstrap: --var($theme, 'date-current-bg-color'),
+        indigo-design: --var($theme, 'date-selected-background'),
     ), $variant);
 
     $current-text-color-variant: map-get((
         material: --var($theme, 'date-selected-text-color'),
         fluent: --var($theme, 'date-current-text-color'),
-        bootstrap: --var($theme, 'date-current-text-color')
+        bootstrap: --var($theme, 'date-current-text-color'),
+        indigo-design: --var($theme, 'date-selected-text-color'),
     ), $variant);
 
     $left: if-ltr(left, right);
@@ -456,6 +461,10 @@
         margin: $cal-header-year-margin;
         color: currentColor;
         opacity: .8;
+
+        @if $variant == 'indigo-design' {
+            opacity: 1;
+        }
     }
 
     %cal-header-date {
@@ -802,6 +811,10 @@
             color: $current-text-color-variant;
             background: $current-color-variant;
 
+            @if $variant == 'indigo-design' {
+                font-weight: 700;
+            }
+
             &:hover {
                 background: $current-color-variant;
             }
@@ -974,6 +987,7 @@
     %cal-value--year-current {
         @include igx-type-style($type-scale, $content) {
             font-size: rem(24px);
+            line-height: rem(52px);
             margin: 0;
         }
     }

@@ -29,6 +29,7 @@ enum IgxInputGroupType {
     BORDER,
     FLUENT,
     BOOTSTRAP,
+    INDIGO,
     SEARCH,
     FLUENT_SEARCH,
 }
@@ -102,6 +103,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostBinding('class.igx-input-group--fluent')
     public isFluent = false;
+
+    /** @hidden */
+    @HostBinding('class.igx-input-group--indigo')
+    public isIndigo = false;
 
     /** @hidden */
     @HostBinding('class.igx-input-group--bootstrap')
@@ -195,7 +200,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /**
      * An @Input property that sets how the input will be styled.
-     * The allowed values are `line`, `box`, `border`, `fluent`, `search` and `fluentSearch`. The default is `line`.
+     * The allowed values are `line`, `box`, `border`, `fluent`, `search`, `fluentSearch`, `bootstrap` and `indigo`. The default is `line`.
      * ```html
      * <igx-input-group [type]="'search'">
      * ```
@@ -204,7 +209,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     public set type(value: string) {
         const type: IgxInputGroupType = (IgxInputGroupType as any)[value.toUpperCase()];
         if (type !== undefined) {
-            this.isBox = this.isBootstrap = this.isFluent = this.isFluentSearch = this.isBorder = this.isSearch = false;
+            this.isBox = this.isBootstrap = this.isFluent = this.isIndigo = this.isFluentSearch = this.isBorder = this.isSearch = false;
             switch (type) {
                 case IgxInputGroupType.BOX:
                     this.isBox = true;
@@ -214,6 +219,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                     break;
                 case IgxInputGroupType.FLUENT:
                     this.isFluent = true;
+                    break;
+                case IgxInputGroupType.INDIGO:
+                    this.isIndigo = true;
                     break;
                 case IgxInputGroupType.FLUENT_SEARCH:
                     this.isFluentSearch = true;
@@ -233,7 +241,8 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /**
      * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
-     * Values are `line` - 0, `box` - 1, `border` - 2,  `fluent` - 3 `fluentSearch` - 4 and `search` - 5. The default is `line`.
+     * Values are `line` - 0, `box` - 1, `border` - 2,  `fluent` - 3, `bootstrap` - 4, `indigo` - 5 `search` - 6, `fluentSearch` - 7. and
+     * The default is `line`.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -369,9 +378,24 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         return this._type === IgxInputGroupType.BOOTSTRAP;
     }
 
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is Indigo.
+     * ```typescript
+     * @ViewChild("MyInputGroup1")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let isTypeIndigo = this.inputGroup.isTypeIndigo;
+     * }
+     * ```
+     */
+    public get isTypeIndigo() {
+        return this._type === IgxInputGroupType.INDIGO;
+    }
+
     /** @hidden */
     public get isNotMaterial() {
-        return this._type === IgxInputGroupType.FLUENT || this._type === IgxInputGroupType.BOOTSTRAP;
+        // tslint:disable-next-line:max-line-length
+        return this._type === IgxInputGroupType.FLUENT || this._type === IgxInputGroupType.BOOTSTRAP || this._type === IgxInputGroupType.INDIGO;
     }
 
     /**
@@ -436,3 +460,4 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     ]
 })
 export class IgxInputGroupModule { }
+

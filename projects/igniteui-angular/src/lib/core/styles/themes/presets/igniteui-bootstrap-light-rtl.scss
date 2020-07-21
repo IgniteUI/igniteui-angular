@@ -1,0 +1,8 @@
+@import '../index';
+
+:root {
+    @include igx-palette-vars($light-bootstrap-palette, $contrast: true);
+}
+
+@include igx-core($direction: rtl);
+@include igx-bootstrap-light-theme($light-bootstrap-palette);

@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -19,14 +19,18 @@ $_light-geo-map: extend(
 /// Generates a fluent geo map schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-geo-map
-/// @see $_light-geo-map
+/// @requires {Map} $_light-geo-map
 $_fluent-geo-map: extend($_light-geo-map);
 
 /// Generates a bootstrap geo map schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-geo-map
-/// @see $_light-geo-map
+/// @requires {Map} $_light-geo-map
 $_bootstrap-geo-map: extend($_light-geo-map);
+
+/// Generates an indigo geo map schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-geo-map
+$_indigo-geo-map: extend($_light-geo-map);
 

@@ -1,30 +1,45 @@
 @import '../light/card';
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark card schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-card
 /// @see $default-palette
 $_dark-card: extend($_light-card);
 
 /// Generates a dark fluent card schema.
 /// @type {Map}
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-card
 $_dark-fluent-card: extend($_fluent-card);
 
 /// Generates a dark bootstrap card schema.
 /// @type {Map}
-/// @requires extend
+/// @prop {Map} background [#222]- The card background color.
+/// @requires {function} extend
 /// @requires $_bootstrap-card
 $_dark-bootstrap-card: extend(
     $_bootstrap-card,
     (
         background: #222,
+    )
+);
+
+/// Generates a dark indigo card schema.
+/// @type {Map}
+/// @prop {Map} outline-color [igx-color: ('grays', 200)] - The outline color of an outlined type card.
+/// @requires {function} extend
+/// @requires $_indigo-card
+$_dark-indigo-card: extend(
+    $_indigo-card,
+    (
+        outline-color: (
+            igx-color: ('grays', 200)
+        ),
     )
 );
