@@ -3,7 +3,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -41,15 +41,14 @@ $_light-badge: extend(
 /// Generates a fluent badge schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-badge
+/// @requires {Map} $_light-badge
 $_fluent-badge: extend($_light-badge);
 
 /// Generates a bootstrap badge schema.
 /// @type {Map}
-/// @prop {Number} border-width [0] - The border width of the badge component.
+/// @prop {Number} border-width [1px] - The border width of the badge component.
 /// @requires {function} extend
-/// @requires $_light-badge
-/// @requires $_bootstrap-elevation-badge
+/// @requires {Map} $_light-badge
 $_bootstrap-badge: extend(
     $_light-badge,
     $_bootstrap-shape-badge,
@@ -57,5 +56,13 @@ $_bootstrap-badge: extend(
     (
         border-width: 1px
     )
+);
+
+/// Generates an indigo badge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-badge
+$_indigo-badge: extend(
+    $_light-badge
 );
 

@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
 ////
 
@@ -130,12 +130,18 @@ $_light-financial-chart: extend(
 /// Generates a fluent financial-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-financial-chart
+/// @requires {Map} $_light-financial-chart
 $_fluent-financial-chart: extend($_light-financial-chart);
 
 /// Generates a bootstrap financial-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-financial-chart
+/// @requires {Map} $_light-financial-chart
 $_bootstrap-financial-chart: extend($_light-financial-chart);
+
+/// Generates an indigo financial-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-financial-chart
+$_indigo-financial-chart: extend($_light-financial-chart);
 

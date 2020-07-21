@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -39,6 +39,8 @@
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
+/// @prop {Number} border-color [transparent] - The list border color.
+/// @prop {Color} border-width [0] - The list border width.
 ///
 /// @see $default-palette
 $_light-list: extend(
@@ -121,23 +123,26 @@ $_light-list: extend(
 /// Generates a fluent list schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-list
-$_fluent-list: extend(
-    $_light-list,
-    (
-        border-color: transparent,
-        border-width: 0,
-    )
-);
+/// @requires {Map} $_light-list
+$_fluent-list: extend($_light-list);
 
 /// Generates a bootstrap list schema.
 /// @type {Map}
+/// @property {Map} header-background [#fff] - The list header background color.
 ///
-/// @property {Number} item-thumbnail-color-hover [rem(1px)] - The list border color.
-/// @property {map} item-thumbnail-color-active [igx-color: ('grays', 300)] - The list border-width.
+/// @property {Map} item-background [#fff] - The list item background color.
+/// @property {Map} item-background-hover [igx-color: ('grays', 100), hexrgba: (#fff)] - The list item hover background.
 ///
+/// @property {Map} item-text-color [igx-color: ('grays', 900)] - The list item text color.
+/// @property {Map} item-text-color-hover [igx-color: ('grays', 900)] - The list item text color.
+/// @property {Map} item-text-color-active [igx-color: ('grays', 900)] - The active list item text color.
+///
+/// @prop {Number} border-radius [rem(4px)] - The border radius fraction, between 0-1 to be used for list component.
+/// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
+/// @prop {Number} border-color [igx-color: ('grays', 300)] - The list border color.
+/// @prop {Color} border-width [rem(1px)] - The list border width.
 /// @requires {function} extend
-/// @requires $_light-list
+/// @requires {Map} $_light-list
 $_bootstrap-list: extend(
     $_light-list,
     $_bootstrap-shape-list,
@@ -170,6 +175,110 @@ $_bootstrap-list: extend(
         item-text-color-active: (
             igx-color: ('grays', 900)
         ),
+    )
+);
+
+/// Generates an indigo list schema.
+/// @type {Map}
+///
+/// @property {Map} header-text-color [igx-color: ('primary', 500)] - The list header text color.
+///
+/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .15, to-opaque: (igx-color: 'surface')] - The list item hover background.
+/// @property {Map} item-background-active [ igx-color: ('primary', 500), rgba: .15, to-opaque: (igx-color: 'surface')] - The active list item background color.
+///
+/// @property {Map} item-text-color [igx-color: ('grays', 900)] - The list item text color.
+/// @property {Map} item-text-color-hover [igx-color: ('grays', 900)] - The list item text color.
+/// @property {Map} item-text-color-active [igx-color: ('grays', 900)] - The active list item text color.
+///
+/// @property {Color} item-subtitle-color [igx-color: ('grays', 800)] - The list item subtitle color.
+/// @property {Color} item-subtitle-color-hover [igx-color: ('grays', 800)] - The list item subtitle hover color.
+/// @property {Color} item-subtitle-color-active [igx-color: ('grays', 800)] - The list item subtitle active color.
+///
+/// @property {Color} item-action-color [igx-color: ('grays', 600)] - The list item action color.
+/// @property {Color} item-action-color-hover [igx-color: ('grays', 600)] - The list item action hover color.
+/// @property {Color} item-action-color-active [igx-color: ('grays', 600)] - The list item action active color.
+///
+/// @property {Color} item-thumbnail-color [igx-color: ('grays', 600)] - The list item thumbnail color.
+/// @property {Color} item-thumbnail-color-hover [igx-color: ('grays', 600)] - The list item thumbnail hover color.
+/// @property {Color} item-thumbnail-color-active [igx-color: ('grays', 600)] - The list item thumbnail active color.
+///
+/// @prop {Number} item-border-radius [2px] - The border radius used for list item.
+///
+/// @requires {function} extend
+/// @requires {Map} $_light-list
+$_indigo-list: extend(
+    $_light-list,
+    $_indigo-shape-list,
+    (
+        variant: 'indigo-design',
+
+        header-text-color:  (
+            igx-color: ('primary', 500)
+        ),
+
+        item-background-hover: (
+            igx-color: ('primary', 500),
+            rgba: .15,
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        item-background-active: (
+            igx-color: ('primary', 500),
+            rgba: .15,
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        item-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-action-color : (
+            igx-color: ('grays', 600)
+        ),
+
+        item-action-color-hover : (
+            igx-color: ('grays', 600)
+        ),
+
+        item-action-color-active : (
+            igx-color: ('grays', 600)
+        ),
+
+        item-subtitle-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        item-subtitle-color-hover: (
+            igx-color: ('grays', 800)
+        ),
+
+        item-subtitle-color-active: (
+            igx-color: ('grays', 800)
+        ),
+
+        item-thumbnail-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-thumbnail-color-hover: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-thumbnail-color-active: (
+            igx-color: ('grays', 600)
+        )
     )
 );
 

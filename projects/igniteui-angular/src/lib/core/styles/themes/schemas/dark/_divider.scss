@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -14,11 +14,17 @@ $_dark-divider: extend($_light-divider);
 /// Generates a dark fluent divider schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires$_fluent-divider
+/// @requires $_fluent-divider
 $_dark-fluent-divider: extend($_fluent-divider);
 
 /// Generates a dark bootstrap divider schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires$_bootstrap-divider
+/// @requires $_bootstrap-divider
 $_dark-bootstrap-divider: extend($_bootstrap-divider);
+
+/// Generates a dark indigo divider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-divider
+$_dark-indigo-divider: extend($_indigo-divider);

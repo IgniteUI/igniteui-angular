@@ -45,3 +45,7 @@ $_bootstrap-shape-button: (
     fab-border-radius: 1,
     icon-border-radius: 4px,
 );
+
+/// @type Map
+$_indigo-shape-button: extend($_round-shape-button);
+

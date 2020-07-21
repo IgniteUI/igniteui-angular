@@ -90,13 +90,15 @@
     $padding: map-get((
         'material': rem(16px) rem(24px),
         'fluent': rem(16px) rem(24px),
-        'bootstrap': rem(12px)
+        'bootstrap': rem(12px),
+        'indigo-design': rem(14px) rem(24px)
     ), $variant);
 
     $border: map-get((
         'material': none,
         'fluent': none,
-        'bootstrap': 1px solid igx-color($palette, 'grays', 300)
+        'bootstrap': 1px solid igx-color($palette, 'grays', 300),
+        'indigo-design': none
     ), $variant);
 
     %igx-toast-display {

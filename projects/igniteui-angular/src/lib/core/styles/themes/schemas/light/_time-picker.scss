@@ -3,15 +3,15 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a light time-picker schema.
 /// @type {Map}
 ///
-/// @prop {Map} text-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .38] - The text color of a open time picker.
-/// @prop {Map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a open time picker.
+/// @prop {Map} text-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .38] - The text color of an open time picker.
+/// @prop {Map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of an open time picker.
 /// @prop {Map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
 /// @prop {Map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
 /// @prop {Map} disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .5] - The text color for disabled values.
@@ -80,12 +80,8 @@ $_light-time-picker: extend(
 
 /// Generates a fluent time-picker schema.
 /// @type {Map}
-/// @prop {Map} selected-text-color [igx-color: ('primary', 500)] -  The text color of a selected item in time picker.
-/// @prop {Map} hover-text-color [igx-color: ('primary', 500)] - The hover text color of a open time picker.
-/// @prop {Map} header-background [igx-color: ('primary', 500)] - The header background color of a time picker.
 /// @requires {function} extend
 /// @requires $_light-time-picker
-/// @requires $_fluent-shape-time-picker
 $_fluent-time-picker: extend(
     $_light-time-picker,
     $_fluent-shape-time-picker,
@@ -96,6 +92,9 @@ $_fluent-time-picker: extend(
 
 /// Generates a bootstrap time-picker schema.
 /// @type {Map}
+/// @prop {Map} selected-text-color [igx-color: ('primary', 500)] -  The text color of a selected item in time picker.
+/// @prop {Map} hover-text-color [igx-color: ('primary', 600)] - The hover text color of an open time picker.
+/// @prop {Map} header-background [igx-color: ('primary', 500)] - The header background color of a time picker.
 /// @requires {function} extend
 /// @requires $_light-time-picker
 $_bootstrap-time-picker: extend(
@@ -118,3 +117,46 @@ $_bootstrap-time-picker: extend(
     )
 );
 
+/// Generates an indigo time-picker schema.
+/// @type {Map}
+/// @prop {Map} text-color [igx-color: ('grays', 700)] - The text color of an open time picker.
+/// @prop {Map} selected-text-color [igx-color: ('primary', 500)] -  The text color of a selected item in time picker.
+/// @prop {Map} hover-text-color [igx-color: ('primary', 500)] - The hover text color of an open time picker.
+/// @prop {Map} header-background [igx-color: ('primary', 500)] - The header background color of a time picker.
+/// @prop {Map} header-hour-text-color [igx-contrast-color: ('primary', 500)] - The header hour text color of a time picker.
+/// @prop {Map} header-time-period-color [igx-contrast-color: ('primary', 500)] - The header AM/PM text color of a time picker.
+/// @prop {Number} border-radius [3px] - The border radius fraction used for the overall shape of the time-picker.
+/// @prop {Number} active-item-border-radius [20px] - The border-radius used for the highlight of the active item in the time-picker.
+/// @requires {function} extend
+/// @requires $_light-time-picker
+$_indigo-time-picker: extend(
+    $_light-time-picker,
+    $_indigo-shape-time-picker,
+    (
+        variant: 'indigo-design',
+
+        text-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        hover-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        selected-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        header-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        header-hour-text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+
+        header-time-period-color: (
+            igx-contrast-color: ('primary', 500),
+        ),
+    )
+);
