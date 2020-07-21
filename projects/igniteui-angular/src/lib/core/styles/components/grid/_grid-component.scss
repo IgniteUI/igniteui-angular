@@ -458,6 +458,10 @@
         @extend %igx-grid__filtering-row-main !optional;
     }
 
+    @include e(filtering-row-editing-buttons) {
+        @extend %igx-grid__filtering-row-editing-buttons !optional;
+    }
+
     @include e(filtering-row-scroll-start) {
         @extend %igx-grid__filtering-scroll-start !optional;
     }
