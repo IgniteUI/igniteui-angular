@@ -2,14 +2,14 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a light grid-summary schema.
 /// @type {Map}
 ///
-/// @property {Color} background-color [inherit] - The summaries background color is inherited form igx-grid__tfoot.
+/// @property {Color} background-color [inherit] - The summaries background color is inherited from the grid footer.
 /// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
 /// @property {map} label-color [igx-color: ('primary', 500)] - The summaries label color.
 /// @property {map} label-hover-color [igx-color: ('primary', 700)] - The summaries hover label color.
@@ -20,7 +20,6 @@
 /// @property {map} pinned-border-color [igx-color: ('grays', 400)] - The border color of the summary panel.
 ///
 /// @see $default-palette
-
 $_light-grid-summary: extend(
     $_default-shape-grid-summary,
     (
@@ -55,12 +54,12 @@ $_light-grid-summary: extend(
 /// Generates a fluent grid-summary schema.
 /// @type {Map}
 ///
-/// @property {Color} background-color [ igx-color: ('surface')] - The summaries background color is inherited form igx-grid__tfoot
+/// @property {Color} background-color [ igx-color: ('surface')] - The summaries background color is inherited from the grid footer.
 /// @property {map} border-color [ igx-color: ('grays', 100)] - The summaries border color.
 /// @property {map} pinned-border-color [igx-color: ('grays', 300), hexrgba: #fff] - The border color of the summary panel.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-grid-summary
+/// @requires {Map} $_light-grid-summary
 $_fluent-grid-summary: extend(
     $_light-grid-summary,
     (
@@ -82,6 +81,38 @@ $_fluent-grid-summary: extend(
 /// Generates a bootstrap grid-summary schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-grid-summary
+/// @requires {Map} $_light-grid-summary
 $_bootstrap-grid-summary: extend($_light-grid-summary);
+
+/// Generates an indigo grid-summary schema.
+/// @type {Map}
+/// @property {Color} background-color [igx-color: ('grays', 100), to-opaque: ()] - The summaries background color is inherited from the grid footer.
+/// @property {map} label-hover-color [igx-color: ('primary', 900)] - The summaries hover label color.
+/// @property {map} border-color [igx-color: ('primary', 50)] - The summaries border color.
+/// @property {map} pinned-border-color [igx-color: ('primary', 200)] - The border color of the summary panel.
+/// @requires {function} extend
+/// @requires {Map} $_light-grid-summary
+$_indigo-grid-summary: extend(
+    $_light-grid-summary,
+    (
+        variant: 'indigo-design',
+
+        background-color: (
+            igx-color: ('grays', 100),
+            to-opaque: ()
+        ),
+
+        label-hover-color: (
+            igx-color: ('primary', 900)
+        ),
+
+        border-color: (
+            igx-color: ('primary', 50)
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
 

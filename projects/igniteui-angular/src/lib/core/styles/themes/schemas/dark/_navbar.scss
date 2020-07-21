@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -24,4 +24,10 @@ $_dark-fluent-navbar: extend($_fluent-navbar);
 /// @requires {function} extend
 /// @requires $_bootstrap-navbar
 $_dark-bootstrap-navbar: extend($_bootstrap-navbar);
+
+/// Generates a dark indigo navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-navbar
+$_dark-indigo-navbar: extend($_indigo-navbar);
 

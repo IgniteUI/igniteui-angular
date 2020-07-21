@@ -9,10 +9,12 @@ $_default-shape-card: (
     border-radius: .17,
 );
 
+/// @type Map
 $_round-shape-card: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-card: (
     border-radius: 0%,
 );
@@ -22,6 +24,12 @@ $_fluent-shape-card: (
     border-radius: 2px,
 );
 
+/// @type Map
 $_bootstrap-shape-card: (
     border-radius: 4px,
+);
+
+/// @type Map
+$_indigo-shape-card: (
+    border-radius: 3px,
 );

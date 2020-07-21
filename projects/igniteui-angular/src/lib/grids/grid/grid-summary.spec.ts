@@ -1759,6 +1759,112 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(5);
         });
 
+        it('should show summaries when group row is collapsed', () => {
+            expect(grid.showSummaryOnCollapse).toBe(false);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+            const groupRows = grid.groupsRowList.toArray();
+            grid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            groupRows[0].toggle();
+            fix.detectChanges();
+
+            expect(groupRows[0].expanded).toBe(false);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(4);
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+            groupRows[0].toggle();
+            fix.detectChanges();
+
+            expect(groupRows[0].expanded).toBe(true);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+        });
+
+        it('should be able to change showSummaryOnCollapse run time', () => {
+            expect(grid.showSummaryOnCollapse).toBe(false);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+            const groupRows = grid.groupsRowList.toArray();
+            fix.detectChanges();
+
+            groupRows[0].toggle();
+            fix.detectChanges();
+
+            expect(groupRows[0].expanded).toBe(false);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
+
+            grid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            expect(grid.showSummaryOnCollapse).toBe(true);
+            expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(4);
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+        });
+
+
+        it('should correctly position summary row when group row is collapsed', () => {
+            grid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+            grid.groupBy({ fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 4);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+            const groupRows = grid.groupsRowList.toArray();
+            groupRows[1].toggle();
+            fix.detectChanges();
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 2);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+            grid.summaryPosition = 'top';
+            fix.detectChanges();
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+
+        });
+
         it('should be able to enable/disable summaries at runtime', () => {
             grid.getColumnByName('Age').hasSummary = false;
             grid.getColumnByName('ParentID').hasSummary = false;

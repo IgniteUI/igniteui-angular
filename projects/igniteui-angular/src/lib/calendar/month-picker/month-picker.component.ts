@@ -14,6 +14,7 @@ import { IgxMonthsViewComponent } from '../months-view/months-view.component';
 import { IgxMonthPickerBaseDirective, CalendarView } from '../month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
+import { ScrollMonth } from '../calendar-base';
 
 let NEXT_ID = 0;
 @Component({
@@ -99,8 +100,21 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public animationDone() {
+    public animationDone(event) {
+        if ((event.fromState === 'void' && event.toState === '') ||
+        (event.fromState === '' && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT))) {
+            this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
+        }
         this.yearAction = '';
+    }
+
+    /**
+     * @hidden
+     */
+    public viewRendered(event) {
+        if (event.fromState !== 'void') {
+            this.activeViewChanged.emit(this.activeView);
+        }
     }
 
     /**
@@ -140,6 +154,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public nextYear() {
         this.yearAction = 'next';
+        this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getNextYear(this.viewDate);
 
         this.selectDate(this.viewDate);
@@ -163,6 +178,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public previousYear() {
         this.yearAction = 'prev';
+        this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
 
         this.selectDate(this.viewDate);
@@ -185,6 +201,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      * @hidden
      */
     public selectYear(event: Date) {
+        this.previousViewDate = this.viewDate;
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this.activeView = CalendarView.DEFAULT;
 
@@ -207,7 +224,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * Selects a date.
      * ```typescript
-     *  this.monPicker.selectDate(new Date(`2018-06-12`));
+     *  this.monthPicker.selectDate(new Date(`2018-06-12`));
      * ```
      */
     public selectDate(value: Date) {
@@ -238,6 +255,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'prev';
+        this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
     }
 
@@ -248,6 +266,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'next';
+        this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getNextYear(this.viewDate);
     }
 

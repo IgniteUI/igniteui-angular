@@ -22,7 +22,7 @@
     </h2>
 </div>
 
-<div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()"
+<div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
     (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
         <div tabindex="0" class="igx-calendar-picker__prev" #prevMonthBtn
@@ -63,7 +63,7 @@
     </div>
 </div>
 
-<igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months
+<igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months (@animateView.done)="viewRendered($event)"
                  [date]="viewDate"
                  [locale]="locale"
                  [formatView]="formatViews.month"
@@ -71,7 +71,7 @@
                  (onSelection)="changeMonth($event)">
 </igx-months-view>
 
-<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade
+<igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade (@animateView.done)="viewRendered($event)"
                 [date]="viewDate"
                 [locale]="locale"
                 [formatView]="formatViews.year"

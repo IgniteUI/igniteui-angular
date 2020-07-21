@@ -7,12 +7,14 @@ import {
     Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap,
     monthRange, weekDay, WEEKDAYS
 } from './public_api';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 import { HelperTestFunctions } from './calendar-helper-utils';
+import { CalendarView } from './month-picker-base';
+import { IViewDateChangeEventArgs } from './calendar-base';
 
 describe('IgxCalendar - ', () => {
 
@@ -252,8 +254,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(defaultViews));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
 
@@ -267,8 +269,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('September');
 
@@ -283,8 +285,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
             });
@@ -305,8 +307,8 @@ describe('IgxCalendar - ', () => {
                 fixture.detectChanges();
 
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Sun');
@@ -319,8 +321,8 @@ describe('IgxCalendar - ', () => {
                 bodyWeekday = dom.query(By.css(HelperTestFunctions.WEEKSTART_LABEL_CSSCLASS));
                 expect(calendar.locale).toEqual(locale);
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('lun.,');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('17 sept.');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('sam.,');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('1 sept.');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('sept.');
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
@@ -1559,36 +1561,41 @@ describe('IgxCalendar - ', () => {
                 prev.nativeElement.focus();
 
                 expect(prev.nativeElement).toBe(document.activeElement);
-
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', prev.nativeElement);
                 tick(100);
                 fixture.detectChanges();
 
                 expect(calendar.viewDate.getMonth()).toEqual(4);
-
                 const next = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS))[0];
                 next.nativeElement.focus();
                 expect(next.nativeElement).toBe(document.activeElement);
 
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
-                tick(100);
-                fixture.detectChanges();
 
+                fixture.detectChanges();
+                tick(100);
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
                 tick(100);
                 fixture.detectChanges();
 
+
                 expect(calendar.viewDate.getMonth()).toEqual(6);
             }));
 
-            it('Should open years view, navigate through and select an year via KB.', () => {
+            it('Should open years view, navigate through and select an year via KB.', fakeAsync(() => {
                 const year = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[1];
                 year.nativeElement.focus();
 
                 expect(year.nativeElement).toBe(document.activeElement);
 
+                spyOn(calendar.activeViewChanged, 'emit').and.callThrough();
+
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
+                tick();
+
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(CalendarView.DECADE);
 
                 const years = dom.queryAll(By.css(HelperTestFunctions.YEAR_CSSCLASS));
                 let currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
@@ -1609,20 +1616,33 @@ describe('IgxCalendar - ', () => {
                 currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2016');
 
+                const previousValue = fixture.componentInstance.calendar.viewDate;
+                spyOn(calendar.viewDateChanged, 'emit').and.callThrough();
+
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', currentYear.nativeElement);
+
                 fixture.detectChanges();
+                tick();
 
+                const eventArgs: IViewDateChangeEventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
-            });
+            }));
 
-            it('Should open months view, navigate through and select a month via KB.', () => {
+            it('Should open months view, navigate through and select a month via KB.', fakeAsync(() => {
                 const month = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[0];
                 month.nativeElement.focus();
+                spyOn(calendar.activeViewChanged, 'emit').and.callThrough();
 
                 expect(month.nativeElement).toBe(document.activeElement);
 
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
+                tick();
+
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(CalendarView.YEAR);
 
                 const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
                 const currentMonth = dom.query(By.css(HelperTestFunctions.CURRENT_MONTH_CSSCLASS));
@@ -1651,11 +1671,18 @@ describe('IgxCalendar - ', () => {
 
                 expect(document.activeElement.textContent.trim()).toMatch('Sep');
 
+                const previousValue = fixture.componentInstance.calendar.viewDate;
+                spyOn(calendar.viewDateChanged, 'emit').and.callThrough();
+
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
+                tick();
 
+                const eventArgs: IViewDateChangeEventArgs = { previousValue, currentValue: fixture.componentInstance.calendar.viewDate };
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledTimes(1);
+                expect(calendar.viewDateChanged.emit).toHaveBeenCalledWith(eventArgs);
                 expect(calendar.viewDate.getMonth()).toEqual(8);
-            });
+            }));
 
             it('Should navigate to the first enabled date from the previous month when using "arrow up" key.', fakeAsync(() => {
                 const dateRangeDescriptors: DateRangeDescriptor[] = [];
