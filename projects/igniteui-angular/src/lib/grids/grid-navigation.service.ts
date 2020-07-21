@@ -391,7 +391,7 @@ export class IgxGridNavigationService {
         for (let i = 0; i < props.length; i++) {
             const propName = props[i];
 
-            if (this.activeNode[propName] !== activeNode[propName] && typeof this.activeNode[propName] === 'object') {
+            if (!!this.activeNode[propName] && typeof this.activeNode[propName] === 'object') {
                 checkInnerProp(activeNode[propName], propName);
             } else if (this.activeNode[propName] !== activeNode[propName]) {
                 isChanged = true;
@@ -524,11 +524,6 @@ export class IgxGridNavigationService {
             activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
             .filter(col => col.visibleIndex < newHeaderNode.visibleIndex)[0];
             newHeaderNode.level = nextCol.level;
-        }
-
-        if (this.activeNode.mchCache.visibleIndex === newHeaderNode.visibleIndex &&
-            this.activeNode.mchCache.level === newHeaderNode.level) {
-            return;
         }
 
         this.setActiveNode({
