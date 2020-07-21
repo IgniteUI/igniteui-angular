@@ -573,7 +573,8 @@ describe('igxCombo', () => {
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
         });
         it('should be able to cancel onSearchInput', () => {
-            combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
+            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService, mockIconService, null, mockInjector);
+            spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
             combo.filterable = true;
