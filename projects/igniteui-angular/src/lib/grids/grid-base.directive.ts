@@ -208,6 +208,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
+    private _userOutletDirective: IgxOverlayOutletDirective;
+
     /**
      * @hidden @internal
      */
@@ -1795,7 +1797,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
 
-
     /**
      * @hidden @internal
      */
@@ -3341,10 +3342,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Gets the outlet.
+     * @remark
+     * If any, returns the outlet defined outside the grid. Otherwise returns the grid's outlet directive.
      * @hidden @internal
      */
-    protected get outlet() {
-        return this.outletDirective;
+    get outlet() {
+        return this._userOutletDirective ? this._userOutletDirective : this.outletDirective;
+    }
+
+    /**
+     * Sets the outlet from outside the grid.
+     * @hidden @internal
+     */
+    set outlet(val: any) {
+        this._userOutletDirective = val;
     }
 
     /**
