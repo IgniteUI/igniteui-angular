@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
@@ -87,7 +87,7 @@ $_light-gauge: extend(
 /// @property {Color} scale-outline [(igx-color: 'surface', darken: 8%)] - Sets the color to use for the outline of the scale.
 /// @property {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
 /// @requires {function} extend
-/// @requires $_light-gauge
+/// @requires {Map} $_light-gauge
 $_light-linear-gauge: extend(
     $_light-gauge,
     (
@@ -115,7 +115,7 @@ $_light-linear-gauge: extend(
 /// @property {Color} needle-pivot-brush [igx-color: 'primary'] - Sets the color of the needle pivot point.
 /// @property {Color} needle-pivot-outline [igx-color: 'surface'] - Sets the outline color of the needle pivot point.
 /// @requires {function} extend
-/// @requires $_light-gauge
+/// @requires {Map} $_light-gauge
 $_light-radial-gauge: extend(
     $_light-gauge,
     (
@@ -132,24 +132,36 @@ $_light-radial-gauge: extend(
 /// Generates a light fluent gauge schemas.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-linear-gauge
+/// @requires {Map} $_light-linear-gauge
 $_fluent-linear-gauge: extend($_light-linear-gauge);
 
 /// Generates a light fluent gauge schemas.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-radial-gauge
+/// @requires {Map} $_light-radial-gauge
 $_fluent-radial-gauge: extend($_light-radial-gauge);
 
 /// Generates a light bootstrap gauge schemas.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-linear-gauge
+/// @requires {Map} $_light-linear-gauge
 $_bootstrap-linear-gauge: extend($_light-linear-gauge);
 
 /// Generates a light bootstrap gauge schemas.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-radial-gauge
+/// @requires {Map} $_light-radial-gauge
 $_bootstrap-radial-gauge: extend($_light-radial-gauge);
+
+/// Generates a light indigo gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-linear-gauge
+$_indigo-linear-gauge: extend($_light-linear-gauge);
+
+/// Generates a light indigo gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-radial-gauge
+$_indigo-radial-gauge: extend($_light-radial-gauge);
 

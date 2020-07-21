@@ -6,19 +6,28 @@
 @import 'app-layout';
 
 /* autoprefixer grid: on */
-$palette: $default-palette;
-$schema: $light-schema;
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
 
-$igx-background-color: igx-color($palette, 'surface');
-$igx-foreground-color: text-contrast($igx-background-color);
+$igx-background-color: darken(igx-color($palette, 'surface'), 5%);
+$igx-foreground-color: igx-color($palette, 'grays', 900);
 
 body {
     background: $igx-background-color;
-    color: rgba($igx-foreground-color, .87);
+    color: $igx-foreground-color;
 }
 
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
+
+@include igx-typography(
+    $font-family: "'Nunito Sans', sans-serif",
+    $type-scale: $indigo-type-scale
+);
+
+@include igx-card-typography($indigo-type-scale, $categories: (
+    title: 'h5',
+));
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {
@@ -28,38 +37,3 @@ body {
     }
 }
 
-// @media print {
-//     html,
-//     body,
-//     app-root {
-//         min-height: 100vh;
-//         min-width: 100vw;
-//         margin: 0;
-//         display: block;
-//         background: transparent !important;
-//     }
-
-//     .sample-content,
-//     .sample-column,
-//     .wrapper {
-//         margin: 0;
-//         padding: 0;
-//     }
-
-//     .sample-header,
-//     .sample-description,
-//     .sample-title,
-//     .no-print,
-//     .igx-nav-drawer,
-//     .form-title {
-//         display: none !important;
-//     }
-
-//     ::-webkit-scrollbar {
-//         background-color: #fff !important;
-//     }
-
-//     ::-webkit-scrollbar-thumb {
-//         background-color: #fff !important;
-//     }
-// }

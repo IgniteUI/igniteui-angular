@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
@@ -79,3 +79,10 @@ $_dark-fluent-category-chart: extend($_fluent-category-chart, $_base-dark-catego
 /// @requires $_bootstrap-category-chart
 /// @requires $_base-dark-category-chart
 $_dark-bootstrap-category-chart: extend($_bootstrap-category-chart, $_base-dark-category-chart);
+
+/// Generates an indigo category-chart schema based on a mix of $_indigo-category-chart and $_base-dark-category-chart
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-category-chart
+/// @requires $_base-dark-category-chart
+$_dark-indigo-category-chart: extend($_indigo-category-chart, $_base-dark-category-chart);

@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -19,12 +19,18 @@ $_light-divider: (
 /// Generates a fluent divider schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-divider
+/// @requires {Map} $_light-divider
 $_fluent-divider: extend($_light-divider);
 
 /// Generates a bootstrap divider schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-divider
+/// @requires {Map} $_light-divider
 $_bootstrap-divider: extend($_light-divider);
+
+/// Generates an indigo divider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-divider
+$_indigo-divider: extend($_light-divider);
 

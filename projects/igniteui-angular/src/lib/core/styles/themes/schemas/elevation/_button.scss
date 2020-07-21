@@ -5,6 +5,17 @@
 ////
 
 /// @type Map
+$_flat-button: (
+    raised-resting-elevation: 0,
+    raised-hover-elevation: 0,
+    raised-focus-elevation: 0,
+
+    fab-resting-elevation: 0,
+    fab-hover-elevation: 0,
+    fab-focus-elevation: 0
+);
+
+/// @type Map
 $_default-elevation-button: (
     raised-resting-elevation: 2,
     raised-hover-elevation: 4,
@@ -16,23 +27,10 @@ $_default-elevation-button: (
 );
 
 /// @type Map
-$_fluent-elevation-button: (
-    raised-resting-elevation: 0,
-    raised-hover-elevation: 0,
-    raised-focus-elevation: 0,
+$_fluent-elevation-button: extend($_flat-button);
 
-    fab-resting-elevation: 0,
-    fab-hover-elevation: 0,
-    fab-focus-elevation: 0
-);
+/// @type Map
+$_bootstrap-elevation-button: extend($_flat-button);
 
-$_bootstrap-elevation-button: (
-    raised-resting-elevation: 0,
-    raised-hover-elevation: 0,
-    raised-focus-elevation: 0,
-
-    fab-resting-elevation: 0,
-    fab-hover-elevation: 0,
-    fab-focus-elevation: 0
-);
-
+/// @type Map
+$_indigo-elevation-button: extend($_flat-button);
