@@ -314,6 +314,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-selector
+/// @see bem-selector
 @mixin bem($block, $e: null, $elem: null, $m: null, $mod: null, $mods: null) {
     #{bem-selector($block, $e: $e, $elem: $elem, $m: $m, $mod: $mod, $mods: $mods)} {
         @content;
@@ -321,6 +322,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-block
+/// @see bem-block
 @mixin block($block) {
     @include bem-block($block) {
         @content;
@@ -328,6 +330,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-elem
+/// @see bem-elem
 @mixin elem($elem, $m: null, $mod: null, $mods: null) {
     @include bem-elem($elem, $m: $m, $mod: $mod, $mods: $mods) {
         @content;
@@ -335,6 +338,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-mod
+/// @see bem-mod
 @mixin mod($mod) {
     @include bem-mod($mod) {
         @content;
@@ -342,6 +346,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-mods
+/// @see bem-mods
 @mixin mods($mods...) {
     @include bem-mods($mods...) {
         @content;
@@ -349,6 +354,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-block
+/// @see bem-block
 @mixin b($block) {
     @include bem-block($block) {
         @content;
@@ -356,6 +362,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-elem
+/// @see bem-elem
 @mixin e($elem, $m: null, $mod: null, $mods: null) {
     @include bem-elem($elem, $m: $m, $mod: $mod, $mods: $mods) {
         @content;
@@ -363,6 +370,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-mod
+/// @see bem-mod
 @mixin m($mod) {
     @include bem-mod($mod) {
         @content;
@@ -370,6 +378,7 @@ $bem--sep-mod-val: if(variable-exists(bem--sep-mod-val), $bem--sep-mod-val, '-')
 }
 
 /// @alias bem-mods
+/// @see bem-mods
 @mixin mx($mods...) {
     @include bem-mods($mods...) {
         @content;

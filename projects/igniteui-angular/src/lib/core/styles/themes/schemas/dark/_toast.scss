@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -21,12 +21,26 @@ $_dark-fluent-toast: extend($_fluent-toast);
 
 /// Generates a dark bootstrap toast schema.
 /// @type {Map}
+/// @prop {Map} text-color [igx-contrast-color: ('grays', 600)] - The text-color used for the toast.
 /// @requires {function} extend
 /// @requires $_bootstrap-toast
 $_dark-bootstrap-toast: extend(
     $_bootstrap-toast, (
         text-color: (
             igx-contrast-color: ('grays', 600)
+        )
+    )
+);
+
+/// Generates a dark indigo toast schema.
+/// @type {Map}
+/// @prop {Map} background [igx-color: ('grays', 400)] - The background color used for the toast.
+/// @requires {function} extend
+/// @requires $_indigo-toast
+$_dark-indigo-toast: extend(
+    $_indigo-toast, (
+        background: (
+            igx-color: ('grays', 400)
         )
     )
 );

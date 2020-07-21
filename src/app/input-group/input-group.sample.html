@@ -1,177 +1,119 @@
 <app-page-header title="Input Group"></app-page-header>
-<div class="samples">
-    <input-group-fluent-sample></input-group-fluent-sample>
-    <input-group-bootstrap-sample></input-group-bootstrap-sample>
-    <input-group-child-sample></input-group-child-sample>
+<div class="input-group-sample">
+    <form class="input-group-sample-form">
+        <div class="form__fields-settings">
+            <strong>Select density</strong>
+            <igx-buttongroup [alignment]="alignment" [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            <strong>Select Input type</strong>
+            <igx-buttongroup [alignment]="alignment" [values]="inputTypes" (onSelect)="selectInoutType($event)"></igx-buttongroup>
+            <strong>Enable/Disable fields</strong>
+            <igx-switch [checked]="true" id="enableDisable" (click)="disableFields()"></igx-switch>
+            <strong>Enable/Disable Required</strong>
+            <igx-switch [checked]="false" (click)="toggleRequired()"></igx-switch>
+        </div>
+        <div class="form__fields">
+            <!-- input type search - suffix/prefix -->
+            <igx-input-group [displayDensity]="density" [type]="inputSearchType">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input name="inputTest" #input value="{{inputValue}}" [(ngModel)]="inputValue" igxInput placeholder="Search" [disabled]="isDisabled"/>
+                <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
+                    <igx-icon>clear</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+            <br>
 
-    <h3 class="sample-title">Line Style Input with required @Input</h3>
-    <form class="form">
-        <igx-input-group>
-            <label igxLabel>Required</label>
-            <input igxInput #myInput="igxInput" [value]="value" [required]="isRequired"/>
-            <igx-hint *ngIf="!myInput.isValid">This is required</igx-hint>
-        </igx-input-group>
-        <button igxButton (click)="toggleRequired()">Toggle required</button>
-    </form>
+            <!-- text field -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label for="fluentfirstName" igxLabel>Text Field</label>
+                <igx-prefix>
+                    <igx-icon>face</igx-icon>
+                </igx-prefix>
+                <input name="inputTest" placeholder="Placeholder" [required]="isRequired" id="fluentfirstName" igxInput value="{{inputValue}}" [(ngModel)]="inputValue" [disabled]="isDisabled"/>
+                <igx-suffix>
+                    <igx-icon>data_usage</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+            <br>
 
-    <h3 class="sample-title">Line Style Input</h3>
-    <form class="form">
-        <!-- Basic text field -->
-        <igx-input-group>
-            <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required />
-            <label igxLabel for="firstName">Text Field</label>
-        </igx-input-group>
+            <!-- text field prefix/suffix -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Web address</label>
+                <igx-prefix>
+                    http://
+                </igx-prefix>
+                <input name="inputTest" [required]="isRequired" [disabled]="isDisabled" [value]="inputValue" [(ngModel)]="inputValue" igxInput type="text" />
+                <igx-suffix>
+                    .com
+                </igx-suffix>
+                <igx-hint>Type you web address</igx-hint>
+            </igx-input-group>
+            <br>
 
-        <!-- Basic text field w/ placeholder -->
-        <igx-input-group>
-            <label igxLabel>Label</label>
-            <input igxInput value="read-only" type="text" placeholder="Placeholder" readonly/>
-        </igx-input-group>
+            <!-- textarea -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Textarea</label>
+                <igx-prefix>
+                    <igx-icon>face</igx-icon>
+                </igx-prefix>
+                <textarea name="inputTest" [required]="isRequired" igxInput [value]="inputValue" [disabled]="isDisabled" [(ngModel)]="inputValue"></textarea>
+                <igx-suffix>
+                    <igx-icon>phone</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+            <br>
 
-        <!-- Text field w/ text prefix -->
-        <igx-input-group displayDensity="compact">
-            <igx-prefix>+359</igx-prefix>
-            <label igxLabel>Phone</label>
-            <input igxInput [igxMask]="'000 000 000'" promptChar="*" type="text" />
-        </igx-input-group>
+            <!-- Text field mask -->
+            <igx-input-group [displayDensity]="density" [type]="inputType" displayDensity="compact">
+                <igx-prefix>+359</igx-prefix>
+                <label igxLabel>Input with Mask</label>
+                <input [disabled]="isDisabled" [required]="isRequired" igxInput [igxMask]="'000 000 000'" promptChar="*" type="text" />
+            </igx-input-group>
+            <br>
 
-        <!-- Text field w/ icon prefix -->
-        <igx-input-group [suppressInputAutofocus]="true">
-            <igx-prefix>
-                <igx-icon>email</igx-icon>
-            </igx-prefix>
-            <label igxLabel>Email address</label>
-            <input igxInput type="email" required />
-        </igx-input-group>
+            <!-- date field -->
+            <igx-date-picker [value]="date">
+                <ng-template
+                    igxDatePickerTemplate
+                    let-openDialog="openDialog"
+                    let-value="value"
+                    let-displayData="displayData"
+                >
+                    <igx-input-group [displayDensity]="density" [type]="inputType">
+                        <label igxLabel>Date: </label>
+                        <input [required]="isRequired" name="date" [value]="displayData" igxInput [disabled]="isDisabled"/>
+                        <igx-suffix>
+                            <igx-icon (click)="openDialog()">date_range</igx-icon>
+                        </igx-suffix>
+                    </igx-input-group>
+                </ng-template>
+            </igx-date-picker>
+            <br>
 
-        <!-- Text field w/ icon suffix and hint at the beginning  -->
-        <igx-input-group>
-            <label igxLabel>Search Contacts</label>
-            <input igxInput type="text" />
-            <igx-suffix>
-                <igx-icon>person</igx-icon>
-            </igx-suffix>
-            <igx-hint position="start">Search by phone number or name</igx-hint>
-        </igx-input-group>
+            <!-- Read only -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Read only input field</label>
+                <input readonly [disabled]="isDisabled" igxInput value="read-only" type="text" placeholder="Placeholder"/>
+            </igx-input-group>
+            <br>
 
-        <!-- Textarea group -->
-        <igx-input-group>
-            <label igxLabel>Message</label>
-            <textarea igxInput #textarea maxlength="280"></textarea>
-            <igx-hint position="start">Helper text</igx-hint>
-            <igx-hint position="end">{{textarea.value.length}}/280</igx-hint>
-        </igx-input-group>
-
-        <!-- Text field w/ text prefix - disabled -->
-        <igx-input-group>
-            <igx-prefix>+359</igx-prefix>
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" value="12345678" disabled="disabled" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-            <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
-        </igx-input-group>
-    </form>
-
-    <h3 class="sample-title">Box Style Input</h3>
-    <form class="form">
-        <!-- Boxed text field -->
-        <igx-input-group type="box">
-            <label igxLabel>Text Field</label>
-            <input igxInput [(ngModel)]="user.lastName" name="lastName" />
-        </igx-input-group>
-
-        <!-- Boxed text field w/ icon suffix -->
-        <igx-input-group type="box">
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-            <igx-hint>Call your mom</igx-hint>
-        </igx-input-group>
-
-        <!-- Boxed textarea field -->
-        <igx-input-group type="box">
-            <label igxLabel>Message</label>
-            <textarea igxInput></textarea>
-        </igx-input-group>
-
-        <!-- Boxed text field w/ icon suffix - disabled -->
-        <igx-input-group type="box">
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" value="123456789" disabled="disabled" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
-    </form>
-
-    <h3 class="sample-title">Border Style Input</h3>
-    <form class="form">
-        <!-- Border text field -->
-        <igx-input-group type="border">
-            <label igxLabel>Text Field</label>
-            <input igxInput />
-        </igx-input-group>
-
-        <!-- Border text field w/ icon suffix -->
-        <igx-input-group type="border">
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" required />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-            <igx-hint>Call your mom</igx-hint>
-        </igx-input-group>
-
-
-        <!-- Border textarea field -->
-        <igx-input-group type="border">
-            <label igxLabel>Message</label>
-            <textarea igxInput></textarea>
-        </igx-input-group>
-
-
-        <!-- Border text field w/ icon suffix - disabled -->
-        <igx-input-group type="border">
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" value="123456789" disabled="disabled" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
-    </form>
-
-    <h3 class="sample-title">Search Style Input</h3>
-    <form class="form">
-        <!-- Search text field -->
-        <igx-input-group type="search">
-            <input #input igxInput placeholder="Search" />
-            <igx-prefix>
-                <igx-icon>search</igx-icon>
-            </igx-prefix>
-            <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
-                <igx-icon>clear</igx-icon>
-            </igx-suffix>
-            <igx-suffix>
-                <igx-icon>mic</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
-
-        <!-- Search text field -->
-        <igx-input-group type="search">
-            <input #input1 igxInput placeholder="Search" disabled="disabled" />
-            <igx-prefix>
-                <igx-icon>search</igx-icon>
-            </igx-prefix>
-            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
-                <igx-icon>clear</igx-icon>
-            </igx-suffix>
-            <igx-suffix>
-                <igx-icon>mic</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
+            <!-- Select field -->
+            <igx-select #select1
+                        [displayDensity]="density"
+                        [placeholder]="'Pick One'"
+                        [disabled]="isDisabled"
+                        [type]="inputType">
+                <label igxLabel>Input type select</label>
+                <igx-prefix igxPrefix>
+                    <igx-icon fontSet="material">favorite</igx-icon>
+                </igx-prefix>
+                <igx-select-item>Sofia</igx-select-item>
+                <igx-select-item>London</igx-select-item>
+                <igx-select-item>Paris</igx-select-item>
+                <igx-select-item>New York</igx-select-item>
+            </igx-select>
+            <br>
+        </div>
     </form>
 </div>

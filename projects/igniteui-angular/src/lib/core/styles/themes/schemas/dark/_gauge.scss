@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
@@ -41,3 +41,16 @@ $_dark-bootstrap-linear-gauge: extend($_bootstrap-linear-gauge);
 /// @requires {function} extend
 /// @requires $_bootstrap-radial-gauge
 $_dark-bootstrap-radial-gauge: extend($_bootstrap-radial-gauge);
+
+/// Generates a dark indigo gauge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-linear-gauge
+$_dark-indigo-linear-gauge: extend($_indigo-linear-gauge);
+
+/// Generates a dark indigo gauge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-radial-gauge
+$_dark-indigo-radial-gauge: extend($_indigo-radial-gauge);
+

@@ -1,0 +1,8 @@
+@import '../index';
+
+:root {
+    @include igx-palette-vars($dark-material-palette, $contrast: true);
+}
+
+@include igx-core($direction: rtl);
+@include igx-dark-theme($dark-material-palette);

@@ -89,12 +89,14 @@
         material: em(20px),
         fluent: em(20px),
         bootstrap: em(14px),
+        indigo-design: em(20px),
     ), $variant);
 
     $scale: map-get((
         material: scale(.5),
         fluent: scale(.5),
         bootstrap: scale(.3),
+        indigo-design: scale(.5),
     ), $variant);
 
     $left: if-ltr(left, right);
@@ -104,11 +106,12 @@
         material: rem(2px),
         fluent: rem(1px),
         bootstrap: rem(1px),
+        indigo-design: rem(2px),
     ), $variant);
 
     $radio-hover-scale: map-get((
         material: null,
-        fluent: scale(.5)
+        fluent: scale(.5),
     ), $variant);
 
     $ripple-display: map-get((
