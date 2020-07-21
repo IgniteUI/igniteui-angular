@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark sparkline schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-sparkline
 /// @see $default-palette
 $_dark-sparkline: extend($_light-sparkline);
@@ -23,4 +24,10 @@ $_dark-fluent-sparkline: extend($_fluent-sparkline);
 /// @requires {function} extend
 /// @requires $_bootstrap-sparkline
 $_dark-bootstrap-sparkline: extend($_bootstrap-sparkline);
+
+/// Generates a dark indigo sparkline schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-sparkline
+$_dark-indigo-sparkline: extend($_indigo-sparkline);
 

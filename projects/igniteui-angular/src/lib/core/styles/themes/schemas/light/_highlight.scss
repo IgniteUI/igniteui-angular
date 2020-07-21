@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -35,12 +35,38 @@ $_light-highlight: (
 /// Generates a fluent highlight schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-highlight
+/// @requires {Map} $_light-highlight
 $_fluent-highlight: extend($_light-highlight);
 
 /// Generates a bootstrap highlight schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-highlight
+/// @requires {Map} $_light-highlight
 $_bootstrap-highlight: extend($_light-highlight);
 
+/// Generates an indigo highlight schema.
+/// @type {Map}
+/// @property {Map} active-background [igx-color: ('primary', 500)] - The background color used for the highlight in its active state.
+/// @property {Map} active-color [igx-contrast-color: ('primary', 500)] - The text color used for the highlight in its active state.
+/// @property {Map} resting-color [igx-contrast-color: ( igx-color: ('grays', 300), to-opaque: 'surface' )] - The icon color used for the highlight in its resting state.
+/// @requires {function} extend
+/// @requires {Map} $_light-highlight
+$_indigo-highlight: extend(
+    $_light-highlight,
+    (
+        active-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        active-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+
+        resting-color: (
+            igx-contrast-color: ('grays', 300),
+            to-opaque: (
+                igx-color: 'surface'
+            )
+        )
+    )
+);

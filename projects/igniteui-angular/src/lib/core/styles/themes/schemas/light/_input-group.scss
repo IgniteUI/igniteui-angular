@@ -3,57 +3,57 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a light input-group schema.
 /// @type {Map}
 ///
-/// @prop {map} input-prefix-color [igx-color: ('grays', 600)] - The text color of an input prefix of type line, box and border.
+/// @prop {Map} input-prefix-color [igx-color: ('grays', 600)] - The text color of an input prefix of type line, box and border.
 /// @prop {Color} input-prefix-background [transparent] - The background color of an input prefix of type line, box and border.
-/// @prop {map} input-suffix-color [igx-color: ('grays', 600)] - The text color of an input sufix of type line, box and border.
+/// @prop {Map} input-suffix-color [igx-color: ('grays', 600)] - The text color of an input sufix of type line, box and border.
 /// @prop {Color} input-suffix-background [transparent] - The background color of an input sufix of type line, box and border.
 ///
-/// @prop {map} idle-text-color [igx-color: ('grays', 600)] - The input text color in the idle state.
-/// @prop {map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
-/// @prop {map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
-/// @prop {map} disabled-text-color [igx-color: ('grays', 500)] - The input text color in the disabled state.
+/// @prop {Map} idle-text-color [igx-color: ('grays', 600)] - The input text color in the idle state.
+/// @prop {Map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
+/// @prop {Map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
+/// @prop {Map} disabled-text-color [igx-color: ('grays', 500)] - The input text color in the disabled state.
 ///
-/// @prop {map} idle-secondary-color [igx-color: ('grays', 600)] - The label color in the idle state.
-/// @prop {map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
-/// @prop {map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
+/// @prop {Map} idle-secondary-color [igx-color: ('grays', 600)] - The label color in the idle state.
+/// @prop {Map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
+/// @prop {Map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
 ///
-/// @prop {map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
-/// @prop {map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
-/// @prop {map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
-/// @prop {map} interim-bottom-line-color [igx-color: ('primary', 500), rgba: .12] - The bottom line and border colors during the to-focused transition.
-/// @prop {map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
+/// @prop {Map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
+/// @prop {Map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
+/// @prop {Map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
+/// @prop {Map} interim-bottom-line-color [igx-color: ('primary', 500), rgba: .12] - The bottom line and border colors during the to-focused transition.
+/// @prop {Map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
 ///
-/// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for input groups of type border and fluent.
-/// @prop {map} hover-border-color [igx-color: ('grays', 900)] - The hover input border for input groups of type border and fluent.
-/// @prop {map} focused-border-color [igx-color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
-/// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} border-color [igx-color: ('grays', 600)] - The border color for input groups of type border and fluent.
+/// @prop {Map} hover-border-color [igx-color: ('grays', 900)] - The hover input border for input groups of type border and fluent.
+/// @prop {Map} focused-border-color [igx-color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border and fluent.
 ///
-/// @prop {map} box-background [igx-color: ('grays', 200)] - The background color of an input group of type box.
-/// @prop {map} box-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type box in the disabled state.
+/// @prop {Map} box-background [igx-color: ('grays', 200)] - The background color of an input group of type box.
+/// @prop {Map} box-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type box in the disabled state.
 ///
 /// @prop {Color} border-background [transparent] - The background color of an input group of type border.
-/// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
+/// @prop {Map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
 ///
 /// @prop {Color} search-background [#fff] - The background color of an input group of type search.
-/// @prop {map} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
+/// @prop {Map} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
 ///
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [2] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
 ///
-/// @prop {map} success-secondary-color [igx-color: ('success')] - The success color used in the valid state.
-/// @prop {map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
-/// @prop {map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
+/// @prop {Map} success-secondary-color [igx-color: ('success')] - The success color used in the valid state.
+/// @prop {Map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
+/// @prop {Map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
 ///
-/// @prop {map} placeholder-color [igx-color: ('grays', 500)] - The placeholder color of an input group.
-/// @prop {map} disabled-placeholder-color [igx-color: ('grays', 400)] - The disabled placeholder color of an input group.
+/// @prop {Map} placeholder-color [igx-color: ('grays', 500)] - The placeholder color of an input group.
+/// @prop {Map} disabled-placeholder-color [igx-color: ('grays', 400)] - The disabled placeholder color of an input group.
 ///
 /// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius fraction, between 0-1 to be used for box input .
 /// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .
@@ -61,15 +61,14 @@
 /// @prop {Color} label-floated-background [igx-color: surface] - The background color of the label when floated for input of type border.
 /// @prop {Color} label-floated-disabled-background [igx-color: surface] - The background color of the label when floated for input group of type border in its disabled state.
 ///
-/// @requires {function} extend
-/// @requires {map} $_default-shape-input-group
-/// @requires {map} $_default-elevation-input-group
 /// @see $default-palette
 $_light-input-group: extend(
     $_default-shape-input-group,
     $_default-elevation-input-group,
     (
         variant: 'material',
+
+        theme-variant: 'material',
 
         input-prefix-color: (
             igx-color: ('grays', 600)
@@ -200,12 +199,12 @@ $_light-input-group: extend(
 /// Generates a fluent input-group schema.
 /// @type {Map}
 ///
-/// @prop {map} border-color [igx-color: ('grays', 500)] - The border color for input groups of type border and fluent.
-/// @prop {map} hover-border-color [igx-color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
-/// @prop {map} focused-border-color [igx-color: ('grays', 500)] - The focused input border color for input groups of type border and fluent.
-/// @prop {map} disabled-border-color [igx-color: ('grays', 500)] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} border-color [igx-color: ('grays', 500)] - The border color for input groups of type border and fluent.
+/// @prop {Map} hover-border-color [igx-color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
+/// @prop {Map} focused-border-color [igx-color: ('grays', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 500)] - The disabled border color for input groups of type border and fluent.
 ///
-/// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
+/// @prop {Map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
 ///
 /// @prop {Color} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
 ///
@@ -221,9 +220,7 @@ $_light-input-group: extend(
 /// @prop {Number} search-border-radius [2px] - The border radius fraction, between 0-1 to be used for search input .
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-input-group
-/// @requires {map} $_fluent-shape-input-group
-/// @requires {map} $_fluent-elevation-input-group
+/// @requires {Map} $_light-input-group
 $_fluent-input-group: extend(
     $_light-input-group,
     $_fluent-shape-input-group,
@@ -270,7 +267,7 @@ $_fluent-input-group: extend(
 /// Generates a bootstrap input-group schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-input-group
+/// @requires {Map} $_light-input-group
 $_bootstrap-input-group: extend(
     $_light-input-group,
     $_bootstrap-shape-input-group,
@@ -309,3 +306,60 @@ $_bootstrap-input-group: extend(
     )
 );
 
+/// Generates an indigo input-group schema.
+/// @type {Map}
+/// @prop {Map} border-color [igx-color: ('grays', 400)] - The border color for input groups of type border and fluent.
+/// @prop {Map} box-background [igx-color: ('grays', 100)] - The background color of an input group of type box.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 300)] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} disabled-bottom-line-color [igx-color: ('grays', 300)] - The bottom line and border colors in the disabled state.
+/// @prop {Map} disabled-text-color [igx-color: ('grays', 300)] - The input text color in the disabled state.
+/// @prop {Map} focused-border-color [igx-color: ('primary', 400)] - The focused input border color for input groups of type border and fluent.
+/// @prop {Map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
+/// @prop {Map} hover-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the hover state.
+/// @prop {Map} idle-text-color [igx-color: ('grays', 500)] - The input text color in the idle state.
+/// @requires {function} extend
+/// @requires {Map} $_light-input-group
+$_indigo-input-group: extend(
+    $_light-input-group,
+    $_indigo-shape-input-group,
+    $_indigo-elevation-input-group,
+    (
+        variant: 'indigo-design',
+
+        border-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        hover-border-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        focused-border-color: (
+            igx-color: ('primary', 400)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        hover-bottom-line-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        disabled-bottom-line-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        box-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        idle-text-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-text-color: (
+            igx-color: ('grays', 300)
+        )
+    )
+);

@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
 ////
 
 /// Generates a dark base geo map schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-geo-map
 /// @see $_light-geo-map
 $_dark-geo-map: extend($_light-geo-map);
@@ -25,4 +26,11 @@ $_dark-fluent-geo-map: extend($_fluent-geo-map);
 /// @requires $_bootstrap-geo-map
 /// @see $_bootstrap-geo-map
 $_dark-bootstrap-geo-map: extend($_bootstrap-geo-map);
+
+/// Generates a dark indigo geo map schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-geo-map
+/// @see $_indigo-geo-map
+$_dark-indigo-geo-map: extend($_indigo-geo-map);
 

@@ -2,13 +2,15 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a dark action-strip schema.
 /// @type {Map}
 /// @property {Map} actions-background [igx-color: ('grays', 200), hexrgba: #000, rgba: .8]- actions container background.
+/// @requires {function} extend
+/// @requires $_light-action-strip
 /// @see $default-palette
 $_dark-action-strip: extend(
     $_light-action-strip,
@@ -35,3 +37,8 @@ $_dark-fluent-action-strip: extend($_fluent-action-strip);
 /// @requires $_bootstrap-action-strip
 $_dark-bootstrap-action-strip: extend($_bootstrap-action-strip);
 
+/// Generates a dark indigo action strip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-action-strip
+$_dark-indigo-action-strip: extend($_indigo-action-strip);

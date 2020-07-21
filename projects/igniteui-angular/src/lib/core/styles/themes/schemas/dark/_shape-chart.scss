@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark shape chart schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-shape-chart
 /// @see $default-palette
 $_dark-shape-chart: extend($_light-shape-chart);
@@ -23,4 +24,10 @@ $_dark-fluent-shape-chart: extend($_fluent-shape-chart);
 /// @requires {function} extend
 /// @requires $_bootstrap-shape-chart
 $_dark-bootstrap-shape-chart: extend($_bootstrap-shape-chart);
+
+/// Generates a dark indigo shape-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-shape-chart
+$_dark-indigo-shape-chart: extend($_indigo-shape-chart);
 

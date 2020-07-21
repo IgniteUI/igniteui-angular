@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -18,8 +18,6 @@
 /// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for expansion-panel.
 ///
-/// @requires {function} extend
-/// @requires {Map} $_default-shape-expansion-panel
 /// @see $default-palette
 $_light-expansion-panel: extend(
     $_default-shape-expansion-panel,
@@ -65,3 +63,40 @@ $_fluent-expansion-panel: extend($_light-expansion-panel);
 /// @requires {Map} $_light-expansion-panel
 $_bootstrap-expansion-panel: extend($_light-expansion-panel, $_bootstrap-shape-expansion-panel);
 
+// Generates an indigo expansion panel schema.
+/// @type {Map}
+/// @prop {Map} header-focus-background [igx-color: ('primary', 500), rgba: .15] - The panel header focus background color.
+/// @prop {Map} header-title-color [igx-color: ('grays', 900)] - The panel header title text color.
+/// @prop {Map} header-description-color [igx-color: ('grays', 700)] - The panel header description text color.
+/// @prop {Map} header-icon-color [igx-color: ('grays', 600)] - The panel header icon color.
+/// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The panel disabled text color.
+/// @prop {Number} border-radius [3px] - The border radius used for expansion-panel.
+///
+/// @requires {function} extend
+/// @requires {Map} $_light-expansion-panel
+$_indigo-expansion-panel: extend(
+    $_light-expansion-panel,
+    $_indigo-shape-expansion-panel,
+    (
+        header-title-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        header-description-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        header-icon-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        header-focus-background: (
+            igx-color: ('primary', 500),
+            rgba: .15
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 400)
+        )
+    )
+);

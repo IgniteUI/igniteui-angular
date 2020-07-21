@@ -1,4 +1,8 @@
 @import '../index';
 
+:root {
+    @include igx-palette-vars($light-fluent-excel-palette, $contrast: true);
+}
+
 @include igx-core($direction: rtl);
-@include igx-fluent-theme($fluent-excel-palette);
+@include igx-fluent-light-theme($light-fluent-excel-palette);

@@ -13,6 +13,7 @@
 @mixin _excel-filtering($theme, $palette) {
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
+    $variant: map-get($theme, 'variant');
 
     %grid-excel-filter {
         display: block;
@@ -70,7 +71,11 @@
             $item-selected-background: igx-color($palette, 'grays', 100),
             $item-text-color: igx-color($palette, 'grays', 700),
             $item-hover-text-color: igx-color($palette, 'grays', 800),
-            $item-selected-text-color: igx-color($palette, 'secondary', 500),
+            $item-selected-text-color: if(
+                $variant == 'indigo-design',
+                igx-contrast-color($palette, 'surface'),
+                igx-color($palette, 'secondary', 500)
+            ),
             $item-border-color: transparent,
             $item-selected-border-color: transparent
         ));
@@ -147,7 +152,11 @@
 
     %grid-excel-actions--selected {
         igx-icon {
-            color: igx-color($palette, 'secondary');
+            color: if(
+                $variant == 'indigo-design',
+                igx-color($palette, 'primary', 200),
+                igx-color($palette, 'secondary')
+            );
         }
     }
 

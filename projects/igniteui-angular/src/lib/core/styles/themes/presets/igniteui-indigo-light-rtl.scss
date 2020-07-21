@@ -1,0 +1,8 @@
+@import '../index';
+
+:root {
+    @include igx-palette-vars($light-indigo-palette, $contrast: true);
+}
+
+@include igx-core($direction: rtl);
+@include igx-indigo-light-theme($light-indigo-palette);
