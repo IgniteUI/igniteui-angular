@@ -31,13 +31,13 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         { name: '@types/jszip', target: PackageTarget.DEV },
         { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
         { name: 'core-js-pure', target: PackageTarget.NONE },
+        { name: 'lodash.merge', target: PackageTarget.NONE },
         // peerDependencies
         { name: '@angular/forms', target: PackageTarget.NONE },
         { name: '@angular/common', target: PackageTarget.NONE },
         { name: '@angular/core', target: PackageTarget.NONE },
         { name: '@angular/animations', target: PackageTarget.NONE },
         { name: 'web-animations-js', target: PackageTarget.REGULAR },
-        { name: 'lodash.merge', target: PackageTarget.NONE },
         // igxDevDependencies
         { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];

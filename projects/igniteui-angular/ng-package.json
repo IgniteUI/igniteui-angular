@@ -12,6 +12,7 @@
       "hammerjs",
       "jszip",
       "resize-observer-polyfill",
-      "igniteui-trial-watermark"
+      "igniteui-trial-watermark",
+      "lodash.merge"
     ]
 }
