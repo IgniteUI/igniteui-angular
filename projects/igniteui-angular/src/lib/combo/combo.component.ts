@@ -89,6 +89,12 @@ export enum IgxComboState {
     INVALID = IgxInputState.INVALID
 }
 
+/** The filtering criteria to be applied on data search */
+export interface IComboFilteringOptions {
+    /** Defines filtering case-sensitivity */
+    caseSensitive: boolean;
+}
+
 /** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /** An array containing the values that are currently selected */
@@ -156,7 +162,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public caseSensitive = false;
+    public filteringOptions: IComboFilteringOptions = {
+        caseSensitive: false
+    };
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
