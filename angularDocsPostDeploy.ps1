@@ -64,7 +64,7 @@ if([System.IO.File]::Exists($filePath) -and [System.IO.Directory]::Exists($angul
     $folders = Get-ChildItem -Path $angularDocsRootFolder -Directory -Exclude $tagFolder,"sass","typescript" -Name | Sort-Object @{Expression = {[double]($_.Substring(0, $_.LastIndexOf('.'))) }};
     $textToUpdate = "";
     foreach($item in $folders) {
-        $textToUpdate += '"' + $item.Name + '"'; 
+        $textToUpdate += '"' + $item + '"'; 
     }
     $textToUpdate = "[" +  $textToUpdate.Replace("`"`"","`"`,`"") + "]" ;
     Write-Host $textToUpdate;
