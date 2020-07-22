@@ -68,7 +68,7 @@ The following example shows how you can use the Indigo theme:
     - `viewDate` day value is always 1.
     - `activeView` setter is now available as an input property.
 - `IgxCombo`
-    - Added `showCaseIcon` to display a case sensitive search icon in the search input. Icon click allows the user to easily toggle the search case sensitivity.
+    - Added `showSearchCaseIcon` to display a case sensitive search icon in the search input. Icon click allows the user to easily toggle the search case sensitivity.
 
 ## 10.0.0
 
