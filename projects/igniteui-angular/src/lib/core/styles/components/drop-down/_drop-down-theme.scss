@@ -276,11 +276,6 @@
         @include ellipsis();
     }
 
-    %igx-drop-down__content-center {
-        display: flex;
-        align-items: center;
-    }
-
     %igx-drop-down__item--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($item-padding, 'cosy');
