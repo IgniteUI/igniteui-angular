@@ -11,7 +11,10 @@ import {
     IgxHasVisibleColumnsPipe,
     IgxDatePipeComponent,
     IgxDecimalPipeComponent,
-    IgxGridRowPinningPipe
+    IgxGridRowPinningPipe,
+    IgxGridDataMapperPipe,
+    IgxStringReplacePipe,
+    IgxGridTransactionStatePipe
 } from './pipes';
 
 @NgModule({
@@ -26,7 +29,10 @@ import {
         IgxGridCellStyleClassesPipe,
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
-        IgxGridRowPinningPipe
+        IgxGridRowPinningPipe,
+        IgxGridDataMapperPipe,
+        IgxStringReplacePipe,
+        IgxGridTransactionStatePipe
     ],
     exports: [
         IgxDatePipeComponent,
@@ -39,7 +45,10 @@ import {
         IgxGridCellStyleClassesPipe,
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe,
-        IgxGridRowPinningPipe
+        IgxGridRowPinningPipe,
+        IgxGridDataMapperPipe,
+        IgxStringReplacePipe,
+        IgxGridTransactionStatePipe
     ],
     imports: [
         CommonModule
