@@ -48,9 +48,10 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     _clearAllHighlights() {
         [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
             grid.selectionService.clear();
-            if (grid.navigation.activeNode) {
-                grid.navigation.activeNode.row = null;
+            if (grid !== this.grid && grid.navigation.activeNode) {
+                grid.navigation.clearActivation();
             }
+
             grid.selectionService.activeElement = null;
             grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
             grid.highlightedRowID = null;
@@ -72,7 +73,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             currentElement.classList.add('igx-grid__tr--highlighted');
         }
 
-        this.grid.navigation.activeNode = this.selectionNode;
+        this.grid.navigation.setActiveNode(this.selectionNode, 'dataCell');
         // add highligh to the current grid
         while (this._rootGrid.id !== parentGrid.id) {
             childGrid = parentGrid;
