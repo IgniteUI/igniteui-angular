@@ -23,7 +23,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
     public transform(flatData: ITreeGridRecord[],
         hasSummary: boolean,
         summaryCalculationMode: GridSummaryCalculationMode,
-        summaryPosition: GridSummaryPosition,
+        summaryPosition: GridSummaryPosition, showSummaryOnCollapse: boolean,
         id: string, pipeTrigger: number, summaryPipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
@@ -31,10 +31,11 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
             return flatData;
         }
 
-        return this.addSummaryRows(grid, flatData, summaryPosition);
+        return this.addSummaryRows(grid, flatData, summaryPosition, showSummaryOnCollapse);
     }
 
-    private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[], summaryPosition: GridSummaryPosition): any[] {
+    private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[],
+        summaryPosition: GridSummaryPosition, showSummaryOnCollapse: boolean): any[] {
         const recordsWithSummary = [];
         const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
 
@@ -42,8 +43,19 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
             const record = collection[i];
             recordsWithSummary.push(record);
 
+            const isCollapsed = !record.expanded && record.children && record.children.length > 0 && showSummaryOnCollapse;
+            if (isCollapsed) {
+                let childData = record.children.filter(r => !r.isFilteredOutParent).map(r => r.data);
+                childData = this.removeDeletedRecord(grid, record.rowID, childData);
+                const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
+                const summaryRecord: ISummaryRecord = {
+                    summaries: summaries,
+                    max: maxSummaryHeight,
+                    cellIndentation: record.level + 1
+                };
+                recordsWithSummary.push(summaryRecord);
+            }
             const isExpanded = record.children && record.children.length > 0 && record.expanded;
-
             if (summaryPosition === GridSummaryPosition.bottom && !isExpanded) {
                 let childRecord = record;
                 let parent = record.parent;

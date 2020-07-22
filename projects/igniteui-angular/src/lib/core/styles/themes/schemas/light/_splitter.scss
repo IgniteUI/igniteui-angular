@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
@@ -18,7 +18,7 @@
 /// @property {Number} $size [4px] - The size of the splitter, it's width for vertical and height for horizontal splitter.
 /// @see $default-palette
 $_light-splitter: extend(
-    $_default-shape-splitter,
+    $_round-shape-splitter,
     (
         bar-color: (
             igx-color: 'surface',
@@ -46,19 +46,43 @@ $_light-splitter: extend(
 /// Generates a fluent splitter schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-splitter
+/// @requires {Map} $_light-splitter
 $_fluent-splitter: extend($_light-splitter);
 
 /// Generates a bootstrap splitter schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-splitter
-/// @requires $_bootstrap-shape-splitter
+/// @requires {Map} $_light-splitter
 $_bootstrap-splitter: extend(
     $_light-splitter,
-    $_bootstrap-shape-splitter,
     (
         variant: 'bootstrap',
     )
 );
 
+/// Generates an indigo splitter schema.
+/// @type {Map}
+/// @property {Map} $bar-color [igx-color: ('grays', 300)] - The background color of the bar.
+/// @property {Color} $handle-color [#fff] - The color for the bar drag handle.
+/// @property {Color} $expander-color [#fff] - The color for the bar drag handle.
+/// @property {Map} $focus-color [igx-color: ('primary', 500)] - The color used for focused splitter bar.
+/// @requires {function} extend
+/// @requires {Map} $_light-splitter
+$_indigo-splitter: extend(
+    $_light-splitter,
+    (
+        variant: 'indigo-design',
+
+        bar-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        handle-color: #fff,
+
+        expander-color: #fff
+    )
+);

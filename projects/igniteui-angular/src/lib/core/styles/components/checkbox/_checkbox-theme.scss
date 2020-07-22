@@ -105,18 +105,21 @@
         material: $size,
         fluent: $size,
         bootstrap: $size-bs,
+        indigo-design: $size,
     ), $variant);
 
     $border-width: map-get((
         material: 2px,
         fluent: 1px,
         bootstrap: 1px,
+        indigo-design: 2px,
     ), $variant);
 
     $ripple-display: map-get((
         material: block,
         fluent: none,
         bootstrap: none,
+        indigo-design: none,
     ), $variant);
 
     $label-margin: em(8px);
@@ -125,12 +128,14 @@
         material: 3,
         fluent: 1,
         bootstrap: 2,
+        indigo-design: 3,
     ), $variant);
 
     $mark-offset: map-get((
         material: 0,
         fluent: -1px,
         bootstrap: 0,
+        indigo-design: 0,
     ), $variant);
 
     $mark-length: 24;

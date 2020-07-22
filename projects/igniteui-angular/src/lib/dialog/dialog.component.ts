@@ -73,23 +73,36 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     @Input()
     public id = `igx-dialog-${DIALOG_ID++}`;
 
+    /**
+     * Controls whether the dialog should be shown as modal. Defaults to `true`
+     * ```html
+     * <igx-dialog [isModal]="false" ></igx-dialog>
+     * ```
+     */
     @Input()
-    get isModal() {
+    public get isModal() {
         return this._isModal;
     }
 
-    set isModal(val: boolean) {
+    public set isModal(val: boolean) {
         this._overlayDefaultSettings.modal = val;
         this._isModal = val;
     }
 
-    get closeOnEscapeKey() {
-        return this._closeOnEscapeKey;
+    /**
+     * Controls whether the dialog should close when `Esc` key is pressed. Defaults to `true`
+     * ```html
+     * <igx-dialog [closeOnEscape]="false" ></igx-dialog>
+     * ```
+     */
+    @Input()
+    public get closeOnEscape() {
+        return this._closeOnEscape;
     }
 
-    set closeOnEscapeKey(val: boolean) {
-        this._overlayDefaultSettings.closeOnEsc = val;
-        this._closeOnEscapeKey = val;
+    public set closeOnEscape(val: boolean) {
+        this._overlayDefaultSettings.closeOnEscape = val;
+        this._closeOnEscape = val;
     }
 
     /**
@@ -310,7 +323,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     private _overlayDefaultSettings: OverlaySettings;
     private _closeOnOutsideSelect = false;
-    private _closeOnEscapeKey = true;
+    private _closeOnEscape = true;
     private _isModal = true;
     protected destroy$ = new Subject<boolean>();
 
@@ -414,7 +427,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
             positionStrategy: new GlobalPositionStrategy(this._positionSettings),
             scrollStrategy: new NoOpScrollStrategy(),
             modal: this.isModal,
-            closeOnEsc: this._closeOnEscapeKey,
+            closeOnEscape: this._closeOnEscape,
             closeOnOutsideClick: this.closeOnOutsideSelect
         };
     }

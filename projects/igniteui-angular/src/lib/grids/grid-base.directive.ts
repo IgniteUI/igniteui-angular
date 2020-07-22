@@ -1029,6 +1029,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Controls whether the summary row is visible when groupBy/parent row is collapsed.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [showSummaryOnCollapse]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+     * @remarks
+     * By default showSummaryOnCollapse is set to 'false' which means that the summary row is not visible
+     * when the groupBy/parent row is collapsed.
+     */
+    @Input()
+    get showSummaryOnCollapse() {
+        return this._showSummaryOnCollapse;
+    }
+
+    set showSummaryOnCollapse(value: boolean) {
+        this._showSummaryOnCollapse = value;
+        this.notifyChanges();
+    }
+
+    /**
      * Gets/Sets the filtering strategy of the grid.
      * @example
      * ```html
@@ -2647,6 +2667,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _showSummaryOnCollapse = false;
     private _cellSelectionMode = GridSelectionMode.multiple;
     private _rowSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode = GridSelectionMode.none;

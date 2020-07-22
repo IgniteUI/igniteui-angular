@@ -10,6 +10,7 @@
             [value]="displayData || ''"
             [disabled]="disabled"
             (blur)="onBlur($event)"
+            [tabindex]='editorTabIndex'
             readonly
         />
     </igx-input-group>
@@ -36,6 +37,7 @@
             (wheel)="onWheel($event)"
             (input)="onInput($event)"
             (focus)="onFocus()"
+            [tabindex]='editorTabIndex'
         />
         <igx-suffix *ngIf="!isEmpty" (click)="clear()">
             <igx-icon>clear</igx-icon>

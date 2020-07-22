@@ -9,6 +9,8 @@
     "theme": "./node_modules/igniteui-sassdoc-theme/sassdoc/",
     "autofill": ["throws", "content"],
     "groups": {
+        "global-themes": "Global Themes",
+        "component-themes": "Component Themes",
         "undefined": "general"
     },
     "no-update-notifier": false,
@@ -16,7 +18,7 @@
     "strict": false,
     "display": {
         "alias": true,
-        "access": ["public", "private"]
+        "access": ["public"]
     },
     "privatePrefix": true,
     "resolvedValue": true

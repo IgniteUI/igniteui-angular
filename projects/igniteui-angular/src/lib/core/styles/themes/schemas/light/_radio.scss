@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -10,12 +10,12 @@
 /// @type {Map}
 ///
 /// @property {Color} hover-color [transparent] - The text color used for the label text.
-/// @property {map} fill-hover-border-color [igx-color: ('secondary', 500)] - The text color used for the label text.
-/// @property {map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
-/// @property {map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
-/// @property {map} fill-color [igx-color: ('secondary', 500)] - The checked border and dot colors.
-/// @property {map} fill-color-hover [igx-color: ('secondary', 500)] - The checked border and dot colors on hover.
-/// @property {map} disabled-color [igx-color: ('grays', 400)] - The disabled border and dot colors.
+/// @property {Map} fill-hover-border-color [igx-color: ('secondary', 500)] - The text color used for the label text.
+/// @property {Map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
+/// @property {Map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
+/// @property {Map} fill-color [igx-color: ('secondary', 500)] - The checked border and dot colors.
+/// @property {Map} fill-color-hover [igx-color: ('secondary', 500)] - The checked border and dot colors on hover.
+/// @property {Map} disabled-color [igx-color: ('grays', 400)] - The disabled border and dot colors.
 /// @see $default-palette
 $_light-radio: extend(
     $_default-shape-radio,
@@ -54,43 +54,49 @@ $_light-radio: extend(
 /// Generates a fluent radio schema.
 /// @type {Map}
 ///
-/// @property {map} hover-color [igx-color: ('grays', 800)] - The text color used for the label text.
-/// @property {map} fill-hover-border-color [igx-color: ('secondary', 600)] - The checked dot border color on hover.
-/// @property {map} empty-color [igx-color: ('grays', 800)] - The unchecked border color.
-/// @property {map} fill-color [igx-color: ('secondary', 300)] - The checked border and dot colors.
-/// @property {map} fill-color-hover [igx-color: ('secondary',3500)] - The checked border and dot colors on hover.
+/// @property {Map} hover-color [igx-color: ('grays', 800)] - The text color used for the label text.
+/// @property {Map} fill-hover-border-color [igx-color: ('secondary', 600)] - The checked dot border color on hover.
+/// @property {Map} empty-color [igx-color: ('grays', 800)] - The unchecked border color.
+/// @property {Map} fill-color [igx-color: ('secondary', 300)] - The checked border and dot colors.
+/// @property {Map} fill-color-hover [igx-color: ('secondary',3500)] - The checked border and dot colors on hover.
+///
+/// @requires {function} extend
+/// @requires {Map} $_light-radio
+$_fluent-radio: extend(
+    $_light-radio,
+    (
+        variant: 'fluent',
 
-$_fluent-radio: extend($_light-radio,(
-    variant: 'fluent',
+        hover-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    hover-color: (
-        igx-color: ('grays', 800)
-    ),
+        fill-hover-border-color: (
+            igx-color: ('secondary', 600)
+        ),
 
-    fill-hover-border-color: (
-        igx-color: ('secondary', 600)
-    ),
+        empty-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    empty-color: (
-        igx-color: ('grays', 800)
-    ),
+        fill-color: (
+            igx-color: ('secondary', 300)
+        ),
 
-    fill-color: (
-        igx-color: ('secondary', 300)
-    ),
-
-    fill-color-hover: (
-        igx-color: ('secondary', 300)
-    ),
-));
+        fill-color-hover: (
+            igx-color: ('secondary', 300)
+        ),
+    )
+);
 
 /// Generates a bootstrap radio schema.
 /// @type {Map}
-/// @property {map} fill-hover-border-color [igx-color: ('primary', 500)] - The checked dot border color on hover.
-/// @property {map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
-/// @property {map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
+/// @property {Map} fill-hover-border-color [igx-color: ('primary', 500)] - The checked dot border color on hover.
+/// @property {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @property {Map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
 /// @property {Color} fill-color-hover [#fff] - The checked border and dot colors on hover.
-
+/// @requires {function} extend
+/// @requires {Map} $_light-radio
 $_bootstrap-radio: extend(
     $_light-radio,
     (
@@ -107,6 +113,48 @@ $_bootstrap-radio: extend(
         ),
 
         fill-color-hover: #fff,
+    )
+);
+
+/// Generates an indigo radio schema.
+/// @type {Map}
+///
+/// @property {Map} fill-hover-border-color [igx-color: ('primary', 500)] - The text color used for the label text.
+/// @property {Map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
+/// @property {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @property {Map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
+/// @property {Map} fill-color-hover [igx-color: ('primary', 500)] - The checked border and dot colors on hover.
+/// @property {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and dot colors.
+/// @requires {function} extend
+/// @requires {Map} $_light-radio
+$_indigo-radio: extend(
+    $_light-radio,
+    (
+        variant: 'indigo-design',
+
+        fill-hover-border-color:(
+            igx-color: ('primary', 500)
+        ),
+
+        label-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        empty-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        fill-color-hover: (
+            igx-color: ('primary', 500)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 300)
+        )
     )
 );
 
