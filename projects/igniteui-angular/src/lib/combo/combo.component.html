@@ -39,7 +39,7 @@
             [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
             (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
-        <igx-suffix *ngIf="showCaseIcon">
+        <igx-suffix *ngIf="showSearchCaseIcon">
             <igx-icon fontSet="case-sensitive" name="case-sensitive" [isActive]="filteringOptions.caseSensitive"
                 (click)="filteringOptions.caseSensitive=!filteringOptions.caseSensitive">
             </igx-icon>

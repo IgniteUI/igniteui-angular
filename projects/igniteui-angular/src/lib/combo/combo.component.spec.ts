@@ -893,7 +893,7 @@ describe('igxCombo', () => {
             expect(footerHTMLElement.textContent).toEqual('This is a footer');
         });
         it('should render case-sensitive icon properly', () => {
-            combo.showCaseIcon = true;
+            combo.showSearchCaseIcon = true;
             fixture.detectChanges();
             combo.toggle();
             fixture.detectChanges();
@@ -903,7 +903,7 @@ describe('igxCombo', () => {
 
             combo.toggle();
             fixture.detectChanges();
-            combo.showCaseIcon = false;
+            combo.showSearchCaseIcon = false;
             fixture.detectChanges();
             combo.toggle();
             fixture.detectChanges();
@@ -2418,7 +2418,7 @@ describe('igxCombo', () => {
             expect(combo.isAddButtonVisible()).toEqual(true);
         });
         it('should be able to toggle search case sensitivity', () => {
-            combo.showCaseIcon = true;
+            combo.showSearchCaseIcon = true;
             fixture.detectChanges();
             combo.toggle();
             fixture.detectChanges();

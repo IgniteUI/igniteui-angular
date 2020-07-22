@@ -724,17 +724,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *
      * ```typescript
      * // get
-     * let myComboShowCaseIcon = this.combo.showCaseIcon;
+     * let myComboShowSearchCaseIcon = this.combo.showSearchCaseIcon;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-combo [showCaseIcon]='false'></igx-combo>
+     * <igx-combo [showSearchCaseIcon]='true'></igx-combo>
      * ```
      */
 
     @Input()
-    public showCaseIcon = false;
+    public showSearchCaseIcon = false;
 
 
     /**

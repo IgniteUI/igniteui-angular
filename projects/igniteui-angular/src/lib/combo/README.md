@@ -127,10 +127,10 @@ By default filtering in the combo is enabled. However you can disable it using t
 <igx-combo [filterable]="false"></igx-combo>
 ```
 
-You can enable search case sensitivity by setting the `showCaseIcon` property to true
+You can enable search case sensitivity by setting the `showSearchCaseIcon` property to true
 
 ```html
-<igx-combo [showCaseIcon]="true"></igx-combo>
+<igx-combo [showSearchCaseIcon]="true"></igx-combo>
 ```
 
 <div class="divider--half"></div>
@@ -302,7 +302,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 |  `data`                  | combo data source                                 | any                         |
 |  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
 |  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
-|  `showCaseIcon`          | defines whether the search case-sensitive icon should be displayed - disabled by default| boolean                     |
+|  `showSearchCaseIcon`          | defines whether the search case-sensitive icon should be displayed - disabled by default| boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
 |  `displayKey`            | combo display data source property                | string                      |
 |  `groupKey`              | combo item group                                  | string                      |
