@@ -437,8 +437,9 @@
     $time: map-get((
         material: 1ms,
         fluent: 1ms,
-        bootstrap:.15s
-    ),$variant);
+        bootstrap:.15s,
+        indigo-design: .15s
+    ), $variant);
 
     $button-transition: color $time ease-in-out,
         background-color $time ease-in-out,
@@ -473,12 +474,11 @@
         compact: rem(4px, 16px) rem(8px, 16px)
     );
 
-    $variant: map-get($theme, variant);
-
     $button-padding: map-get((
         material: $button-padding-material,
         fluent: $button-padding-fluent,
         bootstrap: $button-padding-bootstrap,
+        indigo-design: $button-padding-bootstrap,
     ), $variant);
 
     $button--size-material: (
@@ -499,10 +499,17 @@
         compact: rem(31px)
     );
 
+    $button--size-indigo: (
+        comfortable: rem(36px),
+        cosy: rem(32px),
+        compact: rem(24px)
+    );
+
     $button-size: map-get((
         material: $button--size-material,
         fluent: $button--size-fluent,
         bootstrap: $button--size-bootstrap,
+        indigo-design: $button--size-indigo,
     ), $variant);
 
 
@@ -523,49 +530,57 @@
     $raised-shadow: map-get((
         material: --var($theme, 'raised-resting-shadow'),
         fluent: --var($theme, 'raised-resting-shadow'),
-        bootstrap: none
+        bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $raised-shadow--focus: map-get((
         material: --var($theme, 'raised-focus-shadow'),
         fluent: --var($theme, 'raised-focus-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
     ), $variant);
 
     $raised-shadow--hover: map-get((
         material: --var($theme, 'raised-hover-shadow'),
         fluent: --var($theme, 'raised-hover-shadow'),
-        bootstrap: none
+        bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $outlined-shadow: map-get((
         material: null,
         fluent: null,
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color')
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color')
     ), $variant);
 
     $fab-shadow: map-get((
         material: --var($theme, 'fab-resting-shadow'),
         fluent: --var($theme, 'fab-resting-shadow'),
-        bootstrap: none
+        bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $fab-shadow--hover: map-get((
         material: --var($theme, 'fab-hover-shadow'),
         fluent: --var($theme, 'fab-hover-shadow'),
-        bootstrap: none
+        bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $fab-shadow--focus: map-get((
         material: --var($theme, 'fab-focus-shadow'),
         fluent: --var($theme, 'fab-focus-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
     ), $variant);
 
     $icon-shadow: map-get((
         material: --var($theme, 'raised-focus-shadow'),
         fluent: --var($theme, 'raised-focus-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color')
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color')
     ), $variant);
 
     %igx-button-display {
@@ -633,11 +648,20 @@
     }
 
     %igx-button--outlined {
-        border: $button-border;
-        border-color: --var($theme, 'outlined-outline-color');
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
         border-radius: --var($theme, 'outlined-border-radius');
+
+        @if $variant != 'indigo-design' {
+            border: $button-border;
+            border-color: --var($theme, 'outlined-outline-color');
+        } @else {
+            border: {
+                width: 2px;
+                style: solid;
+                color: --var($theme, 'outlined-outline-color');
+            }
+        }
 
         %igx-icon-display {
             color: --var($theme, 'outlined-icon-color')

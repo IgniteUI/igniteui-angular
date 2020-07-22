@@ -1,6 +1,9 @@
-/// Default theme palette.
-/// Will be the one used if no theme palette is specified.
+////
 /// @group palettes
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Default theme palette.
 /// @type Map
 /// @prop {Map} primary - The primary sub-palette created from the primary color.
 /// @prop {Map} secondary - The secondary sub-palette created from the secondary color.
@@ -44,30 +47,67 @@
 /// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
 /// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
 /// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @requires igx-palette
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
-/// Default dark palette
-/// @type {Map}
-/// @group palettes
+/// @access private
 $default-dark-palette: igx-palette(
     $primary: igx-color($default-palette, 'primary'),
     $secondary: igx-color($default-palette, 'secondary'),
     $grays: #fff,
-    $surface: #222
+    $surface: #222,
 ) !default;
 
-/// Green palette
-/// @type {Map}
+/// Same as $default-palette.
+/// @type Map
+/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
 /// @group palettes
+/// @alias default-palette
+/// @see $default-palette
+$light-palette: $default-palette;
+
+/// Same as $light-palette but with modified grays and surface colors.
+/// @type Map
+/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#e41c77] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-palette: $default-dark-palette;
+
+/// An alias of $light-palette
+/// @group palettes
+/// @alias light-palette
+/// @see $light-palette
+$light-material-palette: $light-palette;
+
+/// An alias of $dark-palette
+/// @group palettes
+/// @alias dark-palette
+/// @see $dark-palette
+$dark-material-palette: $default-dark-palette;
+
+/// @access private
 $green-palette: igx-palette(
     $primary: #09f,
     $secondary: #72da67
 ) !default;
 
-/// Dark green palette,
-/// @type {Map}
-/// @group palettes
+/// @access private
 $green-dark-palette: igx-palette(
     $primary: igx-color($green-palette, 'primary'),
     $secondary: igx-color($green-palette, 'secondary'),
@@ -75,17 +115,41 @@ $green-dark-palette: igx-palette(
     $grays: #fff
 ) !default;
 
-/// Purple palette
-/// @type {Map}
+/// Light green palette
+/// @type Map
+/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#72da67] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
 /// @group palettes
+$light-green-palette: $green-palette;
+
+/// Dark green palette
+/// @type Map
+/// @prop {Color} primary [#09f] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#72da67] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-green-palette: $green-dark-palette;
+
+/// @access private
 $purple-palette: igx-palette(
     $primary: #00b4d6,
     $secondary: #514590
 ) !default;
 
-/// Dark purple palette
-/// @type {Map}
-/// @group palettes
+/// @access private
 $purple-dark-palette: igx-palette(
     $primary: igx-color($purple-palette, 'primary'),
     $secondary: igx-color($purple-palette, 'secondary'),
@@ -93,20 +157,45 @@ $purple-dark-palette: igx-palette(
     $grays: #fff
 ) !default;
 
-/// Fluent Excel palette
-/// @type {Map}
+/// Light purple palette
+/// @type Map
+/// @prop {Color} primary [#00b4d6] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#514590] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
 /// @group palettes
+$light-purple-palette: $purple-palette;
+
+/// Dark purple palette
+/// @type Map
+/// @prop {Color} primary [#00b4d6] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#514590] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#333] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#4eb862] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#fbb13c] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#ff134a] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-purple-palette: $purple-dark-palette;
+
+/// @access private
 $fluent-excel-palette: igx-palette(
     $primary: #217346,
     $secondary: #217346,
     $success: #107c10,
     $warn: #797673,
-    $error: #a80000
+    $error: #a80000,
+    $variant: 'fluent'
 ) !default;
 
-/// Fluent Excel dark palette
-/// @type {Map}
-/// @group palettes
+/// @access private
 $fluent-excel-dark-palette: igx-palette(
     $primary: igx-color($fluent-excel-palette, 'primary'),
     $secondary: igx-color($fluent-excel-palette, 'secondary'),
@@ -114,23 +203,49 @@ $fluent-excel-dark-palette: igx-palette(
     $warn: igx-color($fluent-excel-palette, 'warn'),
     $error: igx-color($fluent-excel-palette, 'error'),
     $surface: #222,
-    $grays: #fff
+    $grays: #fff,
+    $variant: 'fluent'
 ) !default;
 
-/// Fluent Word palette
-/// @type {Map}
+/// Light Fluent Excel palette
+/// @type Map
+/// @prop {Color} primary [#217346] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#217346] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
 /// @group palettes
+$light-fluent-excel-palette: $fluent-excel-palette;
+
+/// Dark Fluent Excel palette
+/// @type Map
+/// @prop {Color} primary [#217346] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#217346] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-fluent-excel-palette: $fluent-excel-dark-palette;
+
+/// @access private
 $fluent-word-palette: igx-palette(
     $primary: #2b579a,
     $secondary: #2b579a,
     $success: #107c10,
     $warn: #797673,
     $error: #a80000,
+    $variant: 'fluent'
 ) !default;
 
-/// Fluent Word dark palette
-/// @type {Map}
-/// @group palettes
+/// @access private
 $fluent-word-dark-palette: igx-palette(
     $primary: igx-color($fluent-word-palette, 'primary'),
     $secondary: igx-color($fluent-word-palette, 'secondary'),
@@ -138,12 +253,39 @@ $fluent-word-dark-palette: igx-palette(
     $warn: igx-color($fluent-word-palette, 'warn'),
     $error: igx-color($fluent-word-palette, 'error'),
     $surface: #222,
-    $grays: #fff
+    $grays: #fff,
+    $variant: 'fluent'
 ) !default;
 
-/// Bootstrap palette
-/// @type {Map}
+/// Light Fluent Word palette
+/// @type Map
+/// @prop {Color} primary [#2b579a] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#2b579a] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
 /// @group palettes
+$light-fluent-word-palette: $fluent-word-palette;
+
+/// Dark Fluent Word palette
+/// @type Map
+/// @prop {Color} primary [#2b579a] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#2b579a] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#222] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#1377d5] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#107c10] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#797673] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#a80000] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-fluent-word-palette: $fluent-word-dark-palette;
+
+/// @access private
 $bootstrap-palette: igx-palette(
     $primary: #007bff,
     $secondary: #6c757d,
@@ -151,12 +293,11 @@ $bootstrap-palette: igx-palette(
     $success: #28a745,
     $warn: #ffc107,
     $error: #dc3545,
-    $surface: #f8f9fa
+    $surface: #f8f9fa,
+    $variant: 'bootstrap'
 ) !default;
 
-/// Bootstrap dark palette
-/// @type {Map}
-/// @group palettes
+/// @access private
 $bootstrap-dark-palette: igx-palette(
     $primary: igx-color($bootstrap-palette, 'primary'),
     $secondary: igx-color($bootstrap-palette, 'secondary'),
@@ -165,28 +306,90 @@ $bootstrap-dark-palette: igx-palette(
     $warn: igx-color($bootstrap-palette, 'warn'),
     $error: igx-color($bootstrap-palette, 'error'),
     $surface: #333,
-    $grays: #fff
+    $grays: #fff,
+    $variant: 'bootstrap'
 ) !default;
 
-/// Global Overlay Color
+/// Light bootstrap palette
+/// @type Map
+/// @prop {Color} primary [#007bff] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#6c757d] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#000] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#f8f9fa] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#17a2b8] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#28a745] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#ffc107] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#dc3456] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$light-bootstrap-palette: $bootstrap-palette;
+
+/// Dark bootstrap palette
+/// @type Map
+/// @prop {Color} primary [#007bff] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#6c757d] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#333] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#17a2b8] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#28a745] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#ffc107] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#dc3456] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-bootstrap-palette: $bootstrap-dark-palette;
+
+/// Light Indigo palette
+/// @type Map
+/// @prop {Color} primary [#3f51b5] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#3f51b5] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#060716] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#9208bc] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#689f38] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#ff9800] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#cf1a2b] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$light-indigo-palette: igx-palette(
+    $primary: #3f51b5,
+    $secondary: #3f51b5,
+    $grays: #060716,
+    $surface: #fff,
+    $info: #9208bc,
+    $success: #689f38,
+    $warn: #ff9800,
+    $error: #cf1a2b,
+    $variant: 'indigo-design'
+) !default;
+
+/// Dark Indigo palette
+/// @type Map
+/// @prop {Color} primary [#3f51b5] - The 500 variant of the `primary` color (default).
+/// @prop {Color} secondary [#3f51b5] - The 500 variant of the `secondary` color (default).
+/// @prop {Color} grays [#fff] - The base color for  the `grays` shades.
+/// @prop {Color} surface [#2a2b2f] - The color used as a background in components, such as cards, sheets, and menus.
+/// @prop {Color} info [#9208bc] - The `info` color. Default for every palette if not specified.
+/// @prop {Color} success [#689f38] - The `success` color. Default for every palette if not specified.
+/// @prop {Color} warn [#ff9800] - The `warn` color. Default for every palette if not specified.
+/// @prop {Color} error [#cf1a2b] - The `error`. Default for every palette if not specified.
+/// @access public
+/// @group palettes
+$dark-indigo-palette: igx-palette(
+    $primary: igx-color($light-indigo-palette, 'primary'),
+    $secondary: igx-color($light-indigo-palette, 'secondary'),
+    $info: igx-color($light-indigo-palette, 'info'),
+    $success: igx-color($light-indigo-palette, 'success'),
+    $warn: igx-color($light-indigo-palette, 'warn'),
+    $error: igx-color($light-indigo-palette, 'error'),
+    $surface: #2a2b2f,
+    $grays: #fff,
+    $variant: 'indigo-design'
+) !default;
+
+/// Global Overlay Color.
+/// Assigned to the 500 variant of the grays color form the current $default-palette.
 /// @group palettes
 /// @type Color
-/// @prop {Map} $palette [$default-palette] - The palette used to extract the color from.
-/// @prop {String} $color [grays] - The name of the sub-palette to take the color from.
 /// @requires igx-color
 $overlay-color: igx-color($default-palette, 'grays') !default;
-
-/// Default elevations. Work in progress.
-/// Subject to change.
-/// @group elevations
-/// @type Map
-/// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
-/// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
-/// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
-/// @requires igx-elevations
-$elevations: igx-elevations(
-    rgba(0, 0, 0, .26),
-    rgba(0, 0, 0, .12),
-    rgba(0, 0, 0, .08)
-) !default;
 

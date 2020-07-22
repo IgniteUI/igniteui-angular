@@ -1,14 +1,14 @@
 @import '../light/checkbox';
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark checkbox schema.
 /// @type {Map}
 /// @prop {Color} tick-color [#222] - The checked mark color.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_light-checkbox
 /// @see $default-palette
 $_dark-checkbox: extend($_light-checkbox, (
@@ -18,7 +18,7 @@ $_dark-checkbox: extend($_light-checkbox, (
 /// Generates a dark fluent checkbox schema.
 /// @type {Map}
 /// @prop {Color} tick-color [#fff] - The checked mark color.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_fluent-checkbox
 $_dark-fluent-checkbox: extend($_fluent-checkbox, (
     tick-color: #fff
@@ -27,6 +27,30 @@ $_dark-fluent-checkbox: extend($_fluent-checkbox, (
 /// Generates a dark bootstrap checkbox schema.
 /// @type {Map}
 /// @prop {Color} tick-color [#fff] - The checked mark color.
-/// @requires extend
+/// @requires {function} extend
 /// @requires $_bootstrap-checkbox
 $_dark-bootstrap-checkbox: extend($_bootstrap-checkbox);
+
+/// Generates a dark indigo checkbox schema.
+/// @type {Map}
+/// @prop {Color} fill-color [#fff] - The checked border and fill colors.
+/// @prop {Color} empty-color [igx-color: ('grays', 700)] - The unchecked border color.
+/// @prop {Color} disabled-color [igx-color: ('grays', 400)] - The disabled border and fill colors.
+/// @prop {Color} disabled-color-label [igx-color: ('grays', 400)] - The disabled label color.
+/// @requires {function} extend
+/// @requires $_indigo-checkbox
+$_dark-indigo-checkbox: extend($_indigo-checkbox, (
+    fill-color: #fff,
+
+    empty-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 400),
+    ),
+
+    disabled-color-label: (
+        igx-color: ('grays', 400),
+    )
+));

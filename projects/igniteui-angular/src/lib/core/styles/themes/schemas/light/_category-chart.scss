@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
@@ -222,11 +222,18 @@ $_light-category-chart: extend(
 /// Generates a fluent category-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-category-chart
+/// @requires {Map} $_light-category-chart
 $_fluent-category-chart: extend($_light-category-chart);
 
 /// Generates a bootstrap category-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-category-chart
+/// @requires {Map} $_light-category-chart
 $_bootstrap-category-chart: extend($_light-category-chart);
+
+/// Generates an indigo category-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-category-chart
+$_indigo-category-chart: extend($_light-category-chart);
+

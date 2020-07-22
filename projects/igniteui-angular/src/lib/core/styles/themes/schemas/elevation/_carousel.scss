@@ -14,7 +14,13 @@ $_fluent-elevation-carousel: (
     button-elevation: 0,
 );
 
+/// @type Map
 $_bootstrap-elevation-carousel: (
+    button-elevation: 0,
+);
+
+/// @type Map
+$_indigo-elevation-carousel: (
     button-elevation: 0,
 );
 
