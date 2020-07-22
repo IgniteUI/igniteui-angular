@@ -703,8 +703,6 @@
         indigo-design: 600,
     ), $variant);
 
-    $mobile-view: rem(432px);
-
     %grid-display {
         position: relative;
         display: grid;
