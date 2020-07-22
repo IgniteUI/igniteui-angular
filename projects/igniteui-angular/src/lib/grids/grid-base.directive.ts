@@ -1806,13 +1806,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    // public get outletDirective() {
-    //     return this._outletDirective;
-    // }
-
-    /**
-     * @hidden @internal
-     */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
@@ -3342,10 +3335,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets the outlet.
+     * Gets the outlet used to attach the grid's overlays to.
      * @remark
-     * If any, returns the outlet defined outside the grid. Otherwise returns the grid's outlet directive.
-     * @hidden @internal
+     * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
     get outlet() {
         return this.resolveOutlet();
@@ -3356,8 +3348,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Sets the outlet from outside the grid.
-     * @hidden @internal
+     * Sets the outlet used to attach the grid's overlays to.
      */
     set outlet(val: any) {
         this._userOutletDirective = val;
