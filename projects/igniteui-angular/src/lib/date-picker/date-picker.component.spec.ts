@@ -277,6 +277,13 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
+            it('should allow setting editorTabIndex', () => {
+                fixture.componentInstance.datePicker.editorTabIndex = 3;
+                fixture.detectChanges();
+                const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                expect(input.tabIndex).toBe(3);
+            });
+
     });
 
     describe('DatePicker with passed date', () => {

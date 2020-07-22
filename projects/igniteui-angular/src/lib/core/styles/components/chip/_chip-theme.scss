@@ -257,7 +257,8 @@
     $chip-height: map-get((
         material: $chip-height-material,
         fluent: $chip-height-fluent,
-        bootstrap: $chip-height-material
+        bootstrap: $chip-height-material,
+        indigo-design: $chip-height-material
     ), $variant);
 
     $chip-padding: (
@@ -269,7 +270,8 @@
     $box-shadow: map-get((
         material: null,
         fluent: null,
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'hover-background')
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'hover-background'),
+        indigo-design: null
     ), $variant);
 
     $item-padding: 4px;
@@ -278,7 +280,8 @@
     $chip-avatar-inset: map-get((
         material: 0,
         fluent: -$item-padding,
-        bootstrap: 0
+        bootstrap: 0,
+        indigo-design: 0
     ), $variant);
 
     $chip-icon-size: (

@@ -94,18 +94,21 @@
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-background'),
+        indigo-design: null,
     ), $variant);
 
     $box-shadow-initials: map-get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'initials-background'),
+        indigo-design: null,
     ), $variant);
 
     $box-shadow-image: map-get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'image-background'),
+        indigo-design: null,
     ), $variant);
 
     %_igx-avatar-outline {

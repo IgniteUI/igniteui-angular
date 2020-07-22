@@ -2,11 +2,12 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a light base doughnut chart schema.
+/// @type {Map}
 /// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
 /// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @property {Color} others-category-fill [null] - Sets the fill color for others category.
@@ -17,7 +18,6 @@
 /// @property {Number} selected-slice-opacity [null] - Sets the opacity of the selected slice.
 /// @property {Color} selected-slice-stroke [null] - Sets the stroke color of the selected slice.
 /// @property {Number} selected-slice-stroke-thickness [null] - Sets the stroke thickness of the selected slice.
-/// @type {Map}
 /// @see $default-palette
 $_light-doughnut-chart: extend(
     (
@@ -37,13 +37,18 @@ $_light-doughnut-chart: extend(
 /// Generates a fluent doughnut-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-doughnut-chart
+/// @requires {Map} $_light-doughnut-chart
 $_fluent-doughnut-chart: extend($_light-doughnut-chart);
 
 /// Generates a bootstrap doughnut-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-doughnut-chart
+/// @requires {Map} $_light-doughnut-chart
 $_bootstrap-doughnut-chart: extend($_light-doughnut-chart);
 
+/// Generates an indigo doughnut-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-doughnut-chart
+$_indigo-doughnut-chart: extend($_light-doughnut-chart);
 

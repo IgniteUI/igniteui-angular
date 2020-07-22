@@ -9,15 +9,23 @@ $_default-shape-expansion-panel: (
     border-radius: 0,
 );
 
+/// @type Map
 $_round-shape-expansion-panel: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-expansion-panel: (
     border-radius: 0%,
 );
 
+/// @type Map
 $_bootstrap-shape-expansion-panel: (
     border-radius: 0%,
+);
+
+/// @type Map
+$_indigo-shape-expansion-panel: (
+    border-radius: 3px
 );
 

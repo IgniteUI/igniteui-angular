@@ -35,3 +35,9 @@ $_bootstrap-shape-input-group: (
     border-border-radius: .2,
     search-border-radius: .2,
 );
+
+$_indigo-shape-input-group: (
+    box-border-radius: 0%,
+    border-border-radius: 0%,
+    search-border-radius: 2px,
+);
