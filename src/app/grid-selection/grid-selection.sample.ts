@@ -93,8 +93,9 @@ export class GridSelectionComponent implements AfterViewInit {
         this.grid1.cdr.detectChanges();
     }
 
-    deleteSectedRow() {
+    deleteSelectedRow() {
         const r = this.grid1.selectedRows[0];
-        this.grid1.deleteRow(r[this.grid1.primaryKey]);
+        this.grid1.deleteRow(r);
+
     }
 }
