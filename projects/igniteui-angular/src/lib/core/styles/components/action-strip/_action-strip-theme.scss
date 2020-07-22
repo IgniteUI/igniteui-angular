@@ -77,6 +77,8 @@
         compact: 0 rem(12px)
     );
 
+    $variant: map-get($theme, variant);
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -109,14 +111,14 @@
         }
     }
 
-    %igx-action-strip--cosy{
-        padding: map-get($padding, 'cosy');
+    %igx-action-strip--cosy {
         @extend %action-icons-density;
+        padding: map-get($padding, 'cosy');
     }
 
-    %igx-action-strip--compact{
-        padding: map-get($padding, 'compact');
+    %igx-action-strip--compact {
         @extend %action-icons-density;
+        padding: map-get($padding, 'compact');
     }
 
     %igx-action-strip__editing-actions,
@@ -143,6 +145,12 @@
 
         igx-icon {
             color: --var($theme, 'color');
+        }
+
+        [igxButton='icon'] {
+            @if $variant == 'indigo-design' {
+                border-radius: --var($theme, 'actions-border-radius');
+            }
         }
     }
 

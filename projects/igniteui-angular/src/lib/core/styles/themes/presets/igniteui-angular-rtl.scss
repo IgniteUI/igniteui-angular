@@ -1,5 +1,8 @@
 @import '../index';
 
-// Generate a palette
+:root {
+    @include igx-palette-vars($light-material-palette, $contrast: true);
+}
+
 @include igx-core($direction: rtl);
-@include igx-theme($default-palette);
+@include igx-theme($light-material-palette);

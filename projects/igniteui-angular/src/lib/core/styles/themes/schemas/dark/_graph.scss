@@ -2,12 +2,13 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// Generates a dark graph schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-graph
 /// @see $default-palette
 $_dark-graph: extend($_light-graph);
@@ -23,4 +24,10 @@ $_dark-fluent-graph: extend($_fluent-graph);
 /// @requires {function} extend
 /// @requires $_bootstrap-graph
 $_dark-bootstrap-graph: extend($_bootstrap-graph);
+
+/// Generates a dark indigo graph schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-graph
+$_dark-indigo-graph: extend($_indigo-graph);
 

@@ -5,17 +5,27 @@
 ////
 
 /// @type Map
+$_flat-button-group: (
+    elevation: 0
+);
+
+/// @type Map
 $_default-elevation-button-group: (
     elevation: 2
 );
 
 /// @type Map
-$_fluent-elevation-button-group: (
-    elevation: 0
+$_fluent-elevation-button-group: extend(
+    $_flat-button-group
 );
 
 /// @type Map
-$_bootstrap-elevation-button-group: (
-    elevation: 0
+$_bootstrap-elevation-button-group: extend(
+    $_flat-button-group
+);
+
+/// @type Map
+$_indigo-elevation-button-group: extend(
+    $_flat-button-group
 );
 

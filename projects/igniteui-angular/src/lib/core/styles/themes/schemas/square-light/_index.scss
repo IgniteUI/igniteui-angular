@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access public
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -45,7 +45,8 @@
 @import '../light/toast';
 @import '../light/tooltip';
 
-/// The default light schema for all components.
+/// Used to create square Material Design themes.
+/// Use with light palettes.
 /// @type {Map}
 /// @property {Map} igx-action-strip [$_light-action-strip]
 /// @property {Map} igx-avatar [$_light-avatar]
@@ -131,3 +132,4 @@ $light-square-schema: (
     igx-toast: extend($_light-toast, $_square-shape-toast),
     igx-tooltip: extend($_light-tooltip, $_square-shape-tooltip)
 );
+

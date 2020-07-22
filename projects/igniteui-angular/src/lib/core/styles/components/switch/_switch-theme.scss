@@ -163,54 +163,63 @@
         material: 36px,
         fluent: 40px,
         bootstrap: 32px,
+        indigo-design: 34px
     ), $variant);
 
     $switch-height: map-get((
         material: 14px,
         fluent: 20px,
         bootstrap: 16px,
+        indigo-design: 16px
     ), $variant);
 
     $switch-thumb-width: map-get((
         material: 20px,
         fluent: 12px,
         bootstrap: 8px,
+        indigo-design: 8px
     ), $variant);
 
     $switch-on-offset: map-get((
         material: 1px,
         fluent: $switch-thumb-width / 2,
-        bootstrap: $switch-thumb-width / 2
+        bootstrap: $switch-thumb-width / 2,
+        indigo-design: 7px
     ), $variant);
 
     $switch-off-offset: map-get((
         material: -1px,
         fluent: $switch-thumb-width / 3,
-        bootstrap: $switch-thumb-width / 3
+        bootstrap: $switch-thumb-width / 3,
+        indigo-design: $switch-thumb-width / 3,
     ), $variant);
 
     $ripple-display: map-get((
         material: block,
         fluent: none,
         bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $thumb-resting-shadow: map-get((
         material: --var($theme, 'resting-shadow'),
         fluent: none,
-        bootstrap: none
+        bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $thumb-hover-shadow: map-get((
         material: --var($theme, 'hover-shadow'),
         fluent: none,
         bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $thumb-disabled-shadow: map-get((
         material: --var($theme, 'disabled-shadow'),
         fluent: none,
         bootstrap: none,
+        indigo-design: none
     ), $variant);
 
     $switch-thumb-height: $switch-thumb-width ;
@@ -257,6 +266,10 @@
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
+
+        @if $variant == 'indigo-design' {
+            border: 2px solid --var($theme, 'border-color');
+        }
 
         &:hover,
         &:focus {

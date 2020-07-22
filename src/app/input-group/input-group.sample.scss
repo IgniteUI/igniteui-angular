@@ -1,0 +1,33 @@
+.input-group-sample {
+    padding: 16px;
+}
+
+.input-group-sample-form {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.form__fields {
+    flex: 1;
+    margin-left: 32px;
+}
+
+.form__fields-settings {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 320px;
+    min-width: 180px;
+
+    > * {
+        margin-bottom: 16px;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
