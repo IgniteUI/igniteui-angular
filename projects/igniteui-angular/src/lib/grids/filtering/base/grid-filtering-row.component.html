@@ -121,7 +121,7 @@
     <igx-icon>navigate_next</igx-icon>
 </button>
 
-<div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
+<div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
     <button [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
         <igx-icon>refresh</igx-icon>
         {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}

@@ -2636,16 +2636,29 @@
     @include _excel-filtering($theme, $palette);
     @include _advanced-filtering($theme, $palette);
 
-
+    %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {
         display: flex;
         align-items: center;
+    }
 
-        [igxButton='icon'] {
+    %igx-grid__filtering-row-editing-buttons {
+        button {
+            igx-icon {
+                margin-#{$right}: 8px;
+            }
+        }
+    }
+
+    %igx-grid__filtering-row-editing-buttons--small {
+        button {
             &:not([disabled]) {
-                color: --var($theme, 'sorted-header-icon-color');
+                igx-icon {
+                    color: --var($theme, 'sorted-header-icon-color');
+                }
             }
         }
     }
 }
+
 
