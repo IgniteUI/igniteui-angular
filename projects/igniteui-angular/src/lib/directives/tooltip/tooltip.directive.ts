@@ -276,7 +276,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         // this.target.toBeHidden = true;
         // this.target.close();
         // this.target.toBeHidden = false;
-    }
+    // }
 
     /**
      * @hidden
