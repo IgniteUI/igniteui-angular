@@ -196,6 +196,16 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
         this._overlayDefaults.closeOnOutsideClick = false;
+        this._overlayDefaults.closeOnEscape = true;
+
+        this.target.onClosing.subscribe((event) => {
+            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            this.onTooltipHide.emit(hidingArgs);
+
+            if (hidingArgs.cancel) {
+                event.cancel = true;
+            }
+        });
     }
 
     private checkOutletAndOutsideClick() {
@@ -220,12 +230,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         if (!this.target.collapsed || this.target.toBeHidden) {
             clearTimeout(this.target.timeoutId);
 
-            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            // const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            // this.onTooltipHide.emit(hidingArgs);
 
-            if (hidingArgs.cancel) {
-                return true;
-            }
+            // if (hidingArgs.cancel) {
+            //     return true;
+            // }
 
             //  if close animation has started finish it, or close the tooltip with no animation
             this.target.forceClose(this.mergedOverlaySettings);
@@ -252,18 +262,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('document:keydown.escape', ['$event'])
-    public onKeydownEscape(event) {
-        const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipHide.emit(hidingArgs);
+    // @HostListener('keydown.escape', ['$event'])
+    // public onKeydownEscape(event) {
+    //     console.log('Escape!!');
 
-        if (hidingArgs.cancel) {
-            return;
-        }
+        // const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+        // this.onTooltipHide.emit(hidingArgs);
 
-        this.target.toBeHidden = true;
-        this.target.close();
-        this.target.toBeHidden = false;
+        // if (hidingArgs.cancel) {
+        //     return;
+        // }
+
+        // this.target.toBeHidden = true;
+        // this.target.close();
+        // this.target.toBeHidden = false;
     }
 
     /**
@@ -272,12 +284,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @HostListener('click')
     public onClick() {
         if (!this.target.collapsed) {
-            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            // const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            // this.onTooltipHide.emit(hidingArgs);
 
-            if (hidingArgs.cancel) {
-                return;
-            }
+            // if (hidingArgs.cancel) {
+            //     return;
+            // }
 
             this.target.forceClose(this.mergedOverlaySettings);
         }
@@ -317,6 +329,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      */
     @HostListener('mouseleave')
     public onMouseLeave() {
+        console.log('mouse leave!');
         if (this.tooltipDisabled) {
             return;
         }
@@ -327,18 +340,19 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipHide.emit(hidingArgs);
+        // const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+        // this.onTooltipHide.emit(hidingArgs);
 
-        if (hidingArgs.cancel) {
-            return;
-        }
-
+        // if (hidingArgs.cancel) {
+        //     return;
+        // }
         this.target.toBeHidden = true;
         this.target.timeoutId = setTimeout(() => {
             this.target.close(); // Call close() of IgxTooltipDirective
             this.target.toBeHidden = false;
         }, this.hideDelay);
+
+
     }
 
     /**
@@ -380,12 +394,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         clearTimeout(this.target.timeoutId);
 
         if (!this.target.collapsed) {
-            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            // const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            // this.onTooltipHide.emit(hidingArgs);
 
-            if (hidingArgs.cancel) {
-                return;
-            }
+            // if (hidingArgs.cancel) {
+            //     return;
+            // }
             //  if close animation has started finish it, or close the tooltip with no animation
             this.target.forceClose(this.mergedOverlaySettings);
             this.target.toBeHidden = false;
@@ -421,12 +435,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipHide.emit(hidingArgs);
+        // const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+        // this.onTooltipHide.emit(hidingArgs);
 
-        if (hidingArgs.cancel) {
-            return;
-        }
+        // if (hidingArgs.cancel) {
+        //     return;
+        // }
 
         this.target.toBeHidden = true;
         this.target.timeoutId = setTimeout(() => {
