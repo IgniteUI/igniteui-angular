@@ -450,10 +450,6 @@
         @extend %igx-grid__filtering-row--compact !optional;
     }
 
-    @include e(filtering-row-buttons) {
-        @extend %igx-grid__filtering-row-buttons !optional;
-    }
-
     @include e(filtering-row-main) {
         @extend %igx-grid__filtering-row-main !optional;
     }

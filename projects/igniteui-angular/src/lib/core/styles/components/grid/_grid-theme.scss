@@ -2289,7 +2289,7 @@
 
     @include _excel-filtering($theme, $palette);
 
-    %igx-grid__filtering-row-buttons {
+    %igx-grid__filtering-row-editing-buttons {
         display: flex;
         align-items: center;
 
