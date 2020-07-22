@@ -122,6 +122,12 @@
 </button>
 
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
-    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">{{filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</button>
-    <button #closeButton igxButton igxRipple (click)="close()">{{filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</button>
+    <button [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+        <igx-icon>refresh</igx-icon>
+        {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}
+    </button>
+    <button #closeButton [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
+        <igx-icon>close</igx-icon>
+        {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}
+    </button>
 </div>
