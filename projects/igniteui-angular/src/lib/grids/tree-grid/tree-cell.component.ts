@@ -1,20 +1,10 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
-    Inject,
-    Input,
-    NgZone
+    Input
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { GridBaseAPIService } from '../api.service';
-import { PlatformUtil } from '../../core/utils';
-import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseDirective } from '../grid/public_api';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
-import { GridType } from '../common/grid.interface';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
 
 @Component({
@@ -24,20 +14,9 @@ import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.componen
     providers: [HammerGesturesManager]
 })
 export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
-    private treeGridAPI: IgxTreeGridAPIService;
 
-    constructor(
-        selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        cdr: ChangeDetectorRef,
-        element: ElementRef,
-        protected zone: NgZone,
-        touchManager: HammerGesturesManager,
-        @Inject(DOCUMENT) public document,
-        protected platformUtil: PlatformUtil) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, document, platformUtil);
-        this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
+    private get treeGridAPI(): IgxTreeGridAPIService {
+        return this.gridAPI as IgxTreeGridAPIService;
     }
 
     /**
