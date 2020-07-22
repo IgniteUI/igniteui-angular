@@ -266,14 +266,13 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
             grid.columns[1].hidden = true;
             grid.columns[2].hidden = true;
-            const columnWidths = [100, 200, 0, undefined, null];
+            const columnWidths = [100, 200, 0, null];
             fix.detectChanges();
 
             await setColWidthAndExport(grid, options, fix, columnWidths[0]);
             await setColWidthAndExport(grid, options, fix, columnWidths[1]);
             await setColWidthAndExport(grid, options, fix, columnWidths[2]);
             await setColWidthAndExport(grid, options, fix, columnWidths[3]);
-            await setColWidthAndExport(grid, options, fix, columnWidths[4]);
         });
 
         it('should export all rows with the height specified in options.', async () => {
