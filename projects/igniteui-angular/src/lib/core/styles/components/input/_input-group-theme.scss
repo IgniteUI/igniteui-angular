@@ -1466,7 +1466,6 @@
         border: 1px solid --var($theme, 'border-color');
         font-size: map-get($bootstrap-font-size, 'comfortable');
         padding: map-get($bootstrap-padding, 'comfortable');
-        transition: box-shadow $transition-timing, color $transition-timing;
     }
 
     %bootstrap-input--focus {
