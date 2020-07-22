@@ -23,8 +23,6 @@ All notable changes for each version of this project will be documented in this 
     - Added a disabled style for time parts outside of the minimum and maximum range.
 - `igxDatePicker`
     -  Added new property - `editorTabIndex`, that allows setting tabindex for the default editor.
-- `IgxHierarchicalTransactionService`
-    - The commit method can now be called with variable number of arguments such as primaryKey and childDataKey.
 
 ### New Theme
 Ignite UI for Angular now has a new theme based on our own design system.
