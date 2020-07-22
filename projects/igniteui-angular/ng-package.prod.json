@@ -9,7 +9,6 @@
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
-      "@types/jszip",
       "core-js-pure",
       "hammerjs",
       "jszip",
