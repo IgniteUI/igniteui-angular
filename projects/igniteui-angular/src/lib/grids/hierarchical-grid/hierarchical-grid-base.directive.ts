@@ -73,7 +73,14 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
      * @hidden
      */
     get outlet() {
-        return this.rootGrid ? this.rootGrid.outletDirective : this.outletDirective;
+        return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
+    }
+
+    /**
+     * @hidden
+     */
+    set outlet(val: any) {
+        this._userOutletDirective = val;
     }
 
     /**

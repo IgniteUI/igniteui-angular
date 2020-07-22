@@ -208,7 +208,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
-    private _userOutletDirective: IgxOverlayOutletDirective;
+    protected _userOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden @internal
@@ -1806,9 +1806,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get outletDirective() {
-        return this._outletDirective;
-    }
+    // public get outletDirective() {
+    //     return this._outletDirective;
+    // }
 
     /**
      * @hidden @internal
@@ -1834,7 +1834,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get parentRowOutletDirective() {
-        return this.outletDirective;
+        return this.outlet;
     }
 
     /**
@@ -2899,7 +2899,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outletDirective &&
+            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outlet &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
             }
@@ -3348,7 +3348,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     get outlet() {
-        return this._userOutletDirective ? this._userOutletDirective : this.outletDirective;
+        return this.resolveOutlet();
+    }
+
+    protected resolveOutlet() {
+        return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
     }
 
     /**
@@ -6483,7 +6487,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
-            this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
+            this._advancedFilteringOverlaySettings.outlet = this.outlet;
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
