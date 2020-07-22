@@ -59,7 +59,6 @@ export class IgxColumnActionsComponent implements OnDestroy {
         if (value) {
             this._columns = value;
             this._pipeTrigger++;
-            this.cdr.detectChanges();
         }
     }
 
@@ -130,7 +129,6 @@ export class IgxColumnActionsComponent implements OnDestroy {
         if (value !== this._filterCriteria) {
             this._filterCriteria = value;
             this._pipeTrigger++;
-            this.cdr.detectChanges();
         }
     }
 
@@ -160,7 +158,6 @@ export class IgxColumnActionsComponent implements OnDestroy {
         if (value && value !== this._columnDisplayOrder) {
             this._columnDisplayOrder = value;
             this._pipeTrigger++;
-            this.cdr.detectChanges();
         }
     }
 
@@ -321,9 +318,6 @@ export class IgxColumnActionsComponent implements OnDestroy {
         } else {
             return false;
         }*/
-    }
-
-    constructor(public cdr: ChangeDetectorRef) {
     }
 
     /**

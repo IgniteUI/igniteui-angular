@@ -16,7 +16,7 @@
         *ngFor="let column of columns
             | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
             | filterActionColumns:filterCriteria:pipeTrigger
-            | sortActionColumns:columnDisplayOrder:pipeTrigger; trackBy: actionsDirective.trackByFunction"
+            | sortActionColumns:columnDisplayOrder:pipeTrigger;"
         class="igx-column-actions__columns-item"
     
         (change)="actionsDirective.toggleColumn(column)"
