@@ -452,6 +452,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} category-chart [$_dark-indigo-category-chart]
 /// @property {Map} igx-checkbox [$_dark-indigo-checkbox]
 /// @property {Map} igx-chip [$_dark-indigo-chip]
+/// @property {Map} igx-column-actions [$_dark-bootstrap-column-actions]
 /// @property {Map} igx-column-hiding [$_dark-bootstrap-column-hiding]
 /// @property {Map} igx-combo [$_dark-indigo-combo]
 /// @property {Map} igx-dialog [$_dark-indigo-dialog]
@@ -510,6 +511,7 @@ $dark-indigo-schema: (
     category-chart: $_dark-indigo-category-chart,
     igx-checkbox: $_dark-indigo-checkbox,
     igx-chip: $_dark-indigo-chip,
+    igx-column-actions: $_dark-bootstrap-column-actions,
     igx-column-hiding: $_dark-bootstrap-column-hiding,
     igx-combo: $_dark-indigo-combo,
     igx-dialog: $_dark-indigo-dialog,
