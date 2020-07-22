@@ -28,7 +28,6 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         { name: 'tslib', target: PackageTarget.NONE },
         { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
         { name: '@types/hammerjs', target: PackageTarget.DEV },
-        { name: '@types/jszip', target: PackageTarget.DEV },
         { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
         { name: 'core-js-pure', target: PackageTarget.NONE },
         { name: 'lodash.merge', target: PackageTarget.NONE },
