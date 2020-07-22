@@ -73,7 +73,8 @@
         "jszip": "^3.3.0",
         "tslib": "^2.0.0",
         "resize-observer-polyfill": "^1.5.1",
-        "igniteui-trial-watermark": "^1.0.3"
+        "igniteui-trial-watermark": "^1.0.3",
+        "lodash.merge": "^4.6.2"
     },
     "peerDependencies": {
         "@angular/common": "^10.0.0",

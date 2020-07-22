@@ -129,6 +129,7 @@ import {
 import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
 import { IgxGridHierarchicalPipe } from 'igniteui-angular';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
+import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -242,7 +243,8 @@ const components = [
     ReactiveFormSampleComponent,
     DateRangeSampleComponent,
     GridRemotePagingSampleComponent,
-    GridVirtualizationScrollSampleComponent
+    GridVirtualizationScrollSampleComponent,
+    GridNestedPropsSampleComponent
 ];
 
 @NgModule({
