@@ -554,10 +554,6 @@
         @extend %igx-grid__filtering-row--compact !optional;
     }
 
-    @include e(filtering-row-buttons) {
-        @extend %igx-grid__filtering-row-buttons !optional;
-    }
-
     @include e(filtering-row-editing-buttons) {
         @extend %igx-grid__filtering-row-editing-buttons !optional;
     }
