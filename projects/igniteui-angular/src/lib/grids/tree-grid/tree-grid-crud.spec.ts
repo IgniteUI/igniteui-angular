@@ -361,12 +361,11 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     Name: 'New Name',
                     HireDate: new Date(2001, 1, 1),
                     Age: 60,
-                    Employees: []
+                    Employees: null
                 };
                 treeGrid.updateRow(newRow, 147);
                 fix.detectChanges();
                 tick(16);
-                const rowComponent = treeGrid.getRowByKey(999);
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 147,
