@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -11,6 +11,7 @@
 /// @prop {Map} empty-list-background [igx-color: 'surface'] - The combo list background color.
 /// @prop {Map} search-separator-border-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .12] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .26] - The combo placeholder text color.
+/// @see $default-palette
 $_light-combo: (
     empty-list-background: (
         igx-color: 'surface'
@@ -34,8 +35,7 @@ $_light-combo: (
 /// Generates a fluent combo schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-combo
-/// @see $default-palette
+/// @requires {Map} $_light-combo
 $_fluent-combo: extend($_light-combo);
 
 /// Generates a bootstrap combo schema.
@@ -44,8 +44,7 @@ $_fluent-combo: extend($_light-combo);
 /// @prop {Map} search-separator-border-color [igx-color: ('grays', 400)] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [igx-color: ('grays', 600)] - The combo placeholder text color.
 /// @requires {function} extend
-/// @requires {map} $_light-combo
-/// @see $bootstrap-palette
+/// @requires {Map} $_light-combo
 $_bootstrap-combo: extend(
     $_light-combo,
     (
@@ -61,3 +60,8 @@ $_bootstrap-combo: extend(
     )
 );
 
+/// Generates an indigo combo schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-combo
+$_indigo-combo: extend($_light-combo);

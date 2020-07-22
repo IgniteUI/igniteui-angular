@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -35,11 +35,18 @@ $_light-funnel-chart: extend(
 /// Generates a fluent funnel-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-funnel-chart
+/// @requires {Map} $_light-funnel-chart
 $_fluent-funnel-chart: extend($_light-funnel-chart);
 
 /// Generates a bootstrap funnel-chart schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-funnel-chart
+/// @requires {Map} $_light-funnel-chart
 $_bootstrap-funnel-chart: extend($_light-funnel-chart);
+
+/// Generates an indigo funnel-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-funnel-chart
+$_indigo-funnel-chart: extend($_light-funnel-chart);
+

@@ -1,7 +1,7 @@
 @import '../shape/banner';
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
@@ -40,13 +40,16 @@ $_light-banner: extend(
 /// Generates a fluent banner schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-banner
+/// @requires {Map} $_light-banner
 $_fluent-banner: extend($_light-banner);
 
 /// Generates a bootstrap banner schema.
 /// @type {Map}
+/// @property {Map} banner-background [#fff]- The background color used banner background.
+/// @property {Map} banner-message-color [igx-color: ('grays', 800)]- The color used for banner label.
+/// @property {Map} banner-illustration-color [igx-color: ('grays', 800)] - The color used banner illustration.
 /// @requires {function} extend
-/// @requires $_light-banner
+/// @requires {Map} $_light-banner
 $_bootstrap-banner: extend(
     $_light-banner,
     (
@@ -58,6 +61,25 @@ $_bootstrap-banner: extend(
 
         banner-illustration-color: (
             igx-color: ('grays', 800)
+        )
+    )
+);
+
+/// Generates an indigo banner schema.
+/// @type {Map}
+/// @property {Map} banner-message-color [igx-color: ('grays', 900)]- The color used for banner label.
+/// @property {Map} banner-illustration-color [igx-color: ('grays', 600)] - The color used banner illustration.
+/// @requires {function} extend
+/// @requires {Map} $_light-banner
+$_indigo-banner: extend(
+    $_light-banner,
+    (
+        banner-message-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        banner-illustration-color: (
+            igx-color: ('grays', 600)
         )
     )
 );

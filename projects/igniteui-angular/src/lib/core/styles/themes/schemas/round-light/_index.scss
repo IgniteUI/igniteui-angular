@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access public
+/// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -46,7 +46,8 @@
 @import '../light/toast';
 @import '../light/tooltip';
 
-/// The default light schema for all components.
+/// Used to create round Material Design themes.
+/// Use with light palettes.
 /// @type {Map}
 /// @property {Map} igx-action-strip [$_light-action-strip]
 /// @property {Map} igx-avatar [$_light-avatar]
@@ -90,7 +91,6 @@
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
-
 $light-round-schema: (
     igx-action-strip: extend($_light-action-strip, $_round-shape-avatar),
     igx-avatar: extend($_light-avatar, $_round-shape-avatar),
@@ -135,3 +135,4 @@ $light-round-schema: (
     igx-toast: extend($_light-toast, $_round-shape-toast),
     igx-tooltip: extend($_light-tooltip, $_round-shape-tooltip)
 );
+

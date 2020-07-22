@@ -3,21 +3,21 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a light switch schema.
 /// @type {Map}
 ///
-/// @property {map} thumb-on-color [igx-color: ('secondary', 500)] - The color of the thumb when the switch is on.
-/// @property {map} track-on-color [igx-color: ('secondary', 500), rgba: .5] - The color of the track when the switch is on.
-/// @property {map} thumb-off-color [igx-color: ('grays', 200), hexrgba: #fff] - The color of the thumb when the switch is off.
-/// @property {map} track-off-color [igx-color: ('grays', 600)] - The color of the track when the switch is off.
-/// @property {map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #fff] - The color of the thumb when the switch is disabled.
-/// @property {map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
-/// @property {map} label-color [gx-color: ('grays', 900)] - The color of the switch label
-/// @property {map} label-disabled-color [gx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
+/// @property {Map} thumb-on-color [igx-color: ('secondary', 500)] - The color of the thumb when the switch is on.
+/// @property {Map} track-on-color [igx-color: ('secondary', 500), rgba: .5] - The color of the track when the switch is on.
+/// @property {Map} thumb-off-color [igx-color: ('grays', 200), hexrgba: #fff] - The color of the thumb when the switch is off.
+/// @property {Map} track-off-color [igx-color: ('grays', 600)] - The color of the track when the switch is off.
+/// @property {Map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #fff] - The color of the thumb when the switch is disabled.
+/// @property {Map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
+/// @property {Map} label-color [igx-color: ('grays', 900)] - The color of the switch label
+/// @property {Map} label-disabled-color [igx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
 /// @property {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @property {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
 /// @property {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
@@ -26,11 +26,11 @@
 /// @property {Number} border-radius-thumb [1] - The border radius fraction, between 0-10 to be used for switch thumb.
 /// @property {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for switch ripple.
 ///
-/// @property {color} border-color [transparent] - The border color of the switch.
-/// @property {color} border-hover-color [transparent] - The border color of the switch on hover.
-/// @property {color} border-disabled-color [transparent] - The border color of the disabled switch.
-/// @property {color} border-on-color [transparent] - The border color of the on-switch.
-/// @property {color} border-on-hover-color [transparent] - The border color of the  on-switch.
+/// @property {Color} border-color [transparent] - The border color of the switch.
+/// @property {Color} border-hover-color [transparent] - The border color of the switch on hover.
+/// @property {Color} border-disabled-color [transparent] - The border color of the disabled switch.
+/// @property {Color} border-on-color [transparent] - The border color of the on-switch.
+/// @property {Color} border-on-hover-color [transparent] - The border color of the  on-switch.
 ///
 /// @see $default-palette
 $_light-switch: extend(
@@ -85,22 +85,21 @@ $_light-switch: extend(
 /// Generates a fluent switch schema.
 /// @type {Map}
 ///
-/// @property {map} border-color [igx-color('grays', 500), hexrgba: #fff] - The border color of the switch.
-/// @property {map} border-hover-color [igx-color('grays', 800), hexrgba: #fff] - The border color of the switch on hover.
-/// @property {map} border-disabled-color [igx-color('grays', 300), hexrgba: #fff] - The border color of the disabled switch.
-/// @property {map} border-on-color [igx-color('primary', 500)] - The border color of the on-switch.
-/// @property {map} border-on-hover-color [igx-color('primary', 500)] - The border color of the  on-switch.
+/// @property {Map} border-color [igx-color('grays', 500), hexrgba: #fff] - The border color of the switch.
+/// @property {Map} border-hover-color [igx-color('grays', 800), hexrgba: #fff] - The border color of the switch on hover.
+/// @property {Map} border-disabled-color [igx-color('grays', 300), hexrgba: #fff] - The border color of the disabled switch.
+/// @property {Map} border-on-color [igx-color('primary', 500)] - The border color of the on-switch.
+/// @property {Map} border-on-hover-color [igx-color('primary', 500)] - The border color of the  on-switch.
 ///
-/// @property {color} thumb-on-color [#fff] - The color of the thumb when the switch is on.
-/// @property {map} thumb-off-color [igx-color: ('grays', 900), hexrgba: #fff] - The color of the thumb when the switch is off.
-/// @property {map} track-on-color [igx-color: ('secondary', 500)] - The color of the track when the switch is on.
-/// @property {color} track-off-color [transparent] - The color of the track when the switch is off.
+/// @property {Color} thumb-on-color [#fff] - The color of the thumb when the switch is on.
+/// @property {Map} thumb-off-color [igx-color: ('grays', 900), hexrgba: #fff] - The color of the thumb when the switch is off.
+/// @property {Map} track-on-color [igx-color: ('secondary', 500)] - The color of the track when the switch is on.
+/// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
 ///
 /// @property {Number} border-radius-track [10px] - The border radius fraction, between 0-7 to be used for switch track.
 ///
 /// @requires {function} extend
-/// @requires $_light-switch
-/// @requires $_fluent-shape-switch
+/// @requires {Map} $_light-switch
 $_fluent-switch: extend(
     $_light-switch,
     $_fluent-shape-switch,
@@ -147,13 +146,13 @@ $_fluent-switch: extend(
 
 /// Generates a bootstrap switch schema.
 /// @type {Map}
-/// @property {map} track-on-color [igx-color: ('primary', 500)] - The color of the track when the switch is on.
-/// @property {map} border-disabled-color [igx-color: ('grays', 300)] - The border color of the disabled switch.
+/// @property {Map} track-on-color [igx-color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {Map} border-disabled-color [igx-color: ('grays', 300)] - The border color of the disabled switch.
 /// @property {Number} border-radius-track [4px] - The border radius fraction, between 0-7 to be used for switch track.
 /// @property {Number} border-radius-thumb [2px] - The border radius fraction, between 0-10 to be used for switch thumb.
 ///
 /// @requires {function} extend
-/// @requires $_light-switch
+/// @requires {Map} $_fluent-switch
 $_bootstrap-switch: extend(
     $_fluent-switch,
     $_bootstrap-shape-switch,
@@ -170,3 +169,71 @@ $_bootstrap-switch: extend(
     )
 );
 
+/// Generates an indigo switch schema.
+/// @type {Map}
+///
+/// @property {Map} thumb-on-color [#fff] - The color of the thumb when the switch is on.
+/// @property {Map} track-on-color [igx-color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {Map} thumb-off-color [igx-color: ('grays', 600)] - The color of the thumb when the switch is off.
+/// @property {Map} track-off-color [transparent] - The color of the track when the switch is off.
+/// @property {Map} thumb-disabled-color [igx-color: ('grays', 300)] - The color of the thumb when the switch is disabled.
+/// @property {Map} track-disabled-color [transparent] - The color of the track when the switch is disabled.
+///
+/// @property {Color} border-color [igx-color: ('grays', 600)] - The border color of the switch.
+/// @property {Color} border-hover-color [igx-color: ('grays', 600)] - The border color of the switch on hover.
+/// @property {Color} border-disabled-color [igx-color: ('grays', 300)] - The border color of the disabled switch.
+/// @property {Color} border-on-color [igx-color: ('primary', 500)] - The border color of the on-switch.
+/// @property {Color} border-on-hover-color [igx-color: ('primary', 500)] - The border color of the  on-switch.
+/// @property {Map} label-disabled-color [igx-color: ('grays', 300)] - The color of the switch label when the switch is disabled
+///
+/// @requires {function} extend
+/// @requires $_light-switch
+$_indigo-switch: extend(
+    $_light-switch,
+    $_indigo-shape-switch,
+    (
+        variant: 'indigo-design',
+
+        border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        border-hover-color:(
+            igx-color: ('grays', 500)
+        ),
+
+        border-disabled-color:(
+            igx-color: ('grays', 300)
+        ),
+
+        border-on-color:(
+            igx-color: ('primary', 500)
+        ),
+
+        border-on-hover-color:(
+            igx-color: ('primary', 500)
+        ),
+
+        thumb-on-color: #fff,
+
+        thumb-off-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        track-on-color: (
+            igx-color: ('primary', 500),
+        ),
+
+        track-off-color: transparent,
+
+        track-disabled-color: transparent,
+
+        thumb-disabled-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        label-disabled-color: (
+            igx-color: ('grays', 300)
+        )
+    )
+);

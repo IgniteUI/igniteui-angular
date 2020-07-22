@@ -158,9 +158,12 @@
 
     $drawer-icon-size: rem(24px);
     $drawer-item-margin: rem(8px);
+    $text-side-padding: rem(8px);
     $drawer-item-min-h: auto;
     $drawer-item-max-h: rem(48px);
     $drawer-item-min-w: rem(32px);
+
+    $variant: map-get($theme, variant);
 
 
     %animation {
@@ -183,7 +186,9 @@
         transition: width, transform;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: --var($theme, 'shadow');
-        border-#{$right}: 1px solid --var($theme, 'border-color');
+        @if $variant != 'indigo-design' {
+            border-#{$right}: 1px solid --var($theme, 'border-color');
+        }
         border-radius: --var($theme, 'border-radius');
     }
 
@@ -236,6 +241,15 @@
 
         %item {
             justify-content: center;
+            @if $variant == 'indigo-design' {
+                max-width: rem(32px);
+                // important is needed to override the typography margins
+                margin: rem(14px) auto !important;
+
+                igx-icon {
+                    margin-#{$left}: 0;
+                }
+            }
         }
     }
 
@@ -284,24 +298,46 @@
         color: --var($theme, 'item-text-color');
         max-height: $drawer-item-max-h;
         min-width: $drawer-item-min-w;
-        padding: rem(12px) rem(8px);
+
+        @if $variant != 'indigo-design' {
+            // important is needed to override the typography margins
+            margin: $drawer-item-margin !important;
+            padding: rem(12px) rem(8px);
+        } @else {
+            // important is needed to override the typography margins
+            margin: rem(15px) $drawer-item-margin !important;
+            padding: rem(4px);
+        }
+
         cursor: pointer;
         user-select: none;
         outline: transparent;
         white-space: nowrap;
         border-radius: --var($theme, 'item-border-radius');
-        margin: $drawer-item-margin;
         text-decoration: none;
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
         justify-content: flex-start;
 
         > igx-icon + span {
-            margin-#{$left}: rem(32px);
+            @if $variant == 'indigo-design' {
+                margin-#{$left}: calc(32px - #{$text-side-padding});
+            } @else {
+                margin-#{$left}: rem(32px);
+            }
+        }
+
+        span {
+            @if $variant == 'indigo-design' {
+                padding-#{$left}: $text-side-padding;
+            }
         }
 
         igx-icon {
             color: --var($theme, 'item-icon-color');
+            @if $variant == 'indigo-design' {
+                margin-#{$left}: rem(4px);
+            }
         }
 
         // Need this to override the igx-buttons
