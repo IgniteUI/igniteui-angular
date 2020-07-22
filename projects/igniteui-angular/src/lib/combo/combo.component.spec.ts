@@ -2431,6 +2431,10 @@ describe('igxCombo', () => {
 
             caseSensitiveIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
+            UIInteractions.triggerInputEvent(searchInput, '');
+            fixture.detectChanges();
+            UIInteractions.triggerInputEvent(searchInput, 'M');
+            fixture.detectChanges();
             expect([...combo.filteredData]).toEqual(combo.data.filter(e => e['field'].includes('M')));
         });
     });
