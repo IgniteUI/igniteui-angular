@@ -2652,20 +2652,8 @@
         align-items: center;
 
         [igxButton='icon'] {
-            display: none;
-        }
-
-        @media only screen and (max-width: $mobile-view) {
-            [igxButton] {
-                display: none;
-            }
-
-            [igxButton='icon'] {
-                display: flex;
-
-                &:not([disabled]) {
-                    color: --var($theme, 'sorted-header-icon-color');
-                }
+            &:not([disabled]) {
+                color: --var($theme, 'sorted-header-icon-color');
             }
         }
     }
