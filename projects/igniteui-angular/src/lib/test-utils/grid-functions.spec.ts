@@ -18,6 +18,8 @@ import {
 } from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
+import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
+import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -73,10 +75,10 @@ const SORTED_COLUMN_CLASS = 'igx-grid__th--sorted';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
-const COLUMN_HIDING_CLASS = 'igx-column-hiding';
+const COLUMN_HIDING_DIRECTIVE = IgxColumnHidingDirective;
 const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
 const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
-const COLUMN_PINNING_CLASS = 'igx-column-pinning';
+const COLUMN_PINNING_DIRECTIVE = IgxColumnPinningDirective;
 const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
@@ -1843,11 +1845,11 @@ export class GridFunctions {
     }
 
     public static getColumnHidingElement(fix: ComponentFixture<any>): DebugElement {
-        return fix.debugElement.query(By.css(COLUMN_HIDING_CLASS));
+        return fix.debugElement.query(By.directive(COLUMN_HIDING_DIRECTIVE));
     }
 
     public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
-        return fix.debugElement.query(By.css(COLUMN_PINNING_CLASS));
+        return fix.debugElement.query(By.directive(COLUMN_PINNING_DIRECTIVE));
     }
 
     public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {
