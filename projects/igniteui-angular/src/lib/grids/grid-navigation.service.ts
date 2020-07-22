@@ -180,7 +180,9 @@ export class IgxGridNavigationService {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
         if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
-            this.setActiveNode({ row: 0, column: 0 }, 'dataCell');
+            const item = this.grid.dataView[0];
+            const type = this.grid.isGroupByRecord(item) ? 'groupRow' : 'dataCell';
+            this.setActiveNode({ row: 0, column: 0 }, type);
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
                 obj.target.activate(event);
@@ -309,7 +311,9 @@ export class IgxGridNavigationService {
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
         const currRow = this.grid.dataView[rowIndex];
-        const type: GridKeydownTargetType = this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'dataCell';
+        const type: GridKeydownTargetType = this.isDataRow(rowIndex) ? 'dataCell' :
+            this.grid.isGroupByRecord(currRow) ? 'groupRow' :
+            this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'summaryCell';
         this.setActiveNode({ row: rowIndex, column: visibleColIndex}, type);
         this.grid.navigateTo(this.activeNode.row, this.activeNode.column, cb);
     }
