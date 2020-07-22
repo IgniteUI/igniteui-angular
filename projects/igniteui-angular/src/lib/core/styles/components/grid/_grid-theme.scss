@@ -562,8 +562,6 @@
     $drag-icon-size: rem(24px);
     $grouping-padding-right: rem(12px);
 
-    $mobile-view: rem(432px);
-
     %grid-display {
         position: relative;
         display: grid;
@@ -2291,25 +2289,13 @@
 
     @include _excel-filtering($theme, $palette);
 
-    %igx-grid__filtering-row-editing-buttons {
+    %igx-grid__filtering-row-buttons {
         display: flex;
         align-items: center;
 
         [igxButton='icon'] {
-            display: none;
-        }
-
-        @media only screen and (max-width: $mobile-view) {
-            [igxButton] {
-                display: none;
-            }
-
-            [igxButton='icon'] {
-                display: flex;
-
-                &:not([disabled]) {
-                    color: --var($theme, 'sorted-header-icon-color');
-                }
+            &:not([disabled]) {
+                color: --var($theme, 'sorted-header-icon-color');
             }
         }
     }
