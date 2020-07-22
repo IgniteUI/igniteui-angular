@@ -700,8 +700,6 @@
         bootstrap: 700
     ), $variant);
 
-    $mobile-view: rem(432px);
-
     %grid-display {
         position: relative;
         display: grid;
