@@ -325,6 +325,10 @@
         @extend %grid-cell--cross-selected !optional;
     }
 
+    @include e(td, $m: bool) {
+        @extend %igx-grid__td--bool !optional;
+    }
+
     @include e(tr, $mods: (selected, filtered)) {
         @extend %grid-row--selected--filtered !optional;
     }
