@@ -590,6 +590,7 @@
         material: rem(20px),
         fluent: rem(20px),
         bootstrap: rem(14px),
+        indigo-design: rem(20px),
     ), $variant);
     $cbx-bs-size: rem(14px);
 
@@ -691,13 +692,15 @@
     $grid-border-width: map-get((
         material: 0,
         fluent: 1px,
-        bootstrap: 0
+        bootstrap: 0,
+        indigo-design: 0
     ), $variant);
 
     $grid-header-weight: map-get((
         material: 600,
         fluent: 800,
-        bootstrap: 700
+        bootstrap: 700,
+        indigo-design: 600,
     ), $variant);
 
     %grid-display {
@@ -1147,7 +1150,11 @@
             height: rem(18px);
             width: rem(18px);
             font-size: rem(18px);
-            color: #00000061;
+            color: igx-color($palette, 'grays', 500);
+
+            &.igx-grid__td--bool-check {
+                color: igx-color($palette, 'grays', 700);
+            }
         }
     }
 
@@ -1193,7 +1200,7 @@
         &::before {
             content: '';
             position: absolute;
-            width: rem(2);
+            width: if($variant == 'indigo-design', rem(4px), rem(2px));
             height: 100%;
             z-index: 10000;
             background: --var($theme, 'edited-row-indicator');
@@ -1421,6 +1428,11 @@
     %grid-cell--pinned-last {
         border-#{$right}: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
 
+        %igx-grid__filtering-cell,
+        %grid-cell-header {
+            border-#{$right}: none;
+        }
+
         &%grid-cell--editing {
             border-#{$right}: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
         }
@@ -1489,8 +1501,11 @@
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
         line-height: map-get($grid-header-height, 'comfortable') / $grid-head-fs;
-        opacity: .7;
         transition: opacity 250ms ease-in-out, color 250ms ease-in-out;
+
+        @if $variant != 'indigo-design' {
+            opacity: .7;
+        }
     }
 
     %grid-cell-header-title--cosy {
@@ -1552,7 +1567,7 @@
     %igx-grid__th--selectable {
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
-        opacity: .7;
+        opacity: if($variant != 'indigo-design', .7, 1);
     }
 
     %igx-grid__th--selected {
@@ -1561,8 +1576,7 @@
     }
 
     %igx-grid__th--active {
-        @extend %grid-cell--active;
-
+        %grid-cell-header,
         %igx-grid__th--selected,
         %igx-grid__th--selectable {
             @extend %grid-cell--active
