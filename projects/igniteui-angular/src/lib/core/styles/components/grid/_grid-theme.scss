@@ -2643,7 +2643,7 @@
     %igx-grid__filtering-row-editing-buttons {
         button {
             igx-icon {
-                margin-#{$right}: 8px;
+                margin-#{$right}: rem(8px);
             }
         }
     }
