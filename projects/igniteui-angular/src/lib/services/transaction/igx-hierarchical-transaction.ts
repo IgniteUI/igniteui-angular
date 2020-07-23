@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { IgxTransactionService } from './igx-transaction';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneValue } from '../../core/utils';
+import { HierarchicalTransactionService } from './hierarchical-transaction';
 
 /** @experimental @hidden */
 @Injectable()
 export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction, S extends HierarchicalState>
-    extends IgxTransactionService<T, S> {
+    extends IgxTransactionService<T, S> implements HierarchicalTransactionService<T, S> {
 
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
@@ -51,23 +52,16 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         }
     }
 
-    /**
-     * Applies all transactions over the provided data
-     * @param data Data source to update
-     * @param primaryKey Primary key of the hierarchical data
-     * @param childDataKey Key of child data collection
-     * @param id Optional record id to commit transactions for
-     */
-    public commit(data: any[], primaryKey?: any, childDataKey?: any, id?: any): void {
+    public commit(data: any[], primaryKeyOrId?: any, childDataKey?: any, id?: any): void {
         if (childDataKey !== undefined) {
             let transactions = this.getAggregatedChanges(true);
             if (id !== undefined) {
                 transactions = transactions.filter(t => t.id === id);
             }
-            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKey, true);
+            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, true);
             this.clear(id);
         } else {
-            super.commit(data, id);
+            super.commit(data, primaryKeyOrId);
         }
     }
 
