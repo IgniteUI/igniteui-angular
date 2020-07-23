@@ -321,6 +321,10 @@
         @extend %grid-cell--column-selected !optional;
     }
 
+    @include e(td, $m: bool) {
+        @extend %igx-grid__td--bool !optional;
+    }
+
     @include e(td, $mods: (selected, column-selected)) {
         @extend %grid-cell--cross-selected !optional;
     }

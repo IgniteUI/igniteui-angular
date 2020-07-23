@@ -1136,6 +1136,21 @@
         bottom: 0;
     }
 
+    %igx-grid__td--bool {
+        .igx-grid__td-text {
+            height: rem(18px);
+            width: rem(18px);
+            margin: auto;
+        }
+
+        igx-icon {
+            height: rem(18px);
+            width: rem(18px);
+            font-size: rem(18px);
+            color: #00000061;
+        }
+    }
+
     %igx-grid__tr--edit {
         border-bottom: 1px solid --var($theme, 'edit-mode-color');
         position: relative;
