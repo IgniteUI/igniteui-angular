@@ -48,8 +48,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual('BRown');
 
-            const columnHeader = GridFunctions.getColumnHeader(currentColumn, fixture);
-
             // Ignore case on sorting set to true
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
             fixture.detectChanges();
@@ -94,7 +92,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual(1);
-            const columnHeader = GridFunctions.getColumnHeader(currentColumn, fixture);
         });
 
         it('Should sort grid by current column by expression (Descending with ignoreCase)', () => {
