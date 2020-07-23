@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { isEdge } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IGridEditEventArgs } from '../common/events';
+import { IGridEditEventArgs, IGridBaseEditEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { IgxGridBaseDirective } from '../grid/public_api';
 
@@ -69,6 +69,17 @@ export class IgxRow {
         }
         return args;
     }
+
+    createDoneEditEventArgs(): IGridBaseEditEventArgs {
+        const args: IGridBaseEditEventArgs = {
+            rowID: this.id,
+            rowData: this.newData, // this should be the updated/committed rowData // this effectively should be the newValue
+            oldValue: { ... this.data },
+            newValue: this.newData,
+            owner: this.grid
+        };
+        return args;
+    }
 }
 
 export class IgxCell {
@@ -103,8 +114,24 @@ export class IgxCell {
             owner: this.grid
         };
         if (includeNewValue) {
-            args.newValue = this.editValue;
+            args.newValue = this.castToNumber(this.editValue);
         }
+        return args;
+    }
+
+    createDoneEditEventArgs(): IGridBaseEditEventArgs {
+        const args: IGridBaseEditEventArgs = {
+            rowID: this.id.rowID,
+            cellID: this.id,
+            // rowData - should be the updated/committed rowData // this effectively should be the newValue
+            // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
+            rowData: this.grid.transactions.enabled ? this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData,
+            oldValue: this.value,
+            newValue: this.castToNumber(this.editValue),
+            column: this.column,
+            owner: this.grid,
+        };
+
         return args;
     }
 }

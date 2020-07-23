@@ -150,10 +150,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        // Cast to number after emit
-        // TODO: Clean up this
-        args.newValue = cell.castToNumber(args.newValue);
-
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
@@ -161,7 +157,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         this.grid.summaryService.clearSummaryCache(args);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
-             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
+            if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
                 this.grid.selectionService.selectRowById(args.newValue);
             }
@@ -174,6 +170,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.grid.summaryService.clearSummaryCache(args);
             (this.grid as any)._pipeTrigger++;
         }
+
+        const doneArgs = cell.createDoneEditEventArgs();
+        this.grid.onCellEditDone.emit(doneArgs);
 
         return args;
     }
@@ -222,7 +221,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const data = this.get_all_data(grid.transactions.enabled);
         const index = this.get_row_index_in_data(row.id);
         const hasSummarized = grid.hasSummarizedColumns;
-
+        // here the new row.data is updated
         this._update_row(row, value);
 
         const args = row.createEditEventArgs();
@@ -266,6 +265,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
+        const doneArgs = row.createDoneEditEventArgs();
+        grid.onRowEditDone.emit(doneArgs);
         return args;
     }
 
