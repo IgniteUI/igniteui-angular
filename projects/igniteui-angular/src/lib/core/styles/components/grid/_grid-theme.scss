@@ -1510,11 +1510,11 @@
                 content: attr(data-sortIndex);
                 position: absolute;
                 top: -5px;
-                right: -1px;
+                #{$right}: -1px;
                 font-size: rem(10px);
-                text-align: right;
+                text-align: $right;
                 font-family: sans-serif;
-                line-height: .625rem;
+                line-height: rem(10px);
                 background: --var($theme, 'header-background');
             }
         }
