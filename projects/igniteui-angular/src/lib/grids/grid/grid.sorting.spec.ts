@@ -199,7 +199,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const thirdColumn = 'LastName';
             const invalidAndValidExp = [
                 { fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false },
-                { fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true }
             ];
 
             grid.sort(invalidAndValidExp);

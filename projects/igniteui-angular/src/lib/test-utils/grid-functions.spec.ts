@@ -1891,7 +1891,7 @@ export class GridFunctions {
     }
 
     public static getColumnSortingIndex(columnHeader: DebugElement): number {
-        let sortIndex = columnHeader.query(By.css(`${SORT_ICON_CLASS}`)).nativeElement.getAttribute(SORT_INDEX_ATTRIBUTE);
+        let sortIndex = columnHeader.query(By.css(SORT_ICON_CLASS)).nativeElement.getAttribute(SORT_INDEX_ATTRIBUTE);
         sortIndex = parseInt(sortIndex?.trim(), 10);
         if (!isNaN(sortIndex)) {
             return sortIndex;
