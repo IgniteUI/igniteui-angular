@@ -20,7 +20,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
-export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IGridBaseEditEventArgs extends IBaseEventArgs {
     rowID: any;
     cellID?: {
         rowID: any,
@@ -33,6 +33,9 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs 
     event?: Event;
     column?: ColumnType;
     owner?: IgxGridBaseDirective & GridType;
+}
+
+export interface IGridEditEventArgs extends CancelableEventArgs, IGridBaseEditEventArgs {
 }
 
 export interface IPinColumnEventArgs extends IBaseEventArgs {
