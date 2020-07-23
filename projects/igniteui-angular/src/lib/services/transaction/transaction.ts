@@ -1,5 +1,4 @@
 import { EventEmitter } from '@angular/core';
-import { ThrowStmt } from '@angular/compiler';
 
 export enum TransactionType {
     ADD = 'add',

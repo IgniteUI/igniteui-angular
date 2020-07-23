@@ -2,7 +2,7 @@ import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { GridType } from './grid.interface';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -18,7 +18,7 @@ import { IgxColumnActionsComponent } from '../column-actions/column-actions.comp
 })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: { [prop: string]: any }, value: any, data: any, field: string, index: number): string {
+    transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -27,7 +27,8 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
         for (const cssClass of Object.keys(cssClasses)) {
             const callbackOrValue = cssClasses[cssClass];
-            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field, value, index) : callbackOrValue;
+            const apply = typeof callbackOrValue === 'function' ?
+                callbackOrValue(data, field, resolveNestedPath(data, field), index) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
@@ -46,7 +47,7 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    transform(styles: { [prop: string]: any }, value: any, data: any, field: string, index: number): { [prop: string]: any } {
+    transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): { [prop: string]: any } {
         const css = {};
         if (!styles) {
             return css;
@@ -54,7 +55,7 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 
         for (const prop of Object.keys(styles)) {
             const res = styles[prop];
-            css[prop] = typeof res === 'function' ? res(data, field, value, index) : res;
+            css[prop] = typeof res === 'function' ? res(data, field, resolveNestedPath(data, field), index) : res;
         }
 
         return css;
@@ -299,5 +300,39 @@ export class IgxSortActionColumnsPipe implements PipeTransform {
             return collection.sort((a, b) => (a.header || a.field).localeCompare(b.header || b.field));
         }
         return collection;
+    }
+}
+
+@Pipe({ name: 'dataMapper' })
+export class IgxGridDataMapperPipe implements PipeTransform {
+
+    transform(data: any[], field: string, _: number) {
+        return resolveNestedPath(data, field);
+    }
+}
+
+@Pipe({ name: 'igxStringReplace' })
+export class IgxStringReplacePipe implements PipeTransform {
+
+    transform(value: string, search: string | RegExp, replacement: string): string {
+        return value.replace(search, replacement);
+    }
+}
+
+@Pipe({ name: 'transactionState' })
+export class IgxGridTransactionStatePipe implements PipeTransform {
+
+    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any) {
+        if (rowEditable) {
+            const rowCurrentState = transactions.getAggregatedValue(row_id, false);
+            if (rowCurrentState) {
+                const value = resolveNestedPath(rowCurrentState, field);
+                return value !== undefined && value !== null;
+            }
+        } else {
+            const transaction = transactions.getState(row_id);
+            const value = resolveNestedPath(transaction?.value ?? {}, field);
+            return transaction && transaction.value && (value || value === 0 || value === false);
+        }
     }
 }
