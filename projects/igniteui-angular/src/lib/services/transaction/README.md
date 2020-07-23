@@ -47,3 +47,9 @@ and then inject it in the component's constructor:
    |clear                  | Clears all transactions                                       | id?                       |
    |startPending           | Starts pending transactions. All transactions passed after call to startPending will not be added to transaction log | - |
    |endPending             | Clears all pending transactions and aggregated pending state. If commit is set to true commits pending states as single transaction | commit |
+
+### HierarchicalTransactionService
+
+   | Name                  | Description                                                   | Parameters                |
+   |-----------------------|---------------------------------------------------------------|---------------------------|
+   |commit                 | Applies all transactions over the provided data               | data, primaryKey, childDataKey, id?                 |
