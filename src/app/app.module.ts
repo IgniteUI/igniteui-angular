@@ -30,7 +30,6 @@ import { MaskSampleComponent, DisplayFormatPipe, InputFormatPipe } from './mask/
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
-import { InputGroupChildSampleComponent } from './input-group/input-group-child.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
@@ -110,8 +109,6 @@ import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
-import { InputGroupFluentSampleComponent } from './input-group/input-group-fluent.sample';
-import { InputGroupBoostrapSampleComponent } from './input-group/input-group-bootstrap.sample';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
@@ -132,6 +129,7 @@ import {
 import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
 import { IgxGridHierarchicalPipe } from 'igniteui-angular';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
+import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -158,9 +156,6 @@ const components = [
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
-    InputGroupChildSampleComponent,
-    InputGroupFluentSampleComponent,
-    InputGroupBoostrapSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
     ListPanningSampleComponent,
@@ -248,7 +243,8 @@ const components = [
     ReactiveFormSampleComponent,
     DateRangeSampleComponent,
     GridRemotePagingSampleComponent,
-    GridVirtualizationScrollSampleComponent
+    GridVirtualizationScrollSampleComponent,
+    GridNestedPropsSampleComponent
 ];
 
 @NgModule({

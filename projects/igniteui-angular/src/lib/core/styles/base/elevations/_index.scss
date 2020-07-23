@@ -150,3 +150,16 @@
 
     @return $result;
 }
+
+/// Default elevations.
+/// @type Map
+/// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
+/// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
+/// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
+/// @requires igx-elevations
+$elevations: igx-elevations(
+    rgba(0, 0, 0, .26),
+    rgba(0, 0, 0, .12),
+    rgba(0, 0, 0, .08)
+) !default;
+

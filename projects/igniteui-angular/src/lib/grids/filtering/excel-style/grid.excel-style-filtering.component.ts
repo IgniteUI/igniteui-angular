@@ -15,7 +15,7 @@ import {
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { cloneArray, KEYS } from '../../../core/utils';
+import { cloneArray, KEYS, resolveNestedPath } from '../../../core/utils';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { Subscription, Subject } from 'rxjs';
@@ -414,8 +414,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         const columnField = this.column.field;
         const columnValues = (this.column.dataType === DataType.Date) ?
-            data.map(record => record[columnField] ? record[columnField].toDateString() : record[columnField]) :
-            data.map(record => record[columnField]);
+            data.map(record => resolveNestedPath(record, columnField) ?
+                resolveNestedPath(record, columnField).toDateString() : resolveNestedPath(record, columnField)) :
+            data.map(record => resolveNestedPath(record, columnField));
 
         this.renderValues(columnValues);
     }

@@ -44,11 +44,6 @@ export class IgxSummaryCellComponent {
         return this.column.visibleIndex;
     }
 
-    @HostBinding('attr.aria-describedby')
-    public get describeby() {
-        return `Summary_${this.column.field}`;
-    }
-
     @HostBinding('attr.id')
     public get attrCellID() {
         return `${this.grid.id}_${this.rowIndex}_${ this.visibleColumnIndex}`;

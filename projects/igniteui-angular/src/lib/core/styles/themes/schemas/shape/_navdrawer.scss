@@ -3,17 +3,27 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-navdrawer: (
     border-radius: 0,
     item-border-radius: .16667,
 );
 
+/// @type Map
 $_round-shape-navdrawer: (
     border-radius: 1,
     item-border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-navdrawer: (
     border-radius: 0%,
     item-border-radius: 0%
+);
+
+/// @type Map
+$_indigo-shape-navdrawer: (
+    border-radius: 0,
+    item-border-radius: 1,
 );
