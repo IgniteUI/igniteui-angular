@@ -6,7 +6,8 @@ import {
     Output,
     EventEmitter,
     ChangeDetectorRef,
-    ViewChild
+    ViewChild,
+    OnDestroy
 } from '@angular/core';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { ExpressionUI } from '../grid-filtering.service';
@@ -20,6 +21,7 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
+import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -38,7 +40,8 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
 })
-export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
+export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit, OnDestroy {
+    private destroy$ = new Subject<boolean>();
 
     public dropDownOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -120,6 +123,11 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.dropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             target : this.dropdownConditions.inputGroup.element.nativeElement
         });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     public focus() {

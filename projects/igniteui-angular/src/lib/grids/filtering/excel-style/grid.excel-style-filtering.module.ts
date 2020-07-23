@@ -33,6 +33,8 @@ import { IgxSelectModule } from './../../../select/select.module';
 import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
 import { IgxExcelStyleHidingComponent } from './excel-style-hiding.component';
 import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.component';
+import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
+import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
 
 /**
  * @hidden
@@ -44,6 +46,8 @@ import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.compone
         IgxExcelStylePinningComponent,
         IgxExcelStyleHidingComponent,
         IgxExcelStyleSelectingComponent,
+        IgxExcelStyleClearFiltersComponent,
+        IgxExcelStyleConditionalFilterComponent,
         IgxExcelStyleColumnMovingComponent,
         IgxExcelStyleSearchComponent,
         IgxExcelStyleCustomDialogComponent,

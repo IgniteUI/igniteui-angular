@@ -8,7 +8,8 @@ import {
     TemplateRef,
     ViewChildren,
     QueryList,
-    ElementRef
+    ElementRef,
+    OnDestroy
 } from '@angular/core';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -35,6 +36,7 @@ import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } fr
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
+import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -45,7 +47,8 @@ import { DisplayDensity } from '../../../core/density';
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html'
 })
-export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
+export class IgxExcelStyleCustomDialogComponent implements AfterViewInit, OnDestroy {
+    private destroy$ = new Subject<boolean>();
 
     @Input()
     public expressionsList = new Array<ExpressionUI>();
@@ -104,6 +107,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     get template(): TemplateRef<any> {

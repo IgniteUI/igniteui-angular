@@ -1,12 +1,10 @@
 import {
     Component,
     ChangeDetectionStrategy,
-    Input,
     OnDestroy
 } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
 import { Subject } from 'rxjs';
-import { GridType } from '../../common/grid.interface';
+import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -20,25 +18,10 @@ import { GridType } from '../../common/grid.interface';
 export class IgxExcelStyleHidingComponent implements OnDestroy {
     private destroy$ = new Subject<boolean>();
 
-    @Input()
-    public column: IgxColumnComponent;
-
-    @Input()
-    public grid: GridType;
-
-    constructor() {}
+    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onHideToggle() {
-        this.column.hidden = !this.column.hidden;
-        this.column.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: this.column.hidden });
-        // this.closeDropdown();
     }
 }

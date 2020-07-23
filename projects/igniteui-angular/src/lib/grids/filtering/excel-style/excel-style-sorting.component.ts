@@ -2,18 +2,15 @@ import {
     Component,
     ChangeDetectionStrategy,
     ViewChild,
-    Input,
     AfterViewInit,
     OnDestroy,
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../core/density';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { GridType } from '../../common/grid.interface';
+import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -27,25 +24,16 @@ import { GridType } from '../../common/grid.interface';
 export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, OnChanges {
     private destroy$ = new Subject<boolean>();
 
-    @Input()
-    public column: IgxColumnComponent;
-
-    @Input()
-    public grid: GridType;
-
-    @Input()
-    public displayDensity: DisplayDensity;
-
     @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent, static: true })
     public sortButtonGroup: IgxButtonGroupComponent;
 
-    constructor() {}
+    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
 
     ngAfterViewInit(): void {
-        this.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.updateSelectedButtons(this.column.field);
+        this.esf.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.updateSelectedButtons(this.esf.column.field);
         });
-        this.updateSelectedButtons(this.column.field);
+        this.updateSelectedButtons(this.esf.column.field);
     }
 
     ngOnDestroy(): void {
@@ -60,27 +48,27 @@ export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, 
     }
 
     private updateSelectedButtons(fieldName: string) {
-        const sortIndex = this.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
+        const sortIndex = this.esf.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
 
         this.sortButtonGroup.buttons.forEach((b, i) => {
             this.sortButtonGroup.deselectButton(i);
         });
 
         if (sortIndex !== -1 ) {
-            const sortDirection = this.grid.sortingExpressions[sortIndex].dir;
+            const sortDirection = this.esf.grid.sortingExpressions[sortIndex].dir;
             this.sortButtonGroup.selectButton(sortDirection - 1);
         }
     }
 
     public onSortButtonClicked(sortDirection) {
         if (this.sortButtonGroup.selectedIndexes.length === 0) {
-            if (this.grid.isColumnGrouped(this.column.field)) {
+            if (this.esf.grid.isColumnGrouped(this.esf.column.field)) {
                 this.sortButtonGroup.selectButton(sortDirection - 1);
             } else {
-                this.grid.clearSort(this.column.field);
+                this.esf.grid.clearSort(this.esf.column.field);
             }
         } else {
-            this.grid.sort({ fieldName: this.column.field, dir: sortDirection, ignoreCase: true });
+            this.esf.grid.sort({ fieldName: this.esf.column.field, dir: sortDirection, ignoreCase: true });
         }
     }
 }

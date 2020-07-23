@@ -1,79 +1,43 @@
-<ng-template #defaultExcelStyleColumnOperationsTemplate>
+<ng-template #defaultExcelColumnOperations>
     <div *ngIf="column.sortable">
-        <igx-excel-style-sorting #excelStyleSorting
-            class="igx-excel-filter__sort"
-            [column]="column"
-            [grid]="grid"
-            [displayDensity]="grid.displayDensity">
+        <igx-excel-style-sorting class="igx-excel-filter__sort">
         </igx-excel-style-sorting>
     </div>
 
     <div *ngIf="column.movable">
-        <igx-excel-style-column-moving
-            class="igx-excel-filter__move"
-            [column]="column"
-            [grid]="grid"
-            [isColumnPinnable]="isColumnPinnable"
-            [displayDensity]="grid.displayDensity">
+        <igx-excel-style-column-moving class="igx-excel-filter__move">
         </igx-excel-style-column-moving>
     </div>
 
     <div *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
-        <igx-excel-style-pinning
-            [column]="column"
-            [grid]="grid"
-            [isColumnPinnable]="isColumnPinnable">
+        <igx-excel-style-pinning>
         </igx-excel-style-pinning>
     </div>
 
     <div *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
-        <igx-excel-style-hiding
-            [column]="column"
-            [grid]="grid">
+        <igx-excel-style-hiding>
         </igx-excel-style-hiding>
     </div>
 
     <div *ngIf="columnSelectable() && grid.displayDensity==='comfortable'">
-        <igx-excel-style-selecting
-            [column]="column"
-            [grid]="grid">
+        <igx-excel-style-selecting>
         </igx-excel-style-selecting>
     </div>
 </ng-template>
 
-<ng-template #defaultExcelStyleFilterOperationsTemplate>
-    <!-- clear filter -->
-    <div tabindex="0"
-            [ngClass]="clearFilterClass()"
-            (keydown)="onClearFilterKeyDown($event)"
-            (click)="clearFilter()">
-        <span>{{ grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
-        <igx-icon>clear</igx-icon>
-    </div>
-    <!-- clear filter -->
+<ng-template #defaultExcelFilterOperations>
+    <igx-excel-style-clear-filters>
+    </igx-excel-style-clear-filters>
 
-    <!-- conditional filter -->
-    <div tabindex="0"
-        class="igx-excel-filter__actions-filter"
-        (keydown)="onTextFilterKeyDown($event)"
-        (click)="onTextFilterClick($event)"
-        [igxDropDownItemNavigation]="subMenu" >
-        <span>{{ subMenuText }}</span>
-        <igx-icon>keyboard_arrow_right</igx-icon>
-    </div>
-    <!-- conditional filter -->
+    <igx-excel-style-conditional-filter>
+    </igx-excel-style-conditional-filter>
 
     <igx-excel-style-search #excelStyleSearch
-        class="igx-excel-filter__menu-main"
-        [column]="column"
-        [data]="listData"
-        [grid]="grid"
-        [inline]="inline"
-        [displayDensity]="grid.displayDensity">
+        class="igx-excel-filter__menu-main">
     </igx-excel-style-search>
 </ng-template>
 
-<article #dropdown
+<article #mainDropdown
     *ngIf="column"
     class="igx-excel-filter__menu"
     [ngClass]="{
@@ -118,42 +82,13 @@
         </div>
     </header>
 
-    <ng-container *ngTemplateOutlet="columnOperationsTemplate"></ng-container>
-    <ng-container *ngTemplateOutlet="filterOperationsTemplate"></ng-container>
+    <ng-container *ngIf="this.excelColumnOperationsDirective; else defaultExcelColumnOperations">
+        <ng-content select="igx-excel-column-operations,[igxExcelColumnOperations]">
+        </ng-content>
+    </ng-container>
 
-    <footer class="igx-excel-filter__menu-footer">
-        <button igxButton [displayDensity]="grid.displayDensity" (click)="cancel()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
-        <button igxButton="raised" [displayDensity]="grid.displayDensity" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
-    </footer>
+    <ng-container *ngIf="this.excelFilterOperationsDirective; else defaultExcelFilterOperations">
+        <ng-content select="igx-excel-filter-operations,[igxExcelFilterOperations]">
+        </ng-content>
+    </ng-container>
 </article>
-
-<igx-drop-down
-    *ngIf="column"
-    #subMenu
-    [maxHeight]="'397px'"
-    [displayDensity]="grid.displayDensity"
-    (onSelection)="onSubMenuSelection($event)"
-    (onClosed)="onSubMenuClosed()">
-    <div>
-        <igx-drop-down-item
-        *ngFor="let condition of conditions"
-        [value]="condition">
-            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-            <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
-        </igx-drop-down-item>
-        <igx-drop-down-item *ngIf="showCustomFilterItem()">
-            <igx-icon>filter_list</igx-icon>
-            <span style="margin-left: 16px">{{ grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
-        </igx-drop-down-item>
-    </div>
-</igx-drop-down>
-
-<igx-excel-style-custom-dialog
-    *ngIf="column"
-    #customDialog
-    [column]="column"
-    [filteringService]="filteringService"
-    [overlayComponentId]="overlayComponentId"
-    [overlayService]="overlayService"
-    [displayDensity]="grid.displayDensity">
-</igx-excel-style-custom-dialog>

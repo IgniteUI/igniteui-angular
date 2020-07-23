@@ -92,10 +92,6 @@ import {
 import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
-import {
-    IgxExcelStyleColumnOperationsTemplateDirective,
-    IgxExcelStyleFilterOperationsTemplateDirective
-} from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
@@ -1477,18 +1473,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleColumnOperationsTemplateDirective, { read: IgxExcelStyleColumnOperationsTemplateDirective })
-    public excelStyleColumnOperationsTemplateDirective: IgxExcelStyleColumnOperationsTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleFilterOperationsTemplateDirective, { read: IgxExcelStyleFilterOperationsTemplateDirective })
-    public excelStyleFilterOperationsTemplateDirective: IgxExcelStyleFilterOperationsTemplateDirective;
 
     /**
      * @hidden @internal
