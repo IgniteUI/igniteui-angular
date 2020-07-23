@@ -21,6 +21,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `message` property has been deprecated. You can place the *message text* in the snackbar content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
+- `IgxGrid`
+    - Expose a setter for grid's `outlet` property, which can be used to set the outlet used to attach the grid's overlays to.
 
 ## 10.0.0
 
