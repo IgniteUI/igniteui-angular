@@ -1,9 +1,6 @@
 import { Directive, Inject } from '@angular/core';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridType } from '../common/grid.interface';
-import { IgxColumnComponent } from '../public_api';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnActionsComponent } from './column-actions.component';
 
 @Directive({
@@ -12,7 +9,6 @@ import { IgxColumnActionsComponent } from './column-actions.component';
 export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent
     ) {
         super();
@@ -22,30 +18,25 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkAllLabel = this.gridAPI.grid ? this.gridAPI.grid.resourceStrings.igx_grid_pinning_check_all_label : 'Pin All';
+    public checkAllLabel = this.columnActions.grid?.resourceStrings.igx_grid_pinning_check_all_label ?? 'Pin All';
 
     /**
      * @hidden @internal
      */
-    public uncheckAllLabel = this.gridAPI.grid ? this.gridAPI.grid.resourceStrings.igx_grid_pinning_uncheck_all_label : 'Unpin All';
-
-    /**
-     * @hidden @internal
-     */
-    public trackByFunction = (index: number, item: IgxColumnComponent) => item.pinned;
+    public uncheckAllLabel = this.columnActions.grid?.resourceStrings.igx_grid_pinning_uncheck_all_label ?? 'Unpin All';
 
     /**
      * @hidden @internal
      */
     public checkAll() {
-        this.gridAPI.grid.columns.forEach(c => c.pinned = true);
+        this.columnActions.actionableColumns.forEach(c => c.pinned = true);
     }
 
     /**
      * @hidden @internal
      */
     public uncheckAll() {
-        this.gridAPI.grid.columns.forEach(c => c.pinned = false);
+        this.columnActions.actionableColumns.forEach(c => c.pinned = false);
     }
 
     /**

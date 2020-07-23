@@ -16,12 +16,14 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IgxColumnActionsModule } from '../column-actions/column-actions.module'
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 
 describe('Column Pinning UI #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
-    let columnChooser: IgxColumnPinningComponent;
+    let columnChooser: IgxColumnActionsComponent;
     let columnChooserElement: DebugElement;
 
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
@@ -38,6 +40,7 @@ describe('Column Pinning UI #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxColumnPinningModule,
+                IgxColumnActionsModule,
                 IgxButtonModule
             ]
         }).compileComponents();
@@ -78,17 +81,17 @@ describe('Column Pinning UI #grid', () => {
             expect(columnChooser.title).toBe('');
         }));
 
-        it('filter input visibility is controlled via \'disableFilter\' property.', () => {
+        it('filter input visibility is controlled via \'hideFilter\' property.', () => {
             let filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
             expect(filterInputElement).not.toBeNull();
 
-            fix.componentInstance.disableFilter = true;
+            fix.componentInstance.hideFilter = true;
             fix.detectChanges();
 
             filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
             expect(filterInputElement).toBeNull();
 
-            fix.componentInstance.disableFilter = false;
+            fix.componentInstance.hideFilter = false;
             fix.detectChanges();
 
             filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);

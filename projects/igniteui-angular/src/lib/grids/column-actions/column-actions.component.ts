@@ -1,13 +1,10 @@
 import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     HostBinding,
     Input,
     OnDestroy,
     Output,
-    Inject,
     ViewChild,
     ViewChildren,
     QueryList
@@ -33,6 +30,12 @@ export class IgxColumnActionsComponent implements OnDestroy {
 /* todo
     <!-- (onColumnVisibilityChanged)="onVisibilityChanged($event)" -->
 */
+
+    /**
+     * @hidden @internal
+     */
+    public actionableColumns: IgxColumnComponent[] = [];
+
     /**
      * @hidden @internal
      */
@@ -321,6 +324,13 @@ export class IgxColumnActionsComponent implements OnDestroy {
     }
 
     /**
+     * @hidden @internal
+     */
+    public get grid() {
+        return this.actionableColumns[0]?.grid ?? null;
+    }
+
+    /**
      * @hidden
      */
     ngOnDestroy() {
@@ -350,14 +360,4 @@ export class IgxColumnActionsComponent implements OnDestroy {
     public checkAllColumns() {
         this.actionsDirective.checkAll();
     }
-
-    /*
-
-    get level() {
-        return this.column.level;
-    }
-
-    get calcIndent() {
-        return this.indentation * this.level;
-    }*/
 }

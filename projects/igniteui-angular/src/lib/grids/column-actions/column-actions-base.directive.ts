@@ -26,11 +26,6 @@ export abstract class IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public trackByFunction: (index: number, item: IgxColumnComponent) => boolean;
-
-    /**
-     * @hidden @internal
-     */
     public abstract columnChecked(column: IgxColumnComponent): boolean;
 
     /**

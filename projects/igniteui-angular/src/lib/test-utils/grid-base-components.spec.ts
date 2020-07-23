@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
-import { IgxColumnHidingComponent, IgxColumnPinningComponent } from '../grids/public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
+import { IgxColumnActionsComponent } from '../grids/column-actions/column-actions.component';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
     template: `
@@ -120,18 +121,27 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 
 @Component({
     template: `<div>
-    <igx-column-hiding [columns]="grid.columns" *ngIf="showInline" [disableFilter]="disableFilter"></igx-column-hiding>
+    <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productHidable) }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
-    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
+    @ViewChild(IgxColumnActionsComponent)
+    public chooser: IgxColumnActionsComponent;
+
+    @ViewChildren(IgxCheckboxComponent)
+    public checkboxes: IgxCheckboxComponent[];
+    
     width = '500px';
     height = '500px';
     showInline = true;
-    disableFilter = false;
+    hideFilter = false;
     constructor(private cdr: ChangeDetectorRef) {
         super();
+    }
+
+    public get hiddenColumnsCount(): number {
+        return this.checkboxes.filter(c => c.checked).length;
     }
 
     ngOnInit() {
@@ -157,17 +167,17 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
 @Component({
     template: `<div>
-        <igx-column-pinning [columns]="grid.columns" *ngIf="showInline" [disableFilter]="disableFilter"></igx-column-pinning>
+        <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-pinning>
         ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
-    @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
+    @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
 
     height = '500px';
     width = '500px';
     showInline = true;
-    disableFilter = false;
+    hideFilter = false;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();

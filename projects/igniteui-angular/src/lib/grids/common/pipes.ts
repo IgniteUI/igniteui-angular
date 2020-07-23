@@ -7,6 +7,7 @@ import { GridType } from './grid.interface';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 
 /**
  * @hidden
@@ -253,15 +254,19 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 })
 export class IgxColumnActionEnabledPipe implements PipeTransform {
 
+    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
+
     public transform(
         collection: IgxColumnComponent[],
         actionFilter: (value: IgxColumnComponent, index: number, array: IgxColumnComponent[]) => boolean,
         pipeTrigger: number
     ): IgxColumnComponent[] {
-        const copy = collection.slice(0);
+        let copy = collection.slice(0);
         if (actionFilter) {
-            return copy.filter(actionFilter);
+            copy = copy.filter(actionFilter);
         }
+        // Preserve the actionable collection for use in the component
+        this.columnActions.actionableColumns = copy;
         return copy;
     }
 }
