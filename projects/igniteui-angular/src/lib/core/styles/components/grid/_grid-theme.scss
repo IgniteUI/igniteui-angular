@@ -2391,6 +2391,10 @@
         align-items: center;
     }
 
+    %igx-grid__filtering-dropdown-text {
+        margin-left: rem(16px);
+    }
+
     %igx-grid__filtering-row--cosy {
         height: map-get($grid-header-height, 'cosy');
     }
