@@ -1,5 +1,6 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
+import { resolveNestedPath } from '../core/utils';
 
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree): any[];
@@ -95,6 +96,6 @@ export class FilteringStrategy extends BaseFilteringStrategy {
     }
 
     protected getFieldValue(rec: object, fieldName: string): any {
-        return rec[fieldName];
+        return resolveNestedPath(rec, fieldName);
     }
 }
