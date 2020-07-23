@@ -64,7 +64,6 @@ const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
-const SORT_INDEX_CLASS = '.sort-index';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -81,6 +80,7 @@ const COLUMN_PINNING_CLASS = 'igx-column-pinning';
 const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
+const SORT_INDEX_ATTRIBUTE = 'data-sortIndex';
 export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
 export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
@@ -1815,7 +1815,7 @@ export class GridFunctions {
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
-        const sortIcon = header.query(By.css(SORT_ICON_CLASS)).parent;
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         sortIcon.triggerEventHandler('click', new Event('click'));
     }
 
@@ -1891,9 +1891,10 @@ export class GridFunctions {
     }
 
     public static getColumnSortingIndex(columnHeader: DebugElement): number {
-        const indicatorContainer = columnHeader.query(By.css(SORT_INDEX_CLASS));
-        if (indicatorContainer) {
-            return parseInt(indicatorContainer.nativeElement.textContent.trim(), 10);
+        let sortIndex = columnHeader.query(By.css(`${SORT_ICON_CLASS}`)).nativeElement.getAttribute(SORT_INDEX_ATTRIBUTE);
+        sortIndex = parseInt(sortIndex?.trim(), 10);
+        if (!isNaN(sortIndex)) {
+            return sortIndex;
         }
         return null;
     }
