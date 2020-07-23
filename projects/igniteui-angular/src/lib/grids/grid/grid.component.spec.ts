@@ -2415,8 +2415,8 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
     public width = '600px';
     public height = '400px';
     public value: any;
-    public formatNum() {
-        return this.value.toExponential().toString();
+    public formatNum(value) {
+        return value.toExponential().toString();
     }
 }
 
