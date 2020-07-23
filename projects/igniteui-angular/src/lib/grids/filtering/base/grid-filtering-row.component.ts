@@ -778,4 +778,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private get isColumnFiltered() {
         return this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0;
     }
+
+    public get isNarrowWidth(): boolean {
+        return this.element.nativeElement.offsetWidth < 432;
+    }
 }
