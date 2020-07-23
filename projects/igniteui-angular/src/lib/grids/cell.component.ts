@@ -767,7 +767,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (!isLeftClick(event)) {
             event.preventDefault();
-            this.grid.navigation.setActiveNode(this.column);
+            this.setActiveNode();
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
