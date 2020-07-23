@@ -94,6 +94,12 @@ The following example shows how you can use the Indigo theme:
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
 
+## 9.1.9
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Expose a setter for grid's `outlet` property, which can be used to set the outlet used to attach the grid's overlays to.
+
 ## 9.1.4
 
 ### New Features

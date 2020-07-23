@@ -182,7 +182,7 @@
                                  mode="dropdown"
                                  [(ngModel)]="searchValue"
                                  [locale]="grid.locale"
-                                 [outlet]="grid.outletDirective">
+                                 [outlet]="grid.outlet">
                     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
                         <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'">
                             <input #searchValueInput
