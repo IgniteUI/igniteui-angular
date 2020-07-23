@@ -75,10 +75,8 @@ const SORTED_COLUMN_CLASS = 'igx-grid__th--sorted';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
-const COLUMN_HIDING_DIRECTIVE = IgxColumnHidingDirective;
-const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
-const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
-const COLUMN_PINNING_DIRECTIVE = IgxColumnPinningDirective;
+const COLUMN_ACTIONS_INPUT_CLASS = '.igx-column-actions__header-input';
+const COLUMN_ACTIONS_COLUMNS_CLASS = '.igx-column-actions__columns';
 const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
@@ -1845,11 +1843,11 @@ export class GridFunctions {
     }
 
     public static getColumnHidingElement(fix: ComponentFixture<any>): DebugElement {
-        return fix.debugElement.query(By.directive(COLUMN_HIDING_DIRECTIVE));
+        return fix.debugElement.query(By.directive(IgxColumnHidingDirective));
     }
 
     public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
-        return fix.debugElement.query(By.directive(COLUMN_PINNING_DIRECTIVE));
+        return fix.debugElement.query(By.directive(IgxColumnPinningDirective));
     }
 
     public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {
@@ -1857,7 +1855,7 @@ export class GridFunctions {
     }
 
     public static getColumnHidingHeaderInput(columnChooserElement: DebugElement): DebugElement {
-        return columnChooserElement.query(By.css(COLUMN_HIDING_INPUT_CLASS));
+        return columnChooserElement.query(By.css(COLUMN_ACTIONS_INPUT_CLASS));
     }
 
     public static getColumnChooserFilterInput(columnChooserElement: DebugElement): DebugElement {
@@ -1888,7 +1886,7 @@ export class GridFunctions {
     }
 
     public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
-        return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
+        return columnChooserElement.query(By.css(COLUMN_ACTIONS_COLUMNS_CLASS));
     }
 
     public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {

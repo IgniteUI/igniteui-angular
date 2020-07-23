@@ -55,7 +55,7 @@ describe('Column Hiding UI #grid', () => {
             columnChooserElement = GridFunctions.getColumnHidingElement(fix);
         }));
 
-        fit('title is initially empty.', () => {
+        it('title is initially empty.', () => {
             const title = GridFunctions.getColumnChooserTitle(columnChooserElement);
             expect(title).toBe(null);
         });
@@ -72,13 +72,11 @@ describe('Column Hiding UI #grid', () => {
             fix.detectChanges();
 
             expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
-            expect(columnChooser.title).toBe('');
 
             columnChooser.title = null;
             fix.detectChanges();
 
             expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
-            expect(columnChooser.title).toBe('');
         });
 
         it('filter input visibility is controlled via \'hideFilter\' property.', () => {

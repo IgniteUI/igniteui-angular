@@ -102,7 +102,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
      * let columnItems =  this.columnActions.columnItems;
      * ```
      */
-    @ViewChildren('columnItem', { read: IgxCheckboxComponent })
+    @ViewChildren(IgxCheckboxComponent)
     public columnItems: QueryList<IgxCheckboxComponent>;
 
     /**

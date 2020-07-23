@@ -277,8 +277,6 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
 })
 export class IgxFilterActionColumnsPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
-
     public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
         if (filterCriteria && filterCriteria.length > 0) {
             return collection.filter((c) => {
@@ -295,8 +293,6 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
     pure: true
 })
 export class IgxSortActionColumnsPipe implements PipeTransform {
-
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: IgxColumnComponent[], displayOrder: ColumnDisplayOrder, pipeTrigger: number): IgxColumnComponent[] {
         if (displayOrder === ColumnDisplayOrder.Alphabetical) {
