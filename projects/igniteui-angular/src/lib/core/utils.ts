@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
 import { setImmediate } from 'core-js-pure';
+import merge from 'lodash.merge';
 
 /**
  * @hidden
@@ -47,19 +48,7 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @hidden
  */
 export function mergeObjects(obj1: {}, obj2: {}): any {
-    if (!isObject(obj1)) {
-        throw new Error(`Cannot merge into ${obj1}. First param must be an object.`);
-    }
-
-    if (!isObject(obj2)) {
-        return obj1;
-    }
-
-    for (const key of Object.keys(obj2)) {
-        obj1[key] = cloneValue(obj2[key]);
-    }
-
-    return obj1;
+    return merge(obj1, obj2);
 }
 
 /**
@@ -383,6 +372,66 @@ export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
         }
     }
     return match;
+}
+
+/**
+ *
+ * Given a property access path in the format `x.y.z` resolves and returns
+ * the value of the `z` property in the passed object.
+ *
+ * @hidden
+ * @internal
+ */
+export function resolveNestedPath(obj: any, path: string) {
+    const parts = path?.split('.') ?? [];
+    let current = obj[parts.shift()];
+
+    parts.forEach(prop => {
+        if (current) {
+            current = current[prop];
+        }
+    });
+
+    return current;
+}
+
+
+/**
+ *
+ * Given a property access path in the format `x.y.z` and a value
+ * this functions builds and returns an object following the access path.
+ *
+ * @example
+ * ```typescript
+ * console.log('x.y.z.', 42);
+ * >> { x: { y: { z: 42 } } }
+ * ```
+ *
+ * @hidden
+ * @internal
+ */
+export function reverseMapper(path: string, value: any) {
+    const obj = {};
+    const parts = path?.split('.') ?? [];
+
+    let _prop = parts.shift();
+    let mapping: any;
+
+    // Initial binding for first level bindings
+    obj[_prop] = value;
+    mapping = obj;
+
+    parts.forEach(prop => {
+        // Start building the hierarchy
+        mapping[_prop] = {};
+        // Go down a level
+        mapping = mapping[_prop];
+        // Bind the value and move the key
+        mapping[prop] = value;
+        _prop = prop;
+    });
+
+    return obj;
 }
 
 export function yieldingLoop(count: number, chunkSize: number, callback: (index: number) => void, done: () => void) {
