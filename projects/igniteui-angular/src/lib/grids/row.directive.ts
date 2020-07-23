@@ -14,13 +14,12 @@ import {
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { GridType } from './common/grid.interface';
+import merge from 'lodash.merge';
 
 @Directive({
     selector: '[igxRowBaseComponent]'
@@ -40,7 +39,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return Object.assign({}, this._rowData, this.grid.transactions.getAggregatedValue(this.rowID, false));
+            return merge({...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
         }
         return this._rowData;
     }

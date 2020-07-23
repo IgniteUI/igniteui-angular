@@ -7,9 +7,7 @@ import {
     ViewChildren,
     QueryList,
     ViewChild,
-    TemplateRef,
-    Input,
-    HostListener
+    TemplateRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowDirective } from '../row.directive';
@@ -17,7 +15,6 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]

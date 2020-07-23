@@ -1,14 +1,14 @@
 @import '../light/grid-toolbar';
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// Generates a base dark grid-toolbar schema.
 /// @type {Map}
-/// @prop {map} background-color [#222] - The toolbar background color.
-/// @prop {map} dropdown-background [#222] - The toolbar drop-down background color.
+/// @prop {Map} background-color [#222] - The toolbar background color.
+/// @prop {Map} dropdown-background [#222] - The toolbar drop-down background color.
 $_base-dark-grid-toolbar: (
     background-color: #222,
     dropdown-background: #222
@@ -35,3 +35,19 @@ $_dark-fluent-grid-toolbar: extend($_fluent-grid-toolbar, $_base-dark-grid-toolb
 /// @requires $_bootstrap-grid-toolbar
 /// @requires $_base-dark-grid-toolbar
 $_dark-bootstrap-grid-toolbar: extend($_bootstrap-grid-toolbar, $_base-dark-grid-toolbar);
+
+/// Generates a dark indigo grid-toolbar schema.
+/// @type {Map}
+/// @property {Map} background-color [igx-color: 'surface'] - The toolbar background color.
+/// @requires {function} extend
+/// @requires $_indigo-grid-toolbar
+/// @requires $_base-dark-grid-toolbar
+$_dark-indigo-grid-toolbar: extend(
+    $_indigo-grid-toolbar,
+    $_base-dark-grid-toolbar,
+    (
+        background-color: (
+            igx-color: 'surface',
+        )
+    )
+);

@@ -1,7 +1,7 @@
 @import '../light/button-group';
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -9,9 +9,9 @@
 /// Generates the base dark button-group schema.
 /// @type {Map}
 /// @prop {Color} item-background [#222] - The background color for button group items.
-/// @prop {map} item-border-color [igx-color: ('grays', 400), hexrgba: #222] - The border color for button group items.
-/// @prop {map} item-selected-border-color [igx-color: ('grays', 500), hexrgba: #222] - The border color for button group selected items.
-/// @prop {map} item-disabled-border: [igx-color: ('grays', 400), hexrgba: #222] - The border color for button group disabled items.
+/// @prop {Map} item-border-color [igx-color: ('grays', 400), hexrgba: #222] - The border color for button group items.
+/// @prop {Map} item-selected-border-color [igx-color: ('grays', 500), hexrgba: #222] - The border color for button group selected items.
+/// @prop {Map} item-disabled-border: [igx-color: ('grays', 400), hexrgba: #222] - The border color for button group disabled items.
 $_base-dark-button-group: (
     item-background: #222,
 
@@ -42,15 +42,15 @@ $_dark-button-group: extend($_light-button-group, $_base-dark-button-group);
 /// Generates a dark fluent button-group schema based on a mix of $_fluent-button-group and $_base-dark-button-group
 /// @type {Map}
 ///
-/// @prop {map} item-border-color [igx-color: ('grays', 100), hexrgba: #000] - The border color for button group items.
-/// @prop {map} item-selected-border-color [igx-color: ('grays', 100), hexrgba: #000] - The border color for button group selected items.
-/// @prop {map} item-disabled-border: [igx-color: ('grays', 100), hexrgba: #000] - The border color for button group disabled items.
-/// @prop {map} item-text-color [igx-color: ('grays', 900)] - The text color for button group items.
-/// @prop {map} item-hover-text-color [igx-color: ('primary', 200)] - The text color for button group items on hover.
+/// @prop {Map} item-border-color [igx-color: ('grays', 100), hexrgba: #000] - The border color for button group items.
+/// @prop {Map} item-selected-border-color [igx-color: ('grays', 100), hexrgba: #000] - The border color for button group selected items.
+/// @prop {Map} item-disabled-border: [igx-color: ('grays', 100), hexrgba: #000] - The border color for button group disabled items.
+/// @prop {Map} item-text-color [igx-color: ('grays', 900)] - The text color for button group items.
+/// @prop {Map} item-hover-text-color [igx-color: ('primary', 200)] - The text color for button group items on hover.
 /// @prop {Color} item-hover-background [#222] - The background color for button group items on hover.
-/// @prop {map} item-selected-background [igx-color: ('grays', 100)] - The background color for button group selected items.
-/// @prop {map} item-selected-hover-background [igx-color: ('grays', 100)] - The background color for button group selected items on hover.
-/// @prop {map} item-selected-text-color [igx-color: ('primary', 200)] - The text color for button group selected items.
+/// @prop {Map} item-selected-background [igx-color: ('grays', 100)] - The background color for button group selected items.
+/// @prop {Map} item-selected-hover-background [igx-color: ('grays', 100)] - The background color for button group selected items on hover.
+/// @prop {Map} item-selected-text-color [igx-color: ('primary', 200)] - The text color for button group selected items.
 /// @prop {Color} disabled-background-color [#222] - The background color for button group disabled items.
 ///
 /// @requires {function} extend
@@ -107,3 +107,10 @@ $_dark-fluent-button-group: extend(
 /// @requires {function} extend
 /// @requires $_bootstrap-button-group
 $_dark-bootstrap-button-group: extend($_bootstrap-button-group);
+
+/// Generates a dark indigo button-group schema
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-button-group
+$_dark-indigo-button-group: extend($_indigo-button-group);
+

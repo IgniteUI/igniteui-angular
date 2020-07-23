@@ -2,59 +2,87 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
+/// @ignore
+$_light-watermark-image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODQiIGhlaWdodD0iMTA0IiB2aWV3Qm94PSIwIDAgMTg0IDEwNCI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbC1ydWxlOiBldmVub2RkOwogICAgICAgIG9wYWNpdHk6IDAuMDU7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxwYXRoIGlkPSJ0cmlhbCIgY2xhc3M9ImNscy0xIiBkPSJNMTYuNzIsMTAuMTQ4TDEwLjMsOC40MzRsMS44MDYtNi43MjNMNy4wOSwwLjM2OSw1LjI4Myw3LjA5MiwyLjMwOCw2LjMsMS4xNSwxMC42MDlsMi45NzUsMC44TDEuMjM1LDIyLjE2MXEtMS4zNDUsNS4wMDctLjM2Nyw3LjIwN1Q1LjgsMzIuNjIzYTI4LjE2MywyOC4xNjMsMCwwLDAsNC45LjY2NGwwLjg1MS00LjEtMy44NS0uODhxLTEuNzIxLS40Ni0xLjg4OS0xLjVhMTEuMTg4LDExLjE4OCwwLDAsMSwuNTkxLTMuODY3bDIuNzQxLTEwLjIsNi40MTYsMS43MTRaTTE5LjcsMzUuNzlsNC4zNDgtMTYuMTgxLDEuMTM1LS4xNDRhMzMuODcxLDMzLjg3MSwwLDAsMSw3LjM4Mi0uMjE0TDMzLjkxOSwxNC4yYTIyLjk0MSwyMi45NDEsMCwwLDAtOC43ODgsMS4xOEwyNS44NzgsMTIuNmwtNS4wMjEtMS4zNDJMMTQuNjI5LDM0LjQzNlptMTYuNzgzLDQuNDg1LDYuMjI5LTIzLjE4MkwzNy42NCwxNS43MzgsMzEuNDEyLDM4LjkyMVptNy4yODctMjcuMTIzTDQ1LjIsNy44Miw0MC4xMzIsNi40NjYsMzguNywxMS44Wm0yMC4wNDIsMTFxLTEuMzkxLTIuMzM0LTUuNjQ1LTMuNDcxYTQxLjk1MSw0MS45NTEsMCwwLDAtOS42NDUtMS4yODVsLTAuNzczLDMuNjIsMS41MTMsMC4zcTQuNTYzLDAuODIyLDcuNTM4LDEuNjE3YTMuNTYyLDMuNTYyLDAsMCwxLDIuMiwxLjM4MiwzLjUyOCwzLjUyOCwwLDAsMSwuMTE2LDIuODE0TDU4LjY1OCwzMC44LDUyLjUyNCwyOS43YTEwLjY0NSwxMC42NDUsMCwwLDAtNi4zLjM1NHEtMi4zMDYsMS4wNzQtMy4yNTMsNC42LTEuOTgxLDcuMzcyLDQuOTQ2LDkuMjIzYTE4LjM1NywxOC4zNTcsMCwwLDAsNy45NDYuMjg1LDEwLjEzNCwxMC4xMzQsMCwwLDAsNS43MjIsMy4zNjhMNjIuNzYsNDMuNzJhMi42NjUsMi42NjUsMCwwLDEtMS4zNDMtMS4wMywyLjI3MywyLjI3MywwLDAsMS0uMTMtMS42NWwyLjg0LTEwLjU3MVE2NS4yLDI2LjQ4Miw2My44MDgsMjQuMTQ3Wk01Ny43LDM0LjM2N2wtMS42NTcsNi4xNjYtMC45MTIuMDU1QTE4LjYzNSwxOC42MzUsMCwwLDEsNTAsNDAuMDEzcS0yLjgzNi0uNzU4LTEuOTc2LTMuOTU3YTMuMjM3LDMuMjM3LDAsMCwxLDQuMTQyLTIuNjJaTTcxLjUzMiw0OS42NDJsOC44Mi0zMi44MjYtNS4wNjgtMS4zNTQtOC44MiwzMi44MjZaIi8+Cjwvc3ZnPgo=';
+
 /// Generates a light watermark schema.
 /// @type {Map}
+/// @see $default-palette
+/// @prop {Number} $border-radius [0] - The border radius fraction, between 0-1 to be used for the link.
+/// @prop {Map} $border-color [igx-color: ('primary')] - The border color used for the link.
+/// @prop {Map} $link-background [igx-color: ('primary')] - The background color used for the link.
+/// @prop {Color} $color [#fff] - The color used for the link text.
 /// @requires {function} extend
 $_light-watermark: extend(
-    $_default-shape-watermark,
+    $_material-shape-watermark,
     (
         variant: 'material',
 
         link-background: (
-            igx-color: ('secondary'),
+            igx-color: ('primary'),
         ),
 
-        background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODQiIGhlaWdodD0iMTA0IiB2aWV3Qm94PSIwIDAgMTg0IDEwNCI+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5jbHMtMSB7CiAgICAgICAgZmlsbC1ydWxlOiBldmVub2RkOwogICAgICAgIG9wYWNpdHk6IDAuMDU7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxwYXRoIGlkPSJ0cmlhbCIgY2xhc3M9ImNscy0xIiBkPSJNMTYuNzIsMTAuMTQ4TDEwLjMsOC40MzRsMS44MDYtNi43MjNMNy4wOSwwLjM2OSw1LjI4Myw3LjA5MiwyLjMwOCw2LjMsMS4xNSwxMC42MDlsMi45NzUsMC44TDEuMjM1LDIyLjE2MXEtMS4zNDUsNS4wMDctLjM2Nyw3LjIwN1Q1LjgsMzIuNjIzYTI4LjE2MywyOC4xNjMsMCwwLDAsNC45LjY2NGwwLjg1MS00LjEtMy44NS0uODhxLTEuNzIxLS40Ni0xLjg4OS0xLjVhMTEuMTg4LDExLjE4OCwwLDAsMSwuNTkxLTMuODY3bDIuNzQxLTEwLjIsNi40MTYsMS43MTRaTTE5LjcsMzUuNzlsNC4zNDgtMTYuMTgxLDEuMTM1LS4xNDRhMzMuODcxLDMzLjg3MSwwLDAsMSw3LjM4Mi0uMjE0TDMzLjkxOSwxNC4yYTIyLjk0MSwyMi45NDEsMCwwLDAtOC43ODgsMS4xOEwyNS44NzgsMTIuNmwtNS4wMjEtMS4zNDJMMTQuNjI5LDM0LjQzNlptMTYuNzgzLDQuNDg1LDYuMjI5LTIzLjE4MkwzNy42NCwxNS43MzgsMzEuNDEyLDM4LjkyMVptNy4yODctMjcuMTIzTDQ1LjIsNy44Miw0MC4xMzIsNi40NjYsMzguNywxMS44Wm0yMC4wNDIsMTFxLTEuMzkxLTIuMzM0LTUuNjQ1LTMuNDcxYTQxLjk1MSw0MS45NTEsMCwwLDAtOS42NDUtMS4yODVsLTAuNzczLDMuNjIsMS41MTMsMC4zcTQuNTYzLDAuODIyLDcuNTM4LDEuNjE3YTMuNTYyLDMuNTYyLDAsMCwxLDIuMiwxLjM4MiwzLjUyOCwzLjUyOCwwLDAsMSwuMTE2LDIuODE0TDU4LjY1OCwzMC44LDUyLjUyNCwyOS43YTEwLjY0NSwxMC42NDUsMCwwLDAtNi4zLjM1NHEtMi4zMDYsMS4wNzQtMy4yNTMsNC42LTEuOTgxLDcuMzcyLDQuOTQ2LDkuMjIzYTE4LjM1NywxOC4zNTcsMCwwLDAsNy45NDYuMjg1LDEwLjEzNCwxMC4xMzQsMCwwLDAsNS43MjIsMy4zNjhMNjIuNzYsNDMuNzJhMi42NjUsMi42NjUsMCwwLDEtMS4zNDMtMS4wMywyLjI3MywyLjI3MywwLDAsMS0uMTMtMS42NWwyLjg0LTEwLjU3MVE2NS4yLDI2LjQ4Miw2My44MDgsMjQuMTQ3Wk01Ny43LDM0LjM2N2wtMS42NTcsNi4xNjYtMC45MTIuMDU1QTE4LjYzNSwxOC42MzUsMCwwLDEsNTAsNDAuMDEzcS0yLjgzNi0uNzU4LTEuOTc2LTMuOTU3YTMuMjM3LDMuMjM3LDAsMCwxLDQuMTQyLTIuNjJaTTcxLjUzMiw0OS42NDJsOC44Mi0zMi44MjYtNS4wNjgtMS4zNTQtOC44MiwzMi44MjZaIi8+Cjwvc3ZnPgo='),
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTg0IiBoZWlnaHQ9IjEwNCIgdmlld0JveD0iMCAwIDE4NCAxMDQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIG9wYWNpdHk9IjAuMDUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTYuNyAxMC4xTDEwLjMgOC4zOTk5OUwxMi4xIDEuNjk5OTlMNy4xIDAuMzk5OTk0TDUuMyA3LjA5OTk5TDIuMyA2LjI5OTk5TDEuMSAxMC42TDQuMSAxMS40TDEuMiAyMi4yQzAuMjk5OTk3IDI1LjUgMC4xOTk5OTcgMjcuOSAwLjc5OTk5NyAyOS40QzEuNSAzMC45IDMuMSAzMiA1LjcgMzIuN0M3LjMgMzMuMSA5IDMzLjMgMTAuNiAzMy40TDExLjUgMjkuM0w3LjcgMjguNEM2LjYgMjguMSA1LjkgMjcuNiA1LjggMjYuOUM1LjggMjUuNiA2IDI0LjMgNi40IDIzTDkuMSAxMi44TDE1LjUgMTQuNUwxNi43IDEwLjFaTTE5LjcgMzUuOEwyNCAxOS42TDI1LjEgMTkuNUMyNy41IDE5LjIgMzAgMTkuMSAzMi41IDE5LjNMMzMuOSAxNC4yQzMwLjkgMTQgMjcuOSAxNC40IDI1LjEgMTUuNEwyNS44IDEyLjZMMjAuOCAxMS4zTDE0LjYgMzQuNUwxOS43IDM1LjhaTTM2LjUgNDAuM0w0Mi43IDE3LjFMMzcuNiAxNS43TDMxLjQgMzguOUwzNi41IDQwLjNaTTQzLjggMTMuMkw0NS4yIDcuODk5OTlMNDAuMSA2LjQ5OTk5TDM4LjcgMTEuOEw0My44IDEzLjJaTTYzLjggMjQuMkM2Mi45IDIyLjYgNjEgMjEuNSA1OC4yIDIwLjdDNTUgMTkuOSA1MS44IDE5LjUgNDguNiAxOS40TDQ3LjcgMjNMNDkuMiAyMy4zQzUyLjIgMjMuOCA1NC44IDI0LjQgNTYuNyAyNC45QzU3LjYgMjUuMSA1OC40IDI1LjYgNTguOSAyNi4zQzU5LjMgMjcuMiA1OS40IDI4LjIgNTkgMjkuMUw1OC41IDMwLjhMNTIuNCAyOS43QzUwLjMgMjkuMiA0OC4xIDI5LjMgNDYuMSAzMC4xQzQ0LjYgMzAuOCA0My41IDMyLjMgNDIuOCAzNC43QzQxLjUgMzkuNiA0My4xIDQyLjcgNDcuNyA0My45QzUwLjMgNDQuNiA1MyA0NC43IDU1LjYgNDQuMkM1Ny4xIDQ1LjkgNTkuMSA0Ny4xIDYxLjMgNDcuNkw2Mi41IDQzLjhDNjIgNDMuNiA2MS41IDQzLjMgNjEuMiA0Mi44QzYxIDQyLjMgNjAuOSA0MS43IDYxLjEgNDEuMUw2My45IDMwLjVDNjQuOCAyNy44IDY0LjcgMjUuNyA2My44IDI0LjJaTTU3LjcgMzQuNEw1NiA0MC41TDU1LjEgNDAuNkM1My40IDQwLjYgNTEuNiA0MC41IDUwIDQwQzQ4LjEgMzkuNSA0Ny41IDM4LjIgNDggMzZDNDguMyAzNC4yIDQ5LjkgMzMgNTEuNyAzMy4zQzUxLjkgMzMuMyA1MiAzMy40IDUyLjIgMzMuNEw1Ny43IDM0LjRaTTcxLjUgNDkuNkw4MC4zIDE2LjhMNzUuMiAxNS40TDY2LjQgNDguMkw3MS41IDQ5LjZaIiBmaWxsPSIjMDA5OUZGIi8+Cjwvc3ZnPgo='),
 
-        color: (
-            igx-color: #fff,
-        ),
+        color: #fff,
 
         border-color: (
-            igx-color: ('secondary'),
+            igx-color: ('primary'),
         ),
-
-        roundness: rem(0)
     )
 );
 
 /// Generates a light fluent watermark schema.
 /// @type {Map}
+/// @prop {Number} $border-radius [2px] - The border radius used for the link.
 /// @requires {function} extend
-/// @requires $_light-watermark
+/// @requires {Map} $_light-watermark
 $_fluent-watermark: extend(
     $_light-watermark,
     $_fluent-shape-watermark,
     (
         variant: 'fluent',
-        roundness: rem(2px)
+
+        background-image: #{url($_light-watermark-image)},
     )
 );
 
 /// Generates a bootstrap watermark schema.
 /// @type {Map}
+/// @prop {Number} $border-radius [4px] - The border radius used for the link.
 /// @requires {function} extend
-/// @requires $_light-watermark
+/// @requires {Map} $_light-watermark
 $_bootstrap-watermark: extend(
     $_light-watermark,
     $_bootstrap-shape-watermark,
     (
         variant: 'bootstrap',
-        roundness: rem(4px)
+
+        background-image: #{url($_light-watermark-image)},
+    )
+);
+
+/// Generates an indigo watermark schema.
+/// @type {Map}
+/// @prop {Map} $border-color [igx-color: ('primary', 300)] - The border color for the link.
+/// @prop {Number} $border-radius [1] - The border radius fraction, between 0-1 to be used for the link.
+/// @requires {function} extend
+/// @requires {Map} $_light-watermark
+$_indigo-watermark: extend(
+    $_light-watermark,
+    $_indigo-shape-watermark,
+    (
+        variant: 'indigo-design',
+
+        background-image: #{url($_light-watermark-image)},
+
+        border-color: (
+            igx-color: ('primary', 300),
+        ),
     )
 );
 

@@ -2,7 +2,7 @@
 
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -17,8 +17,6 @@
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-10 to be used for checkbox.
 /// @prop {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
 ///
-/// @requires {function} extend
-/// @requires {map} $_default-shape-checkbox
 /// @see $default-palette
 $_light-checkbox: extend(
     $_default-shape-checkbox,
@@ -57,8 +55,7 @@ $_light-checkbox: extend(
 /// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-checkbox
-/// @requires {map} $_fluent-shape-checkbox
+/// @requires {Map} $_light-checkbox
 $_fluent-checkbox: extend(
     $_light-checkbox,
     $_fluent-shape-checkbox,
@@ -87,7 +84,7 @@ $_fluent-checkbox: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for checkbox.
 ///
 /// @requires {function} extend
-/// @requires {map} $_light-checkbox
+/// @requires {Map} $_light-checkbox
 $_bootstrap-checkbox: extend(
     $_light-checkbox,
     $_bootstrap-shape-checkbox,
@@ -108,3 +105,42 @@ $_bootstrap-checkbox: extend(
     )
 );
 
+
+/// Generates an indigo checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [igx-color: 'surface'] - The checked mark color.
+/// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
+/// @prop {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
+/// @prop {Color} disabled-color-label [igx-color: ('grays', 300)] - The disabled label color.
+/// @prop {Number} border-radius [3px] - The border radius used for the checkbox.
+///
+/// @requires {function} extend
+/// @requires {Map} $_light-checkbox
+$_indigo-checkbox: extend(
+    $_light-checkbox,
+    $_indigo-shape-checkbox,
+    (
+        variant: 'indigo-design',
+
+        tick-color: (
+            igx-color: 'surface'
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        empty-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 300),
+        ),
+
+        disabled-color-label: (
+            igx-color: ('grays', 300),
+        )
+    )
+);

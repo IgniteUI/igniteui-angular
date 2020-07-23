@@ -7,11 +7,11 @@
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
-      "@types/jszip",
       "core-js-pure",
       "hammerjs",
       "jszip",
       "resize-observer-polyfill",
-      "igniteui-trial-watermark"
+      "igniteui-trial-watermark",
+      "lodash.merge"
     ]
 }

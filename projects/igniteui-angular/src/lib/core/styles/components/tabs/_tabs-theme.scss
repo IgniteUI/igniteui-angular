@@ -222,6 +222,7 @@
     $variant: map-get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
+    $indigo-theme: $variant == 'indigo-design';
 
     $item-min-width: 90px;
     $item-max-width: 360px;
@@ -245,9 +246,10 @@
         align-items: center;
         overflow: hidden;
         background: --var($theme, 'item-background');
+        box-shadow: --var($theme, 'tab-area-shadow');
 
-        @if $not-bootstrap-theme {
-            box-shadow: --var($theme, 'tab-area-shadow');
+        @if $bootstrap-theme or $indigo-theme {
+            box-shadow: none;
         }
     }
 
@@ -270,7 +272,7 @@
         align-items: center;
         min-width: 100%;
 
-        @if $bootstrap-theme {
+        @if $bootstrap-theme or $indigo-theme {
             &::after {
                 content: '';
                 position: absolute;
@@ -321,6 +323,10 @@
             border-top-right-radius: --var($theme, 'border-radius');
         }
 
+        @if $indigo-theme {
+            border-bottom: 1px solid --var($theme, 'border-color');
+        }
+
         &::-moz-focus-inner {
             border: 0;
         }
@@ -345,6 +351,19 @@
             &:hover,
             &:focus {
                 border: 1px solid --var($theme, 'border-color--hover');
+            }
+        }
+
+        @if $indigo-theme {
+            border-top: transparent;
+            border-left: transparent;
+            border-right: transparent;
+
+            &:hover,
+            &:focus {
+                border-top: transparent;
+                border-left: transparent;
+                border-right: transparent;
             }
         }
 
@@ -411,7 +430,14 @@
 
     %igx-tabs__header-menu-item--disabled {
         outline: 0;
-        opacity: .5;
+        @if not $indigo-theme {
+            opacity: .5;
+        } @else  {
+            %igx-tabs__header-menu-item-icon,
+            %igx-tabs__item-label {
+                opacity: .4;
+            }
+        }
         cursor: default;
         pointer-events: none;
     }
@@ -459,7 +485,9 @@
         background: --var($theme, 'button-background');
         color: --var($theme, 'button-color');
         outline: 0;
-        box-shadow: igx-elevation($elevations, 4);
+        @if not $indigo-theme {
+            box-shadow: igx-elevation($elevations, 4);
+        }
 
         &:hover {
             background: --var($theme, 'button-hover-background');
