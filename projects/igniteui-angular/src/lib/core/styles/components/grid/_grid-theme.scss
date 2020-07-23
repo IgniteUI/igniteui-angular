@@ -2634,24 +2634,24 @@
     @include _excel-filtering($theme, $palette);
     @include _advanced-filtering($theme, $palette);
 
-
+    %igx-grid__filtering-row-editing-buttons--small,
     %igx-grid__filtering-row-editing-buttons {
         display: flex;
         align-items: center;
+    }
 
-        [igxButton='icon'] {
-            display: none;
-        }
-
-        @media only screen and (max-width: $mobile-view) {
-            [igxButton] {
-                display: none;
+    %igx-grid__filtering-row-editing-buttons {
+        button {
+            igx-icon {
+                margin-#{$right}: 8px;
             }
+        }
+    }
 
-            [igxButton='icon'] {
-                display: flex;
-
-                &:not([disabled]) {
+    %igx-grid__filtering-row-editing-buttons--small {
+        button {
+            &:not([disabled]) {
+                igx-icon {
                     color: --var($theme, 'sorted-header-icon-color');
                 }
             }
