@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.1.9
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Expose a setter for grid's `outlet` property, which can be used to set the outlet used to attach the grid's overlays to.
+
 ## 9.1.4
 
 ### New Features
