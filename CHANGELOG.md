@@ -79,7 +79,7 @@ The following example shows how you can use the Indigo theme:
 - `igxGrid`
     - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.
 - `igx-select`, `igx-combo`, `igx-drop-down`
-    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default. This requires styling to be handled on the application-level if there is something more than a simple text in the item.
 - `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface;
     - `actions` - contains information about the transactions, that caused the emission of the event.
