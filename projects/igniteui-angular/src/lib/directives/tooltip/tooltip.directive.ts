@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, HostListener, Input, NgModule, ChangeDetectorRef, OnInit,
-    Output, EventEmitter, Optional, HostBinding, Inject
+    Output, EventEmitter, Optional, HostBinding, Inject, OnDestroy
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
 import { IBaseEventArgs } from '../../core/utils';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
@@ -41,7 +43,9 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]'
 })
-export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit {
+export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
+    private destroy$ = new Subject();
+
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -198,7 +202,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._overlayDefaults.closeOnOutsideClick = false;
         this._overlayDefaults.closeOnEscape = true;
 
-        this.target.onClosing.subscribe((event) => {
+        this.target.onClosing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
             this.onTooltipHide.emit(hidingArgs);
 
@@ -206,6 +210,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
                 event.cancel = true;
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     private checkOutletAndOutsideClick() {
