@@ -77,6 +77,7 @@ const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
 const COLUMN_ACTIONS_INPUT_CLASS = '.igx-column-actions__header-input';
 const COLUMN_ACTIONS_COLUMNS_CLASS = '.igx-column-actions__columns';
+const COLUMN_ACTIONS_COLUMNS_LABEL_CLASS = 'igx-checkbox__label';
 const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
@@ -1848,6 +1849,11 @@ export class GridFunctions {
 
     public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
         return fix.debugElement.query(By.directive(IgxColumnPinningDirective));
+    }
+
+    public static getColumnActionsColumnList(element: DebugElement): string[] {
+        const labels = element.queryAll(By.css(`.${COLUMN_ACTIONS_COLUMNS_LABEL_CLASS}`));
+        return labels.map(label => label.nativeElement.textContent.trim());
     }
 
     public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {

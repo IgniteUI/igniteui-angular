@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../hiding/column-hiding-item.directive';
+import { IColumnVisibilityChangedEventArgs } from '../hiding/column-hiding-item.directive';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
@@ -13,12 +13,11 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
-import { IgxColumnHidingModule } from '../hiding/hiding.module';
-import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsModule } from '../column-actions/column-actions.module'
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { IgxColumnComponent } from '../public_api';
+import { IgxColumnComponent } from '../columns/column.component';
+
 describe('Column Hiding UI #grid', () => {
     configureTestSuite();
     let fix;
@@ -39,7 +38,6 @@ describe('Column Hiding UI #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-               // IgxColumnHidingModule,
                 IgxColumnActionsModule,
                 IgxButtonModule
             ]
@@ -98,7 +96,7 @@ describe('Column Hiding UI #grid', () => {
 
         it('lists all 4 hidable grid columns.', () => {
             const columnItems = columnChooser.columnItems;
-            expect(columnItems.length).toBe(5);
+            expect(columnItems.length).toBe(4);
 
             expect(GridFunctions.getColumnChooserItems(columnChooserElement).length).toBe(4);
         });
@@ -106,20 +104,20 @@ describe('Column Hiding UI #grid', () => {
         it('orders columns according to "columnDisplayOrder".', () => {
             expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.DisplayOrder);
 
-            let columnItems = columnChooser.columnItems.map((item) => item.name);
-            expect(columnItems).toEqual(['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate']);
+            let columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['ID', 'Downloads', 'Released', 'ReleaseDate']);
 
             columnChooser.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
             fix.detectChanges();
 
             expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.Alphabetical);
-            columnItems = columnChooser.columnItems.map((item) => item.name);
-            expect(columnItems).toEqual(['Downloads', 'ID', 'ProductName', 'Released', 'ReleaseDate']);
+            columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['Downloads', 'ID', 'Released', 'ReleaseDate']);
 
             columnChooser.columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
             fix.detectChanges();
-            columnItems = columnChooser.columnItems.map((item) => item.name);
-            expect(columnItems).toEqual(['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate']);
+            columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['ID', 'Downloads', 'Released', 'ReleaseDate']);
         });
 
         it('does not show "ProductName" column.', () => {
