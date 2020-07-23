@@ -160,10 +160,12 @@
                               [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
                     </igx-icon>
                     <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
-                        <igx-icon fontSet="filtering-icons"
-                                  [name]="selectedColumn.filters.condition(condition).iconName">
-                        </igx-icon>
-                        <span>{{getConditionFriendlyName(condition)}}</span>
+                        <div class="igx-grid__filtering-dropdown-items">
+                            <igx-icon fontSet="filtering-icons"
+                                      [name]="selectedColumn.filters.condition(condition).iconName">
+                            </igx-icon>
+                            <span class="igx-grid__filtering-dropdown-text">{{getConditionFriendlyName(condition)}}</span>
+                        </div>
                     </igx-select-item>
                 </igx-select>
 
