@@ -2005,7 +2005,7 @@ describe('igxCombo', () => {
             combo.searchValue = 'New ';
             combo.handleInputChange();
             fixture.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(1);
+            expect(filterSpy).toHaveBeenCalledTimes(2);
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
 
             firstFilter = [...combo.filteredData];
@@ -2013,16 +2013,15 @@ describe('igxCombo', () => {
             combo.handleInputChange();
             fixture.detectChanges();
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
-            expect(filterSpy).toHaveBeenCalledTimes(2);
+            expect(filterSpy).toHaveBeenCalledTimes(4);
 
             combo.searchValue = '';
             combo.handleInputChange();
             fixture.detectChanges();
             expect(combo.filteredData.length).toEqual(initialData.length);
             expect(combo.filteredData.length).toBeGreaterThan(firstFilter.length);
-            expect(filterSpy).toHaveBeenCalledTimes(3);
+            expect(filterSpy).toHaveBeenCalledTimes(6);
             expect(combo.filteredData.length).toEqual(initialData.length);
-            expect(filterSpy).toHaveBeenCalledTimes(3);
         });
         it('should properly select/deselect filteredData', () => {
             combo.toggle();
@@ -2034,7 +2033,7 @@ describe('igxCombo', () => {
             combo.searchValue = 'New ';
             combo.handleInputChange();
             fixture.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(1);
+            expect(filterSpy).toHaveBeenCalledTimes(2);
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
             expect(combo.filteredData.length).toEqual(4);
 
@@ -2417,7 +2416,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.isAddButtonVisible()).toEqual(true);
         });
-        it('should be able to toggle search case sensitivity', fakeAsync(() => {
+        it('should be able to toggle search case sensitivity', () => {
             combo.showSearchCaseIcon = true;
             fixture.detectChanges();
             combo.toggle();
@@ -2431,13 +2430,8 @@ describe('igxCombo', () => {
 
             caseSensitiveIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
-            UIInteractions.triggerInputEvent(searchInput, '');
-            fixture.detectChanges();
-            UIInteractions.triggerInputEvent(searchInput, 'M');
-            tick();
-            fixture.detectChanges();
             expect([...combo.filteredData]).toEqual(combo.data.filter(e => e['field'].includes('M')));
-        }));
+        });
     });
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {
