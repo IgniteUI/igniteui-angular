@@ -437,6 +437,11 @@ export class AppComponent implements OnInit {
             link: '/dateRange',
             icon: 'date_range',
             name: 'DateRange'
+        },
+        {
+            link: '/grid-nested-props',
+            icon: 'view_column',
+            name: 'Grid nested properties data source'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

@@ -9,6 +9,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
+import { resolveNestedPath } from '../../core/utils';
 
 /** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
@@ -46,7 +47,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
     protected getFieldValue(rec: object, fieldName: string): any {
         const hierarchicalRecord = <ITreeGridRecord>rec;
-        return hierarchicalRecord.data[fieldName];
+        return resolveNestedPath(hierarchicalRecord.data, fieldName);
     }
 }
 
