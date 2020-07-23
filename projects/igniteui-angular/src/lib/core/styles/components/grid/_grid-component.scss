@@ -546,6 +546,10 @@
         @extend %igx-grid__filtering-dropdown-items !optional;
     }
 
+    @include e(filtering-dropdown-text) {
+        @extend %igx-grid__filtering-dropdown-text !optional;
+    }
+
     @include e(filtering-row) {
         @extend %igx-grid__filtering-row !optional;
     }
