@@ -1,0 +1,40 @@
+<div class="wrapper">
+    <app-page-header title="Grid data source with nested properties"></app-page-header>
+
+    <section class="sample-content">
+        <div class="sample-column">
+            <igx-grid #grid
+                [data]="data"
+                [allowFiltering]="true"
+                filterMode="excelStyleFilter"
+                allowAdvancedFiltering="true"
+                [showToolbar]="true"
+                [exportCsv]="true"
+                [exportExcel]="true"
+                exportText="Export"
+                exportExcelText="Export to Excel"
+                exportCsvText="Export to CSV"
+            >
+                <igx-column *ngFor="let each of config"
+                    [field]="each.field"
+                    [sortable]="true"
+                    [editable]="true"
+                    [hasSummary]="true"
+                    [dataType]="each.type"
+                    [groupable]="each.groupable"
+                    [cellStyles]="styles"
+                >
+                </igx-column>
+            </igx-grid>
+        </div>
+    </section>
+    <section class="sample-content">
+        <igx-tree-grid primaryKey='ID' #treeGrid [data]="treeData" childDataKey="Employees">
+            <igx-column [field]="'ID'" dataType="number" [editable]="true" [sortable]="true"></igx-column>
+            <igx-column [field]="'Name'" dataType="string" [editable]="true" [sortable]="true"></igx-column>
+            <igx-column [field]="'HireDate'" dataType="date" [editable]="true" [sortable]="true"></igx-column>
+            <igx-column [field]="'Age'" dataType="number" [editable]="true" [sortable]="true"></igx-column>
+        </igx-tree-grid>
+    </section>
+</div>
+

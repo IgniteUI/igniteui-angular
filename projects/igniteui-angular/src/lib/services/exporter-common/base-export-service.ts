@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 
-import { cloneValue, IBaseEventArgs, yieldingLoop } from '../../core/utils';
+import { cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 
 import { ExportUtilities } from './export-utilities';
@@ -230,7 +230,7 @@ export abstract class IgxBaseExporter {
         if (!isSpecialData) {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
-                    const rawValue = this._isTreeGrid ? rowData.data[e.field] : rowData[e.field];
+                    const rawValue = this._isTreeGrid ? resolveNestedPath(rowData.data, e.field) : resolveNestedPath(rowData, e.field);
                     a[e.header] = e.formatter && !e.skipFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
