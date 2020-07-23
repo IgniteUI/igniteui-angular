@@ -26,12 +26,14 @@ export class GridRowEditSampleComponent {
         cell: {
             done: true,
             enter: true,
-            cancel: true
+            cancel: true,
+            doneCommitted: true
         },
         row: {
             done: true,
             enter: true,
-            cancel: true
+            cancel: true,
+            doneCommitted: true
         }
     };
     public cancel = {
@@ -157,6 +159,12 @@ export class GridRowEditSampleComponent {
         }
         evt.cancel = this.cancel.row.done;
     }
+    rowEditDoneAndCommitted(evt) {
+        if (this.events.row.doneCommitted) {
+            console.log('%cRow' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+    }
 
     rowEditCancel(evt) {
         if (this.events.row.cancel) {
@@ -179,6 +187,12 @@ export class GridRowEditSampleComponent {
             console.log(evt);
         }
         evt.cancel = this.cancel.cell.done;
+    }
+    cellEditDoneAndCommitted(evt) {
+        if (this.events.cell.doneCommitted) {
+            console.log('%cCell' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
     }
 
     cellEditCancel(evt) {
