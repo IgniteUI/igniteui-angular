@@ -212,6 +212,9 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         });
     }
 
+    /**
+     * @hidden
+     */
     ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
