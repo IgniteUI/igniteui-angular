@@ -17,7 +17,8 @@ import {
     IgxSortActionColumnsPipe,
     IgxGridDataMapperPipe,
     IgxStringReplacePipe,
-    IgxGridTransactionStatePipe
+    IgxGridTransactionStatePipe,
+    IgxColumnFormatterPipe
 } from './pipes';
 
 @NgModule({
@@ -38,7 +39,8 @@ import {
         IgxSortActionColumnsPipe,
         IgxGridDataMapperPipe,
         IgxStringReplacePipe,
-        IgxGridTransactionStatePipe
+        IgxGridTransactionStatePipe,
+        IgxColumnFormatterPipe
     ],
     exports: [
         IgxDatePipeComponent,
@@ -57,7 +59,8 @@ import {
         IgxSortActionColumnsPipe,
         IgxGridDataMapperPipe,
         IgxStringReplacePipe,
-        IgxGridTransactionStatePipe
+        IgxGridTransactionStatePipe,
+        IgxColumnFormatterPipe
     ],
     imports: [
         CommonModule
