@@ -65,7 +65,15 @@ import { IgxExcelStyleConditionalFilterComponent } from './excel-style-condition
         IgxExcelStyleColumnOperationsTemplateDirective,
         IgxExcelStyleFilterOperationsTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
-        IgxExcelStyleDateExpressionComponent
+        IgxExcelStyleDateExpressionComponent,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStylePinningComponent,
+        IgxExcelStyleHidingComponent,
+        IgxExcelStyleSelectingComponent,
+        IgxExcelStyleClearFiltersComponent,
+        IgxExcelStyleConditionalFilterComponent,
+        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStyleSearchComponent
     ],
     imports: [
         CommonModule,
