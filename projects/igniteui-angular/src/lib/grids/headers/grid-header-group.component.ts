@@ -312,7 +312,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public activate() {
-        this.grid.navigation.setActiveNode(this.activeNode, 'headerCell');
+        this.grid.navigation.setActiveNode(this.activeNode);
         this.grid.theadRow.nativeElement.focus();
     }
 

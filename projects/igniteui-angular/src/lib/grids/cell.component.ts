@@ -26,7 +26,6 @@ import { RowType } from './common/row.interface';
 import { GridSelectionMode, GridKeydownTargetType } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
-import { retry } from 'rxjs/operators';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -889,11 +888,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private setActiveNode() {
         const currRow = this.grid.dataView[this.rowIndex];
         const type: GridKeydownTargetType = this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'dataCell';
-        if (this.grid.navigation.activeNode) {
-            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex}, type);
-        } else {
+        // if (this.grid.navigation.activeNode) {
+        //     this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex}, type);
+        // } else {
             const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
             this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, type);
-        }
+        // }
     }
 }

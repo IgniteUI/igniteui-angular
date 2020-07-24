@@ -170,7 +170,7 @@
 </div>
 
 
-<div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false, true)" [attr.aria-activedescendant]="activeDescendant"
+<div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
  (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
         *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
