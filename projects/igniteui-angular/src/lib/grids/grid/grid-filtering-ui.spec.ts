@@ -1128,7 +1128,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(reset.nativeElement.innerText).toBe('Reset');
+            expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
         }));
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
@@ -1151,8 +1151,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(close.nativeElement.innerText).toBe('My close');
-            expect(reset.nativeElement.innerText).toBe('Reset');
+            expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
+            expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
             changei18n({
                 igx_grid_filter: 'Filter',
@@ -1181,8 +1181,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(close.nativeElement.innerText).toBe('My close');
-            expect(reset.nativeElement.innerText).toBe('Reset');
+            expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
+            expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
         }));
 
         it('should correctly apply locale to datePicker.', fakeAsync(() => {
