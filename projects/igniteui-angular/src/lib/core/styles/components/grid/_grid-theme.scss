@@ -1145,16 +1145,13 @@
             font-size: rem(18px);
             color: igx-color($palette, 'grays', 500);
         }
-
-
-        &%igx-grid__td--bool-true {
-            igx-icon {
-                color: igx-color($palette, 'grays', 700);
-            }
-        }
     }
 
-
+    %igx-grid__td--bool-true {
+        igx-icon {
+            color: igx-color($palette, 'grays', 700);
+        }
+    }
 
     %igx-grid__tr--edit {
         border-bottom: 1px solid --var($theme, 'edit-mode-color');
