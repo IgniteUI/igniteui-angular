@@ -10,16 +10,14 @@
         [row]="rowData"
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">
-        {{ formatter ? (value | columnFormatter:formatter) :
+        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) :
             column.dataType === 'number' ?
             (value | igxdecimal:grid.locale) :
             column.dataType === 'date' ?
             (value | igxdate: grid.locale) :
             column.dataType === 'boolean' ? "" :
             value
-        }}
-    </div>
+        }}</div>
     <igx-icon *ngIf="column.dataType === 'boolean'">{{value ? 'check' : 'close'}}</igx-icon>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
