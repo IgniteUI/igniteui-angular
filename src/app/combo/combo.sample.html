@@ -39,7 +39,7 @@
                     </form>
                 </div>
                 <div class="input-row">
-                    <igx-combo #playgroundCombo class="input-container" [placeholder]="'Locations'"
+                    <igx-combo #playgroundCombo class="input-container" [placeholder]="'Locations'" [showSearchCaseIcon]='true'
                         (onAddition)="handleAddition($event)" (onSelectionChange)="handleSelectionChange($event)"
                         [data]="items" [allowCustomValues]="customValuesFlag" [displayDensity]="'comfortable'"
                         [autoFocusSearch]="autoFocusSearch" [filterable]="filterableFlag" [displayKey]="valueKeyVar"

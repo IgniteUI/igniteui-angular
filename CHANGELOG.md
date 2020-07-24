@@ -52,6 +52,11 @@ The following example shows how you can use the Indigo theme:
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
     - Added support for tooltips on data cells default template and summary cells.
+    - Added support for binding columns to properties in nested data objects.
+    Data operations (filtering/sorting/updating/etc) are supported for the nested properties.
+    ```html
+        <igx-column field="foo.bar.baz"></igx-column>
+    ```
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
@@ -70,6 +75,8 @@ The following example shows how you can use the Indigo theme:
     - `activeViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
     - `viewDate` day value is always 1.
     - `activeView` setter is now available as an input property.
+- `IgxCombo`
+    - Added `showSearchCaseIcon` to display a case sensitive search icon in the search input. Icon click allows the user to easily toggle the search case sensitivity.
 
 ## 10.0.0
 
@@ -77,7 +84,7 @@ The following example shows how you can use the Indigo theme:
 - `igxGrid`
     - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.
 - `igx-select`, `igx-combo`, `igx-drop-down`
-    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default. This requires styling to be handled on the application-level if there is something more than a simple text in the item.
 - `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface;
     - `actions` - contains information about the transactions, that caused the emission of the event.
