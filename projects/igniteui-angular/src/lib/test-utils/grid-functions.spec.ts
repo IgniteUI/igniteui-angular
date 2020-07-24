@@ -80,6 +80,7 @@ const COLUMN_PINNING_CLASS = 'igx-column-pinning';
 const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
+const SORT_INDEX_ATTRIBUTE = 'data-sortIndex';
 export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
 export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
@@ -1897,6 +1898,15 @@ export class GridFunctions {
 
     public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
         return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
+    }
+
+    public static getColumnSortingIndex(columnHeader: DebugElement): number {
+        let sortIndex = columnHeader.query(By.css(SORT_ICON_CLASS)).nativeElement.getAttribute(SORT_INDEX_ATTRIBUTE);
+        sortIndex = parseInt(sortIndex?.trim(), 10);
+        if (!isNaN(sortIndex)) {
+            return sortIndex;
+        }
+        return null;
     }
 
     public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
