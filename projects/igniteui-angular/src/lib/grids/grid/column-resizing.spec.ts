@@ -881,8 +881,8 @@ export class LargePinnedColGridComponent implements OnInit {
         this.data = SampleTestData.generateProductData(75);
     }
 
-    public returnVal() {
-        return this.value;
+    public returnVal(value) {
+        return value;
     }
 }
 
