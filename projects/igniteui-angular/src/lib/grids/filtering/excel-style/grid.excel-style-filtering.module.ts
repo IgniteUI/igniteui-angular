@@ -66,6 +66,7 @@ import { IgxExcelStyleConditionalFilterComponent } from './excel-style-condition
         IgxExcelStyleFilterOperationsTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleDateExpressionComponent,
+        IgxExcelStyleHeaderComponent,
         IgxExcelStyleSortingComponent,
         IgxExcelStylePinningComponent,
         IgxExcelStyleHidingComponent,

@@ -10,14 +10,15 @@ import {
     ElementRef,
     Input,
     ViewRef,
-    ContentChild
+    ContentChild,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { cloneArray, KEYS, resolveNestedPath } from '../../../core/utils';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
-import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -236,11 +237,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @HostBinding('class.igx-excel-filter--inline')
     public inline = true;
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
-    protected excelStyleSearch: IgxExcelStyleSearchComponent;
+    @Output()
+    public loadingStart = new EventEmitter();
+
+    @Output()
+    public loadingEnd = new EventEmitter();
+
+    @Output()
+    public initialized = new EventEmitter();
 
     /**
      * @hidden @internal
@@ -321,11 +325,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        if (this.excelStyleSearch) {
-            requestAnimationFrame(() => {
-                this.excelStyleSearch.searchInput.nativeElement.focus();
-            });
-        }
+        this.initialized.emit();
         this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
         });
@@ -420,7 +420,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private renderColumnValuesRemotely() {
-        this.excelStyleSearch.isLoading = true;
+        this.loadingStart.emit();
         const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
 
         this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
@@ -428,8 +428,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 colVals.map(val => val ? val.toDateString() : val) : colVals;
 
             this.renderValues(columnValues);
-            this.excelStyleSearch.isLoading = false;
-            this.excelStyleSearch.refreshSize();
+            this.loadingEnd.emit();
         });
     }
 

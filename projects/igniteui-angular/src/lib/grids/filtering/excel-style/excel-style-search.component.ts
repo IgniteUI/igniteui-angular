@@ -20,6 +20,7 @@ import { ExpressionUI } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -32,7 +33,6 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html'
@@ -79,7 +79,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate;
     }
 
-    constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) { }
+    constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) {
+        esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.isLoading = true;
+        });
+        esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.isLoading = false;
+            this.refreshSize();
+        });
+        esf.initialized.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => {
+                this.searchInput.nativeElement.focus();
+            });
+        });
+    }
 
     public ngAfterViewInit() {
         this.refreshSize();
