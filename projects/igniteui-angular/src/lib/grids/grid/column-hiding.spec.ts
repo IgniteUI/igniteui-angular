@@ -14,7 +14,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { IgxColumnActionsModule } from '../column-actions/column-actions.module'
+import { IgxColumnActionsModule } from '../column-actions/column-actions.module';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnComponent } from '../columns/column.component';
 

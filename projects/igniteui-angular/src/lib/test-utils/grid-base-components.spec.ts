@@ -131,7 +131,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 
     @ViewChildren(IgxCheckboxComponent)
     public checkboxes: IgxCheckboxComponent[];
-    
+
     width = '500px';
     height = '500px';
     showInline = true;
