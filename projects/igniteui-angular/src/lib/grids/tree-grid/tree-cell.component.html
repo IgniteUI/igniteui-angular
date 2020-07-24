@@ -7,8 +7,8 @@
         [row]="rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'" [metadata]="searchMetadata"
         class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
         grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : column.dataType === 'boolean' ? "" : value }}
-        <igx-icon *ngIf="column.dataType === 'boolean'" [ngClass]="{'igx-grid__td--bool-check': value}">{{value ? 'check' : 'close'}}</igx-icon>
     </div>
+    <igx-icon *ngIf="column.dataType === 'boolean'">{{value ? 'check' : 'close'}}</igx-icon>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
