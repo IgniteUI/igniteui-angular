@@ -75,8 +75,15 @@ export class IgxFilteringService implements OnDestroy {
 
             this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
-            this._componentOverlayId =
-                this._overlayService.attach(classRef, this._filterMenuOverlaySettings, this._moduleRef);
+
+            if (this.grid.excelStyleFilteringComponent) {
+                this._componentOverlayId =
+                    this._overlayService.attach(this.grid.excelStyleFilteringComponent.element, this._filterMenuOverlaySettings);
+            } else {
+                this._componentOverlayId =
+                    this._overlayService.attach(classRef, this._filterMenuOverlaySettings, this._moduleRef);
+            }
+
             this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
         }
     }
@@ -85,7 +92,7 @@ export class IgxFilteringService implements OnDestroy {
         this._filterMenuPositionSettings = {
             verticalStartPoint: VerticalAlignment.Bottom,
             openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
-            closeAnimation: useAnimation(fadeOut, { params: { duration: '200ms' }})
+            closeAnimation: null
         };
         this._filterMenuOverlaySettings = {
             closeOnOutsideClick: true,
@@ -96,7 +103,10 @@ export class IgxFilteringService implements OnDestroy {
         this._overlayService.onOpening.pipe(
             filter((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                const instance = eventArgs.componentRef.instance as any;
+                const instance = this.grid.excelStyleFilteringComponent ?
+                    this.grid.excelStyleFilteringComponent :
+                    eventArgs.componentRef.instance as any;
+
                 if (instance) {
                     instance.initialize(this.column, this._overlayService, eventArgs.id);
                 }

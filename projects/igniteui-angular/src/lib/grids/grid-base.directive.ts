@@ -144,6 +144,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1477,6 +1478,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public excelStyleFilteringComponent: IgxGridExcelStyleFilteringComponent;
 
     /**
      * @hidden @internal

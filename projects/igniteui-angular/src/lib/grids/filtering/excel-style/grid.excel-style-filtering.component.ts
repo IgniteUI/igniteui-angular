@@ -164,10 +164,17 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     public overlayComponentId: string;
 
+    private _minHeight;
+
     /**
-     * @hidden @internal
+     * Gets the minimum height.
      */
-    get minHeight() {
+    @Input()
+    get minHeight(): string {
+        if (this._minHeight || this._minHeight === 0)             {
+            return this._minHeight;
+        }
+
         if (!this.inline) {
             let minHeight = 645;
             switch (this.grid.displayDensity) {
@@ -180,9 +187,25 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     /**
-     * @hidden @internal
+     * Sets the minimum height.
      */
-    @HostBinding('style.max-height') get maxHeight() {
+    set minHeight(value: string) {
+        this._minHeight = value;
+    }
+
+
+    private _maxHeight;
+
+    /**
+     * Gets the maximum height.
+     */
+    @Input()
+    @HostBinding('style.max-height')
+    get maxHeight(): string {
+        if (this._maxHeight) {
+            return this._maxHeight;
+        }
+
         if (!this.inline) {
             let maxHeight = 775;
             switch (this.grid.displayDensity) {
@@ -192,6 +215,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             }
             return `${maxHeight}px`;
         }
+    }
+
+    /**
+     * Sets the maximum height.
+     */
+    set maxHeight(value: string) {
+        this._maxHeight = value;
     }
 
     /**
@@ -251,7 +281,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         return this.column.grid;
     }
 
-    constructor(private cdr: ChangeDetectorRef, private element: ElementRef) {}
+    constructor(private cdr: ChangeDetectorRef, public element: ElementRef) {}
 
     /**
      * @hidden @internal
