@@ -31,6 +31,7 @@ import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
 import { IgxProgressBarModule } from '../../../progressbar/progressbar.component';
 import { IgxSelectModule } from './../../../select/select.module';
 import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
+import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
 import { IgxExcelStyleHidingComponent } from './excel-style-hiding.component';
 import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.component';
 import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
@@ -42,6 +43,7 @@ import { IgxExcelStyleConditionalFilterComponent } from './excel-style-condition
 @NgModule({
     declarations: [
         IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleHeaderComponent,
         IgxExcelStyleSortingComponent,
         IgxExcelStylePinningComponent,
         IgxExcelStyleHidingComponent,

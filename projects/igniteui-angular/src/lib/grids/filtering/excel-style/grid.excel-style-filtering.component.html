@@ -1,4 +1,11 @@
 <ng-template #defaultExcelColumnOperations>
+    <igx-excel-style-header
+        [showHiding]="grid.displayDensity !== 'comfortable' && !column.disableHiding"
+        [showPinning]="grid.displayDensity !== 'comfortable' && !column.disablePinning"
+        [showSelecting]="grid.displayDensity !== 'comfortable' && columnSelectable()"
+    >
+    </igx-excel-style-header>
+
     <div *ngIf="column.sortable">
         <igx-excel-style-sorting class="igx-excel-filter__sort">
         </igx-excel-style-sorting>
@@ -48,39 +55,6 @@
     (keydown)="onKeyDown($event)"
     [style.min-height]="minHeight"
     [style.max-height]="maxHeight">
-
-    <header class="igx-excel-filter__menu-header">
-        <h4>{{ column.header || column.field }}</h4>
-        <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
-            <button *ngIf="columnSelectable()" igxButton="icon"
-            [displayDensity]="grid.displayDensity" (click)="onSelect()"
-            tabindex="0" [ngClass]='selectedClass()'>
-             <igx-icon fontSet="material">done</igx-icon>
-            </button>
-            <button *ngIf="!column.disablePinning && !column.pinned"
-                igxButton="icon"
-                [displayDensity]="grid.displayDensity"
-                (click)="onPin()"
-                [disabled]="!isColumnPinnable"
-                tabindex="0">
-                <igx-icon fontSet="pinning-icons" name="pin"></igx-icon>
-            </button>
-            <button *ngIf="!column.disablePinning && column.pinned"
-                igxButton="icon"
-                [displayDensity]="grid.displayDensity"
-                (click)="onPin()"
-                tabindex="0">
-                <igx-icon fontSet="pinning-icons" name="unpin"></igx-icon>
-            </button>
-            <button *ngIf="!column.disableHiding"
-                igxButton="icon"
-                [displayDensity]="grid.displayDensity"
-                tabindex="0"
-                (click)="onHideToggle()">
-                <igx-icon>{{ column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
-            </button>
-        </div>
-    </header>
 
     <ng-container *ngIf="this.excelColumnOperationsDirective; else defaultExcelColumnOperations">
         <ng-content select="igx-excel-column-operations,[igxExcelColumnOperations]">
