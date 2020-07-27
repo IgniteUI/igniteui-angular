@@ -124,26 +124,36 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(6);
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('Jones');
 
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(secondColumn, fixture))).toEqual(1);
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(firstColumn, fixture))).toEqual(2);
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(thirdColumn, fixture))).toBeNull();
+
             // Clear sorting on a column
             grid.clearSort(firstColumn);
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(1);
             expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(firstColumn, fixture))).toBeNull();
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(secondColumn, fixture))).toEqual(1);
 
             grid.sortingExpressions = [
-                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
-                { fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
+                { fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true },
+                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true }
             ];
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(2);
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(firstColumn, fixture))).toEqual(1);
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(secondColumn, fixture))).toEqual(2);
 
             // Clear sorting on all columns
             grid.clearSort();
             fixture.detectChanges();
 
             expect(grid.sortingExpressions.length).toEqual(0);
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(firstColumn, fixture))).toBeNull();
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader(secondColumn, fixture))).toBeNull();
         });
 
         it('Should sort grid by multiple expressions through API using ignoreCase for the second expression', () => {
@@ -202,6 +212,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual('ALex');
             expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual('Smith');
             expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(5);
+
         });
 
         it(`Should allow sorting using a custom Sorting Strategy.`, () => {
@@ -246,6 +257,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowFirstCell)).toEqual('7');
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Rick');
+
         });
 
         it('Should sort grid descending by clicking twice on sort icon UI', () => {
@@ -274,6 +286,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader('ID', fixture))).toEqual(1);
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
 
@@ -282,6 +295,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Connor');
+
+            expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader('ID', fixture))).toBeNull();
 
         });
 
@@ -297,7 +312,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, true);
-
             grid.clearSort();
             fixture.detectChanges();
             GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
@@ -345,6 +359,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             // tslint:disable-next-line: max-line-length
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
+            expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
+
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
 
@@ -352,6 +368,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
             // tslint:disable-next-line: max-line-length
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+
+            expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
         });
     });
 });

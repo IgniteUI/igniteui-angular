@@ -1515,6 +1515,19 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
+            position: relative;
+
+            &::after {
+                content: attr(data-sortIndex);
+                position: absolute;
+                top: -5px;
+                #{$right}: -1px;
+                font-size: rem(10px);
+                text-align: $right;
+                font-family: sans-serif;
+                line-height: rem(10px);
+                background: --var($theme, 'header-background');
+            }
         }
     }
 
