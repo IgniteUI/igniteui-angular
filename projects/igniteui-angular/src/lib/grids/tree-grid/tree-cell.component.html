@@ -10,7 +10,15 @@
         [row]="rowData"
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal:grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
+        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) :
+            column.dataType === 'number' ?
+            (value | igxdecimal:grid.locale) :
+            column.dataType === 'date' ?
+            (value | igxdate: grid.locale) :
+            column.dataType === 'boolean' ? "" :
+            value
+        }}</div>
+    <igx-icon *ngIf="column.dataType === 'boolean'">{{value ? 'check' : 'close'}}</igx-icon>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
@@ -27,7 +35,7 @@
         <igx-checkbox (change)="editValue = $event.checked" [value]="editValue" [checked]="editValue" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-date-picker [style.width.%]="100" [outlet]="grid.outletDirective" mode="dropdown"
+        <igx-date-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown"
         [locale]="grid.locale" [(value)]="editValue" [igxFocus]="focused" [labelVisibility]="false">
     </igx-date-picker>
     </ng-container>

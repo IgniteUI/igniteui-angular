@@ -287,6 +287,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return this.editMode || this.cellTemplate ? '' : this.value;
     }
 
+    @HostBinding('class.igx-grid__td--bool-true')
+    public get booleanClass() {
+        return this.column.dataType === 'boolean' && this.value;
+    }
+
     /**
      * Returns a reference to the nativeElement of the cell.
      * ```typescript

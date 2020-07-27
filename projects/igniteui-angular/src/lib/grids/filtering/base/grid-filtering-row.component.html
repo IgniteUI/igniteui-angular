@@ -46,7 +46,7 @@
         tabindex="0"
         mode="dropdown"
         [value]="value"
-        [outlet]="filteringService.grid.outletDirective"
+        [outlet]="filteringService.grid.outlet"
         [locale]="filteringService.grid.locale"
         (onSelection)="onDateSelected($event)"
         (onClosed)="datePickerClose()">
