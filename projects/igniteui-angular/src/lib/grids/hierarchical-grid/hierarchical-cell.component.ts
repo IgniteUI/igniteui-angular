@@ -80,6 +80,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
             parentGrid.highlightedRowID = parentRowID;
         }
-        super.activate(event);
+        super.activate(event, {rowIndex: this.selectionNode.row, colIndex: this.selectionNode.column});
     }
 }

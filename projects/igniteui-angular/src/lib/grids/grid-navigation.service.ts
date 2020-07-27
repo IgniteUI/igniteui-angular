@@ -26,7 +26,7 @@ export interface IActiveNode {
 @Injectable()
 export class IgxGridNavigationService {
     public grid: IgxGridBaseDirective & GridType;
-    public _activeNode: IActiveNode;
+    public _activeNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;
 
     public get activeNode() {
@@ -69,7 +69,7 @@ export class IgxGridNavigationService {
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(event); });
+            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(event, position); });
         }
         this.grid.cdr.detectChanges();
     }
@@ -202,10 +202,9 @@ export class IgxGridNavigationService {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
         if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
-            this.setActiveNode({ row: 0, column: 0 });
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
-                obj.target.activate(event);
+                obj.target.activate(event, {rowIndex: 0, colIndex: 0});
             });
         }
     }
@@ -329,8 +328,7 @@ export class IgxGridNavigationService {
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
-        this.setActiveNode({ row: rowIndex, column: visibleColIndex});
-        this.grid.navigateTo(this.activeNode.row, this.activeNode.column, cb);
+        this.grid.navigateTo(rowIndex, visibleColIndex, cb);
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {

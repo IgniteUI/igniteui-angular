@@ -728,12 +728,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     pointerdown = (event: PointerEvent) => {
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
-            this.activate(event);
+            this.activate(event, {rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
             return;
         }
         if (!isLeftClick(event)) {
             event.preventDefault();
-            this.setActiveNode();
+            this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
@@ -741,7 +741,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
-        this.activate(event);
+        this.activate(event, {rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
     }
 
     /**
@@ -816,9 +816,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @hidden
      * @internal
      */
-    public activate(event: FocusEvent | KeyboardEvent) {
+    public activate(event: FocusEvent | KeyboardEvent, position) {
         const node = this.selectionNode;
-        this.setActiveNode();
+
+        this.setActiveNode(position);
+
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
@@ -885,14 +887,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return meta;
     }
 
-    private setActiveNode() {
-        const currRow = this.grid.dataView[this.rowIndex];
-        const type: GridKeydownTargetType = this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'dataCell';
-        // if (this.grid.navigation.activeNode) {
-        //     this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex}, type);
-        // } else {
-            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-            this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex, layout: layout }, type);
-        // }
+    private setActiveNode(position) {
+        const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+        const newLayout = !this.grid.navigation.activeNode.layout ? layout :
+        {...this.grid.navigation.activeNode.layout, colStart: layout.colStart, rowEnd: layout.rowEnd};
+
+        this.grid.navigation.setActiveNode({ row: position.rowIndex, column: position.colIndex, layout: newLayout });
     }
 }

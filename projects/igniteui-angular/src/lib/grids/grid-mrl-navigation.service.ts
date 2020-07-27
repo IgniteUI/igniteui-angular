@@ -264,7 +264,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
         const layout = this.layout(newActiveNode.column);
         const newLayout = {...this.activeNode.layout, colStart: layout.colStart, rowEnd: layout.rowEnd};
-        this.grid.navigation.setActiveNode({row: this.activeNode.row, column: newActiveNode.column,
+        this.setActiveNode({row: this.activeNode.row, column: newActiveNode.column,
             layout: newLayout, mchCache: newActiveNode.mchCache});
         this.performHorizontalScrollToCell(newActiveNode.column);
     }

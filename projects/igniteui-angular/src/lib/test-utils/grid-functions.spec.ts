@@ -168,7 +168,7 @@ export class GridFunctions {
     public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
-        cell.activate(null);
+        cell.activate(null, {rowIndex: cell.rowIndex, colIndex: cell.columnIndex});
         fix.detectChanges();
     }
 
