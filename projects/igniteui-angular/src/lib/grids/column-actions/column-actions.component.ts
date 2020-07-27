@@ -37,7 +37,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      * @hidden @internal
      */
     public actionableColumns: IgxColumnComponent[] = [];
-    
+
     /**
      * @hidden @internal
      */
