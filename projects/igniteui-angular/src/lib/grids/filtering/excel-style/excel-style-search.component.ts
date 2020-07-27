@@ -57,16 +57,16 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     @HostBinding('class') class = 'igx-excel-filter__menu-main';
 
-    @ViewChild('input', { read: IgxInputDirective, static: true })
+    @ViewChild('input', { read: IgxInputDirective })
     public searchInput: IgxInputDirective;
 
     @ViewChild('list', { read: IgxListComponent })
     public list: IgxListComponent;
 
-    @ViewChild(IgxForOfDirective, { static: true })
+    @ViewChild(IgxForOfDirective)
     protected virtDir: IgxForOfDirective<any>;
 
-    @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef, static: true })
+    @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
     public get valuesLoadingTemplate() {
@@ -148,7 +148,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public get containerSize() {
-        return this.list.element.nativeElement.offsetHeight;
+        if (this.list) {
+            return this.list.element.nativeElement.offsetHeight;
+        }
     }
 
     public applyFilter() {

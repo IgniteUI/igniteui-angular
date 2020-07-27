@@ -1,40 +1,41 @@
-<div *ngIf="esf.column"
-    tabindex="0"
-    class="igx-excel-filter__actions-filter"
-    (keydown)="onTextFilterKeyDown($event)"
-    (click)="onTextFilterClick($event)"
-    [igxDropDownItemNavigation]="subMenu">
-    <span>{{ subMenuText }}</span>
-    <igx-icon>keyboard_arrow_right</igx-icon>
-
-<igx-drop-down
-    *ngIf="esf.column"
-    #subMenu
-    [maxHeight]="'397px'"
-    [displayDensity]="esf.grid.displayDensity"
-    (onSelection)="onSubMenuSelection($event)"
-    (onClosed)="onSubMenuClosed()">
-    <div>
-        <igx-drop-down-item
-        *ngFor="let condition of conditions"
-        [value]="condition">
-            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-            <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
-        </igx-drop-down-item>
-        <igx-drop-down-item *ngIf="showCustomFilterItem()">
-            <igx-icon>filter_list</igx-icon>
-            <span style="margin-left: 16px">{{ esf.grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
-        </igx-drop-down-item>
+<ng-container *ngIf="esf.column">
+    <div tabindex="0"
+        class="igx-excel-filter__actions-filter"
+        (keydown)="onTextFilterKeyDown($event)"
+        (click)="onTextFilterClick($event)"
+        [igxDropDownItemNavigation]="subMenu">
+        <span>{{ subMenuText }}</span>
+        <igx-icon>keyboard_arrow_right</igx-icon>
     </div>
-</igx-drop-down>
 
-<igx-excel-style-custom-dialog
-    *ngIf="esf.column"
-    #customDialog
-    [column]="esf.column"
-    [filteringService]="esf.grid.filteringService"
-    [overlayComponentId]="esf.overlayComponentId"
-    [overlayService]="esf.overlayService"
-    [displayDensity]="esf.grid.displayDensity">
-</igx-excel-style-custom-dialog>
-</div>
+    <igx-drop-down
+        *ngIf="esf.column"
+        #subMenu
+        [maxHeight]="'397px'"
+        [displayDensity]="esf.grid.displayDensity"
+        (onSelection)="onSubMenuSelection($event)"
+        (onClosed)="onSubMenuClosed()">
+        <div>
+            <igx-drop-down-item
+            *ngFor="let condition of conditions"
+            [value]="condition">
+                <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+                <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
+            </igx-drop-down-item>
+            <igx-drop-down-item *ngIf="showCustomFilterItem()">
+                <igx-icon>filter_list</igx-icon>
+                <span style="margin-left: 16px">{{ esf.grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
+            </igx-drop-down-item>
+        </div>
+    </igx-drop-down>
+
+    <igx-excel-style-custom-dialog
+        *ngIf="esf.column"
+        #customDialog
+        [column]="esf.column"
+        [filteringService]="esf.grid.filteringService"
+        [overlayComponentId]="esf.overlayComponentId"
+        [overlayService]="esf.overlayService"
+        [displayDensity]="esf.grid.displayDensity">
+    </igx-excel-style-custom-dialog>
+</ng-container>
