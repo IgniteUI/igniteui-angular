@@ -304,11 +304,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     public get checkAllDisabled(): boolean {
         if (this.columnItems) {
-            this.columnItems.forEach((checkbox) => {
-                if (!checkbox.checked) {
-                    return false;
-                }
-            });
+            return !this.columnItems.some(checkbox => !checkbox.checked);
         }
         return true;
     }
@@ -317,11 +313,8 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     public get uncheckAllDisabled(): boolean {
         if (this.columnItems) {
-            this.columnItems.forEach((checkbox) => {
-                if (checkbox.checked) {
-                    return false;
-                }
-            });
+            return !this.columnItems.some(checkbox => checkbox.checked);
+
         }
         return true;
     }
