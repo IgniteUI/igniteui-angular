@@ -1515,6 +1515,19 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
+            position: relative;
+
+            &::after {
+                content: attr(data-sortIndex);
+                position: absolute;
+                top: -5px;
+                #{$right}: -1px;
+                font-size: rem(10px);
+                text-align: $right;
+                font-family: sans-serif;
+                line-height: rem(10px);
+                background: --var($theme, 'header-background');
+            }
         }
     }
 
@@ -2374,7 +2387,9 @@
         }
 
         igx-input-group {
-            flex: 0 0 200px;
+            width: 100%;
+            max-width: rem(200px);
+            min-width: rem(140px);
         }
 
         igx-prefix:focus {
@@ -2396,6 +2411,15 @@
         }
     }
 
+    %igx-grid__filtering-dropdown-items {
+        display: flex;
+        align-items: center;
+    }
+
+    %igx-grid__filtering-dropdown-text {
+        margin-left: rem(16px);
+    }
+
     %igx-grid__filtering-row--cosy {
         height: map-get($grid-header-height, 'cosy');
     }
@@ -2409,6 +2433,7 @@
         flex: 1;
         overflow: hidden;
         max-width: calc(100% - 176px);
+        min-width: rem(56px);
 
         igx-chips-area {
             transition: transform .25s $ease-out-back;
@@ -2640,4 +2665,30 @@
 
     @include _excel-filtering($theme, $palette);
     @include _advanced-filtering($theme, $palette);
+
+    %igx-grid__filtering-row-editing-buttons--small,
+    %igx-grid__filtering-row-editing-buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    %igx-grid__filtering-row-editing-buttons {
+        button {
+            igx-icon {
+                margin-#{$right}: rem(8px);
+            }
+        }
+    }
+
+    %igx-grid__filtering-row-editing-buttons--small {
+        button {
+            &:not([disabled]) {
+                igx-icon {
+                    color: --var($theme, 'sorted-header-icon-color');
+                }
+            }
+        }
+    }
 }
+
+
