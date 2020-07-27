@@ -1,6 +1,5 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     OnDestroy,
     ViewChild,
     OnInit
@@ -19,7 +18,6 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html'

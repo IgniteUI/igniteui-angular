@@ -1,12 +1,12 @@
 import {
     AfterViewInit,
     Component,
-    ChangeDetectionStrategy,
     ViewChild,
     ChangeDetectorRef,
     TemplateRef,
     Directive,
-    OnDestroy
+    OnDestroy,
+    HostBinding
 } from '@angular/core';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
@@ -55,10 +55,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     public searchValue: any;
 
+    @HostBinding('class') class = 'igx-excel-filter__menu-main';
+
     @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
-    @ViewChild('list', { read: IgxListComponent, static: true })
+    @ViewChild('list', { read: IgxListComponent })
     public list: IgxListComponent;
 
     @ViewChild(IgxForOfDirective, { static: true })

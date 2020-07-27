@@ -1,4 +1,5 @@
-<div [ngClass]="esf.selectedClass()"
+<div *ngIf="esf.column"
+    [ngClass]="esf.selectedClass()"
     tabindex="0"
     (click)="esf.onSelect()">
     <span>{{esf.grid.resourceStrings.igx_grid_excel_select }}</span>

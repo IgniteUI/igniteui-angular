@@ -74,7 +74,8 @@ import { IgxExcelStyleConditionalFilterComponent } from './excel-style-condition
         IgxExcelStyleClearFiltersComponent,
         IgxExcelStyleConditionalFilterComponent,
         IgxExcelStyleColumnMovingComponent,
-        IgxExcelStyleSearchComponent
+        IgxExcelStyleSearchComponent,
+        IgxExcelStyleHeaderComponent
     ],
     imports: [
         CommonModule,

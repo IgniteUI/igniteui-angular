@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, HostBinding } from '@angular/core';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxColumnGroupComponent } from '../../columns/column-group.component';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
@@ -8,13 +8,14 @@ import { Subject } from 'rxjs';
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-column-moving',
     templateUrl: './excel-style-column-moving.component.html'
 })
 export class IgxExcelStyleColumnMovingComponent implements OnDestroy {
     private destroy$ = new Subject<boolean>();
+
+    @HostBinding('class') class = 'igx-excel-filter__move';
 
     constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
 

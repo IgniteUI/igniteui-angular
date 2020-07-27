@@ -1,4 +1,5 @@
-<header class="igx-excel-filter__menu-header">
+<header *ngIf="esf.column"
+        class="igx-excel-filter__menu-header">
     <h4>{{ esf.column.header || esf.column.field }}</h4>
     <div class="igx-excel-filter__menu-header-actions">
         <button *ngIf="showSelecting"

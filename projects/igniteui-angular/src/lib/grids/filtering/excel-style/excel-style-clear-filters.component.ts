@@ -1,6 +1,5 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     OnDestroy
 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -11,7 +10,6 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-clear-filters',
     templateUrl: './excel-style-clear-filters.component.html'

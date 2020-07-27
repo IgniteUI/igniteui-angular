@@ -1,3 +1,4 @@
+<ng-container *ngIf="esf.column">
 <header>
     {{ esf.grid.resourceStrings.igx_grid_excel_filter_sorting_header }}
 </header>
@@ -25,7 +26,8 @@
             {{ esf.grid.displayDensity==='compact'?
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc_short:
             esf.grid.resourceStrings.igx_grid_excel_filter_sorting_desc
-         }}
+        }}
         </span>
     </button>
 </igx-buttongroup>
+</ng-container>

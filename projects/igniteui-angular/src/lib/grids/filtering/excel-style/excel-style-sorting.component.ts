@@ -1,11 +1,11 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     ViewChild,
     AfterViewInit,
     OnDestroy,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    HostBinding
 } from '@angular/core';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
@@ -16,7 +16,6 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html'
@@ -24,7 +23,9 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
 export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, OnChanges {
     private destroy$ = new Subject<boolean>();
 
-    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent, static: true })
+    @HostBinding('class') class = 'igx-excel-filter__sort';
+
+    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
     public sortButtonGroup: IgxButtonGroupComponent;
 
     constructor(public esf: IgxGridExcelStyleFilteringComponent) { }

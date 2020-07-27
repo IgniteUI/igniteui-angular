@@ -1,4 +1,5 @@
-<div tabindex="0"
+<div *ngIf="esf.column"
+    tabindex="0"
     [ngClass]="clearFilterClass()"
     (keydown)="onClearFilterKeyDown($event)"
     (click)="clearFilter()">

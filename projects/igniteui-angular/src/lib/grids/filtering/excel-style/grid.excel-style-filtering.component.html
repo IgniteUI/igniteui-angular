@@ -6,30 +6,20 @@
     >
     </igx-excel-style-header>
 
-    <div *ngIf="column.sortable">
-        <igx-excel-style-sorting class="igx-excel-filter__sort">
-        </igx-excel-style-sorting>
-    </div>
+    <igx-excel-style-sorting *ngIf="column.sortable">
+    </igx-excel-style-sorting>
 
-    <div *ngIf="column.movable">
-        <igx-excel-style-column-moving class="igx-excel-filter__move">
-        </igx-excel-style-column-moving>
-    </div>
+    <igx-excel-style-column-moving *ngIf="column.movable">
+    </igx-excel-style-column-moving>
 
-    <div *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
-        <igx-excel-style-pinning>
-        </igx-excel-style-pinning>
-    </div>
+    <igx-excel-style-pinning *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
+    </igx-excel-style-pinning>
 
-    <div *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
-        <igx-excel-style-hiding>
-        </igx-excel-style-hiding>
-    </div>
+    <igx-excel-style-hiding *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
+    </igx-excel-style-hiding>
 
-    <div *ngIf="columnSelectable() && grid.displayDensity==='comfortable'">
-        <igx-excel-style-selecting>
-        </igx-excel-style-selecting>
-    </div>
+    <igx-excel-style-selecting *ngIf="columnSelectable() && grid.displayDensity==='comfortable'">
+    </igx-excel-style-selecting>
 </ng-template>
 
 <ng-template #defaultExcelFilterOperations>
@@ -39,8 +29,7 @@
     <igx-excel-style-conditional-filter>
     </igx-excel-style-conditional-filter>
 
-    <igx-excel-style-search #excelStyleSearch
-        class="igx-excel-filter__menu-main">
+    <igx-excel-style-search #excelStyleSearch>
     </igx-excel-style-search>
 </ng-template>
 

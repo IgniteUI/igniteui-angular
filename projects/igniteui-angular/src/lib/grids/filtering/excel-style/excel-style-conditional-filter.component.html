@@ -1,11 +1,11 @@
-<div tabindex="0"
+<div *ngIf="esf.column"
+    tabindex="0"
     class="igx-excel-filter__actions-filter"
     (keydown)="onTextFilterKeyDown($event)"
     (click)="onTextFilterClick($event)"
     [igxDropDownItemNavigation]="subMenu">
     <span>{{ subMenuText }}</span>
     <igx-icon>keyboard_arrow_right</igx-icon>
-</div>
 
 <igx-drop-down
     *ngIf="esf.column"
@@ -37,3 +37,4 @@
     [overlayService]="esf.overlayService"
     [displayDensity]="esf.grid.displayDensity">
 </igx-excel-style-custom-dialog>
+</div>

@@ -1,6 +1,5 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     AfterViewInit,
     Input,
     Output,
@@ -35,7 +34,6 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
