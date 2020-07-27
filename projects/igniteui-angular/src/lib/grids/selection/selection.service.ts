@@ -116,10 +116,7 @@ export class IgxCell {
             owner: this.grid
         };
         if (includeNewValue) {
-            // WTF
-            // args.newValue = this.castToNumber(this.editValue);
-            args.newValue = this.editValue;
-            console.log(args.newValue);
+            args.newValue = this.castToNumber(this.editValue);
         }
         return args;
     }
@@ -128,12 +125,11 @@ export class IgxCell {
         const args: IGridBaseEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
-            // rowData - should be the updated/committed rowData // this effectively should be the newValue
+            // rowData - should be the updated/committed rowData - this effectively should be the newValue
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData: this.grid.transactions.enabled ? this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData,
             oldValue: this.value,
-            // newValue: this.castToNumber(this.editValue),
-            newValue: this.editValue,
+            newValue: this.castToNumber(this.editValue),
             column: this.column,
             owner: this.grid,
         };

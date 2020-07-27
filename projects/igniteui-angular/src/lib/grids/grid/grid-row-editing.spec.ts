@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs } from '../common/events';
+import { IGridEditEventArgs, IGridBaseEditEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridModule, IgxGridBaseDirective } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
@@ -125,13 +125,17 @@ describe('IgxGrid - Row Editing #grid', () => {
         it('Emit all events with proper arguments', () => {
             const row = grid.getRowByIndex(2);
             const initialRowData = {...cell.rowData};
+            const newCellValue = 'Aaaaa';
+            const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
 
             spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
+            spyOn(grid.onCellEditDone, 'emit').and.callThrough();
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
+            spyOn(grid.onRowEditDone, 'emit').and.callThrough();
 
             let cellInput = null;
 
@@ -188,12 +192,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
 
-            const newCellValue = 'Aaaaa';
             cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
-            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
@@ -204,7 +206,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            // TODO: onRowEdit should emit updated rowData - issue #7304
+
             rowArgs = {
                 rowID: row.rowID,
                 rowData: initialRowData,
@@ -213,12 +215,32 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid
             };
+
+            const cellDoneArgs: IGridBaseEditEventArgs = {
+                rowID: cell.row.rowID,
+                cellID: cell.cellID,
+                rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
+                oldValue: cell.value,
+                newValue: newCellValue,
+                column: cell.column,
+                owner: grid
+            };
+
+            const rowDoneArgs: IGridBaseEditEventArgs = {
+                rowID: row.rowID,
+                rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
+                oldValue: row.rowData,
+                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                owner: grid
+            };
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
 
             fix.detectChanges();
 
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith(rowArgs);
+            expect(grid.onRowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {
@@ -2036,6 +2058,49 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
         }));
+
+        it('onCellEditDone, onRowEditDone should emit the committed/new rowData', () => {
+            const gridContent = GridFunctions.getGridContent(fix);
+            const row = grid.getRowByIndex(0);
+            const newCellValue = 'Aaaaa';
+            const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
+
+            spyOn(grid.onCellEditDone, 'emit').and.callThrough();
+            spyOn(grid.onRowEditDone, 'emit').and.callThrough();
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, newCellValue);
+            fix.detectChanges();
+
+            const cellDoneArgs: IGridBaseEditEventArgs = {
+                rowID: cell.row.rowID,
+                cellID: cell.cellID,
+                rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
+                oldValue: cell.value,
+                newValue: newCellValue,
+                column: cell.column,
+                owner: grid
+            };
+
+            const rowDoneArgs: IGridBaseEditEventArgs = {
+                rowID: row.rowID,
+                rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
+                oldValue: row.rowData,
+                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                owner: grid
+            };
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fix.detectChanges();
+
+            expect(grid.onCellEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
+            expect(grid.onRowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
+        });
 
         it('Should add correct class to the edited row', () => {
             const row: HTMLElement = grid.getRowByIndex(0).nativeElement;

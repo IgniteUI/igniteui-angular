@@ -149,10 +149,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        // Cast to number after emit
-        // TODO: Clean up this
-        args.newValue = cell.castToNumber(args.newValue);
-
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.get_all_data(this.grid.transactions.enabled);
         const index = this.get_row_index_in_data(cell.id.rowID);
@@ -173,9 +169,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         const doneArgs = cell.createDoneEditEventArgs();
-        // Cast to number after emit
-        // TODO: Clean up this
-        doneArgs.newValue = cell.castToNumber(args.newValue);
         this.grid.onCellEditDone.emit(doneArgs);
 
         return args;
