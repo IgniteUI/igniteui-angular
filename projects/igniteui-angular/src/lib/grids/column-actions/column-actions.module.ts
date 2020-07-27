@@ -9,7 +9,7 @@ import { IgxGridPipesModule } from '../common/grid-pipes.module';
     declarations: [
         IgxColumnHidingDirective,
         IgxColumnPinningDirective,
-        IgxColumnActionsComponent
+        IgxColumnActionsComponent,
     ],
     imports: [
         IgxGridSharedModules,

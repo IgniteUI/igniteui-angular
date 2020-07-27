@@ -1,0 +1,42 @@
+<div class="wrapper">
+    <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'">
+        <igx-column *ngFor="let c of columns" [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
+            [hidden]='c.hidden'>
+        </igx-column>
+    </igx-grid>
+
+    <div class='actions-container'>
+        <article>
+            <h4>Hiding Action</h4>
+            <div class="button-sample">
+                <igx-column-actions
+                igxColumnHiding
+                [columns]="grid1.columns"
+                [title]="grid1.columnHidingTitle">
+                </igx-column-actions>
+            </div>
+        </article>
+
+        <article>
+                <h4>Pinning Action</h4>
+                <div class="button-sample">
+                    <igx-column-actions
+                    igxColumnPinning
+                    [columns]="grid1.columns"
+                    [title]="grid1.columnPinningTitle">
+                    </igx-column-actions>
+                </div>
+        </article>
+
+        <article>
+            <h4>Custom Group Action</h4>
+            <div class="button-sample">
+                <igx-column-actions
+                igxColumnGrouping
+                [columns]="grid1.columns"
+                [title]="'Custom Group Action'">
+                </igx-column-actions>
+            </div>
+    </article>
+    </div>
+</div>
