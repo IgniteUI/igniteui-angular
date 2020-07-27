@@ -209,6 +209,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
+    protected _userOutletDirective: IgxOverlayOutletDirective;
+
     /**
      * @hidden @internal
      */
@@ -1828,19 +1830,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
 
-
     /**
      * @hidden @internal
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     protected _outletDirective: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
-    public get outletDirective() {
-        return this._outletDirective;
-    }
 
     /**
      * @hidden @internal
@@ -1866,7 +1860,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get parentRowOutletDirective() {
-        return this.outletDirective;
+        return this.outlet;
     }
 
     /**
@@ -2958,7 +2952,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outletDirective &&
+            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outlet &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
             }
@@ -3396,10 +3390,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Gets the outlet used to attach the grid's overlays to.
+     * @remark
+     * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    protected get outlet() {
-        return this.outletDirective;
+    get outlet() {
+        return this.resolveOutlet();
+    }
+
+    protected resolveOutlet() {
+        return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
+    }
+
+    /**
+     * Sets the outlet used to attach the grid's overlays to.
+     */
+    set outlet(val: any) {
+        this._userOutletDirective = val;
     }
 
     /**
@@ -6527,7 +6534,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
-            this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
+            this._advancedFilteringOverlaySettings.outlet = this.outlet;
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,

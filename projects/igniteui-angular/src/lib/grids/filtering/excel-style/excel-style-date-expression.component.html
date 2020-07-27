@@ -14,7 +14,7 @@
     </igx-select-item>
 </igx-select>
 
-<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale" [outlet]="grid.outletDirective">
+<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale" [outlet]="grid.outlet">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
         <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity">
             <input #input
