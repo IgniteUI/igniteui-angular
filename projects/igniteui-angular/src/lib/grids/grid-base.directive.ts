@@ -1194,7 +1194,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onCellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * Emitted when cell has been edited and editing has been committed.
+     * Emitted after cell has been edited and editing has been committed.ell has been edited and editing has been committed.
      * @remarks
      * Event is fired after editing is completed, when the cell exited edit mode.
      * @example
@@ -1238,7 +1238,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * Emitted when exiting edit mode for a row and editing has been committed.
+     * Emitted after exiting edit mode for a row and editing has been committed.
      * @remarks
      * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,

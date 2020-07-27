@@ -65,7 +65,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
      */
     public getRowData(rowID: any) {
         const data = this.get_all_data(this.grid.transactions.enabled);
-        const index = this.get_row_index_in_data(rowID);
+        const index = this.get_row_index_in_data(rowID, data);
         return data[index];
     }
 
@@ -79,12 +79,12 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return this.grid.crudService.cell;
     }
 
-    public get_row_index_in_data(rowID: any): number {
+    public get_row_index_in_data(rowID: any, dataCollection?: any[]): number {
         const grid = this.grid as IgxGridBaseDirective;
         if (!grid) {
             return -1;
         }
-        const data = this.get_all_data(grid.transactions.enabled);
+        const data = dataCollection ? dataCollection : this.get_all_data(grid.transactions.enabled);
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
@@ -127,7 +127,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public submit_value() {
         const cell = this.grid.crudService.cell;
-        if (cell ) {
+        if (cell) {
             const args = this.update_cell(cell, cell.editValue);
             if (args.cancel) {
                 return;
@@ -151,7 +151,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.get_all_data(this.grid.transactions.enabled);
-        const index = this.get_row_index_in_data(cell.id.rowID);
+        const index = this.get_row_index_in_data(cell.id.rowID, data);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
@@ -216,9 +216,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = grid.crudService.row;
         const data = this.get_all_data(grid.transactions.enabled);
-        const index = this.get_row_index_in_data(row.id);
+        const index = this.get_row_index_in_data(row.id, data);
         const hasSummarized = grid.hasSummarizedColumns;
-        // here the new row.data is updated
         this._update_row(row, value);
 
         const args = row.createEditEventArgs();
@@ -228,7 +227,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        // TODO: emit onRowEdit after value is updated - issue #7304
         grid.onRowEdit.emit(args);
 
         if (args.cancel) {
