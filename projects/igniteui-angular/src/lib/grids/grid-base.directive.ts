@@ -1203,8 +1203,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * </igx-grid>
      * ```
      */
-   @Output()
-   public onCellEditDone = new EventEmitter<IGridBaseEditEventArgs>();
+    @Output()
+    public onCellEditDone = new EventEmitter<IGridBaseEditEventArgs>();
 
     /**
      * Emitted when a row enters edit mode.

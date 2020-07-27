@@ -137,13 +137,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     }
 
     update_cell(cell: IgxCell, value: any) {
-        const data = this.get_all_data(this.grid.transactions.enabled);
-        const index = this.get_row_index_in_data(cell.id.rowID);
-
         cell.editValue = value;
-
         const args = cell.createEditEventArgs();
-
         // TODO: emit onCellEdit after value is updated - issue #7304
         this.grid.onCellEdit.emit(args);
         if (args.cancel) {
@@ -154,7 +149,13 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
+        // Cast to number after emit
+        // TODO: Clean up this
+        args.newValue = cell.castToNumber(args.newValue);
+
         this.grid.summaryService.clearSummaryCache(args);
+        const data = this.get_all_data(this.grid.transactions.enabled);
+        const index = this.get_row_index_in_data(cell.id.rowID);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
@@ -172,6 +173,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         const doneArgs = cell.createDoneEditEventArgs();
+        // Cast to number after emit
+        // TODO: Clean up this
+        doneArgs.newValue = cell.castToNumber(args.newValue);
         this.grid.onCellEditDone.emit(doneArgs);
 
         return args;
