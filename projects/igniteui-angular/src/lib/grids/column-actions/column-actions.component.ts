@@ -1,13 +1,13 @@
 import {
     Component,
-    EventEmitter,
     HostBinding,
     Input,
     OnDestroy,
-    Output,
-    ViewChild,
     ViewChildren,
-    QueryList
+    QueryList,
+    DoCheck,
+    KeyValueDiffers,
+    Pipe
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
@@ -24,12 +24,14 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
     selector: 'igx-column-actions',
     templateUrl: './column-actions.component.html'
 })
-export class IgxColumnActionsComponent implements OnDestroy {
+export class IgxColumnActionsComponent implements DoCheck {
 
 
-/* todo
-    <!-- (onColumnVisibilityChanged)="onVisibilityChanged($event)" -->
-*/
+    /* todo
+        <!-- (onColumnVisibilityChanged)="onVisibilityChanged($event)" -->
+    */
+
+    private _columnDifferMap = new Map<IgxColumnComponent, any>();
 
     /**
      * @hidden @internal
@@ -61,6 +63,10 @@ export class IgxColumnActionsComponent implements OnDestroy {
     public set columns(value: IgxColumnComponent[]) {
         if (value) {
             this._columns = value;
+            this._columnDifferMap.clear();
+            this._columns.forEach(col => {
+                this._columnDifferMap.set(col, this._differs.find(col).create());
+            });
             this._pipeTrigger++;
         }
     }
@@ -96,7 +102,7 @@ export class IgxColumnActionsComponent implements OnDestroy {
     public hideFilter = false;
 
     /**
-     * Gets the column items currently present in the dropdown
+     * Gets the checkbox components representing column items currently present in the dropdown
      * @example
      * ```typescript
      * let columnItems =  this.columnActions.columnItems;
@@ -297,30 +303,27 @@ export class IgxColumnActionsComponent implements OnDestroy {
      * @hidden @internal
      */
     public get checkAllDisabled(): boolean {
-        return false;
-    /*    if (!this.columnItems || this.columnItems.length < 1 ||
-            this.hiddenColumnsCount === this.columns.length) {
-            return true;
-        } else if (this.hidableColumns.length < 1 ||
-            this.hidableColumns.length === this.hidableColumns.filter((col) => col.value).length) {
-            return true;
-        } else {
-            return false;
-        }*/
+        if (this.columnItems) {
+            this.columnItems.forEach((checkbox) => {
+                if (!checkbox.checked) {
+                    return false;
+                }
+            });
+        }
+        return true;
     }
     /**
      * @hidden @internal
      */
     public get uncheckAllDisabled(): boolean {
-        return false;
-      /*  if (!this.columnItems || this.columnItems.length < 1 ||
-            this.hiddenColumnsCount < 1 || this.hidableColumns.length < 1) {
-            return true;
-        } else if (this.hidableColumns.length === this.hidableColumns.filter((col) => !col.value).length) {
-            return true;
-        } else {
-            return false;
-        }*/
+        if (this.columnItems) {
+            this.columnItems.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    return false;
+                }
+            });
+        }
+        return true;
     }
 
     /**
@@ -333,11 +336,16 @@ export class IgxColumnActionsComponent implements OnDestroy {
     /**
      * @hidden
      */
-    ngOnDestroy() {
-       // for (const item of this._currentColumns) {
-       //     item.valueChanged.unsubscribe();
-       // }
+    ngDoCheck() {
+        for (const [col, colDiffer] of this._columnDifferMap) {
+            const colDiffers = colDiffer.diff(col);
+            if (colDiffers) {
+                this._pipeTrigger++;
+            }
+        }
     }
+
+    constructor(private _differs: KeyValueDiffers) { }
 
     /**
      * Unchecks all columns and performs the appropriate action.

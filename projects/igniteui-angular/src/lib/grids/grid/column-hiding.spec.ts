@@ -126,19 +126,19 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('"hiddenColumnsCount" reflects properly the number of hidden columns.', fakeAsync(() => {
-            expect(fix.hiddenColumnsCount).toBe(1);
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(1);
 
             grid.columns[2].hidden = false;
-            tick();
-            expect(fix.hiddenColumnsCount).toBe(0);
+            fix.detectChanges();
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(0);
 
             grid.columns[0].hidden = true;
-            tick();
-            expect(fix.hiddenColumnsCount).toBe(1);
+            fix.detectChanges();
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(1);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Released');
             fix.detectChanges();
-            expect(fix.hiddenColumnsCount).toBe(2);
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(2);
         }));
 
         it('allows hiding a column whose disabled=undefined.', () => {

@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnActionsComponent } from '../grids/column-actions/column-actions.component';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 @Component({
     template: `
@@ -128,10 +127,6 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
     @ViewChild(IgxColumnActionsComponent)
     public chooser: IgxColumnActionsComponent;
-
-    @ViewChildren(IgxCheckboxComponent)
-    public checkboxes: IgxCheckboxComponent[];
-
     width = '500px';
     height = '500px';
     showInline = true;
@@ -141,7 +136,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     }
 
     public get hiddenColumnsCount(): number {
-        return this.checkboxes.filter(c => c.checked).length;
+        return this.chooser.columnItems.filter(c => c.checked).length;
     }
 
     ngOnInit() {
@@ -167,7 +162,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
 @Component({
     template: `<div>
-        <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-pinning>
+        <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
         ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     </div>`
 })
