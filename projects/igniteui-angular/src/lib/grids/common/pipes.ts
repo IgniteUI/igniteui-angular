@@ -278,14 +278,19 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
 })
 export class IgxFilterActionColumnsPipe implements PipeTransform {
 
+    constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
+
     public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
+        let copy = collection.slice(0);
         if (filterCriteria && filterCriteria.length > 0) {
-            return collection.filter((c) => {
+            copy = collection.filter((c) => {
                 const filterText = c.header || c.field;
                 return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0;
             });
         }
-        return collection;
+        // Preserve the filtered collection for use in the component
+        this.columnActions.filteredColumns = copy;
+        return copy;
     }
 }
 

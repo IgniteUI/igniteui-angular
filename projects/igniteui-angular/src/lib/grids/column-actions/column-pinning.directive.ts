@@ -29,14 +29,14 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public checkAll() {
-        this.columnActions.actionableColumns.forEach(c => c.pinned = true);
+        this.columnActions.filteredColumns.forEach(c => c.pinned = true);
     }
 
     /**
      * @hidden @internal
      */
     public uncheckAll() {
-        this.columnActions.actionableColumns.forEach(c => c.pinned = false);
+        this.columnActions.filteredColumns.forEach(c => c.pinned = false);
     }
 
     /**

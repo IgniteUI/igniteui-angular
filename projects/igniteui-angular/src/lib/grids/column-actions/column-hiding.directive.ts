@@ -29,14 +29,14 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public checkAll() {
-        this.columnActions.actionableColumns.forEach(c => c.hidden = true);
+        this.columnActions.filteredColumns.forEach(c => c.hidden = true);
     }
 
     /**
      * @hidden @internal
      */
     public uncheckAll() {
-        this.columnActions.actionableColumns.forEach(c => c.hidden = false);
+        this.columnActions.filteredColumns.forEach(c => c.hidden = false);
     }
 
     /**

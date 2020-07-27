@@ -37,6 +37,11 @@ export class IgxColumnActionsComponent implements DoCheck {
      * @hidden @internal
      */
     public actionableColumns: IgxColumnComponent[] = [];
+    
+    /**
+     * @hidden @internal
+     */
+    public filteredColumns: IgxColumnComponent[] = [];
 
     /**
      * @hidden @internal
@@ -303,20 +308,15 @@ export class IgxColumnActionsComponent implements DoCheck {
      * @hidden @internal
      */
     public get checkAllDisabled(): boolean {
-        if (this.columnItems) {
-            return !this.columnItems.some(checkbox => !checkbox.checked);
-        }
-        return true;
+        return !this.filteredColumns.some(col => !this.actionsDirective.columnChecked(col));
+
     }
     /**
      * @hidden @internal
      */
     public get uncheckAllDisabled(): boolean {
-        if (this.columnItems) {
-            return !this.columnItems.some(checkbox => checkbox.checked);
+        return !this.filteredColumns.some(col => this.actionsDirective.columnChecked(col));
 
-        }
-        return true;
     }
 
     /**
