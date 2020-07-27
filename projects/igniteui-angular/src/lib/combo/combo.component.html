@@ -41,7 +41,7 @@
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         <igx-suffix *ngIf="showSearchCaseIcon">
             <igx-icon fontSet="case-sensitive" name="case-sensitive" [isActive]="filteringOptions.caseSensitive"
-                (click)="filteringOptions.caseSensitive=!filteringOptions.caseSensitive">
+                (click)="toggleCaseSensitive()">
             </igx-icon>
         </igx-suffix>
     </igx-input-group>
@@ -51,7 +51,7 @@
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
-            | comboFiltering:searchValue:displayKey:filterable:filteringOptions
+            | comboFiltering:searchValue:displayKey:filterable:filteringOptions:filteringPipeTrigger
             | comboGrouping:groupKey:valueKey;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
