@@ -25,7 +25,9 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive
+    Directive,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -1084,6 +1086,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
         filteringExpressionsTree: IFilteringExpressionsTree,
         done: (values: any[]) => void) => void;
+
+    /**
+     * Gets/Sets the current selection state.
+     * @remarks
+     * Represents the selected rows' IDs (primary key or rowData)
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" primaryKey="ID" rowSelection="multiple" [selectedRows]="[0, 1, 2]"><igx-grid>
+     * ```
+     */
+    @Input()
+    public set selectedRows(rowIDs: any[]) {
+        rowIDs.length > 0
+            ? this.selectRows(rowIDs, true)
+            : this.deselectAllRows();
+    }
+
+    public get selectedRows(): any[] {
+        return this.selectionService.getSelectedRows();
+    }
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked.
@@ -5260,18 +5282,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Get current selection state.
-     * @example
-     * Returns an array with selected rows' IDs (primaryKey or rowData)
-     * ```typescript
-     * const selectedRows = this.grid.selectedRows();
-     * ```
-     */
-    public selectedRows(): any[] {
-        return this.selectionService.getSelectedRows();
-    }
-
-    /**
      * Select specified rows by ID.
      * @example
      * ```typescript
@@ -5455,6 +5465,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         for (let [row, set] of selectionMap) {
+            row = this.paging ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;

@@ -152,13 +152,14 @@ export class SelectionComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'"`,
+            ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
             '', ColumnDefinitions.productBasicNumberID)
 })
 export class RowSelectionComponent extends BasicGridComponent {
     data = SampleTestData.foodProductDataExtended();
     public width = '800px';
     public height = '600px';
+    public selectedRows = [];
 }
 
 @Component({

@@ -195,7 +195,7 @@
         background: --var($theme, 'item-background');
         min-width: $group-item-min-width;
         display: flex;
-        flex: 1 0 auto;
+        flex: 1 0 0%;
         justify-content: center;
         align-items: center;
         text-decoration: none;
@@ -319,4 +319,3 @@
         @include ellipsis();
     }
 }
-
