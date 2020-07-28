@@ -285,6 +285,7 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
         if (filterCriteria && filterCriteria.length > 0) {
             copy = collection.filter((c) => {
                 const filterText = c.header || c.field;
+                if (!filterText) { return false; }
                 return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0;
             });
         }
