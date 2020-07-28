@@ -69,7 +69,7 @@ export class TreeGridSampleComponent implements OnInit {
     }
 
     public addChildRow() {
-        const selectedRowId = this.grid1.selectedRows()[0];
+        const selectedRowId = this.grid1.selectedRows[0];
         this.grid1.addRow (
             {
                 'ID': `ADD${this.nextRow++}`,
@@ -88,7 +88,7 @@ export class TreeGridSampleComponent implements OnInit {
     }
 
     public deleteRow() {
-        this.grid1.deleteRow(this.grid1.selectedRows()[0]);
+        this.grid1.deleteRow(this.grid1.selectedRows[0]);
     }
 
     public undo() {
