@@ -8,7 +8,7 @@ import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -362,51 +362,51 @@ describe('Column Hiding UI #grid', () => {
 
             UIInteractions.triggerInputEvent(filterInput, 'r');
             fix.detectChanges();
-            expect(columnChooser.columnItems.length).toBe(3);
-
-            UIInteractions.triggerInputEvent(filterInput, 're');
-            fix.detectChanges();
             expect(columnChooser.columnItems.length).toBe(2);
+
+            UIInteractions.triggerInputEvent(filterInput, 'releasedate');
+            fix.detectChanges();
+            expect(columnChooser.columnItems.length).toBe(1);
 
             UIInteractions.triggerInputEvent(filterInput, 'r');
             fix.detectChanges();
-            expect(columnChooser.columnItems.length).toBe(3);
+            expect(columnChooser.columnItems.length).toBe(2);
 
             UIInteractions.triggerInputEvent(filterInput, '');
             fix.detectChanges();
-            expect(columnChooser.columnItems.length).toBe(5);
+            expect(columnChooser.columnItems.length).toBe(4);
         });
 
         it('filters columns according to the specified filter criteria.', fakeAsync(() => {
             columnChooser.filterCriteria = 'd';
-            tick();
             fix.detectChanges();
+            tick();
 
             const filterInput = GridFunctions.getColumnChooserFilterInput(columnChooserElement).nativeElement;
             expect(filterInput.value).toBe('d');
-            expect(columnChooser.columnItems.length).toBe(5);
+            expect(columnChooser.columnItems.length).toBe(4);
 
             columnChooser.filterCriteria += 'a';
-            tick();
             fix.detectChanges();
+            tick();
 
             expect(filterInput.value).toBe('da');
             expect(columnChooser.columnItems.length).toBe(1);
 
             columnChooser.filterCriteria = '';
             columnChooser.filterCriteria = 'el';
-            tick();
             fix.detectChanges();
+            tick();
 
             expect(filterInput.value).toBe('el');
             expect(columnChooser.columnItems.length).toBe(2);
 
             columnChooser.filterCriteria = '';
-            tick();
             fix.detectChanges();
+            tick();
 
             expect(filterInput.value).toBe('');
-            expect(columnChooser.columnItems.length).toBe(5);
+            expect(columnChooser.columnItems.length).toBe(4);
         }));
 
         it('- Hide All button operates over the filtered in columns only', fakeAsync(() => {
@@ -509,6 +509,7 @@ describe('Column Hiding UI #grid', () => {
 
         it('- Show All button operates over the filtered in columns only', fakeAsync(() => {
             grid.columns[1].disableHiding = false;
+            fix.detectChanges();
             columnChooser.checkAllColumns();
             columnChooser.filterCriteria = 're';
             fix.detectChanges();
@@ -635,7 +636,7 @@ describe('Column Hiding UI #grid', () => {
          }));
 
         it('indents columns according to their level.', () => {
-            const items = fix.checkboxes;
+            const items = GridFunctions.getColumnChooserItems(columnChooserElement);
             const margin0 = '0px';
             const margin30 = '30px';
             const margin60 = '60px';
@@ -764,25 +765,6 @@ describe('Column Hiding UI #grid', () => {
             for (let i = 1; i < 6; i++) {
                 verifyColumnIsHidden(grid.columns[i], true, 2);
             }
-        });
-
-        it('onColumnVisibilityChanged event is fired on grid.toggleColumnVisibility(args).', () => {
-            spyOn(grid.onColumnVisibilityChanged, 'emit').and.callThrough();
-
-            const currentArgs: IColumnVisibilityChangedEventArgs = {
-                column: grid.columns.find(c => c.header === 'Person Details'),
-                newValue: true
-            };
-            grid.toggleColumnVisibility(currentArgs);
-            fix.detectChanges();
-
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-
-            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
-            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
-            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
-            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
-            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
         });
     });
 
