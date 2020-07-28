@@ -398,6 +398,10 @@
             }
         }
 
+        igx-buttongroup {
+            min-width: 30%;
+        }
+
         [igxButton='icon'] {
             margin-#{$left}: rem(16px);
         }
