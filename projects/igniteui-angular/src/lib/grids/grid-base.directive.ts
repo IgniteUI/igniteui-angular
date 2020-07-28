@@ -25,7 +25,9 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive
+    Directive,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -1092,6 +1094,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
         filteringExpressionsTree: IFilteringExpressionsTree,
         done: (values: any[]) => void) => void;
+
+    /**
+     * Gets/Sets the current selection state.
+     * @remarks
+     * Represents the selected rows' IDs (primary key or rowData)
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" primaryKey="ID" rowSelection="multiple" [selectedRows]="[0, 1, 2]"><igx-grid>
+     * ```
+     */
+    @Input()
+    public set selectedRows(rowIDs: any[]) {
+        rowIDs.length > 0
+            ? this.selectRows(rowIDs, true)
+            : this.deselectAllRows();
+    }
+
+    public get selectedRows(): any[] {
+        return this.selectionService.getSelectedRows();
+    }
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked.
@@ -5289,18 +5311,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.isRowPinningToTop ?
             [...this.pinnedDataView, ...this.unpinnedDataView] :
             [...this.unpinnedDataView, ...this.pinnedDataView];
-    }
-
-    /**
-     * Get current selection state.
-     * @example
-     * Returns an array with selected rows' IDs (primaryKey or rowData)
-     * ```typescript
-     * const selectedRows = this.grid.selectedRows();
-     * ```
-     */
-    public selectedRows(): any[] {
-        return this.selectionService.getSelectedRows();
     }
 
     /**
