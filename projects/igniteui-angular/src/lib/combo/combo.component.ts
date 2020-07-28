@@ -165,10 +165,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
-    /**
-     * @hidden @internal
-     */
-    public filteringPipeTrigger = 0;
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
@@ -1587,8 +1583,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public toggleCaseSensitive() {
-        this.filteringOptions.caseSensitive = !this.filteringOptions.caseSensitive;
-        this.filteringPipeTrigger++;
+        this.filteringOptions = { caseSensitive: !this.filteringOptions.caseSensitive };
     }
 }
 

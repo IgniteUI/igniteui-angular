@@ -15,7 +15,7 @@ import { IComboFilteringOptions } from './combo.component';
 })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(collection: any[], searchValue: any, displayKey: any,
-                    shouldFilter: boolean, filteringOptions: IComboFilteringOptions, _: any) {
+                    shouldFilter: boolean, filteringOptions: IComboFilteringOptions) {
         if (!collection) {
             return [];
         }
