@@ -13,6 +13,7 @@ import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/pu
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { HorizontalAlignment, VerticalAlignment, OverlaySettings, AutoPositionStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -22,7 +23,7 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
     selector: 'igx-excel-style-conditional-filter',
     templateUrl: './excel-style-conditional-filter.component.html'
 })
-export class IgxExcelStyleConditionalFilterComponent implements OnDestroy, OnInit {
+export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     private shouldOpenSubMenu = true;
     private destroy$ = new Subject<boolean>();
 
@@ -43,11 +44,13 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy, OnIni
     @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
-
-    ngOnInit(): void {
-        this._subMenuOverlaySettings.outlet = (this.esf.grid as any).outlet;
-    }
+    constructor(public esf: IgxGridExcelStyleFilteringComponent) {
+        this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.esf.grid) {
+                this._subMenuOverlaySettings.outlet = (this.esf.grid as any).outlet;
+            }
+        });
+     }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);

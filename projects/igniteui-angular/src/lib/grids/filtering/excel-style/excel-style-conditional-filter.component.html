@@ -9,7 +9,6 @@
     </div>
 
     <igx-drop-down
-        *ngIf="esf.column"
         #subMenu
         [maxHeight]="'397px'"
         [displayDensity]="esf.grid.displayDensity"
@@ -30,7 +29,6 @@
     </igx-drop-down>
 
     <igx-excel-style-custom-dialog
-        *ngIf="esf.column"
         #customDialog
         [column]="esf.column"
         [filteringService]="esf.grid.filteringService"

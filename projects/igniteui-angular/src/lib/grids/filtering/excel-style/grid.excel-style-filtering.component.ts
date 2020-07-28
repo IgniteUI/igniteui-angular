@@ -79,6 +79,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private _column: IgxColumnComponent;
     private _columnPinning: Subscription;
     private _columnVisibilityChanged: Subscription;
+    private _sortingChanged: Subscription;
     private _filteringChanged: Subscription;
     private _densityChanged: Subscription;
 
@@ -88,6 +89,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @Input()
     public set column(value: IgxColumnComponent) {
         this._column = value;
+        this.columnChange.emit(this._column);
 
         if (this._columnPinning) {
             this._columnPinning.unsubscribe();
@@ -95,6 +97,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         if (this._columnVisibilityChanged) {
             this._columnVisibilityChanged.unsubscribe();
+        }
+
+        if (this._sortingChanged) {
+            this._sortingChanged.unsubscribe();
         }
 
         if (this._filteringChanged) {
@@ -109,6 +115,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this._column.grid.filteringService.registerSVGIcons();
             this.isColumnPinnable = this.column.pinnable;
             this.init();
+            this.sortingChanged.emit();
 
             this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 requestAnimationFrame(() => {
@@ -120,6 +127,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             });
             this._columnVisibilityChanged = this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
+            });
+            this._sortingChanged =  this.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.sortingChanged.emit();
             });
             this._filteringChanged = this.grid.filteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.init();
@@ -237,14 +247,35 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @HostBinding('class.igx-excel-filter--inline')
     public inline = true;
 
+    /**
+     * @hidden @internal
+     */
     @Output()
     public loadingStart = new EventEmitter();
 
+    /**
+     * @hidden @internal
+     */
     @Output()
     public loadingEnd = new EventEmitter();
 
+    /**
+     * @hidden @internal
+     */
     @Output()
     public initialized = new EventEmitter();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public sortingChanged = new EventEmitter();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public columnChange = new EventEmitter<IgxColumnComponent>();
 
     /**
      * @hidden @internal

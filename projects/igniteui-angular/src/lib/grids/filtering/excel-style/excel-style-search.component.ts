@@ -107,7 +107,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     public refreshSize() {
         requestAnimationFrame(() => {
-            this.virtDir.recalcUpdateSizes();
+            this.virtDir?.recalcUpdateSizes();
         });
     }
 

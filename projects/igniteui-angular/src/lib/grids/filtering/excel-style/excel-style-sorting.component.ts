@@ -1,11 +1,9 @@
 import {
     Component,
     ViewChild,
-    AfterViewInit,
     OnDestroy,
-    OnChanges,
-    SimpleChanges,
-    HostBinding
+    HostBinding,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +18,7 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html'
 })
-export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class IgxExcelStyleSortingComponent implements OnDestroy {
     private destroy$ = new Subject<boolean>();
 
     @HostBinding('class') class = 'igx-excel-filter__sort';
@@ -28,29 +26,21 @@ export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, 
     @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
     public sortButtonGroup: IgxButtonGroupComponent;
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
-
-    ngAfterViewInit(): void {
-        this.esf.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    constructor(public esf: IgxGridExcelStyleFilteringComponent, private cdr: ChangeDetectorRef) {
+        this.esf.sortingChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.updateSelectedButtons(this.esf.column.field);
         });
-        this.updateSelectedButtons(this.esf.column.field);
-    }
+     }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.column && !changes.column.firstChange) {
-            this.updateSelectedButtons(changes.column.currentValue.field);
-        }
-    }
-
     private updateSelectedButtons(fieldName: string) {
         const sortIndex = this.esf.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
 
+        this.cdr.detectChanges();
         this.sortButtonGroup.buttons.forEach((b, i) => {
             this.sortButtonGroup.deselectButton(i);
         });
