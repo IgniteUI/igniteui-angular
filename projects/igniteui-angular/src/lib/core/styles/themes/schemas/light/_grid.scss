@@ -688,7 +688,8 @@ $_indigo-grid: extend(
 
         cell-selected-background: (
             igx-color: ('primary', 50),
-            rgba: .5
+            rgba: .5,
+            to-opaque: #fff
         ),
 
         cell-active-border-color: (
