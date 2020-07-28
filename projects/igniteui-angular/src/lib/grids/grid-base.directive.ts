@@ -5457,6 +5457,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         for (let [row, set] of selectionMap) {
+            row = this.paging ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
