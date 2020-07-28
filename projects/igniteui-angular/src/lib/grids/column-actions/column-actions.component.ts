@@ -352,7 +352,7 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * @hidden @internal
-    */
+     */
     get titleID() {
         return this.id + '_title';
     }
