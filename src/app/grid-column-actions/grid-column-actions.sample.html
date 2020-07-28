@@ -1,6 +1,6 @@
 <div class="wrapper">
     <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'">
-        <igx-column *ngFor="let c of columns" [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
+        <igx-column *ngFor="let c of columns" [groupable]='true' [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
             [hidden]='c.hidden'>
         </igx-column>
     </igx-grid>
@@ -22,8 +22,7 @@
                 <div class="button-sample">
                     <igx-column-actions
                     igxColumnPinning
-                    [columns]="grid1.columns"
-                    [title]="grid1.columnPinningTitle">
+                    [columns]="grid1.columns">
                     </igx-column-actions>
                 </div>
         </article>
@@ -34,7 +33,7 @@
                 <igx-column-actions
                 appColumnGrouping
                 [columns]="grid1.columns"
-                [title]="'Custom Group Action'">
+                >
                 </igx-column-actions>
             </div>
     </article>

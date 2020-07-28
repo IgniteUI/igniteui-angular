@@ -47,7 +47,7 @@ export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = c => !c.groupable;
+    public actionEnabledColumnsFilter = c => c.groupable;
 
     /**
      * @hidden @internal
