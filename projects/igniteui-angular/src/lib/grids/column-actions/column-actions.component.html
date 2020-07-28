@@ -1,9 +1,10 @@
 <div class="igx-column-actions__header">
-    <h4 class="igx-column-actions__header-title" *ngIf="title">{{ title }}</h4>
+    <h4 [attr.id]='titleID' class="igx-column-actions__header-title" *ngIf="title">{{ title }}</h4>
 
     <igx-input-group class="igx-column-actions__header-input" *ngIf="!hideFilter">
         <input igxInput
             type="text"
+            [attr.aria-describedby]='titleID'
             [(ngModel)]="filterCriteria"
             [placeholder]="filterColumnsPrompt"
             autocomplete="off" />

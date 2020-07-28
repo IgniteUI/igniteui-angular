@@ -14,6 +14,7 @@ import { ColumnDisplayOrder } from '../common/enums';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 
+let NEXT_ID = 0;
 /**
  * Providing reference to `IgxColumnActionsComponent`:
  * ```typescript
@@ -324,6 +325,36 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     public get grid() {
         return this.actionableColumns[0]?.grid ?? null;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private _id = `igx-column-actions-${NEXT_ID++}`;
+
+    /**
+     * Gets/Sets the value of the `id` attribute.
+     * @remarks
+     * If not provided it will be automatically generated.
+     * @example
+     * ```html
+     * <igx-column-actions [id]="'igx-actions-1'"></igx-column-actions>
+     * ```
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public get id(): string {
+        return this._id;
+    }
+    public set id(value: string) {
+        this._id = value;
+    }
+
+    /**
+     * @hidden @internal
+    */
+    get titleID() {
+        return this.id + '_title';
     }
 
     /**
