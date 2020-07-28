@@ -2,12 +2,10 @@ import {
     Component,
     HostBinding,
     Input,
-    OnDestroy,
     ViewChildren,
     QueryList,
     DoCheck,
-    KeyValueDiffers,
-    Pipe
+    KeyValueDiffers
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
@@ -87,14 +85,30 @@ export class IgxColumnActionsComponent implements DoCheck {
     public title = '';
 
     /**
-     * Gets/sets the prompt that is displayed in the filter input.
+     * @hidden @internal
+     */
+    private _filterColumnsPrompt = '';
+    /**
+     * Gets the prompt that is displayed in the filter input.
+     * @example
+     * ```typescript
+     * let filterColumnsPrompt = this.columnActions.filterColumnsPrompt;
+     * ```
+     */
+    @Input()
+    public get filterColumnsPrompt(): string {
+        return this._filterColumnsPrompt;
+    }
+    /**
+     * Sets the prompt that is displayed in the filter input.
      * @example
      * ```html
      * <igx-column-actions [filterColumnsPrompt]="'Type here to search'"></igx-column-actions>
      * ```
      */
-    @Input()
-    public filterColumnsPrompt = '';
+    public set filterColumnsPrompt(value: string) {
+        this._filterColumnsPrompt = value || '';
+    }
 
     /**
      * Shows/hides the columns filtering input from the UI.
