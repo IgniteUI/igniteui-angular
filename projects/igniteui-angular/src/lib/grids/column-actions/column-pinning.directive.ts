@@ -42,7 +42,7 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = c => !c.disablePinning;
+    public actionEnabledColumnsFilter = c => !c.disablePinning && !c.level;
 
     /**
      * @hidden @internal

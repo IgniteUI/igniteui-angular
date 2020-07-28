@@ -210,7 +210,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 
 @Component({
     template: `<div>
-    <igx-column-pinning [columns]="grid.columns" *ngIf="showInline"></igx-column-pinning>
+    <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })

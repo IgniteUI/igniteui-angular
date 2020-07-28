@@ -2,8 +2,6 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
-import { IgxColumnPinningModule } from '../pinning/pinning.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
 import { IgxButtonModule } from '../../directives/button/button.directive';
@@ -14,7 +12,6 @@ import {
 } from '../../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsModule } from '../column-actions/column-actions.module';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
@@ -39,7 +36,6 @@ describe('Column Pinning UI #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxColumnPinningModule,
                 IgxColumnActionsModule,
                 IgxButtonModule
             ]
@@ -71,14 +67,12 @@ describe('Column Pinning UI #grid', () => {
             columnChooser.title = undefined;
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBe(null);
-            expect(columnChooser.title).toBe('');
+            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
 
             columnChooser.title = null;
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBe(null);
-            expect(columnChooser.title).toBe('');
+            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
         }));
 
         it('filter input visibility is controlled via \'hideFilter\' property.', () => {
@@ -259,12 +253,8 @@ describe('Column Pinning UI #grid', () => {
         }));
 
         it('shows only top level columns.', () => {
-            const columnItems = columnChooser.columnItems;
-            expect(columnItems.length).toBe(3);
-            expect(columnItems[0].name).toBe('Missing');
-            expect(columnItems[1].name).toBe('General Information');
-            expect(columnItems[2].name).toBe('ID');
-            expect(GridFunctions.getColumnChooserItems(columnChooserElement).length).toBe(3);
+            let columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['Missing', 'General Information', 'ID']);
         });
 
         it('- pinning group column pins all children.', () => {
