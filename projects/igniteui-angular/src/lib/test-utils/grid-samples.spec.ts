@@ -1135,12 +1135,12 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
 
-        <ng-template igxExcelStyleColumnOperations>
-            <div class="esf-custom-column-operations">Column Operations Template</div>
-        </ng-template>
-        <ng-template igxExcelStyleFilterOperations>
-            <div class="esf-custom-filter-operations">Filter Operations Template</div>
-        </ng-template>
+        <igx-excel-style-filtering>
+            <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
+                <igx-excel-column-operations>Column Operations Template</igx-excel-column-operations>
+                <igx-excel-filter-operations>Filter Operations Template</igx-excel-filter-operations>
+            </igx-grid-excel-style-filtering>
+        </igx-excel-style-filtering>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
