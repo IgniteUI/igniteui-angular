@@ -253,7 +253,7 @@ describe('Column Pinning UI #grid', () => {
         }));
 
         it('shows only top level columns.', () => {
-            let columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            const columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
             expect(columnNames).toEqual(['Missing', 'General Information', 'ID']);
         });
 
