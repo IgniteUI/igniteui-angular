@@ -1587,15 +1587,16 @@
     }
 
     %igx-grid__th--active {
-        %grid-cell-header,
+        @extend %grid-cell--active;
+
         %igx-grid__th--selected,
         %igx-grid__th--selectable {
-            @extend %grid-cell--active
+            @extend %grid-cell--active;
         }
     }
 
     %igx-grid-summary--active {
-        @extend %grid-cell--active
+        @extend %grid-cell--active;
     }
 
     %igx-grid__th--sortable {
