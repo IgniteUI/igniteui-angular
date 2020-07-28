@@ -187,6 +187,13 @@
         box-shadow: --var($theme, 'shadow');
         transition: $transition;
         border-radius: --var($theme, 'border-radius');
+
+        button {
+            // The margin here is required to fix a bug in Safari #7858
+            margin-top: 0;
+            margin-#{$right}: 0;
+            margin-bottom: 0;
+        }
     }
 
     %igx-group-item {
@@ -204,10 +211,6 @@
         position: relative;
         z-index: 0;
         transition: $transition;
-        // The margin here is required to fix a bug in Safari #7858
-        margin-top: 0;
-        margin-#{$right}: 0;
-        margin-bottom: 0;
 
         &%igx-button--flat {
             border-radius: 0;
