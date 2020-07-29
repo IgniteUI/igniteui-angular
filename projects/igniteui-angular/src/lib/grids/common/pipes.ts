@@ -283,11 +283,13 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
     public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
         let copy = collection.slice(0);
         if (filterCriteria && filterCriteria.length > 0) {
-            copy = collection.filter((c) => {
+            const filterFunc = (c) => {
                 const filterText = c.header || c.field;
                 if (!filterText) { return false; }
-                return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0;
-            });
+                return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
+                    (c.children?.some(filterFunc) ?? false);
+            };
+            copy = collection.filter(filterFunc);
         }
         // Preserve the filtered collection for use in the component
         this.columnActions.filteredColumns = copy;
