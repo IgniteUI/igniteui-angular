@@ -426,6 +426,14 @@
             margin-#{$right}: rem(8px);
         }
     }
+
+    igx-excel-filter-operations,
+    [igxExcelFilterOperations] {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+    }
 }
 
 /// Adds typography styles for the excel-style-filtering component.
