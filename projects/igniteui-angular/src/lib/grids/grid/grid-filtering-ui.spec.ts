@@ -3584,8 +3584,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 690 && scrollbar.scrollTop <= 700).toBe(true,
-                'search scrollbar has incorrect scrollTop');
+            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 700).toBe(true,
+                'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
