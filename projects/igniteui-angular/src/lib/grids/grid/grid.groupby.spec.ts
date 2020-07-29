@@ -1022,7 +1022,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.selectAllRows();
             fix.detectChanges();
 
-            expect(grid.selectedRows().length).toEqual(8);
+            expect(grid.selectedRows.length).toEqual(8);
             let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
             for (const r of rows) {
                 expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
@@ -1030,12 +1030,12 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             grid.deselectAllRows();
             fix.detectChanges();
-            expect(grid.selectedRows().length).toEqual(0);
+            expect(grid.selectedRows.length).toEqual(0);
 
             GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            expect(grid.selectedRows().length).toEqual(8);
+            expect(grid.selectedRows.length).toEqual(8);
 
             rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
             for (const r of rows) {
@@ -1600,7 +1600,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         GridSelectionFunctions.clickRowCheckbox(rows[0].element);
         await wait(100);
         grid.cdr.detectChanges();
-        expect(grid.selectedRows().length).toEqual(1);
+        expect(grid.selectedRows.length).toEqual(1);
         GridSelectionFunctions.verifyRowSelected(rows[0]);
 
     });

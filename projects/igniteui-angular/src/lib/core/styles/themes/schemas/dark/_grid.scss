@@ -443,6 +443,9 @@ $_dark-indigo-grid: extend(
 
         cell-selected-background: (
             igx-color: ('grays', 200),
+            to-opaque: (
+                igx-color: 'surface',
+            )
         ),
 
         cell-selected-text-color: (

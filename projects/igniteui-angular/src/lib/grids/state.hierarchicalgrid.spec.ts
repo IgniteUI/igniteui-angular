@@ -384,10 +384,10 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         state.setState(rowSelectionState);
         gridState = state.getState(false, ['rowSelection', 'rowIslands']);
-        HelperFunctions.verifyRowSelection(grid.selectedRows(), gridState as IGridState);
+        HelperFunctions.verifyRowSelection(grid.selectedRows, gridState as IGridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
-            HelperFunctions.verifyRowSelection(childGrid.grid.selectedRows(), childGrid.state);
+            HelperFunctions.verifyRowSelection(childGrid.grid.selectedRows, childGrid.state);
         });
         gridState = state.getState(true, ['rowSelection', 'rowIslands']);
         expect(gridState).toBe(rowSelectionState);

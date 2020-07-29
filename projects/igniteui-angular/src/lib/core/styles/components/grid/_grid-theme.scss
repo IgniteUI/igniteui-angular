@@ -1139,6 +1139,23 @@
         bottom: 0;
     }
 
+    %igx-grid__td--bool {
+        justify-content: center;
+
+        igx-icon {
+            height: rem(18px);
+            width: rem(18px);
+            font-size: rem(18px);
+            color: igx-color($palette, 'grays', 500);
+        }
+    }
+
+    %igx-grid__td--bool-true {
+        igx-icon {
+            color: igx-color($palette, 'grays', 700);
+        }
+    }
+
     %igx-grid__tr--edit {
         border-bottom: 1px solid --var($theme, 'edit-mode-color');
         position: relative;
@@ -1515,6 +1532,19 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
+            position: relative;
+
+            &::after {
+                content: attr(data-sortIndex);
+                position: absolute;
+                top: -5px;
+                #{$right}: -1px;
+                font-size: rem(10px);
+                text-align: $right;
+                font-family: sans-serif;
+                line-height: rem(10px);
+                background: --var($theme, 'header-background');
+            }
         }
     }
 
@@ -1557,15 +1587,16 @@
     }
 
     %igx-grid__th--active {
-        %grid-cell-header,
+        @extend %grid-cell--active;
+
         %igx-grid__th--selected,
         %igx-grid__th--selectable {
-            @extend %grid-cell--active
+            @extend %grid-cell--active;
         }
     }
 
     %igx-grid-summary--active {
-        @extend %grid-cell--active
+        @extend %grid-cell--active;
     }
 
     %igx-grid__th--sortable {

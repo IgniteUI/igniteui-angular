@@ -15,8 +15,11 @@ All notable changes for each version of this project will be documented in this 
     - Added `closeOnEscape` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
 - `IgxNavbar`:
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** - The `selectedRows` method is now an `@Input` property. Setting it to an array of Row IDs will update the grid's selection state, any previous selection will be cleared. Setting it to an empty array will clear the selection entirely.
 - `igxGrid`
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
+    - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 - `IgxTimePicker`
@@ -44,6 +47,7 @@ The following example shows how you can use the Indigo theme:
     @include igx-indigo-dark-theme($dark-indigo-palette);
 }
 ```
+
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -95,6 +99,12 @@ The following example shows how you can use the Indigo theme:
 
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
+
+## 9.1.9
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Expose a setter for grid's `outlet` property, which can be used to set the outlet used to attach the grid's overlays to.
 
 ## 9.1.4
 

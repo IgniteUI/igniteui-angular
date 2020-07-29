@@ -363,7 +363,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         state.setState(rowSelectionState);
         gridState = state.getState(false, 'rowSelection');
-        HelperFunctions.verifyRowSelection(grid.selectedRows(), gridState as IGridState);
+        HelperFunctions.verifyRowSelection(grid.selectedRows, gridState as IGridState);
         gridState = state.getState(true, 'rowSelection');
         expect(gridState).toBe(rowSelectionState);
     });
@@ -382,7 +382,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         state.setState(rowSelectionStateObject);
         gridState = state.getState(false, 'rowSelection');
-        HelperFunctions.verifyRowSelection(grid.selectedRows(), gridState as IGridState);
+        HelperFunctions.verifyRowSelection(grid.selectedRows, gridState as IGridState);
         gridState = state.getState(true, 'rowSelection');
         expect(gridState).toBe(rowSelectionState);
     });
