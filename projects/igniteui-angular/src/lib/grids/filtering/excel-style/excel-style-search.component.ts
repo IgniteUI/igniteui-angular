@@ -40,6 +40,7 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
     private _isLoading;
+    private _changesDetected = false;
     private destroy$ = new Subject<boolean>();
 
     public get isLoading() {
@@ -148,6 +149,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public get containerSize() {
+        if (!this.list && !this._changesDetected) {
+            this._changesDetected = true;
+            this.cdr.detectChanges();
+        }
+
         if (this.list) {
             return this.list.element.nativeElement.offsetHeight;
         }
