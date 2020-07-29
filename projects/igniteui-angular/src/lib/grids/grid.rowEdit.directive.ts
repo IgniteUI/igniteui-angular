@@ -64,7 +64,7 @@ export class IgxRowEditTabStopDirective {
         this.grid.navigation.activeNode.row = this.grid.rowInEditMode.index;
         this.grid.navigation.activeNode.column = this.currentCellIndex;
         this.grid.navigateTo(this.grid.rowInEditMode.index, this.currentCellIndex, (obj) => {
-            obj.target.activate(event);
+            obj.target.activate(event, {rowIndex: this.grid.rowInEditMode.index, colIndex: this.currentCellIndex});
             this.grid.cdr.detectChanges();
         });
     }

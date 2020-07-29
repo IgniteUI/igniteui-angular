@@ -824,7 +824,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public activate(event: FocusEvent | KeyboardEvent, position) {
         const node = this.selectionNode;
 
-        this.setActiveNode(position);
+        this.grid.navigation.setActiveNode({ row: position.rowIndex, column: position.colIndex });
 
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
@@ -890,13 +890,5 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const meta = new Map<string, any>();
         meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
         return meta;
-    }
-
-    private setActiveNode(position) {
-        const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-        const newLayout = !this.grid.navigation.activeNode.layout ? layout :
-        {...this.grid.navigation.activeNode.layout, colStart: layout.colStart, rowEnd: layout.rowEnd};
-
-        this.grid.navigation.setActiveNode({ row: position.rowIndex, column: position.colIndex, layout: newLayout });
     }
 }

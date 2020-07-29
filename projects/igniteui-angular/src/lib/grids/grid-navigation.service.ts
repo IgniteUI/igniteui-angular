@@ -298,7 +298,7 @@ export class IgxGridNavigationService {
         }
 
         this.navigateInBody(next.rowIndex, next.visibleColumnIndex, (obj) => {
-            obj.target.activate(event);
+            obj.target.activate(event, { rowIndex: next.rowIndex, colIndex: next.visibleColumnIndex });
             this.grid.cdr.detectChanges();
         });
     }
