@@ -15,6 +15,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 const ROW_TAG = 'igx-grid-row';
@@ -572,13 +573,12 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the last data cell in the grid using Ctrl + End.', async () => {
+            setupGridScrollDetection(fix, grid);
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -589,9 +589,8 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
+            setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -602,8 +601,6 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
 
             const fRow = grid.getRowByIndex(0);
             expect(fRow).not.toBeUndefined();
@@ -612,13 +609,12 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
+            setupGridScrollDetection(fix, grid);
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -629,9 +625,8 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
+            setupGridScrollDetection(fix, grid);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -640,8 +635,6 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
