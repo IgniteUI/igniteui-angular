@@ -611,7 +611,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.focusFirstCell(fix);
 
             grid.navigateTo(15, 1, (args) => {
-                args.target.activate();
+                args.target.activate(null, {rowIndex: 15, colIndex: 1});
             });
             fix.detectChanges();
             await wait(200);
@@ -631,7 +631,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             GridFunctions.focusFirstCell(fix);
 
-            grid.navigateTo(50, 50, (args) => { args.target.activate(); });
+            grid.navigateTo(50, 50, (args) => { args.target.activate(null, {rowIndex: 50, colIndex: 50}); });
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
