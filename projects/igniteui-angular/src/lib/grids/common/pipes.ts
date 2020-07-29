@@ -263,6 +263,9 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
         pipeTrigger: number
     ): IgxColumnComponent[] {
         let copy = collection.slice(0);
+        if (copy.length && copy[0].grid.hasColumnLayouts) {
+            copy = copy.filter(c => c.columnLayout);
+        }
         if (actionFilter) {
             copy = copy.filter(actionFilter);
         }
