@@ -581,6 +581,8 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             const lastRow = grid.getRowByIndex(52);
             expect(lastRow).not.toBeUndefined();
