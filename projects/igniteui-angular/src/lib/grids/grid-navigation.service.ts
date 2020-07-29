@@ -69,7 +69,10 @@ export class IgxGridNavigationService {
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(event, position); });
+            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
+                obj.target.activate(event, position);
+                this.grid.cdr.detectChanges();
+            });
         }
         this.grid.cdr.detectChanges();
     }
@@ -201,7 +204,7 @@ export class IgxGridNavigationService {
     focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
-        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
+        if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
                 obj.target.activate(event, {rowIndex: 0, colIndex: 0});

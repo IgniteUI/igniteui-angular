@@ -168,6 +168,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             spyOn(grid.activeNodeChange, 'emit').and.callThrough();
 
             gridContent.triggerEventHandler('focus', null);
+            fix.detectChanges();
 
             const activeNode = grid.navigation.activeNode;
             const cell = grid.getCellByColumnVisibleIndex(activeNode.row, activeNode.column);

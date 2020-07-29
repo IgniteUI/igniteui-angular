@@ -845,7 +845,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.grid.onSelection.emit({ cell: this, event });
         }
-        this.grid.cdr.detectChanges();
     }
 
 
