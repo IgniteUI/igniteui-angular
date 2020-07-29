@@ -2005,7 +2005,7 @@ describe('igxCombo', () => {
             combo.searchValue = 'New ';
             combo.handleInputChange();
             fixture.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(2);
+            expect(filterSpy).toHaveBeenCalledTimes(1);
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
 
             firstFilter = [...combo.filteredData];
@@ -2013,14 +2013,14 @@ describe('igxCombo', () => {
             combo.handleInputChange();
             fixture.detectChanges();
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
-            expect(filterSpy).toHaveBeenCalledTimes(4);
+            expect(filterSpy).toHaveBeenCalledTimes(2);
 
             combo.searchValue = '';
             combo.handleInputChange();
             fixture.detectChanges();
             expect(combo.filteredData.length).toEqual(initialData.length);
             expect(combo.filteredData.length).toBeGreaterThan(firstFilter.length);
-            expect(filterSpy).toHaveBeenCalledTimes(6);
+            expect(filterSpy).toHaveBeenCalledTimes(3);
             expect(combo.filteredData.length).toEqual(initialData.length);
         });
         it('should properly select/deselect filteredData', () => {
@@ -2033,7 +2033,7 @@ describe('igxCombo', () => {
             combo.searchValue = 'New ';
             combo.handleInputChange();
             fixture.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(2);
+            expect(filterSpy).toHaveBeenCalledTimes(1);
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
             expect(combo.filteredData.length).toEqual(4);
 
