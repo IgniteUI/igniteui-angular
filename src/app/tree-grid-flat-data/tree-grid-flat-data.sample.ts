@@ -110,7 +110,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public addChildRow() {
-        const selectedRowId = this.grid1.selectedRows()[0];
+        const selectedRowId = this.grid1.selectedRows[0];
         this.grid1.addRow(
             {
                 'employeeID': this.data.length + this.nextRow++,
@@ -122,7 +122,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public deleteRow() {
-        this.grid1.deleteRow(this.grid1.selectedRows()[0]);
+        this.grid1.deleteRow(this.grid1.selectedRows[0]);
     }
 
     public selectDensity(event) {

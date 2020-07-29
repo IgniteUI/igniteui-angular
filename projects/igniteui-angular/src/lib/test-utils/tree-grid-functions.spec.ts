@@ -303,7 +303,7 @@ export class TreeGridFunctions {
         expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
         // Verify selection of row through treeGrid
-        const selectedRows = (treeGridComponent as IgxTreeGridComponent).selectedRows();
+        const selectedRows = (treeGridComponent as IgxTreeGridComponent).selectedRows;
         expect(selectedRows.includes(rowComponent.rowID)).toBe(expectedSelection);
     }
 
@@ -326,7 +326,7 @@ export class TreeGridFunctions {
     public static verifyDataRowsSelection(fix, expectedSelectedRowIndices: any[], expectedSelection: boolean) {
         if (expectedSelection) {
             const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
-            expect(treeGrid.selectedRows().length).toBe(expectedSelectedRowIndices.length, 'Incorrect number of rows that are selected.');
+            expect(treeGrid.selectedRows.length).toBe(expectedSelectedRowIndices.length, 'Incorrect number of rows that are selected.');
         }
 
         expectedSelectedRowIndices.forEach(rowIndex => {
