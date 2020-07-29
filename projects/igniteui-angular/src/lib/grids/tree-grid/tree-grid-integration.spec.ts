@@ -974,7 +974,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
-            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
@@ -1027,7 +1027,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             };
             expect(trans.add).toHaveBeenCalledWith(transParams, null);
 
-            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             tick(16);
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
@@ -1073,7 +1073,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const transParams: HierarchicalTransaction = { id: addedRowId, type: TransactionType.ADD, newValue: newRow };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
-            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
@@ -1126,7 +1126,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             };
             expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
 
-            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            treeGrid.deleteRowById(treeGrid.selectedRows[0]);
             tick(16);
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
