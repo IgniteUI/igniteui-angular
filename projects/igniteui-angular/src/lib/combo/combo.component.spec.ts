@@ -638,7 +638,7 @@ describe('igxCombo', () => {
             expect(combo.type).toEqual('box');
             expect(combo.role).toEqual('combobox');
         });
-        xit('should apply all appropriate classes on combo initialization', () => {
+        it('should apply all appropriate classes on combo initialization', () => {
             const comboWrapper = fixture.nativeElement.querySelector(CSS_CLASS_COMBO);
             expect(comboWrapper).not.toBeNull();
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Location');
@@ -681,7 +681,7 @@ describe('igxCombo', () => {
             expect(dropDownButton.classList.contains(CSS_CLASS_TOGGLEBUTTON)).toBeTruthy();
             expect(dropDownButton.childElementCount).toEqual(1);
 
-            const inputGroupBorder = inputGroupWrapper.children[1];
+            const inputGroupBorder = inputGroupElement.children[1];
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
