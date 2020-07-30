@@ -2,8 +2,10 @@
     <ng-container *ngTemplateOutlet="bundle"></ng-container>
 </div>
 
+<div class="igx-input-group__border" *ngIf="hasBorder"></div>
+
 <div class="igx-input-group__hint">
-    <ng-content select="igx-hint,[igxHint]"></ng-content>
+    <ng-content select="igx-hint, [igxHint]"></ng-content>
 </div>
 
 <ng-template #label>
@@ -14,32 +16,65 @@
     <ng-content select="[igxInput]"></ng-content>
 </ng-template>
 
-<ng-template #inputBundle>
-    <ng-container *ngIf="!isNotMaterial">
-        <ng-container *ngTemplateOutlet="label"></ng-container>
-    </ng-container>
-
-    <ng-container *ngTemplateOutlet="input"></ng-container>
+<ng-template #prefix>
+    <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
 </ng-template>
 
-<ng-template #bundle>
-    <ng-container *ngIf="isNotMaterial">
-        <ng-container *ngTemplateOutlet="label"></ng-container>
-    </ng-container>
+<ng-template #suffix>
+    <ng-content select="igx-suffix, [igxSuffix]"></ng-content>
+</ng-template>
 
+<ng-template #materialBundle>
     <div class="igx-input-group__bundle">
-        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+        <ng-container *ngTemplateOutlet="prefix"></ng-container>
 
-        <div *ngIf="!isTypeBootstrap; else inputBundle" class="igx-input-group__bundle-main">
-
-            <ng-container *ngIf="!isNotMaterial">
-                <ng-container *ngTemplateOutlet="label"></ng-container>
-            </ng-container>
-
+        <div class="igx-input-group__bundle-main">
+            <ng-container *ngTemplateOutlet="label"></ng-container>
             <ng-container *ngTemplateOutlet="input"></ng-container>
         </div>
 
-        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+        <ng-container *ngTemplateOutlet="suffix"></ng-container>
     </div>
-    <div class="igx-input-group__border" *ngIf="hasBorder"></div>
+</ng-template>
+
+<ng-template #fluentBundle>
+    <ng-container *ngTemplateOutlet="label"></ng-container>
+
+    <div class="igx-input-group__bundle">
+        <ng-container *ngTemplateOutlet="prefix"></ng-container>
+
+        <div class="igx-input-group__bundle-main">
+            <ng-container *ngTemplateOutlet="input"></ng-container>
+        </div>
+
+        <ng-container *ngTemplateOutlet="suffix"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #bootstrapBundle>
+    <ng-container *ngTemplateOutlet="label"></ng-container>
+
+    <div class="igx-input-group__bundle">
+        <ng-container *ngTemplateOutlet="prefix"></ng-container>
+
+        <ng-container *ngTemplateOutlet="input"></ng-container>
+
+        <ng-container *ngTemplateOutlet="suffix"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #bundle>
+    <ng-container [ngSwitch]="type">
+        <ng-container *ngSwitchCase="'bootstrap'">
+            <ng-container *ngTemplateOutlet="bootstrapBundle"></ng-container>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'fluent'">
+            <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+            <ng-container *ngTemplateOutlet="materialBundle"></ng-container>
+        </ng-container>
+    </ng-container>
 </ng-template>

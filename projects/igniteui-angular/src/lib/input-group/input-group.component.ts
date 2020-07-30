@@ -10,42 +10,53 @@ import {
     NgModule,
     QueryList,
     Inject,
-    Optional
+    Optional,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
-import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
+import {
+    IgxInputDirective,
+    IgxInputState,
+} from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixModule} from '../directives/prefix/prefix.directive';
+import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
-import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import {
+    DisplayDensity,
+    IDisplayDensityOptions,
+    DisplayDensityToken,
+    DisplayDensityBase,
+} from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
-enum IgxInputGroupType {
-    LINE,
-    BOX,
-    BORDER,
-    FLUENT,
-    BOOTSTRAP,
-    SEARCH,
-    FLUENT_SEARCH,
+enum IgxInputGroupEnum {
+    line,
+    box,
+    border,
+    fluent,
+    bootstrap,
+    search,
+    fluent_search,
 }
+
+/**
+ * Determines the Input Group type.
+ */
+export type IgxInputGroupType = keyof typeof IgxInputGroupEnum;
 
 @Component({
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }]
+    providers: [
+        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
+    ],
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
-    private _type = IgxInputGroupType.LINE;
+export class IgxInputGroupComponent extends DisplayDensityBase
+    implements IgxInputGroupBase {
+    private _type: IgxInputGroupType = 'line';
     private _filled = false;
-
-    /**
-     * An ElementRef property of the `IgxInputGroupComponent`.
-     */
-    public element: ElementRef;
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -82,30 +93,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostBinding('class.igx-input-group--focused')
     public isFocused = false;
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--box')
-    public isBox = false;
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--border')
-    public isBorder = false;
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--search')
-    public isSearch = false;
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--fluent-search')
-    public isFluentSearch = false;
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--fluent')
-    public isFluent = false;
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--bootstrap')
-    public isBootstrap = false;
 
     /**
      * An @Input property that disables the `IgxInputGroupComponent`.
@@ -180,7 +167,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (!this.isFocused && event.target !== this.input.nativeElement && !this.suppressInputAutofocus) {
+        if (
+            !this.isFocused &&
+            event.target !== this.input.nativeElement &&
+            !this.suppressInputAutofocus
+        ) {
             this.input.focus();
         }
     }
@@ -195,45 +186,19 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /**
      * An @Input property that sets how the input will be styled.
-     * The allowed values are `line`, `box`, `border`, `fluent`, `search` and `fluentSearch`. The default is `line`.
+     * Allowed values of type IgxInputGroupType.
      * ```html
      * <igx-input-group [type]="'search'">
      * ```
      */
     @Input('type')
-    public set type(value: string) {
-        const type: IgxInputGroupType = (IgxInputGroupType as any)[value.toUpperCase()];
-        if (type !== undefined) {
-            this.isBox = this.isBootstrap = this.isFluent = this.isFluentSearch = this.isBorder = this.isSearch = false;
-            switch (type) {
-                case IgxInputGroupType.BOX:
-                    this.isBox = true;
-                    break;
-                case IgxInputGroupType.BORDER:
-                    this.isBorder = true;
-                    break;
-                case IgxInputGroupType.FLUENT:
-                    this.isFluent = true;
-                    break;
-                case IgxInputGroupType.FLUENT_SEARCH:
-                    this.isFluentSearch = true;
-                    break;
-                case IgxInputGroupType.SEARCH:
-                    this.isSearch = true;
-                    break;
-                case IgxInputGroupType.BOOTSTRAP:
-                    this.isBootstrap = true;
-                    break;
-                default: break;
-            }
-
-            this._type = type;
-        }
+    public set type(value: IgxInputGroupType) {
+        this._type = value;
     }
 
     /**
      * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
-     * Values are `line` - 0, `box` - 1, `border` - 2,  `fluent` - 3 `fluentSearch` - 4 and `search` - 5. The default is `line`.
+     * The default is `line`.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -243,7 +208,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * ```
      */
     public get type() {
-        return this._type.toString();
+        return this._type;
     }
 
     /**
@@ -264,10 +229,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         this.suppressInputAutofocus = value;
     }
 
-    constructor(private _element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensityOptions) {
+    constructor(
+        public element: ElementRef<HTMLElement>,
+        @Optional()
+        @Inject(DisplayDensityToken)
+        private _displayDensityOptions: IDisplayDensityOptions
+    ) {
         super(_displayDensityOptions);
-        this.element = _element;
     }
 
     /**
@@ -295,8 +263,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * ```
      */
     public get hasBorder() {
-        return this._type === IgxInputGroupType.LINE ||
-            this._type === IgxInputGroupType.BOX;
+        return this._type === 'line' || this._type === 'box';
     }
 
     /**
@@ -310,7 +277,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * ```
      */
     public get isTypeLine(): boolean {
-        return  this._type === IgxInputGroupType.LINE;
+        return this._type === 'line';
     }
 
     /**
@@ -323,8 +290,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
-        return this._type === IgxInputGroupType.BOX;
+        return this._type === 'box';
     }
 
     /**
@@ -337,8 +305,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
-        return this._type === IgxInputGroupType.BORDER;
+        return this._type === 'border';
     }
 
     /**
@@ -351,8 +320,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--fluent')
     public get isTypeFluent() {
-        return this._type === IgxInputGroupType.FLUENT;
+        return this._type === 'fluent';
     }
 
     /**
@@ -365,13 +335,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--bootstrap')
     public get isTypeBootstrap() {
-        return this._type === IgxInputGroupType.BOOTSTRAP;
-    }
-
-    /** @hidden */
-    public get isNotMaterial() {
-        return this._type === IgxInputGroupType.FLUENT || this._type === IgxInputGroupType.BOOTSTRAP;
+        return this._type === 'bootstrap';
     }
 
     /**
@@ -384,8 +350,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--search')
     public get isTypeSearch() {
-        return  this._type === IgxInputGroupType.SEARCH;
+        return this._type === 'search';
     }
 
     /**
@@ -398,8 +365,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      * ```
      */
+    @HostBinding('class.igx-input-group--fluent-search')
     public get isTypeFluentSearch() {
-        return  this._type === IgxInputGroupType.FLUENT_SEARCH;
+        return this._type === 'fluent_search';
     }
 
     /** @hidden */
@@ -419,7 +387,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         IgxInputGroupComponent,
         IgxHintDirective,
         IgxInputDirective,
-        IgxLabelDirective
+        IgxLabelDirective,
     ],
     exports: [
         IgxInputGroupComponent,
@@ -427,12 +395,8 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         IgxInputDirective,
         IgxLabelDirective,
         IgxPrefixModule,
-        IgxSuffixModule
+        IgxSuffixModule,
     ],
-    imports: [
-        CommonModule,
-        IgxPrefixModule,
-        IgxSuffixModule
-    ]
+    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule],
 })
-export class IgxInputGroupModule { }
+export class IgxInputGroupModule {}
