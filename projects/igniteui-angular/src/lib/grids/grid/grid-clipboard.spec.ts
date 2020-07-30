@@ -90,6 +90,22 @@ describe('IgxGrid - Clipboard #grid', () => {
         expect(eventData).toEqual('Downloads\tReleased\r\n127\ttrue\r\n20\t\r\n');
     });
 
+    it('Copy data when paging is enabled', () => {
+        grid.paging = true;
+        grid.perPage = 5;
+        fix.detectChanges();
+        grid.page = 1;
+        fix.detectChanges();
+        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        grid.clipboardOptions.copyHeaders = false;
+        grid.selectRange({ rowStart: 1, rowEnd: 2, columnStart: 2, columnEnd: 3 });
+        fix.detectChanges();
+
+        const eventData = dispatchCopyEventOnGridBody(fix);
+        expect(copySpy).toHaveBeenCalledTimes(1);
+        expect(eventData).toEqual('0\ttrue\r\n1000\t\r\n');
+    });
+
     it('Disable clipboardOptions', () => {
         const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.enabled = false;
