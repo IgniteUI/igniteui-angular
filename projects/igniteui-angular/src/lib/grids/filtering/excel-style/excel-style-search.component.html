@@ -1,14 +1,13 @@
-<ng-container *ngIf="esf.column">
 <igx-input-group
             type="box"
-            [displayDensity]="esf.grid.displayDensity">
+            [displayDensity]="esf.displayDensity">
     <igx-icon igxPrefix>search</igx-icon>
     <input
         #input
         igxInput
         tabindex="0"
         [(ngModel)]="searchValue"
-        [placeholder]="esf.column.grid.resourceStrings.igx_grid_excel_search_placeholder"
+        [placeholder]="esf.column?.grid.resourceStrings.igx_grid_excel_search_placeholder"
         autocomplete="off"/>
     <igx-icon
         igxSuffix
@@ -19,10 +18,10 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list #list [displayDensity]="esf.grid.displayDensity" [isLoading]="isLoading">
+<igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
     <div [style.overflow]="'hidden'" [style.position]="'relative'">
         <igx-list-item
-            *igxFor="let item of esf.listData | excelStyleSearchFilter: searchValue; scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
+        *igxFor="let item of esf.listData | excelStyleSearchFilter: searchValue; scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox
             [value]="item"
             tabindex="-1"
@@ -50,7 +49,6 @@
 </ng-template>
 
 <footer class="igx-excel-filter__menu-footer">
-    <button igxButton [displayDensity]="esf.grid.displayDensity" (click)="esf.cancel()">{{ esf.grid.resourceStrings.igx_grid_excel_cancel }}</button>
-    <button igxButton="raised" [displayDensity]="esf.grid.displayDensity" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ esf.grid.resourceStrings.igx_grid_excel_apply }}</button>
+    <button igxButton [displayDensity]="esf.displayDensity" (click)="esf.cancel()">{{ esf.grid?.resourceStrings.igx_grid_excel_cancel }}</button>
+    <button igxButton="raised" [displayDensity]="esf.displayDensity" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ esf.grid?.resourceStrings.igx_grid_excel_apply }}</button>
 </footer>
-</ng-container>

@@ -90,6 +90,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     @Input()
     public set column(value: IgxColumnComponent) {
         this._column = value;
+        this.listData = new Array<FilterListItem>();
         this.columnChange.emit(this._column);
 
         if (this._columnPinning) {
@@ -321,7 +322,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     get grid(): IgxGridBaseDirective {
-        return this.column.grid;
+        return this.column?.grid;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get displayDensity() {
+        return this.column?.grid.displayDensity;
     }
 
     constructor(private cdr: ChangeDetectorRef, public element: ElementRef) {}

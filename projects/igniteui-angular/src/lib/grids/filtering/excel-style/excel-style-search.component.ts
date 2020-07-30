@@ -15,7 +15,9 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DataType } from '../../../data-operations/data-util';
-import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
+import {
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxStringFilteringOperand
+} from '../../../data-operations/filtering-condition';
 import { ExpressionUI } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
@@ -40,7 +42,6 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
     private _isLoading;
-    private _changesDetected = false;
     private destroy$ = new Subject<boolean>();
 
     public get isLoading() {
@@ -58,13 +59,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     @HostBinding('class') class = 'igx-excel-filter__menu-main';
 
-    @ViewChild('input', { read: IgxInputDirective })
+    @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
-    @ViewChild('list', { read: IgxListComponent })
+    @ViewChild('list', { read: IgxListComponent, static: true })
     public list: IgxListComponent;
 
-    @ViewChild(IgxForOfDirective)
+    @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
@@ -140,7 +141,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     public get itemSize() {
         let itemSize = '40px';
-        switch (this.esf.grid.displayDensity) {
+        switch (this.esf.displayDensity) {
             case DisplayDensity.cosy: itemSize = '32px'; break;
             case DisplayDensity.compact: itemSize = '24px'; break;
             default: break;
@@ -149,11 +150,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public get containerSize() {
-        if (!this.list && !this._changesDetected) {
-            this._changesDetected = true;
-            this.cdr.detectChanges();
-        }
-
         if (this.list) {
             return this.list.element.nativeElement.offsetHeight;
         }
