@@ -272,6 +272,7 @@ describe('IgxTooltip', () => {
                 flush();
 
                 unhoverElement(button);
+                tick(500);
                 expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalled();
                 flush();
             }));
@@ -285,6 +286,7 @@ describe('IgxTooltip', () => {
                 flush();
 
                 tooltipTarget.hideTooltip();
+                tick(500);
                 expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalled();
                 flush();
             }));
@@ -301,6 +303,7 @@ describe('IgxTooltip', () => {
                 flush();
 
                 unhoverElement(button);
+                tick(500);
                 expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
                 flush();
             }));
@@ -317,6 +320,7 @@ describe('IgxTooltip', () => {
                 flush();
 
                 tooltipTarget.hideTooltip();
+                tick(500);
                 expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
                 flush();
             }));

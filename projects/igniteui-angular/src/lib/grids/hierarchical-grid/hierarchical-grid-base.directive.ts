@@ -84,10 +84,19 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
     }
 
     /**
-     * @hidden
+     * Gets the outlet used to attach the grid's overlays to.
+     * @remark
+     * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    protected get outlet() {
-        return this.rootGrid ? this.rootGrid.outletDirective : this.outletDirective;
+    get outlet() {
+        return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
+    }
+
+    /**
+     * Sets the outlet used to attach the grid's overlays to.
+     */
+    set outlet(val: any) {
+        this._userOutletDirective = val;
     }
 
     /**

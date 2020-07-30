@@ -22,8 +22,8 @@
     </igx-grid>
 
 <button (click)="selectRow()">Non Existing row</button>
-<button (click)="deleteSectedRow()">Delete Selected Row</button>
-<button (click)="selectCells()">Select Range throught API</button>
+<button (click)="deleteSelectedRow()">Delete Selected Row</button>
+<button (click)="selectCells()">Select Range through API</button>
 
 <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
 <button (click)='log(grid1.selectedCells)'>Selected Cells</button>
@@ -31,8 +31,8 @@
 <button (click)='log(grid1.getSelectedData())'>Selected Data</button>
 <button (click)="grid1.paging = true">Enable Paging</button>
 <button (click)="selectCell()">Select (1.1)</button>
-<button (click)="selectThirdRow()">Select Thrid row</button>
-<button (click)="log(grid1.selectedRows())">Selected RowsS</button>
+<button (click)="selectThirdRow()">Select Third row</button>
+<button (click)="log(grid1.selectedRows)">Selected Rows</button>
 
 <ng-container *ngIf="selection">
     <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>

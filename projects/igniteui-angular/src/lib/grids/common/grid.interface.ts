@@ -30,7 +30,7 @@ export interface GridType extends IGridDataBindable {
     selectionService: any;
     navigation: any;
     filteringService: any;
-    outletDirective: any;
+    outlet: any;
 
     calcHeight: number;
 

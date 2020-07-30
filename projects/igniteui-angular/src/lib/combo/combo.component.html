@@ -9,7 +9,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [attr.placeholder]="placeholder"
-        [disabled]="disabled" (blur)="onBlur()" (focus)="onFocus()"/>
+        [disabled]="disabled" (blur)="onBlur()" (focus)="onFocus()" />
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
@@ -39,15 +39,19 @@
             [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
             (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
+        <igx-suffix *ngIf="showSearchCaseIcon">
+            <igx-icon fontSet="case-sensitive" name="case-sensitive" [isActive]="filteringOptions.caseSensitive"
+                (click)="toggleCaseSensitive()">
+            </igx-icon>
+        </igx-suffix>
     </igx-input-group>
     <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
-        <igx-combo-item role="option" [itemHeight]='itemHeight'
-            *igxFor="let item of data
-            | comboFiltering:searchValue:displayKey:filterable
+        <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
+            | comboFiltering:searchValue:displayKey:filterable:filteringOptions
             | comboGrouping:groupKey:valueKey;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
