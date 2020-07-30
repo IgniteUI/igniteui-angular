@@ -863,8 +863,15 @@
     }
 
     %igx-button--fab {
-        @include igx-type-style($type-scale, $text) {
-            text-align: center;
+        p,
+        span,
+        div
+        {
+            font-size: rem(12px);
+            letter-spacing: rem(.75px);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin: 0;
         }
     }
 }
