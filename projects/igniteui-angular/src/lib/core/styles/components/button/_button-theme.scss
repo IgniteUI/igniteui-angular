@@ -514,15 +514,15 @@
 
 
     $button-floating-padding: (
-        comfortable: rem(15px),
-        cosy: rem(11px),
-        compact: rem(7px)
+        comfortable: rem(8px) rem(20px) rem(8px) rem(12px),
+        cosy: rem(4px) rem(16px) rem(4px) rem(8px),
+        compact: 0 rem(12px) 0 rem(4px)
     );
 
     $button-floating-size: (
-        comfortable: rem(56px),
-        cosy: rem(48px),
-        compact: rem(40px)
+        comfortable: rem(48px),
+        cosy: rem(40px),
+        compact: rem(32px)
     );
 
     $icon-in-button-size: rem(18px);
@@ -762,6 +762,18 @@
             background: --var($theme, 'fab-focus-background');
             box-shadow: $fab-shadow--focus;
         }
+
+        igx-icon {
+            display: inline-flex;
+            order: -1;
+            margin: 7px 0;
+            padding-left: 4px;
+        }
+
+        * + igx-icon {
+            margin: 0;
+            margin-right: 12px;
+        }
     }
 
     %igx-button--fab-cosy {
@@ -845,6 +857,12 @@
     $text: map-get($categories, 'text');
 
     %igx-button-display {
+        @include igx-type-style($type-scale, $text) {
+            text-align: center;
+        }
+    }
+
+    %igx-button--fab {
         @include igx-type-style($type-scale, $text) {
             text-align: center;
         }
