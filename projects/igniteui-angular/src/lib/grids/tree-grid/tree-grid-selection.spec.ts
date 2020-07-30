@@ -599,6 +599,17 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
         });
 
+        it('should have correct header checkbox when add a row and then selectAll rows', () => {
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
+            fix.detectChanges();
+
+            TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows.length).toBeGreaterThan(treeGrid.flatData.length);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+
         it('should have correct header checkbox when add a row and undo transaction', fakeAsync(() => {
             pending('Related to the bug #5673');
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
