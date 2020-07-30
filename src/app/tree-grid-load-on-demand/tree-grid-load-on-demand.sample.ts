@@ -87,7 +87,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     }
 
     public addChildRow() {
-        const selectedRowId = this.grid1.selectedRows()[0];
+        const selectedRowId = this.grid1.selectedRows[0];
         const parent = this.grid1.records.get(selectedRowId).data;
 
         if (!parent[this.grid1.hasChildrenKey]) {
@@ -105,7 +105,7 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     }
 
     public deleteRow() {
-        this.grid1.deleteRow(this.grid1.selectedRows()[0]);
+        this.grid1.deleteRow(this.grid1.selectedRows[0]);
     }
 
     public selectDensity(event) {

@@ -999,7 +999,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 fix.detectChanges();
 
                 TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
-                expect(treeGrid.selectedRows()).toEqual([1, 6, 10]);
+                expect(treeGrid.selectedRows).toEqual([1, 6, 10]);
 
                 let rows = TreeGridFunctions.getAllRows(fix);
                 const row = rows[0];
@@ -1019,7 +1019,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
                 TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
                 TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, true);
-                expect(treeGrid.selectedRows()).toEqual([1, 6, 10]);
+                expect(treeGrid.selectedRows).toEqual([1, 6, 10]);
             });
         });
 

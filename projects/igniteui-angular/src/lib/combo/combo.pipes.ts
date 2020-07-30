@@ -11,8 +11,7 @@ import { IComboFilteringOptions } from './combo.component';
  * @hidden
  */
 @Pipe({
-    name: 'comboFiltering',
-    pure: false
+    name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
     public transform(collection: any[], searchValue: any, displayKey: any,
