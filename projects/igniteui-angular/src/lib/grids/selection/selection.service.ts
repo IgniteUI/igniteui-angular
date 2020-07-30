@@ -53,7 +53,6 @@ export class IgxRow {
     transactionState: any;
     state: any;
     newData: any;
-    oldRowData: any;
 
     constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
@@ -68,15 +67,14 @@ export class IgxRow {
         if (includeNewValue) {
             args.newValue = this.newData;
         }
-        this.oldRowData = { ... args.oldValue };
         return args;
     }
 
-    createDoneEditEventArgs(): IGridEditDoneEventArgs {
+    createDoneEditEventArgs(cachedRowData: any): IGridEditDoneEventArgs {
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
             rowData: this.newData, // this should be the updated/committed rowData // this effectively should be the newValue
-            oldValue: this.oldRowData,
+            oldValue: cachedRowData,
             newValue: this.newData,
             owner: this.grid
         };

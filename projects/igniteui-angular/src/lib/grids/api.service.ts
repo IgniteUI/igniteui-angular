@@ -233,6 +233,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
+        const cachedRowData = { ... args.oldValue };
         if (rowInEditMode) {
             const hasChanges = grid.transactions.getState(args.rowID, true);
             grid.transactions.endPending(false);
@@ -260,7 +261,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
-        const doneArgs = row.createDoneEditEventArgs();
+        const doneArgs = row.createDoneEditEventArgs(cachedRowData);
         grid.onRowEditDone.emit(doneArgs);
         return args;
     }
