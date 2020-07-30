@@ -872,7 +872,9 @@
     }
 
     %igx-button--fab {
-        p, span, div {
+        p,
+        span,
+        div {
             @include igx-type-style($type-scale, $text) {
                 text-align: center;
                 margin: 0;
