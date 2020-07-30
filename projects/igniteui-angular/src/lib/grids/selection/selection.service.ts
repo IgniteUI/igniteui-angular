@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { isEdge } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IGridEditEventArgs, IGridBaseEditEventArgs } from '../common/events';
+import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { IgxGridBaseDirective } from '../grid/public_api';
 
@@ -53,6 +53,7 @@ export class IgxRow {
     transactionState: any;
     state: any;
     newData: any;
+    oldRowData: any;
 
     constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
@@ -60,21 +61,22 @@ export class IgxRow {
         const args: IGridEditEventArgs = {
             rowID: this.id,
             rowData:  this.data,
-            oldValue: { ... this.data },
+            oldValue: this.data,
             cancel: false,
             owner: this.grid
         };
         if (includeNewValue) {
             args.newValue = this.newData;
         }
+        this.oldRowData = { ... args.oldValue };
         return args;
     }
 
-    createDoneEditEventArgs(): IGridBaseEditEventArgs {
-        const args: IGridBaseEditEventArgs = {
+    createDoneEditEventArgs(): IGridEditDoneEventArgs {
+        const args: IGridEditDoneEventArgs = {
             rowID: this.id,
             rowData: this.newData, // this should be the updated/committed rowData // this effectively should be the newValue
-            oldValue: { ... this.data },
+            oldValue: this.oldRowData,
             newValue: this.newData,
             owner: this.grid
         };
@@ -121,8 +123,8 @@ export class IgxCell {
         return args;
     }
 
-    createDoneEditEventArgs(): IGridBaseEditEventArgs {
-        const args: IGridBaseEditEventArgs = {
+    createDoneEditEventArgs(): IGridEditDoneEventArgs {
+        const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
             // rowData - should be the updated/committed rowData - this effectively should be the newValue

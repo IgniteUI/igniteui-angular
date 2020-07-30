@@ -140,7 +140,7 @@ import {
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
     IGridScrollEventArgs,
-    IGridBaseEditEventArgs
+    IGridEditDoneEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -1204,7 +1204,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public onCellEditDone = new EventEmitter<IGridBaseEditEventArgs>();
+    public onCellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a row enters edit mode.
@@ -1251,7 +1251,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public onRowEditDone = new EventEmitter<IGridBaseEditEventArgs>();
+    public onRowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.

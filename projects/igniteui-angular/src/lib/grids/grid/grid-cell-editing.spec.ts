@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridBaseEditEventArgs } from './public_api';
+import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -848,7 +848,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cell = grid.getCellByColumn(0, 'Name');
             const initialValue = cell.value;
             const newValue = 'New Name';
-            let cellArgs: IGridBaseEditEventArgs;
+            let cellArgs: IGridEditDoneEventArgs;
             const updatedRowData = Object.assign({}, cell.rowData, { Name: newValue });
 
             spyOn(grid.onCellEditDone, 'emit').and.callThrough();
@@ -941,7 +941,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should properly emit 'onCellEditDone' event`, () => {
             spyOn(grid.onCellEditDone, 'emit').and.callThrough();
-            let cellArgs: IGridBaseEditEventArgs;
+            let cellArgs: IGridEditDoneEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
             const firstNewValue = 'New Name';
             const secondNewValue = 1;

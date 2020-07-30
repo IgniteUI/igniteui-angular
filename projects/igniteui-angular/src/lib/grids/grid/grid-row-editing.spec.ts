@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs, IGridBaseEditEventArgs } from '../common/events';
+import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridModule, IgxGridBaseDirective } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
@@ -216,7 +216,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid
             };
 
-            const cellDoneArgs: IGridBaseEditEventArgs = {
+            const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.rowID,
                 cellID: cell.cellID,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
@@ -226,7 +226,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid
             };
 
-            const rowDoneArgs: IGridBaseEditEventArgs = {
+            const rowDoneArgs: IGridEditDoneEventArgs = {
                 rowID: row.rowID,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: row.rowData,
@@ -2075,7 +2075,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
-            const cellDoneArgs: IGridBaseEditEventArgs = {
+            const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.rowID,
                 cellID: cell.cellID,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
@@ -2085,7 +2085,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid
             };
 
-            const rowDoneArgs: IGridBaseEditEventArgs = {
+            const rowDoneArgs: IGridEditDoneEventArgs = {
                 rowID: row.rowID,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: row.rowData,
