@@ -41,7 +41,7 @@
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
         <igx-suffix *ngIf="showSearchCaseIcon">
             <igx-icon fontSet="case-sensitive" name="case-sensitive" [isActive]="filteringOptions.caseSensitive"
-                (click)="filteringOptions.caseSensitive=!filteringOptions.caseSensitive">
+                (click)="toggleCaseSensitive()">
             </igx-icon>
         </igx-suffix>
     </igx-input-group>

@@ -39,7 +39,8 @@ export class IgxTreeGridFilteringComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="900px" height="600px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" [selectedRows]="selectedRows"
+     width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
@@ -50,6 +51,7 @@ export class IgxTreeGridFilteringComponent {
 export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+    public selectedRows = [];
 }
 
 @Component({
