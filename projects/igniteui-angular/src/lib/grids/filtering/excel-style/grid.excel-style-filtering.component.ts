@@ -82,6 +82,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private _sortingChanged: Subscription;
     private _filteringChanged: Subscription;
     private _densityChanged: Subscription;
+    private _columnMoved: Subscription;
 
     /**
      * An @Input property that sets the column.
@@ -111,6 +112,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this._densityChanged.unsubscribe();
         }
 
+        if (this._columnMoved) {
+            this._columnMoved.unsubscribe();
+        }
+
         if (this._column) {
             this._column.grid.filteringService.registerSVGIcons();
             this.isColumnPinnable = this.column.pinnable;
@@ -135,6 +140,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 this.init();
             });
             this._densityChanged = this.grid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
+            });
+            this._columnMoved = this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
         }
