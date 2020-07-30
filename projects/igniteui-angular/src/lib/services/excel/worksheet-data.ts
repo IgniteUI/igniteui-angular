@@ -20,7 +20,7 @@ export class WorksheetData {
     }
 
     public get columnCount(): number {
-        return this._columnCount;
+        return 20;
     }
 
     public get rowCount(): number {
