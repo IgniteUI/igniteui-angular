@@ -39,7 +39,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 flatData, 0, treeGridRecordsMap);
         }
 
-        grid.flatData = flatData;
+        grid.flatData = grid.transactions.enabled ?
+        flatData.filter(rec => !grid.transactions.getState(this.getRowID(primaryKey, rec))) : flatData;
         grid.records = treeGridRecordsMap;
         grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
