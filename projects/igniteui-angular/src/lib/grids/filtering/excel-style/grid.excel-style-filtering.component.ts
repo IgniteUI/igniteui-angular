@@ -83,6 +83,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private _filteringChanged: Subscription;
     private _densityChanged: Subscription;
     private _columnMoved: Subscription;
+    private _originalDisplay: string;
 
     /**
      * An @Input property that sets the column.
@@ -226,7 +227,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         if (!this.inline) {
             let maxHeight = 775;
-            switch (this.grid.displayDensity) {
+            switch (this.displayDensity) {
                 case DisplayDensity.cosy: maxHeight = 565; break;
                 case DisplayDensity.compact: maxHeight = 405; break;
                 default: break;
@@ -357,6 +358,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.column = column;
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
+        if (this._originalDisplay) {
+            this.element.nativeElement.style.display = this._originalDisplay;
+        }
 
         this.initialized.emit();
         this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -726,6 +730,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public hide() {
+        this._originalDisplay = document.defaultView.getComputedStyle(this.element.nativeElement).display;
         this.element.nativeElement.style.display = 'none';
     }
 
