@@ -840,7 +840,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(initialValue);
         });
 
-        it(`Should emit the committed/new rowData onCellEditDone`, () => {
+        it(`Should emit the committed/new rowData cellEditDone`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -851,7 +851,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             let cellArgs: IGridEditDoneEventArgs;
             const updatedRowData = Object.assign({}, cell.rowData, { Name: newValue });
 
-            spyOn(grid.onCellEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
             cell.update(newValue);
             fixture.detectChanges();
@@ -866,8 +866,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
 
         it(`Should properly emit 'onCellEditCancel' event`, () => {
@@ -939,8 +939,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(true);
         });
 
-        it(`Should properly emit 'onCellEditDone' event`, () => {
-            spyOn(grid.onCellEditDone, 'emit').and.callThrough();
+        it(`Should properly emit 'cellEditDone' event`, () => {
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
             let cellArgs: IGridEditDoneEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
             const firstNewValue = 'New Name';
@@ -968,8 +968,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
 
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
@@ -991,8 +991,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
     });
 

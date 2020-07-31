@@ -140,6 +140,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         cell.editValue = value;
         const args = cell.createEditEventArgs();
         this.grid.onCellEdit.emit(args);
+        // TODO Implement cellEditExit event end emit if isEqual(args.oldValue, args.newValue)
+        // TODO do not emit onCellEdit & cellEditDone if isEqual(args.oldValue, args.newValue)
         if (args.cancel) {
             return args;
         }
@@ -149,9 +151,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         this.grid.summaryService.clearSummaryCache(args);
-        const data = this.get_all_data(this.grid.transactions.enabled);
-        const index = this.get_row_index_in_data(cell.id.rowID, data);
-        this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, reverseMapper(cell.column.field, args.newValue));
+        const data = this.getRowData(cell.id.rowID);
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -168,7 +169,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         const doneArgs = cell.createDoneEditEventArgs();
-        this.grid.onCellEditDone.emit(doneArgs);
+        this.grid.cellEditDone.emit(doneArgs);
 
         return args;
     }
@@ -261,7 +262,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         (grid as any)._pipeTrigger++;
 
         const doneArgs = row.createDoneEditEventArgs(cachedRowData, index);
-        grid.onRowEditDone.emit(doneArgs);
+        grid.rowEditDone.emit(doneArgs);
         return args;
     }
 

@@ -350,7 +350,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a root row through the treeGrid API', fakeAsync(() => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'John Winchester');
                 verifyRowsCount(fix, 3, 10);
@@ -375,7 +375,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -388,7 +388,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child row through the treeGrid API', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
@@ -412,7 +412,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -426,7 +426,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child row through the rowObject API', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
@@ -450,7 +450,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -543,7 +543,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a root row through the treeGrid API', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
@@ -568,7 +568,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -583,7 +583,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a root row by changing its ID (its children should become root rows)', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
@@ -609,7 +609,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -625,7 +625,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child row through the treeGrid API', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
@@ -649,7 +649,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -663,7 +663,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child row through the rowObject API', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
@@ -687,7 +687,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
@@ -701,7 +701,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
 
             it('should support updating a child row by changing its original parentID', () => {
                 spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
-                const doneSpy = spyOn(treeGrid.onRowEditDone, 'emit').and.callThrough();
+                const doneSpy = spyOn(treeGrid.rowEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyCellValue(fix, 5, 'Name', 'Erma Walsh');
@@ -727,7 +727,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 });
 
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-                expect(treeGrid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
                 // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,

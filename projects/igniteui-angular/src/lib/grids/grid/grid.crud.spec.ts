@@ -140,7 +140,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     it('should support updating a row through the grid API', () => {
         spyOn(grid.onRowEdit, 'emit').and.callThrough();
-        const doneSpy = spyOn(grid.onRowEditDone, 'emit').and.callThrough();
+        const doneSpy = spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
         // Update non-existing row
         grid.updateRow({ index: -100, value: -100 }, 100);
@@ -176,8 +176,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
 
         expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-        expect(grid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
-        expect(grid.onRowEditDone.emit).toHaveBeenCalledWith(doneArgs);
+        expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+        expect(grid.rowEditDone.emit).toHaveBeenCalledWith(doneArgs);
 
         const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
         expect(spyDoneArgs.rowData).toBe(grid.dataView[0]);
@@ -189,7 +189,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     it('should support updating a cell value through the grid API', () => {
         spyOn(grid.onCellEdit, 'emit').and.callThrough();
-        const doneSpy = spyOn(grid.onCellEditDone, 'emit').and.callThrough();
+        const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
         // Update a non-existing cell
         grid.updateCell(-100, 100, 'index');
@@ -232,8 +232,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
 
         expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
-        expect(grid.onCellEditDone.emit).toHaveBeenCalledTimes(1);
-        expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(doneArgs);
+        expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+        expect(grid.cellEditDone.emit).toHaveBeenCalledWith(doneArgs);
 
         const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
         expect(spyDoneArgs.rowData).toBe(grid.dataView[0]);

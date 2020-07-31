@@ -1223,12 +1223,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Event is fired after editing is completed, when the cell exited edit mode.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a row enters edit mode.
@@ -1270,12 +1270,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.

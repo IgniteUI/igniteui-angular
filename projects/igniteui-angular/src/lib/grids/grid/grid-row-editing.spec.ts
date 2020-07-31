@@ -130,12 +130,12 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            spyOn(grid.onCellEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
-            spyOn(grid.onRowEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
             let cellInput = null;
 
@@ -238,9 +238,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith(rowArgs);
-            expect(grid.onRowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
+            expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
         it('Should display the banner below the edited row if it is not the last one', () => {
@@ -2059,14 +2059,15 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell = grid.getCellByColumn(0, 'ProductName');
         }));
 
-        it('onCellEditDone, onRowEditDone should emit the committed/new rowData', () => {
+        // TODO Update test to check for refs
+        it('cellEditDone, rowEditDone should emit the committed/new rowData', () => {
             const gridContent = GridFunctions.getGridContent(fix);
             const row = grid.getRowByIndex(0);
             const newCellValue = 'Aaaaa';
             const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
 
-            spyOn(grid.onCellEditDone, 'emit').and.callThrough();
-            spyOn(grid.onRowEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -2096,10 +2097,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fix.detectChanges();
 
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowEditDone.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
-            expect(grid.onRowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
+            expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
         it('Should add correct class to the edited row', () => {

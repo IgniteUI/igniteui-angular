@@ -152,14 +152,14 @@ export class GridRowEditSampleComponent {
         }
         evt.cancel = this.cancel.row.enter;
     }
-    rowEditDone(evt) {
+    rowEdit(evt) {
         if (this.events.row.done) {
-            console.log('%cRow' + '%c Edit DONE', this.cssBig, this.cssGreen);
+            console.log('%cRow' + '%c Edit', this.cssBig, this.cssGreen);
             console.log(evt);
         }
         evt.cancel = this.cancel.row.done;
     }
-    rowEditDoneAndCommitted(evt) {
+    rowEditDone(evt) {
         if (this.events.row.doneCommitted) {
             console.log('%cRow' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
             console.log(evt);
@@ -181,14 +181,14 @@ export class GridRowEditSampleComponent {
         }
         evt.cancel = this.cancel.cell.enter;
     }
-    cellEditDone(evt) {
+    cellEdit(evt) {
         if (this.events.cell.done) {
-            console.log('%cCell' + '%c Edit DONE', this.cssBig, this.cssGreen);
+            console.log('%cCell' + '%c Edit', this.cssBig, this.cssGreen);
             console.log(evt);
         }
         evt.cancel = this.cancel.cell.done;
     }
-    cellEditDoneAndCommitted(evt) {
+    cellEditDone(evt) {
         if (this.events.cell.doneCommitted) {
             console.log('%cCell' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
             console.log(evt);
