@@ -71,13 +71,13 @@ export class IgxRow {
     }
 
     createDoneEditEventArgs(cachedRowData: any, cachedRowIndex: number): IGridEditDoneEventArgs {
+        const updatedData = this.grid.transactions.enabled ?
+        this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.dataView[cachedRowIndex];
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
-            rowData: this.grid.transactions.enabled ?
-                this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.dataView[cachedRowIndex],
+            rowData: updatedData,
             oldValue: cachedRowData,
-            newValue: this.grid.transactions.enabled ?
-                this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.dataView[cachedRowIndex],
+            newValue: updatedData,
             owner: this.grid
         };
         return args;

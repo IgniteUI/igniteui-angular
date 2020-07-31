@@ -84,7 +84,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (!grid) {
             return -1;
         }
-        const data = dataCollection ? dataCollection : this.get_all_data(grid.transactions.enabled);
+        const data = dataCollection ?? this.get_all_data(grid.transactions.enabled);
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
@@ -139,7 +139,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     update_cell(cell: IgxCell, value: any) {
         cell.editValue = value;
         const args = cell.createEditEventArgs();
-        // TODO: emit onCellEdit after value is updated - issue #7304
         this.grid.onCellEdit.emit(args);
         if (args.cancel) {
             return args;
@@ -199,7 +198,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const grid = this.grid;
 
         const rowInEditMode = grid.crudService.row;
-        row.newData = value ? value : grid.transactions.getAggregatedValue(row.id, true);
+        row.newData = value ?? rowInEditMode.transactionState;
 
 
         if (rowInEditMode && row.id === rowInEditMode.id) {
