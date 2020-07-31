@@ -60,7 +60,7 @@
         height: 100%;
         background: --var($theme, 'filtering-row-background');
         // TODO The border-radius should not be hardcoded.
-        border-radius: 4px;
+        border-radius: rem(4px);
 
         @include igx-button-group(igx-button-group-theme(
             $shadow: none,
