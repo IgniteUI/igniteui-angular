@@ -2,6 +2,7 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { ColumnChooserBaseDirective } from '../column-chooser-base';
 import { IgxColumnPinningItemDirective } from './pinning.directive';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 
 
@@ -19,6 +20,8 @@ export class IgxColumnPinningComponent extends ColumnChooserBaseDirective {
     /**
      * @hidden
      */
+    @DeprecateMethod(`The IgxColumnPinning component is deprecated. Please use the
+    IgxColumnActions component with the IgxColumnPinning directive instead.`)
     createColumnItem(container: any, column: any) {
         if (column.level !== 0 || column.disablePinning) {
             return null;

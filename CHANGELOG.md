@@ -17,6 +17,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `selectedRows` method is now an `@Input` property. Setting it to an array of Row IDs will update the grid's selection state, any previous selection will be cleared. Setting it to an empty array will clear the selection entirely.
+    - **Breaking Change** - `IgxColumnHiding` and `IgxColumnPinning` components have been deprecated in favor of a component combining the their functionality - `IgxColumnActions` which is used with either of the new `IgxColumnPinning` and `IgxColumnHiding` directives that specify the action to be triggered through the UI.
 - `igxGrid`
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
     - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
