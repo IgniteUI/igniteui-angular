@@ -56,7 +56,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         public inputGroup: IgxInputGroupBase,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
         @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName,
-        protected element: ElementRef,
+        protected element: ElementRef<HTMLInputElement>,
         protected cdr: ChangeDetectorRef) { }
 
     private get ngControl(): NgControl {
