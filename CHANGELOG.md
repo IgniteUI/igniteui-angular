@@ -50,6 +50,8 @@ The following example shows how you can use the Indigo theme:
 
 
 ### New Features
+- `igxButton` directive
+    -Added styles to support extended fab buttons.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
     - Added support for tooltips on data cells default template and summary cells.
