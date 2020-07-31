@@ -110,7 +110,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
-                obj.target.activate(event, {rowIndex: 0, colIndex: 0});
+                obj.target.activate(event);
             });
 
         } else {
