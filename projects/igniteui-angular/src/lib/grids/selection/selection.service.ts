@@ -634,6 +634,7 @@ export class IgxGridSelectionService {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
+
         this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
@@ -669,7 +670,7 @@ export class IgxGridSelectionService {
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
         if (clearPrevSelection) { this.rowSelection.clear(); }
-        rowIDs.forEach(rowID => { this.rowSelection.add(rowID); });
+        rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.allRowsSelected = undefined;
     }
 

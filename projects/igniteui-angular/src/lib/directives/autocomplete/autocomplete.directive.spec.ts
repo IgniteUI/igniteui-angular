@@ -269,7 +269,7 @@ describe('IgxAutocomplete', () => {
             expect(input.value).toBe(startsWith);
         }));
         it('Should not open dropdown on input focusing', () => {
-            input.nativeElement.focused = true;
+            input.nativeElement.focus();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
@@ -353,7 +353,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
             expect(fixture.componentInstance.townSelected).toBe(filteredTowns[0]);
             expect(input.value).toBe(filteredTowns[0]);
-            expect(input.nativeElement).toBe(document.activeElement);
+            expect(input.nativeElement as Element).toBe(document.activeElement);
         }));
         it('Should filter and select duplicated items properly', fakeAsync(() => {
             fixture.componentInstance.towns.push('Sofia', 'Sofia');

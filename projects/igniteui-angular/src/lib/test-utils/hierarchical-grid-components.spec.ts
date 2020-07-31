@@ -39,7 +39,7 @@ import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    providers: [ IgxHierarchicalTransactionServiceFactory ]
+    providers: [IgxHierarchicalTransactionServiceFactory]
 })
 export class IgxHierarchicalGridTestBaseComponent {
 
@@ -68,7 +68,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'"
-        [rowSelection]="'multiple'">
+        [rowSelection]="'multiple'" [selectedRows]="selectedRows">
         <igx-column field="ID" ></igx-column>
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
@@ -83,10 +83,11 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    providers: [ IgxHierarchicalTransactionServiceFactory ]
+    providers: [IgxHierarchicalTransactionServiceFactory]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
     public data;
+    public selectedRows = [];
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
