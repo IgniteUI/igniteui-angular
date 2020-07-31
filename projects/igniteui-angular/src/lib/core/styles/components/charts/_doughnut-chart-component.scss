@@ -1,0 +1,13 @@
+////
+/// @group components
+/// @access private
+/// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(doughnut-chart) {
+    // Register the component in the component registry
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+}
