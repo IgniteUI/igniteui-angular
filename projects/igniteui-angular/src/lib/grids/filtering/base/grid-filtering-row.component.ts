@@ -147,8 +147,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     ngAfterViewInit() {
-        this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
-        this._operatorsOverlaySettings.outlet = this.column.grid.outletDirective;
+        this._conditionsOverlaySettings.outlet = this.column.grid.outlet;
+        this._operatorsOverlaySettings.outlet = this.column.grid.outlet;
 
         const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
         if (selectedItem) {
@@ -777,5 +777,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private get isColumnFiltered() {
         return this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0;
+    }
+
+    public get isNarrowWidth(): boolean {
+        return this.element.nativeElement.offsetWidth < 432;
     }
 }

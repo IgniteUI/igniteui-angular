@@ -3,10 +3,11 @@
 </ng-template>
 <ng-template #defaultCell>
     <div igxTextHighlight style="pointer-events: none" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
-        [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
-        [row]="rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'" [metadata]="searchMetadata"
-        class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
-        grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
+    [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+    [row]="rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'" [metadata]="searchMetadata"
+    class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
+    grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale)  : column.dataType === 'boolean' ? "" : value }}</div>
+    <igx-icon *ngIf="column.dataType === 'boolean'">{{value ? 'check' : 'close'}}</igx-icon>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
@@ -24,7 +25,7 @@
             [igxFocus]="true" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-date-picker [style.width.%]="100" [outlet]="grid.outletDirective" mode="dropdown"
+        <igx-date-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown"
             [locale]="grid.locale" [(value)]="editValue" [igxFocus]="true" [labelVisibility]="false">
         </igx-date-picker>
     </ng-container>

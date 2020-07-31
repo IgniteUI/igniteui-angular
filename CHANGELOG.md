@@ -27,8 +27,9 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `igxGrid`
     - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.
+    - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
 - `igx-select`, `igx-combo`, `igx-drop-down`
-    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default. This requires styling to be handled on the application-level if there is something more than a simple text in the item.
 - `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface;
     - `actions` - contains information about the transactions, that caused the emission of the event.
@@ -42,6 +43,12 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
+
+## 9.1.9
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Expose a setter for grid's `outlet` property, which can be used to set the outlet used to attach the grid's overlays to.
 
 ## 9.1.4
 

@@ -19,6 +19,7 @@
         <igx-grid-cell
             class="igx-grid__td igx-grid__td--fw"
             [class.igx-grid__td--number]="col.dataType === 'number'"
+            [class.igx-grid__td--bool]="col.dataType === 'boolean'"
             [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
             [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
             [editMode]="col.editable && crudService.isInEditMode(index, col.index)"

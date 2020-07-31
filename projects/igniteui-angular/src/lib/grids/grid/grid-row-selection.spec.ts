@@ -1703,6 +1703,19 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows().length).toBe(9);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(grid, false, true);
         }));
+
+        it('Row Pinning: should update checkbox status correctly when there is pinned row and groupBy', () => {
+            grid.pinRow(2);
+            fix.detectChanges();
+
+            grid.groupBy({ fieldName: 'InStock', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            GridSelectionFunctions.headerCheckboxClick(grid);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true, false);
+            expect(grid.selectedRows().length).toBe(grid.data.length);
+        });
     });
 
     describe('Integration with CRUD and transactions', () => {
