@@ -2,7 +2,7 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
-import _ from './setImmediate';
+import { setImmediate } from './setImmediate';
 
 /**
  * @hidden
@@ -393,7 +393,8 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
             callback(i);
         }
         if (i < count) {
-            _.set(chunk);
+            //setTimeout(chunk, 0);
+            setImmediate(chunk);
         } else {
             done();
         }
