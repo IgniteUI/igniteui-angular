@@ -606,7 +606,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
             fix.detectChanges();
 
-            expect(treeGrid.selectedRows.length).toBeGreaterThan(treeGrid.flatData.length);
+            expect(treeGrid.selectedRows().length).toBeGreaterThan(treeGrid.flatData.length);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
         });
 
