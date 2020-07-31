@@ -4364,10 +4364,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
                 // Verify custom column operations template is used.
-                expect(excelMenu.querySelector('igx-excel-column-operations')).not.toBeNull();
+                expect(excelMenu.querySelector('igx-excel-style-column-operations')).not.toBeNull();
 
                 // Verify custom filter operations template is used.
-                expect(excelMenu.querySelector('igx-excel-filter-operations')).not.toBeNull();
+                expect(excelMenu.querySelector('igx-excel-style-filter-operations')).not.toBeNull();
 
                 // Verify components in default ESF column operations template are not present.
                 expect(GridFunctions.getExcelFilteringHeaderComponent(fix, excelMenu)).toBeNull();

@@ -32,7 +32,7 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 }
 
 /**
- * @hidden
+ * A component used for presenting Excel style search UI.
  */
 @Component({
     preserveWhitespaces: false,
@@ -44,10 +44,16 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private _isLoading;
     private destroy$ = new Subject<boolean>();
 
+    /**
+     * @hidden @internal
+     */
     public get isLoading() {
         return this._isLoading;
     }
 
+    /**
+     * @hidden @internal
+     */
     public set isLoading(value: boolean) {
         this._isLoading = value;
         if (!(this.cdr as any).destroyed) {
@@ -55,22 +61,43 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public searchValue: any;
 
+    /**
+     * @hidden @internal
+     */
     @HostBinding('class') class = 'igx-excel-filter__menu-main';
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('list', { read: IgxListComponent, static: true })
     public list: IgxListComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
     protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
     public get valuesLoadingTemplate() {
         if (this.esf.grid.excelStyleLoadingValuesTemplateDirective) {
             return this.esf.grid.excelStyleLoadingValuesTemplateDirective.template;
@@ -79,6 +106,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     get applyButtonDisabled() {
         return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate;
     }
@@ -110,16 +140,25 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         this.destroy$.complete();
     }
 
+    /**
+     * @hidden @internal
+     */
     public refreshSize() {
         requestAnimationFrame(() => {
             this.virtDir?.recalcUpdateSizes();
         });
     }
 
+    /**
+     * @hidden @internal
+     */
     public clearInput() {
         this.searchValue = null;
     }
 
+    /**
+     * @hidden @internal
+     */
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
         const selectedIndex = this.esf.listData.indexOf(eventArgs.checkbox.value);
         if (selectedIndex === 0) {
@@ -142,6 +181,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
     }
 
+    /**
+     * @hidden @internal
+     */
     public get itemSize() {
         let itemSize = '40px';
         switch (this.esf.displayDensity) {
@@ -152,12 +194,18 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return itemSize;
     }
 
+    /**
+     * @hidden @internal
+     */
     public get containerSize() {
         if (this.list) {
             return this.list.element.nativeElement.offsetHeight;
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.esf.column.field);
         const selectedItems = this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected === true);

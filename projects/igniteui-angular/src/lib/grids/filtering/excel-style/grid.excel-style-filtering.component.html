@@ -9,8 +9,8 @@
     <igx-excel-style-sorting *ngIf="column.sortable">
     </igx-excel-style-sorting>
 
-    <igx-excel-style-column-moving *ngIf="column.movable">
-    </igx-excel-style-column-moving>
+    <igx-excel-style-moving *ngIf="column.movable">
+    </igx-excel-style-moving>
 
     <igx-excel-style-pinning *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
     </igx-excel-style-pinning>
@@ -46,12 +46,12 @@
     [style.max-height]="maxHeight">
 
     <ng-container *ngIf="this.excelColumnOperationsDirective; else defaultExcelColumnOperations">
-        <ng-content select="igx-excel-column-operations,[igxExcelColumnOperations]">
+        <ng-content select="igx-excel-style-column-operations,[igxExcelStyleColumnOperations]">
         </ng-content>
     </ng-container>
 
     <ng-container *ngIf="this.excelFilterOperationsDirective; else defaultExcelFilterOperations">
-        <ng-content select="igx-excel-filter-operations,[igxExcelFilterOperations]">
+        <ng-content select="igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]">
         </ng-content>
     </ng-container>
 </article>

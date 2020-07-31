@@ -1137,8 +1137,8 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         </igx-column>
 
         <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
-            <igx-excel-column-operations>Column Operations Template</igx-excel-column-operations>
-            <igx-excel-filter-operations>Filter Operations Template</igx-excel-filter-operations>
+            <igx-excel-style-column-operations>Column Operations Template</igx-excel-style-column-operations>
+            <igx-excel-style-filter-operations>Filter Operations Template</igx-excel-style-filter-operations>
         </igx-grid-excel-style-filtering>
     </igx-grid>`
 })

@@ -1,44 +1,48 @@
-import { Component, OnDestroy, HostBinding } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxColumnGroupComponent } from '../../columns/column-group.component';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
-import { Subject } from 'rxjs';
 
 /**
- * @hidden
+ * A component used for presenting Excel style column moving UI.
  */
 @Component({
     preserveWhitespaces: false,
-    selector: 'igx-excel-style-column-moving',
-    templateUrl: './excel-style-column-moving.component.html'
+    selector: 'igx-excel-style-moving',
+    templateUrl: './excel-style-moving.component.html'
 })
-export class IgxExcelStyleColumnMovingComponent implements OnDestroy {
-    private destroy$ = new Subject<boolean>();
-
+export class IgxExcelStyleMovingComponent {
+    /**
+     * @hidden @internal
+     */
     @HostBinding('class') class = 'igx-excel-filter__move';
 
     constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
-
-    ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-    }
 
     private get visibleColumns() {
         return this.esf.grid.visibleColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
     }
 
+    /**
+     * @hidden @internal
+     */
     get canNotMoveLeft() {
         return this.esf.column.visibleIndex === 0 ||
             (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && this.esf.column.disablePinning) ||
             (this.esf.column.level !== 0 && !this.findColumn(0, this.visibleColumns));
     }
 
+    /**
+     * @hidden @internal
+     */
     get canNotMoveRight() {
         return this.esf.column.visibleIndex === this.visibleColumns.length - 1 ||
             (this.esf.column.level !== 0 && !this.findColumn(1, this.visibleColumns));
     }
 
+    /**
+     * @hidden @internal
+     */
     public onMoveButtonClicked(moveDirection) {
         let targetColumn;
         if (this.esf.column.pinned) {

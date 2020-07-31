@@ -40,14 +40,14 @@ export class FilterListItem {
 }
 
 @Directive({
-    selector: 'igx-excel-column-operations,[igxExcelColumnOperations]'
+    selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]'
 })
 export class IgxExcelStyleColumnOperationsTemplateDirective {
     constructor() {}
 }
 
 @Directive({
-    selector: 'igx-excel-filter-operations,[igxExcelFilterOperations]'
+    selector: 'igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]'
 })
 export class IgxExcelStyleFilterOperationsTemplateDirective {
     constructor() {}

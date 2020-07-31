@@ -1120,7 +1120,7 @@ export class GridFunctions {
 
     public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
-        return excelMenu.querySelector('igx-excel-style-column-moving');
+        return excelMenu.querySelector('igx-excel-style-moving');
     }
 
     public static getExcelFilteringColumnSelectionContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {

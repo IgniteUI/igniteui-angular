@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 
 /**
- * @hidden
+ * A component used for presenting Excel style column sorting UI.
  */
 @Component({
     preserveWhitespaces: false,
@@ -21,8 +21,14 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
 export class IgxExcelStyleSortingComponent implements OnDestroy {
     private destroy$ = new Subject<boolean>();
 
+    /**
+     * @hidden @internal
+     */
     @HostBinding('class') class = 'igx-excel-filter__sort';
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
     public sortButtonGroup: IgxButtonGroupComponent;
 
@@ -51,6 +57,9 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSortButtonClicked(sortDirection) {
         if (this.sortButtonGroup.selectedIndexes.length === 0) {
             if (this.esf.grid.isColumnGrouped(this.esf.column.field)) {

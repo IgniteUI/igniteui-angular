@@ -1,8 +1,7 @@
 import {
     Component,
     OnDestroy,
-    ViewChild,
-    OnInit
+    ViewChild
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
@@ -15,8 +14,9 @@ import { HorizontalAlignment, VerticalAlignment, OverlaySettings, AutoPositionSt
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
 
+
 /**
- * @hidden
+ * A component used for presenting Excel style conditional filter UI.
  */
 @Component({
     preserveWhitespaces: false,
@@ -38,9 +38,15 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
 
@@ -57,12 +63,18 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         this.destroy$.complete();
     }
 
+    /**
+     * @hidden @internal
+     */
     public onTextFilterKeyDown(eventArgs) {
         if (eventArgs.key === KEYS.ENTER) {
             this.onTextFilterClick(eventArgs);
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
             this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.currentTarget;
@@ -87,31 +99,23 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         }
     }
 
-    get subMenuText() {
-        switch (this.esf.column.dataType) {
-            case DataType.Boolean:
-                return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
-            case DataType.Number:
-                return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
-            case DataType.Date:
-                return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
-            default:
-                return this.esf.grid.resourceStrings.igx_grid_excel_text_filter;
-        }
-    }
-
-    get conditions() {
-        return this.esf.column.filters.conditionList();
-    }
-
+    /**
+     * @hidden @internal
+     */
     public getCondition(value: string): IFilteringOperation {
         return this.esf.column.filters.condition(value);
     }
 
+    /**
+     * @hidden @internal
+     */
     public translateCondition(value: string): string {
         return this.esf.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
         if (this.esf.expressionsList && this.esf.expressionsList.length &&
             this.esf.expressionsList[0].expression.condition.name !== 'in') {
@@ -127,16 +131,45 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         this.customDialog.open(this.esf.mainDropdown.nativeElement);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSubMenuClosed() {
         requestAnimationFrame(() => {
             this.shouldOpenSubMenu = true;
         });
     }
 
+    /**
+     * @hidden @internal
+     */
     public showCustomFilterItem(): boolean {
         const exprTree = this.esf.column.filteringExpressionsTree;
         return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
             !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
             (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get subMenuText() {
+        switch (this.esf.column.dataType) {
+            case DataType.Boolean:
+                return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
+            case DataType.Number:
+                return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
+            case DataType.Date:
+                return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
+            default:
+                return this.esf.grid.resourceStrings.igx_grid_excel_text_filter;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get conditions() {
+        return this.esf.column.filters.conditionList();
     }
 }

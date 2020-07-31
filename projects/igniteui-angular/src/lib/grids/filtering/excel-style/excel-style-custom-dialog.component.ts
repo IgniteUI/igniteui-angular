@@ -7,8 +7,7 @@ import {
     TemplateRef,
     ViewChildren,
     QueryList,
-    ElementRef,
-    OnDestroy
+    ElementRef
 } from '@angular/core';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -44,7 +43,7 @@ import { Subject } from 'rxjs';
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html'
 })
-export class IgxExcelStyleCustomDialogComponent implements AfterViewInit, OnDestroy {
+export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     private destroy$ = new Subject<boolean>();
 
     @Input()
@@ -104,11 +103,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit, OnDest
 
     ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;
-    }
-
-    ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
     }
 
     get template(): TemplateRef<any> {

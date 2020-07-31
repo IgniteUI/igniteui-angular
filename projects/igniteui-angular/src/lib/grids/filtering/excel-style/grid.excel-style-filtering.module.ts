@@ -7,7 +7,7 @@ import {
     IgxExcelStyleFilterOperationsTemplateDirective
 } from './grid.excel-style-filtering.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
-import { IgxExcelStyleColumnMovingComponent } from './excel-style-column-moving.component';
+import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
@@ -50,7 +50,7 @@ import { IgxExcelStyleConditionalFilterComponent } from './excel-style-condition
         IgxExcelStyleSelectingComponent,
         IgxExcelStyleClearFiltersComponent,
         IgxExcelStyleConditionalFilterComponent,
-        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStyleMovingComponent,
         IgxExcelStyleSearchComponent,
         IgxExcelStyleCustomDialogComponent,
         IgxExcelStyleDefaultExpressionComponent,
@@ -73,7 +73,7 @@ import { IgxExcelStyleConditionalFilterComponent } from './excel-style-condition
         IgxExcelStyleSelectingComponent,
         IgxExcelStyleClearFiltersComponent,
         IgxExcelStyleConditionalFilterComponent,
-        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStyleMovingComponent,
         IgxExcelStyleSearchComponent,
         IgxExcelStyleHeaderComponent
     ],
