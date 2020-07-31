@@ -6411,7 +6411,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public endRowEdit(commit = true, event?: Event) {
-        console.log('end row');
         this.endEdit(commit, event);
         const activeCell = this.navigation.activeNode;
         if (activeCell && activeCell.row !== -1) {
