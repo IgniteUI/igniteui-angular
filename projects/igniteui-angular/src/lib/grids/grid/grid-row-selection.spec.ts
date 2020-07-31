@@ -1709,11 +1709,12 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             grid.groupBy({ fieldName: 'InStock', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
 
             GridSelectionFunctions.headerCheckboxClick(grid);
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true, false);
-            expect(grid.selectedRows.length).toBe(grid.data.length);
+            expect(grid.selectedRows().length).toBe(grid.data.length);
         });
     });
 
