@@ -1506,8 +1506,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, static: true })
-    public excelStyleFilteringComponent: IgxGridExcelStyleFilteringComponent;
+    public get excelStyleFilteringComponent() {
+        return this.excelStyleFilteringComponents.first;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, descendants: false })
+    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
 
     /**
      * @hidden @internal
