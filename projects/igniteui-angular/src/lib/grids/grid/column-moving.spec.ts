@@ -631,7 +631,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - select a cell from the 'ID' column
             const cell = grid.getCellByColumn(0, 'ID');
-            cell.activate(null, {rowIndex: cell.rowIndex, colIndex: cell.columnIndex});
+            cell.activate(null);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 

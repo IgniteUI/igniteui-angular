@@ -70,7 +70,7 @@ export class IgxGridNavigationService {
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
-                obj.target.activate(event, position);
+                obj.target.activate(event);
                 this.grid.cdr.detectChanges();
             });
         }
@@ -207,7 +207,7 @@ export class IgxGridNavigationService {
         if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
-                obj.target.activate(event, {rowIndex: 0, colIndex: 0});
+                obj.target.activate(event);
             });
         }
     }
@@ -301,7 +301,7 @@ export class IgxGridNavigationService {
         }
 
         this.navigateInBody(next.rowIndex, next.visibleColumnIndex, (obj) => {
-            obj.target.activate(event, { rowIndex: next.rowIndex, colIndex: next.visibleColumnIndex });
+            obj.target.activate(event);
             this.grid.cdr.detectChanges();
         });
     }
