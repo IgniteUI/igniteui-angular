@@ -261,15 +261,10 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
-        // TODO make sure there both cases are covered
-        //1) having rowEdit and transacrions --> then there is value and should be passed
-        //2) Pure API row Update --> there are no transacrions only value
-
         const doneArgs = row.createDoneEditEventArgs(cachedRowData, index);
         grid.onRowEditDone.emit(doneArgs);
         return args;
     }
-
 
 
     protected update_row_in_array(value: any, rowID: any, index: number) {
