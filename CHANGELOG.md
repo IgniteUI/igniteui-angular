@@ -47,6 +47,9 @@ The following example shows how you can use the Indigo theme:
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Exposed new `onCellEditDone` and `onRowEditDone` non cancelable events. The arguments of the first one contain the initial row data prior editing, while the arguments of the later expose the updated/committed row data containing the new value.
+        - `onCellEditDone` - Emitted after cell has been edited and editing has been committed.
+        - `onRowEditDone` - Emitted after exiting edit mode for a row and editing has been committed.
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
     - Added support for tooltips on data cells default template and summary cells.
     - Added support for binding columns to properties in nested data objects.

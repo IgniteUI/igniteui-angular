@@ -223,9 +223,11 @@ A list of the events emitted by the **igx-grid**:
 |_Event emitters_|_Notify for a change_|
 |`onCellEditEnter`|Emitted when cell enters edit mode.|
 |`onCellEdit`|Emitted when cell editing has been performed in the grid and the value has been submitted.|
+|`onCellEditDone`|Emitted after cell has been edited and editing has been committed.|
 |`onCellEditCancel`|Emitted when cell editing has been performed in the grid and the value has **not** been submitted.|
 |`onRowEditEnter`|Emitted when row enters edit mode.|
 |`onRowEdit`|Emitted when row editing has been performed in the grid and the value has been submitted.|
+|`onRowEditDone`|Emitted after exiting edit mode for a row and editing has been committed.|
 |`onRowEditCancel`|Emitted when row editing has been performed in the grid and the value has **not** been submitted.|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
