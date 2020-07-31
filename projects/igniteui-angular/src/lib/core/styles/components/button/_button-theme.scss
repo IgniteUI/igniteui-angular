@@ -429,6 +429,8 @@
 @mixin igx-button($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
     $button-border: 1px solid transparent;
     $button-width: rem(88px);
 
@@ -514,15 +516,15 @@
 
 
     $button-floating-padding: (
-        comfortable: rem(15px),
-        cosy: rem(11px),
-        compact: rem(7px)
+        comfortable: rem(8px) rem(16px),
+        cosy: rem(4px) rem(12px),
+        compact: 0 rem(8px)
     );
 
     $button-floating-size: (
-        comfortable: rem(56px),
-        cosy: rem(48px),
-        compact: rem(40px)
+        comfortable: rem(48px),
+        cosy: rem(40px),
+        compact: rem(32px)
     );
 
     $icon-in-button-size: rem(18px);
@@ -762,18 +764,37 @@
             background: --var($theme, 'fab-focus-background');
             box-shadow: $fab-shadow--focus;
         }
+
+        igx-icon {
+            display: inline-flex;
+            order: -1;
+            margin: rem(8px) 0;
+        }
+
+        * + igx-icon {
+            margin: 0;
+            margin-#{$right}: rem(12px);
+        }
     }
 
     %igx-button--fab-cosy {
         padding: map-get($button-floating-padding, 'cosy');
         min-width: map-get($button-floating-size, 'cosy');
         min-height: map-get($button-floating-size, 'cosy');
+
+        * + igx-icon {
+            margin-#{$right}: rem(8px);
+        }
     }
 
     %igx-button--fab-compact {
         padding: map-get($button-floating-padding, 'compact');
         min-width: map-get($button-floating-size, 'compact');
         min-height: map-get($button-floating-size, 'compact');
+
+        * + igx-icon {
+            margin-#{$right}: rem(4px);
+        }
     }
 
     %igx-button--icon {
@@ -847,6 +868,17 @@
     %igx-button-display {
         @include igx-type-style($type-scale, $text) {
             text-align: center;
+        }
+    }
+
+    %igx-button--fab {
+        p,
+        span,
+        div {
+            @include igx-type-style($type-scale, $text) {
+                text-align: center;
+                margin: 0;
+            }
         }
     }
 }
