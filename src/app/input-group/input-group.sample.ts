@@ -14,7 +14,7 @@ export class InputGroupSampleComponent implements OnInit {
     public alignment = ButtonGroupAlignment.vertical;
     public density = 'comfortable';
     public displayDensities;
-    public inputType = '';
+    public inputType = 'line';
     public inputTypes;
     public inputSearchType = 'search';
     date = new Date();
