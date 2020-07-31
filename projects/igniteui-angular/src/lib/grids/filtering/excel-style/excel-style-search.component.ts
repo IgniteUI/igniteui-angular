@@ -96,6 +96,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 this.searchInput.nativeElement.focus();
             });
         });
+        esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.virtDir.state.startIndex = 0;
+        });
     }
 
     public ngAfterViewInit() {
