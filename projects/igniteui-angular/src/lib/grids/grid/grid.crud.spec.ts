@@ -180,7 +180,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.onRowEditDone.emit).toHaveBeenCalledWith(doneArgs);
 
         const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-        // expect(spyDoneArgs.rowData).toBe(grid.dataView[0]);
+        expect(spyDoneArgs.rowData).toBe(grid.dataView[0]);
         expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
         expect(grid.rowList.first.cells.first.value).toEqual(200);
