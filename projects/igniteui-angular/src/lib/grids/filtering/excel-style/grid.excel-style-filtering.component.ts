@@ -119,13 +119,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         if (this._column) {
             this._column.grid.filteringService.registerSVGIcons();
-            this.isColumnPinnable = this.column.pinnable;
             this.init();
             this.sortingChanged.emit();
 
             this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 requestAnimationFrame(() => {
-                    this.isColumnPinnable = this.column.pinnable;
                     if (!(this.cdr as ViewRef).destroyed) {
                        this.cdr.detectChanges();
                     }
@@ -316,11 +314,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public isColumnPinnable: boolean;
-
-    /**
-     * @hidden @internal
-     */
     get grid(): IgxGridBaseDirective {
         return this.column?.grid;
     }
@@ -346,13 +339,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.expressionsList = new Array<ExpressionUI>();
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
         this.populateColumnData();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public pinClass() {
-        return this.isColumnPinnable ? 'igx-excel-filter__actions-pin' : 'igx-excel-filter__actions-pin--disabled';
     }
 
     /**

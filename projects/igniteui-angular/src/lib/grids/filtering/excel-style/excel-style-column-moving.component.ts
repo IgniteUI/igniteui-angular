@@ -31,7 +31,6 @@ export class IgxExcelStyleColumnMovingComponent implements OnDestroy {
     get canNotMoveLeft() {
         return this.esf.column.visibleIndex === 0 ||
             (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && this.esf.column.disablePinning) ||
-            (this.esf.grid.unpinnedColumns.indexOf(this.esf.column) === 0 && !this.esf.isColumnPinnable) ||
             (this.esf.column.level !== 0 && !this.findColumn(0, this.visibleColumns));
     }
 
