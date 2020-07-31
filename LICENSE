@@ -2,6 +2,9 @@ This is a commercial product, requiring a valid paid-for license for commercial 
 This product is free to use for non-commercial educational use for students in K through 12 grades
 or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
 
+This repository includes files originally copied from https://github.com/zloirock/core-js
+under setImmediate.ts. The original versions of the files are MIT licensed. See the file headers for details.
+
 In order for us to verify your eligibility for free usage, please register for trial at
 https://Infragistics.com/Angular and open a support ticket with a request for free license.
 
