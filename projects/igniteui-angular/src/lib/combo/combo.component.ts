@@ -1578,6 +1578,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public handleClosed() {
         this.onClosed.emit();
     }
+
+    /**
+     * @hidden @internal
+     */
+    public toggleCaseSensitive() {
+        this.filteringOptions = { caseSensitive: !this.filteringOptions.caseSensitive };
+    }
 }
 
 /**
