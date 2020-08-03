@@ -92,6 +92,16 @@
         [igxButton] + [igxButton] {
             margin-#{$left}: rem(4px);
         }
+
+        %grid-excel-actions__action {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        %grid-excel-actions__action,
+        %grid-excel-actions--selected {
+            justify-content: center;
+        }
     }
 
     %grid-excel-menu__footer {
