@@ -28,6 +28,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 // tslint:disable: no-use-before-declare
 
 describe('IgxGrid - Column Pinning #grid', () => {
@@ -619,7 +620,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             });
 
             it('should allow navigating to/from pinned area', (async () => {
-
+                setupGridScrollDetection(fix, grid);
                 const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
                 const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
                 grid.selectRange(range);

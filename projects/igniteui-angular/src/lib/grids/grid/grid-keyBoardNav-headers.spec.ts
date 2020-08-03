@@ -16,6 +16,7 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 import { GridSelectionMode, FilterMode } from '../common/enums';
+import { IActiveNodeChangeEventArgs } from '../common/events';
 
 const DEBOUNCETIME = 30;
 
@@ -73,6 +74,35 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.navigation.activeNode.row).toEqual(-1);
             expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
+        });
+
+        it('should emit when activeNode ref is changed', () => {
+            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+
+            const args: IActiveNodeChangeEventArgs = {
+                row: -1,
+                column: 0,
+                level: 0,
+                tag: 'headerCell'
+            };
+
+            gridHeader.triggerEventHandler('focus', null);
+            fix.detectChanges();
+
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
+            fix.detectChanges();
+
+            args.column += 1;
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
+            fix.detectChanges();
+
+            args.column -= 1;
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledTimes(3);
         });
 
         it('should allow horizontal navigation', async () => {
