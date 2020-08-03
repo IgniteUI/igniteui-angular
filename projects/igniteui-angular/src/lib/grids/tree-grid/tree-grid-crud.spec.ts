@@ -368,7 +368,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 tick(16);
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -378,7 +378,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
                 verifyCellValue(fix, 0, 'Name', 'New Name');
@@ -404,7 +404,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 299);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -414,7 +414,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -441,7 +441,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getRowByKey(299).update(newRow);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -451,7 +451,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -558,7 +558,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 1);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -568,7 +568,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -598,7 +598,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 1);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -608,7 +608,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -637,7 +637,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 7);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -647,7 +647,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -674,7 +674,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getRowByKey(7).update(newRow);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -684,7 +684,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -713,7 +713,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getRowByKey(7).update(newRow);
                 fix.detectChanges();
 
-                (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+                (treeGrid as IgxTreeGridComponent).onRowEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
                     expect(e.rowData).toBe(e.oldValue);
@@ -723,7 +723,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
+                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
