@@ -50,6 +50,8 @@ The following example shows how you can use the Indigo theme:
 
 
 ### New Features
+- `igxButton` directive
+    - Added styles to support extended fab buttons.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Exposed new `cellEditDone` and `rowEditDone` non cancelable events. The arguments of the first one contain the initial row data prior editing, while the arguments of the later expose the updated/committed row data containing the new value.
         - `cellEditDone` - Emitted after a cell has been edited and editing has been committed.
