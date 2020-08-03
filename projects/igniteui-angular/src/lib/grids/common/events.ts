@@ -165,3 +165,10 @@ export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The new scroll position */
     scrollPosition: number;
 }
+
+export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
+    row: number;
+    column: number;
+    level?: number;
+    tag: GridKeydownTargetType;
+}

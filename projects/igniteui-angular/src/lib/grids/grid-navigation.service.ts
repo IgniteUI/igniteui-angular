@@ -8,6 +8,7 @@ import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IActiveNodeChangeEventArgs } from './common/events';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -25,8 +26,16 @@ export interface IActiveNode {
 @Injectable()
 export class IgxGridNavigationService {
     public grid: IgxGridBaseDirective & GridType;
-    public activeNode: IActiveNode;
+    public _activeNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;
+
+    public get activeNode() {
+        return this._activeNode;
+    }
+
+    public set activeNode(value: IActiveNode) {
+        this._activeNode = value;
+    }
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
@@ -43,8 +52,8 @@ export class IgxGridNavigationService {
         const ctrl = event.ctrlKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
-        const type = this.isDataRow(this.activeNode.row) ? GridKeydownTargetType.dataCell :
-            this.isDataRow(this.activeNode.row, true) ? GridKeydownTargetType.summaryCell : GridKeydownTargetType.groupRow;
+        const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
+            this.isDataRow(this.activeNode.row, true) ? 'summaryCell' : 'groupRow';
         if (this.emitKeyDown(type, this.activeNode.row, event)) {
             return;
         }
@@ -60,7 +69,10 @@ export class IgxGridNavigationService {
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(event); });
+            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
+                obj.target.activate(event);
+                this.grid.cdr.detectChanges();
+            });
         }
         this.grid.cdr.detectChanges();
     }
@@ -134,7 +146,9 @@ export class IgxGridNavigationService {
     }
 
     summaryNav(event: KeyboardEvent) {
-        this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length);
+        if (this.grid.hasSummarizedColumns) {
+            this.horizontalNav(event, event.key.toLowerCase(), this.grid.dataView.length, 'summaryCell');
+        }
     }
 
     headerNavigation(event: KeyboardEvent) {
@@ -148,33 +162,49 @@ export class IgxGridNavigationService {
 
         this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt, event);
         if (shift || alt || (ctrl && (key.includes('down') || key.includes('down')))) { return; }
-        !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl);
+        !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1, 'headerCell') : this.handleMCHeaderNav(key, ctrl);
     }
 
-    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
+    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number, tag: GridKeydownTargetType) {
         const ctrl = event.ctrlKey;
         if (!HORIZONTAL_NAV_KEYS.has(event.key.toLowerCase())) { return; }
         event.preventDefault();
         this.activeNode.row = rowIndex;
         if (rowIndex > 0) {
-            if (this.emitKeyDown(GridKeydownTargetType.summaryCell, this.activeNode.row, event)) {
+            if (this.emitKeyDown('summaryCell', this.activeNode.row, event)) {
                 return;
             }
         }
+
+        const newActiveNode = {
+            column: this.activeNode.column,
+            mchCache: {
+                level: this.activeNode.level,
+                visibleIndex: this.activeNode.column
+            }
+        };
+
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-            this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
+            newActiveNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
         }
         if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
-            this.activeNode.column = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
+            newActiveNode.column = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
         }
+
+        if (tag === 'headerCell') {
+            const column = this.grid.getColumnByVisibleIndex(newActiveNode.column);
+            newActiveNode.mchCache.level = column.level;
+            newActiveNode.mchCache.visibleIndex = column.visibleIndex;
+        }
+
+        this.setActiveNode({row: this.activeNode.row, column: newActiveNode.column, mchCache: newActiveNode.mchCache});
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
     focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
-        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
-            this.activeNode = { row: 0, column: 0 };
+        if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
                 obj.target.activate(event);
@@ -184,9 +214,11 @@ export class IgxGridNavigationService {
 
     focusFirstCell(header = true) {
         if (this.grid.dataView.length && this.activeNode &&
-            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
-        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
-                level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
+            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
+            (!header && !this.grid.hasSummarizedColumns))) { return; }
+
+        this.setActiveNode({ row: header ? -1 : this.grid.dataView.length, column: 0,
+                level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} });
         this.performHorizontalScrollToCell(0);
     }
 
@@ -299,7 +331,7 @@ export class IgxGridNavigationService {
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
-        this.grid.navigateTo(this.activeNode.row = rowIndex, this.activeNode.column = visibleColIndex, cb);
+        this.grid.navigateTo(rowIndex, visibleColIndex, cb);
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
@@ -329,22 +361,86 @@ export class IgxGridNavigationService {
     }
 
     public isDataRow(rowIndex: number, includeSummary = false) {
-        if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) { return true; }
+        if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) { return false; }
         const curRow = this.grid.dataView[rowIndex];
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
 
+    public setActiveNode(activeNode: IActiveNode) {
+        if (!this.isActiveNodeChanged(activeNode)) {
+            return;
+        }
+
+        if (!this.activeNode) {
+            this.activeNode = activeNode;
+        }
+
+        Object.assign(this.activeNode, activeNode);
+
+        const currRow = this.grid.dataView[activeNode.row];
+        const type: GridKeydownTargetType = activeNode.row < 0 ? 'headerCell' :
+            this.isDataRow(activeNode.row) ? 'dataCell' :
+            currRow && this.grid.isGroupByRecord(currRow) ? 'groupRow' :
+            currRow && this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'summaryCell';
+
+        const args: IActiveNodeChangeEventArgs = {
+            row: this.activeNode.row,
+            column: this.activeNode.column,
+            level: this.activeNode.level,
+            tag: type
+        };
+
+        this.grid.activeNodeChange.emit(args);
+    }
+
+    public isActiveNodeChanged(activeNode: IActiveNode) {
+        let isChanged = false;
+        const checkInnerProp = (aciveNode: ColumnGroupsCache | IMultiRowLayoutNode, prop) => {
+            if (!aciveNode) {
+                isChanged = true;
+                return;
+            }
+
+            props = Object.getOwnPropertyNames(aciveNode);
+            for (let i = 0; i < props.length; i++) {
+                const propName = props[i];
+                if (this.activeNode[prop][propName] !== aciveNode[propName]) {
+                    isChanged = true;
+                }
+            }
+        };
+
+        if (!this.activeNode) {
+            return isChanged = true;
+        }
+
+        let props = Object.getOwnPropertyNames(activeNode);
+        for (let i = 0; i < props.length; i++) {
+            const propName = props[i];
+
+            if (!!this.activeNode[propName] && typeof this.activeNode[propName] === 'object') {
+                checkInnerProp(activeNode[propName], propName);
+            } else if (this.activeNode[propName] !== activeNode[propName]) {
+                isChanged = true;
+            }
+        }
+
+        return isChanged;
+    }
+
+
+
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
         const row = this.grid.summariesRowList.toArray().concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) { return; }
 
-        const target = type === GridKeydownTargetType.groupRow ? row :
-            type === GridKeydownTargetType.dataCell ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
+        const target = type === 'groupRow' ? row :
+            type === 'dataCell' ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
                 row.summaryCells?.find(c => c.visibleColumnIndex === this.activeNode.column);
         const keydownArgs = { targetType: type, event: event, cancel: false, target: target };
         this.grid.onGridKeydown.emit(keydownArgs);
-        if (keydownArgs.cancel && type === GridKeydownTargetType.dataCell) {
+        if (keydownArgs.cancel && type === 'dataCell') {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;
             return keydownArgs.cancel;
@@ -428,6 +524,10 @@ export class IgxGridNavigationService {
     }
 
     private handleMCHeaderNav(key: string, ctrl: boolean) {
+        const newHeaderNode: ColumnGroupsCache = {
+            visibleIndex: this.activeNode.mchCache.visibleIndex,
+            level: this.activeNode.mchCache.level
+        };
         const activeCol = this.currentActiveColumn;
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
                 filter(c => c.level <= this.activeNode.level).map(col => col.visibleIndex));
@@ -435,27 +535,31 @@ export class IgxGridNavigationService {
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             nextCol =  this.getNextColumnMCH(index);
-            this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
+            newHeaderNode.visibleIndex = nextCol.visibleIndex;
         }
         if ((key.includes('right') || key === 'end') && activeCol.visibleIndex < lastGroupIndex) {
             const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
             activeCol.visibleIndex + 1;
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
-            this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
+            newHeaderNode.visibleIndex = nextCol.visibleIndex;
         }
         if (!ctrl && key.includes('up') && this.activeNode.level > 0) {
             nextCol = activeCol.parent;
-            this.activeNode.mchCache.level = nextCol.level;
+            newHeaderNode.level = nextCol.level;
         }
         if (!ctrl && key.includes('down') && activeCol.children) {
-            nextCol = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
+            nextCol = activeCol.children.find(c => c.visibleIndex === newHeaderNode.visibleIndex) ||
             activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
-            .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
-            this.activeNode.mchCache.level = nextCol.level;
+            .filter(col => col.visibleIndex < newHeaderNode.visibleIndex)[0];
+            newHeaderNode.level = nextCol.level;
         }
-        this.activeNode.column = nextCol.visibleIndex;
-        this.activeNode.level = nextCol.level;
-        this.performHorizontalScrollToCell(this.activeNode.column);
+
+        this.setActiveNode({
+            row: this.activeNode.row,
+            column: nextCol.visibleIndex,
+            level: nextCol.level,
+            mchCache: newHeaderNode});
+        this.performHorizontalScrollToCell(nextCol.visibleIndex);
     }
 
     private handleMCHExpandCollapse(key, column) {

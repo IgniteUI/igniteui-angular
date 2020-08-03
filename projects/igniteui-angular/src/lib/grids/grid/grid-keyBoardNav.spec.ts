@@ -6,7 +6,7 @@ import {
     IgxGridGroupByRowComponent,
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
-import { IGridCellEventArgs } from '../common/events';
+import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -124,6 +124,58 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(selectedCell.value).toEqual('Casey Houston');
             expect(selectedCell.column.field).toMatch('Name');
+        });
+
+        it('Should emit when activeNode ref is changed', () => {
+            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+
+            const args: IActiveNodeChangeEventArgs = {
+                row: 0,
+                column: 0,
+                level: undefined,
+                tag: 'dataCell'
+            };
+
+            gridContent.triggerEventHandler('focus', null);
+            fix.detectChanges();
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
+            fix.detectChanges();
+            args.column += 1;
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
+            fix.detectChanges();
+            args.column += 1;
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
+            fix.detectChanges();
+            args.row += 1;
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            UIInteractions.triggerEventHandlerKeyDown('arrowleft', gridContent);
+            fix.detectChanges();
+            args.column -= 1;
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
+
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledTimes(5);
+        });
+
+
+        it('should emit activeNodeChange once when you click over the same element', () => {
+            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+
+            gridContent.triggerEventHandler('focus', null);
+            fix.detectChanges();
+
+            const activeNode = grid.navigation.activeNode;
+            const cell = grid.getCellByColumnVisibleIndex(activeNode.row, activeNode.column);
+            UIInteractions.simulateMouseEvent('mousedown', cell.nativeElement, 0, 0);
+            fix.detectChanges();
+
+            expect(grid.activeNodeChange.emit).toHaveBeenCalledTimes(1);
         });
 
         it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', () => {
@@ -560,7 +612,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.focusFirstCell(fix);
 
             grid.navigateTo(15, 1, (args) => {
-                args.target.activate();
+                args.target.activate(null);
             });
             fix.detectChanges();
             await wait(200);
@@ -580,7 +632,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             GridFunctions.focusFirstCell(fix);
 
-            grid.navigateTo(50, 50, (args) => { args.target.activate(); });
+            grid.navigateTo(50, 50, (args) => { args.target.activate(null); });
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
