@@ -4,6 +4,7 @@ import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
+import { GridKeydownTargetType } from './common/enums';
 
 /** @hidden */
 @Injectable()
@@ -227,26 +228,45 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             const col = key.includes('down') ? this.getNextRowIndex(children, false) : this.getPreviousRowIndex(children, false);
             if (!col) { return; }
             this.activeNode.column = col.visibleIndex;
-            const newLayout = this.layout(this.activeNode.column);
-            Object.assign(this.activeNode.layout, {rowStart: newLayout.rowStart, rowEnd: newLayout.rowEnd});
+            const layout = this.layout(this.activeNode.column);
+            const nextLayout = {...this.activeNode.layout, rowStart: layout.rowStart, rowEnd: layout.rowEnd};
+            this.setActiveNode({row: this.activeNode.row, layout: nextLayout});
             return;
         }
-        this.horizontalNav(event, key, -1);
+        this.horizontalNav(event, key, -1, 'headerCell');
     }
 
-    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
+    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number, tag: GridKeydownTargetType) {
         const ctrl = event.ctrlKey;
         if (!HORIZONTAL_NAV_KEYS.has(key) || event.altKey) { return; }
         this.activeNode.row = rowIndex;
+
+        const newActiveNode = {
+            column: this.activeNode.column,
+            mchCache: {
+                level: this.activeNode.level,
+                visibleIndex: this.activeNode.column
+            }
+        };
+
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-            this.activeNode.column = ctrl || key === 'home' ? this.firstIndexPerRow : this.getNextHorizontalCellPosition(true).column;
+            newActiveNode.column = ctrl || key === 'home' ? this.firstIndexPerRow : this.getNextHorizontalCellPosition(true).column;
         }
         if ((key.includes('right') || key === 'end') && this.activeNode.column !== this.lastIndexPerRow) {
-            this.activeNode.column = ctrl || key === 'end' ? this.lastIndexPerRow : this.getNextHorizontalCellPosition().column;
+            newActiveNode.column = ctrl || key === 'end' ? this.lastIndexPerRow : this.getNextHorizontalCellPosition().column;
         }
-        const newLayout = this.layout(this.activeNode.column);
-        Object.assign(this.activeNode.layout, {colStart: newLayout.colStart, rowEnd: newLayout.rowEnd});
-        this.performHorizontalScrollToCell(this.activeNode.column);
+
+        if (tag === 'headerCell') {
+            const column = this.grid.getColumnByVisibleIndex(newActiveNode.column);
+            newActiveNode.mchCache.level = column.level;
+            newActiveNode.mchCache.visibleIndex = column.visibleIndex;
+        }
+
+        const layout = this.layout(newActiveNode.column);
+        const newLayout = {...this.activeNode.layout, colStart: layout.colStart, rowEnd: layout.rowEnd};
+        this.setActiveNode({row: this.activeNode.row, column: newActiveNode.column,
+            layout: newLayout, mchCache: newActiveNode.mchCache});
+        this.performHorizontalScrollToCell(newActiveNode.column);
     }
 
     private get lastIndexPerRow(): number {
