@@ -173,3 +173,10 @@ export interface IColumnToggledEventArgs extends IBaseEventArgs {
     /** The checked state after the action. */
     checked: boolean;
 }
+
+export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
+    row: number;
+    column: number;
+    level?: number;
+    tag: GridKeydownTargetType;
+}
