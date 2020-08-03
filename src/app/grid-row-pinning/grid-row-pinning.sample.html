@@ -20,7 +20,7 @@
             </div>
             <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
                 [columnHiding]='true' [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'"
-                [height]="'600px'" [rowSelection]="true">
+                [height]="'600px'" [rowSelection]="'multiple'">
 
                 <ng-template igxGridDetail let-dataItem>
                     <div>
