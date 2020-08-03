@@ -13,7 +13,7 @@ export function DeprecateClass(message: string) {
                 const targetName = typeof target === 'function' ? target.name : target.constructor.name;
                 isMessageShown = showMessage(`${targetName}: ${message}`, isMessageShown);
 
-                super(args);
+                super(...args);
             }
         };
     };
