@@ -17,12 +17,11 @@
 
     %grid-excel-filter {
         display: block;
-        width: 100%;
+        width: rem(320px);
         height: 100%;
         flex-grow: 1;
         box-shadow: igx-elevation($elevations, 12);
         overflow: auto;
-        width: rem(320px);
         min-width: rem(320px);
     }
 
