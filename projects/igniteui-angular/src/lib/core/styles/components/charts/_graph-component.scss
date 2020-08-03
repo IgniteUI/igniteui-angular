@@ -6,7 +6,7 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(graph) {
+@include b(bullet-graph) {
     // Register the component in the component registry
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));

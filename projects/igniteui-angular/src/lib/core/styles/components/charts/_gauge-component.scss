@@ -6,7 +6,13 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(gauge) {
+@include b(linear-gauge) {
+    // Register the component in the component registry
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+}
+
+@include b(radial-gauge) {
     // Register the component in the component registry
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
