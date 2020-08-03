@@ -148,6 +148,35 @@ describe('Column Hiding UI #grid', () => {
             verifyCheckbox('Released', false, false, columnChooserElement, fix);
         });
 
+        it('onColumnToggled event is fired on toggling checkboxes.', () => {
+            spyOn(columnChooser.onColumnToggled, 'emit').and.callThrough();
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(1);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ReleaseDate'), checked: undefined });
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(2);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ReleaseDate'), checked: undefined });
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(3);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('Downloads'), checked: undefined });
+
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(4);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('Downloads'), checked: undefined });
+        });
+
         it('does not show any items when all columns disabled is true.', () => {
             grid.columns.forEach((col) => col.disableHiding = true);
             fix.detectChanges();

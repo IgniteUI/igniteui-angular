@@ -162,3 +162,14 @@ export interface IGridScrollEventArgs extends IBaseEventArgs {
     /** The new scroll position */
     scrollPosition: number;
 }
+
+/**
+ * Event emitted when a checkbox in the checkbox
+ * list of an IgxColumnActions component is clicked.
+ */
+export interface IColumnToggledEventArgs extends IBaseEventArgs {
+    /** The column that is toggled. */
+    column: IgxColumnComponent;
+    /** The checked state after the action. */
+    checked: boolean;
+}

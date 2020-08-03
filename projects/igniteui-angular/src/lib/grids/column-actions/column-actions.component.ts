@@ -5,12 +5,15 @@ import {
     ViewChildren,
     QueryList,
     DoCheck,
-    KeyValueDiffers
+    KeyValueDiffers,
+    EventEmitter,
+    Output
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxCheckboxComponent, IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
+import { IColumnToggledEventArgs } from '../common/events';
 
 let NEXT_ID = 0;
 /**
@@ -271,24 +274,14 @@ export class IgxColumnActionsComponent implements DoCheck {
     public indentation = 30;
 
     /**
-     * An event that is emitted after the columns visibility is changed.
-     * Provides references to the `column` and the `newValue` properties as event arguments.
+     * An event that is emitted after a column's checked state is changed.
+     * Provides references to the `column` and the `checked` properties as event arguments.
      * ```html
-     *  <igx-column-hiding (onColumnVisibilityChanged) = "onColumnVisibilityChanged($event)"></igx-column-hiding>
+     *  <igx-column-actions (onColumnToggled)="onColumnToggled($event)"></igx-column-actions>
      * ```
      */
-    // @Output()
-    // public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
-
-    /**
-     * Gets the count of the hidden columns.
-     * ```typescript
-     * let hiddenColumnsCount =  this.columnHiding.hiddenColumnsCount;
-     * ```
-     */
-    // public get hiddenColumnsCount() {
-    //    return (this.columns) ? this.columns.filter((col) => col.hidden).length : 0;
-    // }
+    @Output()
+    public onColumnToggled = new EventEmitter<IColumnToggledEventArgs>();
 
     /**
      * @hidden @internal
@@ -405,5 +398,16 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     public checkAllColumns() {
         this.actionsDirective.checkAll();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public toggleColumn(event: IChangeCheckboxEventArgs, column: IgxColumnComponent) {
+        this.onColumnToggled.emit({
+            column: column,
+            checked: event.checked
+        });
+        this.actionsDirective.toggleColumn(column);
     }
 }

@@ -15,7 +15,8 @@
                 <igx-column-actions
                 igxColumnHiding
                 [columns]="grid1.columns"
-                [title]="grid1.columnHidingTitle">
+                [title]="grid1.columnHidingTitle"
+                (onColumnToggled)="columnToggled($event)">
                 </igx-column-actions>
             </div>
         </article>
