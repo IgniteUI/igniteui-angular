@@ -18,6 +18,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `selectedRows` method is now an `@Input` property. Setting it to an array of Row IDs will update the grid's selection state, any previous selection will be cleared. Setting it to an empty array will clear the selection entirely.
 - `igxGrid`
+    - **Behavioral Change** - For numeric columns, the onCellEdit arguments' newValue will now contain the numeric value that will be committed instead of the string input.
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
     - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
 - `igxTreeGrid`
@@ -53,7 +54,7 @@ The following example shows how you can use the Indigo theme:
 - `igxButton` directive
     - Added styles to support extended fab buttons.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - Exposed new `cellEditDone` and `rowEditDone` non cancelable events. The arguments of the first one contain the initial row data prior editing, while the arguments of the later expose the updated/committed row data containing the new value.
+    - Exposed new `cellEditDone` and `rowEditDone` non cancelable events. The arguments contain `rowData` that is the committed `newValue`.
         - `cellEditDone` - Emitted after a cell has been edited and editing has been committed.
         - `rowEditDone` - Emitted after exiting edit mode for a row and editing has been committed.
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.

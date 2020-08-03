@@ -1219,8 +1219,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after cell has been edited and editing has been committed.
-     * @remarks
-     * Event is fired after editing is completed, when the cell exited edit mode.
      * @example
      * ```html
      * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
