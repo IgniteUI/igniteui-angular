@@ -252,11 +252,12 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
-        row.id = newId;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
             grid.selectionService.selectRowById(newId);
         }
+        // make sure selection is handled prior to updating the row.id
+        row.id = newId;
         if (hasSummarized) {
             grid.summaryService.removeSummaries(newId);
         }
