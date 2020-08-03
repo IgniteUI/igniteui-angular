@@ -158,7 +158,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         };
 
         const doneArgs: IGridEditDoneEventArgs = {
-            rowID: 1,
+            rowID: 200,
             rowData: { index: 200, value: 200 },
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },

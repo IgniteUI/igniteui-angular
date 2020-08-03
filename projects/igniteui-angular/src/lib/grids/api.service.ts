@@ -252,6 +252,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
+        row.id = newId;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
             grid.selectionService.selectRowById(newId);
@@ -261,7 +262,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
-        const doneArgs = row.createDoneEditEventArgs(cachedRowData, index);
+        const doneArgs = row.createDoneEditEventArgs(cachedRowData);
         grid.rowEditDone.emit(doneArgs);
         return args;
     }
