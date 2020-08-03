@@ -393,7 +393,6 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
             callback(i);
         }
         if (i < count) {
-            //setTimeout(chunk, 0);
             setImmediate(chunk);
         } else {
             done();
