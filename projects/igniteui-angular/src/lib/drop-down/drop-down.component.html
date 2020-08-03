@@ -1,6 +1,6 @@
 <div [ngClass]="{
-    'igx-drop-down__list': items.length > 0,
-    'igx-drop-down__list--empty': items.length === 0 }"
+    'igx-drop-down__list': scrollContainer.children.length > 0,
+    'igx-drop-down__list--empty': scrollContainer.children.length === 0 }"
 [style.width]="width"
 igxToggle
 (onAppended)="onToggleContentAppended()"
