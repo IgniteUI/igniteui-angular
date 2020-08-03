@@ -639,7 +639,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             const fRow = grid.getRowByIndex(0);
