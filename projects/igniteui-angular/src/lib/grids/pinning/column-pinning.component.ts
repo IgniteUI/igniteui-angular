@@ -2,10 +2,11 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { ColumnChooserBaseDirective } from '../column-chooser-base';
 import { IgxColumnPinningItemDirective } from './pinning.directive';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateClass } from '../../core/deprecateDecorators';
 
 
-
+@DeprecateClass(`The 'IgxColumnPinning' component is deprecated.
+Please use the 'IgxColumnActions' component with the 'IgxColumnPinning' directive instead.`)
 @Component({
     preserveWhitespaces: false,
     selector: 'igx-column-pinning',
@@ -20,8 +21,6 @@ export class IgxColumnPinningComponent extends ColumnChooserBaseDirective {
     /**
      * @hidden
      */
-    @DeprecateMethod(`The IgxColumnPinning component is deprecated. Please use the
-    IgxColumnActions component with the IgxColumnPinning directive instead.`)
     createColumnItem(container: any, column: any) {
         if (column.level !== 0 || column.disablePinning) {
             return null;
