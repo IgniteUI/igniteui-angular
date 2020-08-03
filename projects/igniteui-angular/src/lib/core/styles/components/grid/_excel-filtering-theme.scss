@@ -22,15 +22,13 @@
         flex-grow: 1;
         box-shadow: igx-elevation($elevations, 12);
         overflow: auto;
+        width: rem(320px);
         min-width: rem(320px);
     }
 
     %grid-excel-filter--inline {
         box-shadow: none;
-
-        %grid-excel-menu {
-            width: 100%;
-        }
+        width: 100%;
     }
 
     %igx-excel-filter__loading {
