@@ -127,7 +127,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             });
         });
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.virtDir.state.startIndex = 0;
+            this.virtDir.resetScrollPosition();
         });
     }
 
