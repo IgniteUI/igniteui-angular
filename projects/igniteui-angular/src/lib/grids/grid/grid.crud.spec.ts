@@ -148,7 +148,6 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
         expect(grid.data[0].index).not.toEqual(-100);
-        // TODO: onRowEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: 1,
             rowData: { index: 1, value: 1 },
@@ -197,7 +196,6 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
         const cell = grid.getCellByColumn(0, 'index');
 
-        // TODO: onCellEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,

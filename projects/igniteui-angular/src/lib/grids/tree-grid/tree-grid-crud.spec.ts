@@ -367,7 +367,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 147);
                 fix.detectChanges();
                 tick(16);
-                // TODO: onRowEdit should emit updated rowData - issue #7304
+
                 (treeGrid as IgxTreeGridComponent).onCellEdit.pipe(first()).subscribe(e => {
                     expect(e).toEqual(oldRow);
                     expect(e.rowData).toBe(treeGrid.dataView[0]);
@@ -378,8 +378,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
                 verifyCellValue(fix, 0, 'Name', 'New Name');
@@ -415,8 +414,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -453,8 +451,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -571,8 +568,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -612,8 +608,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -652,8 +647,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -690,8 +684,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 
@@ -730,8 +723,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
                 const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-                // expect(spyDoneArgs.rowData).toBe(treeGrid.dataView[0]); // fails dataView[0] has undefined children,
-                // while rowData has the children rows
+                expect(spyDoneArgs.rowData.data).toBe(treeGrid.dataView[0].data);
                 expect(spyDoneArgs.newValue.data).toEqual(newRow);
                 expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
 

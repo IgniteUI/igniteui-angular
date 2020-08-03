@@ -1635,7 +1635,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-            // TODO: onRowEdit should emit updated rowData - issue #7304
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
@@ -1658,7 +1657,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(2);
-            // TODO: onRowEdit should emit updated rowData - issue #7304
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
