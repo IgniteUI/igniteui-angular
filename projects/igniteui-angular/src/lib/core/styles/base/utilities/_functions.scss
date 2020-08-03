@@ -186,7 +186,8 @@
             }
         }
     } @else {
-        @error 'Expected color for $background/$foreground but got #{$background}/#{$foreground}';
+        @warn 'Expected color for $background/$foreground but got #{$background}/#{$foreground}. The contrast color can\'t be calculated automatically.';
+        @return #fff;
     }
 }
 
