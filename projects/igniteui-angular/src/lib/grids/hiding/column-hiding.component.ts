@@ -10,8 +10,10 @@ import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from 
 import { ColumnChooserBaseDirective } from '../column-chooser-base';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { DeprecateClass } from '../../core/deprecateDecorators';
 
+@DeprecateClass(`The 'IgxColumnHiding' component is deprecated.
+Please use the 'IgxColumnActions' component with the 'IgxColumnHiding' directive instead.`)
 @Component({
     preserveWhitespaces: false,
     selector: 'igx-column-hiding',
@@ -124,8 +126,6 @@ export class IgxColumnHidingComponent extends ColumnChooserBaseDirective impleme
     /**
      * @hidden
      */
-    @DeprecateMethod(`The IgxColumnHiding component is deprecated. Please use the
-    IgxColumnActions component with the IgxColumnHiding directive instead.`)
     protected createColumnItem(container: any, column: any) {
         if (column.grid.hasColumnLayouts && !column.columnLayout) {
             return null;

@@ -3,6 +3,25 @@ import { isDevMode } from '@angular/core';
 /**
  * @hidden
  */
+export function DeprecateClass(message: string) {
+    let isMessageShown = false;
+
+    return function<T extends new(...args: any[]) => {} >(originalClass: T) {
+        return class extends originalClass {
+            constructor(...args) {
+                const target: any = originalClass;
+                const targetName = typeof target === 'function' ? target.name : target.constructor.name;
+                isMessageShown = showMessage(`${targetName}: ${message}`, isMessageShown);
+
+                super(args);
+            }
+        };
+    };
+}
+
+/**
+ * @hidden
+ */
 export function DeprecateMethod(message: string): MethodDecorator {
     let isMessageShown = false;
 
