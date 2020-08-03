@@ -392,7 +392,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public columnSelectable() {
-        return this.grid.columnSelection !== GridSelectionMode.none && this.column.selectable;
+        return this.grid?.columnSelection !== GridSelectionMode.none && this.column?.selectable;
     }
 
     /**
