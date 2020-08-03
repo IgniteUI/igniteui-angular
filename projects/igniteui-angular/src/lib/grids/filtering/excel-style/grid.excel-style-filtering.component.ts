@@ -196,7 +196,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         if (!this.inline) {
             let minHeight = 645;
-            switch (this.grid.displayDensity) {
+            switch (this.displayDensity) {
                 case DisplayDensity.cosy: minHeight = 465; break;
                 case DisplayDensity.compact: minHeight = 330; break;
                 default: break;
@@ -392,7 +392,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public columnSelectable() {
-        return this.grid.columnSelection !== GridSelectionMode.none && this.column.selectable;
+        return this.grid?.columnSelection !== GridSelectionMode.none && this.column?.selectable;
     }
 
     /**

@@ -1,24 +1,24 @@
 <ng-template #defaultExcelColumnOperations>
     <igx-excel-style-header
-        [showHiding]="grid.displayDensity !== 'comfortable' && !column.disableHiding"
-        [showPinning]="grid.displayDensity !== 'comfortable' && !column.disablePinning"
-        [showSelecting]="grid.displayDensity !== 'comfortable' && columnSelectable()"
+        [showHiding]="displayDensity !== 'comfortable' && !column?.disableHiding"
+        [showPinning]="displayDensity !== 'comfortable' && !column?.disablePinning"
+        [showSelecting]="displayDensity !== 'comfortable' && columnSelectable()"
     >
     </igx-excel-style-header>
 
-    <igx-excel-style-sorting *ngIf="column.sortable">
+    <igx-excel-style-sorting *ngIf="column?.sortable">
     </igx-excel-style-sorting>
 
-    <igx-excel-style-moving *ngIf="column.movable">
+    <igx-excel-style-moving *ngIf="column?.movable">
     </igx-excel-style-moving>
 
-    <igx-excel-style-pinning *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
+    <igx-excel-style-pinning *ngIf="!column?.disablePinning && displayDensity==='comfortable'">
     </igx-excel-style-pinning>
 
-    <igx-excel-style-hiding *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
+    <igx-excel-style-hiding *ngIf="!column?.disableHiding && displayDensity==='comfortable'">
     </igx-excel-style-hiding>
 
-    <igx-excel-style-selecting *ngIf="columnSelectable() && grid.displayDensity==='comfortable'">
+    <igx-excel-style-selecting *ngIf="columnSelectable() && displayDensity==='comfortable'">
     </igx-excel-style-selecting>
 </ng-template>
 
@@ -29,16 +29,15 @@
     <igx-excel-style-conditional-filter>
     </igx-excel-style-conditional-filter>
 
-    <igx-excel-style-search #excelStyleSearch>
+    <igx-excel-style-search>
     </igx-excel-style-search>
 </ng-template>
 
 <article #mainDropdown
-    *ngIf="column"
     class="igx-excel-filter__menu"
     [ngClass]="{
-        'igx-excel-filter__menu--cosy': grid.displayDensity === 'cosy',
-        'igx-excel-filter__menu--compact': grid.displayDensity === 'compact'
+        'igx-excel-filter__menu--cosy': displayDensity === 'cosy',
+        'igx-excel-filter__menu--compact': displayDensity === 'compact'
     }"
     [id]="overlayComponentId"
     (keydown)="onKeyDown($event)"
