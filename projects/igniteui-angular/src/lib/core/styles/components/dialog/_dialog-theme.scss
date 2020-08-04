@@ -164,7 +164,11 @@
 
         @media all and (-ms-high-contrast: none)
         {
-            max-width: 60ch;
+            max-width: map-get((
+                material: 62ch,
+                fluent: 48ch,
+                bootstrap: 60ch,
+            ), $variant);
         }
     }
 
