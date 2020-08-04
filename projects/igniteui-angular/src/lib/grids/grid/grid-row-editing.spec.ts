@@ -2064,7 +2064,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
 
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
-            const doneSpy = spyOn(grid.rowEditDone, 'emit').and.callThrough();
+            const rowDoneSpy = spyOn(grid.rowEditDone, 'emit').and.callThrough();
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
 
@@ -2097,13 +2097,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
-
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
-            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
-            expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
-
-            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
-            expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
+            const rowDoneSpyArgs = rowDoneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+            expect(rowDoneSpyArgs.rowData).toBe(rowDoneSpyArgs.newValue);
         });
 
         it('Should add correct class to the edited row', () => {

@@ -168,7 +168,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             (this.grid as any)._pipeTrigger++;
         }
 
-        const doneArgs = cell.createDoneEditEventArgs();
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         this.grid.cellEditDone.emit(doneArgs);
 
         return args;

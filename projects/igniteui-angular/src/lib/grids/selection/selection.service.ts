@@ -123,7 +123,7 @@ export class IgxCell {
         return args;
     }
 
-    createDoneEditEventArgs(): IGridEditDoneEventArgs {
+    createDoneEditEventArgs(value: any): IGridEditDoneEventArgs {
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -131,7 +131,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData: this.grid.transactions.enabled ? this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData,
             oldValue: this.value,
-            newValue: this.castToNumber(this.editValue),
+            newValue: this.castToNumber(value),
             column: this.column,
             owner: this.grid,
         };

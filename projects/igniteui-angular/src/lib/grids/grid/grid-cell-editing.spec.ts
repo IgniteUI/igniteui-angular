@@ -940,7 +940,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it(`Should properly emit 'cellEditDone' event`, () => {
-            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
+
             let cellArgs: IGridEditDoneEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
             const firstNewValue = 'New Name';
@@ -993,6 +994,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             };
             expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+
+            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+            expect(spyDoneArgs.rowData).toBe(grid.data[0]);
         });
     });
 
