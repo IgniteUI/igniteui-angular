@@ -324,7 +324,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
             // should show count for actual hidden igxColumns
             expect(parseInt(hidingButtonLabel.nativeElement.textContent.trim(), 10)).toBe(4);
-            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-hiding'));
+            const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
             const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
             // should show 2 checkboxes - one for each group
             expect(checkboxes.length).toBe(2);
@@ -346,7 +346,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             hidingButton.nativeElement.click();
             fixture.detectChanges();
             const verifyCheckbox = ControlsFunction.verifyCheckbox;
-            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-hiding'));
+            const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
             const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);
             verifyCheckbox('group1', true, false, columnChooserElement, fixture);
 
@@ -373,31 +373,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             expect(checkbox.checked).toBe(true);
             expect(column.hidden).toBeTruthy();
-        });
-
-        it('UI - should emit onColumnVisibilityChanged event on toggling checkboxes.', () => {
-            // enable toolbar for hiding
-            grid.showToolbar = true;
-            grid.columnHiding = true;
-            fixture.detectChanges();
-            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
-            const hidingButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
-            hidingButton.nativeElement.click();
-            fixture.detectChanges();
-
-            const args = [];
-            grid.onColumnVisibilityChanged.subscribe((ar) => {
-                args.push(ar);
-            });
-
-            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-hiding'));
-            const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);
-            checkbox.click();
-            fixture.detectChanges();
-
-            expect(args.length).toBe(1);
-            expect(args[0].column).toBe(grid.getColumnByName('group1'));
-            expect(args[0].newValue).toBe(false);
         });
 
     });
@@ -663,7 +638,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
             // should show count for actual igxColumns displayed in the pinned area
             expect(parseInt(pinningButtonLabel.nativeElement.textContent.trim(), 10)).toBe(4);
-            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-pinning'));
+            const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
             const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
             // should show 2 checkboxes - one for each group
             expect(checkboxes.length).toBe(2);
@@ -727,7 +702,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const pinningButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
             pinningButton.nativeElement.click();
             fixture.detectChanges();
-            const columnChooserElement = fixture.debugElement.query(By.css('igx-column-pinning'));
+            const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
 
             const verifyCheckbox = ControlsFunction.verifyCheckbox;
             const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);

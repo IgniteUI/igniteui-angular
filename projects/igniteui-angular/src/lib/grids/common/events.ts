@@ -20,7 +20,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
-export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     rowID: any;
     cellID?: {
         rowID: any,
@@ -33,6 +33,9 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs 
     event?: Event;
     column?: ColumnType;
     owner?: IgxGridBaseDirective & GridType;
+}
+
+export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {
 }
 
 export interface IPinColumnEventArgs extends IBaseEventArgs {
@@ -161,4 +164,22 @@ export interface IGridScrollEventArgs extends IBaseEventArgs {
     event: Event;
     /** The new scroll position */
     scrollPosition: number;
+}
+
+/**
+ * Event emitted when a checkbox in the checkbox
+ * list of an IgxColumnActions component is clicked.
+ */
+export interface IColumnToggledEventArgs extends IBaseEventArgs {
+    /** The column that is toggled. */
+    column: IgxColumnComponent;
+    /** The checked state after the action. */
+    checked: boolean;
+}
+
+export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
+    row: number;
+    column: number;
+    level?: number;
+    tag: GridKeydownTargetType;
 }

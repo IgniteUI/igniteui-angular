@@ -141,7 +141,9 @@ import {
     IRowToggleEventArgs,
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
-    IGridScrollEventArgs
+    IGridScrollEventArgs,
+    IGridEditDoneEventArgs,
+    IActiveNodeChangeEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -1217,6 +1219,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onCellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
+     * Emitted after cell has been edited and editing has been committed.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
      * Emitted when a row enters edit mode.
      * @remarks
      * Emitted when [rowEditable]="true".
@@ -1235,7 +1248,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
-     * performing paging operation, column resizing, pinning, moving or hitting  `Done`
+     * performing paging operation, column resizing, pinning, moving or hitting `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
      * @example
@@ -1246,6 +1259,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emitted after exiting edit mode for a row and editing has been committed.
+     * @remarks
+     * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
+     * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * performing paging operation, column resizing, pinning, moving or hitting `Done`
+     * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (rowEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.
@@ -1480,6 +1509,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
+     * Emmited when the active node is changed.
+     *
+     * @example
+     * ```
+     * <igx-grid [data]="data" [autoGenerate]="true" (activeNodeChange)="activeNodeChange($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public activeNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
 
     /**
      * @hidden @internal
@@ -5858,6 +5898,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     cb(cbArgs);
                 });
             }
+
+            if (this.dataView[rowIndex].detailsData) {
+                this.navigation.setActiveNode({row: rowIndex});
+                this.cdr.detectChanges();
+            }
+
             return;
         }
         const args = this.getNavigationArguments(row, visibleColIndex);
@@ -5865,23 +5911,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNavigationArguments(row, visibleColIndex) {
-        let targetType, target;
+        let targetType: GridKeydownTargetType, target;
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
-                targetType = GridKeydownTargetType.groupRow;
+                targetType = 'groupRow';
                 target = row;
                 break;
             case 'igx-grid-summary-row':
-                targetType = GridKeydownTargetType.summaryCell;
+                targetType = 'summaryCell';
                 target = visibleColIndex !== -1 ?
                     row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
                 break;
             case 'igx-child-grid-row':
-                targetType = GridKeydownTargetType.hierarchicalRow;
+                targetType = 'hierarchicalRow';
                 target = row;
                 break;
             default:
-                targetType = GridKeydownTargetType.dataCell;
+                targetType = 'dataCell';
                 target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
                 break;
         }
@@ -6365,7 +6411,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const row = this.crudService.row;
         const cell = this.crudService.cell;
 
-        // TODO: Merge the crudService with wht BaseAPI service
+        // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
@@ -6381,8 +6427,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const rowIndex = activeCell.row;
             const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
             this.navigateTo(rowIndex, visibleColIndex, (c) => {
-                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
-                    c.target.activate();
+                if (c.targetType === 'dataCell' && c.target) {
+                    c.target.activate(event);
                 }
             });
         }
