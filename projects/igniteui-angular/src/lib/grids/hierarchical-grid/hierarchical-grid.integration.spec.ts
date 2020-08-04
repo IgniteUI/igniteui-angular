@@ -620,8 +620,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // Check if the child grid columns are the one used by the hiding UI
             childGrid.visibleColumns.forEach((column, index) => expect(toolbar.columnHidingUI.columns[index]).toEqual(column));
 
-            // Instead of clicking we can just change the item's value
-            toolbar.columnHidingUI.columnItems[2].value = true;
+            // Instead of clicking we can just toggle the checkbox
+            toolbar.columnHidingUI.columnItems.toArray()[2].toggle();
             fixture.detectChanges();
 
             // And it should hide the column of the child grid
@@ -645,8 +645,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // Check if the child grid columns are the one used by the pinning UI
             childGrid.visibleColumns.forEach((column, index) => expect(toolbar.columnPinningUI.columns[index]).toEqual(column));
 
-            // Instead of clicking we can just change the item's value
-            toolbar.columnPinningUI.columnItems[1].value = true;
+              // Instead of clicking we can just toggle the checkbox
+            toolbar.columnPinningUI.columnItems.toArray()[1].toggle();
             fixture.detectChanges();
 
             // Check pinned state

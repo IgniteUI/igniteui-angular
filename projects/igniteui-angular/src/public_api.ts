@@ -99,6 +99,8 @@ export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
 export * from './lib/date-range-picker/public_api';
 
+export * from './lib/grids/column-actions/column-actions-base.directive';
+export * from './lib/grids/column-actions/column-actions.component';
 
 /**
  * Exporter services, classes, interfaces and enums
