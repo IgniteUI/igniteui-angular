@@ -1,13 +1,13 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// @type Map
-/// @prop {Number} border-radius [.2] - The border radius used for calendar.
-/// @prop {Number} date-border-radius [1] - The border radius used for calendar date.
-/// @prop {Number} month-border-radius [1] - The border radius used for calendar month.
+/// @prop {Number} border-radius [.2] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [1] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [1] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 $_default-shape-calendar: (
     border-radius: .2,
     date-border-radius: 1,
@@ -15,9 +15,9 @@ $_default-shape-calendar: (
 );
 
 /// @type Map
-/// @prop {Number} border-radius [1] - The border radius used for calendar.
-/// @prop {Number} date-border-radius [1] - The border radius used for calendar date.
-/// @prop {Number} month-border-radius [1] - The border radius used for calendar month.
+/// @prop {Number} border-radius [1] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [1] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [1] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 $_round-shape-calendar: (
     border-radius: 1,
     date-border-radius: 1,
@@ -25,29 +25,27 @@ $_round-shape-calendar: (
 );
 
 /// @type Map
-/// @prop {Number} border-radius [0%] - The border radius used for calendar.
-/// @prop {Number} date-border-radius [0%] - The border radius used for calendar date.
-/// @prop {Number} month-border-radius [0%] - The border radius used for calendar month.
+/// @prop {Number} border-radius [0] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [0] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [0] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 $_square-shape-calendar: (
-    border-radius: 0%,
-    date-border-radius: 0%,
-    month-border-radius: 0%,
+    border-radius: 0,
+    date-border-radius: 0,
+    month-border-radius: 0,
 );
 
 /// @type Map
-/// @prop {Number} border-radius [0%] - The border radius used for calendar.
-/// @prop {Number} date-border-radius [0%] - The border radius used for calendar date.
-/// @prop {Number} month-border-radius [0%] - The border radius used for calendar month.
-$_fluent-shape-calendar: (
-    border-radius: 0%,
-    date-border-radius: 0%,
-    month-border-radius: 0%,
-);
+/// @prop {Number} border-radius [0] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [0] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [0] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {function} extend
+/// @requires {Map} $_square-shape-calendar
+$_fluent-shape-calendar: extend($_square-shape-calendar);
 
 /// @type Map
-/// @prop {Number} border-radius [4px] - The border radius used for calendar.
-/// @prop {Number} date-border-radius [4px] - The border radius used for calendar date.
-/// @prop {Number} month-border-radius [4px] - The border radius used for calendar month.
+/// @prop {Number} border-radius [4px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [4px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [4px] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 $_bootstrap-shape-calendar: (
     border-radius: 4px,
     date-border-radius: 4px,
@@ -55,9 +53,9 @@ $_bootstrap-shape-calendar: (
 );
 
 /// @type Map
-/// @prop {Number} border-radius [3px] - The border radius used for calendar.
-/// @prop {Number} date-border-radius [1] - The border radius used for calendar date.
-/// @prop {Number} month-border-radius [1] - The border radius used for calendar month.
+/// @prop {Number} border-radius [3px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} date-border-radius [1] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} month-border-radius [1] - The border radius used for calendar month. Can be a fraction between 0 and 1, pixels, or percent.
 $_indigo-shape-calendar: (
     border-radius: 3px,
     date-border-radius: 1,

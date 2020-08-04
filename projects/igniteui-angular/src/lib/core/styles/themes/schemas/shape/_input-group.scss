@@ -1,13 +1,13 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// @type Map
-/// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius used for box input.
-/// @prop {Number} border-border-radius [.2] - The border radius used for border input.
-/// @prop {Number} search-border-radius [.2] - The border radius used for search input.
+/// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [.2] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [.2] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 $_default-shape-input-group: (
     box-border-radius: .2 .2 0 0,
     border-border-radius: .2,
@@ -15,9 +15,9 @@ $_default-shape-input-group: (
 );
 
 /// @type Map
-/// @prop {Number} box-border-radius [1 1 1 1] - The border radius used for box input.
-/// @prop {Number} border-border-radius [1] - The border radius used for border input.
-/// @prop {Number} search-border-radius [1] - The border radius used for search input.
+/// @prop {Number} box-border-radius [1 1 1 1] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [1] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [1] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 $_round-shape-input-group: (
     box-border-radius: 1 1 1 1,
     border-border-radius: 1,
@@ -25,19 +25,19 @@ $_round-shape-input-group: (
 );
 
 /// @type Map
-/// @prop {Number} box-border-radius [0%] - The border radius used for box input.
-/// @prop {Number} border-border-radius [0%] - The border radius used for border input.
-/// @prop {Number} search-border-radius [0%] - The border radius used for search input.
+/// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [0] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 $_square-shape-input-group: (
-    box-border-radius: 0%,
-    border-border-radius: 0%,
-    search-border-radius: 0%,
+    box-border-radius: 0,
+    border-border-radius: 0,
+    search-border-radius: 0,
 );
 
 /// @type Map
-/// @prop {Number} box-border-radius [2px] - The border radius used for box input.
-/// @prop {Number} border-border-radius [2px] - The border radius used for border input.
-/// @prop {Number} search-border-radius [2px] - The border radius used for search input.
+/// @prop {Number} box-border-radius [2px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 $_fluent-shape-input-group: (
     box-border-radius: 2px,
     border-border-radius: 2px,
@@ -45,9 +45,9 @@ $_fluent-shape-input-group: (
 );
 
 /// @type Map
-/// @prop {Number} box-border-radius [.2] - The border radius used for box input.
-/// @prop {Number} border-border-radius [.2] - The border radius used for border input.
-/// @prop {Number} search-border-radius [.2] - The border radius used for search input.
+/// @prop {Number} box-border-radius [.2] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [.2] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [.2] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 $_bootstrap-shape-input-group: (
     box-border-radius: .2,
     border-border-radius: .2,
@@ -55,11 +55,11 @@ $_bootstrap-shape-input-group: (
 );
 
 /// @type Map
-/// @prop {Number} box-border-radius [0%] - The border radius used for box input.
-/// @prop {Number} border-border-radius [0%] - The border radius used for border input.
-/// @prop {Number} search-border-radius [2px] - The border radius used for search input.
+/// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 $_indigo-shape-input-group: (
-    box-border-radius: 0%,
-    border-border-radius: 0%,
+    box-border-radius: 0,
+    border-border-radius: 0,
     search-border-radius: 2px,
 );

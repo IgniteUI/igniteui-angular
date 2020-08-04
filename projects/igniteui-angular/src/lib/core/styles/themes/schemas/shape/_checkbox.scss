@@ -1,6 +1,6 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
@@ -21,11 +21,11 @@ $_round-shape-checkbox: (
 );
 
 /// @type Map
-/// @prop {Number} border-radius [0%] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [0%] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [0] - The border radius used for checkbox.
+/// @prop {Number} border-radius-ripple [0] - The border radius used for checkbox ripple.
 $_square-shape-checkbox: (
-    border-radius: 0%,
-    border-radius-ripple: 0%
+    border-radius: 0,
+    border-radius-ripple: 0
 );
 
 /// @type Map
