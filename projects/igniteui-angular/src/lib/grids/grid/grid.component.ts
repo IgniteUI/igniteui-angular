@@ -503,8 +503,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public detailsViewFocused(container, rowIndex) {
-        this.navigation.activeNode ? this.navigation.activeNode.row = rowIndex :
-            this.navigation.activeNode = {row: rowIndex};
+        this.navigation.setActiveNode({row: rowIndex});
     }
 
     /**
