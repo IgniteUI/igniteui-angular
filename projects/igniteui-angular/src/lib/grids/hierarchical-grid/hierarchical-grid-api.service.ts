@@ -126,7 +126,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
 
     public get_rec_by_id(rowID): any {
         const data = this.get_all_data(false);
-        const index = this.get_row_index_in_data(rowID);
+        const index = this.get_row_index_in_data(rowID, data);
         return data[index];
     }
 }
