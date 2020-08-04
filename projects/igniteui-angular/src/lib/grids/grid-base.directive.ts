@@ -3361,17 +3361,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    @WatchChanges()
     @Input()
     get outlet() {
         return this.resolveOutlet();
     }
 
     set outlet(val: IgxOverlayOutletDirective) {
-        if (this._userOutletDirective !== val) {
-            this._userOutletDirective = val;
-            this.notifyChanges(true);
-        }
+        this._userOutletDirective = val;
     }
 
     protected resolveOutlet() {
