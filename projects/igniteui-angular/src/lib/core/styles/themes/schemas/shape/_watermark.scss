@@ -5,31 +5,37 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for watermark.
 $_round-shape-watermark: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for watermark.
 $_square-shape-watermark: (
     border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for watermark.
 $_material-shape-watermark: (
     border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for watermark.
 $_fluent-shape-watermark: (
     border-radius: 2px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for watermark.
 $_bootstrap-shape-watermark: (
     border-radius: 4px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for watermark.
 $_indigo-shape-watermark: (
     border-radius: 1,
 );

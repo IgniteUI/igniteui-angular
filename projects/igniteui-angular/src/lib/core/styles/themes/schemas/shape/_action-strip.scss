@@ -3,32 +3,40 @@
 /// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @type Map
+/// @prop {Number} actions-border-radius [1] - The border radius used for action strip actions container.
 $_default-shape-action-strip: (
     actions-border-radius: 1
 );
 
 /// @type Map
+/// @prop {Number} actions-border-radius [1] - The border radius used for action strip actions container.
 $_round-shape-action-strip: (
     actions-border-radius: 1
 );
 
 /// @type Map
+/// @prop {Number} actions-border-radius [0] - The border radius used for action strip actions container.
 $_square-shape-action-strip: (
     actions-border-radius: 0
 );
 
 /// @type Map
+/// @prop {Number} actions-border-radius [1] - The border radius used for action strip actions container.
 $_fluent-shape-action-strip: (
     actions-border-radius: 1
 );
 
 /// @type Map
+/// @prop {Number} actions-border-radius [4px] - The border radius used for action strip actions container.
 $_bootstrap-shape-action-strip: (
     actions-border-radius: 4px
 );
 
 
 /// @type Map
+/// @prop {Number} actions-border-radius [3px] - The border radius used for action strip actions container.
 $_indigo-shape-action-strip: (
     actions-border-radius: 3px
 );

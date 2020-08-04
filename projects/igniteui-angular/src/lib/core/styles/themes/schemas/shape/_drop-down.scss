@@ -5,32 +5,48 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.2] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items.
 $_default-shape-drop-down: (
     border-radius: .2,
     item-border-radius: 0,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items.
 $_round-shape-drop-down: (
     border-radius: 1,
     item-border-radius: 0,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [0%] - The border radius used for the drop-down items.
 $_square-shape-drop-down: (
     border-radius: 0%,
     item-border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items.
 $_fluent-shape-drop-down: (
     border-radius: 2px,
     item-border-radius: 0,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items.
 $_bootstrap-shape-drop-down: (
     border-radius: 4px,
     item-border-radius: 0,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [2px] - The border radius used for the drop-down items.
 $_indigo-shape-drop-down: (
     border-radius: 2px,
     item-border-radius: 2px,

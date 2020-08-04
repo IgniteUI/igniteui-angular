@@ -5,21 +5,25 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for carousel.
 $_default-shape-carousel: (
     border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for carousel.
 $_round-shape-carousel: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for carousel.
 $_square-shape-carousel: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for carousel.
 $_bootstrap-shape-carousel: (
     border-radius: 4px
 );

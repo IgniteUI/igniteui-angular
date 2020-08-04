@@ -5,26 +5,31 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for expansion-panel.
 $_default-shape-expansion-panel: (
     border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for expansion-panel.
 $_round-shape-expansion-panel: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for expansion-panel.
 $_square-shape-expansion-panel: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for expansion-panel.
 $_bootstrap-shape-expansion-panel: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [3px] - The border radius used for expansion-panel.
 $_indigo-shape-expansion-panel: (
     border-radius: 3px
 );

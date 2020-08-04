@@ -5,6 +5,9 @@
 ////
 
 /// @type Map
+/// @property {Number} border-radius-track [1] - The border radius used for switch track.
+/// @property {Number} border-radius-thumb [1] - The border radius used for switch thumb.
+/// @property {Number} border-radius-ripple [1] - The border radius used for switch ripple.
 $_default-shape-switch: (
     border-radius-track: 1,
     border-radius-thumb: 1,
@@ -12,6 +15,9 @@ $_default-shape-switch: (
 );
 
 /// @type Map
+/// @property {Number} border-radius-track [1] - The border radius used for switch track.
+/// @property {Number} border-radius-thumb [1] - The border radius used for switch thumb.
+/// @property {Number} border-radius-ripple [1] - The border radius used for switch ripple.
 $_round-shape-switch: (
     border-radius-track: 1,
     border-radius-thumb: 1,
@@ -19,6 +25,9 @@ $_round-shape-switch: (
 );
 
 /// @type Map
+/// @property {Number} border-radius-track [0%] - The border radius used for switch track.
+/// @property {Number} border-radius-thumb [0%] - The border radius used for switch thumb.
+/// @property {Number} border-radius-ripple [0%] - The border radius used for switch ripple.
 $_square-shape-switch: (
     border-radius-track: 0%,
     border-radius-thumb: 0%,
@@ -26,17 +35,22 @@ $_square-shape-switch: (
 );
 
 /// @type Map
+/// @property {Number} border-radius-track [10px] - The border radius used for switch track.
 $_fluent-shape-switch: (
     border-radius-track: 10px,
 );
 
 /// @type Map
+/// @property {Number} border-radius-track [4px] - The border radius used for switch track.
+/// @property {Number} border-radius-thumb [2px - The border radius used for switch thumb.
 $_bootstrap-shape-switch: (
     border-radius-track: 4px,
     border-radius-thumb: 2px,
 );
 
 /// @type Map
+/// @property {Number} border-radius-track [8px] - The border radius used for switch track.
+/// @property {Number} border-radius-thumb [1] - The border radius used for switch thumb.
 $_indigo-shape-switch: (
     border-radius-track: 8px,
     border-radius-thumb: 1

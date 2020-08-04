@@ -5,18 +5,29 @@
 ////
 
 /// @type Map
+/// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius used for box input.
+/// @prop {Number} border-border-radius [.2] - The border radius used for border input.
+/// @prop {Number} search-border-radius [.2] - The border radius used for search input.
 $_default-shape-input-group: (
     box-border-radius: .2 .2 0 0,
     border-border-radius: .2,
     search-border-radius: .2,
 );
 
+/// @type Map
+/// @prop {Number} box-border-radius [1 1 1 1] - The border radius used for box input.
+/// @prop {Number} border-border-radius [1] - The border radius used for border input.
+/// @prop {Number} search-border-radius [1] - The border radius used for search input.
 $_round-shape-input-group: (
     box-border-radius: 1 1 1 1,
     border-border-radius: 1,
     search-border-radius: 1,
 );
 
+/// @type Map
+/// @prop {Number} box-border-radius [0%] - The border radius used for box input.
+/// @prop {Number} border-border-radius [0%] - The border radius used for border input.
+/// @prop {Number} search-border-radius [0%] - The border radius used for search input.
 $_square-shape-input-group: (
     box-border-radius: 0%,
     border-border-radius: 0%,
@@ -24,18 +35,29 @@ $_square-shape-input-group: (
 );
 
 /// @type Map
+/// @prop {Number} box-border-radius [2px] - The border radius used for box input.
+/// @prop {Number} border-border-radius [2px] - The border radius used for border input.
+/// @prop {Number} search-border-radius [2px] - The border radius used for search input.
 $_fluent-shape-input-group: (
     box-border-radius: 2px,
     border-border-radius: 2px,
     search-border-radius: 2px,
 );
 
+/// @type Map
+/// @prop {Number} box-border-radius [.2] - The border radius used for box input.
+/// @prop {Number} border-border-radius [.2] - The border radius used for border input.
+/// @prop {Number} search-border-radius [.2] - The border radius used for search input.
 $_bootstrap-shape-input-group: (
     box-border-radius: .2,
     border-border-radius: .2,
     search-border-radius: .2,
 );
 
+/// @type Map
+/// @prop {Number} box-border-radius [0%] - The border radius used for box input.
+/// @prop {Number} border-border-radius [0%] - The border radius used for border input.
+/// @prop {Number} search-border-radius [2px] - The border radius used for search input.
 $_indigo-shape-input-group: (
     box-border-radius: 0%,
     border-border-radius: 0%,

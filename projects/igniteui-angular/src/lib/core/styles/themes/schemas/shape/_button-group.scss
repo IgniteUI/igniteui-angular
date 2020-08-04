@@ -5,27 +5,37 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.2] - The border radius used  for button-group component.
 $_default-shape-button-group: (
     border-radius: .2,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for button-group component.
 $_round-shape-button-group: (
     border-radius: 1,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for button-group component.
 $_square-shape-button-group: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for button-group component.
 $_fluent-shape-button-group: (
     border-radius: 2px,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for button-group component.
 $_bootstrap-shape-button-group: (
     border-radius: 4px,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [8px] - The border radius used for button-group component.
 $_indigo-shape-button-group: (
     border-radius: 8px
 )

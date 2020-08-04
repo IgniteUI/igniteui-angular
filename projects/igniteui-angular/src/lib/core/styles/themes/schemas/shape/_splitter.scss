@@ -5,11 +5,13 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for splitter.
 $_round-shape-splitter: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for splitter.
 $_square-shape-splitter: (
     border-radius: 0,
 );

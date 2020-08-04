@@ -3,22 +3,33 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
+/// @property {Number} border-radius [0] - The border radius used for tabs.
 $_default-shape-tabs: (
     border-radius: 0
 );
 
+/// @type Map
+/// @property {Number} border-radius [0] - The border radius used for tabs.
 $_round-shape-tabs: (
     border-radius: 0
 );
 
+/// @type Map
+/// @property {Number} border-radius [0] - The border radius used for tabs.
 $_square-shape-tabs: (
     border-radius: 0
 );
 
+/// @type Map
+/// @property {Number} border-radius [0] - The border radius used for tabs.
 $_fluent-shape-tabs: (
     border-radius: 0
 );
 
+/// @type Map
+/// @property {Number} border-radius [4px] - The border radius used for tabs.
 $_bootstrap-shape-tabs: (
     border-radius: 4px
 );

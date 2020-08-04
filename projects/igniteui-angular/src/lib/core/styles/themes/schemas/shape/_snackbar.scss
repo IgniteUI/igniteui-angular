@@ -5,31 +5,37 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.17] - The border radius used for snackbar.
 $_default-shape-snackbar: (
     border-radius: .17,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for snackbar.
 $_round-shape-snackbar: (
     border-radius: 1
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for snackbar.
 $_square-shape-snackbar: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for snackbar.
 $_fluent-shape-snackbar: (
     border-radius: 2px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [.17] - The border radius used for snackbar.
 $_bootstrap-shape-snackbar: (
     border-radius: .17
 );
 
 /// @type Map
+/// @prop {Number} border-radius [6px] - The border radius used for snackbar.
 $_indigo-shape-snackbar: (
     border-radius: 6px
 );

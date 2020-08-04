@@ -5,30 +5,40 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for list component.
+/// @prop {Number} item-border-radius [0] - The border radius used for list item.
 $_default-shape-list: (
     border-radius: 0,
     item-border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for list component.
+/// @prop {Number} item-border-radius [1] - The border radius used for list item.
 $_round-shape-list: (
     border-radius: 1,
     item-border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for list component.
+/// @prop {Number} item-border-radius [0%] - The border radius used for list item.
 $_square-shape-list: (
     border-radius: 0%,
     item-border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [rem(4px)] - The border radius used for list component.
+/// @prop {Number} item-border-radius [0%] - The border radius used for list item.
 $_bootstrap-shape-list: (
     border-radius: rem(4px),
     item-border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for list component.
+/// @prop {Number} item-border-radius [2px] - The border radius used for list item.
 $_indigo-shape-list: (
     border-radius: 0,
     item-border-radius: 2px

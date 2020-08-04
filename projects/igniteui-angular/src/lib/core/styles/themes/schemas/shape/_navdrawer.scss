@@ -5,24 +5,32 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for the navdrawer component.
+/// @prop {Number} item-border-radius [.16667] - The border radius used for the navdrawer items.
 $_default-shape-navdrawer: (
     border-radius: 0,
     item-border-radius: .16667,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for the navdrawer component.
+/// @prop {Number} item-border-radius [1] - The border radius used for the navdrawer items.
 $_round-shape-navdrawer: (
     border-radius: 1,
     item-border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for the navdrawer component.
+/// @prop {Number} item-border-radius [0%] - The border radius used for the navdrawer items.
 $_square-shape-navdrawer: (
     border-radius: 0%,
     item-border-radius: 0%
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for the navdrawer component.
+/// @prop {Number} item-border-radius [1] - The border radius used for the navdrawer items.
 $_indigo-shape-navdrawer: (
     border-radius: 0,
     item-border-radius: 1,

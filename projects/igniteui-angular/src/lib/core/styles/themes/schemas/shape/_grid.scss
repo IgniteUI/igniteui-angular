@@ -5,21 +5,28 @@
 ////
 
 /// @type Map
+/// @prop {Number} drop-area-border-radius [1] - The border radius used for drop-area.
 $_default-shape-grid: (
     drop-area-border-radius: 1
 );
 
 $_round-shape-grid: ();
 
+/// @type Map
+/// @prop {Number} drop-area-border-radius [0%] - The border radius used for drop-area.
 $_square-shape-grid: (
     drop-area-border-radius: 0%
 );
 
+/// @type Map
+/// @prop {Number} drop-area-border-radius [2px] - The border radius used for drop-area.
 $_fluent-shape-grid: (
     drop-area-border-radius: 2px
 );
 
 /// @type Map
+/// @type Map
+/// @prop {Number} drop-area-border-radius [4px] - The border radius used for drop-area.
 $_bootstrap-shape-grid: (
     drop-area-border-radius: 4px
 );

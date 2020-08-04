@@ -5,31 +5,37 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.1] - The border radius used for dialog.
 $_default-shape-dialog: (
     border-radius: .1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for chip.
 $_round-shape-dialog: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for chip.
 $_square-shape-dialog: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for chip.
 $_fluent-shape-dialog: (
     border-radius: 2px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for chip.
 $_bootstrap-shape-dialog: (
     border-radius: 4px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for chip.
 $_indigo-shape-dialog: (
     border-radius: 2px,
 );

@@ -5,6 +5,11 @@
 ////
 
 /// @type Map
+/// @prop {Number} flat-border-radius [.2] - The border radius used for flat button.
+/// @prop {Number} raised-border-radius [.2] - The border radius used for raised button.
+/// @prop {Number} outlined-border-radius [.2] - The border radius used for outlined button.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button.
+/// @prop {Number} icon-border-radius [1] - The border radius used for icon button.
 $_default-shape-button: (
     flat-border-radius: .2,
     raised-border-radius: .2,
@@ -13,6 +18,12 @@ $_default-shape-button: (
     icon-border-radius: 1,
 );
 
+/// @type Map
+/// @prop {Number} flat-border-radius [1] - The border radius used for flat button.
+/// @prop {Number} raised-border-radius [1] - The border radius used for raised button.
+/// @prop {Number} outlined-border-radius [1] - The border radius used for outlined button.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button.
+/// @prop {Number} icon-border-radius [1] - The border radius used for icon button.
 $_round-shape-button: (
     flat-border-radius: 1,
     raised-border-radius: 1,
@@ -21,6 +32,13 @@ $_round-shape-button: (
     icon-border-radius: 1,
 );
 
+
+/// @type Map
+/// @prop {Number} flat-border-radius [0%] - The border radius used for flat button.
+/// @prop {Number} raised-border-radius [0%] - The border radius used for raised button.
+/// @prop {Number} outlined-border-radius [0%] - The border radius used for outlined button.
+/// @prop {Number} fab-border-radius [0%] - The border radius used for fab button.
+/// @prop {Number} icon-border-radius [0%] - The border radius used for icon button.
 $_square-shape-button: (
     flat-border-radius: 0%,
     raised-border-radius: 0%,
@@ -30,6 +48,11 @@ $_square-shape-button: (
 );
 
 /// @type Map
+/// @prop {Number} flat-border-radius [0] - The border radius used for flat button.
+/// @prop {Number} raised-border-radius [2px] - The border radius used for raised button.
+/// @prop {Number} outlined-border-radius [2px] - The border radius used for outlined button.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button.
+/// @prop {Number} icon-border-radius [0] - The border radius used for icon button.
 $_fluent-shape-button: (
     flat-border-radius: 0,
     raised-border-radius: 2px,
@@ -38,6 +61,12 @@ $_fluent-shape-button: (
     icon-border-radius: 0,
 );
 
+/// @type Map
+/// @prop {Number} flat-border-radius [4px] - The border radius used for flat button.
+/// @prop {Number} raised-border-radius [4px] - The border radius used for raised button.
+/// @prop {Number} outlined-border-radius [4px] - The border radius used for outlined button.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button.
+/// @prop {Number} icon-border-radius [4px] - The border radius used for icon button.
 $_bootstrap-shape-button: (
     flat-border-radius: 4px,
     raised-border-radius: 4px,

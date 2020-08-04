@@ -5,6 +5,9 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.2] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [1] - The border radius used for calendar date.
+/// @prop {Number} month-border-radius [1] - The border radius used for calendar month.
 $_default-shape-calendar: (
     border-radius: .2,
     date-border-radius: 1,
@@ -12,6 +15,9 @@ $_default-shape-calendar: (
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [1] - The border radius used for calendar date.
+/// @prop {Number} month-border-radius [1] - The border radius used for calendar month.
 $_round-shape-calendar: (
     border-radius: 1,
     date-border-radius: 1,
@@ -19,6 +25,9 @@ $_round-shape-calendar: (
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [0%] - The border radius used for calendar date.
+/// @prop {Number} month-border-radius [0%] - The border radius used for calendar month.
 $_square-shape-calendar: (
     border-radius: 0%,
     date-border-radius: 0%,
@@ -26,6 +35,9 @@ $_square-shape-calendar: (
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [0%] - The border radius used for calendar date.
+/// @prop {Number} month-border-radius [0%] - The border radius used for calendar month.
 $_fluent-shape-calendar: (
     border-radius: 0%,
     date-border-radius: 0%,
@@ -33,6 +45,9 @@ $_fluent-shape-calendar: (
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [4px] - The border radius used for calendar date.
+/// @prop {Number} month-border-radius [4px] - The border radius used for calendar month.
 $_bootstrap-shape-calendar: (
     border-radius: 4px,
     date-border-radius: 4px,
@@ -40,6 +55,9 @@ $_bootstrap-shape-calendar: (
 );
 
 /// @type Map
+/// @prop {Number} border-radius [3px] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [1] - The border radius used for calendar date.
+/// @prop {Number} month-border-radius [1] - The border radius used for calendar month.
 $_indigo-shape-calendar: (
     border-radius: 3px,
     date-border-radius: 1,

@@ -5,21 +5,25 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for chip.
 $_round-shape-chip: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for chip.
 $_square-shape-chip: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [.25] - The border radius used for chip.
 $_bootstrap-shape-chip: (
     border-radius: .25
 );
 
 /// @type Map
+/// @prop {Number} border-radius [3px] - The border radius used for chip.
 $_indigo-shape-chip: (
     border-radius: 3px
 );

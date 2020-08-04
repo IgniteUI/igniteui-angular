@@ -5,31 +5,37 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.25] - The border radius used for tooltip.
 $_default-shape-tooltip: (
     border-radius: .25,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for tooltip.
 $_round-shape-tooltip: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for tooltip.
 $_square-shape-tooltip: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for tooltip.
 $_fluent-shape-tooltip: (
     border-radius: 2px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for tooltip.
 $_bootstrap-shape-tooltip: (
     border-radius: 4px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [3px] - The border radius used for tooltip.
 $_indigo-shape-tooltip: (
     border-radius: 3px
 );

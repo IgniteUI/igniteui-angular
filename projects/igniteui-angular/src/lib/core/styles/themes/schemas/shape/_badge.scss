@@ -3,18 +3,27 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for badge.
 $_default-shape-badge: (
     border-radius: 1,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for badge.
 $_round-shape-badge: (
     border-radius: 1
 );
 
+/// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for badge.
 $_square-shape-badge: (
     border-radius: 0%,
 );
 
+/// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for badge.
 $_bootstrap-shape-badge: (
     border-radius: 4px,
 );

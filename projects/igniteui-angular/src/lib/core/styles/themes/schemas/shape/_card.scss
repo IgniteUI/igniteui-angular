@@ -5,31 +5,37 @@
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [.17] - The border radius used for card.
 $_default-shape-card: (
     border-radius: .17,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for card.
 $_round-shape-card: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0%] - The border radius used for card.
 $_square-shape-card: (
     border-radius: 0%,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [2px] - The border radius used for card.
 $_fluent-shape-card: (
     border-radius: 2px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for card.
 $_bootstrap-shape-card: (
     border-radius: 4px,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [3px] - The border radius used for card.
 $_indigo-shape-card: (
     border-radius: 3px,
 );
