@@ -1184,8 +1184,7 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
 
 @Component({
     template: `
-    <igx-grid-excel-style-filtering style="height: 700px; width: 350px"
-        [column]="grid1.getColumnByName('ProductName')">
+    <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
         <igx-excel-style-column-operations>
             <igx-excel-style-selecting></igx-excel-style-selecting>
         </igx-excel-style-column-operations>
@@ -1207,11 +1206,23 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
         </igx-column>
     </igx-grid>`
 })
-export class IgxGridExternalESFTemplateComponent extends BasicGridComponent {
+export class IgxGridExternalESFTemplateComponent extends BasicGridComponent implements OnInit {
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
+
     public data = SampleTestData.excelFilteringData();
+
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngOnInit(): void {
+        this.esf.column = this.grid.getColumnByName('Downloads');
+    }
 }
 
 @Component({
