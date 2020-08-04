@@ -105,8 +105,6 @@ export class IgxCell {
         return value;
     }
 
-    // TODO Optional 1) it may be possible to call createDoneEditEventArgs and add cancel argument?
-    // Make sure rowDate is what should be in both methods.
     createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
@@ -131,7 +129,7 @@ export class IgxCell {
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
             rowData: this.grid.transactions.enabled ? this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData,
             oldValue: this.value,
-            newValue: this.castToNumber(value),
+            newValue: value,
             column: this.column,
             owner: this.grid,
         };
