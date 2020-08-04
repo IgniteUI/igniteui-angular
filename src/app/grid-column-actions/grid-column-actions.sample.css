@@ -1,0 +1,11 @@
+.sample-buttons{
+    margin-top: 24px;
+}
+
+.actions-container {
+    display: flex;
+}
+
+.actions-container  > article {
+    width: 30%;
+}

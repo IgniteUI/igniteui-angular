@@ -3,25 +3,26 @@ import { DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../hiding/column-hiding-item.directive';
+import { IColumnVisibilityChangedEventArgs } from '../hiding/column-hiding-item.directive';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
-import { IgxColumnHidingModule } from '../hiding/hiding.module';
-import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IgxColumnActionsModule } from '../column-actions/column-actions.module';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { IgxColumnComponent } from '../columns/column.component';
 
 describe('Column Hiding UI #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
-    let columnChooser: IgxColumnHidingComponent;
+    let columnChooser: IgxColumnActionsComponent;
     let columnChooserElement: DebugElement;
 
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
@@ -37,7 +38,7 @@ describe('Column Hiding UI #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxColumnHidingModule,
+                IgxColumnActionsModule,
                 IgxButtonModule
             ]
         }).compileComponents();
@@ -69,26 +70,24 @@ describe('Column Hiding UI #grid', () => {
             fix.detectChanges();
 
             expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
-            expect(columnChooser.title).toBe('');
 
             columnChooser.title = null;
             fix.detectChanges();
 
             expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
-            expect(columnChooser.title).toBe('');
         });
 
-        it('filter input visibility is controlled via \'disableFilter\' property.', () => {
+        it('filter input visibility is controlled via \'hideFilter\' property.', () => {
             let filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
             expect(filterInputElement).not.toBeNull();
 
-            fix.componentInstance.disableFilter = true;
+            fix.componentInstance.hideFilter = true;
             fix.detectChanges();
 
             filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
             expect(filterInputElement).toBeNull();
 
-            fix.componentInstance.disableFilter = false;
+            fix.componentInstance.hideFilter = false;
             fix.detectChanges();
 
             filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
@@ -97,7 +96,7 @@ describe('Column Hiding UI #grid', () => {
 
         it('lists all 4 hidable grid columns.', () => {
             const columnItems = columnChooser.columnItems;
-            expect(columnItems.length).toBe(5);
+            expect(columnItems.length).toBe(4);
 
             expect(GridFunctions.getColumnChooserItems(columnChooserElement).length).toBe(4);
         });
@@ -105,20 +104,20 @@ describe('Column Hiding UI #grid', () => {
         it('orders columns according to "columnDisplayOrder".', () => {
             expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.DisplayOrder);
 
-            let columnItems = columnChooser.columnItems.map((item) => item.name);
-            expect(columnItems).toEqual(['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate']);
+            let columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['ID', 'Downloads', 'Released', 'ReleaseDate']);
 
             columnChooser.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
             fix.detectChanges();
 
             expect(columnChooser.columnDisplayOrder).toBe(ColumnDisplayOrder.Alphabetical);
-            columnItems = columnChooser.columnItems.map((item) => item.name);
-            expect(columnItems).toEqual(['Downloads', 'ID', 'ProductName', 'Released', 'ReleaseDate']);
+            columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['Downloads', 'ID', 'Released', 'ReleaseDate']);
 
             columnChooser.columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
             fix.detectChanges();
-            columnItems = columnChooser.columnItems.map((item) => item.name);
-            expect(columnItems).toEqual(['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate']);
+            columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['ID', 'Downloads', 'Released', 'ReleaseDate']);
         });
 
         it('does not show "ProductName" column.', () => {
@@ -127,42 +126,55 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('"hiddenColumnsCount" reflects properly the number of hidden columns.', fakeAsync(() => {
-            expect(columnChooser.hiddenColumnsCount).toBe(1);
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(1);
 
             grid.columns[2].hidden = false;
-            tick();
-            expect(columnChooser.hiddenColumnsCount).toBe(0);
+            fix.detectChanges();
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(0);
 
             grid.columns[0].hidden = true;
-            tick();
-            expect(columnChooser.hiddenColumnsCount).toBe(1);
+            fix.detectChanges();
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(1);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Released');
             fix.detectChanges();
-            expect(columnChooser.hiddenColumnsCount).toBe(2);
+            expect(fix.componentInstance.hiddenColumnsCount).toBe(2);
         }));
-
-        it('reflects changes in columns disabled properly.', () => {
-            grid.columns[0].disableHiding = true;
-            fix.detectChanges();
-
-            let colProductName = getColumnChooserItem('ID');
-            expect(colProductName).toBeUndefined();
-
-            grid.columns[0].disableHiding = false;
-            fix.detectChanges();
-
-            colProductName = getColumnChooserItem('ID');
-            expect(colProductName).toBeDefined();
-            expect(colProductName.disabled).toBe(false);
-            verifyCheckbox('ID', false, false, columnChooserElement, fix);
-        });
 
         it('allows hiding a column whose disabled=undefined.', () => {
             grid.columns[3].disableHiding = undefined;
             fix.detectChanges();
 
             verifyCheckbox('Released', false, false, columnChooserElement, fix);
+        });
+
+        it('onColumnToggled event is fired on toggling checkboxes.', () => {
+            spyOn(columnChooser.onColumnToggled, 'emit').and.callThrough();
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(1);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ReleaseDate'), checked: undefined });
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(2);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ReleaseDate'), checked: undefined });
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(3);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('Downloads'), checked: undefined });
+
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(4);
+            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('Downloads'), checked: undefined });
         });
 
         it('does not show any items when all columns disabled is true.', () => {
@@ -341,71 +353,6 @@ describe('Column Hiding UI #grid', () => {
             expect(GridFunctions.getColumnChooserItemElement(columnChooserElement, 'Release Date')).toBeDefined();
         });
 
-        it('onColumnVisibilityChanged event is fired on toggling checkboxes.', () => {
-            spyOn(columnChooser.onColumnVisibilityChanged, 'emit').and.callThrough();
-
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), newValue: true });
-
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(2);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), newValue: false });
-
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(3);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Downloads'), newValue: false });
-
-
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(4);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Downloads'), newValue: true });
-        });
-
-        it('onColumnVisibilityChanged event is fired for each hidable & visible column on pressing "Hide All" button.', () => {
-            spyOn(columnChooser.onColumnVisibilityChanged, 'emit').and.callThrough();
-
-            const hideAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Hide All');
-            hideAll.triggerEventHandler('click', new Event('click'));
-            fix.detectChanges();
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(3);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ID'), newValue: true });
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Released'), newValue: true });
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), newValue: true });
-        });
-
-        it('onColumnVisibilityChanged event is fired for each hidable & hidden column on pressing "Show All" button.', () => {
-            grid.columns[3].hidden = true;
-            grid.columns[4].hidden = true;
-            fix.detectChanges();
-
-            spyOn(columnChooser.onColumnVisibilityChanged, 'emit').and.callThrough();
-
-            const showAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Show All');
-            showAll.triggerEventHandler('click', new Event('click'));
-            fix.detectChanges();
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(3);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Downloads'), newValue: false });
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Released'), newValue: false });
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), newValue: false });
-        });
-
         it('shows a filter textbox with no prompt', () => {
             const filterInput = GridFunctions.getColumnChooserFilterInput(columnChooserElement).nativeElement;
 
@@ -444,51 +391,51 @@ describe('Column Hiding UI #grid', () => {
 
             UIInteractions.triggerInputEvent(filterInput, 'r');
             fix.detectChanges();
-            expect(columnChooser.columnItems.length).toBe(3);
-
-            UIInteractions.triggerInputEvent(filterInput, 're');
-            fix.detectChanges();
             expect(columnChooser.columnItems.length).toBe(2);
+
+            UIInteractions.triggerInputEvent(filterInput, 'releasedate');
+            fix.detectChanges();
+            expect(columnChooser.columnItems.length).toBe(1);
 
             UIInteractions.triggerInputEvent(filterInput, 'r');
             fix.detectChanges();
-            expect(columnChooser.columnItems.length).toBe(3);
+            expect(columnChooser.columnItems.length).toBe(2);
 
             UIInteractions.triggerInputEvent(filterInput, '');
             fix.detectChanges();
-            expect(columnChooser.columnItems.length).toBe(5);
+            expect(columnChooser.columnItems.length).toBe(4);
         });
 
         it('filters columns according to the specified filter criteria.', fakeAsync(() => {
             columnChooser.filterCriteria = 'd';
-            tick();
             fix.detectChanges();
+            tick();
 
             const filterInput = GridFunctions.getColumnChooserFilterInput(columnChooserElement).nativeElement;
             expect(filterInput.value).toBe('d');
-            expect(columnChooser.columnItems.length).toBe(5);
+            expect(columnChooser.columnItems.length).toBe(4);
 
             columnChooser.filterCriteria += 'a';
-            tick();
             fix.detectChanges();
+            tick();
 
             expect(filterInput.value).toBe('da');
             expect(columnChooser.columnItems.length).toBe(1);
 
             columnChooser.filterCriteria = '';
             columnChooser.filterCriteria = 'el';
-            tick();
             fix.detectChanges();
+            tick();
 
             expect(filterInput.value).toBe('el');
             expect(columnChooser.columnItems.length).toBe(2);
 
             columnChooser.filterCriteria = '';
-            tick();
             fix.detectChanges();
+            tick();
 
             expect(filterInput.value).toBe('');
-            expect(columnChooser.columnItems.length).toBe(5);
+            expect(columnChooser.columnItems.length).toBe(4);
         }));
 
         it('- Hide All button operates over the filtered in columns only', fakeAsync(() => {
@@ -591,7 +538,8 @@ describe('Column Hiding UI #grid', () => {
 
         it('- Show All button operates over the filtered in columns only', fakeAsync(() => {
             grid.columns[1].disableHiding = false;
-            columnChooser.hideAllColumns();
+            fix.detectChanges();
+            columnChooser.checkAllColumns();
             columnChooser.filterCriteria = 're';
             fix.detectChanges();
             tick();
@@ -667,30 +615,6 @@ describe('Column Hiding UI #grid', () => {
             expect(grid.columns[0].hidden).toBe(true, 'ID column is not hidden!');
         });
 
-        it('fires onColumnVisibilityChanged event after filtering and clearing the filter.', () => {
-            spyOn(columnChooser.onColumnVisibilityChanged, 'emit').and.callThrough();
-            const filterInput = GridFunctions.getColumnChooserFilterInput(columnChooserElement);
-
-            UIInteractions.triggerInputEvent(filterInput, 'a');
-            fix.detectChanges();
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Downloads'), newValue: false });
-            expect(grid.columns[2].hidden).toBe(false);
-
-            UIInteractions.triggerInputEvent(filterInput, '');
-            fix.detectChanges();
-
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(2);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ID'), newValue: true });
-            expect(grid.columns[0].hidden).toBe(true);
-        });
-
         it('height can be controlled via columnsAreaMaxHeight input.', () => {
             expect(columnChooser.columnsAreaMaxHeight).toBe('100%');
             expect(columnChooserElement.nativeElement.offsetHeight >= 310).toBe(true);
@@ -741,22 +665,17 @@ describe('Column Hiding UI #grid', () => {
          }));
 
         it('indents columns according to their level.', () => {
-            const items = columnChooser.columnItems;
-            expect(items.filter((col) => col.calcIndent === 0).length).toBe(3);
-            expect(items.filter((col) => col.calcIndent === 30).length).toBe(2);
-            expect(items.filter((col) => col.calcIndent === 60).length).toBe(2);
-
-            const columnItems = GridFunctions.getColumnChooserItems(columnChooserElement);
+            const items = GridFunctions.getColumnChooserItems(columnChooserElement);
             const margin0 = '0px';
             const margin30 = '30px';
             const margin60 = '60px';
-            expect(getComputedStyle(columnItems[0].nativeElement).marginLeft).toBe(margin0);
-            expect(getComputedStyle(columnItems[1].nativeElement).marginLeft).toBe(margin0);
-            expect(getComputedStyle(columnItems[2].nativeElement).marginLeft).toBe(margin30);
-            expect(getComputedStyle(columnItems[3].nativeElement).marginLeft).toBe(margin30);
-            expect(getComputedStyle(columnItems[4].nativeElement).marginLeft).toBe(margin60);
-            expect(getComputedStyle(columnItems[5].nativeElement).marginLeft).toBe(margin60);
-            expect(getComputedStyle(columnItems[6].nativeElement).marginLeft).toBe(margin0);
+            expect(getComputedStyle(items[0].nativeElement).marginLeft).toBe(margin0);
+            expect(getComputedStyle(items[1].nativeElement).marginLeft).toBe(margin0);
+            expect(getComputedStyle(items[2].nativeElement).marginLeft).toBe(margin30);
+            expect(getComputedStyle(items[3].nativeElement).marginLeft).toBe(margin30);
+            expect(getComputedStyle(items[4].nativeElement).marginLeft).toBe(margin60);
+            expect(getComputedStyle(items[5].nativeElement).marginLeft).toBe(margin60);
+            expect(getComputedStyle(items[6].nativeElement).marginLeft).toBe(margin0);
         });
 
         it('checks & hides all children when hiding their parent.', () => {
@@ -876,43 +795,6 @@ describe('Column Hiding UI #grid', () => {
                 verifyColumnIsHidden(grid.columns[i], true, 2);
             }
         });
-
-        it('onColumnVisibilityChanged event is fired on toggling column group checkboxes.', () => {
-            spyOn(columnChooser.onColumnVisibilityChanged, 'emit').and.callThrough();
-
-            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Person Details');
-            fix.detectChanges();
-
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(columnChooser.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(
-                { column: grid.columnList.find(c => c.header === 'Person Details'), newValue: true });
-            expect(grid.columns[2].hidden).toBe(false);
-
-            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
-            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
-            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
-            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
-            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
-        });
-
-        it('onColumnVisibilityChanged event is fired on grid.toggleColumnVisibility(args).', () => {
-            spyOn(grid.onColumnVisibilityChanged, 'emit').and.callThrough();
-
-            const currentArgs: IColumnVisibilityChangedEventArgs = {
-                column: grid.columns.find(c => c.header === 'Person Details'),
-                newValue: true
-            };
-            grid.toggleColumnVisibility(currentArgs);
-            fix.detectChanges();
-
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-
-            verifyCheckbox('General Information', false, false, columnChooserElement, fix);
-            verifyCheckbox('CompanyName', false, false, columnChooserElement, fix);
-            verifyCheckbox('Person Details', true, false, columnChooserElement, fix);
-            verifyCheckbox('ContactName', true, false, columnChooserElement, fix);
-            verifyCheckbox('ContactTitle', true, false, columnChooserElement, fix);
-        });
     });
 
     describe('toolbar button', () => {
@@ -971,7 +853,7 @@ describe('Column Hiding UI #grid', () => {
         return button.query(By.css('igx-icon')).nativeElement;
     }
 
-    function getColumnChooserItem(name: string): IgxColumnHidingItemDirective {
-        return columnChooser.hidableColumns.find((col) => col.name === name) as IgxColumnHidingItemDirective;
+    function getColumnChooserItem(name: string): IgxColumnComponent {
+        return columnChooser.actionableColumns.find((col) => col.field === name);
     }
 });
