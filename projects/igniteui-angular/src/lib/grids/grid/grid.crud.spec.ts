@@ -289,7 +289,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,
-            rowData: { index: 777, value: 1 },
+            rowData: { index: 1, value: 1 },
             oldValue: 1,
             newValue: 777,
             cancel: false,
@@ -307,11 +307,14 @@ describe('IgxGrid - CRUD operations #grid', () => {
             owner: grid
         };
 
+        (grid as IgxGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+            expect(e).toEqual(args);
+        });
+
         // Update an existing cell - changing the new value in the event to 777
         grid.updateCell(666, 1, 'index');
         fix.detectChanges();
 
-        expect(grid.onCellEdit.emit).toHaveBeenCalledWith(args);
         expect(grid.cellEditDone.emit).toHaveBeenCalledWith(handlerUpdateArgs);
         expect(grid.rowList.first.cells.first.value).toEqual(777);
         expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('777');
