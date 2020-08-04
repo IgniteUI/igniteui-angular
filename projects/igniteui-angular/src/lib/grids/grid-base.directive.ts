@@ -142,6 +142,7 @@ import {
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
     IGridScrollEventArgs,
+    IGridEditDoneEventArgs,
     IActiveNodeChangeEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
@@ -1218,6 +1219,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onCellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
+     * Emitted after cell has been edited and editing has been committed.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
      * Emitted when a row enters edit mode.
      * @remarks
      * Emitted when [rowEditable]="true".
@@ -1236,7 +1248,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
-     * performing paging operation, column resizing, pinning, moving or hitting  `Done`
+     * performing paging operation, column resizing, pinning, moving or hitting `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
      * @example
@@ -1247,6 +1259,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emitted after exiting edit mode for a row and editing has been committed.
+     * @remarks
+     * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
+     * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * performing paging operation, column resizing, pinning, moving or hitting `Done`
+     * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (rowEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.
@@ -6383,7 +6411,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const row = this.crudService.row;
         const cell = this.crudService.cell;
 
-        // TODO: Merge the crudService with wht BaseAPI service
+        // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
