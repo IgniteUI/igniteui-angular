@@ -411,7 +411,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         }
     }
 
-    private onClosingHiding(args) {
+    protected onClosingHiding(args) {
         const activeElem = document.activeElement;
         if (!args.event && activeElem !== this.grid.nativeElement && !this.columnHidingButton.nativeElement.contains(activeElem)) {
             args.cancel = true;
