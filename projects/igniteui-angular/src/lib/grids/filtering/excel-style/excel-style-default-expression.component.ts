@@ -1,6 +1,5 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     AfterViewInit,
     Input,
     Output,
@@ -20,6 +19,7 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
+import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -33,12 +33,12 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-default-expression',
     templateUrl: './excel-style-default-expression.component.html'
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
+    private destroy$ = new Subject<boolean>();
 
     public dropDownOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),

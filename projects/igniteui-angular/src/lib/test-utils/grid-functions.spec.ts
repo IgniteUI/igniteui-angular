@@ -1094,9 +1094,24 @@ export class GridFunctions {
         return excelMenu.querySelector('.igx-excel-filter__actions-unpin');
     }
 
+    public static getExcelFilteringPinComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-pinning');
+    }
+
     public static getExcelFilteringHideContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('.igx-excel-filter__actions-hide');
+    }
+
+    public static getExcelFilteringHideComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-hiding');
+    }
+
+    public static getExcelFilteringHeaderComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-header');
     }
 
     public static getExcelFilteringSortComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
@@ -1106,13 +1121,33 @@ export class GridFunctions {
 
     public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
-        return excelMenu.querySelector('igx-excel-style-column-moving');
+        return excelMenu.querySelector('igx-excel-style-moving');
     }
 
     public static getExcelFilteringColumnSelectionContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('.igx-excel-filter__actions-select') ||
             excelMenu.querySelector('.igx-excel-filter__actions-selected');
+    }
+
+    public static getExcelFilteringColumnSelectionComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-column-selecting');
+    }
+
+    public static getExcelFilteringClearFiltersComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-clear-filters');
+    }
+
+    public static getExcelFilteringConditionalFilterComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-conditional-filter');
+    }
+
+    public static getExcelFilteringSearchComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-search');
     }
 
     public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
