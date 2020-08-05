@@ -164,6 +164,16 @@
         color: --var($theme, 'message-color');
         max-width: 40ch;
         padding: $dialog-message-padding;
+
+        @media all and (-ms-high-contrast: none)
+        {
+            max-width: map-get((
+                material: 62ch,
+                fluent: 48ch,
+                bootstrap: 60ch,
+                indigo-design: 48ch,
+            ), $variant);
+        }
     }
 
     %igx-dialog-actions {
