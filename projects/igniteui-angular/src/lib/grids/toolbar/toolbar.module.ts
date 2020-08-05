@@ -4,6 +4,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar.directive';
 import { IgxGridSharedModules } from '../common/shared.module';
 import { IgxColumnHidingModule } from '../hiding/hiding.module';
 import { IgxColumnPinningModule } from '../pinning/pinning.module';
+import { IgxColumnActionsModule } from '../column-actions/column-actions.module';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { IgxColumnPinningModule } from '../pinning/pinning.module';
     imports: [
         IgxGridSharedModules,
         IgxColumnHidingModule,
-        IgxColumnPinningModule
+        IgxColumnPinningModule,
+        IgxColumnActionsModule
     ],
     exports: [
         IgxGridToolbarComponent,

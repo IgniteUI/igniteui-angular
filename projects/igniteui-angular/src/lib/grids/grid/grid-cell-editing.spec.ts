@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs } from './public_api';
+import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -722,10 +722,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
-                cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
@@ -750,13 +749,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 rowData: initialRowData,
                 oldValue: 20,
-                newValue: '1',
+                newValue: 1,
                 cancel: true,
                 column: cell.column,
                 owner: grid
@@ -842,6 +840,36 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(initialValue);
         });
 
+        it(`Should emit the committed/new rowData cellEditDone`, () => {
+            fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            const cell = grid.getCellByColumn(0, 'Name');
+            const initialValue = cell.value;
+            const newValue = 'New Name';
+            let cellArgs: IGridEditDoneEventArgs;
+            const updatedRowData = Object.assign({}, cell.rowData, { Name: newValue });
+
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+
+            cell.update(newValue);
+            fixture.detectChanges();
+            expect(cell.value).toBe(newValue);
+
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: updatedRowData, // fixture is with transactions & without rowEditing
+                oldValue: initialValue,
+                newValue: newValue,
+                column: cell.column,
+                owner: grid
+            };
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+        });
+
         it(`Should properly emit 'onCellEditCancel' event`, () => {
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             const cell = grid.getCellByColumn(0, 'fullName');
@@ -909,6 +937,66 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(true);
+        });
+
+        it(`Should properly emit 'cellEditDone' event`, () => {
+            const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
+
+            let cellArgs: IGridEditDoneEventArgs;
+            let cell = grid.getCellByColumn(0, 'fullName');
+            const firstNewValue = 'New Name';
+            const secondNewValue = 1;
+            let updatedRowData = Object.assign({}, cell.rowData, { fullName: firstNewValue });
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+            let editTemplate = fixture.debugElement.query(By.css('input'));
+            UIInteractions.clickAndSendInputElementValue(editTemplate, firstNewValue);
+            fixture.detectChanges();
+
+            // press tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fixture.detectChanges();
+
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: updatedRowData, // fixture is without rowEditing and without transactions
+                oldValue: 'John Brown',
+                newValue: firstNewValue,
+                column: cell.column,
+                owner: grid
+            };
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+
+            cell = grid.getCellByColumn(0, 'age');
+            expect(cell.editMode).toBe(true);
+            editTemplate = fixture.debugElement.query(By.css('input'));
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
+            fixture.detectChanges();
+
+            // press enter on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fixture.detectChanges();
+
+            updatedRowData = Object.assign({}, cell.rowData, { age: secondNewValue });
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: cell.rowData, // fixture is without rowEditing and without transactions
+                oldValue: 20,
+                newValue: secondNewValue,
+                column: cell.column,
+                owner: grid
+            };
+            expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
+
+            const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+            expect(spyDoneArgs.rowData).toBe(grid.data[0]);
         });
     });
 
