@@ -14,12 +14,13 @@
 /// @prop {Map} message-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The dialog message text color.
 /// @prop {map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
 ///
-/// @prop {Number} elevation [24] - The elevation level for the dialog.
+/// @prop {Number} elevation [24] - The elevation level, between 0-24, to be used for the dialog.
 /// @prop {Number} border-radius [.1] - The border radius used for dialog. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @see $default-palette
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-dialog
+/// @requires {Map} $_default-elevation-dialog
 $_light-dialog: extend(
     $_default-shape-dialog,
     $_default-elevation-dialog,
@@ -63,11 +64,12 @@ $_fluent-dialog: extend(
 /// Generates a bootstrap dialog schema.
 /// @type {Map}
 /// @prop {Map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
-/// @prop {Number} elevation [0] - The elevation level for the dialog.
+/// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the dialog.
 /// @prop {Number} border-radius [4px] - The border radius used for dialog. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-dialog
 /// @requires {Map} $_bootstrap-shape-dialog
+/// @requires {Map} $_bootstrap-elevation-dialog
 $_bootstrap-dialog: extend(
     $_light-dialog,
     $_bootstrap-shape-dialog,
