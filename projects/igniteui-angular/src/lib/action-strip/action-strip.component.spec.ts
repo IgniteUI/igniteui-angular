@@ -11,6 +11,7 @@ import { IgxActionStripModule } from './action-strip.module';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
+const DROP_DOWN_LIST_EMPTY = 'igx-drop-down__list--empty';
 
 describe('igxActionStrip', () => {
     let fixture;
@@ -122,7 +123,7 @@ describe('igxActionStrip', () => {
             const actionStripContainer = fixture.debugElement.query(By.css(`.${ACTION_STRIP_CONTAINER_CSS}`));
             // there should be one rendered child and one hidden dropdown
             expect(actionStripContainer.nativeElement.children.length).toBe(2);
-            let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
+            let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST_EMPTY}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
             icon.parent.triggerEventHandler('click', new Event('click'));
@@ -144,7 +145,7 @@ describe('igxActionStrip', () => {
             const actionStripContainer = fixture.debugElement.query(By.css(`.${ACTION_STRIP_CONTAINER_CSS}`));
             // there should be one rendered child and one hidden dropdown and one additional icon
             expect(actionStripContainer.nativeElement.children.length).toBe(3);
-            let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
+            let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST_EMPTY}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
             icon.parent.triggerEventHandler('click', new Event('click'));
@@ -168,7 +169,7 @@ describe('igxActionStrip', () => {
             actionStrip.hide();
             await wait();
             fixture.detectChanges();
-            dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
+            dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST_EMPTY}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
         });
     });

@@ -13,6 +13,7 @@ import { IgxIconModule } from '../../icon/public_api';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWNLIST_EMPTY = 'igx-drop-down__list--empty';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROP_DOWN_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_DROP_DOWN_ITEM_FOCUSED = 'igx-drop-down__item--focused';
@@ -272,7 +273,7 @@ describe('IgxAutocomplete', () => {
             input.nativeElement.focus();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_EMPTY));
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
             expect(dropdownList.nativeElement.attributes['aria-hidden'].value).toEqual('true');
             expect(dropdownListScrollElement.children.length).toEqual(0);
@@ -281,7 +282,7 @@ describe('IgxAutocomplete', () => {
             input.nativeElement.click();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
-            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST));
+            const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_EMPTY));
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
             expect(dropdownList.nativeElement.attributes['aria-hidden'].value).toEqual('true');
             expect(dropdownListScrollElement.children.length).toEqual(0);
@@ -413,11 +414,12 @@ describe('IgxAutocomplete', () => {
             verifyDropdownItems();
 
         }));
-        it('Should filter and populate dropdown list with matching values on every key stroke', () => {
-            const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
+        fit('Should filter and populate dropdown list with matching values on every key stroke', fakeAsync(() => {
             const verifyDropdownItems = function () {
+                const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
                 const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
                 UIInteractions.setInputElementValue(input, startsWith, fixture);
+                tick();
                 fixture.detectChanges();
                 expect(dropdownListScrollElement.children.length).toEqual(filteredTowns.length);
                 for (let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex++) {
@@ -457,7 +459,7 @@ describe('IgxAutocomplete', () => {
 
             startsWith = 't';
             verifyDropdownItems();
-        });
+        }));
         it('Should not populate dropdown list on non-matching values typing', () => {
             let startsWith = ' ';
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
