@@ -1,26 +1,33 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
 /// @type Map
+/// @prop {Number} button-elevation [1] - The elevation level, between 0-24, to be used for the carousel buttons.
 $_default-elevation-carousel: (
     button-elevation: 1,
 );
 
 /// @type Map
-$_fluent-elevation-carousel: (
+/// @prop {Number} button-elevation [0] - The elevation level, between 0-24, to be used for the carousel buttons.
+$_flat-carousel: (
     button-elevation: 0,
 );
 
 /// @type Map
-$_bootstrap-elevation-carousel: (
-    button-elevation: 0,
-);
+/// @requires {function} extend
+/// @requires {Map} $_flat-carousel
+$_fluent-elevation-carousel: extend($_flat-carousel);
 
 /// @type Map
-$_indigo-elevation-carousel: (
-    button-elevation: 0,
-);
+/// @requires {function} extend
+/// @requires {Map} $_flat-carousel
+$_bootstrap-elevation-carousel: extend($_flat-carousel);
+
+/// @type Map
+/// @requires {function} extend
+/// @requires {Map} $_flat-carousel
+$_indigo-elevation-carousel: extend($_flat-carousel);
 

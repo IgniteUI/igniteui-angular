@@ -14,8 +14,10 @@
 /// @prop {Map} text-color [igx-contrast-color: ('primary', 500)] - The navbar text color.
 /// @prop {Map} idle-icon-color [igx-contrast-color: ('primary', 500)] - The navbar idle icon color.
 /// @prop {Map} hover-icon-color [igx-contrast-color: ('primary', 500)] - The navbar hover icon color.
-/// @prop {Number} elevation [4] - The navbar elevation shadow level.
+/// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the navbar.
 ///
+/// @requires {function} extend
+/// @requires {Map} $_default-elevation-navbar
 /// @see $default-palette
 $_light-navbar: extend(
     $_default-shape-navbar,
@@ -51,9 +53,10 @@ $_fluent-navbar: extend($_light-navbar);
 /// @prop {Map} text-color [igx-contrast-color: 'surface'] - The navbar text color.
 /// @prop {Map} idle-icon-color [igx-contrast-color: 'surface'] - The navbar idle icon color.
 /// @prop {Map} hover-icon-color [igx-contrast-color: 'surface'] - The navbar hover icon color.
-/// @prop {Number} elevation [0] - The navbar elevation shadow level.
+/// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the navbar.
 /// @requires {function} extend
 /// @requires {Map} $_light-navbar
+/// @requires {Map} $_bootstrap-elevation-navbar
 $_bootstrap-navbar: extend(
     $_light-navbar,
     $_bootstrap-elevation-navbar,
@@ -78,6 +81,8 @@ $_bootstrap-navbar: extend(
 
 /// Generates an indigo navbar schema.
 /// @type {Map}
+/// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the navbar.
 /// @requires {function} extend
 /// @requires {Map} $_light-navbar
+/// @requires {Map} $_indigo-elevation-navbar
 $_indigo-navbar: extend($_light-navbar, $_indigo-elevation-navbar);
