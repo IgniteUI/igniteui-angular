@@ -1091,8 +1091,6 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
     public data = SampleTestData.personNameObjectJobCompany();
 }
 
-
-
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'
                          [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
@@ -1135,11 +1133,46 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
-        <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
-        <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
-        <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
-        <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
-        <ng-template igxExcelStyleSelecting><div class="esf-custom-column-selection">Column Selection Template</div></ng-template>
+
+        <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
+            <igx-excel-style-column-operations>Column Operations Template</igx-excel-style-column-operations>
+            <igx-excel-style-filter-operations>Filter Operations Template</igx-excel-style-filter-operations>
+        </igx-grid-excel-style-filtering>
+    </igx-grid>`
+})
+export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+    public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'" [movable]="'true'">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
+        </igx-column>
+
+        <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
+            <igx-excel-style-column-operations>
+                <igx-excel-style-moving></igx-excel-style-moving>
+                <igx-excel-style-pinning></igx-excel-style-pinning>
+            </igx-excel-style-column-operations>
+            <igx-excel-style-filter-operations>
+                <igx-excel-style-search></igx-excel-style-search>
+            </igx-excel-style-filter-operations>
+        </igx-grid-excel-style-filtering>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
@@ -1147,6 +1180,49 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
     public resizable = false;
     public filterable = true;
     public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
+    template: `
+    <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
+        <igx-excel-style-column-operations>
+            <igx-excel-style-selecting></igx-excel-style-selecting>
+        </igx-excel-style-column-operations>
+        <igx-excel-style-filter-operations>Filter Operations Template</igx-excel-style-filter-operations>
+    </igx-grid-excel-style-filtering>
+    <igx-grid #grid1 [data]="data" height="500px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [sortable]="true"
+            [filterable]="filterable" [resizable]="resizable" dataType="string" [selectable]="false"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable"
+            [selectable]="false" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridExternalESFTemplateComponent extends BasicGridComponent implements OnInit {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngOnInit(): void {
+        this.esf.column = this.grid.getColumnByName('Downloads');
+    }
 }
 
 @Component({
