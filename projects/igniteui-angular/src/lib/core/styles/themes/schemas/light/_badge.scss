@@ -15,7 +15,9 @@
 /// @prop {Number} border-width [0] - The border width of the badge component.
 /// @prop {Map} background-color [igx-color: ('primary', 500)] - The background color used.
 /// @prop {Number} elevation [1] - The elevation level, between 0-24, to be used for the badge shadow.
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for badge component.
+/// @prop {Number} border-radius [1] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-badge
 /// @see $default-palette
 $_light-badge: extend(
     $_default-shape-badge,
@@ -47,8 +49,10 @@ $_fluent-badge: extend($_light-badge);
 /// Generates a bootstrap badge schema.
 /// @type {Map}
 /// @prop {Number} border-width [1px] - The border width of the badge component.
+/// @prop {Number} border-radius [4px] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-badge
+/// @requires {Map} $bootstrap-shape-badge
 $_bootstrap-badge: extend(
     $_light-badge,
     $_bootstrap-shape-badge,

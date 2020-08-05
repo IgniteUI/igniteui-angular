@@ -1,25 +1,29 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 $_default-shape-carousel: (
     border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [1] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 $_round-shape-carousel: (
     border-radius: 1,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [0] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 $_square-shape-carousel: (
-    border-radius: 0%,
+    border-radius: 0,
 );
 
 /// @type Map
+/// @prop {Number} border-radius [4px] - The border radius used for carousel. Can be a fraction between 0 and 1, pixels, or percent.
 $_bootstrap-shape-carousel: (
     border-radius: 4px
 );
