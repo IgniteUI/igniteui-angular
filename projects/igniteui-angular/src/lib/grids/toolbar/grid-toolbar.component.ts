@@ -236,7 +236,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         @Optional() public csvExporter: IgxCsvExporterService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private iconService: IgxIconService) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
     }
 
     private _positionSettings: PositionSettings = {
@@ -414,9 +414,11 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     /**
      * @hidden @internal
      */
-    public columnHidingOnClosing(args) {
+    public onClosingDropDown(args) {
         const activeElem = document.activeElement;
-        if (!args.event && activeElem !== this.grid.nativeElement && !this.columnHidingButton.nativeElement.contains(activeElem)) {
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnHidingButton.nativeElement.contains(activeElem) &&
+            !this.columnPinningButton.nativeElement.contains(activeElem)) {
             args.cancel = true;
         }
     }
