@@ -5,48 +5,48 @@
 ////
 
 /// @type Map
-/// @prop {Number} border-radius [.2] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [1] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [.2] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [1] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $_default-shape-checkbox: (
     border-radius: .2,
     border-radius-ripple: 1,
 );
 
 /// @type Map
-/// @prop {Number} border-radius [50%] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [1] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [50%] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [1] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $_round-shape-checkbox: (
     border-radius: 50%,
     border-radius-ripple: 1
 );
 
 /// @type Map
-/// @prop {Number} border-radius [0] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [0] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [0] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [0] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $_square-shape-checkbox: (
     border-radius: 0,
     border-radius-ripple: 0
 );
 
 /// @type Map
-/// @prop {Number} border-radius [2px] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $_fluent-shape-checkbox: (
     border-radius: 2px,
     border-radius-ripple: 2px
 );
 
 /// @type Map
-/// @prop {Number} border-radius [4px] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [4px] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [4px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [4px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $_bootstrap-shape-checkbox: (
     border-radius: 4px,
     border-radius-ripple: 4px
 );
 
 /// @type Map
-/// @prop {Number} border-radius [3px] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [3px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 $_indigo-shape-checkbox: (
     border-radius: 3px,
     border-radius-ripple: 3px
