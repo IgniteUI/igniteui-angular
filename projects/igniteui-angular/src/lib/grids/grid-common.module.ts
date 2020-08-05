@@ -25,6 +25,7 @@ import { IgxGridSummaryModule } from './summaries/summary.module';
 import { IgxGridToolbarModule } from './toolbar/toolbar.module';
 import { IgxColumnHidingModule } from './hiding/hiding.module';
 import { IgxColumnPinningModule } from './pinning/pinning.module';
+import { IgxColumnActionsModule } from './column-actions/column-actions.module';
 import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
 import { IgxGridFilteringModule } from './filtering/base/filtering.module';
@@ -57,6 +58,7 @@ import { IgxRowDirective } from './row.directive';
         IgxGridBodyDirective,
         IgxColumnHidingModule,
         IgxColumnPinningModule,
+        IgxColumnActionsModule,
         IgxGridColumnModule,
         IgxGridHeadersModule,
         IgxGridPipesModule,
@@ -83,6 +85,7 @@ import { IgxRowDirective } from './row.directive';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxColumnHidingModule,
+        IgxColumnActionsModule,
         IgxGridPipesModule,
         IgxGridFilteringModule,
         IgxGridExcelStyleFilteringModule,

@@ -18,6 +18,8 @@ import {
 } from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
+import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
+import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -73,10 +75,9 @@ const SORTED_COLUMN_CLASS = 'igx-grid__th--sorted';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
-const COLUMN_HIDING_CLASS = 'igx-column-hiding';
-const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
-const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
-const COLUMN_PINNING_CLASS = 'igx-column-pinning';
+const COLUMN_ACTIONS_INPUT_CLASS = '.igx-column-actions__header-input';
+const COLUMN_ACTIONS_COLUMNS_CLASS = '.igx-column-actions__columns';
+const COLUMN_ACTIONS_COLUMNS_LABEL_CLASS = 'igx-checkbox__label';
 const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
@@ -1093,9 +1094,24 @@ export class GridFunctions {
         return excelMenu.querySelector('.igx-excel-filter__actions-unpin');
     }
 
+    public static getExcelFilteringPinComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-pinning');
+    }
+
     public static getExcelFilteringHideContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('.igx-excel-filter__actions-hide');
+    }
+
+    public static getExcelFilteringHideComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-hiding');
+    }
+
+    public static getExcelFilteringHeaderComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-header');
     }
 
     public static getExcelFilteringSortComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
@@ -1105,13 +1121,33 @@ export class GridFunctions {
 
     public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
-        return excelMenu.querySelector('igx-excel-style-column-moving');
+        return excelMenu.querySelector('igx-excel-style-moving');
     }
 
     public static getExcelFilteringColumnSelectionContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('.igx-excel-filter__actions-select') ||
             excelMenu.querySelector('.igx-excel-filter__actions-selected');
+    }
+
+    public static getExcelFilteringColumnSelectionComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-column-selecting');
+    }
+
+    public static getExcelFilteringClearFiltersComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-clear-filters');
+    }
+
+    public static getExcelFilteringConditionalFilterComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-conditional-filter');
+    }
+
+    public static getExcelFilteringSearchComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-search');
     }
 
     public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
@@ -1844,11 +1880,16 @@ export class GridFunctions {
     }
 
     public static getColumnHidingElement(fix: ComponentFixture<any>): DebugElement {
-        return fix.debugElement.query(By.css(COLUMN_HIDING_CLASS));
+        return fix.debugElement.query(By.directive(IgxColumnHidingDirective));
     }
 
     public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
-        return fix.debugElement.query(By.css(COLUMN_PINNING_CLASS));
+        return fix.debugElement.query(By.directive(IgxColumnPinningDirective));
+    }
+
+    public static getColumnActionsColumnList(element: DebugElement): string[] {
+        const labels = element.queryAll(By.css(`.${COLUMN_ACTIONS_COLUMNS_LABEL_CLASS}`));
+        return labels.map(label => label.nativeElement.textContent.trim());
     }
 
     public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {
@@ -1856,7 +1897,7 @@ export class GridFunctions {
     }
 
     public static getColumnHidingHeaderInput(columnChooserElement: DebugElement): DebugElement {
-        return columnChooserElement.query(By.css(COLUMN_HIDING_INPUT_CLASS));
+        return columnChooserElement.query(By.css(COLUMN_ACTIONS_INPUT_CLASS));
     }
 
     public static getColumnChooserFilterInput(columnChooserElement: DebugElement): DebugElement {
@@ -1887,7 +1928,7 @@ export class GridFunctions {
     }
 
     public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
-        return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
+        return columnChooserElement.query(By.css(COLUMN_ACTIONS_COLUMNS_CLASS));
     }
 
     public static getColumnSortingIndex(columnHeader: DebugElement): number {
