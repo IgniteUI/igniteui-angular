@@ -32,6 +32,8 @@
 /// @property {Color} border-on-color [transparent] - The border color of the on-switch.
 /// @property {Color} border-on-hover-color [transparent] - The border color of the  on-switch.
 ///
+/// @requires {function} extend
+/// @requires {Map} $_default-elevation-switch
 /// @see $default-palette
 $_light-switch: extend(
     $_default-shape-switch,
