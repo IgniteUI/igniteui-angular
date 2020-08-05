@@ -2,8 +2,6 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
-import { IgxColumnPinningModule } from '../pinning/pinning.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
 import { IgxButtonModule } from '../../directives/button/button.directive';
@@ -14,14 +12,15 @@ import {
 } from '../../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IgxColumnActionsModule } from '../column-actions/column-actions.module';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 
 describe('Column Pinning UI #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
-    let columnChooser: IgxColumnPinningComponent;
+    let columnChooser: IgxColumnActionsComponent;
     let columnChooserElement: DebugElement;
 
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
@@ -37,7 +36,7 @@ describe('Column Pinning UI #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxColumnPinningModule,
+                IgxColumnActionsModule,
                 IgxButtonModule
             ]
         }).compileComponents();
@@ -68,27 +67,25 @@ describe('Column Pinning UI #grid', () => {
             columnChooser.title = undefined;
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBe(null);
-            expect(columnChooser.title).toBe('');
+            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
 
             columnChooser.title = null;
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBe(null);
-            expect(columnChooser.title).toBe('');
+            expect(GridFunctions.getColumnChooserTitle(columnChooserElement)).toBeNull();
         }));
 
-        it('filter input visibility is controlled via \'disableFilter\' property.', () => {
+        it('filter input visibility is controlled via \'hideFilter\' property.', () => {
             let filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
             expect(filterInputElement).not.toBeNull();
 
-            fix.componentInstance.disableFilter = true;
+            fix.componentInstance.hideFilter = true;
             fix.detectChanges();
 
             filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
             expect(filterInputElement).toBeNull();
 
-            fix.componentInstance.disableFilter = false;
+            fix.componentInstance.hideFilter = false;
             fix.detectChanges();
 
             filterInputElement = GridFunctions.getColumnHidingHeaderInput(columnChooserElement);
@@ -234,13 +231,13 @@ describe('Column Pinning UI #grid', () => {
             fix.detectChanges();
 
             let toolbar = grid.toolbar.columnPinningUI;
-            expect(toolbar.pinnableColumns.length).toBe(5);
+            expect(toolbar.columnItems.length).toBe(5);
 
             grid.columns[0].disablePinning = true;
             fix.detectChanges();
 
             toolbar = grid.toolbar.columnPinningUI;
-            expect(toolbar.pinnableColumns.length).toBe(4);
+            expect(toolbar.columnItems.length).toBe(4);
         });
     });
 
@@ -256,12 +253,8 @@ describe('Column Pinning UI #grid', () => {
         }));
 
         it('shows only top level columns.', () => {
-            const columnItems = columnChooser.columnItems;
-            expect(columnItems.length).toBe(3);
-            expect(columnItems[0].name).toBe('Missing');
-            expect(columnItems[1].name).toBe('General Information');
-            expect(columnItems[2].name).toBe('ID');
-            expect(GridFunctions.getColumnChooserItems(columnChooserElement).length).toBe(3);
+            const columnNames = GridFunctions.getColumnActionsColumnList(columnChooserElement);
+            expect(columnNames).toEqual(['Missing', 'General Information', 'ID']);
         });
 
         it('- pinning group column pins all children.', () => {

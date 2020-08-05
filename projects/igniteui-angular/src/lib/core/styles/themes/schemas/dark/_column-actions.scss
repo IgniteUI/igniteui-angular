@@ -1,0 +1,25 @@
+@import '../light/column-actions';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark column actions schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_light-column-actions
+/// @see $default-palette
+$_dark-column-actions: extend($_light-column-actions);
+
+/// Generates a dark fluent column actions schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-column-actions
+$_dark-fluent-column-actions: extend($_fluent-column-actions);
+
+/// Generates a dark bootstrap column actions schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-column-actions
+$_dark-bootstrap-column-actions: extend($_bootstrap-column-actions);

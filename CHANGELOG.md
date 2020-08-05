@@ -17,7 +17,9 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `selectedRows` method is now an `@Input` property. Setting it to an array of Row IDs will update the grid's selection state, any previous selection will be cleared. Setting it to an empty array will clear the selection entirely.
+    - **Breaking Change** - `IgxColumnHiding` and `IgxColumnPinning` components have been deprecated in favor of a component combining the their functionality - `IgxColumnActions` which is used with either of the new `IgxColumnPinning` and `IgxColumnHiding` directives that specify the action to be triggered through the UI.
 - `igxGrid`
+    - **Behavioral Change** - For numeric columns, the onCellEdit arguments' newValue will now contain the numeric value that will be committed instead of the string input.
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
     - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
 - `igxTreeGrid`
@@ -53,6 +55,9 @@ The following example shows how you can use the Indigo theme:
 - `igxButton` directive
     - Added styles to support extended fab buttons.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Exposed new `cellEditDone` and `rowEditDone` non cancelable events. The arguments contain `rowData` that is the committed `newValue`.
+        - `cellEditDone` - Emitted after a cell has been edited and editing has been committed.
+        - `rowEditDone` - Emitted after exiting edit mode for a row and editing has been committed.
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
     - Added support for tooltips on data cells default template and summary cells.
     - Added support for binding columns to properties in nested data objects.

@@ -16,7 +16,7 @@
 @import '../light/carousel';
 @import '../light/checkbox';
 @import '../light/chip';
-@import '../light/column-hiding';
+@import '../light/column-actions';
 @import '../light/combo';
 @import '../light/dialog';
 @import '../light/divider';
@@ -60,7 +60,7 @@
 /// @property {Map} igx-carousel [$_light-carousel]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
-/// @property {Map} igx-column-hiding [$_light-column-hiding]
+/// @property {Map} igx-column-actions [$_light-column-actions]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
 /// @property {Map} igx-divider [$_light-divider]
@@ -102,7 +102,7 @@ $light-square-schema: (
     igx-carousel: extend($_light-carousel, $_square-shape-carousel),
     igx-checkbox: extend($_light-checkbox, $_square-shape-checkbox),
     igx-chip: extend($_light-chip, $_square-shape-chip),
-    igx-column-hiding: extend($_light-column-hiding, $_square-shape-column-hiding),
+    igx-column-actions: extend($_light-column-actions, $_square-shape-column-actions),
     igx-combo: extend($_light-combo, $_square-shape-combo),
     igx-dialog: extend($_light-dialog, $_square-shape-dialog),
     igx-divider: extend($_light-divider, $_square-shape-divider),
