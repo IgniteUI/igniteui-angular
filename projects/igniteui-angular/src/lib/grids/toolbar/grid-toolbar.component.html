@@ -31,7 +31,7 @@
                 <span>{{ grid.hiddenColumnsText }}</span>
             </div>
         </button>
-        <igx-drop-down #columnHidingDropdown (onClosing)="onClosingHiding($event)">
+        <igx-drop-down #columnHidingDropdown (onClosing)="columnHidingOnClosing($event)">
             <igx-column-hiding
                 [columns]="grid.columns"
                 [title]="grid.columnHidingTitle"
