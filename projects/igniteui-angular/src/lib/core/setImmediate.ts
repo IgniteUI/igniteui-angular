@@ -36,10 +36,13 @@ const listener = function (event) {
     run(event.data);
 };
 
+if (!window.setImmediate) {
+    window.addEventListener('message', listener, false);
+}
+
 export function setImmediate(cb: any) {
     if (window.setImmediate) {
-        window.setImmediate(cb);
-        return;
+        return window.setImmediate(cb);
     }
 
     const args = [];
@@ -54,15 +57,13 @@ export function setImmediate(cb: any) {
     };
 
     window.postMessage(counter + '', windowLocation.protocol + '//' + windowLocation.host);
-    window.addEventListener('message', listener, false);
 
     return counter;
 }
 
 export function clearImmediate(id: any) {
     if (window.clearImmediate) {
-        window.clearImmediate(id);
-        return;
+        return window.clearImmediate(id);
     }
 
     delete queue[id];
