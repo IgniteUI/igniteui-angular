@@ -60,6 +60,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     protected virtDir: IgxForOfDirective<any>;
 
+    @ContentChild('scrollContainer.children', { static: true })
+    protected dropdownContent: any;
+
     @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective: IgxToggleDirective;
 
@@ -208,6 +211,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /** @hidden @internal */
     public get scrollContainer(): HTMLElement {
         return this.scrollContainerRef.nativeElement;
+    }
+
+    public get emptyClass(): boolean {
+        if (this.collapsed) {
+            return false;
+        } else {
+            return this.items.length === 0 && this.dropdownContent;
+        }
     }
 
     protected get collectionLength() {
