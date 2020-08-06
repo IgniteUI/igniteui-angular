@@ -413,7 +413,7 @@ describe('IgxAutocomplete', () => {
             verifyDropdownItems();
 
         }));
-        fit('Should filter and populate dropdown list with matching values on every key stroke', fakeAsync(() => {
+        it('Should filter and populate dropdown list with matching values on every key stroke', fakeAsync(() => {
             const verifyDropdownItems = function () {
                 const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
                 const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
