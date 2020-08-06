@@ -55,13 +55,14 @@
 /// @prop {Map} placeholder-color [igx-color: ('grays', 500)] - The placeholder color of an input group.
 /// @prop {Map} disabled-placeholder-color [igx-color: ('grays', 400)] - The disabled placeholder color of an input group.
 ///
-/// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius fraction, between 0-1 to be used for box input .
-/// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .
-/// @prop {Number} search-border-radius [.2] - The border radius fraction, between 0-1 to be used for search input .
+/// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [.2] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [.2] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Color} label-floated-background [igx-color: surface] - The background color of the label when floated for input of type border.
 /// @prop {Color} label-floated-disabled-background [igx-color: surface] - The background color of the label when floated for input group of type border in its disabled state.
 ///
 /// @requires {function} extend
+/// @requires {Map} $_default-shape-input-group
 /// @requires {Map} $_default-elevation-input-group
 /// @see $default-palette
 $_light-input-group: extend(
@@ -217,12 +218,13 @@ $_light-input-group: extend(
 /// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
 ///
-/// @prop {Number} box-border-radius [2px] - The border radius fraction, between 0-1 to be used for box input .
-/// @prop {Number} border-border-radius [2px] - The border radius fraction, between 0-1 to be used for border input .
-/// @prop {Number} search-border-radius [2px] - The border radius fraction, between 0-1 to be used for search input .
+/// @prop {Number} box-border-radius [2px] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [2px] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-input-group
+/// @requires {Map} $_fluent-shape-input-group
 /// @requires {Map} $_fluent-elevation-input-group
 $_fluent-input-group: extend(
     $_light-input-group,
@@ -269,8 +271,19 @@ $_fluent-input-group: extend(
 
 /// Generates a bootstrap input-group schema.
 /// @type {Map}
+/// @prop {Map} border-color [igx-color: ('grays', 400), hexrgba: #fff] - The border color for input groups of type border and fluent.
+/// @prop {Map} input-prefix-color [igx-color: ('grays', 800)] - The text color of an input prefix of type line, box and border.
+/// @prop {Map} idle-secondary-color [igx-color: ('grays', 800)] - The label color in the idle state.
+/// @prop {Map} input-suffix-color [igx-color: ('grays', 800)] - The text color of an input sufix of type line, box and border.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 300), hexrgba: #fff] - The disabled border color for input groups of type border and fluent.
+/// @prop {Color} input-prefix-background [igx-color: ('grays', 300)] - The background color of an input prefix of type line, box, border and fluent.
+/// @prop {Color} input-suffix-background [ igx-color: ('grays', 300)] - The background color of an input suffix of type line, box, border and fluent.
+/// @prop {Number} box-border-radius [.2] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [.2] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [.2] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-input-group
+/// @requires {Map} $_bootstrap-shape-input-group
 $_bootstrap-input-group: extend(
     $_light-input-group,
     $_bootstrap-shape-input-group,
@@ -323,8 +336,12 @@ $_bootstrap-input-group: extend(
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [1] - The elevation level, between 0-24, to be used for the hover state of the search input.
 /// @prop {Number} search-disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state of the search input.
+/// @prop {Number} box-border-radius [0] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-border-radius [0] - The border radius used for border input. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} search-border-radius [2px] - The border radius used for search input. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-input-group
+/// @requires {Map} $_indigo-shape-input-group
 /// @requires {Map} $_indigo-elevation-input-group
 $_indigo-input-group: extend(
     $_light-input-group,

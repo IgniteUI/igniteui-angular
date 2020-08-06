@@ -25,8 +25,8 @@
 /// @prop {Color} disabled-item-background [transparent] - The drop-down disabled item background color.
 /// @prop {Map} disabled-item-text-color [igx-color: 'surface', text-contrast: (), rgba: .38] - The drop-down disabled item text color.
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the drop-down shadow.
-/// @prop {Number} $border-width [0] - The border width used for drop-down component.
-/// @prop {Map} $border-color [igx-color: ('grays', 300)] - The border color used for drop-down component.
+/// @prop {Number} border-width [0] - The border width used for drop-down component.
+/// @prop {Map} border-color [igx-color: ('grays', 300)] - The border color used for drop-down component.
 /// @prop {Number} border-radius [.2] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -179,7 +179,7 @@ $_fluent-drop-down: extend(
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the drop-down shadow.
 /// @prop {Number} border-radius [4px] - The border radius used for drop-down component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} $border-width [1px] - The border width used for drop-down component.
+/// @prop {Number} border-width [1px] - The border width used for drop-down component.
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
 /// @requires {Map} $_bootstrap-shape-drop-down

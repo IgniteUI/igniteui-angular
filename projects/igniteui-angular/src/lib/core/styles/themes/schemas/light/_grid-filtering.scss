@@ -1,5 +1,3 @@
-@import '../shape/grid-filtering';
-
 ////
 /// @group schemas
 /// @access public
@@ -21,39 +19,36 @@
 /// @prop {Map} menu-text-color [igx-color: ('grays', 900)] - The idle menu text color.
 /// @prop {Map} menu-button-text-color [igx-color: ('secondary', 500)] - The menu button text color.
 /// @see $default-palette
-$_light-grid-filtering: extend(
-    $_default-shape-grid-filtering,
-    (
-        menu-background: #fff,
-        toggle-background: transparent,
-        toggle-filtered-background: transparent,
-        toggle-icon-color: inherit,
-        toggle-icon-hover-color: #fff,
-        menu-button-disabled-text-color: initial,
+$_light-grid-filtering: (
+    menu-background: #fff,
+    toggle-background: transparent,
+    toggle-filtered-background: transparent,
+    toggle-icon-color: inherit,
+    toggle-icon-hover-color: #fff,
+    menu-button-disabled-text-color: initial,
 
-        toggle-icon-active-color: (
-            igx-contrast-color: ('secondary', 500),
-        ),
+    toggle-icon-active-color: (
+        igx-contrast-color: ('secondary', 500),
+    ),
 
-        toggle-icon-filtered-color: (
-            igx-color: ('secondary', 500)
-        ),
+    toggle-icon-filtered-color: (
+        igx-color: ('secondary', 500)
+    ),
 
-        toggle-hover-background: (
-            igx-color: ('grays', 300)
-        ),
+    toggle-hover-background: (
+        igx-color: ('grays', 300)
+    ),
 
-        toggle-active-background: (
-            igx-color: ('secondary', 500)
-        ),
+    toggle-active-background: (
+        igx-color: ('secondary', 500)
+    ),
 
-        menu-text-color: (
-            igx-color: ('grays', 900)
-        ),
+    menu-text-color: (
+        igx-color: ('grays', 900)
+    ),
 
-        menu-button-text-color: (
-            igx-color: ('secondary', 500)
-        )
+    menu-button-text-color: (
+        igx-color: ('secondary', 500)
     )
 );
 
@@ -61,7 +56,7 @@ $_light-grid-filtering: extend(
 /// @type {Map}
 /// @prop {Map} menu-background [igx-color: 'surface'] - The idle menu background color.
 /// @requires {function} extend
-/// @requires {Map} $_default-shape-grid-filtering
+/// @requires {Map} $_light-grid-filtering
 $_fluent-grid-filtering: extend(
     $_light-grid-filtering,
     (

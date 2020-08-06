@@ -13,8 +13,9 @@
 /// @property {Map} text-color [igx-contrast-color: ('grays', 900)] - The text color used in the snackbar.
 /// @property {Map} button-color [igx-color: ('secondary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [4] - The elevation level, between 0-24, to be used in the snackbar.
-/// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for the snackbar component.
+/// @prop {Number} border-radius [.17] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
+/// @requires {Map} $_default-shape-snackbar
 /// @requires {Map} $_default-elevation-snackbar
 /// @see $default-palette
 $_light-snackbar: extend(
@@ -37,9 +38,10 @@ $_light-snackbar: extend(
 
 /// Generates a fluent snackbar schema.
 /// @type {Map}
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the snackbar component.
+/// @prop {Number} border-radius [2px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-snackbar
+/// @requires $_fluent-shape-snackbar
 $_fluent-snackbar: extend($_light-snackbar, $_fluent-shape-snackbar);
 
 /// Generates a bootstrap snackbar schema.
@@ -48,9 +50,10 @@ $_fluent-snackbar: extend($_light-snackbar, $_fluent-shape-snackbar);
 /// @property {Map} text-color [igx-contrast-color: ('surface')] - The text color used in the snackbar.
 /// @property {Map} button-color [igx-color: ('primary', 500)] - The button color used in the snackbar.
 /// @property {Number} elevation [10] - The elevation level, between 0-24, to be used in the snackbar.
-/// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for the snackbar component.
+/// @prop {Number} border-radius [.17] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-snackbar
+/// @requires {Map} $_bootstrap-shape-snackbar
 /// @requires {Map} $_bootstrap-elevation-snackbar
 $_bootstrap-snackbar: extend(
     $_light-snackbar,
@@ -77,7 +80,7 @@ $_bootstrap-snackbar: extend(
 /// @property {Map} background [igx-color: ('grays', 600)] - The background color used in the snackbar.
 /// @property {Map} text-color [igx-color: ('grays', 600), text-contrast: ()] - The text color used in the snackbar.
 /// @property {Map} button-color [igx-color: ('grays', 600), text-contrast: ()] - The button color used in the snackbar.
-/// @property {Number} border-radius [6px] - The border radius used for the snackbar component.
+/// @prop {Number} border-radius [6px] - The border radius used for snackbar. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires $_light-snackbar
