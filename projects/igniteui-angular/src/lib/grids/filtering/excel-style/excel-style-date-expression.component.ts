@@ -1,6 +1,5 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     ViewChild,
     Input
 } from '@angular/core';
@@ -12,7 +11,6 @@ import { DisplayDensity } from '../../../core/density';
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-date-expression',
     templateUrl: './excel-style-date-expression.component.html'

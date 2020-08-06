@@ -94,13 +94,6 @@ import {
 import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
-import {
-    IgxExcelStyleSortingTemplateDirective,
-    IgxExcelStylePinningTemplateDirective,
-    IgxExcelStyleHidingTemplateDirective,
-    IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective
-} from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
@@ -155,6 +148,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -166,8 +160,6 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
-
-
 
 @Directive({
     selector: '[igxGridBaseComponent]'
@@ -1548,38 +1540,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
-    public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
-    public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
-    public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleSelectingTemplateDirective, { read: IgxExcelStyleSelectingTemplateDirective })
-    public excelStyleSelectingTemplateDirective: IgxExcelStyleSelectingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
-    public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
+
+    /**
+     * @hidden @internal
+     */
+    public get excelStyleFilteringComponent() {
+        return this.excelStyleFilteringComponents.first;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, descendants: false })
+    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
 
     /**
      * @hidden @internal
@@ -3440,24 +3415,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets the outlet used to attach the grid's overlays to.
+     * Gets/Sets the outlet used to attach the grid's overlays to.
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
+    @Input()
     get outlet() {
         return this.resolveOutlet();
+    }
+
+    set outlet(val: IgxOverlayOutletDirective) {
+        this._userOutletDirective = val;
     }
 
     protected resolveOutlet() {
         return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
     }
 
-    /**
-     * Sets the outlet used to attach the grid's overlays to.
-     */
-    set outlet(val: any) {
-        this._userOutletDirective = val;
-    }
 
     /**
      * Gets the default row height.
