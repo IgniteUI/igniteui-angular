@@ -3,14 +3,11 @@ import { CommonModule } from '@angular/common';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './excel-style-search.component';
 import {
     IgxGridExcelStyleFilteringComponent,
-    IgxExcelStyleSortingTemplateDirective,
-    IgxExcelStyleHidingTemplateDirective,
-    IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStylePinningTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleFilterOperationsTemplateDirective
 } from './grid.excel-style-filtering.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
-import { IgxExcelStyleColumnMovingComponent } from './excel-style-column-moving.component';
+import { IgxExcelStyleMovingComponent } from './excel-style-moving.component';
 import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
@@ -33,6 +30,12 @@ import { IgxListModule } from '../../../list/list.component';
 import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
 import { IgxProgressBarModule } from '../../../progressbar/progressbar.component';
 import { IgxSelectModule } from './../../../select/select.module';
+import { IgxExcelStylePinningComponent } from './excel-style-pinning.component';
+import { IgxExcelStyleHeaderComponent } from './excel-style-header.component';
+import { IgxExcelStyleHidingComponent } from './excel-style-hiding.component';
+import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.component';
+import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
+import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
 
 /**
  * @hidden
@@ -40,29 +43,39 @@ import { IgxSelectModule } from './../../../select/select.module';
 @NgModule({
     declarations: [
         IgxGridExcelStyleFilteringComponent,
+        IgxExcelStyleHeaderComponent,
         IgxExcelStyleSortingComponent,
-        IgxExcelStyleColumnMovingComponent,
+        IgxExcelStylePinningComponent,
+        IgxExcelStyleHidingComponent,
+        IgxExcelStyleSelectingComponent,
+        IgxExcelStyleClearFiltersComponent,
+        IgxExcelStyleConditionalFilterComponent,
+        IgxExcelStyleMovingComponent,
         IgxExcelStyleSearchComponent,
         IgxExcelStyleCustomDialogComponent,
         IgxExcelStyleDefaultExpressionComponent,
         IgxExcelStyleDateExpressionComponent,
-        IgxExcelStyleSortingTemplateDirective,
-        IgxExcelStyleHidingTemplateDirective,
-        IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective,
-        IgxExcelStyleSelectingTemplateDirective,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleFilterOperationsTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleSearchFilterPipe
     ],
     exports: [
         IgxGridExcelStyleFilteringComponent,
-        IgxExcelStyleSortingTemplateDirective,
-        IgxExcelStyleHidingTemplateDirective,
-        IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective,
-        IgxExcelStyleSelectingTemplateDirective,
+        IgxExcelStyleColumnOperationsTemplateDirective,
+        IgxExcelStyleFilterOperationsTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
-        IgxExcelStyleDateExpressionComponent
+        IgxExcelStyleDateExpressionComponent,
+        IgxExcelStyleHeaderComponent,
+        IgxExcelStyleSortingComponent,
+        IgxExcelStylePinningComponent,
+        IgxExcelStyleHidingComponent,
+        IgxExcelStyleSelectingComponent,
+        IgxExcelStyleClearFiltersComponent,
+        IgxExcelStyleConditionalFilterComponent,
+        IgxExcelStyleMovingComponent,
+        IgxExcelStyleSearchComponent,
+        IgxExcelStyleHeaderComponent
     ],
     imports: [
         CommonModule,

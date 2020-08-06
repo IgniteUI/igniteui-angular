@@ -1,0 +1,8 @@
+<div *ngIf="esf.column"
+    tabindex="0"
+    [ngClass]="clearFilterClass()"
+    (keydown)="onClearFilterKeyDown($event)"
+    (click)="clearFilter()">
+    <span>{{ esf.grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
+    <igx-icon>clear</igx-icon>
+</div>

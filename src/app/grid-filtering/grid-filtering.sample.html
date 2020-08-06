@@ -26,6 +26,7 @@
                 [showToolbar]="true"
                 [columnHiding]="true"
                 [columnPinning]="true"
+                [columnSelection]="'single'"
                 [exportExcel]="true"
                 [exportCsv]="true"
                 exportText="Export"
@@ -58,6 +59,59 @@
                 <igx-checkbox #applyChangesCheckbox checked="true">Apply Changes</igx-checkbox>
                 <button igxButton="raised" (click)="clearAdvancedFiltering()">Clear Advanced Filtering</button>
             </div>
+
+            <h3>ESF Templates</h3>
+            <igx-grid
+                #grid2
+                [data]="data"
+                [displayDensity]="density"
+                [allowFiltering]="true"
+                [filterMode]="'excelStyleFilter'"
+                [allowAdvancedFiltering]="true"
+                [rowSelection]="selectionMode"
+                [paging]="false"
+                [width]="'980px'"
+                [height]="'600px'"
+                [showToolbar]="true"
+                [columnHiding]="true"
+                [columnPinning]="true"
+                [columnSelection]="'single'"
+                [exportExcel]="true"
+                [exportCsv]="true"
+                exportText="Export"
+                exportExcelText="Export to Excel"
+                exportCsvText="Export to CSV">
+                <igx-column *ngFor="let c of columns" [field]="c.field"
+                                                    [header]="c.header"
+                                                    [movable]="c.movable"
+                                                    [groupable]="true"
+                                                    [resizable]="c.resizable"
+                                                    [width]="c.width"
+                                                    [sortable]="true"
+                                                    [filterable]="true"
+                                                    [editable]="true"
+                                                    [hidden]="c.hidden"
+                                                    [minWidth]="c.minWidth"
+                                                    [maxWidth]="c.maxWidth"
+                                                    [dataType]="c.type">
+                </igx-column>
+
+                <igx-grid-excel-style-filtering [minHeight]="'700px'" [maxHeight]="'none'">
+                    <div igxExcelStyleColumnOperations>COLUMN OPERATIONS
+                        <igx-excel-style-header></igx-excel-style-header>
+                        <igx-excel-style-sorting></igx-excel-style-sorting>
+                        <igx-excel-style-moving></igx-excel-style-moving>
+                        <igx-excel-style-pinning></igx-excel-style-pinning>
+                        <igx-excel-style-hiding></igx-excel-style-hiding>
+                        <igx-excel-style-selecting></igx-excel-style-selecting>
+                    </div>
+                    <igx-excel-style-filter-operations>FILTER OPERATIONS
+                        <igx-excel-style-clear-filters></igx-excel-style-clear-filters>
+                        <igx-excel-style-conditional-filter></igx-excel-style-conditional-filter>
+                        <igx-excel-style-search></igx-excel-style-search>
+                    </igx-excel-style-filter-operations>
+                </igx-grid-excel-style-filtering>
+            </igx-grid>
         </div>
     </div>
 </div>
