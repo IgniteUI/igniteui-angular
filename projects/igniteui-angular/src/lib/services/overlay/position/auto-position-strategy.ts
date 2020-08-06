@@ -141,7 +141,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      */
     private verticalPush(connectedFit: ConnectedFit): number {
         const topExtend = connectedFit.top;
-        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.bottom;
+        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.height;
         if (topExtend < 0) {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {
