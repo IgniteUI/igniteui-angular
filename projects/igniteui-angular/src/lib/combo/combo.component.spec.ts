@@ -25,7 +25,6 @@ const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
-const CSS_CLASS_DROPDOWNLIST_EMPTY = 'igx-drop-down__list--empty';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
@@ -693,7 +692,7 @@ describe('igxCombo', () => {
 
             const dropDownList = dropDownElement.children[0];
             const dropDownScrollList = dropDownElement.children[0].children[0];
-            expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST_EMPTY)).toBeTruthy();
+            expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
             expect(dropDownScrollList.childElementCount).toEqual(0);
         });
