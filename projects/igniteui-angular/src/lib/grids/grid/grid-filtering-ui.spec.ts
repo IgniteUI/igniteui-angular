@@ -1969,7 +1969,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.openFilterDD(fix.debugElement);
-            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list--empty.igx-toggle'));
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             GridFunctions.selectFilteringCondition('Empty', dropdownList);
             fix.detectChanges();
             GridFunctions.openFilterDD(fix.debugElement);
@@ -4271,7 +4271,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cascadeButton = GridFunctions.getExcelFilterCascadeButton(fix);
 
             // Verify that custom filter dropdown (the submenu) is not visible.
-            let subMenu = fix.nativeElement.querySelector('.igx-drop-down__list--empty.igx-toggle--hidden');
+            let subMenu = fix.nativeElement.querySelector('.igx-drop-down__list.igx-toggle--hidden');
             expect(subMenu).not.toBeNull();
 
             cascadeButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
