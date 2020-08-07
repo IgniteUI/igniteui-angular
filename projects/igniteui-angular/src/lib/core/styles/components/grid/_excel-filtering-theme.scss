@@ -21,6 +21,7 @@
         flex-grow: 1;
         box-shadow: igx-elevation($elevations, 12);
         overflow: auto;
+        min-width: rem(320px);
     }
 
     %grid-excel-filter--inline {
@@ -57,10 +58,9 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        width: 320px;
-        min-width: 320px;
         background: --var($theme, 'filtering-row-background');
-        border-radius: 4px;
+        // TODO The border-radius should not be hardcoded.
+        border-radius: rem(4px);
 
         @include igx-button-group(igx-button-group-theme(
             $shadow: none,
@@ -89,6 +89,16 @@
 
         [igxButton] + [igxButton] {
             margin-#{$left}: rem(4px);
+        }
+
+        %grid-excel-actions__action {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        %grid-excel-actions__action,
+        %grid-excel-actions--selected {
+            justify-content: center;
         }
     }
 
@@ -396,6 +406,10 @@
             ~ igx-date-picker {
                 margin-#{$left}: rem(16px);
             }
+        }
+
+        igx-buttongroup {
+            min-width: 30%;
         }
 
         [igxButton='icon'] {
