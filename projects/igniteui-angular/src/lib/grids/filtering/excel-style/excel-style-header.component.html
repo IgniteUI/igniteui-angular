@@ -1,0 +1,25 @@
+<header *ngIf="esf.column"
+        class="igx-excel-filter__menu-header">
+    <h4>{{ esf.column.header || esf.column.field }}</h4>
+    <div class="igx-excel-filter__menu-header-actions">
+        <button *ngIf="showSelecting"
+            igxButton="icon"
+            (click)="esf.onSelect()"
+            [ngClass]="esf.selectedClass()"
+        >
+            <igx-icon fontSet="material">done</igx-icon>
+        </button>
+        <button *ngIf="showPinning"
+            igxButton="icon"
+            (click)="esf.onPin()"
+        >
+            <igx-icon fontSet="pinning-icons" [name]="esf.column.pinned ? 'unpin' : 'pin'"></igx-icon>
+        </button>
+        <button *ngIf="showHiding"
+            igxButton="icon"
+            (click)="esf.onHideToggle()"
+        >
+            <igx-icon>{{ esf.column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
+        </button>
+    </div>
+</header>

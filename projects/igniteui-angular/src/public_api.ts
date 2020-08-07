@@ -69,6 +69,7 @@ export * from './lib/drop-down/public_api';
 export * from './lib/grids/hiding/hiding.module';
 export * from './lib/grids/common/enums';
 export * from './lib/grids/common/events';
+export * from './lib/grids/filtering/excel-style/public_api';
 export * from './lib/grids/grid/public_api';
 export * from './lib/grids/tree-grid/public_api';
 export * from './lib/grids/hierarchical-grid/public_api';
@@ -99,6 +100,8 @@ export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
 export * from './lib/date-range-picker/public_api';
 
+export * from './lib/grids/column-actions/column-actions-base.directive';
+export * from './lib/grids/column-actions/column-actions.component';
 
 /**
  * Exporter services, classes, interfaces and enums

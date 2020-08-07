@@ -51,7 +51,7 @@
         [ghostHost]="grid.outlet.nativeElement"
         [attr.droppable]="true"
         [igxColumnMovingDrop]="column"
-        (pointerdown)="activate()"
+        (pointerdown)="pointerdown($event)"
         (click)="groupClicked($event)"
         (pointerenter)="onPinterEnter()"
         (pointerleave)="onPointerLeave()"
