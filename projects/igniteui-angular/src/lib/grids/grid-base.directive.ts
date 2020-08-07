@@ -3357,24 +3357,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets the outlet used to attach the grid's overlays to.
+     * Gets/Sets the outlet used to attach the grid's overlays to.
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
+    @Input()
     get outlet() {
         return this.resolveOutlet();
+    }
+
+    set outlet(val: IgxOverlayOutletDirective) {
+        this._userOutletDirective = val;
     }
 
     protected resolveOutlet() {
         return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
     }
 
-    /**
-     * Sets the outlet used to attach the grid's overlays to.
-     */
-    set outlet(val: any) {
-        this._userOutletDirective = val;
-    }
 
     /**
      * Gets the default row height.
