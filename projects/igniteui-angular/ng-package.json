@@ -7,7 +7,6 @@
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
-      "core-js-pure",
       "hammerjs",
       "jszip",
       "resize-observer-polyfill",
