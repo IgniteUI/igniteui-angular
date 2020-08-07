@@ -1232,6 +1232,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return end;
     }
 
+    /**
+     * @hidden
+     * Reset scroll position.
+     * Needed in case scrollbar is hidden/detached but we still need to reset it.
+     */
+    public resetScrollPosition() {
+        this.scrollPosition = 0;
+        this.scrollComponent.scrollAmount = 0;
+        this.state.startIndex = 0;
+    }
+
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
@@ -1241,20 +1252,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
             this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
-                this.scrollPosition = 0;
-                // Need to reset the scrollAmount value here, because horizontalScrollBar is hidden, therefore
-                // onScroll event handler for VirtualHelperBaseDirective will not be called
-                this.scrollComponent.scrollAmount = 0;
+               this.resetScrollPosition();
             }
         }
         if (this.igxForScrollOrientation === 'vertical') {
             this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
             this.scrollComponent.size = this._calcHeight();
             if ( this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
-                this.scrollPosition = 0;
-                // Need to reset the scrollAmount value here, because verticalScrollBar is hidden, therefore
-                // onScroll event handler for VirtualHelperBaseDirective will not be called
-                this.scrollComponent.scrollAmount = 0;
+                this.resetScrollPosition();
             }
         }
         if (scrollable !== this.isScrollable()) {

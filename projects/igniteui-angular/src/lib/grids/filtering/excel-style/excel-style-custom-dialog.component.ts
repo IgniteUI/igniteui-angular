@@ -1,6 +1,5 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     Input,
     ChangeDetectorRef,
     ViewChild,
@@ -22,7 +21,6 @@ import {
 } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
-    ConnectedPositioningStrategy,
     AutoPositionStrategy,
     OverlaySettings,
     VerticalAlignment,
@@ -35,17 +33,18 @@ import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } fr
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
+import { Subject } from 'rxjs';
 
 /**
  * @hidden
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-custom-dialog',
     templateUrl: './excel-style-custom-dialog.component.html'
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
+    private destroy$ = new Subject<boolean>();
 
     @Input()
     public expressionsList = new Array<ExpressionUI>();

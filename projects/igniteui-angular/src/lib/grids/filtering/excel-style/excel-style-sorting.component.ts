@@ -1,86 +1,74 @@
 import {
     Component,
-    ChangeDetectionStrategy,
     ViewChild,
-    Input,
-    AfterViewInit,
     OnDestroy,
-    OnChanges,
-    SimpleChanges
+    HostBinding,
+    ChangeDetectorRef
 } from '@angular/core';
-import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { DisplayDensity } from '../../../core/density';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { GridType } from '../../common/grid.interface';
+import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 
 /**
- * @hidden
+ * A component used for presenting Excel style column sorting UI.
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-sorting',
     templateUrl: './excel-style-sorting.component.html'
 })
-export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class IgxExcelStyleSortingComponent implements OnDestroy {
     private destroy$ = new Subject<boolean>();
 
-    @Input()
-    public column: IgxColumnComponent;
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class') class = 'igx-excel-filter__sort';
 
-    @Input()
-    public grid: GridType;
-
-    @Input()
-    public displayDensity: DisplayDensity;
-
-    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent, static: true })
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('sortButtonGroup', { read: IgxButtonGroupComponent })
     public sortButtonGroup: IgxButtonGroupComponent;
 
-    constructor() {}
-
-    ngAfterViewInit(): void {
-        this.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.updateSelectedButtons(this.column.field);
+    constructor(public esf: IgxGridExcelStyleFilteringComponent, private cdr: ChangeDetectorRef) {
+        this.esf.sortingChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.updateSelectedButtons(this.esf.column.field);
         });
-        this.updateSelectedButtons(this.column.field);
-    }
+     }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.column && !changes.column.firstChange) {
-            this.updateSelectedButtons(changes.column.currentValue.field);
-        }
-    }
-
     private updateSelectedButtons(fieldName: string) {
-        const sortIndex = this.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
+        const sortIndex = this.esf.grid.sortingExpressions.findIndex(s => s.fieldName === fieldName);
 
+        this.cdr.detectChanges();
         this.sortButtonGroup.buttons.forEach((b, i) => {
             this.sortButtonGroup.deselectButton(i);
         });
 
         if (sortIndex !== -1 ) {
-            const sortDirection = this.grid.sortingExpressions[sortIndex].dir;
+            const sortDirection = this.esf.grid.sortingExpressions[sortIndex].dir;
             this.sortButtonGroup.selectButton(sortDirection - 1);
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSortButtonClicked(sortDirection) {
         if (this.sortButtonGroup.selectedIndexes.length === 0) {
-            if (this.grid.isColumnGrouped(this.column.field)) {
+            if (this.esf.grid.isColumnGrouped(this.esf.column.field)) {
                 this.sortButtonGroup.selectButton(sortDirection - 1);
             } else {
-                this.grid.clearSort(this.column.field);
+                this.esf.grid.clearSort(this.esf.column.field);
             }
         } else {
-            this.grid.sort({ fieldName: this.column.field, dir: sortDirection, ignoreCase: true });
+            this.esf.grid.sort({ fieldName: this.esf.column.field, dir: sortDirection, ignoreCase: true });
         }
     }
 }

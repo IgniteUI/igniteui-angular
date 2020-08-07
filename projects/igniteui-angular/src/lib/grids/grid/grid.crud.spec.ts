@@ -2,11 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs } from '../common/events';
+import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { IgxGridModule } from './public_api';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { first } from 'rxjs/operators';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 
@@ -139,6 +140,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
     it('should support updating a row through the grid API', () => {
         spyOn(grid.onRowEdit, 'emit').and.callThrough();
+        const doneSpy = spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
         // Update non-existing row
         grid.updateRow({ index: -100, value: -100 }, 100);
@@ -146,29 +148,87 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
         expect(grid.data[0].index).not.toEqual(-100);
-
-        // Update an existing row
-        grid.updateRow('change', 1);
-        fix.detectChanges();
-
-        const row = grid.rowList.toArray()[0];
-        // TODO: onRowEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: 1,
-            rowData: { index: 200, value: 200 },
+            rowData: { index: 1, value: 1 },
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
             cancel: false,
             owner: grid
         };
 
-        expect(grid.onRowEdit.emit).toHaveBeenCalledWith(args);
+        const doneArgs: IGridEditDoneEventArgs = {
+            rowID: 200,
+            rowData: { index: 200, value: 200 },
+            oldValue: { index: 1, value: 1 },
+            newValue: { index: 200, value: 200 },
+            owner: grid
+        };
+
+        (grid as IgxGridComponent).onRowEdit.pipe(first()).subscribe(e => {
+            expect(e).toEqual(args);
+            expect(e.rowData).toBe(grid.dataView[0]);
+            expect(e.rowData).toBe(e.oldValue);
+        });
+        // Update an existing row
+        grid.updateRow(args.newValue, 1);
+        fix.detectChanges();
+
+        expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+        expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+        expect(grid.rowEditDone.emit).toHaveBeenCalledWith(doneArgs);
+
+        const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+        expect(spyDoneArgs.rowData).toBe(grid.dataView[0]);
+        expect(spyDoneArgs.rowData).toBe(spyDoneArgs.newValue);
+
         expect(grid.rowList.first.cells.first.value).toEqual(200);
         expect(grid.data[0].index).toEqual(200);
     });
 
+    it('should support updating a row through the grid API and event handler', () => {
+        spyOn(grid.onRowEdit, 'emit').and.callThrough();
+        spyOn(grid.rowEditDone, 'emit').and.callThrough();
+
+        const args: IGridEditEventArgs = {
+            rowID: 1,
+            rowData: { index: 1, value: 1 },
+            oldValue: { index: 1, value: 1 },
+            newValue: { index: 777, value: 777 },
+            cancel: false,
+            owner: grid
+        };
+
+        (grid as IgxGridComponent).onRowEdit.pipe(first()).subscribe(e => {
+            expect(e).toEqual(args);
+            expect(e.rowData).toBe(grid.dataView[0]);
+            expect(e.rowData).toBe(e.oldValue);
+        });
+
+        const handlerUpdateArgs: IGridEditDoneEventArgs = {
+            rowID: 777,
+            rowData: { index: 777, value: 777 },
+            oldValue: { index: 1, value: 1 },
+            newValue: { index: 777, value: 777 },
+            owner: grid
+        };
+
+        // Update an existing cell - changing the new value in the event
+        grid.updateRow(666, 1, 'index');
+        fix.detectChanges();
+
+        expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+        expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+
+        // expect(grid.onRowEdit.emit).toHaveBeenCalledWith(args);
+        expect(grid.rowEditDone.emit).toHaveBeenCalledWith(handlerUpdateArgs);
+        expect(grid.rowList.first.cells.first.value).toEqual(777);
+        expect(grid.data[0].index).toEqual(777);
+    });
+
     it('should support updating a cell value through the grid API', () => {
         spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
         // Update a non-existing cell
         grid.updateCell(-100, 100, 'index');
@@ -176,11 +236,10 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
         const cell = grid.getCellByColumn(0, 'index');
 
-        // TODO: onCellEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,
-            rowData: { index: 200, value: 1 },
+            rowData: { index: 1, value: 1 },
             oldValue: 1,
             newValue: 200,
             cancel: false,
@@ -188,16 +247,77 @@ describe('IgxGrid - CRUD operations #grid', () => {
             owner: grid
         };
 
+        const doneArgs: IGridEditDoneEventArgs = {
+            rowID: cell.cellID.rowID,
+            cellID: cell.cellID,
+            rowData: { index: 200, value: 1 },
+            oldValue: 1,
+            newValue: 200,
+            column: cell.column,
+            owner: grid
+        };
+
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
         expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch('-100');
 
+        (grid as IgxGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+            expect(e).toEqual(args);
+            expect(e.rowData).toBe(grid.dataView[0]);
+            expect(e.rowData.index).toBe(e.oldValue);
+        });
         // Update an existing cell
-        grid.updateCell('change', 1, 'index');
+        grid.updateCell(200, 1, 'index');
         fix.detectChanges();
 
-        expect(grid.onCellEdit.emit).toHaveBeenCalledWith(args);
+        expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
+        expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+        expect(grid.cellEditDone.emit).toHaveBeenCalledWith(doneArgs);
+
+        const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
+        expect(spyDoneArgs.rowData).toBe(grid.dataView[0]);
+
         expect(grid.rowList.first.cells.first.value).toEqual(200);
         expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('200');
+    });
+
+    it('should support updating a cell value through the grid API and event handler', () => {
+        spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        spyOn(grid.cellEditDone, 'emit').and.callThrough();
+
+        const cell = grid.getCellByColumn(0, 'index');
+
+        const args: IGridEditEventArgs = {
+            rowID: cell.cellID.rowID,
+            cellID: cell.cellID,
+            rowData: { index: 1, value: 1 },
+            oldValue: 1,
+            newValue: 777,
+            cancel: false,
+            column: cell.column,
+            owner: grid
+        };
+
+        const handlerUpdateArgs: IGridEditDoneEventArgs = {
+            rowID: cell.cellID.rowID,
+            cellID: cell.cellID,
+            rowData: { index: 777, value: 1 },
+            oldValue: 1,
+            newValue: 777,
+            column: cell.column,
+            owner: grid
+        };
+
+        (grid as IgxGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+            expect(e).toEqual(args);
+        });
+
+        // Update an existing cell - changing the new value in the event to 777
+        grid.updateCell(666, 1, 'index');
+        fix.detectChanges();
+
+        expect(grid.cellEditDone.emit).toHaveBeenCalledWith(handlerUpdateArgs);
+        expect(grid.rowList.first.cells.first.value).toEqual(777);
+        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('777');
     });
 
     it('should support updating a cell value through the cell object', () => {
@@ -401,8 +521,8 @@ export class DefaultCRUDGridComponent {
     }
 
     public editDone(event: IGridEditEventArgs) {
-        if (event.newValue === 'change') {
-            event.newValue = event.cellID ? 200 : { index: 200, value: 200 };
+        if (event.newValue === 666) {
+            event.newValue = event.cellID ? 777 : { index: 777, value: 777 };
         }
     }
 }

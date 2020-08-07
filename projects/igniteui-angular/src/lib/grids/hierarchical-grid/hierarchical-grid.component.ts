@@ -339,6 +339,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
          this.rootGrid.hasChildrenKey;
          this.showExpandAll = this.parentIsland ?
          this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+
+        this.excelStyleFilteringComponents = this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents :
+            this.excelStyleFilteringComponents;
     }
 
     private updateSizes() {
