@@ -18,6 +18,7 @@
 /// @prop {Number} border-radius [1] - The border radius used for badge. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-badge
+/// @requires {Map} $_default-elevation-badge
 /// @see $default-palette
 $_light-badge: extend(
     $_default-shape-badge,
@@ -53,6 +54,7 @@ $_fluent-badge: extend($_light-badge);
 /// @requires {function} extend
 /// @requires {Map} $_light-badge
 /// @requires {Map} $_bootstrap-shape-badge
+/// @requires {Map} $_bootstrap-elevation-badge
 $_bootstrap-badge: extend(
     $_light-badge,
     $_bootstrap-shape-badge,

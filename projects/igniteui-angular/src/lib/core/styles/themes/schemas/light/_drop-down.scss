@@ -31,6 +31,7 @@
 /// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-drop-down
+/// @requires {Map} $_default-elevation-drop-down
 /// @see $default-palette
 $_light-drop-down: extend(
     $_default-shape-drop-down,
@@ -128,6 +129,7 @@ $_light-drop-down: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
 /// @requires {Map} $_fluent-shape-drop-down
+/// @requires {Map} $_fluent-elevation-drop-down
 $_fluent-drop-down: extend(
     $_light-drop-down,
     $_fluent-shape-drop-down,
@@ -181,6 +183,7 @@ $_fluent-drop-down: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
 /// @requires {Map} $_bootstrap-shape-drop-down
+/// @requires {Map} $_bootstrap-elevation-drop-down
 $_bootstrap-drop-down: extend(
     $_light-drop-down,
     $_bootstrap-shape-drop-down,
@@ -250,6 +253,7 @@ $_bootstrap-drop-down: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
 /// @requires {Map} $_indigo-shape-drop-down
+/// @requires {Map} $_indigo-elevation-drop-down
 $_indigo-drop-down: extend(
     $_light-drop-down,
     $_indigo-shape-drop-down,
