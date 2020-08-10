@@ -17,9 +17,10 @@
 /// @property {Map} fill-color-success [igx-color: ('success')] - The track success fill color.
 /// @property {Color} stripes-color [rgba(#fff, .7)] - The track stripes color.
 /// @property {Map} text-color [igx-color: ('grays', 700)] - The track value text color.
+/// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
-/// @prop {Number} track-border-radius [0] - The border radius fraction, between 0 - 8 to be used fot the progress bar track.
-///
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-progress
 /// @see $default-palette
 $_light-progress-linear: extend(
     $_default-shape-progress,
@@ -60,9 +61,10 @@ $_light-progress-linear: extend(
 
 /// Generates a fluent progress-linear schema.
 /// @type {Map}
-/// @prop {Number} track-border-radius [0] - The border radius fraction, between 0 - 8 to be used fot the progress bar track.
+/// @prop {Number} track-border-radius [0] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-progress-linear
+/// @requires $_fluent-shape-progress
 $_fluent-progress-linear: extend(
     $_light-progress-linear,
     $_fluent-shape-progress,
@@ -76,10 +78,11 @@ $_fluent-progress-linear: extend(
 ///
 /// @property {Map} track-color [igx-color: ('grays', 200)] - The main track color.
 /// @property {Color} stripes-color [rgba(#fff, .15)] - The track stripes color.
-/// @prop {Number} track-border-radius [4px] - The border radius fot the progress bar track.
+/// @prop {Number} track-border-radius [4px] - The border radius used for the progress bar track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires $_light-progress-linear
+/// @requires $_bootstrap-shape-progress
 $_bootstrap-progress-linear: extend(
     $_light-progress-linear,
     $_bootstrap-shape-progress,

@@ -1,5 +1,3 @@
-@import '../shape/ripple';
-
 ////
 /// @group schemas
 /// @access public
@@ -12,14 +10,11 @@
 /// @property {Map} color [igx-color: ('grays', 800)] - The color of the ripple.
 ///
 /// @see $default-palette
-$_light-ripple: extend(
-    $_default-shape-ripple,
-    (
-        variant: 'material',
+$_light-ripple: (
+    variant: 'material',
 
-        color: (
-            igx-color: ('grays', 800)
-        )
+    color: (
+        igx-color: ('grays', 800)
     )
 );
 
