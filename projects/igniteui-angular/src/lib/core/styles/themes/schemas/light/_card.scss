@@ -16,9 +16,12 @@
 /// @prop {Map} actions-text-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The text color of the card buttons.
 /// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [8] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for card date.
+/// @prop {Number} border-radius [.17] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} outline-color [igx-color: ('grays', 400)] - The outline color of an outlined type card.
 ///
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-card
+/// @requires {Map} $_default-elevation-card
 /// @see $default-palette
 $_light-card: extend(
     $_default-shape-card,
@@ -65,10 +68,12 @@ $_light-card: extend(
 /// @prop {Map} outline-color [igx-color: ('grays', 200)] - The outline color of an outlined type card.
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} border-radius [2px] - The border-radius used for card.
+/// @prop {Number} border-radius [2px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-card
+/// @requires {Map} $_fluent-shape-card
+/// @requires {Map} $_fluent-elevation-card
 $_fluent-card: extend(
     $_light-card,
     $_fluent-shape-card,
@@ -92,9 +97,11 @@ $_fluent-card: extend(
 /// @prop {Map} actions-text-color [igx-color: ('grays', 900)] - The text color of the card buttons.
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} border-radius [4px] - The border-radius used for card.
+/// @prop {Number} border-radius [4px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-card
+/// @requires {Map} $_bootstrap-shape-card
+/// @requires {Map} $_bootstrap-elevation-card
 $_bootstrap-card: extend(
     $_light-card,
     $_bootstrap-shape-card,
@@ -135,9 +142,11 @@ $_bootstrap-card: extend(
 /// @prop {Map} actions-text-color [igx-color: ('grays', 600)] - The text color of the card buttons.
 /// @prop {Number} resting-elevation [4] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [6] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} border-radius [3px] - The border-radius used for card.
+/// @prop {Number} border-radius [3px] - The border radius used for card. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-card
+/// @requires {Map} $_indigo-shape-card
+/// @requires {Map} $_indigo-elevation-card
 $_indigo-card: extend(
     $_light-card,
     $_indigo-shape-card,
