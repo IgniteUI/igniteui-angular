@@ -88,7 +88,7 @@ $_bootstrap-tooltip: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-tooltip
-/// @requires {Map} $_indigo-shape-tooltip,
+/// @requires {Map} $_indigo-shape-tooltip
 $_indigo-tooltip: extend(
     $_light-tooltip,
     $_indigo-shape-tooltip,

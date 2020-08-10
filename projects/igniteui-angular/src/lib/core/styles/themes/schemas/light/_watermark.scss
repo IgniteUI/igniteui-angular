@@ -58,7 +58,7 @@ $_fluent-watermark: extend(
 /// @prop {Number} border-radius [4px] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
-/// @requires {Map} $_bootstrap-shape-watermark,
+/// @requires {Map} $_bootstrap-shape-watermark
 $_bootstrap-watermark: extend(
     $_light-watermark,
     $_bootstrap-shape-watermark,
@@ -75,7 +75,7 @@ $_bootstrap-watermark: extend(
 /// @prop {Number} border-radius [1] - The border radius used for watermark. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-watermark
-/// @requires {Map} $_indigo-shape-watermark,
+/// @requires {Map} $_indigo-shape-watermark
 $_indigo-watermark: extend(
     $_light-watermark,
     $_indigo-shape-watermark,

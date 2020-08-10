@@ -67,7 +67,6 @@
     ],
     "dependencies": {
         "@types/hammerjs": "^2.0.36",
-        "core-js-pure": "^3.6.5",
         "hammerjs": "^2.0.8",
         "jszip": "^3.5.0",
         "tslib": "^2.0.0",
@@ -83,7 +82,7 @@
         "web-animations-js": "^2.3.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~10.0.600"
+        "@igniteui/angular-schematics": "~10.1.610-beta.0"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
