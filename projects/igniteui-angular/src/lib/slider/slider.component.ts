@@ -620,7 +620,7 @@ export class IgxSliderComponent implements
     @Input()
     public set value(value: number | IRangeSliderValue) {
         if (this._hasViewInit) {
-            this.setValue(value);
+            this.setValue(value, true);
             this.positionHandlersAndUpdateTrack();
         } else {
             this._value = value;
@@ -989,7 +989,7 @@ export class IgxSliderComponent implements
     }
 
     public ngAfterContentInit() {
-        this.setValue(this._value);
+        this.setValue(this._value, false);
     }
 
     /**
@@ -1415,15 +1415,20 @@ export class IgxSliderComponent implements
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
 
-    public setValue(value: number | IRangeSliderValue) {
+    public setValue(value: number | IRangeSliderValue, triggerChange: boolean) {
+        let res;
         if (!this.isRange) {
             this.upperValue = value as number - (value as number % this.step);
-            this._onChangeCallback(this.upperValue);
+            res = this.upperValue;
         } else {
             value = this.validateInitialValue(value as IRangeSliderValue);
             this.upperValue = (value as IRangeSliderValue).upper;
             this.lowerValue = (value as IRangeSliderValue).lower;
-            this._onChangeCallback({lower: this.lowerValue, upper: this.upperValue});
+            res = {lower: this.lowerValue, upper: this.upperValue};
+        }
+
+        if (triggerChange) {
+            this._onChangeCallback(res);
         }
     }
 
