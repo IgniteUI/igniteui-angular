@@ -105,7 +105,7 @@ $_fluent-time-picker: extend(
 /// @prop {Number} active-item-border-radius [4px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-time-picker
-/// @requires $_bootstrap-shape-time-picker,
+/// @requires $_bootstrap-shape-time-picker
 $_bootstrap-time-picker: extend(
     $_light-time-picker,
     $_bootstrap-shape-time-picker,
@@ -138,7 +138,7 @@ $_bootstrap-time-picker: extend(
 /// @prop {Number} active-item-border-radius [20px] - The border radius used for the highlight of the active item in the time-picker. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-time-picker
-/// @requires $_indigo-shape-time-picker,
+/// @requires $_indigo-shape-time-picker
 $_indigo-time-picker: extend(
     $_light-time-picker,
     $_indigo-shape-time-picker,

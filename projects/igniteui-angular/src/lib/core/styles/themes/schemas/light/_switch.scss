@@ -157,7 +157,7 @@ $_fluent-switch: extend(
 ///
 /// @requires {function} extend
 /// @requires {Map} $_fluent-switch
-/// @requires {Map} $_bootstrap-shape-switch,
+/// @requires {Map} $_bootstrap-shape-switch
 $_bootstrap-switch: extend(
     $_fluent-switch,
     $_bootstrap-shape-switch,

@@ -125,7 +125,7 @@ $_fluent-tabs: extend($_light-tabs, $_fluent-shape-tabs);
 /// @property {Number} border-radius [4px] - The border radius used for tabs. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-tabs
-/// @requires {Map} $_bootstrap-shape-tabs,
+/// @requires {Map} $_bootstrap-shape-tabs
 $_bootstrap-tabs: extend(
     $_light-tabs,
     $_bootstrap-shape-tabs,

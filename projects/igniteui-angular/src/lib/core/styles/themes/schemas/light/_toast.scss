@@ -40,7 +40,7 @@ $_light-toast: extend(
 /// @prop {Number} border-radius [2px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-toast
-/// @requires $_fluent-shape-toast,
+/// @requires $_fluent-shape-toast
 $_fluent-toast: extend(
     $_light-toast,
     $_fluent-shape-toast,
