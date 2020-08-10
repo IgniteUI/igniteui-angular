@@ -17,11 +17,6 @@
         @extend %igx-drop-down__list !optional;
     }
 
-    @include e(list, $m: empty) {
-        @extend %igx-drop-down__list !optional;
-        @extend %igx-drop-down__list--empty !optional;
-    }
-
     @include e(list-scroll) {
         @extend %igx-drop-down__list-scroll !optional;
     }
