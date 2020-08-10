@@ -21,6 +21,7 @@
 ///
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-card
+/// @requires {Map} $_default-elevation-card
 /// @see $default-palette
 $_light-card: extend(
     $_default-shape-card,
@@ -72,6 +73,7 @@ $_light-card: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-card
 /// @requires {Map} $_fluent-shape-card
+/// @requires {Map} $_fluent-elevation-card
 $_fluent-card: extend(
     $_light-card,
     $_fluent-shape-card,
@@ -99,6 +101,7 @@ $_fluent-card: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-card
 /// @requires {Map} $_bootstrap-shape-card
+/// @requires {Map} $_bootstrap-elevation-card
 $_bootstrap-card: extend(
     $_light-card,
     $_bootstrap-shape-card,
@@ -143,6 +146,7 @@ $_bootstrap-card: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-card
 /// @requires {Map} $_indigo-shape-card
+/// @requires {Map} $_indigo-elevation-card
 $_indigo-card: extend(
     $_light-card,
     $_indigo-shape-card,
