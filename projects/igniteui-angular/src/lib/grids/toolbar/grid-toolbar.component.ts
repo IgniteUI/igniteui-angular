@@ -417,9 +417,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     public onClosingDropDown(args) {
         const activeElem = document.activeElement;
 
-        if (!args.event && (activeElem.className.includes('igx-column-hiding') ||
-        activeElem.className.includes('igx-checkbox__input')) &&
-            activeElem !== this.grid.nativeElement &&
+        if (!args.event && activeElem !== this.grid.nativeElement &&
             !this.columnHidingButton.nativeElement.contains(activeElem) &&
             !this.columnPinningButton.nativeElement.contains(activeElem)) {
             args.cancel = true;
