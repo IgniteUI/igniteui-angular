@@ -25,7 +25,9 @@
 /// @prop {Map} item-selected-border-color [igx-color: ('grays', 400), hexrgba: #ccc] - The border color for a selected item from the button group.
 /// @prop {Map} item-selected-hover-background [igx-color: ('grays', 500)] - The background color for a selected item in hover or focus state in the button group.
 /// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the badge shadow.
-/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for button-group component.
+/// @prop {Number} border-radius [.2] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-button-group
 /// @see $default-palette
 $_light-button-group: extend(
     $_default-shape-button-group,
@@ -95,10 +97,11 @@ $_light-button-group: extend(
 /// @prop {Color} disabled-background-color [transparent] - The background color for a disabled item in the button group.
 ///
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the badge shadow.
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for button-group component.
+/// @prop {Number} border-radius [2px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-button-group
+/// @requires {Map} $_fluent-shape-button-group
 $_fluent-button-group: extend(
     $_light-button-group,
     $_fluent-shape-button-group,
@@ -146,8 +149,10 @@ $_fluent-button-group: extend(
 /// @prop {Map} disabled-background-color [igx-color: ('primary', 500), lighten: 35%] - The background color for a disabled item in the button group.
 /// @prop {Map} disabled-text-color [igx-color: ('primary', 500), lighten: 20%]- The text/icon color for a disabled item in the button group.
 /// @prop {Map} item-disabled-border [igx-color: ('primary', 500), lighten: 35%] - The border color for a disabled item in the button group.
+/// @prop {Number} border-radius [4px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-button-group
+/// @requires {Map} $_bootstrap-shape-button-group
 $_bootstrap-button-group: extend(
     $_light-button-group,
     $_bootstrap-shape-button-group,
@@ -218,8 +223,10 @@ $_bootstrap-button-group: extend(
 /// @prop {Map} disabled-background-color [igx-color: ('grays', 100)] - The background color for a disabled item in the button group.
 /// @prop {Map} disabled-text-color [igx-color: ('grays', 400)]- The text/icon color for a disabled item in the button group.
 /// @prop {Map} item-disabled-border [igx-color: ('grays', 100)] - The border color for a disabled item in the button group.
+/// @prop {Number} border-radius [8px] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-button-group
+/// @requires {Map} $_indigo-shape-button-group
 $_indigo-button-group: extend(
     $_light-button-group,
     $_indigo-shape-button-group,

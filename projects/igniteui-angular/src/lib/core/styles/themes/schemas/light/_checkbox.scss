@@ -14,9 +14,11 @@
 /// @prop {Map} fill-color [igx-color: ('secondary', 500)] - The checked border and fill colors.
 /// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled border and fill colors.
 /// @prop {Map} disabled-color-label [igx-color: ('grays', 400)] - The disabled color of the label.
-/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-10 to be used for checkbox.
-/// @prop {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
+/// @prop {Number} border-radius [.2] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [1] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 ///
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-checkbox
 /// @see $default-palette
 $_light-checkbox: extend(
     $_default-shape-checkbox,
@@ -51,11 +53,12 @@ $_light-checkbox: extend(
 /// @prop {Map} empty-color [igx-color: ('grays', 900)] - The unchecked border color.
 /// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
-/// @prop {Number} border-radius [2px] - The border radius used for checkbox.
-/// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple.
+/// @prop {Number} border-radius [2px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-checkbox
+/// @requires {Map} $_fluent-shape-checkbox
 $_fluent-checkbox: extend(
     $_light-checkbox,
     $_fluent-shape-checkbox,
@@ -81,10 +84,12 @@ $_fluent-checkbox: extend(
 /// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
-/// @prop {Number} border-radius [4px] - The border radius used for checkbox.
+/// @prop {Number} border-radius [4px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [4px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-checkbox
+/// @requires {Map} $_bootstrap-shape-checkbox
 $_bootstrap-checkbox: extend(
     $_light-checkbox,
     $_bootstrap-shape-checkbox,
@@ -113,10 +118,12 @@ $_bootstrap-checkbox: extend(
 /// @prop {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
 /// @prop {Color} disabled-color-label [igx-color: ('grays', 300)] - The disabled label color.
-/// @prop {Number} border-radius [3px] - The border radius used for the checkbox.
+/// @prop {Number} border-radius [3px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-checkbox
+/// @requires {Map} $_indigo-shape-checkbox
 $_indigo-checkbox: extend(
     $_light-checkbox,
     $_indigo-shape-checkbox,

@@ -1,23 +1,29 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// @type Map
+/// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the drop-down shadow.
 $_default-elevation-drop-down: (
     elevation: 8
 );
 
 /// @type Map
+/// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the drop-down shadow.
 $_fluent-elevation-drop-down: (
     elevation: 4
 );
 
+/// @type Map
+/// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the drop-down shadow.
 $_bootstrap-elevation-drop-down: (
     elevation: 0
 );
 
+/// @type Map
+/// @prop {Number} elevation [3] - The elevation level, between 0-24, to be used for the drop-down shadow.
 $_indigo-elevation-drop-down: (
     elevation: 3
 );
