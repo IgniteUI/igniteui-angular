@@ -65,11 +65,14 @@
 /// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
 ///
-/// @prop {Number} flat-border-radius [.2] - The border radius fraction used for flat button.
-/// @prop {Number} raised-border-radius [.2] - The border radius fraction used for raised button.
-/// @prop {Number} outlined-border-radius [.2] - The border radius fraction used for outlined button.
-/// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
-/// @prop {Number} icon-border-radius [1] - The border radius fraction used for icon button.
+/// @prop {Number} flat-border-radius [.2] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} raised-border-radius [.2] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} outlined-border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} icon-border-radius [1] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-button
+/// @requires {Map} $_default-elevation-button
 /// @see $default-palette
 $_light-button: extend(
     $_default-shape-button,
@@ -269,13 +272,15 @@ $_light-button: extend(
 /// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
 ///
-/// @prop {Number} flat-border-radius [0] - The border radius fraction used for flat button.
-/// @prop {Number} raised-border-radius [2px] - The border radius fraction used for raised button.
-/// @prop {Number} outlined-border-radius [2px] - The border radius fraction used for outlined button.
-/// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
-/// @prop {Number} icon-border-radius [0] - The border radius fraction used for icon button.
+/// @prop {Number} flat-border-radius [0] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} raised-border-radius [2px] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} outlined-border-radius [2px] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} icon-border-radius [0] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-button
+/// @requires {Map} $_fluent-shape-button
+/// @requires {Map} $_fluent-elevation-button
 $_fluent-button: extend(
     $_light-button,
     $_fluent-shape-button,
@@ -420,8 +425,23 @@ $_fluent-button: extend(
 /// @prop {Map} disabled-background [igx-color: ('primary', 500), lighten: 35%] - the disabled background color.
 /// @prop {Map} outlined-disabled-outline-color [igx-color: ('primary', 500), lighten: 35%] - the border-color for outlined buttons.
 ///
+/// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} raised-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} fab-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+///
+/// @prop {Number} flat-border-radius [4px] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} raised-border-radius [4px] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} outlined-border-radius [4px] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} icon-border-radius [4px] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
+///
 /// @requires {function} extend
 /// @requires {Map} $_light-button
+/// @requires {Map} $_bootstrap-shape-button
+/// @requires {Map} $_bootstrap-elevation-button
 $_bootstrap-button: extend(
     $_light-button,
     $_bootstrap-shape-button,
@@ -566,8 +586,23 @@ $_bootstrap-button: extend(
 /// @prop {Map} icon-focus-background [igx-color: ('grays', 300)] - The focus icon color of an icon button.
 /// @prop {Color} icon-focus-color [igx-color: ('grays', 600)] - The focus icon color of an icon button.
 ///
+/// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} raised-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} fab-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+///
+/// @prop {Number} flat-border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} raised-border-radius [1] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} outlined-border-radius [1] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} icon-border-radius [1] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
+///
 /// @requires {function} extend
 /// @requires {Map} $_light-button
+/// @requires {Map} $_indigo-shape-button
+/// @requires {Map} $_indigo-elevation-button
 $_indigo-button: extend(
     $_light-button,
     $_indigo-shape-button,

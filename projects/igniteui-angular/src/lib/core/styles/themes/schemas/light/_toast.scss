@@ -12,8 +12,12 @@
 ///
 /// @prop {Map} background [igx-color: ('grays', 600)] - The background color used for the toast.
 /// @prop {Map} text-color [igx-contrast-color: ('grays', 600)] - The text-color used for the toast.
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for the toast component.
+/// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the toast.
+/// @prop {Number} border-radius [1] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 ///
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-toast
+/// @requires {Map} $_default-elevation-toast
 /// @see $default-palette
 $_light-toast: extend(
     $_default-shape-toast,
@@ -33,9 +37,10 @@ $_light-toast: extend(
 
 /// Generates a fluent toast schema.
 /// @type {Map}
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the toast component.
+/// @prop {Number} border-radius [2px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires $_light-toast
+/// @requires $_fluent-shape-toast
 $_fluent-toast: extend(
     $_light-toast,
     $_fluent-shape-toast,
@@ -48,9 +53,12 @@ $_fluent-toast: extend(
 /// @type {Map}
 /// @prop {Map} background [#fff] - The background color used for the toast.
 /// @prop {Map} text-color [igx-color: ('grays', 600)] - The text-color used for the toast.
-/// @prop {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for the toast component.
+/// @prop {Number} elevation [10] - The elevation level, between 0-24, to be used for the toast.
+/// @prop {Number} border-radius [4px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-toast
+/// @requires {Map} $_bootstrap-shape-toast
+/// @requires {Map} $_bootstrap-elevation-toast
 $_bootstrap-toast: extend(
     $_light-toast,
     $_bootstrap-shape-toast,
@@ -70,10 +78,11 @@ $_bootstrap-toast: extend(
 /// @type {Map}
 ///
 /// @prop {Map} text-color [#fff] - The text-color used for the toast.
-/// @prop {Number} border-radius [24px] - The border radius used for the toast component.
+/// @prop {Number} border-radius [24px] - The border radius used for toast. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-toast
+/// @requires {Map} $_indigo-shape-toast
 $_indigo-toast: extend(
     $_light-toast,
     $_indigo-shape-toast,
