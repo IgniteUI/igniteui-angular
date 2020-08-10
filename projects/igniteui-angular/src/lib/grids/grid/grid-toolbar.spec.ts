@@ -382,7 +382,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const dropDownDiv = GridFunctions.getOverlay(fixture);
         expect(dropDownDiv).not.toBe(null);
-        expect(dropDownDiv.querySelector('igx-column-hiding')).not.toBe(null);
+        expect(dropDownDiv.querySelector('igx-column-actions')).not.toBe(null);
 
         GridFunctions.getColumnHidingButton(fixture).click();
     });
@@ -425,7 +425,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
 
         const dropDownDiv = GridFunctions.getOverlay(fixture);
         expect(dropDownDiv).not.toBe(null);
-        expect(dropDownDiv.querySelector('igx-column-pinning')).not.toBe(null);
+        expect(dropDownDiv.querySelector('igx-column-actions')).not.toBe(null);
 
         GridFunctions.getColumnPinningButton(fixture).click();
     });
