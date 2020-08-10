@@ -496,7 +496,7 @@ export class IgxNavigationDrawerComponent implements
         }
 
         if (changes.isOpen) {
-            this.setDrawerWidth(this.isOpen ? this.width : '');
+            this.setDrawerWidth(this.isOpen ? this.width : (this.miniTemplate ? this.miniWidth : ''));
         }
 
         if (changes.miniWidth) {
