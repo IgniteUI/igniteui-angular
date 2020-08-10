@@ -10,7 +10,7 @@
 4. **[DONE]** igxSelect Add igxHint support [#5584](https://github.com/IgniteUI/igniteui-angular/issues/5584)
 5. **[DONE]** igxGrid Hide the group area row [#5561](https://github.com/IgniteUI/igniteui-angular/issues/5561)
 6. **[DONE]** igxDateRangePickerComponent calendar should display selected range if both start and end are filled and valid [#7593](https://github.com/IgniteUI/igniteui-angular/issues/7593)
-7. **[DONE]**Add support for mixing px and % column widths [#5486](https://github.com/IgniteUI/igniteui-angular/issues/5486)
+7. **[DONE]** Add support for mixing px and % column widths [#5486](https://github.com/IgniteUI/igniteui-angular/issues/5486)
 8. **[DONE]** Do not close modal overlay on ESC key press [#7697](https://github.com/IgniteUI/igniteui-angular/issues/7697)
 9. **[DONE]** Themes: Add Dock Manager Support [#7541](https://github.com/IgniteUI/igniteui-angular/issues/7541)
 10. **[DONE]** igx-grid - pre-select rows [#6653](https://github.com/IgniteUI/igniteui-angular/issues/6653)
