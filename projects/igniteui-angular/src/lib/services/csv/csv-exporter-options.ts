@@ -7,6 +7,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     private _valueDelimiter;
     private _fileType;
+    private _fileTypeWithEncoding;
 
     constructor(fileName: string, fileType: CsvFileTypes) {
         super(fileName, IgxCsvExporterOptions.getExtensionFromFileType(fileType));
@@ -74,6 +75,56 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      */
     set fileType(value) {
         this.setFileType(value);
+    }
+
+     /**
+      * Gets the CSV file type and charset encoding.
+      * ```typescript
+      * let fileTypeWithEncoding = this.exportOptions.fileTypeWithEncoding;
+      * ```
+      * @memberof IgxCsvExporterOptions
+      */
+    get fileTypeWithEncoding() {
+        return this.resolveEncoding();
+    }
+
+    /**
+     * Sets the CSV file type and charset encoding.
+     * ```typescript
+     * this.exportOptions.fileTypeWithEncoding = 'text/csv;charset=utf-8;';
+     * ```
+     * @memberof IgxCsvExporterOptions
+     */
+    set fileTypeWithEncoding(value) {
+        this.setFileTypeWithEncoding(value);
+    }
+
+    private resolveEncoding() {
+        if (this._fileTypeWithEncoding === undefined) {
+            switch (this._fileType) {
+                case CsvFileTypes.CSV:
+                    return 'text/csv;charset=utf-8;';
+                case CsvFileTypes.TSV:
+                case CsvFileTypes.TAB:
+                    return 'text/tab-separated-values;charset=utf-8;';
+            }
+        } else {
+            return this._fileTypeWithEncoding;
+        }
+    }
+
+    private setFileTypeWithEncoding(value) {
+        if (value !== undefined && value !== null) {
+            switch (this._fileType) {
+                case CsvFileTypes.CSV:
+                    this._fileTypeWithEncoding = `text/csv;charset=${value};`;
+                    break;
+                case CsvFileTypes.TSV:
+                case CsvFileTypes.TAB:
+                    this._fileTypeWithEncoding = `text/tab-separated-values;charset=${value};`;
+                    break;
+            }
+        }
     }
 
     private setFileType(value) {

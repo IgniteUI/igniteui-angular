@@ -58,15 +58,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     }
 
     private saveFile(options: IgxCsvExporterOptions) {
-        switch (options.fileType) {
-            case CsvFileTypes.CSV:
-                this.exportFile(this._stringData, options.fileName, 'text/csv;charset=utf-8;');
-                break;
-            case CsvFileTypes.TSV:
-            case CsvFileTypes.TAB:
-                this.exportFile(this._stringData, options.fileName, 'text/tab-separated-values;charset=utf-8;');
-                break;
-        }
+        this.exportFile(this._stringData, options.fileName, options.fileTypeWithEncoding);
     }
 
     private exportFile(data: string, fileName: string, fileType: string): void {
