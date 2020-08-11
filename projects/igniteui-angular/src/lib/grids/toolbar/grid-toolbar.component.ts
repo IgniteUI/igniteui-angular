@@ -410,4 +410,17 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
             }
         }
     }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingDropDown(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnHidingButton.nativeElement.contains(activeElem) &&
+            !this.columnPinningButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
+    }
 }
