@@ -407,6 +407,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             const error = this.ngControl.control.validator({} as AbstractControl);
             this.inputGroup.isRequired = error && error.required;
             this.cdr.markForCheck();
+
+            // If validator is dynamically cleared,
+            // reset label's required class(asterisk) and IgxInputState #6896
+            } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator) {
+                this.input.valid = IgxInputState.INITIAL;
+                this.inputGroup.isRequired = false;
+                this.cdr.markForCheck();
         }
     }
     private setSelection(item: IgxDropDownItemBaseDirective) {
