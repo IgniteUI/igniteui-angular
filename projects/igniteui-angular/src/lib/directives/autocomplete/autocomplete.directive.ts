@@ -11,12 +11,13 @@ import {
     OnDestroy,
     Optional,
     Output,
-    Self
+    Self,
+    AfterViewInit
 } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Subject, Subscription } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
 import {
     AbsoluteScrollStrategy,
@@ -74,15 +75,18 @@ export interface AutocompleteOverlaySettings {
 @Directive({
     selector: '[igxAutocomplete]'
 })
-export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
+export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit {
+    private _opening = false;
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
-                @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
-                @Optional() protected group: IgxInputGroupComponent,
-                protected elementRef: ElementRef,
-                protected cdr: ChangeDetectorRef) {
+        @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
+        @Optional() protected group: IgxInputGroupComponent,
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef) {
         super(null);
     }
+    private destroy$ = new Subject();
+    private _lastListLength = 0;
 
     private defaultSettings: OverlaySettings = {
         modal: false,
@@ -91,11 +95,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         excludePositionTarget: true
     };
 
-    /** @hidden  @internal */
-    private subscriptions: Subscription[] = [];
-
     protected id: string;
-    protected dropDownOpened$ = new Subject<boolean>();
     protected get model() {
         return this.ngModel || this.formControl;
     }
@@ -293,31 +293,20 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             return;
         }
         this.target.close();
-        this.dropDownOpened$.next();
     }
 
     /**
      * Opens autocomplete drop down
      */
     public open() {
-        if (this.disabled || !this.collapsed) {
+        if (this.disabled || !this.collapsed || this._lastListLength === 0 || this._opening) {
             return;
         }
+        this._opening = true;
+        this.highlightFirstItem();
         // if no drop-down width is set, the drop-down will be as wide as the autocomplete input;
         this.target.width = this.target.width || (this.parentElement.clientWidth + 'px');
         this.target.open(this.settings);
-
-        // unsubscribe from previous subscriptions, before creating new subscriptions.
-        this.unsubscribe();
-
-        this.subscriptions.push(this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select));
-        this.subscriptions.push(this.target.onOpened.pipe(first()).subscribe(this.highlightFirstItem));
-        this.subscriptions.push(this.target.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.highlightFirstItem));
-    }
-
-    /** @hidden  @internal */
-    private unsubscribe() {
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     private get collapsed(): boolean {
@@ -354,7 +343,33 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /** @hidden */
     public ngOnDestroy() {
-        this.dropDownOpened$.complete();
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    public ngAfterViewInit() {
+        this._lastListLength = this.target.children.length || null;
+        this.target.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._lastListLength = this.target.children.length || 0;
+            if (this.target.children.length) {
+                if (!this.collapsed || this._opening) {
+                    this.highlightFirstItem();
+                    return;
+                } else {
+                    this.open();
+                }
+            } else {
+                this.highlightFirstItem();
+                this.close();
+            }
+        });
+        this.target.onOpening.pipe(takeUntil(this.destroy$)).subscribe((event: CancelableEventArgs) => {
+            if (event.cancel) {
+                this._opening = false;
+            }
+        });
+        this.target.onOpened.pipe(takeUntil(this.destroy$)).subscribe(() => this._opening = false);
+        this.target.onSelection.pipe(takeUntil(this.destroy$)).subscribe(this.select);
     }
 }
 
