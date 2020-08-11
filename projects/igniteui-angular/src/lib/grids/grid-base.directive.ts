@@ -4706,7 +4706,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected getComputedHeight(elem) {
-        return parseFloat(this.document.defaultView.getComputedStyle(elem).getPropertyValue('height'));
+        return elem.offsetHeight ? parseFloat(this.document.defaultView.getComputedStyle(elem).getPropertyValue('height')) : 0;
     }
     /**
      * @hidden
