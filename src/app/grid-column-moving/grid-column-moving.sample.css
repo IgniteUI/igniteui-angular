@@ -10,3 +10,14 @@
     margin-bottom: 16px;
     max-width: 900px;
 }
+
+.references {
+    font-size: .75em;
+}
+
+.references > p {
+    margin: 0;
+    letter-spacing: initial;
+    line-height: initial;
+    font-size: 1em;
+}
