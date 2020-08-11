@@ -119,7 +119,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      */
     private horizontalPush(connectedFit: ConnectedFit): number {
         const leftExtend = connectedFit.left;
-        const rightExtend = connectedFit.right - connectedFit.viewPortRect.right;
+        const rightExtend = connectedFit.right - connectedFit.viewPortRect.width;
         //  if leftExtend < 0 overlay goes beyond left end of the screen. We should push it back with exactly
         //  as much as it is beyond the screen.
         //  if rightExtend > 0 overlay goes beyond right end of the screen. We should push it back with the
@@ -141,7 +141,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      */
     private verticalPush(connectedFit: ConnectedFit): number {
         const topExtend = connectedFit.top;
-        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.bottom;
+        const bottomExtend = connectedFit.bottom - connectedFit.viewPortRect.height;
         if (topExtend < 0) {
             return Math.abs(topExtend);
         } else if (bottomExtend > 0) {
