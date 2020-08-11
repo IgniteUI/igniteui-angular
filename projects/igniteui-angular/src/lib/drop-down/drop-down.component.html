@@ -1,7 +1,4 @@
-<div [ngClass]="{
-    'igx-drop-down__list': items.length > 0,
-    'igx-drop-down__list--empty': items.length === 0 }"
-[style.width]="width"
+<div class="igx-drop-down__list" [style.width]="width"
 igxToggle
 (onAppended)="onToggleContentAppended()"
 (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
