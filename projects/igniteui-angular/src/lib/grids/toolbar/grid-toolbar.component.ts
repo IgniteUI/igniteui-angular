@@ -407,4 +407,17 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     ngAfterViewInit() {
         this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
     }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingDropDown(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnHidingButton.nativeElement.contains(activeElem) &&
+            !this.columnPinningButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
+    }
 }
