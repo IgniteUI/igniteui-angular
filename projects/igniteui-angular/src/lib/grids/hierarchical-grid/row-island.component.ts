@@ -51,7 +51,8 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
     template: ``,
-    providers: [IgxRowIslandAPIService]
+    providers: [IgxRowIslandAPIService,
+                IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
