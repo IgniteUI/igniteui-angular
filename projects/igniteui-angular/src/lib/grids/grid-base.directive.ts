@@ -4793,7 +4793,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         const height = Math.abs(gridHeight - renderedHeight);
 
-        if (height === 0 || isNaN(gridHeight)) {
+        if (Math.round(height) === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }
