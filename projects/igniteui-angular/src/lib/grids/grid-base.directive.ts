@@ -1197,6 +1197,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
+     * Emitted when cell exits edit mode.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (cellEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public cellEditExit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
      * Emitted when cell has been edited.
      * @remarks
      * Event is fired after editing is completed, when the cell is exiting edit mode.
