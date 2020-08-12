@@ -1,11 +1,25 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {ButtonGroupAlignment, DisplayDensityToken, IDisplayDensityOptions} from 'igniteui-angular';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    IgxInputGroupType,
+    ButtonGroupAlignment,
+    DisplayDensityToken,
+    IDisplayDensityOptions,
+    IButtonGroupEventArgs,
+} from 'igniteui-angular';
+
+interface Selection {
+    selected: boolean;
+    type?: IgxInputGroupType;
+    label: string;
+    togglable: boolean;
+}
 
 @Component({
     // tslint:disable-next-line:component-selector
+    encapsulation: ViewEncapsulation.None,
     selector: 'input-group-sample',
     styleUrls: ['input-group.sample.scss'],
-    templateUrl: 'input-group.sample.html'
+    templateUrl: 'input-group.sample.html',
 })
 export class InputGroupSampleComponent implements OnInit {
     public inputValue: any;
@@ -13,42 +27,59 @@ export class InputGroupSampleComponent implements OnInit {
     public isDisabled = false;
     public alignment = ButtonGroupAlignment.vertical;
     public density = 'comfortable';
-    public displayDensities;
-    public inputType = 'line';
-    public inputTypes;
+    public displayDensities: Selection[];
+    public inputType: IgxInputGroupType = 'line';
+    public inputTypes: Selection[];
     public inputSearchType = 'search';
     date = new Date();
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
+    constructor(
+        @Inject(DisplayDensityToken)
+        public displayDensityOptions: IDisplayDensityOptions
+    ) {}
 
     public ngOnInit(): void {
         this.displayDensities = [
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
-            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'compact', selected: this.density === 'compact', togglable: true }
+            {
+                label: 'comfortable',
+                selected: this.density === 'comfortable',
+                togglable: true,
+            },
+            {
+                label: 'cosy',
+                selected: this.density === 'cosy',
+                togglable: true,
+            },
+            {
+                label: 'compact',
+                selected: this.density === 'compact',
+                togglable: true,
+            },
         ];
 
         this.inputTypes = [
-            { selected: true, type: 'line', label: 'Line', togglable: true},
-            { selected: this.inputType === 'border', type: 'border', label: 'Border', togglable: true},
-            { selected: this.inputType === 'box', type: 'box', label: 'Box', togglable: true},
-            { selected: this.inputType === 'fluent', type: 'fluent', label: 'Fluent', togglable: true},
-            { selected: this.inputType === 'bootstrap', type: 'bootstrap', label: 'Bootstrap', togglable: true},
-            { selected: this.inputType === 'indigo', type: 'indigo', label: 'Indigo', togglable: true},
+            { selected: true, type: 'line', label: 'Line', togglable: true },
+            {
+                selected: this.inputType === 'border',
+                type: 'border',
+                label: 'Border',
+                togglable: true,
+            },
+            {
+                selected: this.inputType === 'box',
+                type: 'box',
+                label: 'Box',
+                togglable: true,
+            },
         ];
     }
 
-    public selectDensity(event) {
+    public selectDensity(event: IButtonGroupEventArgs) {
         this.density = this.displayDensities[event.index].label;
     }
 
-    public selectInoutType(event) {
+    public selectInputType(event: IButtonGroupEventArgs) {
         const currentType = this.inputTypes[event.index].type;
-        this.inputType = this.inputTypes[event.index].type;
-        if (currentType === 'fluent' ) {
-            this.inputSearchType = 'fluent_search';
-        } else {
-            this.inputSearchType = 'search';
-        }
+        this.inputType = currentType;
     }
 
     public disableFields() {
@@ -63,4 +94,3 @@ export class InputGroupSampleComponent implements OnInit {
         this.isRequired = !this.isRequired;
     }
 }
-

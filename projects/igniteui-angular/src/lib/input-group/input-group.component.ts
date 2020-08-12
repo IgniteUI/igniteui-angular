@@ -11,6 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
+    OnInit,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -35,11 +36,14 @@ enum IgxInputGroupEnum {
     line,
     box,
     border,
-    fluent,
-    bootstrap,
-    indigo,
     search,
-    fluent_search,
+}
+
+enum IgxInputGroupThemeEnum {
+    'material',
+    'fluent',
+    'bootstrap',
+    'indigo-design',
 }
 
 /**
@@ -47,17 +51,24 @@ enum IgxInputGroupEnum {
  */
 export type IgxInputGroupType = keyof typeof IgxInputGroupEnum;
 
+/**
+ * Determines the Input Group theme.
+ */
+export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
+
 @Component({
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [
         { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
+        { provide: Window, useValue: window },
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
-    implements IgxInputGroupBase {
+    implements IgxInputGroupBase, OnInit {
     private _type: IgxInputGroupType = 'line';
     private _filled = false;
+    private _variant: IgxInputGroupTheme = 'material';
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -213,6 +224,21 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     }
 
     /**
+     * Returns the theme of the `IgxInputGroupComponent`.
+     * The default is `material`.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit(){
+     *    let inputType = this.inputGroup.theme;
+     * }
+     * ```
+     */
+    public get theme(): IgxInputGroupTheme {
+        return this._variant;
+    }
+
+    /**
      * @hidden
      * @deprecated Use 'suppressInputAutofocus' instead.
      */
@@ -234,9 +260,21 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         public element: ElementRef<HTMLElement>,
         @Optional()
         @Inject(DisplayDensityToken)
-        private _displayDensityOptions: IDisplayDensityOptions
+        _displayDensityOptions: IDisplayDensityOptions,
+        private window: Window
     ) {
         super(_displayDensityOptions);
+    }
+
+    ngOnInit() {
+        // const variant = this.element.nativeElement.style.getPropertyValue('--igx-input-group-variant');
+        // const globalVariant = document.documentElement.style.getPropertyValue('--igx-input-group-variant');
+        // window.getComputedStyle(this._document.documentElement).
+        const variant = this.window
+            .getComputedStyle(this.element.nativeElement)
+            .getPropertyValue('--igx-input-group-variant')
+            .trim();
+        this._variant = variant as IgxInputGroupTheme;
     }
 
     /**
@@ -323,7 +361,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--fluent')
     public get isTypeFluent() {
-        return this._type === 'fluent';
+        return this._variant === 'fluent';
     }
 
     /**
@@ -338,7 +376,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--bootstrap')
     public get isTypeBootstrap() {
-        return this._type === 'bootstrap';
+        return this._variant === 'bootstrap';
     }
 
     /**
@@ -353,7 +391,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--indigo')
     public get isTypeIndigo() {
-        return this._type === 'indigo';
+        return this._variant === 'indigo-design';
     }
 
     /**
@@ -371,20 +409,20 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         return this._type === 'search';
     }
 
-    /**
-     * Returns whether the `IgxInputGroupComponent` type is fluentSearch.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeFluentSearch = this.inputGroup.isTypeFluentSearch;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--fluent-search')
-    public get isTypeFluentSearch() {
-        return this._type === 'fluent_search';
-    }
+    // /**
+    //  * Returns whether the `IgxInputGroupComponent` type is fluentSearch.
+    //  * ```typescript
+    //  * @ViewChild("MyInputGroup1")
+    //  * public inputGroup: IgxInputGroupComponent;
+    //  * ngAfterViewInit(){
+    //  *    let isTypeFluentSearch = this.inputGroup.isTypeFluentSearch;
+    //  * }
+    //  * ```
+    //  */
+    // @HostBinding('class.igx-input-group--fluent-search')
+    // public get isTypeFluentSearch() {
+    //     return this._variant === 'fluent';
+    // }
 
     /** @hidden */
     public get filled() {
