@@ -699,7 +699,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             thirdRow.toggle();
             fix.detectChanges();
 
-            const childGrid = rowIsland1.rowIslandAPI.getChildGrids()[0]
+            const childGrid = rowIsland1.rowIslandAPI.getChildGrids()[0];
             childGrid.selectedRows = ['20', '21'];
             fix.detectChanges();
             expect(hierarchicalGrid.selectedRows.length).toEqual(2);
