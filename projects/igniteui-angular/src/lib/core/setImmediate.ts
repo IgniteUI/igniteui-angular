@@ -20,9 +20,10 @@
  */
 
 // Note: Originally copied from core-js-pure package and modified. (https://github.com/zloirock/core-js)
-const windowLocation = window.location;
-let counter = 0;
+
 const queue = {};
+let counter = 0;
+let eventListenerAdded = false;
 
 const run = function (id) {
     if (queue.hasOwnProperty(id)) {
@@ -36,13 +37,14 @@ const listener = function (event) {
     run(event.data);
 };
 
-if (!window.setImmediate) {
-    window.addEventListener('message', listener, false);
-}
-
 export function setImmediate(cb: any) {
     if (window.setImmediate) {
         return window.setImmediate(cb);
+    }
+
+    if (!eventListenerAdded) {
+        eventListenerAdded = true;
+        window.addEventListener('message', listener, false);
     }
 
     const args = [];
@@ -56,6 +58,7 @@ export function setImmediate(cb: any) {
         (typeof cb === 'function' ? cb : Function(cb)).apply(undefined, args);
     };
 
+    const windowLocation = window.location;
     window.postMessage(counter + '', windowLocation.protocol + '//' + windowLocation.host);
 
     return counter;

@@ -236,10 +236,6 @@
         border: --var($theme, 'border-width') solid --var($theme, 'border-color');
     }
 
-    %igx-drop-down__list--empty {
-        box-shadow: none;
-    }
-
     %igx-drop-down__list-scroll {
         overflow-y: auto;
         overflow-x: hidden;
