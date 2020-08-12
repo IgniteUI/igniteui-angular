@@ -50,6 +50,7 @@ import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
+import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
 
 let NEXT_ID = 0;
 const ITEMS_COUNT = 7;
@@ -2124,7 +2125,8 @@ export class IgxTimePickerComponent implements
         IgxIconModule,
         IgxButtonModule,
         IgxMaskModule,
-        IgxToggleModule
+        IgxToggleModule,
+        IgxTextSelectionModule
     ],
     providers: []
 })
