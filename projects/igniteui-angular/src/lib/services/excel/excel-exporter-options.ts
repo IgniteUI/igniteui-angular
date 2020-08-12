@@ -6,6 +6,7 @@ import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base
 export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
     private _columnWidth: number;
     private _rowHeight: number;
+    private _sheetName = 'Sheet1';
 
     /**
      * Specifies if column pinning should be ignored. If ignoreColumnsOrder is set to true,
@@ -84,5 +85,30 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
         }
 
         this._rowHeight = value;
+    }
+
+    /**
+     * Get the name of the worksheet
+     * ```typescript
+     * let sheetName = this.exportOptions.sheetName;
+     * ```
+     */
+    public get sheetName() {
+        return this._sheetName;
+    }
+
+    /**
+     * Set the name of the worksheet. If not specified or empty string set,
+     * the default sheet name will be used - Sheet1
+     * ```typescript
+     * exportOptions.sheetName = 'SheetName';
+     * ```
+     */
+    public set sheetName(value: string) {
+        if (!value) {
+            throw Error('Invalid value for sheet name!');
+        }
+
+        this._sheetName = value;
     }
 }
