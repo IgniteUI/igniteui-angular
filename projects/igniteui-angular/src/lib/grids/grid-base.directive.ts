@@ -1945,7 +1945,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChildren(IgxRowEditTabStopDirective)
+    @ContentChildren(IgxRowEditTabStopDirective, { descendants: true })
     public rowEditTabsCUSTOM: QueryList<IgxRowEditTabStopDirective>;
 
     /**
