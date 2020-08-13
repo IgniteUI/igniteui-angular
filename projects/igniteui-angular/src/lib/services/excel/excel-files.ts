@@ -38,7 +38,7 @@ export class CoreFile implements IExcelFile {
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const hasSharedStrings = worksheetData.isEmpty === false;
-        folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings, worksheetData.options.worksheetName));
+        folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings, worksheetData.options.worksheetName.toLowerCase()));
     }
 }
 
@@ -134,7 +134,7 @@ export class WorksheetFile implements IExcelFile {
         }
         const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
 
-        const worksheetName = `${worksheetData.options.worksheetName}.xml`;
+        const worksheetName = `${worksheetData.options.worksheetName.toLowerCase()}.xml`;
 
         folder.file(worksheetName,
                     ExcelStrings.getSheetXML(dimension, freezePane, cols.join(''), sheetData.join(''), hasTable,
@@ -145,7 +145,7 @@ export class WorksheetFile implements IExcelFile {
         return new Promise(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
-                const worksheetName = `${worksheetData.options.worksheetName}.xml`;
+                const worksheetName = `${worksheetData.options.worksheetName.toLowerCase()}.xml`;
 
                 folder.file(worksheetName, ExcelStrings.getSheetXML(
                     this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
@@ -306,7 +306,7 @@ export class WorkbookFile implements IExcelFile {
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(
-            !worksheetData.isEmpty, worksheetData.options.exportAsTable, worksheetData.options.worksheetName
+            !worksheetData.isEmpty, worksheetData.options.exportAsTable, worksheetData.options.worksheetName.toLowerCase()
         ));
     }
 }
@@ -367,7 +367,7 @@ export class TablesFile implements IExcelFile {
  */
 export class WorksheetRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const worksheetName = `${worksheetData.options.worksheetName}.xml.rels`;
+        const worksheetName = `${worksheetData.options.worksheetName.toLowerCase()}.xml.rels`;
 
         folder.file(worksheetName, ExcelStrings.getWorksheetRels());
     }
