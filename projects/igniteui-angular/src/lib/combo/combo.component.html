@@ -22,7 +22,7 @@
             clear
         </igx-icon>
     </igx-suffix>
-    <igx-suffix igxButton="icon" class="igx-combo__toggle-button" igxRipple>
+    <igx-suffix class="igx-combo__toggle-button">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>

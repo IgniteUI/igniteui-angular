@@ -61,7 +61,6 @@ export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
     templateUrl: 'input-group.component.html',
     providers: [
         { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
-        { provide: Window, useValue: window },
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
@@ -260,17 +259,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         public element: ElementRef<HTMLElement>,
         @Optional()
         @Inject(DisplayDensityToken)
-        _displayDensityOptions: IDisplayDensityOptions,
-        private window: Window
+        _displayDensityOptions: IDisplayDensityOptions
     ) {
         super(_displayDensityOptions);
     }
 
     ngOnInit() {
-        // const variant = this.element.nativeElement.style.getPropertyValue('--igx-input-group-variant');
-        // const globalVariant = document.documentElement.style.getPropertyValue('--igx-input-group-variant');
-        // window.getComputedStyle(this._document.documentElement).
-        const variant = this.window
+        const variant = window
             .getComputedStyle(this.element.nativeElement)
             .getPropertyValue('--igx-input-group-variant')
             .trim();
@@ -302,7 +297,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get hasBorder() {
-        return this._type === 'line' || this._type === 'box';
+        return (
+            (this._type === 'line' || this._type === 'box') &&
+            this._variant === 'material'
+        );
     }
 
     /**
@@ -316,7 +314,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get isTypeLine(): boolean {
-        return this._type === 'line';
+        return this._type === 'line' && this._variant === 'material';
     }
 
     /**
@@ -331,7 +329,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
-        return this._type === 'box';
+        return this._type === 'box' && this._variant === 'material';
     }
 
     /**
@@ -346,11 +344,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
-        return this._type === 'border';
+        return this._type === 'border' && this._variant === 'material';
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is Fluent.
+     * Returns true if the `IgxInputGroupComponent` theme is Fluent.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -365,7 +363,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is Bootstrap.
+     * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -380,7 +378,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is Indigo.
+     * Returns true if the `IgxInputGroupComponent` theme is Indigo.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -408,21 +406,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     public get isTypeSearch() {
         return this._type === 'search';
     }
-
-    // /**
-    //  * Returns whether the `IgxInputGroupComponent` type is fluentSearch.
-    //  * ```typescript
-    //  * @ViewChild("MyInputGroup1")
-    //  * public inputGroup: IgxInputGroupComponent;
-    //  * ngAfterViewInit(){
-    //  *    let isTypeFluentSearch = this.inputGroup.isTypeFluentSearch;
-    //  * }
-    //  * ```
-    //  */
-    // @HostBinding('class.igx-input-group--fluent-search')
-    // public get isTypeFluentSearch() {
-    //     return this._variant === 'fluent';
-    // }
 
     /** @hidden */
     public get filled() {
