@@ -674,6 +674,36 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             // check row is not selected
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
         });
+
+        it('Should not clear root selection state when changing selection mode of child grid', () => {
+            rowIsland1.rowSelection = GridSelectionMode.multiple;
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const secondRow = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+
+            fix.detectChanges();
+            expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
+
+            const thirdRow = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+            thirdRow.toggle();
+            fix.detectChanges();
+
+            const childGrid = rowIsland1.rowIslandAPI.getChildGrids()[0];
+            const firstChildRow = childGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const secondChildRow = childGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+            GridSelectionFunctions.clickRowCheckbox(firstChildRow);
+            GridSelectionFunctions.clickRowCheckbox(secondChildRow);
+            fix.detectChanges();
+
+            expect(hierarchicalGrid.selectedRows().length).toEqual(2);
+            expect(childGrid.selectedRows().length).toEqual(2);
+
+            rowIsland1.rowSelection = GridSelectionMode.single;
+            fix.detectChanges();
+            expect(hierarchicalGrid.selectedRows().length).toEqual(2);
+            expect(childGrid.selectedRows().length).toEqual(0);
+        });
     });
 
     describe('Row Selection CRUD', () => {
