@@ -228,9 +228,8 @@ export class IgxGridCRUDService {
     }
 
     end(): void {
-        const cell = this.cell;
+        this.grid.cellEditExit.emit(this.cell?.createEditEventArgs(true));
         this.cell = null;
-        this.grid.cellEditExit.emit(cell.createEditEventArgs(true));
     }
     public enterEditMode(cell) {
         if (this.isInCompositionMode) {
