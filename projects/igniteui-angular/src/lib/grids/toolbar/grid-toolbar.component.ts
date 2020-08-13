@@ -236,7 +236,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         @Optional() public csvExporter: IgxCsvExporterService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private iconService: IgxIconService) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
     }
 
     private _positionSettings: PositionSettings = {
@@ -408,6 +408,30 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
             if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
                 this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
             }
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingColumnHiding(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnHidingButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingColumnPinning(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnPinningButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
         }
     }
 }
