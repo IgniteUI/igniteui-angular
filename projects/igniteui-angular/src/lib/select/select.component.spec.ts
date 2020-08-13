@@ -529,14 +529,14 @@ describe('igxSelect', () => {
             expect(inputGroupIsRequiredClass).not.toBeNull();
             expect(inputGroupIsRequiredClass).not.toBeUndefined();
 
-            // Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
+            // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
             fix.componentInstance.removeValidators(formGroup);
             fix.detectChanges();
             tick();
 
             inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
-            // interaction test - expect actual asterisk
+            // interaction test - expect no asterisk
             asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
             expect(selectFormReference).toBeDefined();
             expect(selectComp).toBeDefined();
@@ -575,6 +575,23 @@ describe('igxSelect', () => {
             asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
             expect(asterisk).toBe('"*"');
 
+            // 4) Should NOT remove asterisk, when remove validators on igxSelect with required HTML attribute set(edge case)
+            // set required HTML attribute
+            inputGroup.parent.nativeElement.setAttribute('required', '');
+            // Re-add all Validators
+            fix.componentInstance.addValidators(formGroup);
+            fix.detectChanges();
+            // update and clear validators
+            fix.componentInstance.removeValidators(formGroup);
+            fix.detectChanges();
+            tick();
+            // expect asterisk
+            asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+            expect(asterisk).toBe('"*"');
+            inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupIsRequiredClass).toBeDefined();
+            expect(inputGroupIsRequiredClass).not.toBeNull();
+            expect(inputGroupIsRequiredClass).not.toBeUndefined();
         }));
 
 
