@@ -61,7 +61,7 @@ describe('Excel Exporter', () => {
             options = createExportOptions('GridExcelExport', 50);
         }));
 
-        fit('should export grid as displayed.', async () => {
+        it('should export grid as displayed.', async () => {
             const currentGrid: IgxGridComponent = null;
             await TestMethods.testRawData(currentGrid, async (grid) => {
                 await exportAndVerify(grid, options, actualData.simpleGridData);
