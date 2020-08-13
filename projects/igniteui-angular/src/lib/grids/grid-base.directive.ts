@@ -466,6 +466,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.selectionService.clear(true);
+        this.navigation.activeNode = null;
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
@@ -507,6 +508,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.selectionService.clear(true);
+        this.navigation.activeNode = null;
         this._perPage = val;
         this.perPageChange.emit(this._perPage);
         this.page = 0;
