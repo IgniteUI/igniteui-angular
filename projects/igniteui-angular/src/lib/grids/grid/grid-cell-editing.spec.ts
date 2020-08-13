@@ -645,6 +645,55 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBeFalsy();
         });
 
+        it(`Should properly emit 'cellEditExit' event`, () => {
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
+            expect(cell.editMode).toBeFalsy();
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+
+            // press tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fixture.detectChanges();
+
+            let cellArgs: IGridEditEventArgs = {
+                rowID: cell.row.rowID,
+                cellID: cell.cellID,
+                rowData: initialRowData,
+                newValue: 'John Brown',
+                oldValue: 'John Brown',
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
+
+
+            expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
+
+            // press tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBeFalsy();
+            cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.rowData};
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                newValue: 20,
+                oldValue: 20,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
+            expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
+        });
+
         it(`Should properly emit 'onCellEdit' event`, () => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             let cellArgs: IGridEditEventArgs;

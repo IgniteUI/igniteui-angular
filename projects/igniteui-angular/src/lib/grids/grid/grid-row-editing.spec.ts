@@ -131,6 +131,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
@@ -185,7 +186,9 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid
             };
+
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cellDebug);
@@ -239,6 +242,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith(rowArgs);
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
