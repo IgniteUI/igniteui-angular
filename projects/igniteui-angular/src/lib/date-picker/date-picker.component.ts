@@ -20,7 +20,7 @@ import {
     Injector,
     AfterViewChecked
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl, NG_VALIDATORS, FormControl, ValidationErrors } from '@angular/forms';
 import {
     IgxCalendarComponent,
     IgxCalendarHeaderTemplateDirective,
@@ -131,6 +131,11 @@ const noop = () => { };
     providers:
         [{
             provide: NG_VALUE_ACCESSOR,
+            useExisting: IgxDatePickerComponent,
+            multi: true
+        },
+        {
+            provide: NG_VALIDATORS,
             useExisting: IgxDatePickerComponent,
             multi: true
         }],
@@ -308,6 +313,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
+        if (this._ngControl && this._value && this._disabledDates) {
+            this._ngControl.control.validator({} as AbstractControl);
+            this._onChangeCallback(this._value);
+        }
     }
 
     /**
@@ -741,6 +750,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /** @hidden @internal */
     public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
 
+    /** @hidden @internal */
+    public validate(control: AbstractControl): ValidationErrors | null {
+        if (this.value && this.disabledDates && isDateInRanges(this.value, this.disabledDates)) {
+            return { dateIsDisabled: true };
+        }
+        return null;
+    }
     //#endregion
 
     /**
@@ -874,7 +890,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
+            (this._ngControl.control.validator || this._ngControl.control.asyncValidator) && this.inputGroup) {
             if (this.inputGroup.isFocused) {
                 this._inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
