@@ -11,7 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
-    AfterViewInit
+    AfterContentInit
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -64,7 +64,7 @@ export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
-    implements IgxInputGroupBase, AfterViewInit {
+    implements IgxInputGroupBase, AfterContentInit {
     private _type: IgxInputGroupType = 'line';
     private _filled = false;
     private _variant: IgxInputGroupTheme = 'material';
@@ -264,7 +264,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         super(_displayDensityOptions);
     }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() {
         const variant = window
             .getComputedStyle(this.element.nativeElement)
             .getPropertyValue('--igx-input-group-variant')
