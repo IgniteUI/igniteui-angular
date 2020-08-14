@@ -1,6 +1,8 @@
 import { ExcelFileTypes } from './excel-enums';
 
 export class JSZipFiles {
+    public static worksheetName = 'Sheet1';
+
     public static allFilesNames: string[] = [
         '_rels/',
         '_rels/.rels',
@@ -21,7 +23,8 @@ export class JSZipFiles {
         'xl/worksheets/_rels/sheet1.xml.rels',
         'xl/tables/',
         'xl/tables/table1.xml',
-        'xl/sharedStrings.xml'
+        'xl/sharedStrings.xml',
+        'worksheets/sheet1.xml'
     ];
 
     public static dataFilesAndFoldersNames  = [
@@ -132,7 +135,7 @@ export class JSZipFiles {
     <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
     <Default Extension="xml" ContentType="application/xml"/>
     <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
-    <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+    <Override PartName="/${this.allFilesNames[11]}" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
     <Override PartName="/xl/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
     <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
     <Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
@@ -185,7 +188,7 @@ export class JSZipFiles {
 `schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Microsoft Excel</Application><DocSecurity>0` +
 `</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Worksheets` +
 `</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" ` +
-`baseType="lpstr"><vt:lpstr>Sheet1</vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate>` +
+`baseType="lpstr"><vt:lpstr>${this.worksheetName}</vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate>` +
 `<SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0300</AppVersion></Properties>`
                 };
                 break;
@@ -211,7 +214,7 @@ export class JSZipFiles {
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" ` +
 `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" ` +
 `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId1" ` +
-`Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>${typesData}` +
+`Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="${this.allFilesNames[20]}"/>${typesData}` +
 `</Relationships>`
                 };
                 break;
@@ -251,7 +254,7 @@ export class JSZipFiles {
 `officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x15" ` +
 `xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml/2010/11/main"><fileVersion appName="xl" lastEdited="6" lowestEdited="6" ` +
 `rupBuild="14420"/><workbookPr filterPrivacy="1" defaultThemeVersion="164011"/><bookViews><workbookView xWindow="0" yWindow="0" ` +
-`windowWidth="22260" windowHeight="12645"/></bookViews><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets><calcPr ` +
+`windowWidth="22260" windowHeight="12645"/></bookViews><sheets><sheet name="${this.worksheetName}" sheetId="1" r:id="rId1"/></sheets><calcPr ` +
 `calcId="162913"/><extLst><ext uri="{140A7094-0E35-4892-8432-C4D2E57EDEB5}" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml` +
 `/2010/11/main"><x15:workbookPr chartTrackingRefBase="1"/></ext></extLst></workbook>`
                 };
