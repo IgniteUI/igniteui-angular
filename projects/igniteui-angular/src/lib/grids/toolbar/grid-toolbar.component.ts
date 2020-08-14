@@ -347,8 +347,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     }
 
     private performExport(exp: IgxBaseExporter, exportType: string) {
-        this.t1 = performance.now();
-
         this.exportClicked();
 
         const fileName = 'ExportedData';
