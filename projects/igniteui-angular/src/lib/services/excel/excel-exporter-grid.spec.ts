@@ -501,7 +501,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.gridWithAdvancedFilters);
         });
 
-        fit('Should set worksheet name', async () => {
+        it('Should set worksheet name', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
