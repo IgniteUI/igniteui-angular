@@ -41,6 +41,7 @@
             </igx-column-actions>
         </igx-drop-down>
     </div>
+
     <div *ngIf="grid.columnPinning">
         <button igxButton="outlined" [displayDensity]="grid.displayDensity" #columnPinningButton name="btnColumnPinning" igxRipple
             (click)="toggleColumnPinningUI()">
@@ -65,7 +66,7 @@
 
     <div class="igx-grid-toolbar__dropdown" *ngIf="shouldShowExportButton" id="btnExport">
         <button igxButton="outlined" [displayDensity]="grid.displayDensity" igxRipple #btnExport
-                (click)="exportClicked()">
+                (click)="exportClicked()" [disabled]="isExporting">
             <span class="igx-grid-toolbar__button-space">
                 <igx-icon fontSet="material">import_export</igx-icon>
                 <span>{{ getExportText() }}</span>
@@ -82,4 +83,8 @@
             </ul>
         </igx-drop-down>
     </div>
+</div>
+
+<div class="igx-grid-toolbar__export-progress" *ngIf="isExporting">
+    <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
 </div>

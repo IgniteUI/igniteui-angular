@@ -134,6 +134,7 @@
 
     %igx-grid-toolbar {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: flex-end;
         grid-row: 1;
@@ -251,6 +252,10 @@
             align-items: center;
             justify-content: space-between;
         }
+    }
+
+    %igx-grid-toolbar__export-progress {
+        flex-basis: 100%;
     }
 
     %igx-grid-toolbar__adv-filter--filtered {

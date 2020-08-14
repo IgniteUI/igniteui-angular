@@ -23,6 +23,10 @@
         @extend %igx-grid-toolbar__actions !optional;
     }
 
+    @include e(export-progress){
+        @extend %igx-grid-toolbar__export-progress !optional;
+    }
+
     @include e(adv-filter, $m: 'filtered') {
         @extend %igx-grid-toolbar__adv-filter--filtered !optional;
     }

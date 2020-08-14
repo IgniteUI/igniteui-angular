@@ -74,6 +74,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     }
 
     private _filterColumnsPrompt = this.grid.resourceStrings.igx_grid_toolbar_actions_filter_prompt;
+    private _isExporting = false;
 
     /**
      * @hidden
@@ -184,6 +185,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      */
     public get shouldShowExportButton(): boolean {
         return (this.grid != null && (this.grid.exportExcel || this.grid.exportCsv));
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isExporting(): boolean {
+        return this._isExporting;
     }
 
     /**
@@ -315,6 +323,11 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      * ```
      */
     public exportToExcelClicked() {
+        this._isExporting = true;
+        this.excelExporter.onExportEnded.subscribe((args: any) => {
+            this._isExporting = false;
+            this.cdr.detectChanges();
+        });
         this.performExport(this.excelExporter, 'excel');
     }
 
@@ -325,10 +338,17 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      * ```
      */
     public exportToCsvClicked() {
+        this._isExporting = true;
+        this.csvExporter.onExportEnded.subscribe((args: any) => {
+            this._isExporting = false;
+            this.cdr.detectChanges();
+        });
         this.performExport(this.csvExporter, 'csv');
     }
 
     private performExport(exp: IgxBaseExporter, exportType: string) {
+        this.t1 = performance.now();
+
         this.exportClicked();
 
         const fileName = 'ExportedData';
