@@ -906,7 +906,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     protected getGroupAreaHeight(): number {
-        return this.groupArea ? this.groupArea.nativeElement.offsetHeight : 0;
+        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
     }
 
     /**
