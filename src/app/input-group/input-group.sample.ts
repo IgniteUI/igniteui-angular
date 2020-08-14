@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
     IgxInputGroupType,
     ButtonGroupAlignment,
@@ -16,8 +16,7 @@ interface Selection {
 
 @Component({
     // tslint:disable-next-line:component-selector
-    encapsulation: ViewEncapsulation.None,
-    selector: 'input-group-sample',
+    selector: 'app-input-group-sample',
     styleUrls: ['input-group.sample.scss'],
     templateUrl: 'input-group.sample.html',
 })
