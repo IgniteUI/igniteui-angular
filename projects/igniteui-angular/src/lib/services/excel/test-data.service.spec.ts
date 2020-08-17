@@ -215,10 +215,11 @@ export class FileContentData {
 
     public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string, appData: string): IFileContent[] {
         this._fileContentCollection = [
-            {  fileName: JSZipFiles.dataFiles[1].name, fileContent : worksheetData},
-            {  fileName: JSZipFiles.dataFiles[2].name, fileContent : tableData},
-            {  fileName: JSZipFiles.dataFiles[3].name, fileContent : sharedStringsData},
-            {  fileName: JSZipFiles.templateFiles[6].name, fileContent : workbookData},
+            {  fileName: JSZipFiles.dataFiles[1].name, fileContent : worksheetData },
+            {  fileName: JSZipFiles.dataFiles[2].name, fileContent : tableData },
+            {  fileName: JSZipFiles.dataFiles[3].name, fileContent : sharedStringsData },
+            {  fileName: JSZipFiles.templateFiles[6].name, fileContent : workbookData },
+            {  fileName: JSZipFiles.templateFiles[1].name, fileContent : appData },
         ];
 
         return this._fileContentCollection;

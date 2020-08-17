@@ -21,8 +21,7 @@ export class JSZipFiles {
         'xl/worksheets/_rels/sheet1.xml.rels',
         'xl/tables/',
         'xl/tables/table1.xml',
-        'xl/sharedStrings.xml',
-        'worksheets/sheet1.xml'
+        'xl/sharedStrings.xml'
     ];
 
     public static dataFilesAndFoldersNames  = [
@@ -133,7 +132,7 @@ export class JSZipFiles {
     <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
     <Default Extension="xml" ContentType="application/xml"/>
     <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
-    <Override PartName="/${this.allFilesNames[11]}" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+    <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
     <Override PartName="/xl/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
     <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
     <Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
@@ -212,7 +211,7 @@ export class JSZipFiles {
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" ` +
 `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" ` +
 `Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId1" ` +
-`Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="${this.allFilesNames[20]}"/>${typesData}` +
+`Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>${typesData}` +
 `</Relationships>`
                 };
                 break;
