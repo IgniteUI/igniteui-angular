@@ -213,7 +213,7 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
         const isSpecialData = ExportUtilities.isSpecialData(data);
 
-        yieldingLoop(data.length, 1000, (i) => {
+        yieldingLoop(data.length, 100, (i) => {
             const row = data[i];
             this.exportRow(dataToExport, row, i, isSpecialData);
         }, () => {

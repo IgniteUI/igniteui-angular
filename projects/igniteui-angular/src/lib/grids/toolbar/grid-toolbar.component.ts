@@ -323,11 +323,16 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      * ```
      */
     public exportToExcelClicked() {
-        this._isExporting = true;
+        let exportEnded = false;
         this.excelExporter.onExportEnded.subscribe((args: any) => {
-            this._isExporting = false;
-            this.cdr.detectChanges();
+            exportEnded = true;
+            this.setIsExporting(false);
         });
+        setTimeout(() => {
+            if (!exportEnded) {
+                this.setIsExporting(true);
+            }
+        }, 500);
         this.performExport(this.excelExporter, 'excel');
     }
 
@@ -338,12 +343,22 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      * ```
      */
     public exportToCsvClicked() {
-        this._isExporting = true;
+        let exportEnded = false;
         this.csvExporter.onExportEnded.subscribe((args: any) => {
-            this._isExporting = false;
-            this.cdr.detectChanges();
+            exportEnded = true;
+            this.setIsExporting(false);
         });
+        setTimeout(() => {
+            if (!exportEnded) {
+                this.setIsExporting(true);
+            }
+        }, 500);
         this.performExport(this.csvExporter, 'csv');
+    }
+
+    private setIsExporting(isExporting: boolean) {
+        this._isExporting = isExporting;
+        this.cdr.detectChanges();
     }
 
     private performExport(exp: IgxBaseExporter, exportType: string) {
