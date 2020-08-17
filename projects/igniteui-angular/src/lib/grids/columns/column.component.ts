@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
-import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { DataType } from '../../data-operations/data-util';
 import {
     IgxFilteringOperand,
@@ -1344,7 +1343,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService, public elementRef: ElementRef) { }
+        public elementRef: ElementRef) { }
 
     /**
      * @hidden
