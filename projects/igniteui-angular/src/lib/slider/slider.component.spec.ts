@@ -1663,7 +1663,7 @@ describe('IgxSlider', () => {
     function verifySecondaryTicsLabelsAreHidden(ticks, hidden) {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
         const secondaryTicks =  allTicks.filter((tick: any) =>
-            !tick.classList.contains('igx-slider__ticks-group--tall')
+            !tick.classList.contains(SLIDER_PRIMARY_GROUP_TICKS_CLASS)
         );
         secondaryTicks.forEach(tick => {
            const label = (tick as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
