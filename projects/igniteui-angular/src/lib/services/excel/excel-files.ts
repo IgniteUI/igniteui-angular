@@ -296,7 +296,6 @@ export class StyleFile implements IExcelFile {
  */
 export class WorkbookFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        worksheetData.options.worksheetName = 'kurci'
         folder.file('workbook.xml', ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
     }
 }

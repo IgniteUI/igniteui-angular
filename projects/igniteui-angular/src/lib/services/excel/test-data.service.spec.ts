@@ -208,10 +208,12 @@ export class FileContentData {
     `windowWidth="22260" windowHeight="12645"/></bookViews><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets><calcPr ` +
     `calcId="162913"/><extLst><ext uri="{140A7094-0E35-4892-8432-C4D2E57EDEB5}" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml` +
     `/2010/11/main"><x15:workbookPr chartTrackingRefBase="1"/></ext></extLst></workbook>`;
+    private _appData = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Microsoft Excel</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Worksheets</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr>Sheet1</vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0300</AppVersion></Properties>`;
 
     constructor() {}
 
-    public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string): IFileContent[] {
+    public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string, appData: string): IFileContent[] {
         this._fileContentCollection = [
             {  fileName: JSZipFiles.dataFiles[1].name, fileContent : worksheetData},
             {  fileName: JSZipFiles.dataFiles[2].name, fileContent : tableData},
@@ -223,7 +225,7 @@ export class FileContentData {
     }
 
     private createData() {
-        return this.create(this._worksheetData, this._tableData, this._sharedStringsData, this._workbookData);
+        return this.create(this._worksheetData, this._tableData, this._sharedStringsData, this._workbookData, this._appData);
     }
 
     get differentTypesDataContent() {
@@ -701,6 +703,9 @@ export class FileContentData {
         `windowWidth="22260" windowHeight="12645"/></bookViews><sheets><sheet name="${name}" sheetId="1" r:id="rId1"/></sheets><calcPr ` +
         `calcId="162913"/><extLst><ext uri="{140A7094-0E35-4892-8432-C4D2E57EDEB5}" xmlns:x15="http://schemas.microsoft.com/office/spreadsheetml` +
         `/2010/11/main"><x15:workbookPr chartTrackingRefBase="1"/></ext></extLst></workbook>`;
+
+        this._appData = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Microsoft Excel</Application><DocSecurity>0</DocSecurity><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Worksheets</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr>${name}</vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0300</AppVersion></Properties>`;
 
         return this.createData();
     }
