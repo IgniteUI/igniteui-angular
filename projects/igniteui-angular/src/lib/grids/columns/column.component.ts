@@ -89,6 +89,21 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public header = '';
     /**
+     * Sets/gets the `title` value.
+     * ```typescript
+     * let title = this.column.title;
+     * ```
+     * ```html
+     * <igx-column [title] = "'Some column tooltip'"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public title = '';
+    /**
      * Sets/gets whether the column is sortable.
      * Default value is `false`.
      * ```typescript
@@ -1307,7 +1322,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService, public elementRef: ElementRef) { }
+        public rowIslandAPI: IgxRowIslandAPIService) { }
 
     /**
      * @hidden
