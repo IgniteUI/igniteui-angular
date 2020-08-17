@@ -9,8 +9,7 @@ import {
     QueryList,
     TemplateRef,
     Output,
-    EventEmitter,
-    ElementRef,
+    EventEmitter
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
