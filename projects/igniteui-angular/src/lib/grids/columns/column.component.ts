@@ -9,14 +9,12 @@ import {
     QueryList,
     TemplateRef,
     Output,
-    EventEmitter,
-    ElementRef,
+    EventEmitter
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { DataType } from '../../data-operations/data-util';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import {
     IgxFilteringOperand,
     IgxBooleanFilteringOperand,
