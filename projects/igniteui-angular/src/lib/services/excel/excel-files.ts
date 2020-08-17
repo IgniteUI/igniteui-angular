@@ -38,7 +38,7 @@ export class CoreFile implements IExcelFile {
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const hasSharedStrings = worksheetData.isEmpty === false;
-        folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings, worksheetData.options.worksheetName.toLowerCase()));
+        folder.file('workbook.xml.rels', ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
 
@@ -296,6 +296,7 @@ export class StyleFile implements IExcelFile {
  */
 export class WorkbookFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+        worksheetData.options.worksheetName = 'kurci'
         folder.file('workbook.xml', ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
     }
 }
@@ -305,9 +306,7 @@ export class WorkbookFile implements IExcelFile {
  */
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(
-            !worksheetData.isEmpty, worksheetData.options.exportAsTable, worksheetData.options.worksheetName.toLowerCase()
-        ));
+        folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(!worksheetData.isEmpty, worksheetData.options.exportAsTable));
     }
 }
 

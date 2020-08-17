@@ -200,7 +200,6 @@ export class FileContentData {
     private _sharedStringsData = '';
     private _tableData = '';
     private _worksheetData = '';
-    private _worksheetName = 'Sheet1';
     private _workbookData = `<?xml version="1.0" encoding="UTF-8"?>
     <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/` +
     `officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x15" ` +
@@ -213,35 +212,6 @@ export class FileContentData {
     constructor() {}
 
     public create(worksheetData: string, tableData: string, sharedStringsData: string, workbookData: string): IFileContent[] {
-        // if Worksheet name is changed, change all file names related to it
-        if (this._worksheetName !== 'Sheet1') {
-            const newWorksheetName = this._worksheetName.toLowerCase();
-            const newWorksheetPath = `xl/worksheets/${newWorksheetName}.xml`;
-            const newWorksheetRelsPath = `xl/worksheets/_rels/${newWorksheetName}.xml.rels`;
-
-            JSZipFiles.worksheetName = this._worksheetName;
-
-            JSZipFiles.allFilesNames[11] = newWorksheetPath;
-            JSZipFiles.allFilesNames[16] = newWorksheetRelsPath;
-            JSZipFiles.allFilesNames[20] = `worksheets/${newWorksheetName}.xml`;
-
-            JSZipFiles.dataFilesAndFoldersNames[1] = newWorksheetRelsPath;
-            JSZipFiles.dataFilesAndFoldersNames[2] = newWorksheetPath;
-
-            JSZipFiles.templatesNames[11] = newWorksheetPath;
-
-            JSZipFiles.templateFiles[7].name = newWorksheetPath;
-
-            JSZipFiles.dataFiles[0].name = newWorksheetRelsPath;
-            JSZipFiles.dataFiles[1].name = newWorksheetPath;
-
-            JSZipFiles.files[6].name = newWorksheetPath;
-            JSZipFiles.files[9].name = newWorksheetRelsPath;
-
-            JSZipFiles.filesNames[9] = newWorksheetRelsPath;
-            JSZipFiles.filesNames[10] = newWorksheetPath;
-        }
-
         this._fileContentCollection = [
             {  fileName: JSZipFiles.dataFiles[1].name, fileContent : worksheetData},
             {  fileName: JSZipFiles.dataFiles[2].name, fileContent : tableData},
@@ -722,8 +692,6 @@ export class FileContentData {
         this._worksheetData =
         // tslint:disable-next-line:max-line-length
         `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>6</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" t="s"><v>8</v></c><c r="C5" t="s"><v>9</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" t="s"><v>10</v></c><c r="C6" t="s"><v>11</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" t="s"><v>12</v></c><c r="C7" t="s"><v>13</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" t="s"><v>14</v></c><c r="C8" t="s"><v>15</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" t="s"><v>16</v></c><c r="C9" t="s"><v>17</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" t="s"><v>18</v></c><c r="C10" t="s"><v>15</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" t="s"><v>19</v></c><c r="C11" t="s"><v>20</v></c></row></sheetData>`;
-
-        this._worksheetName = name;
 
         this._workbookData =  `<?xml version="1.0" encoding="UTF-8"?>
         <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/` +
