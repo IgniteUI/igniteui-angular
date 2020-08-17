@@ -15,7 +15,8 @@ const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
 const SLIDER_TICKS_ELEMENT = '.igx-slider__ticks';
 const SLIDER_TICKS_TOP_ELEMENT = '.igx-slider__ticks--top';
-const SLIDER_PRIMARY_GROUP_TICKS_CLASS = '.igx-slider__ticks-group--tall';
+const SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME = 'igx-slider__ticks-group--tall';
+const SLIDER_PRIMARY_GROUP_TICKS_CLASS = `.${SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME}`;
 const SLIDER_GROUP_TICKS_CLASS = '.igx-slider__ticks-group';
 const SLIDER_TICK_LABELS_CLASS = '.igx-slider__ticks-label';
 const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
@@ -1663,7 +1664,7 @@ describe('IgxSlider', () => {
     function verifySecondaryTicsLabelsAreHidden(ticks, hidden) {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
         const secondaryTicks =  allTicks.filter((tick: any) =>
-            !tick.classList.contains(SLIDER_PRIMARY_GROUP_TICKS_CLASS)
+            !tick.classList.contains(SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME)
         );
         secondaryTicks.forEach(tick => {
            const label = (tick as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
