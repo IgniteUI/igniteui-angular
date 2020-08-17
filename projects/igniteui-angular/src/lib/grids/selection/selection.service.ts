@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { isEdge } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IGridEditEventArgs } from '../common/events';
+import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { IgxGridBaseDirective } from '../grid/public_api';
 
@@ -60,13 +60,26 @@ export class IgxRow {
         const args: IGridEditEventArgs = {
             rowID: this.id,
             rowData:  this.data,
-            oldValue: { ... this.data },
+            oldValue: this.data,
             cancel: false,
             owner: this.grid
         };
         if (includeNewValue) {
             args.newValue = this.newData;
         }
+        return args;
+    }
+
+    createDoneEditEventArgs(cachedRowData: any): IGridEditDoneEventArgs {
+        const updatedData = this.grid.transactions.enabled ?
+        this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
+        const args: IGridEditDoneEventArgs = {
+            rowID: this.id,
+            rowData: updatedData,
+            oldValue: cachedRowData,
+            newValue: updatedData,
+            owner: this.grid
+        };
         return args;
     }
 }
@@ -103,8 +116,23 @@ export class IgxCell {
             owner: this.grid
         };
         if (includeNewValue) {
-            args.newValue = this.editValue;
+            args.newValue = this.castToNumber(this.editValue);
         }
+        return args;
+    }
+
+    createDoneEditEventArgs(value: any): IGridEditDoneEventArgs {
+        const args: IGridEditDoneEventArgs = {
+            rowID: this.id.rowID,
+            cellID: this.id,
+            // rowData - should be the updated/committed rowData - this effectively should be the newValue
+            // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
+            rowData: this.grid.transactions.enabled ? this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData,
+            oldValue: this.value,
+            newValue: value,
+            column: this.column,
+            owner: this.grid,
+        };
         return args;
     }
 }
@@ -604,6 +632,7 @@ export class IgxGridSelectionService {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
+
         this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
@@ -639,7 +668,7 @@ export class IgxGridSelectionService {
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
         if (clearPrevSelection) { this.rowSelection.clear(); }
-        rowIDs.forEach(rowID => { this.rowSelection.add(rowID); });
+        rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.allRowsSelected = undefined;
     }
 
@@ -728,8 +757,12 @@ export class IgxGridSelectionService {
 
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
-        const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
-            this.grid.filteredSortedData : this.grid.gridAPI.get_all_data(true);
+        let  allData;
+        if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
+            allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
+        } else {
+            allData = this.grid.gridAPI.get_all_data(true);
+        }
         return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
     }
 

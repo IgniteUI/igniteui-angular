@@ -1,0 +1,38 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-column-actions) {
+    $block: bem--selector-to-string(&);
+    @include register-component('igx-column-actions');
+
+    @extend %column-actions-display !optional;
+
+    @include e(header) {
+        @extend %column-actions-header !optional;
+    }
+
+    @include e(header-title) {
+        @extend %column-actions-title !optional;
+    }
+
+    @include e(header-input) {
+        @extend %column-actions-input !optional;
+    }
+
+    @include e(columns) {
+        @extend %column-actions-columns !optional;
+    }
+
+    @include e(columns-item) {
+        @extend %column-actions-item !optional;
+    }
+
+    @include e(buttons) {
+        @extend %column-actions-buttons !optional;
+    }
+}

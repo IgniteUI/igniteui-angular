@@ -369,6 +369,32 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(561);
     });
+
+    it('should emit onScroll and onDataPreLoad on row island when child grid is scrolled.', async() => {
+        const ri = fixture.componentInstance.rowIsland;
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        (firstRow.nativeElement.children[0] as HTMLElement).click();
+        fixture.detectChanges();
+
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        const verticalScroll = childGrid.verticalScrollContainer;
+        const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
+
+
+        spyOn(ri.onScroll, 'emit').and.callThrough();
+        spyOn(ri.onDataPreLoad, 'emit').and.callThrough();
+
+
+        // scroll down
+        elem.scrollTop = 400;
+        fixture.detectChanges();
+        fixture.componentRef.hostView.detectChanges();
+        await wait();
+        fixture.detectChanges();
+
+        expect(ri.onScroll.emit).toHaveBeenCalled();
+        expect(ri.onDataPreLoad.emit).toHaveBeenCalled();
+    });
 });
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {

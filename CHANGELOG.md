@@ -15,8 +15,14 @@ All notable changes for each version of this project will be documented in this 
     - Added `closeOnEscape` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
 - `IgxNavbar`:
     - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** - The `selectedRows` method is now an `@Input` property. Setting it to an array of Row IDs will update the grid's selection state, any previous selection will be cleared. Setting it to an empty array will clear the selection entirely.
+    - **Breaking Change** - Removed `IgxExcelStyleSortingTemplateDirective`, `IgxExcelStyleHidingTemplateDirective`, `IgxExcelStyleMovingTemplateDirective`, `IgxExcelStylePinningTemplateDirective` and `IgxExcelStyleSelectingTemplateDirective` directives for re-templating the Excel style filter menu. Added two new directives for re-templating the column operations and filter operations areas - `IgxExcelStyleColumnOperationsTemplateDirective` and `IgxExcelStyleFilterOperationsTemplateDirective`. Exposed all internal components of the Excel style filter menu in order to be used inside the templates.
+    - **Breaking Change** - `IgxColumnHiding` and `IgxColumnPinning` components have been deprecated in favor of a component combining the their functionality - `IgxColumnActions` which is used with either of the new `IgxColumnPinning` and `IgxColumnHiding` directives that specify the action to be triggered through the UI.
 - `igxGrid`
+    - **Behavioral Change** - For numeric columns, the onCellEdit arguments' newValue will now contain the numeric value that will be committed instead of the string input.
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
+    - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 - `IgxTimePicker`
@@ -45,8 +51,14 @@ The following example shows how you can use the Indigo theme:
 }
 ```
 
+
 ### New Features
+- `igxButton` directive
+    - Added styles to support extended fab buttons.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Exposed new `cellEditDone` and `rowEditDone` non cancelable events. The arguments contain `rowData` that is the committed `newValue`.
+        - `cellEditDone` - Emitted after a cell has been edited and editing has been committed.
+        - `rowEditDone` - Emitted after exiting edit mode for a row and editing has been committed.
     - Introduced `showSummaryOnCollapse` grid property which allows you to control whether the summary row stays visible when the groupBy / parent row is collapsed.
     - Added support for tooltips on data cells default template and summary cells.
     - Added support for binding columns to properties in nested data objects.
@@ -72,6 +84,8 @@ The following example shows how you can use the Indigo theme:
     - `activeViewChanged` event emitted after the active view (DEFAULT, YEAR, DECADE) is changed after user interaction.
     - `viewDate` day value is always 1.
     - `activeView` setter is now available as an input property.
+- `IgxCombo`
+    - Added `showSearchCaseIcon` to display a case sensitive search icon in the search input. Icon click allows the user to easily toggle the search case sensitivity.
 
 ## 10.0.0
 
@@ -79,7 +93,7 @@ The following example shows how you can use the Indigo theme:
 - `igxGrid`
     - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.
 - `igx-select`, `igx-combo`, `igx-drop-down`
-    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default. This requires styling to be handled on the application-level if there is something more than a simple text in the item.
 - `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface;
     - `actions` - contains information about the transactions, that caused the emission of the event.
@@ -93,6 +107,12 @@ The following example shows how you can use the Indigo theme:
 
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
+
+## 9.1.9
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Expose a setter for grid's `outlet` property, which can be used to set the outlet used to attach the grid's overlays to.
 
 ## 9.1.4
 

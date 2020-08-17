@@ -16,7 +16,7 @@
 @import '../light/carousel';
 @import '../light/checkbox';
 @import '../light/chip';
-@import '../light/column-hiding';
+@import '../light/column-actions';
 @import '../light/combo';
 @import '../light/dialog';
 @import '../light/divider';
@@ -60,7 +60,7 @@
 /// @property {Map} igx-carousel [$_light-carousel]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
-/// @property {Map} igx-column-hiding [$_light-column-hiding]
+/// @property {Map} igx-column-actions [$_light-column-actions]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
 /// @property {Map} igx-divider [$_light-divider]
@@ -93,8 +93,6 @@ $light-square-schema: (
     igx-action-strip: extend($_light-action-strip, $_square-shape-action-strip),
     igx-avatar: extend($_light-avatar, $_square-shape-avatar),
     igx-badge: extend($_light-badge, $_square-shape-badge),
-    igx-banner: extend($_light-banner, $_square-shape-banner),
-    igx-bottom-nav: extend($_light-bottom-nav, $_square-shape-bottom-nav),
     igx-button: extend($_light-button, $_square-shape-button),
     igx-button-group: extend($_light-button-group, $_square-shape-button-group),
     igx-calendar: extend($_light-calendar, $_square-shape-calendar),
@@ -102,29 +100,16 @@ $light-square-schema: (
     igx-carousel: extend($_light-carousel, $_square-shape-carousel),
     igx-checkbox: extend($_light-checkbox, $_square-shape-checkbox),
     igx-chip: extend($_light-chip, $_square-shape-chip),
-    igx-column-hiding: extend($_light-column-hiding, $_square-shape-column-hiding),
-    igx-combo: extend($_light-combo, $_square-shape-combo),
     igx-dialog: extend($_light-dialog, $_square-shape-dialog),
-    igx-divider: extend($_light-divider, $_square-shape-divider),
     igx-drop-down: extend($_light-drop-down, $_square-shape-drop-down),
     igx-expansion-panel: extend($_light-expansion-panel, $_square-shape-expansion-panel),
     igx-grid: extend($_light-grid, $_square-shape-grid),
-    igx-grid-filtering: extend($_light-grid-filtering, $_square-shape-grid-filtering),
-    igx-paginator: extend($_light-pagination, $_square-shape-pagination),
-    igx-grid-summary: extend($_light-grid-summary, $_square-shape-grid-summary),
-    igx-grid-toolbar: extend($_light-grid-toolbar, $_square-shape-tooltip),
     igx-highlight: $_light-highlight,
-    igx-icon: extend($_light-icon, $_square-shape-icon),
     igx-input-group: extend($_light-input-group, $_square-shape-input-group),
     igx-list: extend($_light-list, $_square-shape-list),
-    igx-navbar: extend($_light-navbar, $_square-shape-navbar),
     igx-navdrawer: extend($_light-navdrawer, $_square-shape-navdrawer),
-    igx-overlay: extend($_light-overlay, $_square-shape-overlay),
     igx-linear-bar: extend($_light-progress-linear, $_default-shape-progress),
     igx-circular-bar: extend($_light-progress-circular, $_default-shape-progress),
-    igx-radio: extend($_light-radio, $_square-shape-radio),
-    igx-ripple: extend($_light-ripple, $_square-shape-ripple),
-    igx-slider: extend($_light-slider, $_square-shape-slider),
     igx-snackbar: extend($_light-snackbar, $_square-shape-snackbar),
     igx-switch: extend($_light-switch, $_square-shape-switch),
     igx-tabs: extend($_light-tabs, $_square-shape-tabs),

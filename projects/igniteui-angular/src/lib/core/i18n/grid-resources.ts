@@ -91,6 +91,11 @@ export interface IGridResourceStrings {
     igx_grid_advanced_filter_column_placeholder?: string;
     igx_grid_advanced_filter_value_placeholder?: string;
     igx_grid_pinned_row_indicator?: string;
+    igx_grid_hiding_check_all_label?: string;
+    igx_grid_hiding_uncheck_all_label?: string;
+    igx_grid_pinning_check_all_label?: string;
+    igx_grid_pinning_uncheck_all_label?: string;
+    igx_grid_toolbar_actions_filter_prompt?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -185,5 +190,10 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"',
     igx_grid_advanced_filter_column_placeholder: 'Select column',
     igx_grid_advanced_filter_value_placeholder: 'Value',
-    igx_grid_pinned_row_indicator: 'Pinned'
+    igx_grid_pinned_row_indicator: 'Pinned',
+    igx_grid_hiding_check_all_label: 'Hide All',
+    igx_grid_hiding_uncheck_all_label: 'Show All',
+    igx_grid_pinning_check_all_label: 'Pin All',
+    igx_grid_pinning_uncheck_all_label: 'Unpin All',
+    igx_grid_toolbar_actions_filter_prompt: 'Filter columns list ...'
 };

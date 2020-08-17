@@ -65,7 +65,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
      */
     public getRowData(rowID: any) {
         const data = this.get_all_data(this.grid.transactions.enabled);
-        const index = this.get_row_index_in_data(rowID);
+        const index = this.get_row_index_in_data(rowID, data);
         return data[index];
     }
 
@@ -79,12 +79,12 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return this.grid.crudService.cell;
     }
 
-    public get_row_index_in_data(rowID: any): number {
+    public get_row_index_in_data(rowID: any, dataCollection?: any[]): number {
         const grid = this.grid as IgxGridBaseDirective;
         if (!grid) {
             return -1;
         }
-        const data = this.get_all_data(grid.transactions.enabled);
+        const data = dataCollection ?? this.get_all_data(grid.transactions.enabled);
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
@@ -127,7 +127,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public submit_value() {
         const cell = this.grid.crudService.cell;
-        if (cell ) {
+        if (cell) {
             const args = this.update_cell(cell, cell.editValue);
             if (args.cancel) {
                 return;
@@ -137,31 +137,24 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     }
 
     update_cell(cell: IgxCell, value: any) {
-        const data = this.get_all_data(this.grid.transactions.enabled);
-        const index = this.get_row_index_in_data(cell.id.rowID);
-
         cell.editValue = value;
-
         const args = cell.createEditEventArgs();
-
-        // TODO: emit onCellEdit after value is updated - issue #7304
         this.grid.onCellEdit.emit(args);
+        // TODO Implement cellEditExit event end emit if isEqual(args.oldValue, args.newValue)
+        // TODO do not emit onCellEdit & cellEditDone if isEqual(args.oldValue, args.newValue)
         if (args.cancel) {
             return args;
         }
-
-        // Cast to number after emit
-        // TODO: Clean up this
-        args.newValue = cell.castToNumber(args.newValue);
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
 
         this.grid.summaryService.clearSummaryCache(args);
-        this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, reverseMapper(cell.column.field, args.newValue));
+        const data = this.getRowData(cell.id.rowID);
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
-             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
+            if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
                 this.grid.selectionService.selectRowById(args.newValue);
             }
@@ -174,6 +167,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.grid.summaryService.clearSummaryCache(args);
             (this.grid as any)._pipeTrigger++;
         }
+
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
+        this.grid.cellEditDone.emit(doneArgs);
 
         return args;
     }
@@ -203,7 +199,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const grid = this.grid;
 
         const rowInEditMode = grid.crudService.row;
-        row.newData = value ? value : grid.transactions.getAggregatedValue(row.id, true);
+        row.newData = value ?? rowInEditMode.transactionState;
 
 
         if (rowInEditMode && row.id === rowInEditMode.id) {
@@ -220,9 +216,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = grid.crudService.row;
         const data = this.get_all_data(grid.transactions.enabled);
-        const index = this.get_row_index_in_data(row.id);
+        const index = this.get_row_index_in_data(row.id, data);
         const hasSummarized = grid.hasSummarizedColumns;
-
         this._update_row(row, value);
 
         const args = row.createEditEventArgs();
@@ -232,13 +227,13 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        // TODO: emit onRowEdit after value is updated - issue #7304
         grid.onRowEdit.emit(args);
 
         if (args.cancel) {
             return args;
         }
 
+        const cachedRowData = { ... args.oldValue };
         if (rowInEditMode) {
             const hasChanges = grid.transactions.getState(args.rowID, true);
             grid.transactions.endPending(false);
@@ -261,14 +256,17 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             grid.selectionService.deselectRow(row.id);
             grid.selectionService.selectRowById(newId);
         }
+        // make sure selection is handled prior to updating the row.id
+        row.id = newId;
         if (hasSummarized) {
             grid.summaryService.removeSummaries(newId);
         }
         (grid as any)._pipeTrigger++;
 
+        const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+        grid.rowEditDone.emit(doneArgs);
         return args;
     }
-
 
 
     protected update_row_in_array(value: any, rowID: any, index: number) {

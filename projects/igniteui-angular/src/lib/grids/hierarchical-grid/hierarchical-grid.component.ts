@@ -14,9 +14,7 @@ import {
     AfterContentInit,
     OnInit,
     OnDestroy,
-    DoCheck,
-    EventEmitter,
-    Output
+    DoCheck
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -32,7 +30,6 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
-import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
@@ -141,17 +138,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public get filteredData() {
         return this._filteredData;
     }
-
-    /**
-     * Emitted when a new chunk of data is loaded from virtualization.
-     * @example
-     * ```typescript
-     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
-     *  </igx-hierarchical-grid>
-     * ```
-     */
-    @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Gets/Sets the total number of records in the data source.
@@ -353,6 +339,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
          this.rootGrid.hasChildrenKey;
          this.showExpandAll = this.parentIsland ?
          this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+
+        this.excelStyleFilteringComponents = this.parentIsland ?
+            this.parentIsland.excelStyleFilteringComponents :
+            this.excelStyleFilteringComponents;
     }
 
     private updateSizes() {

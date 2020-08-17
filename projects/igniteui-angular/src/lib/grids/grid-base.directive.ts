@@ -25,7 +25,9 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive
+    Directive,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -92,13 +94,6 @@ import {
 import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
-import {
-    IgxExcelStyleSortingTemplateDirective,
-    IgxExcelStylePinningTemplateDirective,
-    IgxExcelStyleHidingTemplateDirective,
-    IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective
-} from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
@@ -139,7 +134,9 @@ import {
     IRowToggleEventArgs,
     IColumnSelectionEventArgs,
     IPinRowEventArgs,
-    IGridScrollEventArgs
+    IGridScrollEventArgs,
+    IGridEditDoneEventArgs,
+    IActiveNodeChangeEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -151,6 +148,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -162,8 +160,6 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
-
-
 
 @Directive({
     selector: '[igxGridBaseComponent]'
@@ -207,6 +203,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
+
+    protected _userOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden @internal
@@ -1092,6 +1090,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         done: (values: any[]) => void) => void;
 
     /**
+     * Gets/Sets the current selection state.
+     * @remarks
+     * Represents the selected rows' IDs (primary key or rowData)
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" primaryKey="ID" rowSelection="multiple" [selectedRows]="[0, 1, 2]"><igx-grid>
+     * ```
+     */
+    @Input()
+    public set selectedRows(rowIDs: any[]) {
+        rowIDs.length > 0
+            ? this.selectRows(rowIDs, true)
+            : this.deselectAllRows();
+    }
+
+    public get selectedRows(): any[] {
+        return this.selectionService.getSelectedRows();
+    }
+
+    /**
      * Emitted when `IgxGridCellComponent` is clicked.
      * @remarks
      * Returns the `IgxGridCellComponent`.
@@ -1193,6 +1211,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onCellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
+     * Emitted after cell has been edited and editing has been committed.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
      * Emitted when a row enters edit mode.
      * @remarks
      * Emitted when [rowEditable]="true".
@@ -1211,7 +1240,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
-     * performing paging operation, column resizing, pinning, moving or hitting  `Done`
+     * performing paging operation, column resizing, pinning, moving or hitting `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
      * @example
@@ -1222,6 +1251,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emitted after exiting edit mode for a row and editing has been committed.
+     * @remarks
+     * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
+     * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * performing paging operation, column resizing, pinning, moving or hitting `Done`
+     * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (rowEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public rowEditDone = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when row editing is canceled.
@@ -1458,6 +1503,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowPinning = new EventEmitter<IPinRowEventArgs>();
 
     /**
+     * Emmited when the active node is changed.
+     *
+     * @example
+     * ```
+     * <igx-grid [data]="data" [autoGenerate]="true" (activeNodeChange)="activeNodeChange($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public activeNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
+
+    /**
      * @hidden @internal
      */
     @ViewChild(IgxGridColumnResizerComponent)
@@ -1484,38 +1540,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
-    public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
-    public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
-    public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStyleSelectingTemplateDirective, { read: IgxExcelStyleSelectingTemplateDirective })
-    public excelStyleSelectingTemplateDirective: IgxExcelStyleSelectingTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
-    public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
+
+    /**
+     * @hidden @internal
+     */
+    public get excelStyleFilteringComponent() {
+        return this.excelStyleFilteringComponents.first;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChildren(IgxGridExcelStyleFilteringComponent, { read: IgxGridExcelStyleFilteringComponent, descendants: false })
+    public excelStyleFilteringComponents: QueryList<IgxGridExcelStyleFilteringComponent>;
 
     /**
      * @hidden @internal
@@ -1816,19 +1855,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
 
-
     /**
      * @hidden @internal
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     protected _outletDirective: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
-    public get outletDirective() {
-        return this._outletDirective;
-    }
 
     /**
      * @hidden @internal
@@ -1854,7 +1885,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get parentRowOutletDirective() {
-        return this.outletDirective;
+        return this.outlet;
     }
 
     /**
@@ -2946,7 +2977,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outletDirective &&
+            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outlet &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
             }
@@ -3384,11 +3415,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Gets/Sets the outlet used to attach the grid's overlays to.
+     * @remark
+     * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    protected get outlet() {
-        return this.outletDirective;
+    @Input()
+    get outlet() {
+        return this.resolveOutlet();
     }
+
+    set outlet(val: IgxOverlayOutletDirective) {
+        this._userOutletDirective = val;
+    }
+
+    protected resolveOutlet() {
+        return this._userOutletDirective ? this._userOutletDirective : this._outletDirective;
+    }
+
 
     /**
      * Gets the default row height.
@@ -5285,18 +5328,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Get current selection state.
-     * @example
-     * Returns an array with selected rows' IDs (primaryKey or rowData)
-     * ```typescript
-     * const selectedRows = this.grid.selectedRows();
-     * ```
-     */
-    public selectedRows(): any[] {
-        return this.selectionService.getSelectedRows();
-    }
-
-    /**
      * Select specified rows by ID.
      * @example
      * ```typescript
@@ -5480,6 +5511,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         for (let [row, set] of selectionMap) {
+            row = this.paging ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -5840,6 +5872,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     cb(cbArgs);
                 });
             }
+
+            if (this.dataView[rowIndex].detailsData) {
+                this.navigation.setActiveNode({row: rowIndex});
+                this.cdr.detectChanges();
+            }
+
             return;
         }
         const args = this.getNavigationArguments(row, visibleColIndex);
@@ -5847,23 +5885,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNavigationArguments(row, visibleColIndex) {
-        let targetType, target;
+        let targetType: GridKeydownTargetType, target;
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
-                targetType = GridKeydownTargetType.groupRow;
+                targetType = 'groupRow';
                 target = row;
                 break;
             case 'igx-grid-summary-row':
-                targetType = GridKeydownTargetType.summaryCell;
+                targetType = 'summaryCell';
                 target = visibleColIndex !== -1 ?
                     row.summaryCells.find(c => c.visibleColumnIndex === visibleColIndex) : row.summaryCells.first;
                 break;
             case 'igx-child-grid-row':
-                targetType = GridKeydownTargetType.hierarchicalRow;
+                targetType = 'hierarchicalRow';
                 target = row;
                 break;
             default:
-                targetType = GridKeydownTargetType.dataCell;
+                targetType = 'dataCell';
                 target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
                 break;
         }
@@ -6347,7 +6385,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const row = this.crudService.row;
         const cell = this.crudService.cell;
 
-        // TODO: Merge the crudService with wht BaseAPI service
+        // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
@@ -6363,8 +6401,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const rowIndex = activeCell.row;
             const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
             this.navigateTo(rowIndex, visibleColIndex, (c) => {
-                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
-                    c.target.activate();
+                if (c.targetType === 'dataCell' && c.target) {
+                    c.target.activate(event);
                 }
             });
         }
@@ -6509,7 +6547,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
-            this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
+            this._advancedFilteringOverlaySettings.outlet = this.outlet;
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,

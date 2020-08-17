@@ -36,10 +36,12 @@ import {
     IgxGridFilteringScrollComponent,
     IgxGridFilteringMCHComponent,
     IgxGridFilteringTemplateComponent,
+    IgxGridFilteringESFEmptyTemplatesComponent,
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
     CustomFilteringStrategyComponent,
-    IgxGridExternalESFComponent
+    IgxGridExternalESFComponent,
+    IgxGridExternalESFTemplateComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -1128,7 +1130,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(reset.nativeElement.innerText).toBe('Reset');
+            expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
         }));
 
         it('Should correctly change resource strings for filter row using Changei18n.', fakeAsync(() => {
@@ -1151,8 +1153,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(close.nativeElement.innerText).toBe('My close');
-            expect(reset.nativeElement.innerText).toBe('Reset');
+            expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
+            expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
 
             changei18n({
                 igx_grid_filter: 'Filter',
@@ -1181,8 +1183,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(close.nativeElement.innerText).toBe('My close');
-            expect(reset.nativeElement.innerText).toBe('Reset');
+            expect(close.nativeElement.childNodes[1].textContent.trim()).toBe('My close');
+            expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
         }));
 
         it('should correctly apply locale to datePicker.', fakeAsync(() => {
@@ -2581,10 +2583,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
+                IgxGridFilteringESFEmptyTemplatesComponent,
                 IgxGridFilteringESFTemplatesComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringMCHComponent,
-                IgxGridExternalESFComponent
+                IgxGridExternalESFComponent,
+                IgxGridExternalESFTemplateComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -2740,8 +2744,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
 
-            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
-            const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+            let moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            let moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
 
             moveRight.click();
             fix.detectChanges();
@@ -2751,12 +2755,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.pinnedColumns[0].field).toBe(columnToMove.field);
             expect(grid.pinnedColumns[1].field).toBe(columnToPin.field);
 
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
+            moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
             moveRight.click();
             fix.detectChanges();
 
             expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
             expect(grid.pinnedColumns[1].field).toBe(columnToMove.field);
 
+            moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
             moveLeft.click();
             fix.detectChanges();
 
@@ -2856,6 +2863,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+
             expect(checkboxes[0].checked && checkboxes[0].indeterminate).toBeTruthy();
             expect(!checkboxes[1].checked && !checkboxes[1].indeterminate).toBeTruthy();
             expect(!checkboxes[2].checked && !checkboxes[2].indeterminate).toBeTruthy();
@@ -3569,7 +3577,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
 
             // Scroll the search list to the bottom.
@@ -3580,8 +3588,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 680 && scrollbar.scrollTop <= 690).toBe(true,
-                'search scrollbar has incorrect scrollTop');
+            expect(scrollbar.scrollTop >= 670 && scrollbar.scrollTop <= 700).toBe(true,
+                'search scrollbar has incorrect scrollTop: ' + scrollbar.scrollTop);
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
@@ -4338,16 +4346,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
-    describe(null, () => {
+    describe('Templates: ', () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
         }));
 
         it('Should use custom templates for ESF components instead of default ones.', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringESFEmptyTemplatesComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -4357,30 +4368,132 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 GridFunctions.clickExcelFilterIcon(fix, column.field);
                 tick(100);
                 fix.detectChanges();
-
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-                // Verify custom sorting template is used.
-                expect(excelMenu.querySelector('.esf-custom-sorting')).not.toBeNull();
+
+                // Verify custom column operations template is used.
+                expect(excelMenu.querySelector('igx-excel-style-column-operations')).not.toBeNull();
+
+                // Verify custom filter operations template is used.
+                expect(excelMenu.querySelector('igx-excel-style-filter-operations')).not.toBeNull();
+
+                // Verify components in default ESF column operations template are not present.
+                expect(GridFunctions.getExcelFilteringHeaderComponent(fix, excelMenu)).toBeNull();
                 expect(GridFunctions.getExcelFilteringSortComponent(fix, excelMenu)).toBeNull();
-
-                // Verify custom hiding template is used.
-                expect(excelMenu.querySelector('.esf-custom-hiding')).not.toBeNull();
-                expect(GridFunctions.getExcelFilteringHideContainer(fix, excelMenu)).toBeNull();
-
-                // Verify custom moving template is used.
-                expect(excelMenu.querySelector('.esf-custom-moving')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringMoveComponent(fix, excelMenu)).toBeNull();
+                expect(GridFunctions.getExcelFilteringPinComponent(fix, excelMenu)).toBeNull();
+                expect(GridFunctions.getExcelFilteringHideComponent(fix, excelMenu)).toBeNull();
+                expect(GridFunctions.getExcelFilteringColumnSelectionComponent(fix, excelMenu)).toBeNull();
 
-                // Verify custom pinning template is used.
-                expect(excelMenu.querySelector('.esf-custom-pinning')).not.toBeNull();
-                expect(GridFunctions.getExcelFilteringPinContainer(fix, excelMenu)).toBeNull();
-                expect(GridFunctions.getExcelFilteringUnpinContainer(fix, excelMenu)).toBeNull();
-
-                // Verify column selection custom template application.
-                expect(excelMenu.querySelector('.esf-custom-column-selection')).not.toBeNull();
-                expect(GridFunctions.getExcelFilteringColumnSelectionContainer(fix, excelMenu)).toBeNull();
+                // Verify components in default ESF filter operations template are not present.
+                expect(GridFunctions.getExcelFilteringClearFiltersComponent(fix, excelMenu)).toBeNull();
+                expect(GridFunctions.getExcelFilteringConditionalFilterComponent(fix, excelMenu)).toBeNull();
+                expect(GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu)).toBeNull();
             }
         }));
+
+        it('Should filter and clear the excel search component correctly from template', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+
+            // Type string in search box.
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'ignite', fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            // Clear filtering of ESF search.
+            const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
+                .find((icon: any) => icon.innerText === 'clear');
+            clearIcon.click();
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            tick(100);
+        }));
+
+        it('Should move column left/right when clicking buttons from template', fakeAsync(() => {
+            grid.columns[2].movable = true;
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            expect(grid.columns[2].field).toBe('ProductName');
+            expect(grid.columns[1].field).toBe('Downloads');
+
+            moveLeft.click();
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns[1].field).toBe('ID');
+            expect(grid.columns[0].field).toBe('Downloads');
+            ControlsFunction.verifyButtonIsDisabled(moveLeft);
+
+            moveRight.click();
+            tick();
+            fix.detectChanges();
+
+            expect(grid.columns[0].field).toBe('ID');
+            expect(grid.columns[1].field).toBe('Downloads');
+            ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
+        }));
+
+        it('should select/deselect column in external ESF template when interact with the column selection item through esf menu', () => {
+            fix = TestBed.createComponent(IgxGridExternalESFTemplateComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            // Test in single multiple mode
+            grid.columnSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            spyOn(grid.onColumnSelectionChange, 'emit');
+            const column = grid.getColumnByName('Downloads');
+            fix.componentInstance.esf.column = column;
+            fix.detectChanges();
+
+            GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
+
+            GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(column, false);
+
+            // Test in single selection mode
+            grid.columnSelection = GridSelectionMode.single;
+            fix.detectChanges();
+
+            grid.selectColumns(['ID']);
+            fix.detectChanges();
+
+            const columnId = grid.getColumnByName('ID');
+            GridSelectionFunctions.verifyColumnAndCellsSelected(columnId);
+
+            GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
+
+        });
     });
 
     describe('Load values on demand', () => {

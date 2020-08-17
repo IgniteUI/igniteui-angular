@@ -24,7 +24,7 @@ import {
     TransactionEventOrigin,
     StateUpdateEvent
 } from '../../services/transaction/transaction';
-import { IgxHierarchicalTransactionService } from '../../services/public_api';
+import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
@@ -76,7 +76,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
-    protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
+    protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.

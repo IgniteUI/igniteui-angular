@@ -23,7 +23,7 @@ import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
-import { GridSelectionMode } from './common/enums';
+import { GridSelectionMode, GridKeydownTargetType } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 
@@ -285,6 +285,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('attr.title')
     public get title() {
         return this.editMode || this.cellTemplate ? '' : this.value;
+    }
+
+    @HostBinding('class.igx-grid__td--bool-true')
+    public get booleanClass() {
+        return this.column.dataType === 'boolean' && this.value;
     }
 
     /**
@@ -733,7 +738,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (!isLeftClick(event)) {
             event.preventDefault();
-            this.setActiveNode();
+            this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
@@ -818,7 +823,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-        this.setActiveNode();
+        this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
+
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
@@ -838,8 +844,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.grid.onSelection.emit({ cell: this, event });
         }
-        this.grid.cdr.detectChanges();
     }
+
 
     /**
      * If the provided string matches the text in the cell, the text gets highlighted.
@@ -882,14 +888,5 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const meta = new Map<string, any>();
         meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
         return meta;
-    }
-
-    private setActiveNode() {
-        if (this.grid.navigation.activeNode) {
-            Object.assign(this.grid.navigation.activeNode, {row: this.rowIndex, column: this.visibleColumnIndex});
-        } else {
-            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-            this.grid.navigation.activeNode = { row: this.rowIndex, column: this.visibleColumnIndex, layout: layout };
-        }
     }
 }

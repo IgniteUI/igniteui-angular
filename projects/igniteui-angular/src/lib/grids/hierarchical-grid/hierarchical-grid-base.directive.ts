@@ -10,7 +10,9 @@ import {
     Input,
     ViewChild,
     TemplateRef,
-    Directive
+    Directive,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -29,6 +31,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -60,6 +63,17 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
     public showExpandAll = false;
 
     /**
+     * Emitted when a new chunk of data is loaded from virtualization.
+     * @example
+     * ```typescript
+     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
+     *  </igx-hierarchical-grid>
+     * ```
+     */
+    @Output()
+    public onDataPreLoad = new EventEmitter<IForOfState>();
+
+    /**
      * @hidden
      */
     get maxLevelHeaderDepth() {
@@ -70,10 +84,19 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
     }
 
     /**
-     * @hidden
+     * Gets the outlet used to attach the grid's overlays to.
+     * @remark
+     * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    protected get outlet() {
-        return this.rootGrid ? this.rootGrid.outletDirective : this.outletDirective;
+    get outlet() {
+        return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
+    }
+
+    /**
+     * Sets the outlet used to attach the grid's overlays to.
+     */
+    set outlet(val: any) {
+        this._userOutletDirective = val;
     }
 
     /**

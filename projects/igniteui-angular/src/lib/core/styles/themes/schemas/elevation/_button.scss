@@ -1,10 +1,16 @@
 ////
 /// @group schemas
-/// @access private
+/// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
 /// @type Map
+/// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} raised-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} fab-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
 $_flat-button: (
     raised-resting-elevation: 0,
     raised-hover-elevation: 0,
@@ -16,6 +22,12 @@ $_flat-button: (
 );
 
 /// @type Map
+/// @prop {Number} raised-resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} raised-hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} raised-focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} fab-resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
 $_default-elevation-button: (
     raised-resting-elevation: 2,
     raised-hover-elevation: 4,
@@ -27,10 +39,16 @@ $_default-elevation-button: (
 );
 
 /// @type Map
+/// @requires {function} extend
+/// @requires {Map} $_flat-button
 $_fluent-elevation-button: extend($_flat-button);
 
 /// @type Map
+/// @requires {function} extend
+/// @requires {Map} $_flat-button
 $_bootstrap-elevation-button: extend($_flat-button);
 
 /// @type Map
+/// @requires {function} extend
+/// @requires {Map} $_flat-button
 $_indigo-elevation-button: extend($_flat-button);

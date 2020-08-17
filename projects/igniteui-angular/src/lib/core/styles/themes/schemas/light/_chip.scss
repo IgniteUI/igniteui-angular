@@ -9,7 +9,7 @@
 
 /// Generates a light chip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for chip component.
+/// @prop {Number} border-radius [1] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} text-color [igx-color: ('grays', 700)] - The chip text color.
 /// @prop {Map} background [igx-color: ('grays', 200)] - The chip background color.
 /// @prop {Color} border-color [transparent] - The chip border color.
@@ -29,11 +29,14 @@
 /// @prop {Map} focus-selected-text-color [igx-color: ('grays', 700)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [igx-color: ('grays', 400)] - The selected chip focus background color.
 /// @prop {Color} focus-selected-border-color [transparent] - The selected chip focus border color.
-/// @prop {Number} ghost-elevation [8] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
+/// @prop {Number} ghost-elevation [8] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {color} remove-icon-color ["'currentColor'"] - The remove icon color for the chip.
 /// @prop {Map} remove-icon-color-focus [igx-color: ('error')] - The remove icon color on focus for the chip.
 /// @prop {color} $focus-border-color [transparent] - The chip focus border color.
 ///
+/// @requires {function} extend
+/// @requires {Map} $_round-shape-chip
+/// @requires {Map} $_default-elevation-chip
 /// @see $default-palette
 $_light-chip: extend(
     $_round-shape-chip,
@@ -127,11 +130,13 @@ $_light-chip: extend(
 /// @prop {Map} hover-selected-background [igx-color: ('primary', 500)] - The selected chip hover background color.
 /// @prop {Map} focus-selected-text-color [igx-contrast-color: ('primary', 500)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [igx-color: ('primary', 500)] - The selected chip focus background color.
-/// @prop {Number} ghost-elevation [2] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for chip component.
+/// @prop {Number} ghost-elevation [2] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
+/// @prop {Number} border-radius [1] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-chip
+/// @requires {Map} $_round-shape-chip
+/// @requires {Map} $_fluent-elevation-chip
 $_fluent-chip: extend(
     $_light-chip,
     $_round-shape-chip,
@@ -186,11 +191,13 @@ $_fluent-chip: extend(
 /// Generates a bootstrap chip schema.
 /// @type {Map}
 ///
-/// @prop {Number} ghost-elevation [0] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
-/// @prop {Number} border-radius [.25] - The border radius fraction, between 0-1 to be used for chip component.
+/// @prop {Number} ghost-elevation [0] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
+/// @prop {Number} border-radius [.25] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-chip
+/// @requires {Map} $_bootstrap-shape-chip
+/// @requires {Map} $_bootstrap-elevation-chip
 $_bootstrap-chip: extend(
     $_light-chip,
     $_bootstrap-shape-chip,
@@ -203,8 +210,8 @@ $_bootstrap-chip: extend(
 /// Generates an indigo chip schema.
 /// @type {Map}
 ///
-/// @prop {Number} ghost-elevation [0] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
-/// @prop {Number} border-radius [3px] - The border radius fraction used for chip component.
+/// @prop {Number} ghost-elevation [0] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
+/// @prop {Number} border-radius [3px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Color} text-color [#fff] - The chip text color.
 /// @prop {Map} background [igx-color: ('grays', 600)] - The chip background color.
 /// @prop {Map} ghost-background [igx-color: ('grays', 800), to-opaque: (igx-color: 'surface')] - The chip ghost background color.
@@ -220,6 +227,8 @@ $_bootstrap-chip: extend(
 /// @prop {Map} focus-selected-background [igx-color: ('primary', 400)] - The selected chip focus background color.
 /// @requires {function} extend
 /// @requires {Map} $_light-chip
+/// @requires {Map} $_indigo-shape-chip
+/// @requires {Map} $_indigo-elevation-chip
 $_indigo-chip: extend(
     $_light-chip,
     $_indigo-shape-chip,
