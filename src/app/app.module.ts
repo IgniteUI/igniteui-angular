@@ -92,6 +92,7 @@ import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
@@ -132,9 +133,11 @@ import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualiz
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-directive';
+import { AddRowComponent } from './tree-grid-add-row/add-row.component';
 
 const components = [
     ActionStripSampleComponent,
+    AddRowComponent,
     AppComponent,
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
@@ -215,6 +218,7 @@ const components = [
     GridRowEditSampleComponent,
     GridWithTransactionsComponent,
     TreeGridSampleComponent,
+    TreeGridAddRowSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridWithTransactionsComponent,
     TreeGridLoadOnDemandSampleComponent,

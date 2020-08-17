@@ -108,6 +108,7 @@ import {
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
+import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 
 const appRoutes = [
     {
@@ -451,6 +452,10 @@ const appRoutes = [
     {
         path: 'treeGrid',
         component: TreeGridSampleComponent
+    },
+    {
+        path: 'treeGridAddRow',
+        component: TreeGridAddRowSampleComponent
     },
     {
         path: 'treeGridFlatData',
