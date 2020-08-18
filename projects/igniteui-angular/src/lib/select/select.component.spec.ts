@@ -189,6 +189,13 @@ describe('igxSelect', () => {
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
+
+            // #7974 - Do not close in case of closeOnOutsideClick = false is passed via custom overlaySettings.
+            document.documentElement.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+            tick();
+            expect(select.collapsed).toEqual(false);
+
             select.disabled = true;
             expect(select.disabled).toBeTruthy();
         }));

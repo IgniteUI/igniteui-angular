@@ -369,7 +369,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     ngAfterContentInit() {
         this._overlayDefaults = {
             modal: false,
-            closeOnOutsideClick: false,
+            closeOnOutsideClick: true,
             positionStrategy: new SelectPositioningStrategy(this, { target: this.getEditElement() }),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
@@ -425,7 +425,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         } else {
             this.input.valid = IgxInputState.INITIAL;
         }
-        if (!this.collapsed) {
+
+        // #7974 - Do not close in case of closeOnOutsideClick = false
+        // respect component default and custom overlaySettings
+        const appliedOverlaySettings = Object.assign({}, this._overlayDefaults, this.overlaySettings);
+        if (!this.collapsed && appliedOverlaySettings.closeOnOutsideClick === true) {
             this.toggleDirective.close();
         }
     }
