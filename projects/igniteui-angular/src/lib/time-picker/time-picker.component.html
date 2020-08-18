@@ -4,7 +4,7 @@
         <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
-        <input 
+        <input
             type="text"
             [igxMask]="mask"
             igxInput
@@ -14,6 +14,7 @@
             [focusedValuePipe]="inputFormat"
             [promptChar]="promptChar"
             [value]="displayValue"
+            [igxTextSelection]="true"
             (input)="onInput($event)"
             (blur)="onBlur($event)"
             (focus)="onFocus($event)"
