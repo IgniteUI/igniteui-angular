@@ -134,9 +134,7 @@ export class WorksheetFile implements IExcelFile {
         }
         const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
 
-        const worksheetName = `${worksheetData.options.worksheetName.toLowerCase()}.xml`;
-
-        folder.file(worksheetName,
+        folder.file('sheet1.xml',
                     ExcelStrings.getSheetXML(dimension, freezePane, cols.join(''), sheetData.join(''), hasTable,
                     worksheetData.isTreeGridData, maxOutlineLevel));
     }
@@ -145,9 +143,8 @@ export class WorksheetFile implements IExcelFile {
         return new Promise(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
-                const worksheetName = `${worksheetData.options.worksheetName.toLowerCase()}.xml`;
 
-                folder.file(worksheetName, ExcelStrings.getSheetXML(
+                folder.file('sheet1.xml', ExcelStrings.getSheetXML(
                     this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
                 resolve();
             });
@@ -365,8 +362,6 @@ export class TablesFile implements IExcelFile {
  */
 export class WorksheetRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        const worksheetName = `${worksheetData.options.worksheetName.toLowerCase()}.xml.rels`;
-
-        folder.file(worksheetName, ExcelStrings.getWorksheetRels());
+        folder.file('sheet1.xml.rels', ExcelStrings.getWorksheetRels());
     }
 }
