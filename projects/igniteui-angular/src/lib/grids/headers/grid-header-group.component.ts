@@ -254,7 +254,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get columnTitle() {
-        return this.column.elementRef.nativeElement.getAttribute('title') || this.column.header;
+        return this.column.title || this.column.header;
     }
 
     /**
