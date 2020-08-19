@@ -17,6 +17,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxColumnComponent } from '../tree-grid/public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
@@ -60,6 +61,87 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[1].field).toEqual('LastName');
             expect(columnsList[2].field).toEqual('ID');
         }));
+
+        it('Should be able to reorder columns programmatically.', () => {
+            let columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('LastName');
+            expect(columnsList[2].field).toEqual('ID');
+        });
+
+        it('Should fire onColumnMovingEnd with correct values of event arguments.', () => {
+            let columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+
+            spyOn(grid.onColumnMovingEnd, 'emit').and.callThrough();
+
+            column.move(2);
+
+            columnsList = grid.columnList.toArray();
+            const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1] };
+            expect(grid.onColumnMovingEnd.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onColumnMovingEnd.emit).toHaveBeenCalledWith(args);
+        });
+
+        it('Should exit edit mode and commit the new value when column moving programmatically', () => {
+            fixture.componentInstance.isEditable = true;
+            fixture.detectChanges();
+
+            // step 1 - enter edit mode on a cell
+            const cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            cell.triggerEventHandler('dblclick', {});
+            fixture.detectChanges();
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(true);
+
+            // step 2 - enter some new value
+            const editTemplate = cell.query(By.css('input'));
+            editTemplate.nativeElement.value = '4';
+            editTemplate.nativeElement.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            // step 3 - move a column
+            const columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+
+            // step 4 - verify cell has exited edit mode correctly
+            expect(grid.columnList.toArray()[2].field).toEqual('ID');
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(false);
+            expect(grid.getCellByColumn(0, 'ID').value).toBe('4');
+        });
+
+        it('Should preserve hidden columns order after columns are reordered programmatically', () => {
+
+            // step 1 - hide a column
+            fixture.componentInstance.isHidden = true;
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            // step 2 - move a column
+            const columnsList = grid.columnList.toArray();
+            const column = columnsList[2] as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+
+            expect(grid.visibleColumns[1].field).toEqual('LastName');
+
+            // step 3 - show hidden columns and verify correct order
+            fixture.componentInstance.isHidden = false;
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(grid.visibleColumns[0].field).toEqual('ID');
+            expect(grid.visibleColumns[1].field).toEqual('LastName');
+            expect(grid.visibleColumns[2].field).toEqual('Name');
+        });
 
         it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async() => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));

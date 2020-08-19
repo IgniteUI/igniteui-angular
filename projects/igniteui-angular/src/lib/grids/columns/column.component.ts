@@ -44,6 +44,7 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { DropPosition } from '../moving/moving.service';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1731,6 +1732,24 @@ export class IgxColumnComponent implements AfterContentInit {
         this.grid.filteringService.refreshExpressions();
 
         return true;
+    }
+
+    /**
+     * Moves a column to the specified index.
+     * @example
+     * ```typescript
+     * column.move(index);
+     * ```
+     */
+    public move(index: number) {
+        if (index === this.index) {
+            return;
+        }
+        const grid = (this.grid as any);
+        const columns = grid.columnList.toArray();
+        const targetColumn = columns[index];
+        const pos = this.index < index ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        grid.moveColumn(this, targetColumn, pos);
     }
     /**
      * Returns a reference to the top level parent column.

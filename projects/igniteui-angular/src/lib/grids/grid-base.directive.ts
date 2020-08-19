@@ -3898,7 +3898,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Moves a column to the specified drop target.
      * @example
      * ```typescript
-     * grid.moveColumn(compName, persDetails);
+     * grid.moveColumn(column, dropTarget);
      * ```
      */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
