@@ -26,14 +26,9 @@ export default function (): Rule {
                 const attr = attrMatch[0];
 
                 return (
-                    attr === 'type="bootstrap"' ||
-                    attr === 'type="fluent"' ||
-                    attr === 'type="fluent_search"' ||
-                    attr === 'type="indigo"' ||
-                    attr === 'type=\'bootstrap\'' ||
-                    attr === 'type=\'fluent\'' ||
-                    attr === 'type=\'fluent_search\'' ||
-                    attr === 'type=\'indigo\''
+                    attr.includes('bootstrap') ||
+                    attr.includes('fluent') ||
+                    attr.includes('indigo')
                 );
             }
 

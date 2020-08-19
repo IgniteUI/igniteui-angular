@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     Component,
     ContentChild,
@@ -11,7 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
-    AfterContentInit
+    AfterContentInit,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -222,17 +222,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         return this._type;
     }
 
-    /**
-     * Returns the theme of the `IgxInputGroupComponent`.
-     * The default is `material`.
-     * ```typescript
-     * @ViewChild("MyInputGroup")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let inputType = this.inputGroup.theme;
-     * }
-     * ```
-     */
+    /** @hidden @internal */
     public get theme(): IgxInputGroupTheme {
         return this._variant;
     }
@@ -259,13 +249,15 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         public element: ElementRef<HTMLElement>,
         @Optional()
         @Inject(DisplayDensityToken)
-        _displayDensityOptions: IDisplayDensityOptions
+        private _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT)
+        private document: any
     ) {
         super(_displayDensityOptions);
     }
 
     ngAfterContentInit() {
-        const variant = window
+        const variant = this.document.defaultView
             .getComputedStyle(this.element.nativeElement)
             .getPropertyValue('--igx-input-group-variant')
             .trim();
