@@ -500,6 +500,17 @@ describe('Excel Exporter', () => {
             // Export and verify
             await exportAndVerify(grid, options, actualData.gridWithAdvancedFilters);
         });
+
+        it('Should set worksheet name', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            const worksheetName = 'NewWorksheetName';
+
+            await setWorksheetNameAndExport(grid, options, fix, worksheetName);
+        });
     });
 
     describe('', () => {
@@ -689,6 +700,17 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
+            });
+        });
+    }
+
+    function setWorksheetNameAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, worksheetName) {
+        return new Promise<void>((resolve) => {
+            options.worksheetName = worksheetName;
+            fix.detectChanges();
+            getExportedData(grid, exportOptions).then((wrapper) => {
+                wrapper.verifyDataFilesContent(actualData.simpleGridWorksheetName(worksheetName), ' Worksheet Name : ' + worksheetName)
+                    .then(() => resolve());
             });
         });
     }
