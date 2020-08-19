@@ -4,13 +4,15 @@
     </app-page-header>
     <section>
         <article>
-            <div>
+            <div class="display-density-actions">
                 <h4>Display Density</h4>
-                <button igxButton="raised" [disabled]="displayDensity === compact"
+                <igx-buttongroup>
+                    <button igxButton [disabled]="displayDensity === compact"
                     (click)="setDensity(compact)">Compact</button>
-                <button igxButton="raised" [disabled]="displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
-                <button igxButton="raised" [disabled]="displayDensity === comfortable"
-                    (click)="setDensity(comfortable)">Comfortable</button>
+                    <button igxButton [disabled]="displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
+                    <button igxButton [disabled]="displayDensity === comfortable"
+                        (click)="setDensity(comfortable)">Comfortable</button>
+                </igx-buttongroup>
             </div>
         </article>
         <article>

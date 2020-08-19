@@ -14,6 +14,7 @@
                 <igx-switch [(ngModel)]="car.gesturesSupport">gesturesSupport</igx-switch>
                 <igx-switch [(ngModel)]="loop">loop</igx-switch>
                 <igx-switch [(ngModel)]="pause">pause</igx-switch>
+                <br>
                 <button igxButton="raised" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation" displayDensity="comfortable">Animation Type: {{car.animationType}}</button>
                 <igx-drop-down #dropDownAnimation (onSelection)="onAnimationSelection($event)"  displayDensity="comfortable">
                     <igx-drop-down-item *ngFor="let item of animationModes">
@@ -24,8 +25,8 @@
                 <button igxButton="raised" (click)="play()">play</button>
                 <button igxButton="raised" (click)="changeSlides()">Change slides add</button>
                 <button igxButton="raised" (click)="changeSlidesRemove()">Change slides remove</button>
-                 <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
-                 <div style="height: 800px;">
+                <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
+                <div style="height: 800px;">
                     <igx-carousel #car [interval]="interval" [pause]="pause" [loop]="loop">
                         <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                             <img [src]="slide.image">
