@@ -134,7 +134,6 @@
 
     %igx-grid-toolbar {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
         justify-content: flex-end;
         grid-row: 1;
@@ -142,6 +141,7 @@
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         height: map-get($grid-toolbar-height, 'comfortable');
+        position: relative;
 
         @include if-ltr(){
             padding: map-get($grid-toolbar-padding, 'comfortable');
@@ -255,7 +255,11 @@
     }
 
     %igx-grid-toolbar__export-progress {
-        flex-basis: 100%;
+        position: absolute;
+        width: 100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
     %igx-grid-toolbar__adv-filter--filtered {
