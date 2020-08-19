@@ -7,8 +7,7 @@ import {
     ViewChild,
     Inject,
     TemplateRef,
-    AfterViewInit,
-    OnDestroy
+    AfterViewInit
 } from '@angular/core';
 
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
@@ -35,6 +34,7 @@ import { IgxColumnActionsComponent } from '../column-actions/column-actions.comp
 import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -44,13 +44,7 @@ import { Subscription } from 'rxjs';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent extends DisplayDensityBase implements AfterViewInit, OnDestroy {
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onExportEnded$: Subscription;
-
+export class IgxGridToolbarComponent extends DisplayDensityBase implements AfterViewInit {
     /**
      * @hidden
      */
@@ -348,18 +342,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     }
 
     private performExport(exp: IgxBaseExporter, exportType: string) {
-        let exportEnded = false;
-        setTimeout(() => {
-            if (!exportEnded) {
-                this.setIsExporting(true);
-            }
-        }, 500);
-
-        this._onExportEnded$ = exp.onExportEnded.subscribe(() => {
-            exportEnded = true;
-            this.setIsExporting(false);
-        });
-
         this.exportClicked();
 
         const fileName = 'ExportedData';
@@ -370,10 +352,21 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
 
         this.grid.onToolbarExporting.emit(args);
         if (args.cancel) {
-            this.setIsExporting(false);
-            this._onExportEnded$.unsubscribe();
             return;
         }
+
+        let exportEnded = false;
+        setTimeout(() => {
+            if (!exportEnded) {
+                this.setIsExporting(true);
+            }
+        }, 500);
+
+        exp.onExportEnded.pipe(first()).subscribe(() => {
+            exportEnded = true;
+            this.setIsExporting(false);
+        });
+
         exp.export(this.grid, options);
     }
 
@@ -438,15 +431,5 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      */
     ngAfterViewInit() {
         this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    ngOnDestroy() {
-        if (this._onExportEnded$) {
-            this._onExportEnded$.unsubscribe();
-        }
     }
 }
