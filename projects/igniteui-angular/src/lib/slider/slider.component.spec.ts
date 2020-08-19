@@ -15,8 +15,8 @@ const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
 const SLIDER_TICKS_ELEMENT = '.igx-slider__ticks';
 const SLIDER_TICKS_TOP_ELEMENT = '.igx-slider__ticks--top';
-const SLIDER_PRIMARY_GROUP_TICKS_CLASS = '.igx-slider__ticks-group--tall';
 const SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME = 'igx-slider__ticks-group--tall';
+const SLIDER_PRIMARY_GROUP_TICKS_CLASS = `.${SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME}`;
 const SLIDER_GROUP_TICKS_CLASS = '.igx-slider__ticks-group';
 const SLIDER_TICK_LABELS_CLASS = '.igx-slider__ticks-label';
 const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
@@ -1427,6 +1427,24 @@ describe('IgxSlider', () => {
             expect(secondaryTicks.length).toEqual((expectedPrimary - 1) * expectedSecondary);
         });
 
+        it('check primary ticks length (16px)', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            fixture.componentInstance.primaryTicks = 5;
+            fixture.detectChanges();
+
+            const primaryTick = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS)[0];
+            expect(primaryTick.firstElementChild.getBoundingClientRect().height).toEqual(16);
+        });
+
+        it('check secondary ticks length (8px)', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            fixture.componentInstance.secondaryTicks = 5;
+            fixture.detectChanges();
+
+            const primaryTick = ticks.nativeElement.querySelectorAll(SLIDER_GROUP_TICKS_CLASS)[0];
+            expect(primaryTick.firstElementChild.getBoundingClientRect().height).toEqual(8);
+        });
+
         it('hide/show top and bottom ticks', () => {
             let ticks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_ELEMENT);
             let ticksTop = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
@@ -1484,6 +1502,7 @@ describe('IgxSlider', () => {
             verifyPrimaryTicsLabelsAreHidden(ticks, false);
             verifySecondaryTicsLabelsAreHidden(ticks, false);
         });
+
 
         it('show/hide secondary tick labels', () => {
             const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
@@ -1558,6 +1577,25 @@ describe('IgxSlider', () => {
             labelsTopBottom = nativeElem.querySelector(TOP_TO_BOTTOM_TICK_LABLES);
             expect(labelsTopBottom).not.toBeNull();
             expect(labelsBottomTop).toBeNull();
+        });
+
+        it('ticks change should reflect dynamically when slider labels are changed', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            let labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            slider.labels = labels;
+            fixture.detectChanges();
+
+            let primaryTicks = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
+            expect(primaryTicks.length).toEqual(labels.length);
+
+            labels = labels.splice(0, labels.length - 2);
+            slider.labels = labels;
+            fixture.detectChanges();
+
+            primaryTicks = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
+
+            expect(primaryTicks.length).toEqual(labels.length);
+
         });
     });
 
@@ -1677,7 +1715,8 @@ export class SliderRtlComponent {
     `
 })
 export class SliderTicksComponent {
-    @ViewChild(IgxSliderComponent)
+
+    @ViewChild(IgxSliderComponent, {static: true})
     public slider: IgxSliderComponent;
 
     public primaryTicks = 0;
