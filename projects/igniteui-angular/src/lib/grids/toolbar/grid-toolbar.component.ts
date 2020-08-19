@@ -355,7 +355,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
             }
         }, 500);
 
-        this._onExportEnded$ = exp.onExportEnded.subscribe((args: any) => {
+        this._onExportEnded$ = exp.onExportEnded.subscribe(() => {
             exportEnded = true;
             this.setIsExporting(false);
         });
