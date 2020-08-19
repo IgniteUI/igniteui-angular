@@ -77,6 +77,8 @@ export abstract class IgxBaseExporter {
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
 
+    public onExportEnded = new EventEmitter<IBaseEventArgs>();
+
     /**
      * This event is emitted when a row is exported.
      * ```typescript
