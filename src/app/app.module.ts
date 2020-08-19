@@ -133,11 +133,9 @@ import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualiz
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-directive';
-import { AddRowComponent } from './tree-grid-add-row/add-row.component';
 
 const components = [
     ActionStripSampleComponent,
-    AddRowComponent,
     AppComponent,
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,

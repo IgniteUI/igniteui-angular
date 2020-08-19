@@ -80,6 +80,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
 
+    public test(event) {
+        console.log(event);
+        this.endEdit(true);
+    }
+
+
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html

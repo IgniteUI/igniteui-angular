@@ -170,6 +170,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _init = true;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
+    public _shouldAddRow = false;
+
 
     /**
      * @hidden @internal
@@ -205,6 +207,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     protected _userOutletDirective: IgxOverlayOutletDirective;
+
+    @ViewChild('addRowInstance')
+    public addRowInstance: IgxGridRowComponent;
 
     /**
      * @hidden @internal
@@ -1601,6 +1606,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren('pinnedRow')
     private _pinnedRowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChildren('externalRow')
+    private _externalRowList: QueryList<IgxGridRowComponent>;
+
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
@@ -1854,6 +1862,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
+
+    @ViewChild('addRowFooter', {static: false })
+    public addRowFooter: ElementRef;
 
     /**
      * @hidden @internal
@@ -2646,6 +2657,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private columnListDiffer;
     private rowListDiffer;
+    private externalRowListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
     private _height = '100%';
@@ -3032,6 +3044,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
         this.columnListDiffer = this.differs.find([]).create(null);
+        this.externalRowListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
     }
@@ -3204,6 +3217,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             .pipe(takeUntil(this.destroy$))
             .subscribe((change: QueryList<IgxGridRowComponent>) => {
                 this.onPinnedRowsChanged(change);
+            });
+
+        this._externalRowList.changes
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((change: QueryList<IgxGridRowComponent>) => {
+                this.onExternalRowsChanged(change);
             });
     }
 
@@ -4683,6 +4702,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
+        debugger;
         this.calcGridHeadRow();
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
@@ -4726,6 +4746,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return pagingHeight;
     }
 
+    protected getAddRowFooterHeight(): number {
+        let height = 0;
+        if (this.addRowFooter) {
+            height = this.addRowFooter.nativeElement.firstElementChild ?
+                    this.addRowFooter.nativeElement.offsetHeight : 0;
+        }
+        return height;
+    }
+
     /**
      * @hidden
      */
@@ -4741,6 +4770,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _calculateGridBodyHeight(): number {
+        debugger;
         if (!this._height) {
             return null;
         }
@@ -4750,10 +4780,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
+        const addRowHeight = this.getAddRowFooterHeight();
         const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + actualTheadRow +
-            footerHeight + pagingHeight + groupAreaHeight +
+            footerHeight + pagingHeight + groupAreaHeight + addRowHeight +
             this.scr.nativeElement.clientHeight;
 
         let gridHeight = 0;
@@ -4954,6 +4985,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    protected onExternalRowsChanged(change: QueryList<IgxGridRowComponent>) {
+        const diff = this.externalRowListDiffer.diff(change);
+        if (diff) {
+            this.notifyChanges(true);
+        }
+    }
+
     /**
      * @hidden
      */
@@ -5027,6 +5065,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
+       debugger;
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         const hasScroll = this.hasVerticalScroll();
@@ -6214,6 +6253,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
         });
+    }
+    public set shouldAddRow(value) {
+        this._shouldAddRow = value;
+        this.rowEditable = this._shouldAddRow;
+    }
+    public get shouldAddRow() {
+        return this._shouldAddRow;
     }
 
     /**

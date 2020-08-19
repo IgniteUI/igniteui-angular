@@ -7,7 +7,7 @@ import { IgxTreeGridComponent,
          IgxToggleDirective} from 'igniteui-angular';
 import { takeUntil, filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { AddRowComponent } from './add-row.component';
+
 
 
 @Component({
@@ -22,24 +22,20 @@ export class TreeGridAddRowSampleComponent implements OnInit, OnDestroy {
     public columns: Array<any>;
 
     public selectionMode;
-    @ViewChild('addrow', { read: TemplateRef, static: true })
-    public addrowTemplate: TemplateRef<any>;
+
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
-    @ViewChild('test1', { read: ViewContainerRef }) test1: ViewContainerRef;
 
-    @ViewChild(IgxToggleDirective) toggle: IgxToggleDirective;
-    constructor( @Inject(IgxOverlayService) public overlayService: IgxOverlayService, private resolver: ComponentFactoryResolver) {
-        this.overlayService
-            .onClosed
-            .pipe(
-                filter((x) => x.id === this._overlayId),
-                takeUntil(this.destroy$))
-            .subscribe(() => delete this._overlayId);
-    }
+    // @ViewChild(IgxToggleDirective) toggle: IgxToggleDirective;
+    // constructor( @Inject(IgxOverlayService) public overlayService: IgxOverlayService, private resolver: ComponentFactoryResolver) {
+    //     this.overlayService
+    //         .onClosed
+    //         .pipe(
+    //             filter((x) => x.id === this._overlayId),
+    //             takeUntil(this.destroy$))
+    //         .subscribe(() => delete this._overlayId);
+    // }
 
-    public addContainer(): TemplateRef<any> {
-        return this.addrowTemplate;
-    }
+
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
 
@@ -98,6 +94,7 @@ export class TreeGridAddRowSampleComponent implements OnInit, OnDestroy {
     public onMouseLeave(actionstrip, event?) {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== "igx-drop-down-item") {
             actionstrip.hide();
+
         }
     }
 
@@ -105,26 +102,19 @@ export class TreeGridAddRowSampleComponent implements OnInit, OnDestroy {
         console.log("working");
     }
 
-    public insert( actionstrip) {
+    public toggleContent(actionstrip) {
+        // if (this.grid1.addRowToggle.collapsed) {
+        //     this.grid1.addRowToggle.open();
+        //     const row = this.grid1.addRowInstance;
+
+        //     row.cells.forEach(cell => cell.setEditMode(true));
+        //     // this.grid1.endRowEdit();
+        // }
+        // else {
+        //     this.grid1.addRowToggle.close();
+        // }
         debugger;
-        console.log(actionstrip);
-        const row = actionstrip.context;
-        this.test1.clear();
-        const factory = this.resolver.resolveComponentFactory(IgxTreeGridComponent);
-        const componentRef = this.test1.createComponent(factory);
-        //ne raboti
-        if (!this._overlayId) {
-            this._overlayId = this.overlayService.attach(componentRef.instance.rowList.first);
-        }
-        this.overlayService.show(this._overlayId);
-    }
-    public toggleContent() {
-        if (this.toggle.collapsed) {
-            this.toggle.open();
-        }
-        else {
-            this.toggle.close();
-        }
+        this.grid1.shouldAddRow = true;
     }
 
     public ngOnDestroy() {
