@@ -19,7 +19,7 @@ body {
 
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
-@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: true);
+@include igx-theme($palette: $palette, $schema: $schema);
 
 @include igx-typography(
     $font-family: "'Nunito Sans', sans-serif",
