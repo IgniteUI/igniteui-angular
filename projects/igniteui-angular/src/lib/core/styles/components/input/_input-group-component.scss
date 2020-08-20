@@ -615,6 +615,10 @@
             @extend %form-group-input--box !optional;
         }
 
+        @include e(label) {
+            @extend %fluent-label !optional;
+        }
+
         @include e(textarea) {
             @extend %form-group-textarea--box !optional;
         }
@@ -778,6 +782,12 @@
         }
     }
 
+    @include mx(search, bootstrap) {
+        @include e(input) {
+            @extend %bootstrap-input--search !optional;
+        }
+    }
+
     @include mx(disabled, bootstrap) {
         @include e(bundle) {
             @extend %form-group-display--disabled-bootstrap !optional;
@@ -909,7 +919,7 @@
         }
     }
 
-    @include m(fluent-search) {
+    @include mx(search, fluent) {
         @extend %igx-input-group-fluent-search !optional;
 
         @include e(bundle) {
@@ -937,19 +947,19 @@
         }
     }
 
-    @include mx(fluent-search, cosy) {
+    @include mx(fluent, search, cosy) {
         @extend %igx-input-group-fluent-search--cosy !optional;
     }
 
-    @include mx(fluent-search, compact) {
+    @include mx(fluent, search, compact) {
         @extend %igx-input-group-fluent-search--compact !optional;
     }
 
-    @include mx(focused, fluent-search) {
+    @include mx(focused, fluent, search) {
         @extend %igx-input-group-fluent-search--focused !optional;
     }
 
-    @include mx(disabled, fluent-search) {
+    @include mx(disabled, fluent, search) {
         @include e(bundle) {
             @extend %form-group-bundle-search--disabled !optional;
         }

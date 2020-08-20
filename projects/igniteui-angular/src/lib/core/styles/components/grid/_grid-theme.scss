@@ -1387,10 +1387,29 @@
     %igx-grid__td--editing {
         background: --var($theme, 'cell-editing-background') !important;
         box-shadow: inset 0 0 0 rem(2px) --var($theme, 'edit-mode-color');
+        padding: 0 !important;
 
+        // Have a more stable visual editing experience
         igx-input-group {
+            --igx-input-group-variant: fluent;
             width: 100%;
-            margin-top: -16px;
+            height: 100%;
+            padding-top: 0 !important;
+        }
+
+        igx-date-picker,
+        igx-time-picker,
+        igx-date-range-picker {
+            height: 100%;
+        }
+
+        %form-group-bundle {
+            height: 100%;
+        }
+
+        input {
+            margin: 0 auto;
+            max-width: 100%;
         }
 
         %form-group-input {
