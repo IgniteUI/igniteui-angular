@@ -122,8 +122,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     get columnTitle() {
-        return this.column.elementRef.nativeElement.getAttribute('title') ||
-            this.column.header || this.column.field;
+        return this.column.title || this.column.header || this.column.field;
     }
 
     @HostBinding('attr.role')

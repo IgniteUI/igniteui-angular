@@ -1382,7 +1382,7 @@ describe('IgxDatePicker', () => {
             };
             moduleRef = {};
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(null, null);
+            inputGroup = new IgxInputGroupComponent(null, null, document);
         });
 
         it('should initialize date picker with required correctly', () => {
