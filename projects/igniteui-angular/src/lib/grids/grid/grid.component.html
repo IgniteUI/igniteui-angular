@@ -6,7 +6,7 @@
     *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)"
+            <igx-chip [id]="expr.fieldName" [title]="getGroupByChipTitle(expr)"
                 [removable]="getColumnGroupable(expr.fieldName)"
                 [draggable]="getColumnGroupable(expr.fieldName)" [displayDensity]="displayDensity"
                 (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)"
