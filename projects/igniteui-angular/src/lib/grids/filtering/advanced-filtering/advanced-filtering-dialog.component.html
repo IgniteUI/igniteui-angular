@@ -100,12 +100,10 @@
                           (onSelectionDone)="onChipSelectionEnd()"
                     >
                     <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.columnHeader || expressionItem.expression.fieldName }}</span>
-                    <igx-icon
-                        igxPrefix
-                        fontSet="filtering-icons"
-                        [name]="expressionItem.expression.condition.iconName"
-                    >
+                    <igx-prefix>
+                        <igx-icon fontSet="filtering-icons" [name]="expressionItem.expression.condition.iconName">
                     </igx-icon>
+                    </igx-prefix>
                     <span class="igx-filter-tree__expression-condition">
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
@@ -154,11 +152,10 @@
                             [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
                             [(ngModel)]="selectedCondition"
                             [disabled]="!selectedColumn">
-                    <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
-                              igxPrefix
-                              fontSet="filtering-icons"
-                              [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
-                    </igx-icon>
+                    <igx-prefix *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)">
+                        <igx-icon fontSet="filtering-icons" [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
+                        </igx-icon>
+                    </igx-prefix>
                     <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
                         <div class="igx-grid__filtering-dropdown-items">
                             <igx-icon fontSet="filtering-icons"
