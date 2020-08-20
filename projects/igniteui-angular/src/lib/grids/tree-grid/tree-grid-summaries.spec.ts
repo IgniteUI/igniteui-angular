@@ -183,18 +183,20 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(summaries.length).toBe(0);
         });
 
-        it('should position correctly summary row for collapsed rows -- bottom position', () => {
+        it('should position correctly summary row for collapsed rows -- bottom position', async() => {
             treeGrid.expandAll();
             fix.detectChanges();
 
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
+            await wait(30);
 
             let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
             expect(summaries.length).toBe(4);
 
             treeGrid.showSummaryOnCollapse = true;
             fix.detectChanges();
+            await wait(30);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
             fix.detectChanges();
@@ -225,15 +227,17 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
         });
 
-        it('should position correctly summary row for collapsed rows -- top position', () => {
+        it('should position correctly summary row for collapsed rows -- top position', async() => {
             treeGrid.expandAll();
             fix.detectChanges();
 
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
+            await wait(30);
 
             treeGrid.showSummaryOnCollapse = true;
             fix.detectChanges();
+            await wait(30);
 
             let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
             expect(summaries.length).toBe(4);

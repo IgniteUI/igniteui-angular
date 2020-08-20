@@ -30,7 +30,7 @@ import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignme
 import { ConnectedPositioningStrategy } from '../../services/overlay/position';
 import { GridType } from '../common/grid.interface';
 import { IgxGridIconService } from '../common/grid-icon.service';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
+import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../pinning/pinning-icons';
 import { GridIconsFeature } from '../common/enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
@@ -238,7 +238,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         @Optional() public csvExporter: IgxCsvExporterService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private iconService: IgxGridIconService) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
     }
 
     private _positionSettings: PositionSettings = {
@@ -406,5 +406,29 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      */
     ngAfterViewInit() {
         this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingColumnHiding(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnHidingButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingColumnPinning(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnPinningButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
     }
 }
