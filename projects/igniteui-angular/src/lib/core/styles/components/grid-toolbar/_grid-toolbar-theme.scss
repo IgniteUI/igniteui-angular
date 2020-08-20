@@ -254,12 +254,19 @@
         }
     }
 
-    %igx-grid-toolbar__export-progress {
+    %igx-grid-toolbar__progress-bar {
         position: absolute;
         width: 100%;
         left: 0;
         right: 0;
-        bottom: 0;
+        bottom: -1px;
+        height: rem(2px);
+        overflow: hidden;
+        background: --var($theme, 'background-color');
+
+        igx-linear-bar > * {
+            border-radius: 0;
+        }
     }
 
     %igx-grid-toolbar__adv-filter--filtered {
