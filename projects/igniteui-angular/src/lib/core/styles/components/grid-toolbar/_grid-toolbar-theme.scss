@@ -259,7 +259,7 @@
         width: 100%;
         left: 0;
         right: 0;
-        bottom: -1px;
+        bottom: rem(-1px);
         height: rem(2px);
         overflow: hidden;
         background: --var($theme, 'background-color');
