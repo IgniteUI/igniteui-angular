@@ -2071,6 +2071,7 @@ describe('IgxTimePicker', () => {
         it('Should set time picker status to invalid when it is required and has no value onBlur', fakeAsync(() => {
             timePickerOnBlurComponent.mode = InteractionMode.DropDown;
             timePickerOnBlurComponent.mask = 'dd/mm/yyyy';
+
             fixture.detectChanges();
 
             const inputDirectiveElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
@@ -2080,6 +2081,7 @@ describe('IgxTimePicker', () => {
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
             inputDirectiveElement.triggerEventHandler('focus', { target: { value: null }});
+            tick(16);
             fixture.detectChanges();
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);

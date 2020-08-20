@@ -1679,7 +1679,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
         const grid = fixture.componentInstance.grid;
         const generalGroup = grid.columnList.find(c => c.header === 'General Information');
-        generalGroup.elementRef.nativeElement.title = 'General Information Title';
+        generalGroup.title = 'General Information Title';
         fixture.detectChanges();
 
         const headers = fixture.debugElement.queryAll(By.css('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
