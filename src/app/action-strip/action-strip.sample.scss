@@ -17,7 +17,7 @@
     width: 400px;
     height: 200px;
     position: relative;
-    background-color: igx-color($palette, 'grays', 100);
+    background-color: var(--igx-grays-200);
 }
 
 .my-action-strip {

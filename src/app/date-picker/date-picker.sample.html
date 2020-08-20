@@ -5,21 +5,22 @@
             <h4 class="sample-title">Default Date Picker - dialog mode</h4>
             <p class="sample-description">Added buttons - today and cancel</p>
             <div class="preview">
-                <button (click)="d()">DDD</button>
                 <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today">
                 </igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect(datePicker)">Deselect date</button>
+                <igx-buttongroup class="datepicker-actions">
+                    <button igxButton igxRipple (click)="d()">Today</button>
+                    <button igxButton igxRipple (click)="deselect(datePicker)">Deselect date</button>
+                </igx-buttongroup>
             </div>
         </article>
         <article class="datepicker-column">
             <h4 class="sample-title">Default Date Picker</h4>
-            <p class="sample-description">Date Picker with passed date</p>
-            <button igxButton="raised" igxRipple (click)="showHide()">Show/hide</button>
-            <input type="number"  #monthsviewnumber />
-            <button igxButton="flat" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
+            <p class="sample-description">With Months View Number</p>
             <div class="preview">
                 <igx-date-picker #datepicker1 [value]="date"></igx-date-picker>
             </div>
+            <input type="number" #monthsviewnumber />
+            <button igxButton="raised" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
         </article>
         <article class="datepicker-column">
             <h4 class="sample-title">Default Date Picker</h4>
