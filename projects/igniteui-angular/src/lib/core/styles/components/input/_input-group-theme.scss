@@ -1581,6 +1581,10 @@
         box-shadow: none;
     }
 
+    %bootstrap-input--search {
+        transform: translateY(0);
+    }
+
     %bootstrap-input--cosy {
         font-size: map-get($bootstrap-font-size, 'cosy');
         padding: map-get($bootstrap-padding, 'cosy');
