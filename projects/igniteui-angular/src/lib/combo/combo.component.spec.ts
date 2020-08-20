@@ -637,11 +637,11 @@ describe('igxCombo', () => {
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
-            expect(inputGroupElement.childElementCount).toEqual(2);
+            expect(inputGroupElement.childElementCount).toEqual(3);
 
             const inputGroupWrapper = inputGroupElement.children[0];
             expect(inputGroupWrapper.classList.contains(CSS_CLASS_INPUTGROUP_WRAPPER)).toBeTruthy();
-            expect(inputGroupWrapper.childElementCount).toEqual(2);
+            expect(inputGroupWrapper.childElementCount).toEqual(1);
 
             const inputGroupBundle = inputGroupWrapper.children[0];
             expect(inputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLE)).toBeTruthy();
@@ -660,7 +660,7 @@ describe('igxCombo', () => {
             expect(dropDownButton.classList.contains(CSS_CLASS_TOGGLEBUTTON)).toBeTruthy();
             expect(dropDownButton.childElementCount).toEqual(1);
 
-            const inputGroupBorder = inputGroupWrapper.children[1];
+            const inputGroupBorder = inputGroupElement.children[1];
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
