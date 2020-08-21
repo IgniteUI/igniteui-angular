@@ -141,6 +141,7 @@
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         height: map-get($grid-toolbar-height, 'comfortable');
+        position: relative;
 
         @include if-ltr(){
             padding: map-get($grid-toolbar-padding, 'comfortable');
@@ -250,6 +251,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+    }
+
+    %igx-grid-toolbar__progress-bar {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        right: 0;
+        bottom: rem(-1px);
+        height: rem(2px);
+        overflow: hidden;
+        background: --var($theme, 'background-color');
+
+        igx-linear-bar > * {
+            border-radius: 0;
         }
     }
 
