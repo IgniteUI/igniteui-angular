@@ -2887,7 +2887,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     @HostListener('focusout', ['$event'])
     public blur(event) {
-        if ((event.target === this.tbody.nativeElement &&
+        if (!this.crudService.cell && (event.target === this.tbody.nativeElement &&
             this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
             || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
             || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
