@@ -11,7 +11,6 @@ import {
     TemplateRef,
     Output,
     EventEmitter,
-    ElementRef,
     OnDestroy,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
@@ -1368,8 +1367,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
