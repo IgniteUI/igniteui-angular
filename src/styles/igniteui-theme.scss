@@ -30,8 +30,6 @@ body {
     title: 'h5',
 ));
 
-@include igx-palette-vars($palette, true);
-
 .nav-header {
     @if luminance($igx-background-color) < .5 {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
