@@ -129,6 +129,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public searchValue: any;
 
+    /**
+     * @hidden @internal
+     */
+    public lastActiveNode;
+
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
@@ -1075,6 +1080,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this._overlayComponentId) {
             this._overlayService.hide(this._overlayComponentId);
         }
+        this.grid.navigation.activeNode = this.lastActiveNode;
         if (this.grid.navigation.activeNode && this.grid.navigation.activeNode.row === -1) {
             (this.grid as any).theadRow.nativeElement.focus();
         }
