@@ -25,7 +25,10 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive
+    Directive,
+    OnChanges,
+    SimpleChanges,
+    HostListener
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -68,7 +71,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
-import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -1999,6 +2002,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @HostBinding('attr.role')
     public hostRole = 'grid';
 
+    @HostListener('focusout', ['$event'])
+    public blur(event) {
+        if ((event.target === this.tbody.nativeElement &&
+            this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+            || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+            || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+            this.navigation.activeNode = {} as IActiveNode;
+        }
+    }
+
     /**
      * @hidden @internal
      */
@@ -2887,6 +2900,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
+                    instance.lastActiveNode = this.navigation.activeNode;
                     instance.setAddButtonFocus();
                 }
                 return;
