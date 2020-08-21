@@ -1,0 +1,14 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "type",
+            "remove": "true",
+            "conditions": ["type_is_invalid"],
+            "owner": {
+                "selector": "igx-input-group",
+                "type": "component"
+            }
+        }
+    ]
+}
