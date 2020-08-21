@@ -8,7 +8,7 @@ import {
     ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isIE, IBaseEventArgs } from '../core/utils';
+import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
@@ -16,10 +16,12 @@ export interface IChangeRadioEventArgs extends IBaseEventArgs {
     radio: IgxRadioComponent;
 }
 
-export enum RadioLabelPosition {
-    BEFORE = 'before',
-    AFTER = 'after'
-}
+
+export const RadioLabelPosition = mkenum({
+    BEFORE: 'before',
+    AFTER: 'after'
+});
+export type RadioLabelPosition = (typeof RadioLabelPosition)[keyof typeof RadioLabelPosition];
 
 let nextId = 0;
 const noop = () => { };

@@ -54,7 +54,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, CancelableBrowserEventArgs, isIE, isEqual, IBaseEventArgs } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs, isIE, isEqual, IBaseEventArgs, mkenum } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -107,12 +107,13 @@ export interface IFormatOptions {
  * 'longDate': equivalent to 'MMMM d, y' (June 15, 2015).
  * 'fullDate': equivalent to 'EEEE, MMMM d, y' (Monday, June 15, 2015).
  */
-export enum PredefinedFormatOptions {
-    ShortDate = 'shortDate',
-    MediumDate = 'mediumDate',
-    LongDate = 'longDate',
-    FullDate = 'fullDate'
-}
+export const PredefinedFormatOptions = mkenum({
+    ShortDate: 'shortDate',
+    MediumDate: 'mediumDate',
+    LongDate: 'longDate',
+    FullDate: 'fullDate'
+});
+export type PredefinedFormatOptions = (typeof PredefinedFormatOptions)[keyof typeof PredefinedFormatOptions];
 
 const noop = () => { };
 

@@ -12,6 +12,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
+import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -200,10 +201,11 @@ export class IgxCardFooterDirective {
  * ```
  */
 
-export enum IgxCardType {
-    ELEVATED = 'elevated',
-    OUTLINED = 'outlined'
-}
+export const IgxCardType = mkenum({
+    ELEVATED: 'elevated',
+    OUTLINED: 'outlined'
+});
+export type IgxCardType = (typeof IgxCardType)[keyof typeof IgxCardType];
 
 @Component({
     selector: 'igx-card',
@@ -276,10 +278,11 @@ export class IgxCardComponent {
     public horizontal = false;
 }
 
-export enum IgxCardActionsLayout {
-    START = 'start',
-    JUSTIFY = 'justify',
-}
+export const IgxCardActionsLayout = mkenum({
+    START: 'start',
+    JUSTIFY: 'justify'
+});
+export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof IgxCardActionsLayout];
 
 /**
  * IgxCardActions is container for the card actions.
