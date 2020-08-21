@@ -28,6 +28,8 @@ const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
 const CSS_CLASS_INPUT_GROUP_BOX = 'igx-input-group--box';
 const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
+const CSS_CLASS_INPUT_GROUP_INVALID = 'igx-input-group--invalid ';
+const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
 const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
@@ -455,7 +457,7 @@ describe('igxSelect', () => {
     describe('Form tests: ', () => {
         it('Should properly initialize when used as a reactive form control - with validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
-            const inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            const inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
@@ -463,7 +465,7 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
-            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+            expect(inputGroupIsRequiredClass).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.toggle();
@@ -491,18 +493,57 @@ describe('igxSelect', () => {
 
         it('Should properly initialize when used as a reactive form control - without initial validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
-
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
+            // 1) check if label's --required class and its asterisk are applied
+            const dom = fix.debugElement;
             const selectComp = fix.componentInstance.select;
             const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+            let inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            let inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+            // interaction test - expect actual asterisk
+            // The only way to get a pseudo elements like :before OR :after is to use getComputedStyle(element [, pseudoElt]),
+            // as these are not in the actual DOM
+            let asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+            expect(asterisk).toBe('"*"');
+            expect(inputGroupIsRequiredClass).toBeDefined();
+            expect(inputGroupIsRequiredClass).not.toBeNull();
+
+            // 2) check that input group's --invalid class is NOT applied
+            expect(inputGroupInvalidClass).toBeNull();
+
+            // interaction test - markAsTouched + open&close so the --invalid and --required classes are applied
+            fix.debugElement.componentInstance.markAsTouched();
+            const inputGroup = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+            inputGroup.nativeElement.click();
+            const toggleBtn = fix.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
+            toggleBtn.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            expect(selectComp.collapsed).toEqual(true);
+
+            inputGroupInvalidClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_INVALID));
+            expect(inputGroupInvalidClass).not.toBeNull();
+            expect(inputGroupInvalidClass).not.toBeUndefined();
+
+            inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupIsRequiredClass).not.toBeNull();
+            expect(inputGroupIsRequiredClass).not.toBeUndefined();
+
+            // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
             fix.componentInstance.removeValidators(formGroup);
+            fix.detectChanges();
+            tick();
+
+            inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
+            // interaction test - expect no asterisk
+            asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
             expect(selectFormReference).toBeDefined();
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toEqual('');
-            expect(inputGroupWithRequiredAsterisk).toBeNull();
+            expect(inputGroupIsRequiredClass).toBeNull();
+            expect(asterisk).toBe('none');
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
@@ -522,18 +563,42 @@ describe('igxSelect', () => {
 
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
+            // Re-add all Validators
             fix.componentInstance.addValidators(formGroup);
             fix.detectChanges();
-            inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-            expect(inputGroupWithRequiredAsterisk).toBeDefined();
 
+            inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupIsRequiredClass).toBeDefined();
+            expect(inputGroupIsRequiredClass).not.toBeNull();
+            expect(inputGroupIsRequiredClass).not.toBeUndefined();
+            // interaction test - expect actual asterisk
+            asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+            expect(asterisk).toBe('"*"');
+
+            // 4) Should NOT remove asterisk, when remove validators on igxSelect with required HTML attribute set(edge case)
+            // set required HTML attribute
+            inputGroup.parent.nativeElement.setAttribute('required', '');
+            // Re-add all Validators
+            fix.componentInstance.addValidators(formGroup);
+            fix.detectChanges();
+            // update and clear validators
+            fix.componentInstance.removeValidators(formGroup);
+            fix.detectChanges();
+            tick();
+            // expect asterisk
+            asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
+            expect(asterisk).toBe('"*"');
+            inputGroupIsRequiredClass = dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupIsRequiredClass).toBeDefined();
+            expect(inputGroupIsRequiredClass).not.toBeNull();
+            expect(inputGroupIsRequiredClass).not.toBeUndefined();
         }));
 
 
         it('Should properly initialize when used as a form control - with initial validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
 
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            let inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
@@ -543,7 +608,7 @@ describe('igxSelect', () => {
             fix.detectChanges();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeNull();
-            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+            expect(inputGroupIsRequiredClass).toBeDefined();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.toggle();
@@ -569,14 +634,14 @@ describe('igxSelect', () => {
 
             fix.componentInstance.isRequired = false;
             fix.detectChanges();
-            inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-            expect(inputGroupWithRequiredAsterisk).toBeNull();
+            inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupIsRequiredClass).toBeNull();
         }));
 
         it('Should properly initialize when used as a form control - without initial validators', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
 
-            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            let inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             fix.detectChanges();
             const selectComp = fix.componentInstance.select;
             const selectFormReference = fix.componentInstance.ngForm.form;
@@ -585,7 +650,7 @@ describe('igxSelect', () => {
             expect(selectComp).toBeDefined();
             expect(selectComp.selectedItem).toBeUndefined();
             expect(selectComp.value).toBeUndefined();
-            expect(inputGroupWithRequiredAsterisk).toBeNull();
+            expect(inputGroupIsRequiredClass).toBeNull();
             expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
 
             selectComp.onBlur();
@@ -607,8 +672,8 @@ describe('igxSelect', () => {
 
             fix.componentInstance.isRequired = true;
             fix.detectChanges();
-            inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+            inputGroupIsRequiredClass = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupIsRequiredClass).toBeDefined();
         }));
 
         it('Should have correctly bound focus and blur handlers', () => {
@@ -2819,6 +2884,17 @@ class IgxSelectReactiveFormComponent {
         for (const key in form.controls) {
             form.get(key).setValidators(this.validationType[key]);
             form.get(key).updateValueAndValidity();
+        }
+    }
+
+    public markAsTouched() {
+        if (!this.reactiveForm.valid) {
+            for (const key in this.reactiveForm.controls) {
+                if (this.reactiveForm.controls[key]) {
+                    this.reactiveForm.controls[key].markAsTouched();
+                    this.reactiveForm.controls[key].updateValueAndValidity();
+                }
+            }
         }
     }
 }

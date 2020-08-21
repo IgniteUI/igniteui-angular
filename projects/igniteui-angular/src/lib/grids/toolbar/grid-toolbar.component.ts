@@ -24,17 +24,17 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
-import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position';
 import { GridType } from '../common/grid.interface';
 import { IgxGridIconService } from '../common/grid-icon.service';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
+import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../pinning/pinning-icons';
 import { GridIconsFeature } from '../common/enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
+import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -74,6 +74,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     }
 
     private _filterColumnsPrompt = this.grid.resourceStrings.igx_grid_toolbar_actions_filter_prompt;
+    private _isExporting = false;
 
     /**
      * @hidden
@@ -187,6 +188,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
     }
 
     /**
+     * @hidden @internal
+     */
+    public get isExporting(): boolean {
+        return this._isExporting;
+    }
+
+    /**
      * Returns whether the `IgxGridComponent` renders an Excel export button.
      * ```typescript
      * const exportExcelButton = this.igxGrid1.toolbar.shouldShowExportExcelButton;
@@ -238,7 +246,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         @Optional() public csvExporter: IgxCsvExporterService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private iconService: IgxGridIconService) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
     }
 
     private _positionSettings: PositionSettings = {
@@ -328,6 +336,11 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         this.performExport(this.csvExporter, 'csv');
     }
 
+    private setIsExporting(isExporting: boolean) {
+        this._isExporting = isExporting;
+        this.cdr.detectChanges();
+    }
+
     private performExport(exp: IgxBaseExporter, exportType: string) {
         this.exportClicked();
 
@@ -335,13 +348,25 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         const options = exportType === 'excel' ?
             new IgxExcelExporterOptions(fileName) :
             new IgxCsvExporterOptions(fileName, CsvFileTypes.CSV);
-
         const args = { grid: this.grid, exporter: exp, options: options, cancel: false };
 
         this.grid.onToolbarExporting.emit(args);
         if (args.cancel) {
             return;
         }
+
+        let exportEnded = false;
+        setTimeout(() => {
+            if (!exportEnded) {
+                this.setIsExporting(true);
+            }
+        }, 500);
+
+        exp.onExportEnded.pipe(first()).subscribe(() => {
+            exportEnded = true;
+            this.setIsExporting(false);
+        });
+
         exp.export(this.grid, options);
     }
 
@@ -406,5 +431,29 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      */
     ngAfterViewInit() {
         this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingColumnHiding(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnHidingButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onClosingColumnPinning(args) {
+        const activeElem = document.activeElement;
+
+        if (!args.event && activeElem !== this.grid.nativeElement &&
+            !this.columnPinningButton.nativeElement.contains(activeElem)) {
+            args.cancel = true;
+        }
     }
 }

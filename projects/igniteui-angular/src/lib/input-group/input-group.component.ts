@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
     Component,
     ContentChild,
@@ -11,6 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
+    AfterContentInit,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -35,17 +36,25 @@ enum IgxInputGroupEnum {
     line,
     box,
     border,
-    fluent,
-    bootstrap,
-    indigo,
     search,
-    fluent_search,
+}
+
+enum IgxInputGroupThemeEnum {
+    'material',
+    'fluent',
+    'bootstrap',
+    'indigo-design',
 }
 
 /**
  * Determines the Input Group type.
  */
 export type IgxInputGroupType = keyof typeof IgxInputGroupEnum;
+
+/**
+ * Determines the Input Group theme.
+ */
+export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
 
 @Component({
     selector: 'igx-input-group',
@@ -55,9 +64,10 @@ export type IgxInputGroupType = keyof typeof IgxInputGroupEnum;
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
-    implements IgxInputGroupBase {
+    implements IgxInputGroupBase, AfterContentInit {
     private _type: IgxInputGroupType = 'line';
     private _filled = false;
+    private _variant: IgxInputGroupTheme = 'material';
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -212,6 +222,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         return this._type;
     }
 
+    /** @hidden @internal */
+    public get theme(): IgxInputGroupTheme {
+        return this._variant;
+    }
+
     /**
      * @hidden
      * @deprecated Use 'suppressInputAutofocus' instead.
@@ -234,11 +249,20 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         public element: ElementRef<HTMLElement>,
         @Optional()
         @Inject(DisplayDensityToken)
-        private _displayDensityOptions: IDisplayDensityOptions
+        private _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(DOCUMENT)
+        private document: any
     ) {
         super(_displayDensityOptions);
     }
 
+    ngAfterContentInit() {
+        const variant = this.document.defaultView
+            .getComputedStyle(this.element.nativeElement)
+            .getPropertyValue('--igx-input-group-variant')
+            .trim();
+        this._variant = variant as IgxInputGroupTheme;
+    }
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.
      * ```typescript
@@ -264,7 +288,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get hasBorder() {
-        return this._type === 'line' || this._type === 'box';
+        return (
+            (this._type === 'line' || this._type === 'box') &&
+            this._variant === 'material'
+        );
     }
 
     /**
@@ -278,7 +305,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get isTypeLine(): boolean {
-        return this._type === 'line';
+        return this._type === 'line' && this._variant === 'material';
     }
 
     /**
@@ -293,7 +320,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
-        return this._type === 'box';
+        return this._type === 'box' && this._variant === 'material';
     }
 
     /**
@@ -308,11 +335,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
-        return this._type === 'border';
+        return this._type === 'border' && this._variant === 'material';
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is Fluent.
+     * Returns true if the `IgxInputGroupComponent` theme is Fluent.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -323,11 +350,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--fluent')
     public get isTypeFluent() {
-        return this._type === 'fluent';
+        return this._variant === 'fluent';
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is Bootstrap.
+     * Returns true if the `IgxInputGroupComponent` theme is Bootstrap.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -338,11 +365,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--bootstrap')
     public get isTypeBootstrap() {
-        return this._type === 'bootstrap';
+        return this._variant === 'bootstrap';
     }
 
     /**
-     * Returns whether the `IgxInputGroupComponent` type is Indigo.
+     * Returns true if the `IgxInputGroupComponent` theme is Indigo.
      * ```typescript
      * @ViewChild("MyInputGroup1")
      * public inputGroup: IgxInputGroupComponent;
@@ -353,7 +380,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--indigo')
     public get isTypeIndigo() {
-        return this._type === 'indigo';
+        return this._variant === 'indigo-design';
     }
 
     /**
@@ -369,21 +396,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     @HostBinding('class.igx-input-group--search')
     public get isTypeSearch() {
         return this._type === 'search';
-    }
-
-    /**
-     * Returns whether the `IgxInputGroupComponent` type is fluentSearch.
-     * ```typescript
-     * @ViewChild("MyInputGroup1")
-     * public inputGroup: IgxInputGroupComponent;
-     * ngAfterViewInit(){
-     *    let isTypeFluentSearch = this.inputGroup.isTypeFluentSearch;
-     * }
-     * ```
-     */
-    @HostBinding('class.igx-input-group--fluent-search')
-    public get isTypeFluentSearch() {
-        return this._type === 'fluent_search';
     }
 
     /** @hidden */

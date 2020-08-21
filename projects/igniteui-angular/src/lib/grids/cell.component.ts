@@ -23,7 +23,7 @@ import { DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
-import { GridSelectionMode, GridKeydownTargetType } from './common/enums';
+import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 
