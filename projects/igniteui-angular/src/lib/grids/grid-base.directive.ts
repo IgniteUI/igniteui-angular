@@ -9,6 +9,7 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
+    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -27,8 +28,7 @@ import {
     DoCheck,
     Directive,
     OnChanges,
-    SimpleChanges,
-    HostListener
+    SimpleChanges
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -2058,16 +2058,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @HostBinding('attr.role')
     public hostRole = 'grid';
 
-    @HostListener('focusout', ['$event'])
-    public blur(event) {
-        if ((event.target === this.tbody.nativeElement &&
-            this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
-            || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-            || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
-            this.navigation.activeNode = {} as IActiveNode;
-        }
-    }
-
     /**
      * @hidden @internal
      */
@@ -2893,6 +2883,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get pinnedRecordsCount() {
         return this._pinnedRecordIDs.length;
+    }
+
+    @HostListener('focusout', ['$event'])
+    public blur(event) {
+        if ((event.target === this.tbody.nativeElement &&
+            this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+            || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+            || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+            this.navigation.activeNode = {} as IActiveNode;
+        }
     }
 
     constructor(
