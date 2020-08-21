@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
+import { IgxInputGroupComponent, IgxInputGroupModule, IgxInputGroupType } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxIconModule } from '../icon/public_api';
@@ -12,10 +12,7 @@ import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
-const INPUT_GROUP_FLUENT_CSS_CLASS = 'igx-input-group--fluent';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
-const INPUT_GROUP_INDIGO_CSS_CLASS = 'igx-input-group--indigo';
-const INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS = 'igx-input-group--fluent-search';
 const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable';
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
@@ -28,7 +25,6 @@ describe('IgxInputGroup', () => {
                 InputGroupComponent,
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
-                InputGroupFluentComponent,
                 InputGroupSearchComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
@@ -291,23 +287,11 @@ class InputGroupSearchComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
-@Component({
-    template: `<igx-input-group #igxInputGroup type="fluent">
-                    <input igxInput />
-                </igx-input-group>`
-})
-class InputGroupFluentComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-}
-
-function testInputGroupType(type, component: IgxInputGroupComponent, nativeElement) {
+function testInputGroupType(type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) {
     let isLine = false;
     let isBorder = false;
     let isBox = false;
     let isSearch = false;
-    let isIndigo = false;
-    let isFluent = false;
-    let isFluentSearch = false;
 
     switch (type) {
         case 'line':
@@ -319,15 +303,6 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
         case 'box':
             isBox = true;
             break;
-        case 'indigo':
-            isIndigo = true;
-            break;
-        case 'fluent':
-            isFluent = true;
-            break;
-        case 'fluentSearch':
-            isFluentSearch = true;
-            break;
         case 'search':
             isSearch = true;
             break;
@@ -336,18 +311,12 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
 
     expect(nativeElement.classList.contains(INPUT_GROUP_BOX_CSS_CLASS)).toBe(isBox);
     expect(nativeElement.classList.contains(INPUT_GROUP_BORDER_CSS_CLASS)).toBe(isBorder);
-    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_CSS_CLASS)).toBe(isFluent);
-    expect(nativeElement.classList.contains(INPUT_GROUP_INDIGO_CSS_CLASS)).toBe(isIndigo);
     expect(nativeElement.classList.contains(INPUT_GROUP_SEARCH_CSS_CLASS)).toBe(isSearch);
-    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS)).toBe(isFluentSearch);
 
     expect(component.isTypeLine).toBe(isLine);
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
-    expect(component.isTypeIndigo).toBe(isIndigo);
-    expect(component.isTypeFluent).toBe(isFluent);
     expect(component.isTypeSearch).toBe(isSearch);
-    expect(component.isTypeFluentSearch).toBe(isFluentSearch);
 }
 
 @Component({

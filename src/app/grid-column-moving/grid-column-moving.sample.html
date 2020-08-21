@@ -31,7 +31,7 @@
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
                 [width]="'900px'"
-                [height]="'800px'">
+                >
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"
@@ -47,8 +47,9 @@
                                                     [dataType]="c.type">
                 </igx-column>
                 <igx-grid-footer>
-                    <div style='height:200px;'>
-                        Test
+                    <div class="references">
+                       <p>Test</p> 
+                       <p>Test2</p> 
                     </div>
                 </igx-grid-footer>
             </igx-grid>
