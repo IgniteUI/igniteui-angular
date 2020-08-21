@@ -1156,6 +1156,28 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
         }));
 
+        it('Pinning - Should be able to pin/unpin columns programmatically', (async() => {
+            const columnsList = grid.columnList.toArray();
+
+            // step 1 - pin some columns
+            grid.getColumnByName('ID').pinned = true;
+            grid.getColumnByName('CompanyName').pinned = true;
+            fixture.detectChanges();
+
+            // step 2 - pin a column interactively via drag/drop
+            // step 2 - move that column and verify selection is preserved
+            const column = columnsList[4] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            // step 3 - unpin that column programmatically and verify correct order
+            grid.getColumnByName('ID').unpin();
+            fixture.detectChanges();
+
+            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+            expect(grid.unpinnedColumns[0].field).toEqual('ID');
+        }));
+
         it('Pinning - Should be able to pin/unpin columns both: programmatically and interactively via drag/drop.', (async() => {
 
             // step 1 - pin some columns
@@ -1211,6 +1233,30 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
         }));
 
+        it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async() => {
+            const columnsList = grid.columnList.toArray();
+
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ID').pinned = true;
+            grid.getColumnByName('ContactName').disablePinning = true;
+            fixture.detectChanges();
+
+            // step 2 - drag/drop an unpinned column among pinned columns
+            // step 2 - move that column and verify selection is preserved
+            const column = grid.getColumnByName('ContactName') as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+            // step 3 - verify column is still unpinned
+            expect(grid.pinnedColumns.length).toEqual(2);
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ID');
+            expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
+            expect(grid.unpinnedColumns[1].field).toEqual('ContactName');
+            expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
+        }));
+
         it('Pinning - Should not be able to move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1240,6 +1286,37 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
             expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
             expect(grid.unpinnedColumns[1].field).toEqual('ID');
+            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+        }));
+
+        it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ContactTitle').pinned = true;
+            fixture.detectChanges();
+
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
+            expect(grid.unpinnedColumns[0].field).toEqual('ID');
+            expect(grid.unpinnedColumns[1].field).toEqual('CompanyName');
+
+            grid.columnList.forEach((column) => {
+                if (column.field !== 'Address' && column.field !== 'ContactTitle') {
+                    column.disablePinning = true;
+                }
+            });
+            fixture.detectChanges();
+
+            // step 2 - drag/drop a pinned column among unpinned columns
+            const column = grid.getColumnByName('ID') as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+            // step 3 - verify column is unpinned at the correct place
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
+            expect(grid.unpinnedColumns[0].field).toEqual('ID');
+            expect(grid.unpinnedColumns[1].field).toEqual('CompanyName');
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
     });

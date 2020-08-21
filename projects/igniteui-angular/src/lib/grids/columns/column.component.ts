@@ -1742,29 +1742,22 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      */
     public move(index: number) {
-        let target: IgxColumnComponent;
-        let pos = DropPosition.AfterDropTarget;
         const grid = (this.grid as any);
-        const columns = grid.columnList.toArray();
-        const pinnedColumns = grid.pinnedColumns;
 
-        if (pinnedColumns.length > 0) {
-            // move column in the pinned area
-            if (index < pinnedColumns.length) {
-                target = pinnedColumns[index];
-            }
-            // move column to be the last pinned column
-            if (index = pinnedColumns.length) {
-                target = pinnedColumns[index - 1];
-                pos = DropPosition.AfterDropTarget;
-            }
-            // move column in the unpinned area
-            if (index > pinnedColumns.length) {
-                target = grid.unpinnedColumns[index - pinnedColumns.length];
-            }
-        } else {
-            target = columns[index];
+        if (index < 0 || index >= grid.columns.length) {
+            return;
         }
+
+        const target = grid.columns.find(c => c.visibleIndex === index) as IgxColumnComponent;
+        let pos: DropPosition;
+
+        if (!target) {
+            return;
+        }
+        if (target.pinned && this.disablePinning) {
+            return;
+        }
+        pos = this.visibleIndex < index ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
         grid.moveColumn(this, target, pos);
     }
     /**

@@ -5,11 +5,20 @@
 
     <div class="sample-content">
         <div class="sample-column">
+
+            <div class="sample-buttons">
+                <button igxButton="raised" (click)="moveColumn()">Move Column API</button>
+                <igx-input-group>
+                    <input igxInput name="newIndex" type="number" [(ngModel)]="newIndex"/>
+                    <label igxLabel for="newIndex">New index</label>
+                </igx-input-group>
+            </div>
             <div class="density-chooser">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
             </div>
             <igx-grid
                 #grid1
+                [columnSelection]="'single'"
                 [data]="data"
                 [displayDensity]="density"
                 [showToolbar]="true" [columnHiding]="true"
@@ -33,6 +42,7 @@
                                                     [filterable]="c.filterable"
                                                     [editable]="true"
                                                     [hidden]="c.hidden"
+                                                    [pinned]="c.pinned"
                                                     [hasSummary]="false"
                                                     [dataType]="c.type">
                 </igx-column>

@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
+import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     providers: [],
@@ -13,6 +14,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
+    public newIndex = 0;
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public density = 'comfortable';
@@ -33,7 +35,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
-                summary: true, type: 'string' },
+                summary: true, type: 'string', pinned: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
@@ -47,9 +49,9 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'Region', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
             { field: 'PostalCode', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
+                summary: true, type: 'string', pinned: true },
             { field: 'Phone', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
+                summary: true, type: 'string', pinned: true },
             { field: 'Fax', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string' },
             { field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
@@ -63,6 +65,11 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public moveColumn() {
+        const col = this.grid1.selectedColumns()[0];
+        col.move(this.newIndex);
     }
 
     toggleColumn(name: string) {
