@@ -128,12 +128,24 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public submit_value() {
         const cell = this.grid.crudService.cell;
         if (cell) {
+            if (this.grid.addRowInstance && this.grid.addRowInstance.index === cell.rowIndex) {
+                this.update_add_cell(cell, cell.editValue, this.grid.addRowInstance);
+                this.escape_editMode();
+                return;
+            }
             const args = this.update_cell(cell, cell.editValue);
             if (args.cancel) {
                 return;
             }
             this.escape_editMode();
         }
+    }
+
+    update_add_cell(cell: IgxCell, value: any, row: any) {
+        cell.editValue = value;
+        cell.value = cell.editValue;
+        const prop = cell.column.field;
+        row.rowData = {...row.rowData, [prop] : value };
     }
 
     update_cell(cell: IgxCell, value: any) {

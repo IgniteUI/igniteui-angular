@@ -69,6 +69,29 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
+    public addRow(event?, action?): void {
+        if (event) {
+            event.stopPropagation();
+        }
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        const context = this.strip.context;
+        const grid = context.grid;
+        grid.shouldAddRow = true;
+        grid.cdr.detectChanges();
+        const row = grid.addRowInstance;
+        const firstCell = row.cells.first;
+        row.rowData = {...context.rowData, [grid.primaryKey]: grid.dataLength };
+        Object.keys(row.rowData).forEach(key => row.rowData[key] = undefined);
+        row.index = grid.dataLength;
+        firstCell.setEditMode(true);
+        firstCell.activate();
+        grid.addChildRowIndex = action === 'insertChild' ? context.index : -1;
+        this.strip.hide();
+    }
+
+
     /**
      * Getter if the row is disabled
      * @hidden

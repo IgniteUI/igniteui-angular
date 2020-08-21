@@ -165,15 +165,15 @@
     <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
-<div id="add-row" *ngIf="shouldAddRow" class="igx-grid__footer"  #addRowFooter>
+<div id="add-row" *ngIf="shouldAddRow" class="igx-grid__footer"  #addRowFooter (keydown)="navigation.handleNavigation($event)">
     <ng-container>
         <div>
             <igx-tree-grid-row [gridID]="id" [index]="-1" [treeRow]="[]" [rowData]="[]" #addRowInstance #externalRow>
             </igx-tree-grid-row>
         </div>
         <div id="buttons">
-            <button igxButton  (click)="endRowEdit(false, $event)">Cancel</button>
-            <button igxButton  (click)="test($event)">Done</button>
+            <button igxButton  (click)="onCancel($event)">Cancel</button>
+            <button igxButton  (click)="onDone($event)">Done</button>
         </div>
     </ng-container>
 </div>

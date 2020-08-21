@@ -1,12 +1,7 @@
-import { Component, ViewChild, OnInit, Inject, OnDestroy, ViewContainerRef, ComponentFactoryResolver, ElementRef, ContentChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent,
-         GridSelectionMode,
-         IgxOverlayService,
-         IgxGridRowComponent,
-         IgxTreeGridRowComponent,
-         IgxToggleDirective} from 'igniteui-angular';
-import { takeUntil, filter } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+         GridSelectionMode} from 'igniteui-angular';
+
 
 
 
@@ -15,25 +10,13 @@ import { Subject } from 'rxjs';
     styleUrls: ['tree-grid-add-row.sample.css'],
     templateUrl: 'tree-grid-add-row.sample.html'
 })
-export class TreeGridAddRowSampleComponent implements OnInit, OnDestroy {
-    private destroy$ = new Subject<boolean>();
-    private _overlayId: string;
+export class TreeGridAddRowSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
 
     public selectionMode;
 
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
-
-    // @ViewChild(IgxToggleDirective) toggle: IgxToggleDirective;
-    // constructor( @Inject(IgxOverlayService) public overlayService: IgxOverlayService, private resolver: ComponentFactoryResolver) {
-    //     this.overlayService
-    //         .onClosed
-    //         .pipe(
-    //             filter((x) => x.id === this._overlayId),
-    //             takeUntil(this.destroy$))
-    //         .subscribe(() => delete this._overlayId);
-    // }
 
 
     public ngOnInit(): void {
@@ -84,41 +67,17 @@ export class TreeGridAddRowSampleComponent implements OnInit, OnDestroy {
     }
 
     public onMouseOver(event, grid, actionStrip) {
-        if (event.target.nodeName.toLowerCase() === "igx-grid-cell") {
-            const rowIndex = parseInt(event.target.attributes["data-rowindex"].value, 10);
+        if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
+            const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
             actionStrip.show(row);
         }
     }
 
     public onMouseLeave(actionstrip, event?) {
-        if (!event || event.relatedTarget.nodeName.toLowerCase() !== "igx-drop-down-item") {
+        if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
 
         }
-    }
-
-    public test() {
-        console.log("working");
-    }
-
-    public toggleContent(actionstrip) {
-        // if (this.grid1.addRowToggle.collapsed) {
-        //     this.grid1.addRowToggle.open();
-        //     const row = this.grid1.addRowInstance;
-
-        //     row.cells.forEach(cell => cell.setEditMode(true));
-        //     // this.grid1.endRowEdit();
-        // }
-        // else {
-        //     this.grid1.addRowToggle.close();
-        // }
-        debugger;
-        this.grid1.shouldAddRow = true;
-    }
-
-    public ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
     }
 }

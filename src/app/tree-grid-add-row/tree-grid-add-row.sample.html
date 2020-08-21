@@ -6,22 +6,15 @@
     <div class="sample-content">
          <div class="sample-column">
             <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
-                [paging]="false"  [width]="'1100px'" [height]="'800px'" (mouseover)="onMouseOver($event,grid1,actionStrip)" >
+                [paging]="false"  [width]="'1100px'" [height]="'600px'" (mouseover)="onMouseOver($event,grid1,actionStrip)" >
                 <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
                     [groupable]="false" [width]="c.width"
                     [sortable]="true"  [editable]="true"
                     [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
                 </igx-column>
                 <igx-action-strip #actionStrip>
-                    <button *igxActionStripMenuItem igxButton="raised" (click)="toggleContent(actionStrip)">
-                        Insert
-                    </button>
-                    <button *igxActionStripMenuItem igxButton (click)="test()">
-                    Insert child
-                    </button>
-                    <button *igxActionStripMenuItem igxButton (click)="test()">
-                       Delete
-                    </button>
+                    <!-- *IgxActionStripMenuItem -->
+                    <igx-grid-editing-actions ></igx-grid-editing-actions>
                 </igx-action-strip>
             </igx-tree-grid>
     </div>

@@ -178,6 +178,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
+        if (this.grid.addRowInstance && this.grid.addRowInstance.rowID === this.row.rowID) {
+            return this.editMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
+        }
         if (this.editMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
@@ -517,6 +520,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
+    @ViewChild('addRowCell', { read: TemplateRef, static: true })
+    protected addRowCellTemplate: TemplateRef<any>;
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     protected set highlight(value: IgxTextHighlightDirective) {
         this._highlight = value;
@@ -630,7 +636,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
-                this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                if (this.gridAPI.grid.addRowInstance && this.gridAPI.grid.addRowInstance.index === this.rowIndex) {
+                    this.gridAPI.update_add_cell(editableCell, editableCell.editValue, this.gridAPI.grid.addRowInstance);
+                } else {
+                    this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                }
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
                  * the next cell in edit mode is with wrong value /its context is not updated/;
@@ -643,7 +653,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 }
             }
             crud.end();
-            this.grid.tbody.nativeElement.focus({ preventScroll: true });
+            if (this.grid.addRowInstance.rowID !== this.row.rowID) {
+                this.grid.tbody.nativeElement.focus({ preventScroll: true });
+            }
             this.grid.notifyChanges();
             crud.begin(this);
             return;

@@ -79,11 +79,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
-
-    public test(event) {
-        console.log(event);
-        this.endEdit(true);
-    }
+    public addChildRowIndex = -1;
 
 
     /**
@@ -402,6 +398,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 });
             }
         }
+    }
+
+    public onDone(event?) {
+        if (this.addChildRowIndex === -1) {
+            this.addRow(this.addRowInstance.rowData);
+        } else {
+            this.addRow(this.addRowInstance.rowData, this.addChildRowIndex);
+        }
+        this.shouldAddRow = false;
+    }
+
+    public onCancel(event?) {
+        this.shouldAddRow = false;
     }
 
     private addChildRows(children: any[], parentID: any) {

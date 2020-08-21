@@ -4702,7 +4702,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        debugger;
         this.calcGridHeadRow();
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
@@ -4770,7 +4769,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _calculateGridBodyHeight(): number {
-        debugger;
         if (!this._height) {
             return null;
         }
@@ -5065,7 +5063,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-       debugger;
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         const hasScroll = this.hasVerticalScroll();
@@ -5800,6 +5797,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
         const totalItems = (this as any).totalItemCount ?? this.dataView.length - 1;
+        if (this.addRowInstance && this.addRowInstance.index === rowIndex) {
+            this.executeCallback(rowIndex, visibleColIndex, cb);
+        }
         if (rowIndex < 0 || rowIndex > totalItems || (visibleColIndex !== -1
             && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
@@ -5852,8 +5852,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
         }
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
-            columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
+        columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
+        if (this.addRowInstance && this.addRowInstance.index === currRowIndex) {
+            return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex};
+        }
         if (this.dataView.slice(currRowIndex, currRowIndex + 1)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && nextCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
@@ -5901,8 +5904,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
         if (!cb) { return; }
-        let row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
-        if (!row) {
+        let row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex)
+                    || this.addRowInstance;
+        if (!row && !this.addRowInstance) {
             if ((this as any).totalItemCount) {
                 this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                     this.cdr.detectChanges();
@@ -6000,7 +6004,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
-            colIndex > - 1 && colIndex <= Math.max(...this.visibleColumns.map(c => c.visibleIndex))) {
+            colIndex > - 1 && colIndex <= Math.max(...this.visibleColumns.map(c => c.visibleIndex)) ||
+            this.addRowInstance && this.addRowInstance.index === rowIndex) {
             return true;
         }
         return false;
@@ -6256,7 +6261,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     public set shouldAddRow(value) {
         this._shouldAddRow = value;
-        this.rowEditable = this._shouldAddRow;
     }
     public get shouldAddRow() {
         return this._shouldAddRow;

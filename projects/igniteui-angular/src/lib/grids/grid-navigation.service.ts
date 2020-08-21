@@ -122,6 +122,9 @@ export class IgxGridNavigationService {
             case 'enter':
             case 'f2':
                 const cell = this.grid.getCellByColumnVisibleIndex(this.activeNode.row, this.activeNode.column);
+                if (this.isAddRow(rowIndex)) {
+                    this.grid.endEdit(true);
+                }
                 if (!this.isDataRow(rowIndex) || !cell.editable) { break; }
                 this.grid.crudService.enterEditMode(cell);
                 break;
@@ -367,6 +370,10 @@ export class IgxGridNavigationService {
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
 
+    public isAddRow(rowIndex: number) {
+        return this.grid.addRowInstance && this.grid.addRowInstance.index === rowIndex;
+    }
+
     public setActiveNode(activeNode: IActiveNode) {
         if (!this.isActiveNodeChanged(activeNode)) {
             return;
@@ -380,7 +387,7 @@ export class IgxGridNavigationService {
 
         const currRow = this.grid.dataView[activeNode.row];
         const type: GridKeydownTargetType = activeNode.row < 0 ? 'headerCell' :
-            this.isDataRow(activeNode.row) ? 'dataCell' :
+            this.isDataRow(activeNode.row) || this.grid.addRowInstance ? 'dataCell' :
             currRow && this.grid.isGroupByRecord(currRow) ? 'groupRow' :
             currRow && this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'summaryCell';
 
@@ -476,6 +483,9 @@ export class IgxGridNavigationService {
 
     protected isValidPosition(rowIndex: number, colIndex: number): boolean {
         const length = (this.grid as any).totalItemCount ?? this.grid.dataView.length;
+        if (this.isAddRow(rowIndex)) {
+            return this.activeNode.column !== colIndex ? true : false;
+        }
         if (rowIndex < 0 || colIndex < 0 || length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }

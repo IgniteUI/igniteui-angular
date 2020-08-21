@@ -5,4 +5,13 @@
     <button igxButton="icon" [disabled]="disabled" class="igx-action-strip__delete" igxRipple (click)="deleteRow($event)">
         <igx-icon >delete</igx-icon>
     </button>
+
+    <button igxButton="icon" [disabled]="disabled" IgxRipple (click)="addRow($event)">
+        <igx-icon>perm_identity</igx-icon>
+    </button>
+
+    <button igxButton="icon" [disabled]="disabled" IgxRipple (click)="addRow($event,'insertChild')">
+        <igx-icon>child_care</igx-icon>
+    </button>
+
 </ng-container>

@@ -190,33 +190,14 @@ export class IgxGridCRUDService {
         this.grid.openRowOverlay(this.row.id);
     }
 
-    beginAddingRow() {
-        this.row = this.createRow(this.cell);
-        this.grid.transactions.startPending();
-    }
 
 
     endRowEdit() {
         this.row = null;
     }
 
-    beginAddRow(cell) {
-        debugger;
-        const newCell = this.createCell(cell);
-        newCell.primaryKey = this.primaryKey;
-        if (this.grid.shouldAddRow) {
-            this.cell = newCell;
-            this.cell.id.rowID = this.grid.dataLength + 1;
-            this.cell.rowIndex = this.cell.id.rowID - 1;
-            this.beginAddingRow();
-        }
-    }
 
     begin(cell): void {
-        if (this.grid.addRowInstance) {
-            this.beginAddRow(cell);
-            return;
-        }
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
         const args = newCell.createEditEventArgs(false);
@@ -239,10 +220,6 @@ export class IgxGridCRUDService {
             this.cell = newCell;
 
             if (!this.row) {
-                if(this.grid.shouldAddRow) {
-                    this.cell.id.rowID = this.grid.dataLength + 1;
-                    this.cell.rowIndex = this.cell.id.rowID - 1;
-                }
                 this.beginRowEdit();
                 return;
             }
