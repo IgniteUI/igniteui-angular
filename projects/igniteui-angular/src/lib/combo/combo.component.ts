@@ -165,7 +165,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
-    /* @hidden @internal */
+    /** @hidden @internal */
     public _filterValue = '';
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
