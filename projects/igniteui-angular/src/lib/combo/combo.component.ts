@@ -166,7 +166,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         caseSensitive: false
     };
     /** @hidden @internal */
-    public _filterValue = '';
+    public filterValue = '';
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
@@ -902,7 +902,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     public set searchValue(val: string) {
-        this._filterValue = val;
+        this.filterValue = val;
         this._searchValue = val;
     }
 
@@ -1046,7 +1046,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             };
             this.onSearchInput.emit(args);
             if (args.cancel) {
-                this._filterValue = null;
+                this.filterValue = null;
             }
         }
         this.checkMatch();
