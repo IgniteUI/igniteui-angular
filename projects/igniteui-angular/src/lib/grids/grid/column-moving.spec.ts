@@ -1301,9 +1301,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.unpinnedColumns[0].field).toEqual('ID');
             expect(grid.unpinnedColumns[1].field).toEqual('CompanyName');
 
-            grid.columnList.forEach((column) => {
-                if (column.field !== 'Address' && column.field !== 'ContactTitle') {
-                    column.disablePinning = true;
+            grid.columnList.forEach((col) => {
+                if (col.field !== 'Address' && col.field !== 'ContactTitle') {
+                    col.disablePinning = true;
                 }
             });
             fixture.detectChanges();
