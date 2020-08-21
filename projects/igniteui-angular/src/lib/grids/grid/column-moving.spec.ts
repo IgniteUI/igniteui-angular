@@ -1289,6 +1289,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
+        // tslint:disable-next-line:max-line-length
         it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
