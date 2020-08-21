@@ -1,9 +1,10 @@
 @import '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
 @import '../../../styles/app-palettes';
+@import'../../../styles/igniteui-theme.scss';
 
-.sample-column {
-    flex-flow: column nowrap;
-    flex: 1 0 100% !important;
+.sample-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
     padding: 0 8px;
 }
 
@@ -12,14 +13,12 @@
 }
 
 .color-palettes {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 16px;
 }
 
 .color-palette {
-    min-width: 300px;
-    flex: 1 0 25%;
     margin-bottom: 48px;
 
     &:empty {
@@ -28,26 +27,21 @@
 }
 
 .colors-row {
-    display: flex;
-    flex-flow: column nowrap;
-    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 16px;
+    margin-bottom: 48px;
 }
 
 .color-container {
-    @include igx-color-classes('background');
+    @include igx-color-classes('background', $palette: $palette);
 
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    flex-basis: 100%;
     color: #fff;
-    margin-right: 8px;
-    margin-left: 8px;
 }
 
 .color-title {
     font-size: 18px;
-    line-height: 72px;
+    line-height: 54px;
     margin: 0;
     padding: 8px 16px;
     text-transform: capitalize;
@@ -59,8 +53,19 @@
     padding: 8px 16px;
 }
 
-@media only screen and (min-width: 767px) {
-    .colors-row {
-        flex-flow: row nowrap;
-    }
+.igx-success-500{
+    background: var(--igx-success-500);
 }
+
+.igx-info-500{
+    background: var(--igx-info-500);
+}
+
+.igx-warn-500{
+    background: var(--igx-warn-500);
+}
+
+.igx-error-500{
+    background: var(--igx-error-500);
+}
+

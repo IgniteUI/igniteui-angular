@@ -1,14 +1,24 @@
-.buttons-sample {
-    display: flex;
-    flex-flow: row wrap;
+.columns-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 24px;
+    row-gap: 24px;
+    margin: 24px 16px;
 }
 
-.button-sample {
-    display: flex;
-    flex: 1 0 30%;
-    margin-bottom: 36px;
+.buttons-sample {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(80px, auto);
     align-items: center;
-    justify-content: flex-start;
+}
+
+.display-density{
+    grid-template-columns: 2fr 1fr;
+}
+
+.display-density .button-sample{
+    justify-self: center;
 }
 
 .igx-button--flat .igx-icon,
@@ -27,12 +37,7 @@
     margin-right: 0;
 }
 
-
 .density-chooser {
     margin-bottom: 16px;
-}
-
-.sample-wrap {
-    flex-wrap: wrap;
 }
 

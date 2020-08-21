@@ -2,8 +2,9 @@
     <app-page-header title="Tooltip">
         Displays tooltip to the user for a specific element.
     </app-page-header>
-    <section class="sample-content">
-        <article class="sample-column">
+
+    <div class="column-cotainer">
+        <article class="column">
             <h4 class="sample-title">Simple tooltip</h4>
             <igx-avatar #target="tooltipTarget" [igxTooltipTarget]="simple" [overlaySettings]="settings"
                         src="assets/images/avatar/10.jpg" size="medium" [roundShape]="true"
@@ -16,7 +17,7 @@
                 Her name is Toola Tipa
             </div>
         </article>
-        <article class="sample-column">
+        <article class="column">
             <h4 class="sample-title">Simple tooltip settings</h4>
             <div>
                 <div class="bottomMargin">
@@ -31,14 +32,13 @@
                     <span>Hide Delay: {{target.hideDelay}}</span>
                 </div>
                 <div>
-                    <button class="btn" (click)="showTooltip()">Show Tooltip</button>
-                    <button class="btn" (click)="hideTooltip()">Hide Tooltip</button>
+                    <button igxButton="raised" class="btn" (click)="showTooltip()">Show Tooltip</button>
+                    <button igxButton="raised" class="btn" (click)="hideTooltip()">Hide Tooltip</button>
                 </div>
             </div>
         </article>
-    </section>
-    <section class="sample-content">
-        <article class="sample-column">
+
+        <article class="column">
             <h4 class="sample-title">Rich tooltip</h4>
             <article class="card-wrapper">
                 <igx-card>
@@ -71,7 +71,7 @@
                 </igx-card>
             </article>
         </article>
-        <article class="sample-column">
+        <article class="column">
                 <h4 class="sample-title">Grid with tooltips</h4>
                 <div>
                     <igx-grid [data]="data" width="500px" height="400px" [autoGenerate]="false">
@@ -82,7 +82,7 @@
                                 <igx-icon class="cursorHover" [igxTooltipTarget]="tp" fontset="material">
                                     info
                                 </igx-icon>
-    
+
                                 <div class="cellTooltip" #tp="tooltip" igxTooltip>
                                     <div><strong>Launch: </strong>{{cell.row.rowData.Spec.Launch}}</div>
                                     <div><strong>Build: </strong>{{cell.row.rowData.Spec.Build}}</div>
@@ -96,5 +96,5 @@
                     </igx-grid>
                 </div>
             </article>
-    </section>
+        </div>
 </div>
