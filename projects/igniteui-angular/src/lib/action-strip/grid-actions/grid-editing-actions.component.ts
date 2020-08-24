@@ -81,9 +81,10 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         grid.shouldAddRow = true;
         grid.cdr.detectChanges();
         const row = grid.addRowInstance;
-        const firstCell = row.cells.first;
-        row.rowData = {...context.rowData, [grid.primaryKey]: grid.dataLength };
+        const firstCell = row.cells.find((element, index) => index === 1);
+        row.rowData = {...context.rowData };
         Object.keys(row.rowData).forEach(key => row.rowData[key] = undefined);
+        row.rowData[grid.primaryKey] = grid.dataLength;
         row.index = grid.dataLength;
         firstCell.setEditMode(true);
         firstCell.activate();

@@ -80,6 +80,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public addChildRowIndex = -1;
 
 
+
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -398,6 +399,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
+    public navigateToAddedRow(event?) {
+        const row = this.dataView.find( x => x.rowID === this.data.length - 1);
+        this.scrollTo(row.data, 0);
+        this.snackbar.hide();
+    }
+
     public onDone(event?) {
         if (this.addChildRowIndex === -1) {
             this.addRow(this.addRowInstance.rowData);
@@ -405,6 +412,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.addRow(this.addRowInstance.rowData, this.addChildRowIndex);
         }
         this.shouldAddRow = false;
+        this.snackbar.show();
     }
 
     public onCancel(event?) {

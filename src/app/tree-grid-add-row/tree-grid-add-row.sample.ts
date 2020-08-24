@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxTreeGridComponent,
          GridSelectionMode} from 'igniteui-angular';
 
@@ -10,7 +10,7 @@ import { IgxTreeGridComponent,
     styleUrls: ['tree-grid-add-row.sample.css'],
     templateUrl: 'tree-grid-add-row.sample.html'
 })
-export class TreeGridAddRowSampleComponent implements OnInit {
+export class TreeGridAddRowSampleComponent implements OnInit, AfterViewInit {
     public data: Array<any>;
     public columns: Array<any>;
 
@@ -64,6 +64,10 @@ export class TreeGridAddRowSampleComponent implements OnInit {
             // sub of ID 20
             { 'Salary': 1500, 'employeeID': 23, 'PID': 20, 'firstName': 'Jeremy', 'lastName': 'Donaldson', 'Title': 'Software Developer' }
         ];
+    }
+
+    public ngAfterViewInit(): void {
+        this.grid1.columns[0].editable = false;
     }
 
     public onMouseOver(event, grid, actionStrip) {

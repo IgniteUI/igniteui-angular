@@ -142,9 +142,10 @@
         </div>
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
+    <div style="position:'absolute';z-index: 5;left:40%;bottom: 0;">
+        <igx-snackbar #snackbar actionText="SHOW" (onAction)="navigateToAddedRow($event)" displayTime='2000' >Row added</igx-snackbar>
+    </div>
 </div>
-
-
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
@@ -264,3 +265,15 @@
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>
+
+<!-- <ng-template #snackbarTemplate> -->
+
+<!-- </ng-template> -->
+<!--
+<div igxToggle #toggleRef="toggle">
+    <div>
+        <ng-container
+            *ngTemplateOutlet="snackbarTemplate; context: {}">
+        </ng-container>
+    </div>
+</div> -->

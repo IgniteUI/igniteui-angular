@@ -65,7 +65,7 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridCommonModule
   ],
   imports: [
-    IgxGridCommonModule,
+    IgxGridCommonModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

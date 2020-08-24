@@ -8,6 +8,7 @@ import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
+import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
 /**
  * @hidden
  */
@@ -35,6 +36,7 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
   ],
   imports: [
     IgxGridCommonModule,
+    IgxSnackbarModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

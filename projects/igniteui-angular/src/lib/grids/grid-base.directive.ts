@@ -149,6 +149,7 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1524,6 +1525,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild(IgxGridColumnResizerComponent)
     public resizeLine: IgxGridColumnResizerComponent;
 
+    @ViewChild(IgxSnackbarComponent)
+    public snackbar: IgxSnackbarComponent;
     /**
      * @hidden @internal
      */
