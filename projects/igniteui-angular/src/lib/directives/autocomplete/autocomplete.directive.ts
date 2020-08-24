@@ -77,6 +77,7 @@ export interface AutocompleteOverlaySettings {
 })
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements AfterViewInit, OnDestroy {
 
+    private _shouldBeOpen = false;
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
         @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
         @Optional() protected group: IgxInputGroupComponent,
@@ -84,6 +85,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         protected cdr: ChangeDetectorRef) {
         super(null);
     }
+    private destroy$ = new Subject();
 
     private defaultSettings: OverlaySettings = {
         modal: false,
@@ -290,6 +292,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Closes autocomplete drop down
      */
     public close() {
+        this._shouldBeOpen = false;
         if (this.collapsed) {
             return;
         }
@@ -300,14 +303,14 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Opens autocomplete drop down
      */
     public open() {
-        if (this.disabled || !this.collapsed || this._lastListLength === 0 || this._opening) {
+        this._shouldBeOpen = true;
+        if (this.disabled || !this.collapsed || this.target.children.length === 0) {
             return;
         }
-        this._opening = true;
-        this.highlightFirstItem();
         // if no drop-down width is set, the drop-down will be as wide as the autocomplete input;
         this.target.width = this.target.width || (this.parentElement.clientWidth + 'px');
         this.target.open(this.settings);
+        this.highlightFirstItem();
     }
 
     private get collapsed(): boolean {
@@ -349,14 +352,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     public ngAfterViewInit() {
-        this._lastListLength = this.target.children.length || null;
         this.target.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this._lastListLength = this.target.children.length || 0;
             if (this.target.children.length) {
-                if (!this.collapsed || this._opening) {
+                if (!this.collapsed) {
                     this.highlightFirstItem();
-                    return;
-                } else {
+                } else if (this._shouldBeOpen) {
                     this.open();
                 }
             } else {
@@ -364,12 +364,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 this.close();
             }
         });
-        this.target.onOpening.pipe(takeUntil(this.destroy$)).subscribe((event: CancelableEventArgs) => {
-            if (event.cancel) {
-                this._opening = false;
-            }
-        });
-        this.target.onOpened.pipe(takeUntil(this.destroy$)).subscribe(() => this._opening = false);
         this.target.onSelection.pipe(takeUntil(this.destroy$)).subscribe(this.select);
     }
 }
