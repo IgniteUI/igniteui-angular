@@ -9,7 +9,6 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
-    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -32,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe } from 'rxjs';
+import { Subject, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -2815,15 +2814,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
-    @HostListener('focusout', ['$event'])
-    public blur(event) {
-        if (!this.crudService.cell && (event.target === this.tbody.nativeElement &&
-            this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
-            || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-            || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
-            this.navigation.activeNode = {} as IActiveNode;
-        }
-    }
 
     constructor(
         public selectionService: IgxGridSelectionService,
@@ -2858,6 +2848,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
+                this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                this.navigation.activeNode = {} as IActiveNode;
+            }
+        });
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
