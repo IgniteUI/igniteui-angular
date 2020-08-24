@@ -46,6 +46,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
+    private _filterIconsRegistered = false;
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
     private _filterMenuOverlaySettings: OverlaySettings;
