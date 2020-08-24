@@ -1,18 +1,18 @@
 
 import { mkenum } from '../../core/utils';
-export const FilterMode = mkenum ({
+export const FilterMode = mkenum({
     quickFilter: 'quickFilter',
     excelStyleFilter: 'excelStyleFilter'
 });
 export type FilterMode = (typeof FilterMode)[keyof typeof FilterMode];
 
-export const GridSummaryPosition = mkenum ({
+export const GridSummaryPosition = mkenum({
     top: 'top',
     bottom: 'bottom'
 });
 export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof GridSummaryPosition];
 
-export const GridSummaryCalculationMode = mkenum ({
+export const GridSummaryCalculationMode = mkenum({
     rootLevelOnly: 'rootLevelOnly',
     childLevelsOnly: 'childLevelsOnly',
     rootAndChildLevels: 'rootAndChildLevels'
@@ -27,14 +27,14 @@ export type GridKeydownTargetType =
     'headerCell' |
     'masterDetailRow';
 
-export const GridSelectionMode = mkenum ({
+export const GridSelectionMode = mkenum({
     none: 'none',
     single: 'single',
     multiple: 'multiple'
 });
 export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
-export const ColumnDisplayOrder = mkenum ({
+export const ColumnDisplayOrder = mkenum({
     Alphabetical: 'Alphabetical',
     DisplayOrder: 'DisplayOrder'
 });

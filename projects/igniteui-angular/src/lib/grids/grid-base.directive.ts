@@ -971,7 +971,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._filterMode;
     }
 
-    set filterMode(value) {
+    set filterMode(value: FilterMode) {
         this._filterMode = value;
 
         if (this.filteringService.isFilterRowVisible) {
@@ -994,7 +994,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryPosition;
     }
 
-    set summaryPosition(value) {
+    set summaryPosition(value: GridSummaryPosition) {
         this._summaryPosition = value;
         this.notifyChanges();
     }
@@ -1013,7 +1013,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryCalculationMode;
     }
 
-    set summaryCalculationMode(value) {
+    set summaryCalculationMode(value: GridSummaryCalculationMode) {
         this._summaryCalculationMode = value;
         if (!this._init) {
             this.endEdit(true);

@@ -18,7 +18,7 @@ import { mkenum } from '../core/utils';
 /**
  * @hidden
  */
-export const ICON_POSITION = mkenum ({
+export const ICON_POSITION = mkenum({
     LEFT: 'left',
     NONE: 'none',
     RIGHT: 'right'

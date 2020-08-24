@@ -1,7 +1,7 @@
 import { Directive, HostBinding, NgModule, Input } from '@angular/core';
 import { mkenum } from '../../core/utils';
 
-export const IgxDividerType = mkenum ({
+export const IgxDividerType = mkenum({
     SOLID: 'solid',
     DASHED: 'dashed'
 });

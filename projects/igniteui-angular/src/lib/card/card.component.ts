@@ -201,7 +201,7 @@ export class IgxCardFooterDirective {
  * ```
  */
 
-export const IgxCardType = mkenum ({
+export const IgxCardType = mkenum({
     ELEVATED: 'elevated',
     OUTLINED: 'outlined'
 });
@@ -278,7 +278,7 @@ export class IgxCardComponent {
     public horizontal = false;
 }
 
-export const IgxCardActionsLayout = mkenum ({
+export const IgxCardActionsLayout = mkenum({
     START: 'start',
     JUSTIFY: 'justify'
 });

@@ -11,7 +11,7 @@ export enum Navigate {
 }
 
 /** Key actions that have designated handlers in IgxDropDownComponent */
-export const DropDownActionKey = mkenum ({
+export const DropDownActionKey = mkenum({
     ESCAPE: 'escape',
     ENTER: 'enter',
     SPACE: 'space'

@@ -4,7 +4,7 @@ import { IBaseEventArgs, mkenum } from './utils';
 /**
  * Defines the possible values of the components' display density.
  */
-export const DisplayDensity = mkenum ({
+export const DisplayDensity = mkenum({
     comfortable: 'comfortable',
     cosy: 'cosy',
     compact: 'compact'

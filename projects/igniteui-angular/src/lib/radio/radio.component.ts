@@ -17,7 +17,7 @@ export interface IChangeRadioEventArgs extends IBaseEventArgs {
 }
 
 
-export const RadioLabelPosition = mkenum ({
+export const RadioLabelPosition = mkenum({
     BEFORE: 'before',
     AFTER: 'after'
 });

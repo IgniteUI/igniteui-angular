@@ -107,7 +107,7 @@ export interface IFormatOptions {
  * 'longDate': equivalent to 'MMMM d, y' (June 15, 2015).
  * 'fullDate': equivalent to 'EEEE, MMMM d, y' (Monday, June 15, 2015).
  */
-export const PredefinedFormatOptions = mkenum ({
+export const PredefinedFormatOptions = mkenum({
     ShortDate: 'shortDate',
     MediumDate: 'mediumDate',
     LongDate: 'longDate',

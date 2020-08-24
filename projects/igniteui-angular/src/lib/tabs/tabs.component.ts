@@ -27,7 +27,7 @@ import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
 import ResizeObserver from 'resize-observer-polyfill';
 import { mkenum, PlatformUtil } from '../core/utils';
 
-export const IgxTabsType = mkenum ({
+export const IgxTabsType = mkenum({
     FIXED: 'fixed',
     CONTENTFIT: 'contentfit'
 });

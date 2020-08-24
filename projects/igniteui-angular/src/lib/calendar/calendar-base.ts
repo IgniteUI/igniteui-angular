@@ -9,7 +9,7 @@ import { CalendarView } from './month-picker-base';
 /**
  * Sets the selection type - single, multi or range.
  */
-export const CalendarSelection = mkenum ({
+export const CalendarSelection = mkenum({
     SINGLE: 'single',
     MULTI: 'multi',
     RANGE: 'range'

@@ -16,7 +16,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
-export const SwitchLabelPosition = mkenum ({
+export const SwitchLabelPosition = mkenum({
     BEFORE: 'before',
     AFTER: 'after'
 });

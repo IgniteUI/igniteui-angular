@@ -24,14 +24,14 @@ import { IgxDirectionality } from '../services/direction/directionality';
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 
-export const IgxTextAlign = mkenum ({
+export const IgxTextAlign = mkenum({
     START: 'start',
     CENTER: 'center',
     END: 'end'
 });
 export type IgxTextAlign = (typeof IgxTextAlign)[keyof typeof IgxTextAlign];
 
-export const IgxProgressType = mkenum ({
+export const IgxProgressType = mkenum({
     ERROR: 'error',
     INFO: 'info',
     WARNING: 'warning',

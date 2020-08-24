@@ -34,13 +34,13 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 
 let NEXT_ID = 0;
 
-export const CarouselIndicatorsOrientation = mkenum ({
+export const CarouselIndicatorsOrientation = mkenum({
     bottom: 'bottom',
     top: 'top'
 });
 export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
 
-export const CarouselAnimationType = mkenum ({
+export const CarouselAnimationType = mkenum({
     none: 'none',
     slide: 'slide',
     fade: 'fade'
