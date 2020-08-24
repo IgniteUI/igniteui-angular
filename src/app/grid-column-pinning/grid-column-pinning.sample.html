@@ -29,10 +29,10 @@
         </div>
         <div class="sample-switches">
             <igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
-            <igx-switch [(ngModel)]="grid1.columnPinning" style="padding-left: 10px">Column Pinning</igx-switch>
-            <igx-switch (change)='onSelectionModeChange()' style="padding-left: 10px">Row Selectors</igx-switch>
-            <igx-switch (change)='onChange()' style="padding-left: 10px">Right/Left Column Pinning toggle</igx-switch>
-            <igx-switch (change)='onRowChange()' style="padding-left: 10px">Top/Bottom Row Pinning toggle</igx-switch>
+            <igx-switch [(ngModel)]="grid1.columnPinning">Column Pinning</igx-switch>
+            <igx-switch (change)='onSelectionModeChange()'>Row Selectors</igx-switch>
+            <igx-switch (change)='onChange()'>Right/Left Column Pinning toggle</igx-switch>
+            <igx-switch (change)='onRowChange()'>Top/Bottom Row Pinning toggle</igx-switch>
         </div>
         </div>
     </div>
