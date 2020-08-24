@@ -25,9 +25,7 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive,
-    OnChanges,
-    SimpleChanges
+    Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
