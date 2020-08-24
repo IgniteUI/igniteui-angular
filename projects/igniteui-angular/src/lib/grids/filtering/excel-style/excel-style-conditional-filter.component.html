@@ -18,12 +18,16 @@
             <igx-drop-down-item
             *ngFor="let condition of conditions"
             [value]="condition">
-                <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-                <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
+                <div class="igx-grid__filtering-dropdown-items">
+                    <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+                    <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
+                </div>
             </igx-drop-down-item>
             <igx-drop-down-item *ngIf="showCustomFilterItem()">
-                <igx-icon>filter_list</igx-icon>
-                <span style="margin-left: 16px">{{ esf.grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
+                <div class="igx-grid__filtering-dropdown-items">
+                    <igx-icon>filter_list</igx-icon>
+                    <span class="igx-grid__filtering-dropdown-text">{{ esf.grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
+                </div>
             </igx-drop-down-item>
         </div>
     </igx-drop-down>
