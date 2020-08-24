@@ -245,7 +245,7 @@ export class GridFunctions {
     }
 
     public static getRowExpandIconName(row: IgxGridRowComponent) {
-        return row.element.nativeElement.querySelector('igx-icon').innerText;
+        return row.element.nativeElement.querySelector('igx-icon').textContent;
     }
 
     public static getGroupedRows(fix): DebugElement[] {
