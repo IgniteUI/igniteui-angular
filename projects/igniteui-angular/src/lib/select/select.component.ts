@@ -188,7 +188,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Input()
-    public type = 'line';
+    public type = null;
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
@@ -272,7 +272,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private _injector: Injector) {
         super(elementRef, cdr, selection, _displayDensityOptions);
