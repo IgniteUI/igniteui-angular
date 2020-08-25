@@ -78,6 +78,8 @@ export interface AutocompleteOverlaySettings {
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements AfterViewInit, OnDestroy {
 
     private _shouldBeOpen = false;
+    private destroy$ = new Subject();
+
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
         @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
         @Optional() protected group: IgxInputGroupComponent,
@@ -85,7 +87,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         protected cdr: ChangeDetectorRef) {
         super(null);
     }
-    private destroy$ = new Subject();
 
     private defaultSettings: OverlaySettings = {
         modal: false,
@@ -93,10 +94,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         positionStrategy: new AutoPositionStrategy({ target: this.parentElement }),
         excludePositionTarget: true
     };
-
-    private _opening = false;
-    private destroy$ = new Subject();
-    private _lastListLength = 0;
 
     protected id: string;
     protected get model() {
@@ -360,7 +357,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                     this.open();
                 }
             } else {
-                this.highlightFirstItem();
                 this.close();
             }
         });
