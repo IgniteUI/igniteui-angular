@@ -356,7 +356,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                     this.open();
                 }
             } else {
-                this.highlightFirstItem();
                 this.close();
             }
         });
