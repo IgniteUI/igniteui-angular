@@ -141,12 +141,15 @@ describe('IgxAutocomplete', () => {
             tick();
             expect(autocomplete.open).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.collapsed).toEqual(false);
 
             UIInteractions.setInputElementValue(input, 'ax', fixture);
             tick();
             expect(autocomplete.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(2);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.collapsed).toEqual(true);
+
 
             // Should not try to reopen if no items
             UIInteractions.setInputElementValue(input, 'axx', fixture);
@@ -154,6 +157,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.open).toHaveBeenCalledTimes(3);
             expect(autocomplete.target.open).toHaveBeenCalledTimes(1);
+            expect(autocomplete.target.collapsed).toEqual(true);
 
 
         }));
