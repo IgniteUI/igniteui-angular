@@ -1756,13 +1756,19 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      */
     public move(index: number) {
-        const grid = (this.grid as any);
+        const grid = (this.grid as IgxGridBaseDirective);
+        let columns: QueryList<IgxColumnComponent> = grid.columnList;
 
         if (index < 0 || index >= grid.columns.length) {
             return;
         }
 
-        const target = grid.columns.find(c => c.visibleIndex === index) as IgxColumnComponent;
+        if (this.parent) {
+            columns = this.parent.children;
+        }
+
+        const target = columns.find(c => c.level === this.level && c.visibleIndex === index);
+
         let pos: DropPosition;
 
         if (!target) {
