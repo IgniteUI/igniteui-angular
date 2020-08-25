@@ -1,6 +1,6 @@
 .columns-container{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     column-gap: 24px;
     row-gap: 24px;
     margin: 24px 16px;
@@ -13,11 +13,11 @@
     align-items: center;
 }
 
-.display-density{
-    grid-template-columns: 2fr 1fr;
+.display-density {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
 }
 
-.display-density .button-sample{
+.button-sample {
     justify-self: center;
 }
 

@@ -5,11 +5,11 @@
 
     <div class="sample-content">
         <div class="sample-column">
-                <div class="density-chooser" style="margin-bottom: 16px">
-                        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)" style="display: block; width: 500px"></igx-buttongroup>
+                <div class="density-chooser">
+                        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)"></igx-buttongroup>
                     </div>
-            <div class="density-chooser" style="margin-bottom: 16px">
-                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+            <div class="density-chooser">
+                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
             </div>
 
             <h4>Primary/Foreign key</h4>

@@ -5,14 +5,24 @@
 
     <div class="items-wrapper tabs-demo">
         <div class="items-wrapper__item">
-            
+
             <h3 class="sample-title">Routing sample</h3>
 
-            <button (click)="clickHandler0()">to Root</button>
-            <button (click)="clickHandler1()">to View1</button>
-            <button (click)="clickHandler2()">to View2</button>
-            <button (click)="clickHandler3()">to View3</button><br><br>
-            
+            <igx-buttongroup>
+                <button igxButton (click)="clickHandler0()">
+                    Root
+                </button>
+                <button igxButton (click)="clickHandler1()">
+                    View 1
+                </button>
+                <button igxButton (click)="clickHandler2()">
+                    View 2
+                </button>
+                <button igxButton (click)="clickHandler3()">
+                    View 3
+                </button>
+            </igx-buttongroup>
+
             <igx-tabs>
                 <igx-tab-item label="Tab 1" icon="folder"
                     routerLink="/tabs-routing/view1"
