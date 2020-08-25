@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -9,11 +10,11 @@ import {
     QueryList,
     TemplateRef,
     Output,
-    EventEmitter
+    EventEmitter,
+    OnDestroy,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
-import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { DataType } from '../../data-operations/data-util';
 import {
     IgxFilteringOperand,
@@ -59,7 +60,7 @@ import { DropPosition } from '../moving/moving.service';
     selector: 'igx-column',
     template: ``
 })
-export class IgxColumnComponent implements AfterContentInit {
+export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -339,6 +340,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /** @hidden */
     @Output()
     public visibleWhenCollapsedChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public onColumnChange = new EventEmitter<void>();
 
     /**
      * Gets whether the hiding is disabled.
@@ -1236,6 +1241,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     children: QueryList<IgxColumnComponent>;
 
+
+    /**
+     * @hidden
+     */
+    public destroy$ = new Subject<any>();
     /**
      * @hidden
      */
@@ -1358,8 +1368,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -1372,6 +1381,13 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
     /**
      * @hidden
      */
