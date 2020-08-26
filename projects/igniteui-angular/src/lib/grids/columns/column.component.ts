@@ -1775,7 +1775,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const grid = (this.grid as IgxGridBaseDirective);
         let columns: QueryList<IgxColumnComponent> = grid.columnList;
 
-        if (this.visibleIndex < 0 || index < 0 || index >= grid.columns.length) {
+        if (index < 0 || index >= grid.columns.length) {
             return;
         }
 
@@ -1793,7 +1793,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         if (target.pinned && this.disablePinning) {
             return;
         }
-        pos = this.visibleIndex < index ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        pos = this.visibleIndex > -1 && this.visibleIndex < index ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
         grid.moveColumn(this, target, pos);
     }
     /**
