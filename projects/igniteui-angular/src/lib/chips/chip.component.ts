@@ -98,6 +98,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip [id]="'igx-chip-1'" [tabIndex]="1"></igx-chip>
      * ```
      */
+    @HostBinding('attr.tabIndex')
     @Input()
     public set tabIndex(value: number) {
         this._tabIndex = value;
@@ -372,18 +373,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @Output()
     public onDragEnter = new EventEmitter<IChipEnterDragAreaEventArgs>();
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.tabIndex')
-    get setTabIndex() {
-        if (this._tabIndex !== null) {
-            return this._tabIndex;
-        }
-        return !this.disabled ? 0 : null;
-    }
 
     /**
      * @hidden
