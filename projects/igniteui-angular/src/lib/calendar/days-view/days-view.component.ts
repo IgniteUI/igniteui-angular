@@ -126,6 +126,15 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     }
 
     /**
+     * Returns the week number by date
+     *
+     * @hidden
+     */
+    public getWeekNumber(date): number {
+        return this.calendarModel.getWeekNumber(date);
+    }
+
+    /**
      * Returns the locale representation of the date in the days view.
      *
      * @hidden
