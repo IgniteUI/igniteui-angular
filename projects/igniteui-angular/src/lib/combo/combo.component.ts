@@ -165,12 +165,15 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
+    /** @hidden @internal */
+    public filterValue = '';
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
     protected _displayKey: string;
     protected _prevInputValue = '';
     private _dataType = '';
+    private _searchValue = '';
     private ngControl: NgControl = null;
     private destroy$ = new Subject<any>();
     private _data = [];
@@ -894,7 +897,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public searchValue = '';
+    public get searchValue(): string {
+        return this._searchValue;
+    }
+
+    public set searchValue(val: string) {
+        this.filterValue = val;
+        this._searchValue = val;
+    }
 
     /**
      * @hidden @internal
@@ -1036,8 +1046,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             };
             this.onSearchInput.emit(args);
             if (args.cancel) {
-                this.searchValue = null;
-                return;
+                this.filterValue = null;
             }
         }
         this.checkMatch();
