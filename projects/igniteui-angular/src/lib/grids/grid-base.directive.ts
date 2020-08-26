@@ -2852,6 +2852,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                 || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
                 this.navigation.activeNode = {} as IActiveNode;
+                this.notifyChanges();
             }
         });
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
