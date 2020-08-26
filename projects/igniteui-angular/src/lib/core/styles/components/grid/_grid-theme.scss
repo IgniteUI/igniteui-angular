@@ -1598,11 +1598,19 @@
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
         opacity: if($variant != 'indigo-design', .7, 1);
+
+        .sort-icon::after {
+            background: --var($theme, 'header-selected-background');
+        }
     }
 
     %igx-grid__th--selected {
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
+
+        .sort-icon::after {
+            background: --var($theme, 'header-selected-background');
+        }
     }
 
     %igx-grid__th--active {
