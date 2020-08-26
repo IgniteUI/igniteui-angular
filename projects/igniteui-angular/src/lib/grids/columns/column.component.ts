@@ -1775,7 +1775,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const grid = (this.grid as IgxGridBaseDirective);
         let columns: QueryList<IgxColumnComponent> = grid.columnList;
 
-        if (index < 0 || index >= grid.columns.length) {
+        if (this.visibleIndex < 0 || index < 0 || index >= grid.columns.length) {
             return;
         }
 
