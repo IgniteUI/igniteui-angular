@@ -43,6 +43,7 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { DropPosition } from '../moving/moving.service';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1746,6 +1747,56 @@ export class IgxColumnComponent implements AfterContentInit {
 
         return true;
     }
+
+    /**
+     * Moves a column to the specified index.
+     * @example
+     * ```typescript
+     * column.move(index);
+     * ```
+     */
+    public move(index: number) {
+        let pos: DropPosition;
+        const grid = (this.grid as IgxGridBaseDirective);
+        let columns: QueryList<IgxColumnComponent> = grid.columnList;
+        const li = columns.map(c => c.visibleIndex).reduce(function(a, b) {
+            return Math.max(a, b);
+        });
+
+        if (index < 0 || index > li) {
+            return;
+        }
+
+        if (this.parent) {
+            columns = this.parent.children;
+        }
+
+        let target = columns.find(c => c.level === this.level && c.visibleIndex === index);
+        // if target is undefined, we need to take next column as a target, and will use BeforeDropTarget position
+        // see useAfterTargetPosition below
+        target = target ? target : columns.find(c => c.level === 0 && c.visibleIndex === index + 1);
+
+        // if index is the last position, we need to find the column topLevelParent, if it exists
+        if (index === li) {
+            target = columns.find(c => c.visibleIndex === index);
+            target = target.topLevelParent ? target.topLevelParent : target;
+        }
+
+        if (!target || (target.pinned && this.disablePinning)) {
+            return;
+        }
+
+        const isPreceding = this.visibleIndex > -1 && this.visibleIndex < index;
+        const children = target.children;
+        const useAfterTargetPosition = target.visibleIndex === index || (children && children.find(c => c.visibleIndex === index));
+
+        pos = isPreceding && useAfterTargetPosition ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        if (isPreceding && pos && target.children && target.children.length && target.visibleIndex === index) {
+            return;
+        }
+        grid.moveColumn(this, target, pos);
+    }
+
     /**
      * Returns a reference to the top level parent column.
      * ```typescript
