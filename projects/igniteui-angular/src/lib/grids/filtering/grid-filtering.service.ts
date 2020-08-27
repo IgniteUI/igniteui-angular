@@ -51,6 +51,7 @@ export class IgxFilteringService implements OnDestroy {
     private _filterMenuPositionSettings: PositionSettings;
     private _filterMenuOverlaySettings: OverlaySettings;
     private column;
+    private lastActiveNode;
 
     public isFilterRowVisible = false;
     public filteredColumn: IgxColumnComponent = null;
@@ -98,6 +99,7 @@ export class IgxFilteringService implements OnDestroy {
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = eventArgs.componentRef.instance as any;
                 if (instance) {
+                    this.lastActiveNode = this.grid.navigation.activeNode;
                     instance.initialize(this.column, this._overlayService, eventArgs.id);
                 }
             });
@@ -106,6 +108,7 @@ export class IgxFilteringService implements OnDestroy {
             filter(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe(() => {
                 this._componentOverlayId = null;
+                this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
             });
     }
