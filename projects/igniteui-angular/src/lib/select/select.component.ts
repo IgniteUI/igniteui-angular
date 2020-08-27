@@ -37,7 +37,7 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
-import { IgxHintDirective } from '../input-group/public_api';
+import { IgxHintDirective, IgxInputGroupType } from '../input-group/public_api';
 
 /** @hidden @internal */
 @Directive({
@@ -182,13 +182,19 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * An @Input property that sets how the select will be styled.
-     * The allowed values are `line`, `box` and `border`. The default is `line`.
+     * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
      * ```html
      * <igx-select [type]="'box'"></igx-select>
      * ```
      */
-    @Input()
-    public type = null;
+    @Input('type')
+    public set type(value: IgxInputGroupType) {
+        this.inputGroup.type = value;
+    }
+
+    public get type(): IgxInputGroupType {
+        return this.inputGroup.type;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
