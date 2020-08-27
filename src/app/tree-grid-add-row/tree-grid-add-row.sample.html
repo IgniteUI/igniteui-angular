@@ -6,7 +6,7 @@
     <div class="sample-content">
          <div class="sample-column">
             <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
-                [paging]="false"  [width]="'1100px'" [height]="'600px'" (mouseover)="onMouseOver($event,grid1,actionStrip)" >
+                [paging]="false"  [width]="'1100px'" [height]="'600px'" (mouseover)="onMouseOver($event,grid1,actionStrip)" [rowEditable]='true'>
                 <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
                     [groupable]="false" [width]="c.width"
                     [sortable]="true"  [editable]="true"
@@ -19,3 +19,5 @@
             </igx-tree-grid>
     </div>
 </div>
+
+<button (click)="test()"></button>

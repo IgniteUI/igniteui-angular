@@ -341,3 +341,36 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
         return res;
     }
 }
+
+@Pipe({
+    name: 'treeGridAddRow',
+    pure: true
+})
+export class AddRowPipe implements PipeTransform {
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
+    }
+
+    transform(collection: any[], parentIndex: number, pipeTrigger: number): any[] {
+        debugger;
+        if (parentIndex === -1 ) {
+            return collection;
+        }
+        const grid = this.gridAPI.grid;
+        const primaryKey = grid.primaryKey;
+        const data = {...collection[parentIndex]};
+        Object.keys(data).forEach(key => data[key] = undefined);
+        if (grid.foreignKey) {
+            data[grid.foreignKey] = parentIndex;
+        }
+        if (grid.primaryKey) {
+            data[grid.primaryKey] = collection.length;
+        }
+        const result = collection;
+        result.push(data);
+        grid.addNewRowParent = -1;
+        return result;
+    }
+}

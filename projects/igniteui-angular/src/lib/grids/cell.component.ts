@@ -653,7 +653,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 }
             }
             crud.end();
-            if (this.grid.addRowInstance.rowID !== this.row.rowID) {
+            if (this.grid.addRowInstance && this.grid.addRowInstance.rowID !== this.row.rowID) {
                 this.grid.tbody.nativeElement.focus({ preventScroll: true });
             }
             this.grid.notifyChanges();

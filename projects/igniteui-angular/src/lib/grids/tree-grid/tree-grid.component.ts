@@ -78,6 +78,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
     public addChildRowIndex = -1;
+    private _addNewRowParent = -1;
+    public addModeState = false;
+
+    public set addNewRowParent(value: number) {
+        this._addNewRowParent = value;
+        if (this._addNewRowParent === -1 ) {
+            return;
+        }
+        this._pipeTrigger++;
+        this.notifyChanges();
+    }
+    public get addNewRowParent(): number {
+        return this._addNewRowParent;
+    }
 
 
 

@@ -78,18 +78,43 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        grid.shouldAddRow = true;
-        grid.cdr.detectChanges();
-        const row = grid.addRowInstance;
-        const firstCell = row.cells.find((element, index) => index === 1);
-        row.rowData = {...context.rowData };
-        Object.keys(row.rowData).forEach(key => row.rowData[key] = undefined);
-        row.rowData[grid.primaryKey] = grid.dataLength;
-        row.index = grid.dataLength;
-        firstCell.setEditMode(true);
-        firstCell.activate();
-        grid.addChildRowIndex = action === 'insertChild' ? context.index : -1;
-        this.strip.hide();
+        grid.addNewRowParent = context.rowData[grid.primaryKey];
+        grid.addModeState = true;
+           grid.verticalScrollContainer.onDataChanged.subscribe(() => {
+            if (!grid.addModeState) {
+                return;
+            }
+            grid.cdr.detectChanges();
+            const row = grid.getRowByKey(grid.dataLength - 1);
+            const cell = row.cells.find((element, index) => index === 1);
+            cell.setEditMode(true);
+            cell.activate();
+            grid.cdr.detectChanges();
+        });
+        // grid.shouldAddRow = true;
+        // grid.cdr.detectChanges();
+        // const data = {...context.rowData};
+        // Object.keys(data).forEach(key => data[key] = undefined);
+        // data[grid.primaryKey] = grid.dataLength;
+        // grid.addRow(data, context.rowData[grid.primaryKey]);
+        // grid.cdr.detectChanges();
+        // const row = grid.getRowByKey(grid.dataLength - 1);
+        // const cell = row.cells.find((element, index) => index === 1);
+        // cell.setEditMode(true);
+        // cell.activate();
+
+        // grid.shouldAddRow = true;
+        // grid.cdr.detectChanges();
+        // const row = grid.addRowInstance;
+        // const firstCell = row.cells.find((element, index) => index === 1);
+        // row.rowData = {...context.rowData };
+        // Object.keys(row.rowData).forEach(key => row.rowData[key] = undefined);
+        // row.rowData[grid.primaryKey] = grid.dataLength;
+        // row.index = grid.dataLength;
+        // firstCell.setEditMode(true);
+        // firstCell.activate();
+        // grid.addChildRowIndex = action === 'insertChild' ? context.index : -1;
+        // this.strip.hide();
     }
 
 

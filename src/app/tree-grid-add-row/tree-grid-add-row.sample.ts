@@ -84,4 +84,13 @@ export class TreeGridAddRowSampleComponent implements OnInit, AfterViewInit {
 
         }
     }
+
+    test() {
+        const selectedRowId = this.grid1.selectedRows[0];
+        this.grid1.addRow (
+            {
+                Salary: 12321
+            },
+            selectedRowId);
+    }
 }
