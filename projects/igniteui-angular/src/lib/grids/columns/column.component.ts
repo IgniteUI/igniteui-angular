@@ -1772,10 +1772,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      */
     public move(index: number) {
+        let pos: DropPosition;
         const grid = (this.grid as IgxGridBaseDirective);
         let columns: QueryList<IgxColumnComponent> = grid.columnList;
+        const li = columns.map(c => c.visibleIndex).reduce(function(a, b) {
+            return Math.max(a, b);
+        });
 
-        if (index < 0 || index >= grid.columns.length) {
+        if (index < 0 || index > li) {
             return;
         }
 
@@ -1783,17 +1787,29 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             columns = this.parent.children;
         }
 
-        const target = columns.find(c => c.level === this.level && c.visibleIndex === index);
+        let target = columns.find(c => c.level === this.level && c.visibleIndex === index);
+        // if target is undefined, we need to take next column as a target, and will use BeforeDropTarget position
+        // see useAfterTargetPosition below
+        target = target ? target : columns.find(c => c.level === 0 && c.visibleIndex === index + 1);
 
-        let pos: DropPosition;
+        // if index is the last position, we need to find the column topLevelParent, if it exists
+        if (index === li) {
+            target = columns.find(c => c.visibleIndex === index);
+            target = target.topLevelParent ? target.topLevelParent : target;
+        }
 
-        if (!target) {
+        if (!target || (target.pinned && this.disablePinning)) {
             return;
         }
-        if (target.pinned && this.disablePinning) {
+
+        const isPreceding = this.visibleIndex > -1 && this.visibleIndex < index;
+        const children = target.children;
+        const useAfterTargetPosition = target.visibleIndex === index || (children && children.find(c => c.visibleIndex === index));
+
+        pos = isPreceding && useAfterTargetPosition ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        if (isPreceding && pos && target.children && target.children.length && target.visibleIndex === index) {
             return;
         }
-        pos = this.visibleIndex > -1 && this.visibleIndex < index ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
         grid.moveColumn(this, target, pos);
     }
     /**

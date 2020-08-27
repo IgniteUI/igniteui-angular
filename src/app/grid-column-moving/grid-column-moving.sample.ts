@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
-import { IgxColumnComponent } from '../../../projects/igniteui-angular/src/lib/grids/public_api';
 
 @Component({
     providers: [],
@@ -107,7 +106,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     public moveColumnMCH() {
         const col = this.gridMCH.selectedColumns()[0];
-        col.move(this.newIndex);
+        col.move(this.gridMCHNewIndex);
     }
 
     toggleColumn(name: string) {
