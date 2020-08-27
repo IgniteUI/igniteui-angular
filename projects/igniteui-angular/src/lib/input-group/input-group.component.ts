@@ -208,7 +208,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get type() {
-        return this._type ? this._type : this._inputGroupType ? this._inputGroupType : this._type = 'line';
+        return this._type || this._inputGroupType || 'line';
     }
 
     /** @hidden @internal */

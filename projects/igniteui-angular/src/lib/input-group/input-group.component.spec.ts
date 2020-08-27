@@ -8,8 +8,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
-import { IgxInputGroupType } from './public_api';
-import { InputGroupToken } from './inputGroupType';
+import { InputGroupToken, IgxInputGroupType } from './inputGroupType';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';

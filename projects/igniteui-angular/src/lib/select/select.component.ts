@@ -187,7 +187,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * <igx-select [type]="'box'"></igx-select>
      * ```
      */
-    @Input('type')
+    @Input()
     public set type(value: IgxInputGroupType) {
         if (this.inputGroup) {
             this.inputGroup.type = value;
