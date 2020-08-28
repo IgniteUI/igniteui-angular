@@ -1,14 +1,10 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
-@import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-@import 'mixins';
 @import 'app-palettes';
+@import 'mixins';
 @import 'app-layout';
 
 /* autoprefixer grid: on */
-$palette: $dark-indigo-palette;
-$schema: $dark-indigo-schema;
-
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
 $igx-foreground-color: igx-color($palette, 'grays', 900);
 
