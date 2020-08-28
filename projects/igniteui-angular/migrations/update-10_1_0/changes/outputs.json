@@ -16,6 +16,14 @@
                 "selector": "igx-grid",
                 "type": "component"
             }
-        }
+        },
+        {
+            "name": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
     ]
 }

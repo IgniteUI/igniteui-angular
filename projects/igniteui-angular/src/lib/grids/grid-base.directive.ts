@@ -1274,12 +1274,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditCancel = new EventEmitter<IGridEditEventArgs>();
+    public rowEditExit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when a column is initialized.
@@ -6345,7 +6345,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let args = row.createEditEventArgs();
 
         if (!commit) {
-            this.onRowEditCancel.emit(args);
+            this.rowEditExit.emit(args);
             this.transactions.endPending(false);
         } else {
             args = this.gridAPI.update_row(row, row.newData);
