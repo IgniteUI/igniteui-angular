@@ -66,6 +66,8 @@ The following example shows how you can use the Indigo theme:
     ```html
         <igx-column field="foo.bar.baz"></igx-column>
     ```
+    - Replace `onCellEditCancel` with `cellEditExit` event. The new `cellEditExit` emits every time the editable cell/row is changed/exited.
+    - Replace `onRowEditCancel` with `rowEditExit` event.
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
