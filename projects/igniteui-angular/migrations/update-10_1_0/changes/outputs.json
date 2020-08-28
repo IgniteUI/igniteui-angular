@@ -8,6 +8,14 @@
                 "selector": "igx-tree-grid",
                 "type": "component"
             }
+        },
+        {
+            "name": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
         }
     ]
 }

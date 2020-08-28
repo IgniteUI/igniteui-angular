@@ -228,7 +228,11 @@ export class IgxGridCRUDService {
     }
 
     end(): void {
-        this.grid.cellEditExit.emit(this.cell?.createEditEventArgs(true));
+        const args = this.cell?.createEditEventArgs(true);
+        this.grid.cellEditExit.emit(args);
+        if (args && args.cancel) {
+            return;
+        }
         this.cell = null;
     }
     public enterEditMode(cell) {
@@ -250,11 +254,7 @@ export class IgxGridCRUDService {
             return;
         }
         if (this.inEditMode) {
-            const args = this.cell.createEditEventArgs();
-            this.grid.onCellEditCancel.emit(args);
-            if (args.cancel) {
-                return;
-            }
+
             this.grid.endEdit(false);
             if (isEdge()) { this.grid.cdr.detectChanges(); }
             this.grid.tbody.nativeElement.focus();

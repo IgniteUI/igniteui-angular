@@ -132,7 +132,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
-            spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
             spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
@@ -187,7 +187,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid
             };
 
-            expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
 

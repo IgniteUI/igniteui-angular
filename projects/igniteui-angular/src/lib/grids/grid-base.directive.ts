@@ -1170,20 +1170,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     /**
-     * Emitted when editing and **not** submitting the value.
-     * @remarks
-     * (e.g. `Esc` key was pressed)
-     * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
-     */
-    @Output()
-    public onCellEditCancel = new EventEmitter<IGridEditEventArgs>();
-
-    /**
      * Emitted when cell enters edit mode.
      * @remarks
      * This event is cancelable.

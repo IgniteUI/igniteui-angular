@@ -224,7 +224,6 @@ A list of the events emitted by the **igx-grid**:
 |`onCellEditEnter`|Emitted when cell enters edit mode.|
 |`onCellEdit`|Emitted just before a cell's value is committed (e.g. by pressing Enter).|
 |`cellEditDone`|Emitted after a cell has been edited and editing has been committed.|
-|`onCellEditCancel`|Emitted when a cell exits edit mode without committing its value (e.g. by pressing Escape).|
 |`onRowEditEnter`|If `[rowEditing]` is enabled, emitted when a row enters edit mode (after onCellEditEnter).|
 |`onRowEdit`|Emitted just before a row in edit mode's value is committed (e.g. by clicking the Done button on the Row Editing Overlay).|
 |`rowEditDone`|Emitted after exiting edit mode for a row and editing has been committed.|

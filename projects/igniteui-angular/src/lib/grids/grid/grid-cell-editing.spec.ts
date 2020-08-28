@@ -919,8 +919,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should properly emit 'onCellEditCancel' event`, () => {
-            spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
+        it(`Should properly emit 'cellEditExit' event`, () => {
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
             const cell = grid.getCellByColumn(0, 'fullName');
             const initialRowData = {...cell.rowData};
 
@@ -946,15 +946,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(false);
         });
 
-        it(`Should be able to cancel 'onCellEditCancel' event`, () => {
-            spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
-            grid.onCellEditCancel.subscribe((e: IGridEditEventArgs) => {
+        it(`Should be able to cancel 'cellEditExit' event`, () => {
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            grid.cellEditExit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             const cell = grid.getCellByColumn(0, 'fullName');
@@ -982,8 +982,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(true);
         });
