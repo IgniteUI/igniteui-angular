@@ -3,7 +3,8 @@ import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl } from '@angular/forms';
-import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState } from './combo.component';
+import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState,
+    IComboSearchInputEventArgs } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -565,7 +566,7 @@ describe('igxCombo', () => {
 
             combo.handleInputChange('Item1');
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
-            expect(matchSpy).toHaveBeenCalledTimes(0);
+            expect(matchSpy).toHaveBeenCalledTimes(1);
         });
     });
     describe('Initialization and rendering tests: ', () => {
@@ -637,11 +638,11 @@ describe('igxCombo', () => {
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
-            expect(inputGroupElement.childElementCount).toEqual(2);
+            expect(inputGroupElement.childElementCount).toEqual(3);
 
             const inputGroupWrapper = inputGroupElement.children[0];
             expect(inputGroupWrapper.classList.contains(CSS_CLASS_INPUTGROUP_WRAPPER)).toBeTruthy();
-            expect(inputGroupWrapper.childElementCount).toEqual(2);
+            expect(inputGroupWrapper.childElementCount).toEqual(1);
 
             const inputGroupBundle = inputGroupWrapper.children[0];
             expect(inputGroupBundle.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLE)).toBeTruthy();
@@ -660,7 +661,7 @@ describe('igxCombo', () => {
             expect(dropDownButton.classList.contains(CSS_CLASS_TOGGLEBUTTON)).toBeTruthy();
             expect(dropDownButton.childElementCount).toEqual(1);
 
-            const inputGroupBorder = inputGroupWrapper.children[1];
+            const inputGroupBorder = inputGroupElement.children[1];
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
@@ -2376,6 +2377,17 @@ describe('igxCombo', () => {
             UIInteractions.triggerInputEvent(searchInput, combo.searchValue.substring(0, 2));
             fixture.detectChanges();
             expect(combo.isAddButtonVisible()).toEqual(true);
+        });
+        it('Should NOT filter the data when onSearchInput is canceled', () => {
+            const cancelSub = combo.onSearchInput.subscribe((event: IComboSearchInputEventArgs) => event.cancel = true);
+            combo.toggle();
+            fixture.detectChanges();
+            const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            UIInteractions.triggerInputEvent(searchInput, 'Test');
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(combo.data.length);
+            expect(combo.searchValue).toEqual('Test');
+            cancelSub.unsubscribe();
         });
     });
     describe('Form control tests: ', () => {
