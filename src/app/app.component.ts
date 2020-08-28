@@ -516,14 +516,10 @@ export class AppComponent implements OnInit {
         iconService.registerFontSetAlias('fa-solid', 'fa');
         iconService.registerFontSetAlias('fa-brands', 'fab');
 
-        router.events.pipe(
-            filter(event => event instanceof NavigationEnd)
-        ).subscribe(event => {
-            for(let component of this.componentLinks) {
-                console.log(component.link);
-                console.log(router.url);
-                if(component.link === router.url) {
-                    this.urlString = component.name
+        router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
+            for (const component of this.componentLinks) {
+                if (component.link === router.url) {
+                    this.urlString = component.name;
                 }
             }
         });

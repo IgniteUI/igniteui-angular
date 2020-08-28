@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
-@import 'app-palettes';
+@import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
 @import 'mixins';
 @import 'app-layout';
+
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
 
 /* autoprefixer grid: on */
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
@@ -33,4 +36,6 @@ body {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
     }
 }
+
+
 

@@ -1,5 +1,4 @@
 @import '../../../projects/igniteui-angular/src/lib/core/styles/base/index';
-@import '../../styles/app-palettes';
 
 :host {
     display: block;
@@ -26,11 +25,11 @@
     align-items: center;
     height: rem(90px);
     padding: 0 rem(16px);
-    background: igx-color($palette, 'primary');
+    background: var(--igx-primary-500);
     overflow: hidden;
 
     .title {
-        color: igx-contrast-color($palette, 'primary');
+        color: var(--igx-primary-500-contrast);
         margin: 0;
         text-transform: capitalize;
         white-space: nowrap;

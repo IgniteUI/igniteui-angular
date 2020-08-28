@@ -1,5 +1,4 @@
 @import '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
-@import '../../../styles/app-palettes';
 @import'../../../styles/igniteui-theme.scss';
 
 .sample-wrapper {
@@ -35,8 +34,6 @@
 
 .color-container {
     @include igx-color-classes('background', $palette: $palette);
-
-    color: #fff;
 }
 
 .color-title {
@@ -53,19 +50,23 @@
     padding: 8px 16px;
 }
 
-.igx-success-500{
+.igx-success-500 {
     background: var(--igx-success-500);
+    color: var(--igx-success-500-contrast);
 }
 
-.igx-info-500{
+.igx-info-500 {
     background: var(--igx-info-500);
+    color: var(--igx-info-500-contrast);
 }
 
-.igx-warn-500{
+.igx-warn-500 {
     background: var(--igx-warn-500);
+    color: var(--igx-warn-500-contrast);
 }
 
-.igx-error-500{
+.igx-error-500 {
     background: var(--igx-error-500);
+    color: var(--igx-error-500-contrast);
 }
 
