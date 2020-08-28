@@ -25,5 +25,37 @@
                 "type": "component"
             }
         },
+        {
+            "name": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
     ]
 }
