@@ -32,9 +32,7 @@
                 [displayDensity]="density"
                 [type]="inputSearchType"
             >
-                <igx-prefix>
-                    <igx-icon>search</igx-icon>
-                </igx-prefix>
+                <igx-icon igxPrefix>search</igx-icon>
                 <input
                     name="inputTest"
                     #input
@@ -69,9 +67,7 @@
                     [(ngModel)]="inputValue"
                     [disabled]="isDisabled"
                 />
-                <igx-suffix>
-                    <igx-icon>data_usage</igx-icon>
-                </igx-suffix>
+                <igx-icon igxSuffix>data_usage</igx-icon>
             </igx-input-group>
             <br />
 
