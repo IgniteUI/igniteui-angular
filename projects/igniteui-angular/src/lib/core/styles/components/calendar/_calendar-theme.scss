@@ -628,8 +628,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-grow: 1;
-        flex-basis: 14.28%;
+        min-width: 14.28%;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
@@ -660,8 +659,8 @@
         justify-content: center;
         align-items: center;
         width: $cal-value-w;
+        min-width: $cal-value-w;
         height: $cal-value-h;
-        min-width: 2ch;
         border-radius: --var($theme, 'date-border-radius');
         z-index: 0;
         // transition: background .15s ease-out;
@@ -686,7 +685,7 @@
         }
 
         border-radius: 0;
-        flex-basis: 14.28%;
+        min-width: 14.28%;
         // 100 divided by the number of weekdays
 
         @if $bootstrap-theme {
