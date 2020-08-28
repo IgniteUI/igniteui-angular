@@ -64,7 +64,7 @@
 </ng-template>
 
 <ng-template #bundle>
-    <ng-container [ngSwitch]="type">
+    <ng-container [ngSwitch]="theme">
         <ng-container *ngSwitchCase="'bootstrap'">
             <ng-container *ngTemplateOutlet="bootstrapBundle"></ng-container>
         </ng-container>
@@ -73,7 +73,7 @@
             <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
         </ng-container>
 
-        <ng-container *ngSwitchCase="'indigo'">
+        <ng-container *ngSwitchCase="'indigo-design'">
             <ng-container *ngTemplateOutlet="fluentBundle"></ng-container>
         </ng-container>
 

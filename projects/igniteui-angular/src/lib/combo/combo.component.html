@@ -22,7 +22,7 @@
             clear
         </igx-icon>
     </igx-suffix>
-    <igx-suffix igxButton="icon" class="igx-combo__toggle-button" igxRipple>
+    <igx-suffix class="igx-combo__toggle-button">
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>
@@ -51,7 +51,7 @@
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
-            | comboFiltering:searchValue:displayKey:filterable:filteringOptions
+            | comboFiltering:filterValue:displayKey:filterable:filteringOptions
             | comboGrouping:groupKey:valueKey;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">

@@ -3,39 +3,73 @@
     <form class="input-group-sample-form">
         <div class="form__fields-settings">
             <strong>Select density</strong>
-            <igx-buttongroup [alignment]="alignment" [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            <igx-buttongroup
+                [alignment]="alignment"
+                [values]="displayDensities"
+                (onSelect)="selectDensity($event)"
+            ></igx-buttongroup>
             <strong>Select Input type</strong>
-            <igx-buttongroup [alignment]="alignment" [values]="inputTypes" (onSelect)="selectInoutType($event)"></igx-buttongroup>
+            <igx-buttongroup
+                [alignment]="alignment"
+                [values]="inputTypes"
+                (onSelect)="selectInputType($event)"
+            ></igx-buttongroup>
             <strong>Enable/Disable fields</strong>
-            <igx-switch [checked]="true" id="enableDisable" (click)="disableFields()"></igx-switch>
+            <igx-switch
+                [checked]="true"
+                id="enableDisable"
+                (click)="disableFields()"
+            ></igx-switch>
             <strong>Enable/Disable Required</strong>
-            <igx-switch [checked]="false" (click)="toggleRequired()"></igx-switch>
+            <igx-switch
+                [checked]="false"
+                (click)="toggleRequired()"
+            ></igx-switch>
         </div>
         <div class="form__fields">
             <!-- input type search - suffix/prefix -->
-            <igx-input-group [displayDensity]="density" [type]="inputSearchType">
-                <igx-prefix>
-                    <igx-icon>search</igx-icon>
-                </igx-prefix>
-                <input name="inputTest" #input value="{{inputValue}}" [(ngModel)]="inputValue" igxInput placeholder="Search" [disabled]="isDisabled"/>
-                <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
+            <igx-input-group
+                [displayDensity]="density"
+                [type]="inputSearchType"
+            >
+                <igx-icon igxPrefix>search</igx-icon>
+                <input
+                    name="inputTest"
+                    #input
+                    value="{{ inputValue }}"
+                    [(ngModel)]="inputValue"
+                    igxInput
+                    placeholder="Search"
+                    [disabled]="isDisabled"
+                />
+                <igx-suffix
+                    *ngIf="input.value.length > 0"
+                    (click)="input.value = input.defaultValue"
+                >
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>
-            <br>
+            <br />
 
             <!-- text field -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label for="fluentfirstName" igxLabel>Text Field</label>
+            <igx-input-group class="material-theme" [displayDensity]="density" [type]="inputType">
+                <label for="fluentfirstName" igxLabel>Always Material</label>
                 <igx-prefix>
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
-                <input name="inputTest" placeholder="Placeholder" [required]="isRequired" id="fluentfirstName" igxInput value="{{inputValue}}" [(ngModel)]="inputValue" [disabled]="isDisabled"/>
-                <igx-suffix>
-                    <igx-icon>data_usage</igx-icon>
-                </igx-suffix>
+                <input
+                    name="inputTest"
+                    placeholder="Placeholder"
+                    [required]="isRequired"
+                    id="fluentfirstName"
+                    igxInput
+                    value="{{ inputValue }}"
+                    [(ngModel)]="inputValue"
+                    [disabled]="isDisabled"
+                />
+                <igx-icon igxSuffix>data_usage</igx-icon>
             </igx-input-group>
-            <br>
+            <br />
 
             <!-- text field prefix/suffix -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -43,13 +77,21 @@
                 <igx-prefix>
                     http://
                 </igx-prefix>
-                <input name="inputTest" [required]="isRequired" [disabled]="isDisabled" [value]="inputValue" [(ngModel)]="inputValue" igxInput type="text" />
+                <input
+                    name="inputTest"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    [value]="inputValue"
+                    [(ngModel)]="inputValue"
+                    igxInput
+                    type="text"
+                />
                 <igx-suffix>
                     .com
                 </igx-suffix>
                 <igx-hint>Type you web address</igx-hint>
             </igx-input-group>
-            <br>
+            <br />
 
             <!-- textarea -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
@@ -57,20 +99,34 @@
                 <igx-prefix>
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
-                <textarea name="inputTest" [required]="isRequired" igxInput [value]="inputValue" [disabled]="isDisabled" [(ngModel)]="inputValue"></textarea>
+                <textarea
+                    name="inputTest"
+                    [required]="isRequired"
+                    igxInput
+                    [value]="inputValue"
+                    [disabled]="isDisabled"
+                    [(ngModel)]="inputValue"
+                ></textarea>
                 <igx-suffix>
                     <igx-icon>phone</igx-icon>
                 </igx-suffix>
             </igx-input-group>
-            <br>
+            <br />
 
             <!-- Text field mask -->
-            <igx-input-group [displayDensity]="density" [type]="inputType" displayDensity="compact">
+            <igx-input-group [displayDensity]="density" [type]="inputType">
                 <igx-prefix>+359</igx-prefix>
                 <label igxLabel>Input with Mask</label>
-                <input [disabled]="isDisabled" [required]="isRequired" igxInput [igxMask]="'000 000 000'" promptChar="*" type="text" />
+                <input
+                    [disabled]="isDisabled"
+                    [required]="isRequired"
+                    igxInput
+                    [igxMask]="'000 000 000'"
+                    promptChar="*"
+                    type="text"
+                />
             </igx-input-group>
-            <br>
+            <br />
 
             <!-- date field -->
             <igx-date-picker [value]="date">
@@ -80,30 +136,49 @@
                     let-value="value"
                     let-displayData="displayData"
                 >
-                    <igx-input-group [displayDensity]="density" [type]="inputType">
+                    <igx-input-group
+                        [displayDensity]="density"
+                        [type]="inputType"
+                    >
                         <label igxLabel>Date: </label>
-                        <input [required]="isRequired" name="date" [value]="displayData" igxInput [disabled]="isDisabled"/>
+                        <input
+                            [required]="isRequired"
+                            name="date"
+                            [value]="displayData"
+                            igxInput
+                            [disabled]="isDisabled"
+                        />
                         <igx-suffix>
-                            <igx-icon (click)="openDialog()">date_range</igx-icon>
+                            <igx-icon (click)="openDialog()"
+                                >date_range</igx-icon
+                            >
                         </igx-suffix>
                     </igx-input-group>
                 </ng-template>
             </igx-date-picker>
-            <br>
+            <br />
 
             <!-- Read only -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Read only input field</label>
-                <input readonly [disabled]="isDisabled" igxInput value="read-only" type="text" placeholder="Placeholder"/>
+                <input
+                    readonly
+                    [disabled]="isDisabled"
+                    igxInput
+                    value="read-only"
+                    type="text"
+                    placeholder="Placeholder"
+                />
             </igx-input-group>
-            <br>
+            <br />
 
             <!-- Select field -->
-            <igx-select #select1
-                        [displayDensity]="density"
-                        [placeholder]="'Pick One'"
-                        [disabled]="isDisabled"
-                        [type]="inputType">
+            <igx-select
+                #select1
+                [displayDensity]="density"
+                [placeholder]="'Pick One'"
+                [disabled]="isDisabled"
+            >
                 <label igxLabel>Input type select</label>
                 <igx-prefix igxPrefix>
                     <igx-icon fontSet="material">favorite</igx-icon>
@@ -113,7 +188,7 @@
                 <igx-select-item>Paris</igx-select-item>
                 <igx-select-item>New York</igx-select-item>
             </igx-select>
-            <br>
+            <br />
         </div>
     </form>
 </div>

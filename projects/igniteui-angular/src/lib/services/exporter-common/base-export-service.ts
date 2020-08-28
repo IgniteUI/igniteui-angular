@@ -77,6 +77,8 @@ export abstract class IgxBaseExporter {
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
 
+    public onExportEnded = new EventEmitter<IBaseEventArgs>();
+
     /**
      * This event is emitted when a row is exported.
      * ```typescript
@@ -213,7 +215,7 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
         const isSpecialData = ExportUtilities.isSpecialData(data);
 
-        yieldingLoop(data.length, 1000, (i) => {
+        yieldingLoop(data.length, 100, (i) => {
             const row = data[i];
             this.exportRow(dataToExport, row, i, isSpecialData);
         }, () => {

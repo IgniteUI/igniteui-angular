@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe } from 'rxjs';
+import { Subject, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -72,7 +72,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
-import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -2000,7 +2000,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ContentChildren(IgxRowEditTabStopDirective)
+    @ContentChildren(IgxRowEditTabStopDirective, { descendants: true })
     public rowEditTabsCUSTOM: QueryList<IgxRowEditTabStopDirective>;
 
     /**
@@ -2881,6 +2881,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
+
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
@@ -2914,6 +2915,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
+                this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                this.navigation.activeNode = {} as IActiveNode;
+                this.notifyChanges();
+            }
+        });
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -2969,6 +2979,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
+                    instance.lastActiveNode = this.navigation.activeNode;
                     instance.setAddButtonFocus();
                 }
                 return;
@@ -4702,11 +4713,34 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected getComputedHeight(elem) {
+        return elem.offsetHeight ? parseFloat(this.document.defaultView.getComputedStyle(elem).getPropertyValue('height')) : 0;
+    }
+    /**
+     * @hidden
+     */
+    protected getFooterHeight(): number {
+        return this.summariesHeight || this.getComputedHeight(this.tfoot.nativeElement);
+    }
+    /**
+     * @hidden
+     */
+    protected getTheadRowHeight(): number {
+        const height = this.getComputedHeight(this.theadRow.nativeElement);
+        return (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
+        height - this.getFilterCellHeight() :
+        height;
+    }
+
+    /**
+     * @hidden
+     */
     protected getToolbarHeight(): number {
         let toolbarHeight = 0;
         if (this.showToolbar && this.toolbarHtml != null) {
+            const height = this.getComputedHeight(this.toolbarHtml.nativeElement);
             toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                this.toolbarHtml.nativeElement.offsetHeight : 0;
+            height : 0;
         }
         return toolbarHeight;
     }
@@ -4717,8 +4751,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected getPagingFooterHeight(): number {
         let pagingHeight = 0;
         if (this.footer) {
+            const height = this.getComputedHeight(this.footer.nativeElement);
             pagingHeight = this.footer.nativeElement.firstElementChild ?
-                this.footer.nativeElement.offsetHeight : 0;
+            height : 0;
         }
         return pagingHeight;
     }
@@ -4741,17 +4776,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this._height) {
             return null;
         }
-
-        const actualTheadRow = (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
-            this.theadRow.nativeElement.offsetHeight - this.getFilterCellHeight() :
-            this.theadRow.nativeElement.offsetHeight;
-        const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
+        const actualTheadRow = this.getTheadRowHeight();
+        const footerHeight = this.getFooterHeight();
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
+        const scrHeight = this.getComputedHeight(this.scr.nativeElement);
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
-            this.scr.nativeElement.clientHeight;
+            scrHeight;
 
         let gridHeight = 0;
 
@@ -4762,13 +4795,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 const bodyHeight = this.getDataBasedBodyHeight();
                 return bodyHeight > 0 ? bodyHeight : null;
             }
-            gridHeight = parseInt(computed, 10);
+            gridHeight = parseFloat(computed);
         } else {
             gridHeight = parseInt(this._height, 10);
         }
         const height = Math.abs(gridHeight - renderedHeight);
 
-        if (height === 0 || isNaN(gridHeight)) {
+        if (Math.round(height) === 0 || isNaN(gridHeight)) {
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }

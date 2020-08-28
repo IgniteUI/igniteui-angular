@@ -384,7 +384,7 @@ describe('IgxGrid - Column properties #grid', () => {
         const nameColumn = grid.getColumnByName('Name');
 
         idColumn.header = 'ID Header';
-        idColumn.elementRef.nativeElement.title = 'ID Title';
+        idColumn.title = 'ID Title';
         nameColumn.header = 'Name Header';
         fix.detectChanges();
 
