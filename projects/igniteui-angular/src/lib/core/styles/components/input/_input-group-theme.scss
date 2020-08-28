@@ -1171,8 +1171,10 @@
         color: --var($theme, 'input-prefix-color');
         background: --var($theme, 'input-prefix-background');
         padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+        width: auto;
         height: auto;
         line-height: normal;
+        font-weight: 400;
 
         igx-icon {
             width: rem(18px);
@@ -1203,6 +1205,7 @@
         color: --var($theme, 'input-suffix-color');
         padding: rem(8px, map-get($base-scale-size, 'comfortable'));
         background: --var($theme, 'input-suffix-background');
+        width: auto;
         height: auto;
         line-height: normal;
 
@@ -1218,6 +1221,7 @@
     }
 
     %form-group-suffix-fluent-search {
+        width: auto;
         height: auto;
         padding: rem(8px, map-get($base-scale-size, 'comfortable'));
         line-height: normal;
@@ -1479,9 +1483,18 @@
         border: 1px solid --var($theme, 'border-color');
         padding: map-get($bootstrap-padding, 'comfortable');
         z-index: -1;
+        width: auto;
         height: auto;
+        font-size: map-get($bootstrap-font-size, 'comfortable');
         line-height: 1.5;
         white-space: nowrap;
+
+        igx-icon {
+            width: map-get($bootstrap-font-size, 'comfortable');
+            height: map-get($bootstrap-font-size, 'comfortable');
+            font-size: map-get($bootstrap-font-size, 'comfortable');
+            font-weight: 400;
+        }
     }
 
     %form-group-prefix--bootstrap {
@@ -1505,6 +1518,7 @@
     %form-group-prefix--cosy-bootstrap,
     %form-group-suffix--cosy-bootstrap {
         padding: map-get($bootstrap-padding, 'cosy');
+        width: auto;
         height: auto;
 
         igx-icon {
@@ -1517,6 +1531,7 @@
     %form-group-prefix--compact-bootstrap,
     %form-group-suffix--compact-bootstrap {
         padding: map-get($bootstrap-padding, 'compact');
+        width: auto;
         height: auto;
 
         igx-icon {
