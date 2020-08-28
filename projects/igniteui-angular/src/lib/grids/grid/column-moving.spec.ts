@@ -1527,6 +1527,18 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[1].field).toEqual('CompanyName');
             expect(columnsList[2].field).toEqual('ContactTitle');
             expect(columnsList[3].field).toEqual('ContactName');
+
+            // step 11 - move level 2 column inside the group
+            column = grid.getColumnByName('Missing');
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactTitle');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[7].field).toEqual('City');
+            expect(columnsList[8].field).toEqual('Missing');
         }));
 
         it('MCH - should reorder only columns on the same level (top level group column).', (async() => {

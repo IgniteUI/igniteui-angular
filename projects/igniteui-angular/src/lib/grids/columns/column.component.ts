@@ -1792,7 +1792,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         // see useAfterTargetPosition below
         target = target ? target : columns.find(c => c.level === 0 && c.visibleIndex === index + 1);
 
-        // if index is the last position, we need to find the column topLevelParent, if it exists
+        // if index is the last position, we need to find the column topLevelParent, if it exists. see useAfterTargetPosition below
         if (index === li) {
             target = columns.find(c => c.visibleIndex === index);
             target = target.topLevelParent ? target.topLevelParent : target;
@@ -1803,8 +1803,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const isPreceding = this.visibleIndex > -1 && this.visibleIndex < index;
-        const children = target.children;
-        const useAfterTargetPosition = target.visibleIndex === index || (children && children.find(c => c.visibleIndex === index));
+        const useAfterTargetPosition = target.visibleIndex === index || this.lastChild(target).visibleIndex === index;
 
         pos = isPreceding && useAfterTargetPosition ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
         if (isPreceding && pos && target.children && target.children.length && target.visibleIndex === index) {
@@ -1812,6 +1811,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
         grid.moveColumn(this, target, pos);
     }
+
+    private lastChild(target: IgxColumnComponent) {
+        let lastChild = target.children.last;
+        while (lastChild.children && lastChild.children.last) {
+            lastChild = lastChild.children.last;
+        }
+        return lastChild;
+    }
+
     /**
      * Returns a reference to the top level parent column.
      * ```typescript
