@@ -337,7 +337,7 @@ describe('IgxCalendar - ', () => {
                 // 6 weeks + week header
                 expect(calendarRows.length).toEqual(7);
 
-                // 7 calendar rows * 7 elements in each
+                // 6 calendar rows * 7 elements in each
                 expect(
                     dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-day-item`)).length
                 ).toEqual(42);
@@ -358,6 +358,43 @@ describe('IgxCalendar - ', () => {
 
                 const calendarHeader = dom.query(By.css(HelperTestFunctions.CALENDAR_HEADER_CSSCLASS));
                 expect(calendarHeader).toBeFalsy();
+            });
+
+            it('Should properly render calendar DOM with week numbers enabled', () => {
+                const today = new Date(Date.now());
+                calendar.viewDate = today;
+                calendar.showWeekNumbers = true;
+                fixture.detectChanges();
+
+                const calendarRows = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_ROW_CSSCLASS));
+                expect(calendarRows.length).toEqual(7);
+
+                // 6 calendar rows * 8 elements in each
+                expect(
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-day-item`)).length +
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-week-number-item`)).length
+                ).toEqual(48);
+                expect(
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > span`)).length
+                ).toEqual(8);
+
+            });
+
+            it('Week numbers should appear as first column', () => {
+                const firstWeekOfTheYear = new Date(2020, 0, 5);
+                calendar.viewDate = firstWeekOfTheYear;
+                calendar.showWeekNumbers = true;
+                fixture.detectChanges();
+
+                const calendarRows = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_ROW_CSSCLASS));
+
+                calendarRows.forEach((row, idx) => {
+                    const firstRowItem = row.nativeElement.children[0];
+                    idx === 0 ?
+                        expect(firstRowItem.innerText).toEqual('Wk') :
+                        expect(firstRowItem.tag).toEqual(HelperTestFunctions.CALENDAR_WEEK_NUMBER_ITEM);
+                        expect(firstRowItem.innerText).toEqual(idx);
+                });
             });
 
             it('Calendar DOM structure - year view | month view', () => {

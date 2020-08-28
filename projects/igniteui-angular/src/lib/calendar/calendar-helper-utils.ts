@@ -9,6 +9,7 @@ export class HelperTestFunctions {
     public static MODAL_OVERLAY_CSSCLASS = 'igx-overlay__wrapper--modal';
 
     public static CALENDAR_CSSCLASS = '.igx-calendar';
+    public static CALENDAR_WEEK_NUMBER_ITEM = '"IGX-WEEK-NUMBER-ITEM"';
     public static CALENDAR_HEADER_CSSCLASS = '.igx-calendar__header';
     public static CALENDAR_HEADER_YEAR_CSSCLASS = '.igx-calendar__header-year';
     public static CALENDAR_HEADER_DATE_CSSCLASS = '.igx-calendar__header-date';
