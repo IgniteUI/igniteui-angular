@@ -69,6 +69,20 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
+    public addChild(event?): void {
+        if (event) {
+            event.stopPropagation();
+        }
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        const context = this.strip.context;
+        const grid = context.grid;
+        grid.addRowParent = context.rowData[grid.primaryKey];
+        grid.addRowState = true;
+        this.strip.hide();
+    }
+
     /**
      * Getter if the row is disabled
      * @hidden

@@ -108,6 +108,7 @@ import {
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
+import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 
 const appRoutes = [
     {
@@ -343,6 +344,10 @@ const appRoutes = [
     {
         path: 'grid',
         component: GridSampleComponent
+    },
+    {
+        path: 'gridAddRow',
+        component: GridAddRowSampleComponent
     },
     {
         path: 'gridFilterTemplate',

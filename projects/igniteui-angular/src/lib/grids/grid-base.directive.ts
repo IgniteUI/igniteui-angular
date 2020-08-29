@@ -188,6 +188,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+    private _addRowParent = -1;
+    public addRowState = false;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -617,6 +619,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public dragRowID = null;
 
 
+    public set addRowParent(value: number) {
+        this._addRowParent = value;
+        this.addRowState = true;
+        this._pipeTrigger++;
+        this.notifyChanges();
+    }
+
+    public get addRowParent(): number {
+        return this._addRowParent;
+    }
     /**
      * Gets/Sets whether the rows are editable.
      * @remarks
@@ -2769,6 +2781,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public isGhostRecord(record: any): boolean {
         return record.ghostRecord !== undefined;
+    }
+
+    public isAddRowRecord(record: any): boolean {
+        return record.addRow !== undefined;
     }
 
     /**

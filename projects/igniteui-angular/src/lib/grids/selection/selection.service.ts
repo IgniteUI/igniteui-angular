@@ -174,6 +174,10 @@ export class IgxGridCRUDService {
         return this.grid.primaryKey;
     }
 
+    get addRowState(): boolean {
+        return this.grid.addRowState;
+    }
+
     beginRowEdit() {
         if (this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
@@ -204,6 +208,13 @@ export class IgxGridCRUDService {
 
         if (args.cancel) {
             this.end();
+            return;
+        }
+
+        if (this.addRowState) {
+            this.grid.endEdit(true);
+            this.cell = newCell;
+            this.beginRowEdit();
             return;
         }
 

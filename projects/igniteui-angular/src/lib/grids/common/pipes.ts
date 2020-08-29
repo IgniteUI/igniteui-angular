@@ -355,3 +355,28 @@ export class IgxColumnFormatterPipe implements PipeTransform {
         return formatter(value);
     }
 }
+
+@Pipe({
+    name: 'gridAddRow',
+    pure: true
+})
+export class IgxGridAddRowPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+
+    transform(collection: any, parentID: number, addRowState: boolean, pipeTrigger: number) {
+        const grid = this.gridAPI.grid;
+        if (parentID === -1 || !addRowState) {
+            return collection;
+        }
+        const parentRecordIndex = collection.findIndex(record => record[grid.primaryKey] === parentID);
+        const row = {...collection[parentRecordIndex]};
+        Object.keys(row).forEach(key => row[key] = undefined);
+        const rec = {
+            recordRef: row,
+            addRow: true
+        };
+        collection.splice(parentRecordIndex + 1, 0, rec);
+        return collection;
+    }
+}

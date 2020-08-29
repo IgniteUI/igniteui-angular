@@ -49,6 +49,7 @@ import { ISearchInfo } from './grid/public_api';
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
     protected _lastSearchInfo: ISearchInfo;
+    protected enterAddMode = false;
 
     /**
      * Gets the column of the cell.
@@ -178,6 +179,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
+        if (this.grid.addRowState) {
+            return this.enterAddMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
+        }
         if (this.editMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
@@ -517,6 +521,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
+    @ViewChild('addRowCell', { read: TemplateRef, static: true})
+    protected addRowCellTemplate: TemplateRef<any>;
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     protected set highlight(value: IgxTextHighlightDirective) {
         this._highlight = value;
@@ -782,6 +789,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (event.type === 'doubletap') {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
+        }
+        if (this.grid.addRowState && this.row.addRow) {
+            this.crudService.begin(this);
+            this.enterAddMode = true;
         }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);
