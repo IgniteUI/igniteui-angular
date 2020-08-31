@@ -150,9 +150,6 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
         this.activeView = CalendarView.DEFAULT;
 
-        this.selectDate(event);
-        this.onSelection.emit(this.selectedDates);
-
         requestAnimationFrame(() => {
             if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
         });
