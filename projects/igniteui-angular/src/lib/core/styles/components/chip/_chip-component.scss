@@ -18,26 +18,10 @@
 
     @include e(item) {
         @extend %igx-chip__item !optional;
-
-        &:hover {
-            @extend %igx-chip__item--hover !optional;
-        }
-
-        &:focus {
-            @extend %igx-chip__item--focus !optional;
-        }
     }
 
     @include e(item, $m: 'selected') {
         @extend %igx-chip__item--selected !optional;
-
-        &:hover {
-            @extend %igx-chip__item--hover-selected !optional;
-        }
-
-        &:focus {
-            @extend %igx-chip__item--focus-selected !optional;
-        }
     }
 
     @include e(content) {
