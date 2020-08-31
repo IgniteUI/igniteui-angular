@@ -128,13 +128,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             const newCellValue = 'Aaaaa';
             const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
 
-            spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
-            spyOn(grid.onCellEdit, 'emit').and.callThrough();
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
             spyOn(grid.cellEditExit, 'emit').and.callThrough();
-            spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
             spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
@@ -159,8 +159,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid
             };
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
 
 
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
@@ -240,10 +240,10 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.onRowEdit.emit).toHaveBeenCalledWith(rowArgs);
+            expect(grid.rowEdit.emit).toHaveBeenCalledWith(rowArgs);
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
@@ -1582,10 +1582,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
         }));
 
-        it(`Should properly emit 'onRowEdit' event - Button Click`, () => {
+        it(`Should properly emit 'rowEdit' event - Button Click`, () => {
 
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
 
             cell.setEditMode(true);
 
@@ -1600,9 +1600,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(grid.rowEditExit.emit).not.toHaveBeenCalled();
-            expect(grid.onRowEdit.emit).toHaveBeenCalled();
-            // TODO: onRowEdit should emit updated rowData - issue #7304
-            expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
+            expect(grid.rowEdit.emit).toHaveBeenCalled();
+            // TODO: rowEdit should emit updated rowData - issue #7304
+            expect(grid.rowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
@@ -1612,10 +1612,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should be able to cancel 'onRowEdit' event `, () => {
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+        it(`Should be able to cancel 'rowEdit' event `, () => {
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
 
-            grid.onRowEdit.subscribe((e: IGridEditEventArgs) => {
+            grid.rowEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1638,8 +1638,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toEqual(false);
-            expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
+            expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
@@ -1660,8 +1660,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toEqual(false);
-            expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
+            expect(grid.rowEdit.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
@@ -1674,7 +1674,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Should properly emit 'rowEditExit' event - Button Click`, () => {
 
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
 
             cell.setEditMode(true);
 
@@ -1688,7 +1688,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            expect(grid.onRowEdit.emit).not.toHaveBeenCalled();
+            expect(grid.rowEdit.emit).not.toHaveBeenCalled();
             expect(grid.rowEditExit.emit).toHaveBeenCalled();
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
@@ -1761,9 +1761,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should properly emit 'onRowEditEnter' event`, () => {
+        it(`Should properly emit 'rowEditEnter' event`, () => {
 
-            spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
 
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
@@ -1775,8 +1775,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
-            expect(grid.onRowEditEnter.emit).toHaveBeenCalled();
-            expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
+            expect(grid.rowEditEnter.emit).toHaveBeenCalled();
+            expect(grid.rowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
                 oldValue: initialData,
@@ -1785,10 +1785,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should be able to cancel 'onRowEditEnter' event `, () => {
-            spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
+        it(`Should be able to cancel 'rowEditEnter' event `, () => {
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
 
-            grid.onRowEditEnter.subscribe((e: IGridEditEventArgs) => {
+            grid.rowEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
 
@@ -1802,8 +1802,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(true);
             expect(GridFunctions.getRowEditingOverlay(fix)).toBeFalsy();
 
-            expect(grid.onRowEditEnter.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
+            expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
                 oldValue: initialData,
@@ -1845,7 +1845,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Should properly emit 'rowEditExit' event - Sorting`, () => {
 
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
 
             cell.setEditMode(true);
 
@@ -1871,11 +1871,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should properly emit 'onCellEdit' event `, () => {
+        it(`Should properly emit 'cellEdit' event `, () => {
 
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
-            spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            // TODO: onCellEdit should emit updated rowData - issue #7304
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            // TODO: cellEdit should emit updated rowData - issue #7304
             const cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
@@ -1900,9 +1900,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
-            expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
     });
 

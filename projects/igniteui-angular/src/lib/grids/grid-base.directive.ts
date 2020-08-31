@@ -1175,12 +1175,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when cell exits edit mode.
@@ -1200,12 +1200,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEdit = new EventEmitter<IGridEditEventArgs>();
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after cell has been edited and editing has been committed.
@@ -1225,12 +1225,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when exiting edit mode for a row.
@@ -1242,12 +1242,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEdit = new EventEmitter<IGridEditEventArgs>();
+    public rowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.

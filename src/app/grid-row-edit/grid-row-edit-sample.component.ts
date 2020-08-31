@@ -166,9 +166,9 @@ export class GridRowEditSampleComponent {
         }
     }
 
-    rowEditCancel(evt) {
+    rowEditExit(evt) {
         if (this.events.row.cancel) {
-            console.log('%cRow' + '%c Edit CANCEL', this.cssBig, this.cssRed);
+            console.log('%cRow' + '%c Edit EXIT', this.cssBig, this.cssRed);
             console.log(evt);
         }
         evt.cancel = this.cancel.row.cancel;
@@ -195,12 +195,12 @@ export class GridRowEditSampleComponent {
         }
     }
 
-    cellEditCancel(evt) {
+    cellEditExit(evt) {
         if (this.events.cell.cancel) {
-            console.log('%cCell' + '%c Edit CANCEL', this.cssBig, this.cssRed);
+            console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
             console.log(evt);
         }
-        evt.cancel = this.cancel.cell.cancel;
+        evt.cancel = this.events.cell.cancel;
     }
 
     private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {

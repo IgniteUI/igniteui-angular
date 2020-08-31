@@ -180,7 +180,7 @@ export class IgxGridCRUDService {
         }
         this.row = this.createRow(this.cell);
         const args = this.row.createEditEventArgs(false);
-        this.grid.onRowEditEnter.emit(args);
+        this.grid.rowEditEnter.emit(args);
         if (args.cancel) {
             this.endRowEdit();
             return;
@@ -200,7 +200,7 @@ export class IgxGridCRUDService {
         newCell.primaryKey = this.primaryKey;
         const args = newCell.createEditEventArgs(false);
 
-        this.grid.onCellEditEnter.emit(args);
+        this.grid.cellEditEnter.emit(args);
 
         if (args.cancel) {
             this.end();

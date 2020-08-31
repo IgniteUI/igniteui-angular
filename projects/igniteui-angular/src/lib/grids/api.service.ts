@@ -139,9 +139,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     update_cell(cell: IgxCell, value: any) {
         cell.editValue = value;
         const args = cell.createEditEventArgs();
-        this.grid.onCellEdit.emit(args);
+        this.grid.cellEdit.emit(args);
         // TODO Implement cellEditExit event end emit if isEqual(args.oldValue, args.newValue)
-        // TODO do not emit onCellEdit & cellEditDone if isEqual(args.oldValue, args.newValue)
+        // TODO do not emit cellEdit & cellEditDone if isEqual(args.oldValue, args.newValue)
         if (args.cancel) {
             return args;
         }
@@ -227,7 +227,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        grid.onRowEdit.emit(args);
+        grid.rowEdit.emit(args);
 
         if (args.cancel) {
             return args;

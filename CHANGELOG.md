@@ -31,6 +31,11 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - The `selectedRows` method is now an `@Input` property. Setting it to an array of Row IDs will update the grid's selection state, any previous selection will be cleared. Setting it to an empty array will clear the selection entirely.
     - **Breaking Change** - Removed `IgxExcelStyleSortingTemplateDirective`, `IgxExcelStyleHidingTemplateDirective`, `IgxExcelStyleMovingTemplateDirective`, `IgxExcelStylePinningTemplateDirective` and `IgxExcelStyleSelectingTemplateDirective` directives for re-templating the Excel style filter menu. Added two new directives for re-templating the column operations and filter operations areas - `IgxExcelStyleColumnOperationsTemplateDirective` and `IgxExcelStyleFilterOperationsTemplateDirective`. Exposed all internal components of the Excel style filter menu in order to be used inside the templates.
     - **Breaking Change** - `IgxColumnHiding` and `IgxColumnPinning` components have been deprecated in favor of a component combining the their functionality - `IgxColumnActions` which is used with either of the new `IgxColumnPinning` and `IgxColumnHiding` directives that specify the action to be triggered through the UI.
+    - **Rename outputs**
+        `onRowEditEnter` to `rowEditEnter`
+        `onCellEditEnter` to `cellEditEnter`
+        `onCellEdit` to `cellEdit`
+        `onRowEdit` to `rowEdit`
 - `igxGrid`
     - **Behavioral Change** - For numeric columns, the onCellEdit arguments' newValue will now contain the numeric value that will be committed instead of the string input.
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.

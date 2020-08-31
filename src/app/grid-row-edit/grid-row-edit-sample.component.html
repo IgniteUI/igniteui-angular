@@ -93,10 +93,10 @@
             </div>
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
-                    [rowEditable]="true" [paging]="true" [perPage]="5" (onRowEdit)="rowEdit($event)" (rowEditDone)="rowEditDone($event)"
-                    (onRowEditCancel)="rowEditCancel($event)" (onRowEditEnter)="rowEditEnter($event)"
-                    (onCellEditEnter)="cellEnterEditMode($event)" (onCellEdit)="cellEdit($event)" (cellEditDone)="cellEditDone($event)"
-                    (onCellEditCancel)="cellEditCancel($event)">
+                    [rowEditable]="true" [paging]="true" [perPage]="5" (rowEdit)="rowEdit($event)" (rowEditDone)="rowEditDone($event)"
+                    (rowEditExit)="rowEditExit($event)" (rowEditEnter)="rowEditEnter($event)"
+                    (cellEditEnter)="cellEnterEditMode($event)" (cellEdit)="cellEdit($event)" (cellEditDone)="cellEditDone($event)"
+                    (cellEditExit)="cellEditExit($event)">
                     <igx-column width="100px" [editable]="false" [groupable]="true">
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
@@ -209,7 +209,8 @@
         <article class="grid-row-edit-wrapper">
             <h4>Grid without row editing and with transactions</h4>
             <app-grid-with-transactions>
-                <igx-grid #gridTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
+                <igx-grid #gridTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px"
+                (cellEditExit)="cellEditExit($event)" (rowEditExit)="rowEditExit($event)">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridTransaction', cell.cellID.rowID)">Delete</button>

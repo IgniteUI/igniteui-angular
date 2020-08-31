@@ -554,8 +554,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.ngAfterViewInit();
         }));
 
-        it(`Should properly emit 'onCellEditEnter' event`, () => {
-            spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
+        it(`Should properly emit 'cellEditEnter' event`, () => {
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(0, 'fullName');
             let initialRowData = {...cell.rowData};
             expect(cell.editMode).toBeFalsy();
@@ -572,8 +572,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeTruthy();
 
             // press tab on edited cell
@@ -592,14 +592,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeTruthy();
         });
 
-        it(`Should be able to cancel 'onCellEditEnter' event`, () => {
-            spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
-            grid.onCellEditEnter.subscribe((e: IGridEditEventArgs) => {
+        it(`Should be able to cancel 'cellEditEnter' event`, () => {
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            grid.cellEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             let cell = grid.getCellByColumn(0, 'fullName');
@@ -618,8 +618,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeFalsy();
 
             // press enter on a cell
@@ -640,8 +640,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeFalsy();
         });
 
@@ -694,8 +694,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should properly emit 'onCellEdit' event`, () => {
-            spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        it(`Should properly emit 'cellEdit' event`, () => {
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
             let cellArgs: IGridEditEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
 
@@ -711,7 +711,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            // TODO: onCellEdit should emit updated rowData - issue #7304
+            // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
@@ -722,8 +722,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
@@ -735,7 +735,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            // TODO: onCellEdit should emit updated rowData - issue #7304
+            // TODO: cellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
@@ -746,13 +746,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should be able to cancel 'onCellEdit' event`, () => {
-            spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+        it(`Should be able to cancel 'cellEdit' event`, () => {
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
             let cellArgs: IGridEditEventArgs;
@@ -781,8 +781,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe('John Brown');
@@ -808,18 +808,18 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(true);
         });
 
-        it(`Should be able to update other cell in 'onCellEdit' event`, () => {
+        it(`Should be able to update other cell in 'cellEdit' event`, () => {
             grid.primaryKey = 'personNumber';
             fixture.detectChanges();
 
-            spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 if (e.cellID.columnID === 0) {
                     grid.updateCell(1, e.rowID, 'age');
                 }
@@ -839,7 +839,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
             expect(cell.value).toEqual(1);
@@ -851,7 +851,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toEqual('New Name');
         });
 
-        it(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
+        it(`Should not update data in grid with transactions, when row is updated in cellEdit and cellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -860,7 +860,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             // update the cell value via updateRow and cancel the event
-            grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+            grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.getRowByIndex(rowIndex);
                 grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
