@@ -1,127 +1,124 @@
-<div class="sample-wrapper">
-    <app-page-header title="Dialog">Informs and requires a response from the user.</app-page-header>
-    <section class="sample-content">
-        <article class="sample-column">
-            <h4 class="sample-title">Alert</h4>
-            <p class="sample-description">Detailed description to be added.</p>
-            <br>
-            <div class="alertSection">
-                <button class="sample-column-button-mb" igxButton="raised" igxRipple (click)="alert.open()">Open Alert</button>
-                <igx-switch (click)="togglePosition()">Toggle position</igx-switch>
+<section class="sample-content">
+    <article class="sample-column">
+        <h4 class="sample-title">Alert</h4>
+        <p class="sample-description">Detailed description to be added.</p>
+        <br>
+        <div class="alertSection">
+            <button class="sample-column-button-mb" igxButton="raised" igxRipple (click)="alert.open()">Open Alert</button>
+            <igx-switch (click)="togglePosition()">Toggle position</igx-switch>
+        </div>
+
+        <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"
+            [positionSettings]="positionSettings" >
+        </igx-dialog>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Fluent</h4>
+        <p class="sample-description">Fluent dialog.</p>
+        <br>
+        <button igxButton="raised" igxRipple (click)="fluent.open()">Trigger Alert</button>
+        <igx-dialog
+            #fluent
+            title="All emails together"
+            message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
+            leftButtonLabel="Save"
+            rightButtonLabel="Cancel"
+            leftButtonType='raised'
+            rightButtonType='outlined'
+            (onLeftButtonSelect)="fluent.close()"
+            (onRightButtonSelect)="fluent.close()">
+        </igx-dialog>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Bootstrap</h4>
+        <p class="sample-description">Bootstrap dialog.</p>
+        <br>
+        <button igxButton="raised" igxRipple (click)="bootstrap.open()">Open Modal</button>
+        <igx-dialog
+            #bootstrap
+            title="Modal title"
+            message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
+            leftButtonLabel="Close"
+            rightButtonLabel="Save changes"
+            leftButtonType='raised'
+            leftButtonBackgroundColor='#6c757d'
+            rightButtonType='raised'
+            (onLeftButtonSelect)="bootstrap.close()"
+            (onRightButtonSelect)="bootstrap.close()">
+        </igx-dialog>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Generic Dialog</h4>
+        <p class="sample-description">Detailed description to be added</p>
+        <br>
+        <button igxButton="raised" igxRipple (click)="dialog.open()">Trigger Dialog</button>
+        <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
+                    (onRightButtonSelect)="onDialogOKSelected($event)"
+                    message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
+        </igx-dialog>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Custom Dialog</h4>
+        <p class="sample-description">Detailed description to be added</p>
+        <br>
+        <button igxButton="raised" igxRipple (click)="form.open()">Trigger Custom</button>
+
+        <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onClose)="closeDialog($event)"
+                    (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
+                    [closeOnOutsideSelect]="true">
+            <div class="login-form">
+                <igx-input-group>
+                    <igx-prefix>
+                        <igx-icon>person</igx-icon>
+                    </igx-prefix>
+                    <input type="text" igxInput />
+                    <label igxLabel>Username</label>
+                </igx-input-group>
+                <igx-input-group>
+                    <igx-prefix>
+                        <igx-icon>lock</igx-icon>
+                    </igx-prefix>
+                    <label igxLabel>Password</label>
+                    <input type="password" igxInput />
+                </igx-input-group>
+            </div>
+        </igx-dialog>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Templated Dialog</h4>
+        <p class="sample-description">Detailed description to be added</p>
+        <br>
+        <button igxButton="raised" igxRipple (click)="templated.open()">Trigger</button>
+
+        <igx-dialog #templated [closeOnOutsideSelect]="true">
+            <igx-dialog-title>Title</igx-dialog-title>
+
+            <div class="login-form">
+                <igx-input-group>
+                    <igx-prefix>
+                        <igx-icon>person</igx-icon>
+                    </igx-prefix>
+                    <input type="text" igxInput />
+                    <label igxLabel>Username</label>
+                </igx-input-group>
+                <igx-input-group>
+                    <igx-prefix>
+                        <igx-icon>lock</igx-icon>
+                    </igx-prefix>
+                    <label igxLabel>Password</label>
+                    <input type="password" igxInput />
+                </igx-input-group>
             </div>
 
-            <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"
-                [positionSettings]="positionSettings" >
-            </igx-dialog>
-        </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Fluent</h4>
-            <p class="sample-description">Fluent dialog.</p>
-            <br>
-            <button igxButton="raised" igxRipple (click)="fluent.open()">Trigger Alert</button>
-            <igx-dialog
-                #fluent
-                title="All emails together"
-                message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
-                leftButtonLabel="Save"
-                rightButtonLabel="Cancel"
-                leftButtonType='raised'
-                rightButtonType='outlined'
-                (onLeftButtonSelect)="fluent.close()"
-                (onRightButtonSelect)="fluent.close()">
-            </igx-dialog>
-        </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Bootstrap</h4>
-            <p class="sample-description">Bootstrap dialog.</p>
-            <br>
-            <button igxButton="raised" igxRipple (click)="bootstrap.open()">Open Modal</button>
-            <igx-dialog
-                #bootstrap
-                title="Modal title"
-                message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
-                leftButtonLabel="Close"
-                rightButtonLabel="Save changes"
-                leftButtonType='raised'
-                leftButtonBackgroundColor='#6c757d'
-                rightButtonType='raised'
-                (onLeftButtonSelect)="bootstrap.close()"
-                (onRightButtonSelect)="bootstrap.close()">
-            </igx-dialog>
-        </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Generic Dialog</h4>
-            <p class="sample-description">Detailed description to be added</p>
-            <br>
-            <button igxButton="raised" igxRipple (click)="dialog.open()">Trigger Dialog</button>
-            <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
-                        (onRightButtonSelect)="onDialogOKSelected($event)"
-                        message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
-            </igx-dialog>
-        </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Custom Dialog</h4>
-            <p class="sample-description">Detailed description to be added</p>
-            <br>
-            <button igxButton="raised" igxRipple (click)="form.open()">Trigger Custom</button>
-
-            <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onClose)="closeDialog($event)"
-                        (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
-                        [closeOnOutsideSelect]="true">
-                <div class="login-form">
-                    <igx-input-group>
-                        <igx-prefix>
-                            <igx-icon>person</igx-icon>
-                        </igx-prefix>
-                        <input type="text" igxInput />
-                        <label igxLabel>Username</label>
-                    </igx-input-group>
-                    <igx-input-group>
-                        <igx-prefix>
-                            <igx-icon>lock</igx-icon>
-                        </igx-prefix>
-                        <label igxLabel>Password</label>
-                        <input type="password" igxInput />
-                    </igx-input-group>
-                </div>
-            </igx-dialog>
-        </article>
-
-        <article class="sample-column">
-            <h4 class="sample-title">Templated Dialog</h4>
-            <p class="sample-description">Detailed description to be added</p>
-            <br>
-            <button igxButton="raised" igxRipple (click)="templated.open()">Trigger</button>
-
-            <igx-dialog #templated [closeOnOutsideSelect]="true">
-                <igx-dialog-title>Title</igx-dialog-title>
-
-                <div class="login-form">
-                    <igx-input-group>
-                        <igx-prefix>
-                            <igx-icon>person</igx-icon>
-                        </igx-prefix>
-                        <input type="text" igxInput />
-                        <label igxLabel>Username</label>
-                    </igx-input-group>
-                    <igx-input-group>
-                        <igx-prefix>
-                            <igx-icon>lock</igx-icon>
-                        </igx-prefix>
-                        <label igxLabel>Password</label>
-                        <input type="password" igxInput />
-                    </igx-input-group>
-                </div>
-
-                <igx-dialog-actions>
-                    <button igxButton (click)="templated.close()">CANCEL</button>
-                    <button igxButton (click)="templated.close()">SIGN IN</button>
-                </igx-dialog-actions>
-            </igx-dialog>
-        </article>
-    </section>
-</div>
+            <igx-dialog-actions>
+                <button igxButton (click)="templated.close()">CANCEL</button>
+                <button igxButton (click)="templated.close()">SIGN IN</button>
+            </igx-dialog-actions>
+        </igx-dialog>
+    </article>
+</section>
