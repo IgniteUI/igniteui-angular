@@ -9,7 +9,10 @@
 
 <div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker"
     class="igx-calendar__body-row">
-    <igx-week-number-item *ngIf="showWeekNumbers">{{getWeekNumber(week[0].date)}}</igx-week-number-item>
+    <span class="igx-calendar__date-content" *ngIf="showWeekNumbers">
+        {{getWeekNumber(week[0].date)}}
+    </span>
+    <!-- <igx-week-number-item *ngIf="showWeekNumbers">{{getWeekNumber(week[0].date)}}</igx-week-number-item> -->
     <igx-day-item
         *ngFor="let day of week; trackBy: dateTracker"
         [date]="day"

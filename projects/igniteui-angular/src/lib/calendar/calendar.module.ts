@@ -18,7 +18,6 @@ import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
-import { IgxWeekNumberItemComponent } from './days-view/week-number-item.component';
 
 /**
  * @hidden
@@ -39,8 +38,7 @@ import { IgxWeekNumberItemComponent } from './days-view/week-number-item.compone
         IgxYearsViewComponent,
         IgxMonthPickerComponent,
         IgxMonthViewSlotsCalendar,
-        IgxGetViewDateCalendar,
-        IgxWeekNumberItemComponent
+        IgxGetViewDateCalendar
     ],
     exports: [
         IgxCalendarComponent,
@@ -51,8 +49,7 @@ import { IgxWeekNumberItemComponent } from './days-view/week-number-item.compone
         IgxCalendarHeaderTemplateDirective,
         IgxCalendarMonthDirective,
         IgxCalendarYearDirective,
-        IgxCalendarSubheaderTemplateDirective,
-        IgxWeekNumberItemComponent
+        IgxCalendarSubheaderTemplateDirective
     ],
     imports: [CommonModule, FormsModule, IgxIconModule]
 })
