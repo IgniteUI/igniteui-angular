@@ -1,6 +1,5 @@
-.sample-column {
-    flex-flow: column nowrap;
-    flex: 1 0 100% !important;
+.shadows-container {
+    margin: 32px 16px;
 }
 
 .sample-title {
@@ -8,25 +7,21 @@
 }
 
 .elevations {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: minmax(250px, 1fr);
+    column-gap: 24px;
+    row-gap: 24px;
 }
 
 .elevation-sample {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    margin: 48px 16px;
     padding: 16px;
-    height: 250px;
-    color: #424242;
-    max-width: 250px;
-    flex: 1 0 250px;
+    color: var(--igx-grays-700);
 }
 
 .elevation-sample p.variable {
     font-weight: 600;
+    margin-bottom: 24px;
 }
 
 .elevate-image {

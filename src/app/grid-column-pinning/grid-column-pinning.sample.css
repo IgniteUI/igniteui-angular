@@ -3,8 +3,13 @@
     margin-top: 24px;
 }
 
-[igxButton]+[igxButton] {
-    margin-left: 8px;
+[igxButton] {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+igx-switch {
+    padding-right: 10px;
 }
 
 .pin-icon {
