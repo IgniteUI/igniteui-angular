@@ -6,6 +6,7 @@
 
 $palette: $dark-indigo-palette;
 $schema: $dark-indigo-schema;
+$typography: $indigo-type-scale;
 
 /* autoprefixer grid: on */
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
@@ -18,16 +19,9 @@ body {
 
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
+@include igx-typography($type-scale: $typography);
+
 @include igx-palette-vars($palette, $contrast: true);
-
-@include igx-typography(
-    $font-family: "'Nunito Sans', sans-serif",
-    $type-scale: $indigo-type-scale
-);
-
-@include igx-card-typography($indigo-type-scale, $categories: (
-    title: 'h5',
-));
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {
@@ -36,6 +30,4 @@ body {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
     }
 }
-
-
 
