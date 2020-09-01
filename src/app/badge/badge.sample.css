@@ -1,6 +1,8 @@
 .avatars-wrapper {
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 70px;
+    align-items: center;
 }
 
 .avatar-sample {
@@ -8,7 +10,5 @@
     flex: 1 0 30%;
     width: 88px;
     height: 88px;
-    justify-content: center;
     align-items: center;
-    margin-bottom: 72px;
 }

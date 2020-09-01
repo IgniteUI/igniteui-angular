@@ -2,13 +2,13 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
 @import 'mixins';
-@import 'app-palettes';
 @import 'app-layout';
 
-/* autoprefixer grid: on */
 $palette: $dark-indigo-palette;
 $schema: $dark-indigo-schema;
+$typography: $indigo-type-scale;
 
+/* autoprefixer grid: on */
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
 $igx-foreground-color: igx-color($palette, 'grays', 900);
 
@@ -19,15 +19,9 @@ body {
 
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
+@include igx-typography($type-scale: $typography);
 
-@include igx-typography(
-    $font-family: "'Nunito Sans', sans-serif",
-    $type-scale: $indigo-type-scale
-);
-
-@include igx-card-typography($indigo-type-scale, $categories: (
-    title: 'h5',
-));
+@include igx-palette-vars($palette, $contrast: true);
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {
