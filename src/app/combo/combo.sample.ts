@@ -3,6 +3,7 @@ import { IgxComboComponent, IComboSelectionChangeEventArgs,
     DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
     scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy
 } from 'igniteui-angular';
+import { ButtonGroupAlignment } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
@@ -38,6 +39,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true }) public igxCombo: IgxComboComponent;
     @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    alignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
