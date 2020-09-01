@@ -1,41 +1,36 @@
-<div class="sample-wrapper">
-    <app-page-header title="Navdrawer">
-        Slides in or out a navigation container on user interaction
-    </app-page-header>
-    <section class="sample-content">
-        <h4 class="sample-title">Settings</h4>
-        <div class="settings">
-            <article>
-                <h5 class="setting-title">Visibility</h5>
-                <div class="setting-container">
-                    <igx-switch (ngModelChange)="toggle()" [checked]="this.app.navdrawer.isOpen" [(ngModel)]="this.app.drawerState.open">
-                        Show Navdrawer
-                    </igx-switch>
-                </div>
-            </article>
-            <article>
-                <h5 class="setting-title">Modes</h5>
-                <div class="setting-container">
-                    <igx-switch (ngModelChange)="toggle()" [(ngModel)]="this.app.drawerState.pin">
-                        Pinned Navdrawer
-                    </igx-switch>
-                </div>
-                <div class="setting-container">
-                    <igx-switch (ngModelChange)="toggle()" [(ngModel)]="this.app.drawerState.miniVariant">
-                        Mini variant
-                    </igx-switch>
-                </div>
-            </article>
-            <article>
-                <h5 class="setting-title">Position</h5>
-                <div class="setting-container radio">
-                    <igx-radio *ngFor="let item of ['left', 'right']" value="{{item}}" name="group" [(ngModel)]="this.app.navdrawer.position"
-                        [disabled]="this.app.navdrawer.pin">{{item}}</igx-radio>
-                    <p class="setting-note">
-                        Can be "left"(default) or "right". Only has effect when not pinned.
-                    </p>
-                </div>
-            </article>
-        </div>
-    </section>
-</div>
+<article class="sample-column">
+    <h4 class="sample-title">Settings</h4>
+    <div class="settings">
+        <article>
+            <h5 class="setting-title">Visibility</h5>
+            <div class="setting-container">
+                <igx-switch (ngModelChange)="toggle()" [checked]="this.app.navdrawer.isOpen" [(ngModel)]="this.app.drawerState.open">
+                    Show Navdrawer
+                </igx-switch>
+            </div>
+        </article>
+        <article>
+            <h5 class="setting-title">Modes</h5>
+            <div class="setting-container">
+                <igx-switch (ngModelChange)="toggle()" [(ngModel)]="this.app.drawerState.pin">
+                    Pinned Navdrawer
+                </igx-switch>
+            </div>
+            <div class="setting-container">
+                <igx-switch (ngModelChange)="toggle()" [(ngModel)]="this.app.drawerState.miniVariant">
+                    Mini variant
+                </igx-switch>
+            </div>
+        </article>
+        <article>
+            <h5 class="setting-title">Position</h5>
+            <div class="setting-container radio">
+                <igx-radio *ngFor="let item of ['left', 'right']" value="{{item}}" name="group" [(ngModel)]="this.app.navdrawer.position"
+                    [disabled]="this.app.navdrawer.pin">{{item}}</igx-radio>
+                <p class="setting-note">
+                    Can be "left"(default) or "right". Only has effect when not pinned.
+                </p>
+            </div>
+        </article>
+    </div>
+</article>

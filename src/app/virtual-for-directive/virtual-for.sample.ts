@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
-import { IgxForOfDirective } from 'igniteui-angular';
+import { IgxForOfDirective, ButtonGroupAlignment } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
 
@@ -10,13 +10,14 @@ import { RemoteService } from '../shared/remote.service';
     encapsulation: ViewEncapsulation.None
 })
 export class VirtualForSampleComponent implements OnInit {
+    public alignment = ButtonGroupAlignment.vertical;
     search1: string;
     data = [];
     remoteData: any;
     totalCount: any;
     options = {};
     prevRequest: any;
-    itemSize = '100px';
+    itemSize = '50px';
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
     virtDirVertical: IgxForOfDirective<any>;
 
@@ -181,7 +182,7 @@ export class VirtualForSampleComponent implements OnInit {
     }
 
     scrHorizontalScrollTo(index) {
-        this.virtDirHorizontal.scrollTo(index);
+        this.virtDirHorizontal.scrollTo(parseInt(index, 10));
     }
 
     trackByKey(index, item) {

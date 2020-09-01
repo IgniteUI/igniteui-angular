@@ -1,14 +1,16 @@
+.columns-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    column-gap: 16px;
+    margin: 32px 16px;
+}
+
 .timepicker-column {
-    display: flex;
-    flex-flow: column nowrap;
-    flex: 1 0 25%;
-    align-content: flex-start;
-    margin: 16px;
-    width: 200px;
+    margin: 16px 0;
 }
 
 .action-buttons {
     display: flex;
     flex-flow: column;
-    margin: 10px;
+    margin: 8px;
 }
