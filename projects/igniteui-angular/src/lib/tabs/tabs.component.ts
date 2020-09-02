@@ -25,12 +25,13 @@ import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
 import ResizeObserver from 'resize-observer-polyfill';
-import { PlatformUtil } from '../core/utils';
+import { mkenum, PlatformUtil } from '../core/utils';
 
-export enum IgxTabsType {
-    FIXED = 'fixed',
-    CONTENTFIT = 'contentfit'
-}
+export const IgxTabsType = mkenum({
+    FIXED: 'fixed',
+    CONTENTFIT: 'contentfit'
+});
+export type IgxTabsType = (typeof IgxTabsType)[keyof typeof IgxTabsType];
 
 let NEXT_TABS_ID = 0;
 
