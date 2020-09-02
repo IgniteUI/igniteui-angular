@@ -1539,6 +1539,87 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('ContactName');
             expect(columnsList[7].field).toEqual('City');
             expect(columnsList[8].field).toEqual('Missing');
+
+            column = grid.getColumnByName('CompanyName');
+            column.move(1);
+            fixture.detectChanges();
+
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactTitle');
+            expect(columnsList[2].field).toEqual('ContactName');
+
+            column.move(2);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('ContactTitle');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[2].field).toEqual('CompanyName');
+        }));
+
+        it('MCH - should not move group column to last position', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            let column = grid.getColumnByName('Missing');
+            column.move(3);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('Missing');
+
+            column = grid.getColumnByName('CompanyName').topLevelParent;
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('Missing');
+        }));
+
+        it('MCH - should be able to move group column to position lastIndex - group.children.length', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            let column = grid.getColumnByName('Missing');
+            column.move(3);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('Missing');
+
+            column = grid.getColumnByName('CompanyName').topLevelParent;
+            column.move(6);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[6].field).toEqual('CompanyName');
+            expect(columnsList[7].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('ContactTitle');
+        }));
+
+        it('MCH - trying to move level 1 column to last position should be impossible', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('Address');
+
+            // step 1 - move level 0 column to first position
+            const column = grid.getColumnByName('CompanyName');
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('Address');
         }));
 
         it('MCH - should reorder only columns on the same level (top level group column).', (async() => {

@@ -45,6 +45,7 @@ import {
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
+import { IgxColumnGroupComponent } from './column-group.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1765,59 +1766,58 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Moves a column to the specified index.
+     * Moves a column to the specified visible index.
      * @example
      * ```typescript
      * column.move(index);
      * ```
      */
     public move(index: number) {
-        let pos: DropPosition;
+        let target;
         const grid = (this.grid as IgxGridBaseDirective);
-        let columns: QueryList<IgxColumnComponent> = grid.columnList;
+        let columns: Array<IgxColumnComponent | IgxColumnGroupComponent> = grid.columnList.filter(c => c.visibleIndex > -1);
+        // grid last visible index
         const li = columns.map(c => c.visibleIndex).reduce(function(a, b) {
             return Math.max(a, b);
         });
+        const parent = this.parent;
+        const isPreceding = this.visibleIndex < index;
 
-        if (index < 0 || index > li) {
+        if (index === this.visibleIndex || index < 0 || index > li) {
             return;
         }
 
-        if (this.parent) {
-            columns = this.parent.children;
+        if (parent) {
+            columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
+                c.topLevelParent === this.topLevelParent);
         }
-
-        let target = columns.find(c => c.level === this.level && c.visibleIndex === index);
-        // if target is undefined, we need to take next column as a target, and will use BeforeDropTarget position
-        // see useAfterTargetPosition below
-        target = target ? target : columns.find(c => c.level === 0 && c.visibleIndex === index + 1);
-
-        // if index is the last position, we need to find the column topLevelParent, if it exists. see useAfterTargetPosition below
-        if (index === li) {
-            target = columns.find(c => c.visibleIndex === index);
-            target = target.topLevelParent ? target.topLevelParent : target;
+        // tslint:disable:max-line-length
+        // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
+        // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
+        // tslint:enable:max-line-length
+        if (isPreceding) {
+            columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
+            target = columns.find(c => c.level === this.level && c.visibleIndex + c.calcChildren() - this.calcChildren() === index);
+        } else {
+            columns = columns.filter(c => c.visibleIndex < this.visibleIndex);
+            target = columns.find(c => c.level === this.level && c.visibleIndex === index);
         }
 
         if (!target || (target.pinned && this.disablePinning)) {
             return;
         }
 
-        const isPreceding = this.visibleIndex > -1 && this.visibleIndex < index;
-        const useAfterTargetPosition = target.visibleIndex === index || this.lastChild(target).visibleIndex === index;
-
-        pos = isPreceding && useAfterTargetPosition ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
-        if (isPreceding && pos && target.children && target.children.length && target.visibleIndex === index) {
-            return;
-        }
-        grid.moveColumn(this, target, pos);
+        const pos = isPreceding ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        grid.moveColumn(this, target as IgxColumnComponent, pos);
     }
 
-    private lastChild(target: IgxColumnComponent) {
-        let lastChild = target.children.last;
-        while (lastChild.children && lastChild.children.last) {
-            lastChild = lastChild.children.last;
-        }
-        return lastChild;
+    /**
+     * Returns the number of visible child columns. Returns 1 if the column is not a group.
+     * @hidden
+     */
+    public calcChildren(): number {
+        const children = this.columnGroup ? (this as any).calcChildren() : this.hidden ? 0 : 1;
+        return children;
     }
 
     /**
