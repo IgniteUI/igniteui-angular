@@ -10,21 +10,24 @@ import {
     ViewChild
 } from '@angular/core';
 import { IgxIconModule } from '../icon/public_api';
+import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
+export const IgxAvatarSize = mkenum({
+    SMALL: 'small',
+    MEDIUM: 'medium',
+    LARGE: 'large'
+});
+export type IgxAvatarSize = (typeof IgxAvatarSize)[keyof typeof IgxAvatarSize];
 
-export enum IgxAvatarSize {
-    SMALL = 'small',
-    MEDIUM = 'medium',
-    LARGE = 'large'
-}
+export const IgxAvatarType = mkenum({
+    INITIALS: 'initials',
+    IMAGE: 'image',
+    ICON: 'icon',
+    CUSTOM: 'custom'
+});
 
-export enum IgxAvatarType {
-    INITIALS = 'initials',
-    IMAGE = 'image',
-    ICON = 'icon',
-    CUSTOM = 'custom',
-}
+export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
 
 /**
  * Avatar provides a way to display an image, icon or initials to the user.
