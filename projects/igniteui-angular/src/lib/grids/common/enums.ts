@@ -1,19 +1,23 @@
 
-export enum FilterMode {
-    quickFilter = 'quickFilter',
-    excelStyleFilter = 'excelStyleFilter'
-}
+import { mkenum } from '../../core/utils';
+export const FilterMode = mkenum({
+    quickFilter: 'quickFilter',
+    excelStyleFilter: 'excelStyleFilter'
+});
+export type FilterMode = (typeof FilterMode)[keyof typeof FilterMode];
 
-export enum GridSummaryPosition {
-    top = 'top',
-    bottom = 'bottom'
-}
+export const GridSummaryPosition = mkenum({
+    top: 'top',
+    bottom: 'bottom'
+});
+export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof GridSummaryPosition];
 
-export enum GridSummaryCalculationMode {
-    rootLevelOnly = 'rootLevelOnly',
-    childLevelsOnly = 'childLevelsOnly',
-    rootAndChildLevels = 'rootAndChildLevels'
-}
+export const GridSummaryCalculationMode = mkenum({
+    rootLevelOnly: 'rootLevelOnly',
+    childLevelsOnly: 'childLevelsOnly',
+    rootAndChildLevels: 'rootAndChildLevels'
+});
+export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[keyof typeof GridSummaryCalculationMode];
 
 export enum GridKeydownTargetType {
     dataCell = 'dataCell',
@@ -22,16 +26,18 @@ export enum GridKeydownTargetType {
     hierarchicalRow = 'hierarchicalRow'
 }
 
-export enum GridSelectionMode {
-    none = 'none',
-    single = 'single',
-    multiple = 'multiple',
-}
+export const GridSelectionMode = mkenum({
+    none: 'none',
+    single: 'single',
+    multiple: 'multiple'
+});
+export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
-export enum ColumnDisplayOrder {
-    Alphabetical = 'Alphabetical',
-    DisplayOrder = 'DisplayOrder'
-}
+export const ColumnDisplayOrder = mkenum({
+    Alphabetical: 'Alphabetical',
+    DisplayOrder: 'DisplayOrder'
+});
+export type ColumnDisplayOrder = (typeof ColumnDisplayOrder)[keyof typeof ColumnDisplayOrder];
 
 export enum ColumnPinningPosition {
     Start,

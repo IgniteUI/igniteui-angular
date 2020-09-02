@@ -1,4 +1,4 @@
-import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { EventEmitter, InjectionToken } from '@angular/core';
@@ -11,11 +11,12 @@ export enum Navigate {
 }
 
 /** Key actions that have designated handlers in IgxDropDownComponent */
-export enum DropDownActionKey {
-    ESCAPE = 'escape',
-    ENTER = 'enter',
-    SPACE = 'space'
-}
+export const DropDownActionKey = mkenum({
+    ESCAPE: 'escape',
+    ENTER: 'enter',
+    SPACE: 'space'
+});
+export type DropDownActionKey = (typeof DropDownActionKey)[keyof typeof DropDownActionKey];
 
 /**
  * Interface that encapsulates onSelection event arguments - old selection, new selection and cancel selection.

@@ -966,7 +966,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._filterMode;
     }
 
-    set filterMode(value) {
+    set filterMode(value: FilterMode) {
         this._filterMode = value;
 
         if (this.filteringService.isFilterRowVisible) {
@@ -989,7 +989,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryPosition;
     }
 
-    set summaryPosition(value) {
+    set summaryPosition(value: GridSummaryPosition) {
         this._summaryPosition = value;
         this.notifyChanges();
     }
@@ -1008,7 +1008,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryCalculationMode;
     }
 
-    set summaryCalculationMode(value) {
+    set summaryCalculationMode(value: GridSummaryCalculationMode) {
         this._summaryCalculationMode = value;
         if (!this._init) {
             this.endEdit(true);
@@ -2581,7 +2581,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _allowAdvancedFiltering = false;
-    protected _filterMode = FilterMode.quickFilter;
+    protected _filterMode: FilterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver = new ResizeObserver(() => { });
 
@@ -2616,11 +2616,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected _defaultTargetRecordNumber = 10;
 
-    private _summaryPosition = GridSummaryPosition.bottom;
-    private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
-    private _cellSelectionMode = GridSelectionMode.multiple;
-    private _rowSelectionMode = GridSelectionMode.none;
-    private _columnSelectionMode = GridSelectionMode.none;
+    private _summaryPosition: GridSummaryPosition = GridSummaryPosition.bottom;
+    private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
+    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
+    private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
