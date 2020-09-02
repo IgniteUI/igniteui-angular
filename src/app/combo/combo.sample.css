@@ -1,15 +1,3 @@
-.btn-wrapper {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.btn-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
 .btn-container button {
     margin-right: 8px;
 }
@@ -96,4 +84,16 @@
     color: #09f;
     text-align: center;
     font-weight: 900;
+}
+
+.switch-settings igx-switch {
+    margin-right: 10px;
+}
+
+h4 {
+    margin: 20px 0 10px;
+}
+
+igx-buttongroup button {
+    padding: 0 40px;
 }
