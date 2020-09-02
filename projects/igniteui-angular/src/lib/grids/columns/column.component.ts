@@ -1815,11 +1815,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Returns the number of visible child columns. Returns 1 if the column is not a group.
+     * No children for the column, so will returns 1 or 0, if the column is hidden.
      * @hidden
      */
     public calcChildren(): number {
-        const children = this.columnGroup ? (this as any).calcChildren() : this.hidden ? 0 : 1;
+        const children = this.hidden ? 0 : 1;
         return children;
     }
 
