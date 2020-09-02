@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostBinding, Input, NgModule } from '@angular/core';
 import { IgxIconModule } from '../icon/public_api';
+import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
 
 /**
  * Determines the igxBadge type
  */
-export enum IgxBadgeType {
-    PRIMARY = 'primary',
-    INFO = 'info',
-    SUCCESS = 'success',
-    WARNING = 'warning',
-    ERROR = 'error'
-}
+export const IgxBadgeType = mkenum({
+    PRIMARY: 'primary',
+    INFO: 'info',
+    SUCCESS: 'success',
+    WARNING: 'warning',
+    ERROR: 'error'
+});
+export type IgxBadgeType = (typeof IgxBadgeType)[keyof typeof IgxBadgeType];
 /**
  * Badge provides visual notifications used to decorate avatars, menus, etc.
  *
