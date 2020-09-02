@@ -37,7 +37,7 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
-import { IgxHintDirective, IgxInputGroupType } from '../input-group/public_api';
+import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
 /** @hidden @internal */
 @Directive({
@@ -96,6 +96,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private ngControl: NgControl = null;
     private _overlayDefaults: OverlaySettings;
     private _value: any;
+    private _type = null;
     protected destroy$ = new Subject<boolean>();
 
     /** @hidden @internal do not use the drop-down container class */
@@ -188,14 +189,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Input()
-    public set type(value: IgxInputGroupType) {
-        if (this.inputGroup) {
-            this.inputGroup.type = value;
-        }
-    }
-
     public get type(): IgxInputGroupType {
-        return this.inputGroup?.type;
+            return this._type || this._inputGroupType || 'line';
+        }
+
+    public set type(val: IgxInputGroupType) {
+        this._type = val;
     }
 
     /**
@@ -281,6 +280,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
         super(elementRef, cdr, selection, _displayDensityOptions);
     }

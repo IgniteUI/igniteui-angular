@@ -11,7 +11,7 @@ enum IgxInputGroupEnum {
  * Defines the InputGroupType DI token.
  */
  // Should this go trough Interface https://angular.io/api/core/InjectionToken
- export const InputGroupToken = new InjectionToken<IgxInputGroupType>('InputGroupType');
+ export const IGX_INPUT_GROUP_TYPE = new InjectionToken<IgxInputGroupType>('InputGroupType');
 
  /**
   * Determines the InputGroupType.

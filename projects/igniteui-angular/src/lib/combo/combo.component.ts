@@ -38,7 +38,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
-import { IgxInputGroupType, InputGroupToken } from '../input-group/public_api';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
 /**
  * @hidden
@@ -201,7 +201,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected comboAPI: IgxComboAPIService,
         private _iconService: IgxIconService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(InputGroupToken) private _inputGroupType: IgxInputGroupType,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         @Optional() private _injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);

@@ -29,7 +29,7 @@ import {
 } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IgxInputGroupType, InputGroupToken } from './inputGroupType';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 
 let NEXT_ID = 0;
 
@@ -240,7 +240,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         @Inject(DisplayDensityToken)
         private _displayDensityOptions: IDisplayDensityOptions,
         @Optional()
-        @Inject(InputGroupToken)
+        @Inject(IGX_INPUT_GROUP_TYPE)
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
         private document: any

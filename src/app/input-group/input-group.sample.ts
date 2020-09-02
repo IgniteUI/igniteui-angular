@@ -5,7 +5,7 @@ import {
     DisplayDensityToken,
     IDisplayDensityOptions,
     IButtonGroupEventArgs,
-    InputGroupToken
+    IGX_INPUT_GROUP_TYPE
 } from 'igniteui-angular';
 
 interface Selection {
@@ -20,7 +20,7 @@ interface Selection {
     selector: 'app-input-group-sample',
     styleUrls: ['input-group.sample.scss'],
     templateUrl: 'input-group.sample.html',
-    providers: [{provide: InputGroupToken, useValue: 'box' }]
+    providers: [{provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }]
 })
 export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public inputValue: any;
@@ -35,7 +35,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     constructor(
         @Inject(DisplayDensityToken)
         public displayDensityOptions: IDisplayDensityOptions,
-        @Inject(InputGroupToken) public TOKEN: IgxInputGroupType
+        @Inject(IGX_INPUT_GROUP_TYPE) public TOKEN: IgxInputGroupType
     ) {}
 
     public ngOnInit(): void {

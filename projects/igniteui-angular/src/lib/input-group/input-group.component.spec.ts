@@ -8,7 +8,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
-import { InputGroupToken, IgxInputGroupType } from './inputGroupType';
+import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -264,7 +264,7 @@ describe('IgxInputGroup', () => {
                     <igx-suffix>SUFFIX</igx-suffix>
                     <input #igxInput igxInput />
                 </igx-input-group>`,
-     providers: [{ provide: InputGroupToken, useValue: 'box'}]
+     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box'}]
 })
 class InputGroupComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -273,7 +273,7 @@ class InputGroupComponent {
     @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
     public suppressInputAutofocus = false;
 
-    constructor(@Inject(InputGroupToken) public IGTOKEN: IgxInputGroupType) {}
+    constructor(@Inject(IGX_INPUT_GROUP_TYPE) public IGTOKEN: IgxInputGroupType) {}
 }
 
 @Component({
