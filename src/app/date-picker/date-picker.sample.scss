@@ -3,12 +3,20 @@
     flex-flow: column nowrap;
     flex: 1 0 20%;
     align-content: flex-start;
-    margin: 16px;
-    width: 200px;
+    margin: 16px 32px;
+    width: 270px;
+
+    button {
+        margin-top: 10px;
+    }
 }
 
 .action-buttons {
     display: flex;
     flex-flow: column;
     margin: 10px;
+}
+
+igx-date-picker {
+    margin-bottom: 10px;
 }

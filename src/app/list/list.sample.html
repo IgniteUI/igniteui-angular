@@ -1,8 +1,4 @@
 <div class="sample-wrapper list-sample-component">
-    <app-page-header title="List">
-        Displays rows of identical items. Each list can contain one or more header items.
-    </app-page-header>
-
     <div class="density-chooser">
         <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
     </div>
@@ -323,9 +319,7 @@
                 </igx-card>
             </div>
         </article>
-
     </section>
-
 </div>
 
 <igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (onLeftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
