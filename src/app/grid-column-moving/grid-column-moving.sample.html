@@ -116,6 +116,9 @@
                             <ng-template igxHeader let-column>
                                 {{ column.header }} {{ column.visibleIndex }}
                             </ng-template>
+                            <igx-column filterable="true" sortable="true" movable="true" field="PostalCode">                <ng-template igxHeader let-column>
+                                {{ column.field }} {{ column.visibleIndex }}
+                            </ng-template></igx-column>
                             <igx-column-group header="Location" movable="true">
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
@@ -141,9 +144,6 @@
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
                                 <igx-column filterable="true" sortable="true" resizable="true" field="Fax">                <ng-template igxHeader let-column>
-                                    {{ column.field }} {{ column.visibleIndex }}
-                                </ng-template></igx-column>
-                                <igx-column filterable="true" sortable="true" resizable="true" field="PostalCode">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
                             </igx-column-group>

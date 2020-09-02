@@ -1767,10 +1767,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     /**
      * Moves a column to the specified visible index.
+     * If passed index is invalid, or if column would receive a different visible index after moving, moving is not performed.
+     * If passed index would move the column to a different column group. moving is not performed.
      * @example
      * ```typescript
      * column.move(index);
      * ```
+     * @memberof IgxColumnComponent
      */
     public move(index: number) {
         let target;
