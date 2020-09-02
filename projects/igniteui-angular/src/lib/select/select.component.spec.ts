@@ -142,7 +142,7 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeUndefined();
-            // Default type will be set from input-group - currently 'line'
+            // Default type will be set - currently 'line'
             expect(select.type).toEqual('line');
             expect(select.displayDensity).toEqual('comfortable');
             expect(select.overlaySettings).toBeUndefined();
@@ -418,7 +418,7 @@ describe('igxSelect', () => {
         });
         it('should render input type properly', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default type will be set from input-group - currently 'line'
+            // Default type will be set - currently 'line'
             expect(select.type).toEqual('line');
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
@@ -2615,7 +2615,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         });
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, mockInjector);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
