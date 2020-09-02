@@ -3,17 +3,18 @@ import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingView
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
-import { isDate } from '../core/utils';
+import { isDate, mkenum } from '../core/utils';
 import { CalendarView } from './month-picker-base';
 
 /**
- * Sets the selction type - single, multi or range.
+ * Sets the selection type - single, multi or range.
  */
-export enum CalendarSelection {
-    SINGLE = 'single',
-    MULTI = 'multi',
-    RANGE = 'range'
-}
+export const CalendarSelection = mkenum({
+    SINGLE: 'single',
+    MULTI: 'multi',
+    RANGE: 'range'
+});
+export type CalendarSelection = (typeof CalendarSelection)[keyof typeof CalendarSelection];
 
 export enum ScrollMonth {
     PREV = 'prev',

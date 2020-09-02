@@ -1,47 +1,39 @@
-@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
-@import '../../../projects/igniteui-angular/src/lib/core/styles/components/button/button-theme';
-@import '../../../projects/igniteui-angular/src/lib/core/styles/components/button/button-component';
-@import '../../styles/app-palettes';
+@import '../../../projects/igniteui-angular/src/lib/core/styles/base/index';
 
-$background: #111;
-$text-color: text-contrast($background);
-
-$button-background: text-contrast($background);
-
-$hamburger-theme: igx-button-theme(
-    $icon-background: $button-background,
-    $icon-hover-background: $button-background,
-    $icon-focus-background: $button-background
-);
+:host {
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+}
 
 :host ::ng-deep {
-    @include igx-button($hamburger-theme);
-
     .hamburger {
-        margin-right: 32px;
+        margin-right: rem(16px);
 
         [dir='rtl'] & {
-            margin-left: 32px;
+            margin-left: rem(16px);
             margin-right: initial;
         }
     }
 }
 
 .sample-header {
-    padding: 48px 24px;
-    background: $background;
+    display: flex;
+    align-items: center;
+    height: rem(90px);
+    padding: 0 rem(16px);
+    background: var(--igx-primary-500);
+    overflow: hidden;
 
     .title {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        color: $text-color;
+        color: var(--igx-primary-500-contrast);
         margin: 0;
-    }
-
-    .description {
-        color: $text-color;
-        margin-top: 48px;
-        margin-bottom: 0;
+        text-transform: capitalize;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

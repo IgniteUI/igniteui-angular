@@ -2051,7 +2051,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             firstDayItem.focus();
             firstDayItem.click();
             grid.filteringRow.onInputGroupFocusout();
-            tick(100);
+            tick(200);
             fix.detectChanges();
 
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is committed');
