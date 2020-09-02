@@ -205,7 +205,7 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
     /**
      * @hidden
      */
-    private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+    private _columnDisplayOrder: ColumnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
     /**
      * @hidden
      */

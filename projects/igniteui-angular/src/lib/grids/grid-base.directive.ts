@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe } from 'rxjs';
+import { Subject, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -72,7 +72,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
-import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -971,7 +971,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._filterMode;
     }
 
-    set filterMode(value) {
+    set filterMode(value: FilterMode) {
         this._filterMode = value;
 
         if (this.filteringService.isFilterRowVisible) {
@@ -994,7 +994,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryPosition;
     }
 
-    set summaryPosition(value) {
+    set summaryPosition(value: GridSummaryPosition) {
         this._summaryPosition = value;
         this.notifyChanges();
     }
@@ -1013,7 +1013,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryCalculationMode;
     }
 
-    set summaryCalculationMode(value) {
+    set summaryCalculationMode(value: GridSummaryCalculationMode) {
         this._summaryCalculationMode = value;
         if (!this._init) {
             this.endEdit(true);
@@ -2637,7 +2637,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _allowAdvancedFiltering = false;
-    protected _filterMode = FilterMode.quickFilter;
+    protected _filterMode: FilterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver = new ResizeObserver(() => { });
 
@@ -2672,12 +2672,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected _defaultTargetRecordNumber = 10;
 
-    private _summaryPosition = GridSummaryPosition.bottom;
-    private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _summaryPosition: GridSummaryPosition = GridSummaryPosition.bottom;
+    private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
-    private _cellSelectionMode = GridSelectionMode.multiple;
-    private _rowSelectionMode = GridSelectionMode.none;
-    private _columnSelectionMode = GridSelectionMode.none;
+    private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
+    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
+    private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
@@ -2884,6 +2884,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
+
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
@@ -2917,6 +2918,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
+                this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                this.navigation.activeNode = {} as IActiveNode;
+                this.notifyChanges();
+            }
+        });
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -2972,6 +2982,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
+                    instance.lastActiveNode = this.navigation.activeNode;
                     instance.setAddButtonFocus();
                 }
                 return;
