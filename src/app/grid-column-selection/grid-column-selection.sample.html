@@ -1,8 +1,4 @@
 <div class="wrapper">
-    <app-page-header title="Grid Column Selection">
-        Allows selecting a columns
-    </app-page-header>
-
     <div class="sample-content">
         <div class="sample-column">
             <div class="sample-buttons">
@@ -93,6 +89,7 @@
             </div>
             <div class="sample-buttons">
                 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                <br>
                 <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
                 <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>
                 <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>

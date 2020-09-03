@@ -1,61 +1,39 @@
 <div class="sample-wrapper">
-    <app-page-header title="Colors">
-        Color representation of an Ignite UI for Angular color palette.
-    </app-page-header>
-    <section class="sample-content">
-
-        <article class="sample-column">
-            <h4 class="sample-title">Color Palettes</h4>
-            <div class="color-palettes">
-
-                <div class="color-palette" *ngFor="let color of colors">
-                    <div *ngIf="color.variants.length > 1"
-                        class="color-container">
-                        <h4 class="color-title igx-{{color.name}}-500">{{color.name}}</h4>
-                        <div *ngFor="let variant of color.variants"
-                            class="color-values igx-{{color.name}}-{{variant}}">
-                            <span class="variables">{{variant}}</span>
-                        </div>
+    <article class="sample-column">
+        <h4 class="sample-title">Color Palettes</h4>
+        <div class="color-palettes">
+            <div class="color-palette" *ngFor="let color of colors">
+                <div *ngIf="color.variants.length > 1" class="color-container">
+                    <h4 class="color-title igx-{{color.name}}-500">{{color.name}}</h4>
+                    <div *ngFor="let variant of color.variants" class="color-values igx-{{color.name}}-{{variant}}">
+                        <span class="variables">{{variant}}</span>
                     </div>
                 </div>
-
             </div>
-        </article>
+        </div>
+    </article>
 
-        <article class="sample-column">
-            <h4 class="sample-title">Supporting Colors</h4>
-            <div class="colors-row">
+    <article class="sample-column">
+        <h4 class="sample-title">Supporting Colors</h4>
+        <div class="colors-row">
 
-                <div class="color-container igx-success-500">
-                    <h4 class="color-title">Success Color</h4>
-                    <div class="color-values">
-                        <span class="variable">igx-color($default-palette, 'success')</span>
-                    </div>
-                </div>
-
-                <div class="color-container igx-info-500">
-                    <h4 class="color-title">Color</h4>
-                    <div class="color-values">
-                        <span class="variable">igx-color($default-palette, 'success')</span>
-                    </div>
-                </div>
-
-                <div class="color-container igx-warn-500">
-                    <h4 class="color-title">Warning Color</h4>
-                    <div class="color-values">
-                        <span class="variable">igx-color($default-palette, 'warn')</span>
-                    </div>
-                </div>
-
-                <div class="color-container igx-error-500">
-                    <h4 class="color-title">Error Color</h4>
-                    <div class="color-values">
-                        <span class="variable">igx-color($default-palette, 'error')</span>
-                    </div>
-                </div>
-
+            <div class="color-container igx-success-500">
+                <h4 class="color-title">Success Color</h4>
             </div>
-        </article>
 
-    </section>
+            <div class="color-container igx-info-500">
+                <h4 class="color-title">Info Color</h4>
+            </div>
+
+            <div class="color-container igx-warn-500">
+                <h4 class="color-title">Warning Color</h4>
+            </div>
+
+            <div class="color-container igx-error-500">
+                <h4 class="color-title">Error Color</h4>
+            </div>
+
+        </div>
+    </article>
+
 </div>

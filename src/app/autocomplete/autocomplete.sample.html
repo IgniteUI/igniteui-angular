@@ -1,43 +1,32 @@
-<div class="sample-wrapper">
-    <app-page-header title="Autocomplete"></app-page-header>
-    <section class="sample-content">
-        <article class="sample-column">
-            <form class="input-sample" action="/" method="POST" [formGroup]="travel">
-                <div class="box">
-                    <igx-input-group class="group">
-                        <igx-prefix><igx-icon fontSet="material">language</igx-icon></igx-prefix>
-                        <input formControlName="country" igxInput type="text" required
-                            [igxAutocomplete]='countryPanel'/>
-                        <label igxLabel>Country</label>
-                    </igx-input-group>
-                    <igx-drop-down #countryPanel maxHeight="400px">
-                        <igx-drop-down-item-group *ngFor="let continent of worldInfo | groupContains: travel.value.country" [label]="continent.name">
-                            <igx-drop-down-item *ngFor="let country of continent.countries | contains: travel.value.country" [value]="country">
-                                {{ country }}
-                            </igx-drop-down-item>
-                        </igx-drop-down-item-group>
-                    </igx-drop-down>
-                </div>
-                <div class="box">
-                    <igx-input-group class="group">
-                        <igx-prefix><igx-icon fontSet="material">insert_emoticon</igx-icon></igx-prefix>
-                        <input igxInput formControlName="attraction" type="text" required
-                            [igxAutocomplete]='attractionsPanel'/>
-                        <label igxLabel>Attraction</label>
-                    </igx-input-group>
-                    <igx-drop-down #attractionsPanel [width]="attractionsWidth" maxHeight="300px">
-                        <igx-drop-down-item *ngFor="let attraction of attractions | contains: travel.value.attraction" [value]="attraction.name">
-                            <igx-icon class="logo" fontSet="material">{{attraction.image}}</igx-icon>
-                            {{attraction.name}}
-                        </igx-drop-down-item>
-                    </igx-drop-down>
-                </div>
-                <igx-dialog #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
-                <div class="submit">
-                    <button igxButton (click)="onSearch()" [disabled]="!travel.valid">Search</button>
-                </div>
-            </form>
-            <igx-switch (change)="changeDefaultWidth($event)">Attractions Custom Width</igx-switch>
-        </article>
-    </section>
-</div>
+<form action="/" class="sample-form" method="POST" [formGroup]="travel">
+    <igx-input-group type="box">
+        <igx-prefix><igx-icon fontSet="material">language</igx-icon></igx-prefix>
+        <input placeholder="Country" formControlName="country" igxInput type="text" required
+            [igxAutocomplete]='countryPanel'/>
+    </igx-input-group>
+    <igx-drop-down #countryPanel maxHeight="400px">
+        <igx-drop-down-item-group *ngFor="let continent of worldInfo | groupContains: travel.value.country" [label]="continent.name">
+            <igx-drop-down-item *ngFor="let country of continent.countries | contains: travel.value.country" [value]="country">
+                {{ country }}
+            </igx-drop-down-item>
+        </igx-drop-down-item-group>
+    </igx-drop-down>
+    <igx-input-group type="box">
+        <igx-prefix><igx-icon fontSet="material">insert_emoticon</igx-icon></igx-prefix>
+        <input placeholder="Attraction" igxInput formControlName="attraction" type="text" required
+            [igxAutocomplete]='attractionsPanel'/>
+    </igx-input-group>
+    <igx-drop-down #attractionsPanel [width]="attractionsWidth" maxHeight="300px">
+        <igx-drop-down-item *ngFor="let attraction of attractions | contains: travel.value.attraction" [value]="attraction.name">
+            <div class="dd-item">
+                <igx-icon class="dd-icon" fontSet="material">{{attraction.image}}</igx-icon>
+                <span>{{attraction.name}}</span>
+            </div>
+        </igx-drop-down-item>
+    </igx-drop-down>
+    <igx-dialog #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
+
+    <button igxButton="raised" (click)="onSearch()" [disabled]="!travel.valid">Search</button>
+
+    <igx-switch (change)="changeDefaultWidth($event)">Attractions Custom Width</igx-switch>
+</form>

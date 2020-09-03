@@ -29,6 +29,7 @@ class MySummary extends IgxNumberSummaryOperand {
 
 @Component({
     selector: 'app-grid-summaries-sample',
+    styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html'
 })
 export class GridSummaryComponent implements OnInit {
