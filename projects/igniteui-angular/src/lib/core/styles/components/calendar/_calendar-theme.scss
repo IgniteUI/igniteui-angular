@@ -652,7 +652,7 @@
                 display: none;
             }
 
-            &:before {
+            &::before {
                 content: '';
                 position: absolute;
                 width: 100%;
@@ -690,7 +690,7 @@
                     }
                 }
 
-                &:before {
+                &::before {
                     bottom: 100%;
                     left: 0;
                     height: $cal-row-padding;
@@ -729,7 +729,7 @@
                 border-bottom-left-radius: $border-radius;
                 border-bottom-right-radius: $border-radius;
 
-                &:before {
+                &::before {
                     display: none;
                 }
             }
