@@ -1067,21 +1067,18 @@
     }
 
     %form-group-textarea--box {
-        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'comfortable')) * 2}); /* add the padding to the width */
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
         padding-#{$left}: rem(16px, map-get($base-scale-size, 'comfortable'));
         padding-#{$left}: rem(16px, map-get($base-scale-size, 'comfortable'));
     }
 
     %form-group-textarea--box-cosy {
-        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'cosy')) * 2}); /* add the padding to the width */
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'cosy'))};
         padding-#{$left}: rem(16px, map-get($base-scale-size, 'cosy'));
         padding-#{$left}: rem(16px, map-get($base-scale-size, 'cosy'));
     }
 
     %form-group-textarea--box-compact {
-        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'compact')) * 2}); /* add the padding to the width */
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
         padding-#{$left}: rem(16px, map-get($base-scale-size, 'compact'));
         padding-#{$left}: rem(16px, map-get($base-scale-size, 'compact'));
