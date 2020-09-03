@@ -1,6 +1,11 @@
+<ng-template #labelTemplate>
+    <ng-content select="[igxLabel]"></ng-content>
+</ng-template>
+
 <ng-template #dropdownInputTemplate>
     <igx-input-group #group (mousedown)="mouseDown($event)">
-        <label igxLabel>Time</label>
+        <label igxLabel *ngIf="!labelDirective">Time</label>
+        <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
@@ -30,7 +35,8 @@
         <igx-prefix>
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
-        <label igxLabel>Time</label>
+        <label igxLabel *ngIf="!labelDirective">Time</label>
+        <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <input
             igxInput
             [value]="displayTime || ''"
