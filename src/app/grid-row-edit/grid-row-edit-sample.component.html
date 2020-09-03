@@ -63,13 +63,13 @@
             <div>
                 <igx-switch [(ngModel)]="events.cell.enter"><span class='blue'>Cell - ENTER</span></igx-switch>
                 <igx-switch [(ngModel)]="events.cell.done"><span class='green'>Cell - DONE</span></igx-switch>
-                <igx-switch [(ngModel)]="events.cell.cancel"><span class='red'>Cell - CANCEL</span></igx-switch>
+                <igx-switch [(ngModel)]="events.cell.exit"><span class='red'>Cell - EXIT</span></igx-switch>
                 <igx-switch [(ngModel)]="events.cell.doneCommitted "><span class='green'>Cell - DONE COMMITTED</span></igx-switch>
             </div>
             <div>
                 <igx-switch [(ngModel)]="events.row.enter"><span class='blue'>Row - ENTER</span></igx-switch>
                 <igx-switch [(ngModel)]="events.row.done"><span class='green'>Row - DONE</span></igx-switch>
-                <igx-switch [(ngModel)]="events.row.cancel"><span class='red'>Row - CANCEL</span></igx-switch>
+                <igx-switch [(ngModel)]="events.row.exit"><span class='red'>Row - EXIT</span></igx-switch>
                 <igx-switch [(ngModel)]="events.row.doneCommitted"><span class='red'>Row - DONE COMMITTED</span></igx-switch>
             </div>
         </div>
@@ -78,12 +78,12 @@
             <div>
                 <igx-switch [(ngModel)]="cancel.cell.enter"><span class='blue'>Cell - ENTER</span></igx-switch>
                 <igx-switch [(ngModel)]="cancel.cell.done"><span class='green'>Cell - DONE</span></igx-switch>
-                <igx-switch [(ngModel)]="cancel.cell.cancel"><span class='red'>Cell - CANCEL</span></igx-switch>
+                <igx-switch [(ngModel)]="cancel.cell.exit"><span class='red'>Cell - EXIT</span></igx-switch>
             </div>
             <div>
                 <igx-switch [(ngModel)]="cancel.row.enter"><span class='blue'>Row - ENTER</span></igx-switch>
                 <igx-switch [(ngModel)]="cancel.row.done"><span class='green'>Row - DONE</span></igx-switch>
-                <igx-switch [(ngModel)]="cancel.row.cancel"><span class='red'>Row - CANCEL</span></igx-switch>
+                <igx-switch [(ngModel)]="cancel.row.exit"><span class='red'>Row - EXIT</span></igx-switch>
             </div>
         </div>
         <app-grid-with-transactions>

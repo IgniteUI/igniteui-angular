@@ -26,13 +26,13 @@ export class GridRowEditSampleComponent {
         cell: {
             done: true,
             enter: true,
-            cancel: true,
+            exit: true,
             doneCommitted: true
         },
         row: {
             done: true,
             enter: true,
-            cancel: true,
+            exit: true,
             doneCommitted: true
         }
     };
@@ -40,12 +40,12 @@ export class GridRowEditSampleComponent {
         cell: {
             done: false,
             enter: false,
-            cancel: false
+            exit: false
         },
         row: {
             done: false,
             enter: false,
-            cancel: false
+            exit: false
         }
     };
     public currentActiveGrid: {
@@ -167,11 +167,11 @@ export class GridRowEditSampleComponent {
     }
 
     rowEditExit(evt) {
-        if (this.events.row.cancel) {
+        if (this.events.row.exit) {
             console.log('%cRow' + '%c Edit EXIT', this.cssBig, this.cssRed);
             console.log(evt);
         }
-        evt.cancel = this.cancel.row.cancel;
+        evt.cancel = this.cancel.row.exit;
     }
 
     cellEnterEditMode(evt) {
@@ -196,11 +196,11 @@ export class GridRowEditSampleComponent {
     }
 
     cellEditExit(evt) {
-        if (this.events.cell.cancel) {
+        if (this.events.cell.exit) {
             console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
             console.log(evt);
         }
-        evt.cancel = this.events.cell.cancel;
+        evt.cancel = this.events.cell.exit;
     }
 
     private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {
