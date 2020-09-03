@@ -50,7 +50,7 @@ describe('IgxDatePicker', () => {
         UIInteractions.clearOverlay();
     });
 
-    fdescribe('Base Tests', () => {
+    describe('Base Tests', () => {
         // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerTestComponent>;
         let datePicker: IgxDatePickerComponent;
@@ -149,7 +149,7 @@ describe('IgxDatePicker', () => {
             expect(datePicker.value).toEqual(date);
         });
 
-        fit('should display default and custom label', () => {
+        it('should display default and custom label', () => {
             const dom = fixture.debugElement;
             const testComponent = fixture.componentInstance;
 
