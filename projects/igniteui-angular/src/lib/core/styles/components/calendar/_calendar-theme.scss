@@ -360,10 +360,10 @@
     ), $variant);
 
     $border-radius: map-get((
-            material: 4px,
-            fluent: 0,
-            bootstrap: 0,
-            indigo-design: 8px
+        material: 4px,
+        fluent: 0,
+        bootstrap: 0,
+        indigo-design: 8px
     ), $variant);
 
     $cal-value-h: $cal-value-w;
@@ -619,10 +619,6 @@
             }
         }
 
-        %cal-value-date--week-number {
-            padding-#{$right}: 0 !important;
-        }
-
         %cal-value-date--week-number + %cal-value {
             padding-left: 0 !important;
         }
@@ -636,8 +632,8 @@
         }
 
         %cal-value-date--week-number {
+            padding-#{$right}: 0 !important;
             cursor: default;
-
 
             &:hover,
             &:focus {
@@ -652,7 +648,7 @@
             background: --var($theme, 'week-number-background') !important;
             min-width: auto;
 
-            &:after {
+            &::after {
                 display: none;
             }
 
@@ -676,15 +672,15 @@
                 position: relative;
                 background: --var($theme, 'week-number-background');
 
-                &:before,
-                &:after {
+                &::before,
+                &::after {
                     content: '';
                     position: absolute;
                     width: 100%;
                     background: --var($theme, 'week-number-background');
                 }
 
-                &:after {
+                &::after {
                     top: 100%;
                     left: 0;
                     @if $not-bootstrap-theme{
