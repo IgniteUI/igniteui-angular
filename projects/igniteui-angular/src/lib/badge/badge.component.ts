@@ -153,7 +153,6 @@ export class IgxBadgeComponent {
      * @hidden
      * @internal
      */
-    @HostBinding('attr.aria-roledescription')
     get roleDescription() {
         // tslint:disable-next-line:prefer-conditional-expression
         if (this.icon) {
