@@ -61,6 +61,7 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
+import { IgxLabelDirective } from '../directives/label/label.directive';
 
 let NEXT_ID = 0;
 
@@ -153,28 +154,6 @@ const noop = () => { };
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
     EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
-    /**
-     * Gets/Sets the `IgxDatePickerComponent` label.
-     * @remarks
-     * The default label is 'Date'.
-     * @example
-     * ```html
-     * <igx-date-picker [label]="Calendar"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public label = 'Date';
-
-    /**
-     * Gets/Sets the `IgxDatePickerComponent` label visibility.
-     * @remarks
-     * By default the visibility is set to true.
-     * @example
-     * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
-     */
-    @Input()
-    public labelVisibility = true;
-
     /**
      * Gets/Sets the locales.
      * @remarks Default locale is en.
@@ -420,8 +399,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             displayData: this.displayData,
             format: this.format,
             isSpinLoop: this.isSpinLoop,
-            label: this.label,
-            labelVisibility: this.labelVisibility,
             locale: this.locale,
             mask: this.mask,
             mode: this.mode,
@@ -619,6 +596,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @ViewChild('readOnlyDatePickerTemplate', { read: TemplateRef, static: true })
     protected readOnlyDatePickerTemplate: TemplateRef<any>;
+
+    /*
+     * @hidden @internal
+     */
+    @ContentChild(IgxLabelDirective)
+    public labelDirective: IgxLabelDirective;
 
     /*
      * @hidden

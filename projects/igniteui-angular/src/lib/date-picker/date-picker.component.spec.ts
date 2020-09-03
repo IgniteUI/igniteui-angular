@@ -50,7 +50,7 @@ describe('IgxDatePicker', () => {
         UIInteractions.clearOverlay();
     });
 
-    describe('Base Tests', () => {
+    fdescribe('Base Tests', () => {
         // configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerTestComponent>;
         let datePicker: IgxDatePickerComponent;
@@ -149,42 +149,32 @@ describe('IgxDatePicker', () => {
             expect(datePicker.value).toEqual(date);
         });
 
-        it('When labelVisability is set to false the label should not be visible', () => {
-            let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
+        fit('should display default and custom label', () => {
+            const dom = fixture.debugElement;
+            const testComponent = fixture.componentInstance;
 
-            expect(label.nativeElement.innerText).toBe(datePicker.label);
+            let label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual(testComponent.customLabel);
 
-            fixture.componentInstance.labelVisibility = false;
+            testComponent.customLabelVisibility = false;
             fixture.detectChanges();
 
-            label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label).toBeNull();
-        });
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual('Date');
 
-        it('When update label property it should reflect on the label text of the datepicker', () => {
-            let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label.nativeElement.innerText).toEqual(datePicker.label);
-
-            const expectedResult = 'new label';
-            datePicker.label = expectedResult;
+            testComponent.customLabelVisibility = false;
             fixture.detectChanges();
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual('Date');
 
-            label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label.nativeElement.innerText).toEqual(expectedResult);
-        });
-
-        it('Visualize the label of the datepicker when initially is hidden', () => {
-            fixture.componentInstance.labelVisibility = false;
             fixture.detectChanges();
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual('Date');
 
-            let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label).toBeNull();
-
-            fixture.componentInstance.labelVisibility = true;
+            testComponent.customLabelVisibility = true;
             fixture.detectChanges();
-
-            label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label).not.toBeNull();
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual(testComponent.customLabel);
         });
 
         it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
@@ -1522,13 +1512,16 @@ export class IgxDatePickerWithWeekStartComponent {
 
 @Component({
     template: `
-        <igx-date-picker [labelVisibility]="labelVisibility"></igx-date-picker>
+        <igx-date-picker>
+        <label igxLabel *ngIf="customLabelVisibility">{{ customLabel }}</label>
+        </igx-date-picker>
     `
 })
 export class IgxDatePickerTestComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 
-    public labelVisibility = true;
+    public customLabelVisibility = true;
+    public customLabel = 'Custom label';
 }
 
 @Component({
