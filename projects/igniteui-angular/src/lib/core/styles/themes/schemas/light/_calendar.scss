@@ -48,6 +48,8 @@
 ///
 /// @prop {Color} picker-background-color [transparent] - The igx calendar picker background color.
 /// @prop {Map} border-color [igx-color: ('grays', 300)] - The calendar border color.
+/// @prop {Map} week-number-color [igx-color: ('grays', 500)] - The text color of the week number column.
+/// @prop {Map} week-number-background [igx-color: ('grays', 200)] - The background color of the week number column.
 ///
 /// @prop {Number} border-radius [.2] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} date-border-radius [1] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
@@ -182,6 +184,14 @@ $_light-calendar: extend(
 
         date-disabled-background: (
             igx-color: ('grays', 100),
+        ),
+
+        week-number-color: (
+            igx-color: ('grays', 500),
+        ),
+
+        week-number-background: (
+            igx-color: ('grays', 200),
         ),
     )
 );
