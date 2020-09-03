@@ -196,6 +196,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     @HostListener('keydown.pageup', ['$event'])
     public previousYear(event?: KeyboardEvent) {
         event?.preventDefault();
+        if (this.yearAction === 'next') { return; }
         this.yearAction = 'prev';
         this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
     }
@@ -206,6 +207,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     @HostListener('keydown.pagedown', ['$event'])
     public nextYear(event?: KeyboardEvent) {
         event?.preventDefault();
+        if (this.yearAction === 'prev') { return; }
         this.yearAction = 'next';
         this.viewDate = this.calendarModel.getNextYear(this.viewDate);
     }
