@@ -55,9 +55,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
 
-    comfortable = DisplayDensity.comfortable;
-    cosy = DisplayDensity.cosy;
-    compact = DisplayDensity.compact;
+    'comfortable' = DisplayDensity.comfortable;
+    'cosy' = DisplayDensity.cosy;
+    'compact' = DisplayDensity.compact;
 
     public genres = [];
     public user: FormGroup;
