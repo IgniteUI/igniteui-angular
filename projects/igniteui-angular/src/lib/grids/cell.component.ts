@@ -554,7 +554,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected compositionEndHandler;
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection = GridSelectionMode.multiple;
-    private _hasBeenExited = false;
 
     constructor(
         protected selectionService: IgxGridSelectionService,
@@ -789,7 +788,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.editable && !this.editMode && !this.row.deleted && !this._hasBeenExited) {
+        if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.cellEditExitCanceled) {
             this.crudService.begin(this);
         }
 
@@ -832,9 +831,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
-            const canceled = this._updateCRUDStatus();
-            if (canceled) {
-                this._hasBeenExited = true;
+            this._updateCRUDStatus();
+
+            const activeElement = this.selectionService.activeElement;
+            const row = activeElement ? this.gridAPI.get_row_by_index(activeElement.row) : null;
+            if ((this.crudService.rowEditExitCanceled && row && this.row.rowID !== row.rowID) ||
+                this.crudService.cellEditExitCanceled) {
                 return;
             }
 

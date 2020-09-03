@@ -2916,10 +2916,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
-                this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+            if (!this.crudService.cell &&
+                !!this.navigation.activeNode &&
+                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
+                        this.navigation.activeNode.row < this.dataView.length)
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                !(this.rowEditable && this.crudService.rowEditExitCanceled && this.rowInEditMode)) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
@@ -6374,19 +6377,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
         row.newData = this.transactions.getAggregatedValue(row.id, true);
-
-        let args = row.createEditEventArgs();
+        const rowArgs = row.createEditEventArgs();
+        let rowEditArgs: IGridEditEventArgs;
 
         if (!commit) {
-            this.rowEditExit.emit(args);
             this.transactions.endPending(false);
         } else {
-            args = this.gridAPI.update_row(row, row.newData);
+            rowEditArgs = this.gridAPI.update_row(row, row.newData);
         }
-        if (args.cancel) {
+
+        this.rowEditExit.emit(rowArgs);
+        if (rowEditArgs?.cancel || rowArgs.cancel) {
             this.transactions.startPending();
-            return;
+            return true;
         }
+
         this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
     }
@@ -6420,11 +6425,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
-        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
+        if (!this.rowEditable ||
+            this.rowEditingOverlay &&
+            this.rowEditingOverlay.collapsed || !row ||
+            this.crudService.cellEditExitCanceled) {
             return;
         }
 
-        this.endRowTransaction(commit, row);
+        const canceled = this.endRowTransaction(commit, row);
+        if (canceled) {
+            return true;
+        }
 
         const activeCell = this.selectionService.activeElement;
         if (event && activeCell) {
@@ -6443,7 +6454,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public endRowEdit(commit = true, event?: Event) {
-        this.endEdit(commit, event);
+        const canceled = this.endEdit(commit, event);
+        if (canceled) {
+            return;
+        }
+
         const activeCell = this.navigation.activeNode;
         if (activeCell && activeCell.row !== -1) {
             this.tbody.nativeElement.focus();

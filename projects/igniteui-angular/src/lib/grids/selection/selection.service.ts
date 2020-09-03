@@ -144,6 +144,8 @@ export class IgxGridCRUDService {
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
     public isInCompositionMode = false;
+    private _cellEditExitCanceled = false;
+    private _rowEditExitCanceled = false;
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
@@ -174,9 +176,21 @@ export class IgxGridCRUDService {
         return this.grid.primaryKey;
     }
 
+    get cellEditExitCanceled() {
+        return this._cellEditExitCanceled;
+    }
+
+    get rowEditExitCanceled() {
+        return this._rowEditExitCanceled;
+    }
+
     beginRowEdit(cell) {
         if (this.row && !this.sameRow(cell.id.rowID)) {
-            this.grid.endEdit(true);
+            this._rowEditExitCanceled = this.grid.endEdit(true);
+            if (this.rowEditExitCanceled) {
+                return true;
+            }
+
             this.endRowEdit();
         }
 
@@ -194,6 +208,8 @@ export class IgxGridCRUDService {
         this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
         this.grid.transactions.startPending();
         this.grid.openRowOverlay(this.row.id);
+
+        this.emitCellEditEnter(cell);
     }
 
     emitCellEditEnter(newCell) {
@@ -207,6 +223,7 @@ export class IgxGridCRUDService {
 
     endRowEdit() {
         this.row = null;
+        this.cell = null;
     }
 
     begin(cell): void {
@@ -216,16 +233,21 @@ export class IgxGridCRUDService {
 
         if (this.rowEditing) {
             this.beginRowEdit(newCell);
+            return;
         }
 
        this.emitCellEditEnter(newCell);
     }
 
     end(): boolean {
+        if (!this.cell) {
+            return;
+        }
+
         const args = this.cell?.createEditEventArgs(true);
         this.grid.cellEditExit.emit(args);
         if (args && args.cancel) {
-            return true;
+            return this._cellEditExitCanceled = true;
         }
 
         this.cell = null;
@@ -237,7 +259,7 @@ export class IgxGridCRUDService {
         }
         if (cell && cell.column.editable && !cell.row.deleted) {
             if (this.inEditMode) {
-                this.grid.endEdit(true);
+                this._rowEditExitCanceled = this.grid.endEdit(true);
                 this.grid.tbody.nativeElement.focus();
             } else {
                 this.begin(cell);
@@ -250,7 +272,6 @@ export class IgxGridCRUDService {
             return;
         }
         if (this.inEditMode) {
-
             this.grid.endEdit(false);
             if (isEdge()) { this.grid.cdr.detectChanges(); }
             this.grid.tbody.nativeElement.focus();
