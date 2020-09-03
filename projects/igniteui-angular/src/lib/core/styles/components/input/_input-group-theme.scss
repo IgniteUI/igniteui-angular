@@ -1068,20 +1068,14 @@
 
     %form-group-textarea--box {
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
-        padding-#{$left}: rem(16px, map-get($base-scale-size, 'comfortable'));
-        padding-#{$left}: rem(16px, map-get($base-scale-size, 'comfortable'));
     }
 
     %form-group-textarea--box-cosy {
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'cosy'))};
-        padding-#{$left}: rem(16px, map-get($base-scale-size, 'cosy'));
-        padding-#{$left}: rem(16px, map-get($base-scale-size, 'cosy'));
     }
 
     %form-group-textarea--box-compact {
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
-        padding-#{$left}: rem(16px, map-get($base-scale-size, 'compact'));
-        padding-#{$left}: rem(16px, map-get($base-scale-size, 'compact'));
     }
 
     %form-group-prefix,
