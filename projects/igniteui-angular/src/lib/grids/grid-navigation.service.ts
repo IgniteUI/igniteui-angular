@@ -109,7 +109,7 @@ export class IgxGridNavigationService {
                 break;
             case 'arrowup':
             case 'up':
-                if (ctrl && !this.isDataRow(rowIndex)|| (this.grid.rowEditable && this.grid.crudService.rowEditExitCanceled)) { break; }
+                if (ctrl && !this.isDataRow(rowIndex) || (this.grid.rowEditable && this.grid.crudService.rowEditExitCanceled)) { break; }
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row - 1;
                 break;
