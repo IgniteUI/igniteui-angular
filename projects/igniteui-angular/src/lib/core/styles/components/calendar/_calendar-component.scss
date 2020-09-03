@@ -46,7 +46,7 @@
     }
 
     @include e(label, 'week-number') {
-       @extend %label--week-number !optional;
+        @extend %label--week-number !optional;
     }
 
     @include e(date) {
