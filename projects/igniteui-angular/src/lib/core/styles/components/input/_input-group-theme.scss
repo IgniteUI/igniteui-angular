@@ -1067,15 +1067,15 @@
     }
 
     %form-group-textarea--indigo {
-        margin-top: -#{rem(18px, map-get($base-scale-size, 'comfortable'))} !important;
+        margin-top: -#{rem(24px, map-get($base-scale-size, 'comfortable'))} !important;
     }
 
     %form-group-textarea--indigo-cosy {
-        margin-top: -#{rem(18px, map-get($base-scale-size, 'cosy'))} !important;
+        margin-top: -#{rem(24px, map-get($base-scale-size, 'cosy'))} !important;
     }
 
     %form-group-textarea--indigo-compact {
-        margin-top: -#{rem(18px, map-get($base-scale-size, 'compact'))} !important;
+        margin-top: -#{rem(24px, map-get($base-scale-size, 'compact'))} !important;
     }
 
     %form-group-prefix,
