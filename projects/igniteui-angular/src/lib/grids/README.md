@@ -364,6 +364,7 @@ Here is a list of all public methods exposed by **IgxGridColumnComponent**:
 |--- |--- |
 |`pin(): boolean`|Pins the column. Returns if the operation is successful.|
 |`unpin(): boolean`|Unpins the column. Returns if the operation is successful.|
+|`move(index): boolean`|Moves the column to the specified visible index.|
 
 
 ### Getters/Setters
