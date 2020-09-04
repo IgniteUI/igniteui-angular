@@ -258,10 +258,6 @@
             @extend %form-group-label--box !optional;
         }
 
-        @include e(textarea) {
-            @extend %form-group-textarea--box !optional;
-        }
-
         @include e(hint) {
             @extend %form-group-helper--box !optional;
         }
@@ -277,10 +273,6 @@
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-cosy !optional;
         }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box-cosy !optional;
-        }
     }
 
     @include mx(box, compact) {
@@ -292,10 +284,6 @@
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-compact !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box-compact !optional;
         }
     }
 
@@ -331,10 +319,6 @@
         @include e(label) {
             @extend %form-group-label--box !optional;
             @extend %form-group-label--border !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box !optional;
         }
 
         @include e(hint) {
@@ -373,10 +357,6 @@
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-cosy !optional;
         }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box-cosy !optional;
-        }
     }
 
     @include mx(border, cosy, filled) {
@@ -412,10 +392,6 @@
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-compact !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box-compact !optional;
         }
     }
 
@@ -620,7 +596,7 @@
         }
 
         @include e(textarea) {
-            @extend %form-group-textarea--box !optional;
+            @extend %form-group-textarea--indigo !optional;
         }
 
         @include e(hint) {
@@ -640,7 +616,7 @@
         }
 
         @include e(textarea) {
-            @extend %form-group-textarea--box-cosy !optional;
+            @extend %form-group-textarea--indigo-cosy !optional;
         }
     }
 
@@ -656,7 +632,7 @@
         }
 
         @include e(textarea) {
-            @extend %form-group-textarea--box-compact !optional;
+            @extend %form-group-textarea--indigo-compact !optional;
         }
     }
 
@@ -866,10 +842,6 @@
             @extend %form-group-label--box !optional;
         }
 
-        @include e(textarea) {
-            @extend %form-group-textarea--box !optional;
-        }
-
         @include e(hint) {
             @extend %form-group-helper--box !optional;
         }
@@ -885,10 +857,6 @@
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-cosy !optional;
         }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box-cosy !optional;
-        }
     }
 
     @include mx(search, compact) {
@@ -900,10 +868,6 @@
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-compact !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--box-compact !optional;
         }
     }
 
