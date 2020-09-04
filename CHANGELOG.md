@@ -36,6 +36,7 @@ All notable changes for each version of this project will be documented in this 
         `onCellEditEnter` to `cellEditEnter`
         `onCellEdit` to `cellEdit`
         `onRowEdit` to `rowEdit`
+    - Added `move` method which allows to move a column to a specified visible index. The method is exposed off the `IgxColumnComponent`.
 - `igxGrid`
     - **Behavioral Change** - For numeric columns, the onCellEdit arguments' newValue will now contain the numeric value that will be committed instead of the string input.
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
