@@ -44,6 +44,8 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { DropPosition } from '../moving/moving.service';
+import { IgxColumnGroupComponent } from './column-group.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1762,6 +1764,65 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         return true;
     }
+
+    /**
+     * Moves a column to the specified visible index.
+     * If passed index is invalid, or if column would receive a different visible index after moving, moving is not performed.
+     * If passed index would move the column to a different column group. moving is not performed.
+     * @example
+     * ```typescript
+     * column.move(index);
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public move(index: number) {
+        let target;
+        const grid = (this.grid as IgxGridBaseDirective);
+        let columns: Array<IgxColumnComponent | IgxColumnGroupComponent> = grid.columnList.filter(c => c.visibleIndex > -1);
+        // grid last visible index
+        const li = columns.map(c => c.visibleIndex).reduce(function(a, b) {
+            return Math.max(a, b);
+        });
+        const parent = this.parent;
+        const isPreceding = this.visibleIndex < index;
+
+        if (index === this.visibleIndex || index < 0 || index > li) {
+            return;
+        }
+
+        if (parent) {
+            columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
+                c.topLevelParent === this.topLevelParent);
+        }
+        // tslint:disable:max-line-length
+        // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
+        // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
+        // tslint:enable:max-line-length
+        if (isPreceding) {
+            columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
+            target = columns.find(c => c.level === this.level && c.visibleIndex + c.calcChildren() - this.calcChildren() === index);
+        } else {
+            columns = columns.filter(c => c.visibleIndex < this.visibleIndex);
+            target = columns.find(c => c.level === this.level && c.visibleIndex === index);
+        }
+
+        if (!target || (target.pinned && this.disablePinning)) {
+            return;
+        }
+
+        const pos = isPreceding ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        grid.moveColumn(this, target as IgxColumnComponent, pos);
+    }
+
+    /**
+     * No children for the column, so will returns 1 or 0, if the column is hidden.
+     * @hidden
+     */
+    public calcChildren(): number {
+        const children = this.hidden ? 0 : 1;
+        return children;
+    }
+
     /**
      * Returns a reference to the top level parent column.
      * ```typescript

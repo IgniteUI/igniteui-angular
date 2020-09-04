@@ -357,4 +357,15 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);
     // }
+
+    /**
+     * @hidden
+     * Calculates the number of visible columns, based on indexes of first and last visible columns.
+     */
+    public calcChildren(): number {
+        const visibleChildren = this.allChildren.filter(c => c.visibleIndex > -1);
+        const fi = visibleChildren[0].visibleIndex;
+        const li = visibleChildren[visibleChildren.length - 1].visibleIndex;
+        return li - fi + 1;
+    }
 }
