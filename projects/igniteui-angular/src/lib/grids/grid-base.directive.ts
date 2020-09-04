@@ -5749,7 +5749,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event, ie11 = false) {
-        if (!this.clipboardOptions.enabled || this.crudService.inEditMode) {
+        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode) {
             return;
         }
 
@@ -6428,7 +6428,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this.rowEditable ||
             this.rowEditingOverlay &&
             this.rowEditingOverlay.collapsed || !row ||
-            this.crudService.cellEditingBlocked) {
+            (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked)) {
             return;
         }
 

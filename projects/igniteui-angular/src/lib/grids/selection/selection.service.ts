@@ -164,8 +164,12 @@ export class IgxGridCRUDService {
             this.cell.id.columnID === cell.id.columnID);
     }
 
-    get inEditMode(): boolean {
+    get cellInEditMode(): boolean {
         return !!this.cell;
+    }
+
+    get rowInEditMode(): boolean {
+        return !!this.row;
     }
 
     get rowEditing(): boolean {
@@ -189,9 +193,8 @@ export class IgxGridCRUDService {
             return;
         }
 
-
         if (cell && cell.column.editable && !cell.row.deleted) {
-            if (this.inEditMode) {
+            if (this.cellInEditMode) {
                 this._rowEditingBlocked = this.grid.endEdit(true);
                 this.grid.tbody.nativeElement.focus();
             } else {
@@ -207,7 +210,7 @@ export class IgxGridCRUDService {
         if (this.isInCompositionMode) {
             return;
         }
-        if (this.inEditMode) {
+        if (this.cellInEditMode || this.rowInEditMode) {
             this.grid.endEdit(false);
             if (isEdge()) { this.grid.cdr.detectChanges(); }
             this.grid.tbody.nativeElement.focus();
@@ -229,7 +232,7 @@ export class IgxGridCRUDService {
         const args = this.cell?.createEditEventArgs(true);
         this.grid.cellEditExit.emit(args);
         if (args && args.cancel) {
-            return this._cellEditingBlocked = true;
+            return this._rowEditingBlocked = this._cellEditingBlocked = true;
         }
 
         this.cell = null;
@@ -237,13 +240,13 @@ export class IgxGridCRUDService {
     }
 
     public exitRowEdit() {
-        this.cell = null;
+        // this.cell = null;
         this.row = null;
     }
 
     private beginRowEdit(newCell) {
         if (this.row && !this.sameRow(newCell.id.rowID)) {
-            this._rowEditingBlocked = this.grid.endEdit(true);
+            this._rowEditingBlocked = this.grid.endEdit(false);
             if (this.rowEditingBlocked) {
                 return true;
             }
@@ -254,11 +257,13 @@ export class IgxGridCRUDService {
         if (this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
         }
+
         this.row = this.createRow(newCell);
         const rowArgs = this.row.createEditEventArgs(false);
         this.grid.rowEditEnter.emit(rowArgs);
         if (rowArgs.cancel) {
             this.exitRowEdit();
+            this.cell = null;
             return true;
         }
 
@@ -266,6 +271,7 @@ export class IgxGridCRUDService {
         this.grid.transactions.startPending();
         this.grid.openRowOverlay(this.row.id);
 
+        this.cell = newCell;
         this.emitCellEditEnter(newCell);
     }
 

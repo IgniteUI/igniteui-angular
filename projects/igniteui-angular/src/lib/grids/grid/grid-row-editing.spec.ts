@@ -2537,13 +2537,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             // fix.detectChanges();
             cell = grid.getCellByColumn(1, 'ProductName');
 
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
 
             // set cell in second group in edit mode
             cell.setEditMode(true);
             fix.detectChanges();
 
-            expect(grid.crudService.inEditMode).toBeTruthy();
+            expect(grid.crudService.cellInEditMode).toBeTruthy();
             groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].expanded).toBeTruthy();
 
@@ -2552,41 +2552,41 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
 
             // expand first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
 
             // collapse first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
 
             // set cell in second group in edit mode
             cell.setEditMode(true);
             fix.detectChanges();
 
-            expect(grid.crudService.inEditMode).toBeTruthy();
+            expect(grid.crudService.cellInEditMode).toBeTruthy();
 
             // expand first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
 
             // set cell in first group in edit mode
             cell = grid.getCellByColumn(1, 'ProductName');
             cell.setEditMode(true);
             fix.detectChanges();
 
-            expect(grid.crudService.inEditMode).toBeTruthy();
+            expect(grid.crudService.cellInEditMode).toBeTruthy();
             expect(groupRows[0].expanded).toBeTruthy();
 
             // collapse first group
@@ -2594,14 +2594,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
 
             // expand first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.crudService.inEditMode).toBeFalsy();
+            expect(grid.crudService.cellInEditMode).toBeFalsy();
         });
 
         it('Hide row editing dialog when hierarchical group is collapsed/expanded',
@@ -2615,19 +2615,19 @@ describe('IgxGrid - Row Editing #grid', () => {
                     strategy: DefaultSortingStrategy.instance()
                 });
                 fix.detectChanges();
-                expect(grid.crudService.inEditMode).toBeFalsy();
+                expect(grid.crudService.cellInEditMode).toBeFalsy();
                 cell = grid.getCellByColumn(2, 'ProductName');
                 cell.setEditMode(true);
                 fix.detectChanges();
-                expect(grid.crudService.inEditMode).toBeTruthy();
+                expect(grid.crudService.cellInEditMode).toBeTruthy();
                 groupRows = grid.groupsRowList.toArray();
 
                 grid.toggleGroup(groupRows[0].groupRow);
                 fix.detectChanges();
-                expect(grid.crudService.inEditMode).toBeFalsy();
+                expect(grid.crudService.cellInEditMode).toBeFalsy();
                 grid.toggleGroup(groupRows[0].groupRow);
                 fix.detectChanges();
-                expect(grid.crudService.inEditMode).toBeFalsy();
+                expect(grid.crudService.cellInEditMode).toBeFalsy();
             });
     });
 
