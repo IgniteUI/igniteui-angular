@@ -38,6 +38,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
 /**
  * @hidden
@@ -174,6 +175,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected _prevInputValue = '';
     private _dataType = '';
     private _searchValue = '';
+    private _type = null;
     private ngControl: NgControl = null;
     private destroy$ = new Subject<any>();
     private _data = [];
@@ -199,6 +201,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected comboAPI: IgxComboAPIService,
         private _iconService: IgxIconService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         @Optional() private _injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);
@@ -859,8 +862,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public type = 'box';
+    public get type(): IgxInputGroupType {
+            return this._type || this._inputGroupType || 'box';
+        }
 
+    public set type(val: IgxInputGroupType) {
+        this._type = val;
+    }
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `onOpened` event is called

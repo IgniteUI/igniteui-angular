@@ -2167,7 +2167,7 @@ describe('IgxTimePicker', () => {
                 element
             };
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(element, null, document);
+            inputGroup = new IgxInputGroupComponent(element, null, null, document);
         });
 
         it('should initialize time picker with required correctly', () => {
