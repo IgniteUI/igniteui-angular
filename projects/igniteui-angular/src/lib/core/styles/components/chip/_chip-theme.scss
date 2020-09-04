@@ -317,6 +317,24 @@
 
         &:focus {
             outline-style: none;
+
+            %igx-chip__item {
+                @extend %igx-chip__item--focus;
+            }
+
+            %igx-chip__item--selected {
+                @extend %igx-chip__item--focus-selected;
+            }
+        }
+
+        &:hover {
+            %igx-chip__item {
+                @extend %igx-chip__item--hover;
+            }
+
+            %igx-chip__item--selected {
+                @extend %igx-chip__item--hover-selected;
+            }
         }
 
         // We target the tag selector directly to

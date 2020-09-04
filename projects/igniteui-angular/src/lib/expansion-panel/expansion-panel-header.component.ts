@@ -13,15 +13,17 @@ import {
 } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IExpansionPanelEventArgs, IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansion-panel.common';
+import { mkenum } from '../core/utils';
 
 /**
  * @hidden
  */
-export enum ICON_POSITION {
-    LEFT = 'left',
-    NONE = 'none',
-    RIGHT = 'right'
-}
+export const ICON_POSITION = mkenum({
+    LEFT: 'left',
+    NONE: 'none',
+    RIGHT: 'right'
+});
+export type ICON_POSITION = (typeof ICON_POSITION)[keyof typeof ICON_POSITION];
 
 
 @Component({

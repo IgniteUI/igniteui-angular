@@ -76,7 +76,7 @@ export class GridGroupBySampleComponent implements OnInit {
             { 'Salary': 4900, 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
     }
-    private _density = DisplayDensity.cosy;
+    private _density: DisplayDensity = DisplayDensity.cosy;
     public get density(): DisplayDensity {
         return this._density;
     }

@@ -1,54 +1,50 @@
-<div class="sample-wrapper">
-    <app-page-header title="Grid Toolbar">
-        The grid's toolbar provides a dedicated area for grid features-related UI.
-    </app-page-header>
-    <section class="sample-content">
-        <article class="grid-sample">
-            <h4 class="sample-title">Toolbar</h4>
+<section class="sample-content">
+    <article class="grid-sample">
+        <h4 class="sample-title">Toolbar</h4>
 
-            <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px" (onColumnInit)="initColumns($event)"
+        <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px" (onColumnInit)="initColumns($event)"
 
-                [showToolbar]="true"
-                toolbarTitle="Grid Toolbar"
-                [allowFiltering]="true"
+            [showToolbar]="true"
+            toolbarTitle="Grid Toolbar"
+            [allowFiltering]="true"
 
-                [columnHiding] = "true"
-                hiddenColumnsText = "Hidden"
-                columnHidingTitle = "Column Hiding"
+            [columnHiding] = "true"
+            hiddenColumnsText = "Hidden"
+            columnHidingTitle = "Column Hiding"
 
-                [exportExcel]="true"
-                [exportCsv]="true"
-                exportText="Export"
-                exportExcelText="Export to Excel"
-                exportCsvText="Export to CSV"
-            >
-            </igx-grid>
+            [exportExcel]="true"
+            [exportCsv]="true"
+            exportText="Export"
+            exportExcelText="Export to Excel"
+            exportCsvText="Export to CSV"
+        >
+        </igx-grid>
 
-            <!-- igx-grid
-                displayDensity="cosy"
-                displayDensity="compact"
-                (onToolbarExporting)="toolbarExportClicked($event)"
-            -->
+        <!-- igx-grid
+            displayDensity="cosy"
+            displayDensity="compact"
+            (onToolbarExporting)="toolbarExportClicked($event)"
+        -->
 
-            <br><igx-switch [(ngModel)]="this.igxGrid1.showToolbar">Toolbar</igx-switch>
-            <br><igx-switch [(ngModel)]="this.igxGrid1.columnHiding">Column Hiding</igx-switch>
-            <br><igx-switch [(ngModel)]="this.igxGrid1.columnPinning">Column Pinning</igx-switch>
-            <br><igx-switch [(ngModel)]="this.igxGrid1.exportExcel">Export Excel</igx-switch>
-            <br><igx-switch [(ngModel)]="this.igxGrid1.exportCsv">Export CSV</igx-switch>
-            <br><input type="text" placeholder="" [(ngModel)]="this.igxGrid1.toolbarTitle" />
-            <br><button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
-            <br><button (click)="grid1.toolbar.toggleColumnPinningUI()">Toggle Column Pinning UI</button>
+        <br><igx-switch [(ngModel)]="this.igxGrid1.showToolbar">Toolbar</igx-switch>
+        <br><igx-switch [(ngModel)]="this.igxGrid1.columnHiding">Column Hiding</igx-switch>
+        <br><igx-switch [(ngModel)]="this.igxGrid1.columnPinning">Column Pinning</igx-switch>
+        <br><igx-switch [(ngModel)]="this.igxGrid1.exportExcel">Export Excel</igx-switch>
+        <br><igx-switch [(ngModel)]="this.igxGrid1.exportCsv">Export CSV</igx-switch>
+        <br><input type="text" placeholder="" [(ngModel)]="this.igxGrid1.toolbarTitle" />
+        <br><button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
+        <br><button (click)="grid1.toolbar.toggleColumnPinningUI()">Toggle Column Pinning UI</button>
 
-            <!--
-            <div class="radio-group">
-                <p>Display Density</p>
-                <igx-radio *ngFor="let item of _displayDensity"
-                    value="{{item}}"
-                    [(ngModel)]="grid1.displayDensity"
-                    (change)="grid1.displayDensity = item">{{item}}</igx-radio>
-            </div>
-            -->
+        <!--
+        <div class="radio-group">
+            <p>Display Density</p>
+            <igx-radio *ngFor="let item of _displayDensity"
+                value="{{item}}"
+                [(ngModel)]="grid1.displayDensity"
+                (change)="grid1.displayDensity = item">{{item}}</igx-radio>
+        </div>
+        -->
 
-        </article>
-    </section>
-</div>
+    </article>
+</section>
+
