@@ -596,11 +596,11 @@
 
         %cal-value {
             &:first-of-type {
-                padding-left: $cal-row-padding;
+                padding-#{$left}: $cal-row-padding;
             }
 
             &:last-of-type {
-                padding-right: $cal-row-padding;
+                padding-#{$right}: $cal-row-padding;
             }
         }
 
@@ -620,7 +620,7 @@
         }
 
         %cal-value-date--week-number + %cal-value {
-            padding-left: 0 !important;
+            padding-#{$left}: 0 !important;
         }
 
         %label--week-number,
@@ -657,14 +657,14 @@
                 position: absolute;
                 width: 100%;
                 height: $cal-row-padding / 2;
-                left: 0;
+                #{$left}: 0;
                 top: 100%;
                 background: --var($theme, 'week-number-background') !important;
             }
         }
 
         %label--week-number {
-            padding-right: 0 !important;
+            padding-#{$right}: 0 !important;
             text-align: center;
 
             span {
@@ -678,11 +678,11 @@
                     position: absolute;
                     width: 100%;
                     background: --var($theme, 'week-number-background');
+                    #{$left}: 0;
                 }
 
                 &::after {
                     top: 100%;
-                    left: 0;
                     @if $not-bootstrap-theme{
                         height: ($cal-row-padding / 2) + rem(2px);
                     } @else {
@@ -692,7 +692,6 @@
 
                 &::before {
                     bottom: 100%;
-                    left: 0;
                     height: $cal-row-padding;
                     border-top-left-radius: $border-radius;
                     border-top-right-radius: $border-radius;
@@ -701,7 +700,7 @@
         }
 
         %label--week-number + %cal-value--label {
-            padding-left: 0 !important;
+            padding-#{$left}: 0 !important;
         }
 
         &:first-of-type {
