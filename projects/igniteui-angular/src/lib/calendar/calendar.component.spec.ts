@@ -372,10 +372,12 @@ describe('IgxCalendar - ', () => {
                 // 6 calendar rows * 8 elements in each
                 expect(
                     dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-day-item`)).length +
-                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-week-number-item`)).length
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} >
+                        ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_CLASS}`)).length
                 ).toEqual(48);
                 expect(
-                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > span`)).length
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > span`)).length +
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_LABEL_CLASS}`)).length
                 ).toEqual(8);
 
             });
@@ -386,14 +388,14 @@ describe('IgxCalendar - ', () => {
                 calendar.showWeekNumbers = true;
                 fixture.detectChanges();
 
-                const calendarRows = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_ROW_CSSCLASS));
+                const calendarRows = dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}`));
 
+                const maxWeeks = 52;
                 calendarRows.forEach((row, idx) => {
                     const firstRowItem = row.nativeElement.children[0];
                     idx === 0 ?
-                        expect(firstRowItem.innerText).toEqual('Wk') :
-                        expect(firstRowItem.tag).toEqual(HelperTestFunctions.CALENDAR_WEEK_NUMBER_ITEM);
-                        expect(firstRowItem.innerText).toEqual(idx);
+                        expect(firstRowItem.firstChild.innerText).toEqual('Wk') :
+                        expect(firstRowItem.firstChild.innerText).toEqual((idx === 1 ? maxWeeks : idx - 1).toString());
                 });
             });
 
