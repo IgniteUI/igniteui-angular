@@ -12,19 +12,20 @@ import { IGroupingState } from './groupby-state.interface';
 import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
 import { ITreeGridRecord } from '../grids/tree-grid/public_api';
-import { cloneValue, mergeObjects } from '../core/utils';
+import { cloneValue, mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
 
 /**
  * @hidden
  */
-export enum DataType {
-    String = 'string',
-    Number = 'number',
-    Boolean = 'boolean',
-    Date = 'date'
-}
+export const DataType = mkenum({
+    String: 'string',
+    Number: 'number',
+    Boolean: 'boolean',
+    Date: 'date'
+});
+export type DataType = (typeof DataType)[keyof typeof DataType];
 
 /**
  * @hidden
