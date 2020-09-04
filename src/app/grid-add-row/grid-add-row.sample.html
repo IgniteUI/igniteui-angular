@@ -7,6 +7,8 @@
         [primaryKey]="'ID'"
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
+        enableAddRow="true"
+        [rowEditable]="true"
     >
         <igx-column
             *ngFor="let c of columns"

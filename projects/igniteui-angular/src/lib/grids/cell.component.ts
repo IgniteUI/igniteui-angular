@@ -49,7 +49,6 @@ import { ISearchInfo } from './grid/public_api';
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
     protected _lastSearchInfo: ISearchInfo;
-    protected enterAddMode = false;
 
     /**
      * Gets the column of the cell.
@@ -179,8 +178,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
-        if (this.grid.addRowState) {
-            return this.enterAddMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
+        if (this.grid.enableAddRow && this.row.addRow) {
+            return this.addMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
         }
         if (this.editMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
@@ -358,6 +357,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('class.igx-grid__td--editing')
     editMode = false;
 
+    /**
+     * Returns whether the cell is in add mode
+     */
+    @Input()
+    addMode = false;
 
     /**
      * Sets/get the `role` property of the cell.
@@ -637,7 +641,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
-                this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                if (this.row.addRow) {
+                    this.gridAPI.update_add_cell(editableCell, editableCell.editValue);
+                } else {
+                    this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                }
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
                  * the next cell in edit mode is with wrong value /its context is not updated/;
@@ -790,9 +798,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.grid.addRowState && this.row.addRow) {
+        if (this.grid.enableAddRow && this.row.addRow) {
             this.crudService.begin(this);
-            this.enterAddMode = true;
         }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);

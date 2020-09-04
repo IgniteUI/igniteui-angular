@@ -30,7 +30,7 @@ export class GridAddRowSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '200px', hidden: false },
+            { field: 'ID', width: '200px'},
             { field: 'CompanyName', width: '200px' },
             { field: 'ContactName', width: '200px', pinned: false },
             { field: 'ContactTitle', width: '300px', pinned: false }

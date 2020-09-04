@@ -78,8 +78,11 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        grid.addRowParent = context.rowData[grid.primaryKey];
-        grid.addRowState = true;
+        if (!grid.columns.filter(col => col.editable).length) {
+            console.warn('The grid must have editable columns to perform row adding!');
+            return;
+        }
+        grid.beginAddRow(context.rowData[grid.primaryKey]);
         this.strip.hide();
     }
 
