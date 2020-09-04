@@ -343,14 +343,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
+            expect(grid.crudService.cell).toBeDefined();
             const editTemplate = cellDom.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(editTemplate, 'Gary Martin');
             fixture.detectChanges();
 
             grid.pinColumn('firstName');
             fixture.detectChanges();
-            expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
+            expect(grid.crudService.cell).toBeNull();
             expect(grid.pinnedColumns.length).toBe(1);
             cell = grid.getCellByColumn(0, 'firstName');
             expect(cell.value).toBe('Gary Martin');
@@ -359,12 +359,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cell.setEditMode(true);
             fixture.detectChanges();
 
-            expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
+            expect(grid.crudService.cell).toBeDefined();
             grid.unpinColumn('firstName');
             fixture.detectChanges();
             cell = grid.getCellByColumn(1, 'firstName');
             expect(grid.pinnedColumns.length).toBe(0);
-            expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
+            expect(grid.crudService.cell).toBeNull();
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(cellValue);
         }));
@@ -376,7 +376,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             await wait();
             fixture.detectChanges();
 
-            let editCellID = cell.gridAPI.get_cell_inEditMode().id;
+            let editCellID = grid.crudService.cell.id;
             expect(editableCellId.columnID).toBe(editCellID.columnID);
             expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -388,7 +388,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             await wait(100);
             fixture.detectChanges();
 
-            editCellID = cell.gridAPI.get_cell_inEditMode().id;
+            editCellID = grid.crudService.cell.id;
             expect(editableCellId.columnID).toBe(editCellID.columnID);
             expect(editableCellId.rowIndex).toBe(editCellID.rowIndex);
             expect(JSON.stringify(editableCellId.rowID)).toBe(JSON.stringify(editCellID.rowID));
@@ -536,7 +536,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // Verify cell is still in edit mode
             cell = grid.getCellByColumn(1, 'birthday');
             expect(cell.nativeElement.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-            const editCellID = cell.gridAPI.get_cell_inEditMode().id;
+            const editCellID = grid.crudService.cell.id;
             expect(4).toBe(editCellID.columnID);
             expect(1).toBe(editCellID.rowIndex);
         }));
@@ -1133,7 +1133,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
             fixture.detectChanges();
 
-            expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
+            expect(grid.crudService.cell).toBeNull();
         });
 
         it('should update correct cell when sorting is applied', () => {
@@ -1151,12 +1151,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.clickAndSendInputElementValue(editTemplate, 'Rick Gilmore');
             fixture.detectChanges();
 
-            expect(cell.gridAPI.get_cell_inEditMode().editValue).toBe('Rick Gilmore');
+            expect(grid.crudService.cell.editValue).toBe('Rick Gilmore');
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
 
             fixture.detectChanges();
             expect(cell.value).toBe('Rick Gilmore');
-            expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
+            expect(grid.crudService.cell).toBeNull();
         });
     });
 

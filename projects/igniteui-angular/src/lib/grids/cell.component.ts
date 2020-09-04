@@ -644,14 +644,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                const canceled = crud.end();
+                const canceled = crud.exitCellEdit();
                 if (canceled) {
                     return true;
                 }
             }
             this.grid.tbody.nativeElement.focus({ preventScroll: true });
             this.grid.notifyChanges();
-            crud.begin(this);
+            crud.enterEditMode(this);
             return false;
         }
 
@@ -702,9 +702,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.editable && value) {
             this.gridAPI.submit_value();
-            this.crudService.begin(this);
+            this.crudService.enterEditMode(this);
         } else {
-            this.gridAPI.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
         this.grid.notifyChanges();
     }
@@ -727,7 +727,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (args.cancel) {
                 return;
             }
-            this.gridAPI.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
         this.cdr.markForCheck();
     }
@@ -788,8 +788,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.cellEditExitCanceled) {
-            this.crudService.begin(this);
+        if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.cellEditingBlocked) {
+            this.crudService.enterEditMode(this);
         }
 
         this.grid.onDoubleClick.emit({
@@ -835,8 +835,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
             const activeElement = this.selectionService.activeElement;
             const row = activeElement ? this.gridAPI.get_row_by_index(activeElement.row) : null;
-            if ((this.crudService.rowEditExitCanceled && row && this.row.rowID !== row.rowID) ||
-                this.crudService.cellEditExitCanceled) {
+            if ((this.crudService.rowEditingBlocked && row && this.row.rowID !== row.rowID) ||
+                (this.crudService.cell && this.crudService.cellEditingBlocked)) {
                 return;
             }
 

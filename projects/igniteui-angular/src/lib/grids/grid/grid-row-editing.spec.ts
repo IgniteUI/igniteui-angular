@@ -938,7 +938,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(gridAPI, 'escape_editMode').and.callThrough();
+            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
             spyOn(grid, 'endEdit').and.callThrough();
 
             // put cell in edit mode
@@ -950,8 +950,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(gridAPI.submit_value).toHaveBeenCalled();
             expect(gridAPI.submit_value).toHaveBeenCalledWith();
-            expect(gridAPI.escape_editMode).toHaveBeenCalled();
-            expect(gridAPI.escape_editMode).toHaveBeenCalledWith();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalledWith();
             expect(grid.endEdit).toHaveBeenCalled();
             expect(grid.endEdit).toHaveBeenCalledWith(false);
             expect(cell.editMode).toBeFalsy();
@@ -961,7 +961,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
             spyOn(grid, 'endEdit').and.callThrough();
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(gridAPI, 'escape_editMode').and.callThrough();
+            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -978,8 +978,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe('Aniseed Syrup'); // SORT does not submit
 
-            expect(gridAPI.escape_editMode).toHaveBeenCalled();
-            expect(gridAPI.escape_editMode).toHaveBeenCalledWith();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalledWith();
             expect(grid.endEdit).toHaveBeenCalled();
             expect(grid.endEdit).toHaveBeenCalledWith(false);
         });
@@ -1081,12 +1081,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(gridAPI, 'escape_editMode').and.callThrough();
+            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
 
             expect(gridAPI.submit_value).toHaveBeenCalled();
-            expect(gridAPI.escape_editMode).toHaveBeenCalled();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
 
@@ -1098,13 +1098,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(gridAPI, 'escape_editMode').and.callThrough();
+            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             expect(gridAPI.submit_value).not.toHaveBeenCalled();
-            expect(gridAPI.escape_editMode).toHaveBeenCalled();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
 
@@ -1234,7 +1234,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
                 cell.setEditMode(true);
 
-                (<any>grid).gridAPI.get_cell_inEditMode().editValue = 'IG';
+                (<any>grid).crudService.cell.editValue = 'IG';
                 // cell.update('IG');
                 // Do not exit edit mode
                 fix.detectChanges();
@@ -1326,7 +1326,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(gridAPI, 'escape_editMode').and.callThrough();
+            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
 
             cell.setEditMode(true);
 
@@ -1335,7 +1335,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
 
-            expect(gridAPI.escape_editMode).toHaveBeenCalled();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
             expect(gridAPI.submit_value).toHaveBeenCalled();
         });
 
@@ -1504,14 +1504,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.setEditMode(true);
 
             fix.detectChanges();
-            expect(gridAPI.get_cell_inEditMode()).toBeTruthy(); // check if there is cell in edit mode
-            spyOn(gridAPI, 'escape_editMode').and.callThrough();
+            expect(grid.crudService.cell).toBeTruthy(); // check if there is cell in edit mode
+            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
 
             cell.column.hidden = true;
 
             fix.detectChanges();
 
-            expect(gridAPI.escape_editMode).toHaveBeenCalled();
+            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
         });
 

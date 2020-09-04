@@ -2922,7 +2922,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         this.navigation.activeNode.row < this.dataView.length)
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                 || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.crudService.rowEditExitCanceled && this.rowInEditMode)) {
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
@@ -4105,7 +4105,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (args.cancel) {
                         return;
                     }
-                    this.gridAPI.escape_editMode();
+                    this.crudService.exitCellEdit();
                 }
                 this.cdr.detectChanges();
             }
@@ -4131,7 +4131,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.gridAPI.escape_editMode();
+                this.crudService.exitCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
@@ -6392,7 +6392,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return true;
         }
 
-        this.crudService.endRowEdit();
+        this.crudService.exitRowEdit();
         this.closeRowEditingOverlay();
     }
 
@@ -6423,12 +6423,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
-        commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
+        commit ? this.gridAPI.submit_value() : this.crudService.exitCellEdit();
 
         if (!this.rowEditable ||
             this.rowEditingOverlay &&
             this.rowEditingOverlay.collapsed || !row ||
-            this.crudService.cellEditExitCanceled) {
+            this.crudService.cellEditingBlocked) {
             return;
         }
 

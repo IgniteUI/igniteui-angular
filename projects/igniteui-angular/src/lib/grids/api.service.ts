@@ -69,16 +69,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return data[index];
     }
 
-    // TODO: Refactor
-    public escape_editMode() {
-        this.grid.crudService.end();
-    }
-
-    // TODO: Refactor
-    public get_cell_inEditMode(): IgxCell {
-        return this.grid.crudService.cell;
-    }
-
     public get_row_index_in_data(rowID: any, dataCollection?: any[]): number {
         const grid = this.grid as IgxGridBaseDirective;
         if (!grid) {
@@ -132,7 +122,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             if (args.cancel) {
                 return;
             }
-            this.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
     }
 
