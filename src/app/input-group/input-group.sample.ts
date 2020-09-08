@@ -1,10 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
 import {
     IgxInputGroupType,
     ButtonGroupAlignment,
     DisplayDensityToken,
     IDisplayDensityOptions,
     IButtonGroupEventArgs,
+    IGX_INPUT_GROUP_TYPE
 } from 'igniteui-angular';
 
 interface Selection {
@@ -19,21 +20,22 @@ interface Selection {
     selector: 'app-input-group-sample',
     styleUrls: ['input-group.sample.scss'],
     templateUrl: 'input-group.sample.html',
+    providers: [{provide: IGX_INPUT_GROUP_TYPE, useValue: 'box' }]
 })
-export class InputGroupSampleComponent implements OnInit {
+export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public inputValue: any;
     public isRequired = false;
     public isDisabled = false;
     public alignment = ButtonGroupAlignment.vertical;
     public density = 'comfortable';
     public displayDensities: Selection[];
-    public inputType: IgxInputGroupType = 'line';
+    public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];
-    public inputSearchType = 'search';
     date = new Date();
     constructor(
         @Inject(DisplayDensityToken)
-        public displayDensityOptions: IDisplayDensityOptions
+        public displayDensityOptions: IDisplayDensityOptions,
+        @Inject(IGX_INPUT_GROUP_TYPE) public TOKEN: IgxInputGroupType
     ) {}
 
     public ngOnInit(): void {
@@ -72,6 +74,11 @@ export class InputGroupSampleComponent implements OnInit {
         ];
     }
 
+    ngAfterViewInit() {
+        console.log('The InputGroupToken set for all material themed components(that have no explicit type set on component OR sample lv) is: ',
+        this.TOKEN);
+    }
+
     public selectDensity(event: IButtonGroupEventArgs) {
         this.density = this.displayDensities[event.index].label;
     }
@@ -79,6 +86,7 @@ export class InputGroupSampleComponent implements OnInit {
     public selectInputType(event: IButtonGroupEventArgs) {
         const currentType = this.inputTypes[event.index].type;
         this.inputType = currentType;
+        console.log('New type set is = ', currentType);
     }
 
     public disableFields() {
