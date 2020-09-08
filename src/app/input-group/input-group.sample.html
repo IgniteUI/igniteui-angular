@@ -27,10 +27,8 @@
         </div>
         <div class="form__fields">
             <!-- input type search - suffix/prefix -->
-            <igx-input-group
-                [displayDensity]="density"
-                [type]="inputSearchType"
-            >
+            <igx-input-group class="material-theme" [displayDensity]="density">
+                <label igxLabel>Always Material & Use Input type TOKEN</label>
                 <igx-icon igxPrefix>search</igx-icon>
                 <input
                     name="inputTest"
@@ -52,7 +50,7 @@
 
             <!-- text field -->
             <igx-input-group class="material-theme" [displayDensity]="density" [type]="inputType">
-                <label for="fluentfirstName" igxLabel>Always Material</label>
+                <label for="fluentfirstName" igxLabel>Always Material - set type</label>
                 <igx-prefix>
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
@@ -177,8 +175,9 @@
                 [displayDensity]="density"
                 [placeholder]="'Pick One'"
                 [disabled]="isDisabled"
+                class="material-theme"
             >
-                <label igxLabel>Input type select</label>
+                <label igxLabel>Always Material & Use Input type TOKEN</label>
                 <igx-prefix igxPrefix>
                     <igx-icon fontSet="material">favorite</igx-icon>
                 </igx-prefix>

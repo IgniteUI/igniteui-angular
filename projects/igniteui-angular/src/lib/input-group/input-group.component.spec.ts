@@ -1,13 +1,14 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxInputGroupComponent, IgxInputGroupModule, IgxInputGroupType } from './input-group.component';
+import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxPrefixDirective, IgxSuffixDirective } from '../chips/public_api';
+import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -40,7 +41,7 @@ describe('IgxInputGroup', () => {
     }));
 
     it('Initializes an input group.', () => {
-        const fixture = TestBed.createComponent(InputGroupComponent);
+        const fixture = TestBed.createComponent(InputGroupDisabledComponent);
         fixture.detectChanges();
 
         const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
@@ -86,20 +87,27 @@ describe('IgxInputGroup', () => {
         testInputGroupType('search', igxInputGroup, inputGroupElement);
     });
 
-    it('Should be able to change input group type programmatically.', () => {
+    it('Should respect type Token and be able to change input group type programmatically.', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
         const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
 
-        igxInputGroup.type = 'box';
-        fixture.detectChanges();
+        // a Token is passed and can be obtained
+        expect(fixture.componentInstance.IGTOKEN).toBe('box');
+
+        // type set via Token is 'box'
         testInputGroupType('box', igxInputGroup, inputGroupElement);
 
+        // user can override Token passing other igxInputGroup types
         igxInputGroup.type = 'border';
         fixture.detectChanges();
         testInputGroupType('border', igxInputGroup, inputGroupElement);
+
+        igxInputGroup.type = 'box';
+        fixture.detectChanges();
+        testInputGroupType('box', igxInputGroup, inputGroupElement);
 
         igxInputGroup.type = 'search';
         fixture.detectChanges();
@@ -108,6 +116,11 @@ describe('IgxInputGroup', () => {
         igxInputGroup.type = 'line';
         fixture.detectChanges();
         testInputGroupType('line', igxInputGroup, inputGroupElement);
+
+        // Set type as null, so the Token type should be used again
+        igxInputGroup.type = null;
+        fixture.detectChanges();
+        testInputGroupType('box', igxInputGroup, inputGroupElement);
     });
 
     it('disabled input should properly detect changes.', () => {
@@ -250,7 +263,8 @@ describe('IgxInputGroup', () => {
                     <igx-prefix>PREFIX</igx-prefix>
                     <igx-suffix>SUFFIX</igx-suffix>
                     <input #igxInput igxInput />
-                </igx-input-group>`
+                </igx-input-group>`,
+     providers: [{ provide: IGX_INPUT_GROUP_TYPE, useValue: 'box'}]
 })
 class InputGroupComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
@@ -258,6 +272,8 @@ class InputGroupComponent {
     @ViewChild(IgxPrefixDirective, { read: ElementRef }) public prefix: ElementRef;
     @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
     public suppressInputAutofocus = false;
+
+    constructor(@Inject(IGX_INPUT_GROUP_TYPE) public IGTOKEN: IgxInputGroupType) {}
 }
 
 @Component({
