@@ -15,6 +15,8 @@ All notable changes for each version of this project will be documented in this 
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
+- `IgxTimePicker`
+    - Added a custom label functionality.
 
 ## 10.1.0
 
