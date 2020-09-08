@@ -6423,12 +6423,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
-        commit ? this.gridAPI.submit_value() : this.crudService.exitCellEdit();
+        const shouldNotCommit = commit ? this.gridAPI.submit_value() : this.crudService.exitCellEdit();
 
         if (!this.rowEditable ||
             this.rowEditingOverlay &&
             this.rowEditingOverlay.collapsed || !row ||
-            (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked)) {
+            (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked) ||
+            shouldNotCommit) {
             return;
         }
 
