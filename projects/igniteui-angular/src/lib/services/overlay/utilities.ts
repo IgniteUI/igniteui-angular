@@ -31,7 +31,10 @@ export interface OutOfViewPort {
 }
 
 export interface PositionSettings {
-    /** Attaching target for the component to show */
+    /**
+     * @deprecated Set the target point/element in the overlay instead.
+     * Attaching target for the component to show
+     */
     target?: Point | HTMLElement;
     /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
@@ -50,6 +53,8 @@ export interface PositionSettings {
 }
 
 export interface OverlaySettings {
+    /** Attaching target for the component to show */
+    target?: Point | HTMLElement;
     /** Position strategy to use with these settings */
     positionStrategy?: IPositionStrategy;
     /** Scroll strategy to use with these settings */
@@ -139,7 +144,7 @@ export class Util {
      * if no target is provided
      * @param settings Overlay settings for which to calculate target rectangle
      */
-    static getTargetRect(settings: PositionSettings): ClientRect {
+    static getTargetRect(target?: Point | HTMLElement): ClientRect {
         let targetRect: ClientRect = {
             bottom: 0,
             height: 0,
@@ -149,10 +154,10 @@ export class Util {
             width: 0
         };
 
-        if (settings.target instanceof HTMLElement) {
-            targetRect = (settings.target as HTMLElement).getBoundingClientRect();
-        } else if (settings.target instanceof Point) {
-            const targetPoint = settings.target as Point;
+        if (target instanceof HTMLElement) {
+            targetRect = (target as HTMLElement).getBoundingClientRect();
+        } else if (target instanceof Point) {
+            const targetPoint = target as Point;
             targetRect = {
                 bottom: targetPoint.y,
                 height: 0,

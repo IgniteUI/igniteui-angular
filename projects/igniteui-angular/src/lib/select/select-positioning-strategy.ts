@@ -1,4 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit  } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from '../services/overlay/utilities';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
@@ -31,9 +31,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_styles: SelectStyles = {};
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
+    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         this.select.scrollContainer.scrollTop = 0;
-        const rects = super.calculateElementRectangles(contentElement);
+        const targetElement = target ? target : this.settings.target;
+        const rects = super.calculateElementRectangles(contentElement, targetElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
         const selectFit: SelectFit = {
             verticalOffset: this.global_yOffset,

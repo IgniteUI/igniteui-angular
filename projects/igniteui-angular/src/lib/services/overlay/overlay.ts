@@ -250,7 +250,8 @@ export class IgxOverlayService implements OnDestroy {
                 height: contentElementRect.height
             },
             this._document,
-            false);
+            false,
+            overlayInfo.settings.target);
     }
 
     /**
@@ -312,7 +313,8 @@ export class IgxOverlayService implements OnDestroy {
                 info.elementRef.nativeElement.parentElement,
                 { width: info.initialSize.width, height: info.initialSize.height },
                 document,
-                true);
+                true,
+                info.settings.target);
             info.settings.scrollStrategy.initialize(this._document, this, info.id);
             info.settings.scrollStrategy.attach();
         }

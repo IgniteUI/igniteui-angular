@@ -85,6 +85,7 @@ import { DisplayDensityDropDownComponent } from './drop-down/display-density/dis
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
+import { OverlayTargetSampleComponent } from './overlay/overlay-target.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
@@ -167,6 +168,7 @@ const components = [
     NavbarSampleComponent,
     NavdrawerSampleComponent,
     OverlaySampleComponent,
+    OverlayTargetSampleComponent,
     OverlayAnimationSampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,

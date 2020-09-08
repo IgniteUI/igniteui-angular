@@ -349,6 +349,11 @@ export class AppComponent implements OnInit {
             name: 'Overlay'
         },
         {
+            link: '/overlay-target',
+            icon: 'flip_to_front',
+            name: 'Overlay With Target'
+        },
+        {
             link: '/overlay-animation',
             icon: 'flip_to_front',
             name: 'Overlay Animation'

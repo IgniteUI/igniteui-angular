@@ -1,0 +1,89 @@
+<div #container class="sample-wrapper">
+    <app-page-header title="Overlay" description="description for overlay"></app-page-header>
+    <section class="sample-content">
+        <div class="column">
+            <p>Directions</p>
+            <div class="direction-container">
+                <div id="tld" class="direction" (click)="setDirection($event)"></div>
+                <div id="tcd" class="direction" (click)="setDirection($event)"></div>
+                <div id="trd" class="direction" (click)="setDirection($event)"></div>
+            </div>
+            <div class="direction-container">
+                <div id="mld" class="direction" (click)="setDirection($event)"></div>
+                <div id="mcd" class="direction selected" (click)="setDirection($event)"></div>
+                <div id="mrd" class="direction" (click)="setDirection($event)"></div>
+            </div>
+            <div class="direction-container">
+                <div id="bld" class="direction" (click)="setDirection($event)"></div>
+                <div id="bcd" class="direction" (click)="setDirection($event)"></div>
+                <div id="brd" class="direction" (click)="setDirection($event)"></div>
+            </div>
+            <p>Starting Point</p>
+            <div class="start-point-container">
+                <div id="tlsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="tcsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="trsp" class="start-point" (click)="setStartPoint($event)"></div>
+            </div>
+            <div class="start-point-container">
+                <div id="mlsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="mcsp" class="start-point selected" (click)="setStartPoint($event)"></div>
+                <div id="mrsp" class="start-point" (click)="setStartPoint($event)"></div>
+            </div>
+            <div class="start-point-container">
+                <div id="blsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="bcsp" class="start-point" (click)="setStartPoint($event)"></div>
+                <div id="brsp" class="start-point" (click)="setStartPoint($event)"></div>
+            </div>
+        </div>
+        <div class="column">
+            <p>Strategies</p>
+            <div class="radio-group">
+                <p>Position Strategies</p>
+                <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps"
+                    [(ngModel)]="positionStrategy" (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+            <div class="radio-group">
+                <p>Scroll Strategies</p>
+                <igx-radio *ngFor="let item of scrollStrategies" value="{{item}}" name="ss" [(ngModel)]="scrollStrategy"
+                    (change)="onChange($event)">{{item}}</igx-radio>
+            </div>
+        </div>
+        <div class="column">
+            <p>Settings</p>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="closeOnOutsideClick" name="close"
+                    [value]="closeOnOutsideClick" (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
+            </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="modal" name="modal" [value]="modal"
+                    (change)="onSwitchChange($event)">Modal</igx-switch>
+            </div>
+            <div>
+                <igx-switch class="settings" [(ngModel)]="useOutlet" name="outlet" [value]="useOutlet"
+                    (change)="onSwitchChange($event)">Open in outlet</igx-switch>
+            </div>
+            <div>
+                <igx-input-group>
+                    <input igxInput name="dropDownItems" type="number" [(ngModel)]="itemsCount">
+                    <label igxLabel for="dropDownItems">Drop down items</label>
+                </igx-input-group>
+                <igx-input-group>
+                    <input igxInput name="dropDownWidth" type="number" [(ngModel)]="dropDownWidth">
+                    <label igxLabel for="dropDownWidth">Drop down width</label>
+                </igx-input-group>
+            </div>
+        </div>
+        <div #outlet class="outlet column">
+            Outlet
+        </div>
+        <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()" [style.position]="'absolute'"
+            (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
+        <igx-drop-down width="{{dropDownWidth}}px">
+            <igx-drop-down-item *ngFor="let item of items">
+                <div class="igx-drop-down__item-template">
+                    {{ item }}
+                </div>
+            </igx-drop-down-item>
+        </igx-drop-down>
+    </section>
+</div>
