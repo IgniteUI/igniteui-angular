@@ -87,7 +87,7 @@ export class IgxBadgeComponent {
     * ```
     */
     @Input()
-    public value = '';
+    public value: string | number = '';
 
     /**
      * Sets/gets an icon for the badge from the material icons set.
@@ -154,18 +154,13 @@ export class IgxBadgeComponent {
      * @internal
      */
     get roleDescription() {
-        let message: string;
-
         // tslint:disable-next-line:prefer-conditional-expression
         if (this.icon) {
-            message = this.type + ' type badge with icon type ' + this.icon;
-        } else if (this.value) {
-            message = this.type + ' badge type with value ' + this.value;
-        } else {
-            message = this.type + ' badge type without value';
+            return this.type + ' type badge with icon type ' + this.icon;
+        } else if (this.value || this.value === 0) {
+            return this.type + ' badge type with value ' + this.value;
         }
-
-        return message;
+        return this.type + ' badge type without value';
     }
 
     /**
