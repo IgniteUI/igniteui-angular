@@ -3883,19 +3883,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
         const fromIndex = columnCollection.indexOf(from);
-        const childColumnsCount = from.allChildren.length;
-        // remove item(s) to be moved.
-        const fromCollection = columnCollection.splice(fromIndex, childColumnsCount + 1);
-
+        columnCollection.splice(fromIndex, 1);
         let dropIndex = columnCollection.indexOf(to);
-
         if (position === DropPosition.AfterDropTarget) {
             dropIndex++;
-            if (to.columnGroup) {
-                dropIndex += to.allChildren.length;
-            }
         }
-        columnCollection.splice(dropIndex, 0, ...fromCollection);
+        columnCollection.splice(dropIndex, 0, from);
     }
     /**
      * @hidden
@@ -3906,7 +3899,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         parent.children.reset(buffer);
     }
     /**
-     * Moves a column to the specified drop target.
+     * Places a column before or after the specified target column.
      * @example
      * ```typescript
      * grid.moveColumn(compName, persDetails);
@@ -3917,7 +3910,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (column === dropTarget) {
             return;
         }
-        let position = pos;
+
         if ((column.level !== dropTarget.level) ||
             (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
@@ -3925,48 +3918,29 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, dropTarget, position);
-        }
-
-        if (dropTarget.pinned && column.pinned) {
-            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
+            this._moveChildColumns(column.parent, column, dropTarget, pos);
         }
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin();
-            if (!this.isPinningToStart) {
-                if (pos === DropPosition.AfterDropTarget) {
-                    position = DropPosition.AfterDropTarget;
-                }
-            }
-            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
         }
 
         if (!dropTarget.pinned && column.pinned) {
             column.unpin();
-            let list = [];
-
-            if (this.pinnedColumns.indexOf(column) === -1 && this.pinnedColumns.indexOf(dropTarget) === -1) {
-                list = this._unpinnedColumns;
-            } else {
-                list = this._pinnedColumns;
-            }
-
-            const fi = list.indexOf(column);
-            const ti = list.indexOf(dropTarget);
-
-            if (pos === DropPosition.BeforeDropTarget && fi < ti) {
-                position = DropPosition.BeforeDropTarget;
-            } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
-                position = DropPosition.AfterDropTarget;
-            }
         }
 
-        if (!dropTarget.pinned) {
-            this._reorderColumns(column, dropTarget, position, this._unpinnedColumns);
+        if (dropTarget.pinned && column.pinned) {
+            this._reorderColumns(column, dropTarget, pos, this._pinnedColumns);
         }
 
-        this._moveColumns(column, dropTarget, position);
+
+
+
+        if (!dropTarget.pinned && !column.pinned) {
+            this._reorderColumns(column, dropTarget, pos, this._unpinnedColumns);
+        }
+
+        this._moveColumns(column, dropTarget, pos);
         this.notifyChanges();
         if (this.hasColumnLayouts) {
             this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
