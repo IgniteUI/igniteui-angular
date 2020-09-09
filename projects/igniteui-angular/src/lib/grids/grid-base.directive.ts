@@ -3772,6 +3772,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Reorder columns in the main columnList and _columns collections.
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
@@ -3801,37 +3802,43 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Reorders columns inside the passed column collection.
+     * When reordering column group collection, the collection is not flattened.
+     * In all other cases, the columns collection is flattened, this is why adittional calculations on the dropIndex are done.
      * @hidden
      */
-    protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
+    protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[],
+        inGroup = false) {
         const fromIndex = columnCollection.indexOf(from);
-        columnCollection.splice(fromIndex, 1);
+        const childColumnsCount = inGroup ? 1 : from.allChildren.length + 1;
+        columnCollection.splice(fromIndex, childColumnsCount);
         let dropIndex = columnCollection.indexOf(to);
         if (position === DropPosition.AfterDropTarget) {
             dropIndex++;
+            if (!inGroup && to.columnGroup) {
+                dropIndex += to.allChildren.length;
+            }
         }
         columnCollection.splice(dropIndex, 0, from);
     }
+
     /**
+     * Reorder column group collection.
      * @hidden
      */
     protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const buffer = parent.children.toArray();
-        this._reorderColumns(from, to, pos, buffer);
+        this._reorderColumns(from, to, pos, buffer, true);
         parent.children.reset(buffer);
     }
     /**
      * Places a column before or after the specified target column.
      * @example
      * ```typescript
-     * grid.moveColumn(compName, persDetails);
+     * grid.moveColumn(column, target);
      * ```
      */
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
-
-        if (column === dropTarget) {
-            return;
-        }
+    public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
         let position = pos;
         if (position === DropPosition.None) {
@@ -3842,17 +3849,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             position =  DropPosition.AfterDropTarget;
         }
 
-        if ((column.level !== dropTarget.level) ||
-            (column.topLevelParent !== dropTarget.topLevelParent)) {
+        if (column === target || (column.level !== target.level) ||
+            (column.topLevelParent !== target.topLevelParent)) {
             return;
         }
 
         this.endEdit(true);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, dropTarget, pos);
+            this._moveChildColumns(column.parent, column, target, pos);
         }
 
-        if (dropTarget.pinned && !column.pinned) {
+        if (target.pinned && !column.pinned) {
             column.pin();
             if (!this.isPinningToStart) {
                 if (pos === DropPosition.AfterDropTarget) {
@@ -3861,22 +3868,30 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     position = DropPosition.None;
                 }
             }
-            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
+            this._reorderColumns(column, target, position, this._pinnedColumns);
         }
 
-        if (!dropTarget.pinned && column.pinned) {
+        if (!target.pinned && column.pinned) {
             column.unpin();
         }
 
-        if (dropTarget.pinned && column.pinned) {
-            this._reorderColumns(column, dropTarget, pos, this._pinnedColumns);
+        if (target.pinned && column.pinned) {
+            this._reorderColumns(column, target, pos, this._pinnedColumns);
         }
 
-        if (!dropTarget.pinned && !column.pinned) {
-            this._reorderColumns(column, dropTarget, pos, this._unpinnedColumns);
+        if (!target.pinned && !column.pinned) {
+           this._reorderColumns(column, target, pos, this._unpinnedColumns);
         }
 
-        this._moveColumns(column, dropTarget, pos);
+        this._moveColumns(column, target, pos);
+        this._columnsReordered(column, target);
+    }
+
+    /**
+     * Notiy changes, reset cache and populateVisibleIndexes.
+     * @hidden
+     */
+    private _columnsReordered(column: IgxColumnComponent, target) {
         this.notifyChanges();
         if (this.hasColumnLayouts) {
             this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
@@ -3887,7 +3902,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const args = {
             source: column,
-            target: dropTarget
+            target: target
         };
 
         this.onColumnMovingEnd.emit(args);
