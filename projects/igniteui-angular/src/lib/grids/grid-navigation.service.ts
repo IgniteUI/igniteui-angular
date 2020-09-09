@@ -48,7 +48,7 @@ export class IgxGridNavigationService {
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-            !this.grid.crudService.rowEditingBlocked) { return; }
+            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }

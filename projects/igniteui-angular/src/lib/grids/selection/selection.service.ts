@@ -195,7 +195,12 @@ export class IgxGridCRUDService {
 
         if (cell && cell.column.editable && !cell.row.deleted) {
             if (this.cellInEditMode) {
-                this._rowEditingBlocked = this.grid.endEdit(true);
+                const canceled = this.grid.endEdit(true);
+                if (this.grid.rowEditable && canceled) {
+                    this.exitCellEdit();
+                }
+
+                this._rowEditingBlocked = canceled;
                 this.grid.tbody.nativeElement.focus();
             } else {
                 /** Changing the reference with the new editable cell */
@@ -226,7 +231,7 @@ export class IgxGridCRUDService {
 
     public exitCellEdit(): boolean {
         if (!this.cell) {
-            return;
+            return false;
         }
 
         const args = this.cell?.createEditEventArgs(true);
@@ -235,12 +240,12 @@ export class IgxGridCRUDService {
             return this._rowEditingBlocked = this._cellEditingBlocked = true;
         }
 
+        this._rowEditingBlocked = this._cellEditingBlocked = false;
         this.cell = null;
         return false;
     }
 
     public exitRowEdit() {
-        // this.cell = null;
         this.row = null;
     }
 
@@ -251,6 +256,7 @@ export class IgxGridCRUDService {
                 return true;
             }
 
+            this._rowEditingBlocked = false;
             this.exitRowEdit();
         }
 
@@ -285,11 +291,8 @@ export class IgxGridCRUDService {
         const args = newCell.createEditEventArgs(false);
         this.grid.cellEditEnter.emit(args);
 
+        this._cellEditingBlocked = args.cancel;
         if (args.cancel) {
-            // if (this.grid.rowEditable && this.grid.rowInEditMode) {
-            //     this._rowEditingBlocked = true;
-            // }
-            this._cellEditingBlocked = true;
             this.cell = null;
         }
     }

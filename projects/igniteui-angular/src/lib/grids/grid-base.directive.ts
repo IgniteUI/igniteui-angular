@@ -6423,14 +6423,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
-        const shouldNotCommit = commit ? this.gridAPI.submit_value() : this.crudService.exitCellEdit();
+        let args;
+        commit ? args = this.gridAPI.submit_value() : this.crudService.exitCellEdit();
 
         if (!this.rowEditable ||
             this.rowEditingOverlay &&
             this.rowEditingOverlay.collapsed || !row ||
-            (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked) ||
-            shouldNotCommit) {
-            return;
+            (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked)) {
+            return true;
         }
 
         const canceled = this.endRowTransaction(commit, row);
@@ -6448,6 +6448,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
         }
+
+        /** Returns cellEdit args so we can trace the cancelation process.  */
+        return args ? args.cancel : false;
     }
 
     /**
@@ -6456,6 +6459,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public endRowEdit(commit = true, event?: Event) {
         const canceled = this.endEdit(commit, event);
+
+        /**
+         * If cellEdit was canceled and we are in row edit mode,
+         * we should exit from cell edit if we end the row editing process.
+         */
+        if (this.crudService.cellInEditMode && canceled) {
+            this.crudService.exitCellEdit();
+        }
+
         if (canceled) {
             return;
         }

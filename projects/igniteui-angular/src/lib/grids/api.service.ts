@@ -120,7 +120,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (cell) {
             const args = this.update_cell(cell, cell.editValue);
             if (args.cancel) {
-                return true;
+                return args;
             }
             this.grid.crudService.exitCellEdit();
         }
