@@ -47,7 +47,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
   /** @inheritdoc */
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
-    const targetElement = target ? target : this.settings.target;
+    const targetElement = target || this.settings.target;
     const rects =  this.calculateElementRectangles(contentElement, targetElement);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }

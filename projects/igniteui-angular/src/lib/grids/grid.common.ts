@@ -35,10 +35,11 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
     public settings: RowEditPositionSettings;
+    public target: Point | HTMLElement;
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean,
-            target?: Point | HTMLElement): void {
+            positionTarget?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
-        const targetElement = target ? <HTMLElement>target : <HTMLElement>this.settings.target; // current grid.row
+        const targetElement = positionTarget ? <HTMLElement>positionTarget : <HTMLElement>this.target; // current grid.row
 
         // Position of the overlay depends on the available space in the grid.
         // If the bottom space is not enough then the the row overlay will show at the top of the row.

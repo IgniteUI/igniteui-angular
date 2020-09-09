@@ -7,7 +7,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
-        const targetElement = target ? target : this.settings.target;
+        const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
         const connectedFit: ConnectedFit = {};
         if (initialCall) {

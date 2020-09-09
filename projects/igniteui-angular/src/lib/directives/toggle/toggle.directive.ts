@@ -425,7 +425,8 @@ export class IgxToggleActionDirective implements OnInit {
      */
     public ngOnInit() {
         this._overlayDefaults = {
-            positionStrategy: new ConnectedPositioningStrategy({ target: this.element.nativeElement }),
+            target: this.element.nativeElement,
+            positionStrategy: new ConnectedPositioningStrategy(),
             scrollStrategy: new AbsoluteScrollStrategy(),
             closeOnOutsideClick: true,
             modal: false,

@@ -33,7 +33,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         this.select.scrollContainer.scrollTop = 0;
-        const targetElement = target ? target : this.settings.target;
+        const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
         const selectFit: SelectFit = {
