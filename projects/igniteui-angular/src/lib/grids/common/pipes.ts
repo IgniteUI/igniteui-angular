@@ -366,7 +366,10 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     transform(collection: any, parentID: number, enableAddRow: boolean, cancelAddMode: boolean, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (parentID === -1 || !enableAddRow) {
+        if (!enableAddRow) {
+            return collection;
+        }
+        if (parentID === -1) {
             const result = collection.map(record => {
                 return grid.isAddRowRecord(record) ? record.recordRef : record;
             });
