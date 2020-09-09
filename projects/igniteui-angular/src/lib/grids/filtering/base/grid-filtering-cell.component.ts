@@ -110,7 +110,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     get displayDensity(): string {
-        return this.column.grid.displayDensity === 'comfortable' ? 'cosy' : this.column.grid.displayDensity;
+        return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 
     get template(): TemplateRef<any> {
