@@ -46,6 +46,12 @@ The TimePicker has vertical and horizontal layout. By default the `vertical` is 
 <igx-time-picker [vertical]="true">
 </igx-time-picker>
 ```
+The TimePicker supports custom label. It can be set in the following way:
+````html
+<igx-time-picker>
+    <label igxLabel> Custom label</label>
+</igx-time-picker>
+````
 
 The TimePicker input group could be retemplated.
 ```html
