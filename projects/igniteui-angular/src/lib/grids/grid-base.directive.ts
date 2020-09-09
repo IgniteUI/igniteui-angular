@@ -3847,7 +3847,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * grid.moveColumn(column, target);
      * ```
      */
-    public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
+    public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
+        if (pos === DropPosition.None) {
+            warningShown = showMessage(
+                'DropPosition.None is deprecated.' +
+                'Use DropPosition.AfterDropTarget instead.',
+                warningShown);
+            pos = DropPosition.AfterDropTarget;
+        }
+
         if (column === target || (column.level !== target.level) ||
             (column.topLevelParent !== target.topLevelParent)) {
             return;
