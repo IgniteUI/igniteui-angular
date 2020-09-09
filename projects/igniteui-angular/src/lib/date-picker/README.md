@@ -41,6 +41,12 @@ DatePicker with cancel and today buttons
 </igx-date-picker>
 ```
 
+The DatePicker's custom label can be set in the following way:
+````html
+<igx-date-picker>
+    <label igxLabel>Custom label</label>
+</igx-date-picker>
+
 You have also ability to disable the datePicker
 ```html
 <igx-date-picker [disabled]="false">
