@@ -1192,7 +1192,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            if (!this.collapsed || this.inputGroup.isFocused) {
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            } else {
+                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
+            }
         }
         this.manageRequiredAsterisk();
     }

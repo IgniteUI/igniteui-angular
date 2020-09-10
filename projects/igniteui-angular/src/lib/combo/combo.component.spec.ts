@@ -2649,6 +2649,7 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
+                input.triggerEventHandler('focus', {});
                 combo.selectAllItems();
                 fixture.detectChanges();
                 expect(combo.valid).toEqual(IgxComboState.VALID);
@@ -2706,6 +2707,17 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
                 expect(model.valid).toBeFalse();
+                expect(model.touched).toBeTrue();
+                expect(model.dirty).toBeFalse();
+
+                fixture.componentInstance.values = ['New Jersey'];
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual(['New Jersey']);
+                expect(combo.value).toEqual('New Jersey');
+                expect(model.valid).toBeTrue();
                 expect(model.touched).toBeTrue();
                 expect(model.dirty).toBeFalse();
             }));
