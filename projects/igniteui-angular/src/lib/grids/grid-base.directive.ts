@@ -3848,12 +3848,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
-        if (pos === DropPosition.None) {
+        let position = pos;
+        if (position === DropPosition.None) {
             warningShown = showMessage(
                 'DropPosition.None is deprecated.' +
                 'Use DropPosition.AfterDropTarget instead.',
                 warningShown);
-            pos = DropPosition.AfterDropTarget;
+            position = DropPosition.AfterDropTarget;
         }
 
         if (column === target || (column.level !== target.level) ||
@@ -3863,11 +3864,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, target, pos);
+            this._moveChildColumns(column.parent, column, target, position);
         }
 
         if (target.pinned && !column.pinned) {
             column.pin();
+            if (!this.isPinningToStart) {
+                if (pos === DropPosition.AfterDropTarget) {
+                    position = DropPosition.AfterDropTarget;
+                } else {
+                    position = DropPosition.None;
+                }
+            }
         }
 
         if (!target.pinned && column.pinned) {
@@ -3875,13 +3883,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (target.pinned && column.pinned) {
-            this._reorderColumns(column, target, pos, this._pinnedColumns);
+            this._reorderColumns(column, target, position, this._pinnedColumns);
         }
         if (!target.pinned && !column.pinned) {
-           this._reorderColumns(column, target, pos, this._unpinnedColumns);
+           this._reorderColumns(column, target, position, this._unpinnedColumns);
         }
 
-        this._moveColumns(column, target, pos);
+        this._moveColumns(column, target, position);
         this._columnsReordered(column, target);
     }
 
