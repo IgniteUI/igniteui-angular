@@ -3856,7 +3856,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, target, pos);
+            this._moveChildColumns(column.parent, column, target, position);
         }
 
         if (target.pinned && !column.pinned) {
@@ -3876,14 +3876,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (target.pinned && column.pinned) {
-            this._reorderColumns(column, target, pos, this._pinnedColumns);
+            this._reorderColumns(column, target, position, this._pinnedColumns);
         }
 
         if (!target.pinned && !column.pinned) {
-           this._reorderColumns(column, target, pos, this._unpinnedColumns);
+           this._reorderColumns(column, target, position, this._unpinnedColumns);
         }
 
-        this._moveColumns(column, target, pos);
+        this._moveColumns(column, target, position);
         this._columnsReordered(column, target);
     }
 
