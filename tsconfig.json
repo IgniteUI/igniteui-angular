@@ -1,22 +1,50 @@
-// This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’slanguage server to improve development experience.
-// It is not intended to be used to perform a compilation.
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./src/tsconfig.app.json"
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "downlevelIteration": true,
+        "importHelpers": true,
+        "module": "es2020",
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "target": "es2015",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "lib": [
+            "es2017",
+            "dom"
+        ],
+        "paths": {
+            "igniteui-angular": [
+                "projects/igniteui-angular/src/public_api.ts"
+            ]
+        },
+        "rootDir": "."
     },
-    {
-      "path": "./src/tsconfig.spec.json"
+    "exclude": [
+        "dist"
+    ],
+    "typedocOptions": {
+        "mode": "file",
+        "out": "dist/igniteui-angular/docs/typescript",
+        "exclude": "**/*.spec.ts",
+        "theme":  "node_modules/igniteui-typedoc-theme/dist",
+        "excludePrivate": true,
+        "excludeProtected": true,
+        "excludeNotExported": true,
+        "name": "Ignite UI for Angular",
+        "target": "es2015",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "preserveConstEnums": true,
+        "stripInternal": true,
+        "readme": "none"
     },
-    {
-      "path": "./e2e/tsconfig.e2e.json"
-    },
-    {
-      "path": "./projects/igniteui-angular/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/igniteui-angular/tsconfig.spec.json"
+    "angularCompilerOptions": {
+        "generateDeepReexports": true
     }
-  ]
 }
