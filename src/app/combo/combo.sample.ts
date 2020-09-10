@@ -45,7 +45,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public customValuesFlag = true;
     public autoFocusSearch = true;
     public items: any[] = [];
-    public values1:  Array<any>;
+    public values1:  Array<any> = ['Arizona'];
     public values2:  Array<any>;
 
     public valueKeyVar = 'field';
