@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl, NgModel } from '@angular/forms';
 import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState,
     IComboSearchInputEventArgs } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -60,7 +60,7 @@ const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
 describe('igxCombo', () => {
-    let fixture;
+    let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
 
@@ -2589,6 +2589,55 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
             });
+            it('should properly init with empty array and handle consecutive model changes', fakeAsync(() => {
+                const model = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
+                fixture.componentInstance.values = [];
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(model.valid).toBeFalse();
+                expect(model.dirty).toBeFalse();
+                expect(model.touched).toBeFalse();
+
+                fixture.componentInstance.values = ['Missouri'];
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual(['Missouri']);
+                expect(combo.value).toEqual('Missouri');
+                expect(model.valid).toBeTrue();
+                expect(model.touched).toBeFalse();
+
+                fixture.componentInstance.values = ['Missouri', 'Missouri'];
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual(['Missouri']);
+                expect(combo.value).toEqual('Missouri');
+                expect(model.valid).toBeTrue();
+                expect(model.touched).toBeFalse();
+
+                fixture.componentInstance.values = null;
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual([]);
+                expect(combo.value).toEqual('');
+                expect(model.valid).toBeFalse();
+                expect(model.touched).toBeFalse();
+                expect(model.dirty).toBeFalse();
+
+                combo.onBlur();
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                expect(model.valid).toBeFalse();
+                expect(model.touched).toBeTrue();
+                expect(model.dirty).toBeFalse();
+            }));
             it('should have correctly bound focus and blur handlers', () => {
                 spyOn(combo, 'onFocus');
                 spyOn(combo, 'onBlur');
