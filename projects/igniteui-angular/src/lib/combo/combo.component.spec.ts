@@ -122,11 +122,8 @@ describe('igxCombo', () => {
             spyOnProperty(combo, 'collapsed').and.returnValue(true);
             spyOnProperty(combo, 'valid', 'set');
 
-            combo.onFocus();
-            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
-
             combo.onBlur();
-            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
         });
         it('should correctly handle ngControl validity', () => {
             pending('Convert existing form test here');
@@ -2721,17 +2718,12 @@ describe('igxCombo', () => {
                 expect(model.touched).toBeTrue();
                 expect(model.dirty).toBeFalse();
             }));
-            it('should have correctly bound focus and blur handlers', () => {
-                spyOn(combo, 'onFocus');
+            it('should have correctly bound blur handler', () => {
                 spyOn(combo, 'onBlur');
-
-                input.triggerEventHandler('focus', {});
-                expect(combo.onFocus).toHaveBeenCalled();
-                expect(combo.onFocus).toHaveBeenCalledWith();
 
                 input.triggerEventHandler('blur', {});
                 expect(combo.onBlur).toHaveBeenCalled();
-                expect(combo.onFocus).toHaveBeenCalledWith();
+                expect(combo.onBlur).toHaveBeenCalledWith();
             });
         });
     });
