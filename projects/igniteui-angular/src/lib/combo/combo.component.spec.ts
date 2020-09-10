@@ -98,12 +98,10 @@ describe('igxCombo', () => {
 
             // writeValue
             expect(combo.value).toBe('');
-            mockSelection.add_items.and.returnValue(new Set(['test']));
+            mockSelection.get.and.returnValue(new Set(['test']));
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['test']);
-            // TODO: Uncomment after fix for write value going through entire selection process
-            // expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-            expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['test'], true);
+            expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
             expect(combo.value).toBe('test');
 
@@ -213,17 +211,18 @@ describe('igxCombo', () => {
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
             combo.data = data;
-            spyOn(combo, 'selectItems');
+            mockSelection.select_items.calls.reset();
+            spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['EXAMPLE']);
-            expect(combo.selectItems).toHaveBeenCalledTimes(1);
+            expect(mockSelection.select_items).toHaveBeenCalledTimes(1);
 
-            // Calling "SelectItems" through the writeValue accessor should clear the previous values;
+            // Calling "select_items" through the writeValue accessor should clear the previous values;
             // Select items is called with the invalid value and it is written in selection, though no item is selected
             // Controlling the selection is up to the user
-            expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE'], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['EXAMPLE'], true);
             combo.writeValue(combo.data[0]);
             // When value key is specified, the item's value key is stored in the selection
-            expect(combo.selectItems).toHaveBeenCalledWith(combo.data[0], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
         });
         it('should select items through setSelctedItem method', () => {
             const selectionService = new IgxSelectionAPIService();
