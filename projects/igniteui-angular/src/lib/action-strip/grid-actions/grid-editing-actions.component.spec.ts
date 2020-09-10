@@ -50,7 +50,7 @@ describe('igxGridEditingActions #grid ', () => {
             const dataLenght = grid.dataLength;
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
-            deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[2];
+            deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             expect(deleteIcon.nativeElement.innerText).toBe('delete');
             deleteIcon.parent.triggerEventHandler('click', new Event('click'));
             actionStrip.hide();
@@ -74,7 +74,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
             const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions button`));
             const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
-            expect(editingIcons.length).toBe(3);
+            expect(editingIcons.length).toBe(2);
             expect(editingIcons[0].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
             expect(editingIcons[1].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
             expect(pinningIcons.length).toBe(1);

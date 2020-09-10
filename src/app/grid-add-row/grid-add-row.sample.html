@@ -7,7 +7,6 @@
         [primaryKey]="'ID'"
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
-        enableAddRow="true"
         [rowEditable]="true"
     >
         <igx-column
@@ -22,7 +21,7 @@
         </igx-column>
 
         <igx-action-strip #actionstrip>
-            <igx-grid-editing-actions></igx-grid-editing-actions>
+            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
 </div>

@@ -189,7 +189,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
     private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-    public _enableAddRow = false;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -626,7 +625,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @interal
      */
-    public addRowParent = -1;
+    public addRowParent = null;
 
     /**
      * Gets/Sets whether the rows are editable.
@@ -649,15 +648,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._rowEditable = val;
         this.notifyChanges();
-    }
-
-    @Input()
-    get enableAddRow(): boolean {
-        return this._enableAddRow;
-    }
-
-    set enableAddRow(val: boolean) {
-        this._enableAddRow = val;
     }
 
     /**
@@ -4042,18 +4032,38 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detectChanges();
     }
 
+    /**
+     * Spawns the add row UI for a specific row.
+     * If rowID is not specified, the grid spawns the UI under the first visible row in the view.
+     * @example
+     * ```typescript
+     * this.grid1.beginAddRow(rowID);
+     * ```
+     * @param rowID
+     */
 
     public beginAddRow(rowID?: any) {
-        this.endEdit(true);
-        this.cancelAddMode = false;
         if (!rowID) {
             rowID = this.rowList.first.rowData[this.primaryKey];
         }
-        this.addRowParent = rowID;
+        const index = this.data.findIndex(record => record[this.primaryKey] === rowID);
+        this.beginAddRowByIndex(rowID, index);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public beginAddRowByIndex(rowID: any, index: number) {
+        this.endEdit(true);
+        this.cancelAddMode = false;
+
+        this.addRowParent = {
+            rowID: rowID,
+            index: index
+        };
         this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
             this.cdr.detectChanges();
-            const parent = this.getRowByKey(this.addRowParent);
-            const row = this.getRowByIndex(parent.index + 1);
+            const row = this.getRowByIndex(this.addRowParent.index + 1);
             const cell = row.cells.find(c => c.editable);
             cell.setEditMode(true);
             cell.activate();
@@ -6513,17 +6523,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         if (commit) {
             this.gridAPI.submit_add_value();
-            const record = this.getRowByIndex(row.index);
-            record.addRow = false;
-            this.data.push(...this.data.splice(record.index, 1));
-            this.addRowParent = -1;
+            // const record = this.getRowByIndex(row.index);
+            // record.addRow = false;
+            this.data.push(row.data);
+            this.addRowParent = null;
+            this.addRowSnackbar.show();
         } else {
+            this.gridAPI.escape_editMode();
             this.cancelAddMode = true;
-            this._pipeTrigger++;
         }
         this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
-        this.addRowSnackbar.show();
+        this._pipeTrigger++;
     }
 
     /**

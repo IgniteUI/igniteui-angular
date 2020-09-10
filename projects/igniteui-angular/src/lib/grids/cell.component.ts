@@ -178,7 +178,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
-        if (this.grid.enableAddRow && this.row.addRow) {
+        if (this.grid.rowEditable && this.row.addRow) {
             return this.addMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
         }
         if (this.editMode) {
@@ -643,6 +643,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (editableCell) {
                 if (this.row.addRow) {
                     this.gridAPI.update_add_cell(editableCell, editableCell.editValue);
+                    this.row.rowData = editableCell.rowData;
                 } else {
                     this.gridAPI.update_cell(editableCell, editableCell.editValue);
                 }
@@ -798,7 +799,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.grid.enableAddRow && this.row.addRow) {
+        if (this.grid.rowEditable && this.row.addRow) {
             this.crudService.begin(this);
         }
         if (this.editable && !this.editMode && !this.row.deleted) {

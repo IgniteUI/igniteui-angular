@@ -145,13 +145,13 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    update_add_cell(cell: IgxCell, value: any) {
+    public update_add_cell(cell: IgxCell, value: any) {
         cell.editValue = value;
 
         if (isEqual(cell.value, cell.editValue)) {
             return;
         }
-        const data = this.getRowData(cell.id.rowID).recordRef;
+        const data = cell.rowData;
         this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, cell.editValue));
     }
 

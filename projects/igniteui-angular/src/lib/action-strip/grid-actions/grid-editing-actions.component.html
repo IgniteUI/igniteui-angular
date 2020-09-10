@@ -2,7 +2,7 @@
     <button igxButton="icon" [disabled]="disabled" igxRipple (click)="startEdit($event)">
         <igx-icon>edit</igx-icon>
     </button>
-    <button igxButton="icon" [disabled]="disabled" igxRipple (click)="addChild($event)">
+    <button *ngIf="addRow" igxButton="icon" [disabled]="disabled" igxRipple (click)="addChild($event)">
         <igx-icon>favorite</igx-icon>
     </button>
     <button igxButton="icon" [disabled]="disabled" class="igx-action-strip__delete" igxRipple (click)="deleteRow($event)">

@@ -364,30 +364,21 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any, parentID: number, enableAddRow: boolean, cancelAddMode: boolean, pipeTrigger: number) {
+    transform(collection: any, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!enableAddRow) {
+        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode) {
             return collection;
         }
-        if (parentID === -1) {
-            const result = collection.map(record => {
-                return grid.isAddRowRecord(record) ? record.recordRef : record;
-            });
-            grid.data = result;
-            return result;
-        }
-        const parentRecordIndex = collection.findIndex(record => record[grid.primaryKey] === parentID);
-        if (cancelAddMode) {
-            collection.splice(parentRecordIndex + 1, 1);
-            return collection;
-        }
-        const row = {...collection[parentRecordIndex]};
+        const copy = collection.slice(0);
+        const parentIndex = grid.addRowParent.index;
+
+        const row = {...collection[parentIndex]};
         Object.keys(row).forEach(key => row[key] = undefined);
         const rec = {
             recordRef: row,
             addRow: true
         };
-        collection.splice(parentRecordIndex + 1, 0, rec);
-        return collection;
+        copy.splice(parentIndex + 1, 0, rec);
+        return copy;
     }
 }

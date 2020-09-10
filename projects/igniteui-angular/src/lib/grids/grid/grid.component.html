@@ -141,7 +141,7 @@
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridAddRow:addRowParent:enableAddRow:cancelAddMode:pipeTrigger"
+        | gridAddRow:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
@@ -283,7 +283,7 @@
 }">unfold_more</igx-icon>
 </ng-template>
 
-<div *ngIf="rowEditable || enableAddRow" igxToggle>
+<div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass">
         <ng-container
             *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">

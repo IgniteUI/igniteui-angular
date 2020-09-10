@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/deprecateDecorators';
 
@@ -18,6 +18,12 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     public cssClass = 'igx-action-strip__editing-actions';
 
     private isMessageShown = false;
+
+    /**
+     * An input to enable/disable action strip row adding button
+     */
+    @Input()
+    public addRow = false;
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
@@ -78,11 +84,11 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        if (!grid.columns.filter(col => col.editable).length) {
-            console.warn('The grid must have editable columns to perform row adding!');
+        if (!grid.rowEditable) {
+            console.warn('The grid must be in row edit mode to perform row adding!');
             return;
         }
-        grid.beginAddRow(context.rowData[grid.primaryKey]);
+        grid.beginAddRowByIndex(context.rowID, context.index);
         this.strip.hide();
     }
 
