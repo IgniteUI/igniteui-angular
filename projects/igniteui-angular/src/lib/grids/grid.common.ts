@@ -55,6 +55,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
         this.settings.verticalStartPoint = this.settings.verticalDirection = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
         this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
 
-        super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight }, document, initialCall);
+        super.position(contentElement, { width: targetElement.clientWidth, height: targetElement.clientHeight },
+                    document, initialCall, targetElement);
     }
 }
