@@ -1215,13 +1215,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-    /** @hidden @internal */
-    public onFocus() {
-        if (this.collapsed) {
-            this._onTouchedCallback();
-        }
-    }
-
     /**
      * @hidden @internal
      */
