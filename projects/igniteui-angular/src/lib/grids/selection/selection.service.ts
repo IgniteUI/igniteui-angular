@@ -198,9 +198,9 @@ export class IgxGridCRUDService {
                 const canceled = this.grid.endEdit(true);
                 if (this.grid.rowEditable && canceled) {
                     this.exitCellEdit();
+                    this._rowEditingBlocked = canceled;
                 }
 
-                this._rowEditingBlocked = canceled;
                 this.grid.tbody.nativeElement.focus();
             } else {
                 /** Changing the reference with the new editable cell */

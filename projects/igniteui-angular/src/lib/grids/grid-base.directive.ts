@@ -6426,10 +6426,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let args;
         commit ? args = this.gridAPI.submit_value() : this.crudService.exitCellEdit();
 
+        /** Exit cell edit mode via row edit template if cellEdit is canceled. */
+        if (this.rowEditable && args && args.cancel) {
+            this.crudService.exitEditMode();
+        }
+
         if (!this.rowEditable ||
             this.rowEditingOverlay &&
-            this.rowEditingOverlay.collapsed || !row ||
-            (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked)) {
+            this.rowEditingOverlay.collapsed || !row) {
+            return false;
+        }
+
+        if (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked) {
             return true;
         }
 
@@ -6449,8 +6457,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         }
 
-        /** Returns cellEdit args so we can trace the cancelation process.  */
-        return args ? args.cancel : false;
+        return false;
     }
 
     /**
