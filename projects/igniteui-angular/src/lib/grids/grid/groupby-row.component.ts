@@ -34,7 +34,7 @@ export class IgxGridGroupByRowComponent {
         public cdr: ChangeDetectorRef,
         public filteringService: IgxFilteringService) {
             this.gridAPI.grid.onRowSelectionChange.subscribe(() => {
-                this.gridAPI.grid.cdr.markForCheck();
+                this.cdr.markForCheck();
             });
         }
 
