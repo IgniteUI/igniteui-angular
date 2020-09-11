@@ -2685,7 +2685,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         closeAnimation: null
     });
 
-    private rowEditSettings = {
+    private rowEditSettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
@@ -6332,7 +6332,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!targetRow) {
             return;
         }
-        this.rowEditPositioningStrategy.target = targetRow.element.nativeElement;
+        this.rowEditPositioningStrategy.settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
