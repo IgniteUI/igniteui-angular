@@ -159,12 +159,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    get collapsibleIndicatorTemplate(): TemplateRef<any> {
-        return this._collapseIndicatorTemplate;
-    }
-    set collapsibleIndicatorTemplate(template: TemplateRef<any>) {
-        this._collapseIndicatorTemplate = template;
-    }
+    public collapsibleIndicatorTemplate: TemplateRef<any>;
 
     /**
      * Returns a reference to the inline editor template.
@@ -271,7 +266,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
         if (this.collapseIndicatorTemplate) {
-            this._collapseIndicatorTemplate = this.collapseIndicatorTemplate.template;
+            this.collapsibleIndicatorTemplate = this.collapseIndicatorTemplate.template;
         }
         // currently only ivy fixes the issue, we have to slice only if the first child is group
         if (this.children.first === this) {
