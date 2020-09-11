@@ -3,7 +3,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxIconModule } from '../../icon/public_api';
@@ -88,6 +88,290 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeTruthy();
         }));
 
+        it('should allow to select multiple cells in the same grid on mouse drag', fakeAsync(() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            const row = hierarchicalGrid.getRowByIndex(3) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fix.detectChanges();
+            tick(30);
+            expect(row.expanded).toBeTruthy();
+
+            const startCell = hierarchicalGrid.getCellByColumn(1, 'ID');
+
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
+            fix.detectChanges();
+
+            let cell = hierarchicalGrid.getCellByColumn(1, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 1, 0, 1);
+
+            cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 2, 0, 1);
+
+            cell = hierarchicalGrid.getCellByColumn(3, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverElementEvent('pointerup', cell.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 3, 0, 1);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 3, 0, 1);
+            expect(startCell.active).toBe(true);
+        }));
+
+        it('should NOT allow to select multiple cells in multiple grids on mouse drag', fakeAsync(() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            const row = hierarchicalGrid.getRowByIndex(3) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fix.detectChanges();
+            tick(30);
+            expect(row.expanded).toBeTruthy();
+
+            const startCell = hierarchicalGrid.getCellByColumn(2, 'ID');
+
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
+            fix.detectChanges();
+
+            let cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 2, 2, 0, 1);
+
+            cell = hierarchicalGrid.getCellByColumn(3, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 2, 3, 0, 1);
+
+            const childGridLevel1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            cell = childGridLevel1.getCellByColumn(0, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            cell = childGridLevel1.getCellByColumn(1, 'ChildLevels');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            cell = hierarchicalGrid.getCellByColumn(3, 'ProductName');
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverElementEvent('pointerup', cell.nativeElement);
+            fix.detectChanges();
+
+            expect(childGridLevel1.getSelectedRanges().length).toBe(0);
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 2, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 2, 3, 0, 2);
+            expect(startCell.active).toBe(true);
+        }));
+
+        it('should be able to select range with shift + arrow keys', fakeAsync(() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            let cell = hierarchicalGrid.getCellByColumn(1, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true, false);
+            tick(100);
+            fix.detectChanges();
+
+            cell = hierarchicalGrid.getCellByColumn(1, 'ProductName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
+            tick(100);
+            fix.detectChanges();
+
+            cell = hierarchicalGrid.getCellByColumn(2, 'ProductName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
+            tick(100);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellSelected(cell, true);
+            expect(cell.active).toBeFalse();
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 3, 1, 2);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 3, 1, 2);
+        }));
+
+        it('should be able to select range with shift + mouse click and skip the child grid', (async() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            const forthRow = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+            forthRow.toggle();
+            fix.detectChanges();
+            await wait(30);
+            expect(forthRow.expanded).toBeTruthy();
+
+            let cell = hierarchicalGrid.getCellByColumn(1, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.selected).toBeTrue();
+            expect(cell.active).toBeTrue();
+
+            hierarchicalGrid.navigateTo(5, -1);
+            await wait(100);
+            fix.detectChanges();
+
+            cell = hierarchicalGrid.getCellByColumn(5, 'ProductName');
+            UIInteractions.simulateClickAndSelectEvent(cell, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellSelected(cell, true);
+            expect(cell.active).toBeTrue();
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 5, 1, 2);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2);
+        }));
+
+        it('should be able to select multiple ranges holding ctrl key', (async() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            const forthRow = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+            forthRow.toggle();
+            fix.detectChanges();
+            await wait(30);
+            expect(forthRow.expanded).toBeTruthy();
+
+            let cell = hierarchicalGrid.getCellByColumn(1, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.selected).toBeTrue();
+            expect(cell.active).toBeTrue();
+
+            hierarchicalGrid.navigateTo(5, -1);
+            await wait(100);
+            fix.detectChanges();
+
+            cell = hierarchicalGrid.getCellByColumn(5, 'ProductName');
+            UIInteractions.simulateClickAndSelectEvent(cell, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellSelected(cell, true);
+            expect(cell.active).toBeTrue();
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 5, 1, 2);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2);
+
+            cell = hierarchicalGrid.getCellByColumn(5, 'ID');
+            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 5, 5, 0, 0, 1, 2);
+        }));
+
+        it('should clear the selection in parent grid when continue navigation in the child grid', fakeAsync(() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            const row = hierarchicalGrid.getRowByIndex(4) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fix.detectChanges();
+            tick(30);
+            expect(row.expanded).toBeTruthy();
+
+            let cell = hierarchicalGrid.getCellByColumn(1, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.selected).toBeTrue();
+            expect(cell.active).toBeTrue();
+
+            cell = hierarchicalGrid.getCellByColumn(4, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(hierarchicalGrid, 1, 4, 1, 1);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 4, 1, 1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
+            tick(30);
+            fix.detectChanges();
+
+            expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
+        }));
+
+        it('should not be able to create range selection between parent and child grid on mouse click + shift key', fakeAsync(() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+
+            const row = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fix.detectChanges();
+            tick(30);
+            expect(row.expanded).toBeTruthy();
+
+            let cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 2, 2, 1, 1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true, false);
+            tick(30);
+            fix.detectChanges();
+
+            expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
+
+            cell = hierarchicalGrid.getCellByColumn(0, 'ProductName');
+
+            UIInteractions.simulateClickAndSelectEvent(cell, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
+        }));
+
+        it('should not be able to create multiple ranges in multiple grids holding ctrl key', fakeAsync(() => {
+            hierarchicalGrid.displayDensity = 'compact';
+            fix.detectChanges();
+            const row = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+
+            row.toggle();
+            fix.detectChanges();
+            tick(30);
+            expect(row.expanded).toBeTruthy();
+            const childGridLevel1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+
+            let cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
+
+            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
+            fix.detectChanges();
+
+            cell = childGridLevel1.getCellByColumn(0, 'ProductName');
+            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
+            fix.detectChanges();
+
+            expect(hierarchicalGrid.getSelectedRanges().length).toBe(0);
+            expect(cell.selected).toBeTrue();
+            GridSelectionFunctions.verifySelectedRange(childGridLevel1, 0, 0, 2, 2);
+
+            cell = hierarchicalGrid.getCellByColumn(0, 'ProductName');
+
+            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
+            fix.detectChanges();
+
+            expect(childGridLevel1.getSelectedRanges().length).toBe(0);
+            GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 0, 0, 2, 2);
+        }));
     });
 
     describe('Row Selection', () => {
