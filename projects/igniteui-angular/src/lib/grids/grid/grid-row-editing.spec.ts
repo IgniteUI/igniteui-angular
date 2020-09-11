@@ -1583,7 +1583,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {
-
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
             spyOn(grid.rowEdit, 'emit').and.callThrough();
 
@@ -1599,7 +1598,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            expect(grid.rowEditExit.emit).not.toHaveBeenCalled();
+            expect(grid.rowEditExit.emit).toHaveBeenCalled();
             expect(grid.rowEdit.emit).toHaveBeenCalled();
             // TODO: rowEdit should emit updated rowData - issue #7304
             expect(grid.rowEdit.emit).toHaveBeenCalledWith({
@@ -1649,7 +1648,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
 
             // Enter cell edit mode again
-            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', targetCell.nativeElement);
 
             fix.detectChanges();
 
@@ -1738,7 +1737,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
 
             // Enter cell edit mode again
-            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', targetCell.nativeElement);
             fix.detectChanges();
 
             // Press enter on cell

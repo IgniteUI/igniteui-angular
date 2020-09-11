@@ -136,7 +136,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             expect(parseFloat(cell.value)).toBe(expectedValue);
 
-            cellDomNumber.triggerEventHandler('dblclick', {});
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             editValue = '';

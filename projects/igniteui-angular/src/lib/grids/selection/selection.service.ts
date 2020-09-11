@@ -251,7 +251,7 @@ export class IgxGridCRUDService {
 
     private beginRowEdit(newCell) {
         if (this.row && !this.sameRow(newCell.id.rowID)) {
-            this._rowEditingBlocked = this.grid.endEdit(false);
+            this._rowEditingBlocked = this.grid.endEdit(true);
             if (this.rowEditingBlocked) {
                 return true;
             }
