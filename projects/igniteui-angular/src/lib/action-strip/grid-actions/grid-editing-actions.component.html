@@ -3,9 +3,9 @@
         <igx-icon>edit</igx-icon>
     </button>
     <button *ngIf="addRow" igxButton="icon" [disabled]="disabled" igxRipple (click)="addChild($event)">
-        <igx-icon>favorite</igx-icon>
+        <igx-icon fontSet="imx-icons" name="add-row"></igx-icon>
     </button>
     <button igxButton="icon" [disabled]="disabled" class="igx-action-strip__delete" igxRipple (click)="deleteRow($event)">
-        <igx-icon >delete</igx-icon>
+        <igx-icon>delete</igx-icon>
     </button>
 </ng-container>
