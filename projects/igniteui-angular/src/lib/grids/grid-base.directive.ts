@@ -2468,6 +2468,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowEditMessage;
 
     /**
+     * @hidden @internal
+     */
+    public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
+
+    /**
+     * @hidden @internal
+     */
+    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
+
+
+    /**
      * Emitted when an export process is initiated by the user.
      * @example
      * ```typescript
@@ -6523,8 +6534,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         if (commit) {
             this.gridAPI.submit_add_value();
-            // const record = this.getRowByIndex(row.index);
-            // record.addRow = false;
             this.data.push(row.data);
             this.addRowParent = null;
             this.addRowSnackbar.show();

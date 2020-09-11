@@ -703,7 +703,7 @@
         grid-template-columns: 1fr;
         overflow: hidden;
         box-shadow: $grid-shadow;
-        
+
         @if $variant == 'fluent' {
             box-shadow: 0 0 0 1px --var($theme, 'grid-border-color');
         }
@@ -2326,6 +2326,13 @@
             /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
             position: absolute;
         }
+    }
+
+    %igx-grid__addrow-snackbar {
+        position: absolute;
+        z-index: 5;
+        left: 35%;
+        bottom: 25%;
     }
 
     %igx-grid__filtering-cell {
