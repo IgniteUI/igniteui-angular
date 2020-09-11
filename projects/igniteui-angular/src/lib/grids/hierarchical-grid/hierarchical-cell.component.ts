@@ -47,9 +47,10 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     // TODO: Extend the new selection service to avoid complete traversal
     _clearAllHighlights() {
         [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
-            grid.selectionService.clear();
-            if (grid.navigation.activeNode) {
-                grid.navigation.activeNode.row = null;
+            if (grid !== this.grid && grid.navigation.activeNode) {
+                grid.navigation.clearActivation();
+                grid.selectionService.initKeyboardState();
+                grid.selectionService.clear();
             }
             grid.selectionService.activeElement = null;
             grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
@@ -81,6 +82,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
             parentGrid.highlightedRowID = parentRowID;
         }
+        this.grid.navigation.activeNode.gridID = this.gridID;
         super.activate(event);
     }
 }
