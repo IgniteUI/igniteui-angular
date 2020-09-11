@@ -290,7 +290,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
+        this.grid.crudService.releaseBlockedEditing();
         grid.endEdit(false);
+        this.grid.crudService.exitEditRegardlessCancelation();
 
         if (grid.paging) {
             grid.page = 0;

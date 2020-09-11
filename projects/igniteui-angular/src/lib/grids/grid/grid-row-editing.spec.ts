@@ -1784,7 +1784,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should be able to cancel 'rowEditEnter' event `, () => {
+        fit(`Should be able to cancel 'rowEditEnter' event `, () => {
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
 
             grid.rowEditEnter.subscribe((e: IGridEditEventArgs) => {
@@ -1798,7 +1798,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             targetCell.nativeElement.dispatchEvent(new Event('dblclick'));
             fix.detectChanges();
 
-            expect(cell.editMode).toEqual(true);
+            expect(cell.editMode).toEqual(false);
+            expect(grid.crudService.rowInEditMode).toEqual(false);
             expect(GridFunctions.getRowEditingOverlay(fix)).toBeFalsy();
 
             expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -1811,8 +1812,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should properly emit 'rowEditExit' event - Filtering`, () => {
-
+        fit(`Should properly emit 'rowEditExit' event - Filtering`, () => {
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
 
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1820,7 +1820,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
-            cell.editValue = 'New Name';
+            // cell.editValue = 'New Name';
+            const expectedRes = 'New Name';
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, expectedRes);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
@@ -1834,7 +1837,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
-                newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
+                newValue: Object.assign({}, initialData, { ProductName: expectedRes }),
                 oldValue: initialData,
                 cancel: false,
                 owner: grid
@@ -1870,7 +1873,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        it(`Should properly emit 'cellEdit' event `, () => {
+        fit(`Should properly emit 'cellEdit' event `, () => {
 
             spyOn(grid.rowEdit, 'emit').and.callThrough();
             spyOn(grid.cellEdit, 'emit').and.callThrough();

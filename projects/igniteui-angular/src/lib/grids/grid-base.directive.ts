@@ -4155,7 +4155,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
+        this.crudService.releaseBlockedEditing();
         this.endEdit(false);
+        this.crudService.exitEditRegardlessCancelation();
+
+
         if (expression instanceof Array) {
             this.gridAPI.sort_multiple(expression);
         } else {
@@ -6484,6 +6488,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.tbody.nativeElement.focus();
         }
     }
+
     /**
      * @hidden
      */
