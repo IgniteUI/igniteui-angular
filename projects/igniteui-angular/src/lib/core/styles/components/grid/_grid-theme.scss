@@ -696,6 +696,10 @@
         indigo-design: 600,
     ), $variant);
 
+    %disable-focus-styles {
+        outline: 0;
+    }
+
     %grid-display {
         position: relative;
         display: grid;
