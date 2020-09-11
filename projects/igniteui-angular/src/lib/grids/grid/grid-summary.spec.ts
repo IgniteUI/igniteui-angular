@@ -1409,7 +1409,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '50']);
         });
 
-        fit('CRUD: summaries should be updated when row is submitted when rowEditable=true', fakeAsync(() => {
+        it('CRUD: summaries should be updated when row is submitted when rowEditable=true', fakeAsync(() => {
             grid.getColumnByName('Age').editable = true;
             grid.getColumnByName('HireDate').editable = true;
             fix.detectChanges();

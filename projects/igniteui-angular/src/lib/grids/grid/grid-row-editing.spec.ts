@@ -1784,7 +1784,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        fit(`Should be able to cancel 'rowEditEnter' event `, () => {
+        it(`Should be able to cancel 'rowEditEnter' event `, () => {
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
 
             grid.rowEditEnter.subscribe((e: IGridEditEventArgs) => {
@@ -1812,7 +1812,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        fit(`Should properly emit 'rowEditExit' event - Filtering`, () => {
+        it(`Should properly emit 'rowEditExit' event - Filtering`, () => {
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
 
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1873,7 +1873,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        fit(`Should properly emit 'cellEdit' event `, () => {
+        it(`Should properly emit 'cellEdit' event `, () => {
 
             spyOn(grid.rowEdit, 'emit').and.callThrough();
             spyOn(grid.cellEdit, 'emit').and.callThrough();
