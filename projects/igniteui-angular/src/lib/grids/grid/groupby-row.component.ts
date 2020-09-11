@@ -8,6 +8,8 @@ import {
     Input,
     ViewChild,
     TemplateRef,
+    ContentChildren,
+    QueryList,
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
@@ -15,6 +17,8 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { GridType } from '../common/grid.interface';
+import { IgxGroupRowSelectorDirective } from '../selection/row-selectors';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,9 +29,80 @@ import { GridType } from '../common/grid.interface';
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        private gridSelection: IgxGridSelectionService,
+        public gridSelection: IgxGridSelectionService,
         public element: ElementRef,
-        public cdr: ChangeDetectorRef) { }
+        public cdr: ChangeDetectorRef,
+        public filteringService: IgxFilteringService) {
+            this.gridAPI.grid.onRowSelectionChange.subscribe(() => {
+                this.gridAPI.grid.cdr.markForCheck();
+            });
+        }
+
+    /**
+    * @hidden @internal
+    */
+    public onGroupSelectorClick(event){
+        if (!this.isMultiRowSelectionEnabled) { return; }
+        event.stopPropagation();
+        if(this.areAllRowsInTheGroupSelected()) {
+            this.groupRow.records.forEach(row => {
+                this.gridSelection.deselectRow(row, false);
+            });
+        } else {
+            this.groupRow.records.forEach(row => {
+                this.gridSelection.selectRowById(row, false);
+            });
+        }
+        console.log(this.groupRow);
+    }
+
+    areAllRowsInTheGroupSelected(): boolean {
+        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(x));
+    }
+
+    public get groupSelectedRows(): any[] {
+        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(rowID) > -1);
+    }
+
+    /**
+    * @hidden @internal
+    */
+    public get isMultiRowSelectionEnabled(): boolean {
+        return this.gridAPI.grid.isMultiRowSelectionEnabled;
+    }
+
+     /**
+     * @hidden
+     * @internal
+     */
+    public get groupRowSelectorTemplate(): TemplateRef<IgxGroupRowSelectorDirective> {
+        if (this.groupRowSelectorsTemplates && this.groupRowSelectorsTemplates.first) {
+            return this.groupRowSelectorsTemplates.first.templateRef;
+        }
+
+        return null;
+    }
+
+     /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGroupRowSelectorDirective, { read: IgxGroupRowSelectorDirective, descendants: false })
+    public groupRowSelectorsTemplates: QueryList<IgxGroupRowSelectorDirective>;
+
+     /**
+     * @hidden
+     * @internal
+     */
+    public get totalRowsCountAfterFilter() {
+        if (this.gridAPI.get_data()) {
+            return this.gridSelection.allData.length;
+        }
+
+        return 0;
+    }
+
+    //Originalno
 
     /**
      * @hidden

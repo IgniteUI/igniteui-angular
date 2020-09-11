@@ -1,7 +1,21 @@
 <ng-container #defaultGroupRow>
+
+    <ng-container *ngIf="isMultiRowSelectionEnabled">
+        <div class="igx-grid__cbx-selection" (pointerdown)="$event.preventDefault()" (click)="onGroupSelectorClick($event)">
+            <ng-template #groupRowSelector *ngTemplateOutlet="
+                this.groupRowSelectorTemplate ? this.groupRowSelectorTemplate : groupRowSelectorBaseTemplate;
+                context: { $implicit: {
+                    selectedCount: groupSelectedRows.length,
+                    totalCount: this.groupRow.records.length }}">
+            </ng-template>
+         </div>
+    </ng-container>
+
+    <div class="igx-grid__row-indentation igx-grid__row-header-indentation--level-{{this.groupRow.level}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
+
     <div (click)="toggle()" class="igx-grid__grouping-indicator">
-            <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
-            </ng-container>
+        <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
+        </ng-container>
     </div>
 
     <div class="igx-grid__group-content" #groupContent>
@@ -42,4 +56,22 @@
             <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'></igx-badge>
         </div>
     </ng-template>
+
+    <ng-template #groupRowSelectorBaseTemplate igxGroupRowSelector let-context>
+        <div class="igx-grid__cbx-padding">
+            <igx-checkbox
+                [tabindex]="-1"
+                [readonly]="true"
+                [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+                disableRipple="true"
+                [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+                [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+                #groupRowCheckbox>
+            </igx-checkbox>
+            <!-- [aria-label]="headSelectorBaseAriaLabel" -->
+
+        </div>
+    </ng-template>
 </ng-container>
+
+
