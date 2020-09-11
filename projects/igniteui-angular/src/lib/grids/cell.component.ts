@@ -778,7 +778,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerenter = (event: PointerEvent) => {
-        if (this.grid.navigation.activeNode.gridID && this.grid.navigation.activeNode.gridID !== this.gridID) {
+        if (!this.grid.navigation.activeNode.gridID || this.grid.navigation.activeNode.gridID !== this.gridID) {
             return;
         }
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
@@ -792,7 +792,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerup = (event: PointerEvent) => {
-        if (!isLeftClick(event)) { return; }
+        if (!isLeftClick(event) || !this.grid.navigation.activeNode.gridID ||
+        this.grid.navigation.activeNode.gridID !== this.gridID) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
         }
