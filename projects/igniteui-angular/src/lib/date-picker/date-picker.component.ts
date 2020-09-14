@@ -62,6 +62,7 @@ import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -154,6 +155,47 @@ const noop = () => { };
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
     EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    /**
+     * Gets/Sets the `IgxDatePickerComponent` label.
+     * @remarks
+     * The default label is 'Date'.
+     * @example
+     * ```html
+     * <igx-date-picker [label]="Calendar"></igx-date-picker>
+     * ```
+     * @deprecated By default the label is set to 'Date'. Use
+     * ````html
+     * <igx-date-picker>
+     *      <label igxLabel>Custom label</label>
+     * </igx-date-picker>
+     * ````
+     * to set a custom label.
+     */
+    @DeprecateProperty(`By default the label is set to 'Date'.`)
+    @Input()
+    public label = 'Date';
+
+    /**
+     * Gets/Sets the `IgxDatePickerComponent` label visibility.
+     * @remarks
+     * By default the visibility is set to true.
+     * @example
+     * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
+     * @deprecated Use
+     * ````html
+     * <igx-date-picker>
+     *      <label igxLabel>Custom label</label>
+     * </igx-date-picker>
+     * ````
+     * to set a custom label.
+     */
+    @DeprecateProperty(`Deprecated. Use
+    <igx-date-picker>
+        <label igxLabel>Custom label</label>
+    </igx-date-picker> to set a label.` )
+    @Input()
+    public labelVisibility = true;
+
     /**
      * Gets/Sets the locales.
      * @remarks Default locale is en.
@@ -399,6 +441,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             displayData: this.displayData,
             format: this.format,
             isSpinLoop: this.isSpinLoop,
+            label: this.label,
+            labelVisibility: this.labelVisibility,
             locale: this.locale,
             mask: this.mask,
             mode: this.mode,
