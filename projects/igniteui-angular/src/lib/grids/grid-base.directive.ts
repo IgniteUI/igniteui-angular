@@ -6468,7 +6468,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public endRowEdit(commit = true, event?: Event) {
+    public endRowEdit(commit = true, event?: Event, cancelClick?: boolean) {
         const canceled = this.endEdit(commit, event);
 
         /**
@@ -6481,6 +6481,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (canceled) {
             return;
+        }
+
+        /**
+         * If there isn't anything canceled so far,
+         * we should release all editing blocked items.
+         * Because if rowEdit is canceled clicking Done button would block row editing process.
+         */
+        if (!!cancelClick) {
+            this.crudService.releaseBlockedEditing();
         }
 
         const activeCell = this.navigation.activeNode;

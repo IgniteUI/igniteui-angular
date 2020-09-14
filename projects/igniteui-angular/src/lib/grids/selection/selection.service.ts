@@ -193,9 +193,20 @@ export class IgxGridCRUDService {
             return;
         }
 
-        /** Changing the reference with the new editable cell */
-        this.beginCellEdit(cell);
-        this.rowEditing ? this.beginRowEdit(this.cell) : this.emitCellEditEnter(this.cell);
+        if (this.cellInEditMode) {
+            const canceled = this.grid.endEdit(true);
+            if (this.grid.rowEditable && canceled) {
+                // this.exitCellEdit();
+                this._rowEditingBlocked = canceled;
+            }
+
+            this.grid.tbody.nativeElement.focus();
+        } else {
+            /** Changing the reference with the new editable cell */
+            this.beginCellEdit(cell);
+            this.rowEditing ? this.beginRowEdit(this.cell) : this.emitCellEditEnter(this.cell);
+        }
+
 
         // if (cell && cell.column.editable && !cell.row.deleted) {
         //     if (this.cellInEditMode) {
@@ -266,10 +277,10 @@ export class IgxGridCRUDService {
     }
 
     private beginRowEdit(newCell) {
-        if (this.row && this.sameRow(newCell.id.rowID)) {
-            this.emitCellEditEnter(newCell);
-            return;
-        }
+        // if (this.row && this.sameRow(newCell.id.rowID)) {
+        //     this.emitCellEditEnter(newCell);
+        //     // return;
+        // }
 
         if (this.row && !this.sameRow(newCell.id.rowID)) {
             this._rowEditingBlocked = this.grid.endEdit(true);
