@@ -779,7 +779,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     pointerenter = (event: PointerEvent) => {
         const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
-        if (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
+        if (!this.grid.navigation.activeNode ||
+            (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID || this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;
         }
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
@@ -794,7 +795,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     pointerup = (event: PointerEvent) => {
         const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
-        if (!isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
+        if (!isLeftClick(event) || !this.grid.navigation.activeNode || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
         this.grid.navigation.activeNode.gridID !== this.gridID))) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
