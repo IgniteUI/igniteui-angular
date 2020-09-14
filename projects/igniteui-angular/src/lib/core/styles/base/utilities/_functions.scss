@@ -104,9 +104,10 @@
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette, $color, $variant: 500) {
-    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
+    @if type-of($palette) == 'map' and map-has-key($palette, $color) {
         @return map-get(map-get($palette, $color), $variant);
     }
+
     @return #fff;
 }
 
