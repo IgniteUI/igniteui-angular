@@ -1145,7 +1145,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            if (!this.collapsed || this.inputGroup.isFocused) {
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            } else {
+                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
+            }
         }
         this.manageRequiredAsterisk();
     }
@@ -1169,13 +1173,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             } else {
                 this.valid = IgxComboState.INITIAL;
             }
-        }
-    }
-
-    /** @hidden @internal */
-    public onFocus() {
-        if (this.collapsed) {
-            this._onTouchedCallback();
         }
     }
 
@@ -1218,8 +1215,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        this.selectItems(value, true);
-        this.cdr.markForCheck();
+        const selection = Array.isArray(value) ? value : [];
+        const oldSelection = this.selectedItems();
+        this.selection.select_items(this.id, selection, true);
+        this._value = this.createDisplayText(this.selectedItems(), oldSelection);
     }
 
     /**
