@@ -6385,12 +6385,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let rowEditArgs: IGridEditEventArgs;
 
         if (!commit) {
+            this.rowEditExit.emit(rowArgs);
             this.transactions.endPending(false);
         } else {
             rowEditArgs = this.gridAPI.update_row(row, row.newData);
+            this.rowEditExit.emit(rowArgs);
         }
 
-        this.rowEditExit.emit(rowArgs);
         if (rowEditArgs?.cancel || rowArgs.cancel) {
             this.transactions.startPending();
             return true;

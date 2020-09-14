@@ -196,15 +196,14 @@ export class IgxGridCRUDService {
         if (this.cellInEditMode) {
             const canceled = this.grid.endEdit(true);
             if (this.grid.rowEditable && canceled) {
-                // this.exitCellEdit();
                 this._rowEditingBlocked = canceled;
             }
 
             this.grid.tbody.nativeElement.focus();
         } else {
             /** Changing the reference with the new editable cell */
-            this.beginCellEdit(cell);
-            this.rowEditing ? this.beginRowEdit(this.cell) : this.emitCellEditEnter(this.cell);
+            const newCell = this.beginCellEdit(cell);
+            this.rowEditing ? this.beginRowEdit(newCell) : this.emitCellEditEnter(newCell);
         }
 
 
@@ -277,13 +276,9 @@ export class IgxGridCRUDService {
     }
 
     private beginRowEdit(newCell) {
-        // if (this.row && this.sameRow(newCell.id.rowID)) {
-        //     this.emitCellEditEnter(newCell);
-        //     // return;
-        // }
-
         if (this.row && !this.sameRow(newCell.id.rowID)) {
             this._rowEditingBlocked = this.grid.endEdit(true);
+            this.cell = newCell;
             if (this.rowEditingBlocked) {
                 return true;
             }
@@ -296,27 +291,30 @@ export class IgxGridCRUDService {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
         }
 
-        this.row = this.createRow(newCell);
-        const rowArgs = this.row.createEditEventArgs(false);
-        this.grid.rowEditEnter.emit(rowArgs);
-        if (rowArgs.cancel) {
-            this.exitRowEdit();
-            this.cell = null;
-            return true;
+        if (!this.row) {
+            this.cell = newCell;
+            this.row = this.createRow(this.cell);
+            const rowArgs = this.row.createEditEventArgs(false);
+
+            this.grid.rowEditEnter.emit(rowArgs);
+            if (rowArgs.cancel) {
+                this.exitRowEdit();
+                this.cell = null;
+                return true;
+            }
+
+            this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
+            this.grid.transactions.startPending();
+            this.grid.openRowOverlay(this.row.id);
         }
 
-        this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
-        this.grid.transactions.startPending();
-        this.grid.openRowOverlay(this.row.id);
-
-        this.cell = newCell;
         this.emitCellEditEnter(newCell);
     }
 
     private beginCellEdit(cell) {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
-        this.cell = newCell;
+        return newCell;
     }
 
     private emitCellEditEnter(newCell) {
@@ -326,7 +324,10 @@ export class IgxGridCRUDService {
         this._cellEditingBlocked = args.cancel;
         if (args.cancel) {
             this.cell = null;
+        } else {
+            this.cell = newCell;
         }
+
     }
 }
 
