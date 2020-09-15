@@ -79,10 +79,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get groupByRowCheckboxCheckedState(): boolean {
-        if(this.selectionMode === GridSelectionMode.multiple) {
-            return this.selectedRowsInTheGroup.length === this.groupRow.records.length ? true : false;
-        }
-        return false;
+        return this.selectedRowsInTheGroup.length === this.groupRow.records.length ? true : false;
     }
 
     /**
@@ -90,10 +87,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     public get groupByRowCheckboxIndeterminateState(): boolean {
         if(this.selectedRowsInTheGroup.length > 0){
-            if(this.selectionMode === GridSelectionMode.multiple) {
-                return this.selectedRowsInTheGroup.length !== this.groupRow.records.length ? true : false;
-            }
-            return true;
+            return this.selectedRowsInTheGroup.length !== this.groupRow.records.length ? true : false;
         }
         return false;
     }
