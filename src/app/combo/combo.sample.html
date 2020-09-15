@@ -18,13 +18,16 @@
                 <div>
                     <h5 class="sample-title">Template Form</h5>
                     <form>
-                        <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" required
-                            [(ngModel)]="values1" [ngModelOptions]="{ updateOn: 'blur' }" #comboModel="ngModel"
+                        <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" #comboModel="ngModel"
+                            [(ngModel)]="values1" [ngModelOptions]="{ updateOn: 'blur' }" minlength="2" required
                             [data]="items" [filterable]="filterableFlag" [displayKey]="valueKeyVar"
                             [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                            <label igxLabel>States</label>
                             <igx-hint>Please select the states you've visited</igx-hint>
                         </igx-combo>
                     </form>
+                    <button igxButton (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
+                    <button igxButton (click)="values1 = []">Clear values </button>
                 </div>
                 <div>
                     <h5 class="sample-title">Reactive Form</h5>
