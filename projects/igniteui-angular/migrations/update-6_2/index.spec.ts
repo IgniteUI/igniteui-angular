@@ -76,6 +76,6 @@ describe('Update 6.2.0', () => {
         const tree = await schematicRunner.runSchematicAsync('migration-05', {}, appTree)
             .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`<igx-grid (cellEdit)="handler"></igx-grid> <not-igx-grid (onEditDone)="handler"></not-igx-grid>`);
+            .toEqual(`<igx-grid (onCellEdit)="handler"></igx-grid> <not-igx-grid (onEditDone)="handler"></not-igx-grid>`);
     });
 });
