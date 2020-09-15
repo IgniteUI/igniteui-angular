@@ -3,7 +3,7 @@
         <h4 class="sample-title">Default Date Picker - dialog mode</h4>
         <p class="sample-description">Added buttons - today and cancel</p>
         <div class="preview">
-            <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today">
+            <igx-date-picker #datePicker  [showWeekNumbers]="true" cancelButtonLabel="cancel" todayButtonLabel="today">
             </igx-date-picker>
             <igx-buttongroup class="datepicker-actions">
                 <button igxButton igxRipple (click)="d()">Today</button>

@@ -337,7 +337,7 @@ describe('IgxCalendar - ', () => {
                 // 6 weeks + week header
                 expect(calendarRows.length).toEqual(7);
 
-                // 7 calendar rows * 7 elements in each
+                // 6 calendar rows * 7 elements in each
                 expect(
                     dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-day-item`)).length
                 ).toEqual(42);
@@ -358,6 +358,45 @@ describe('IgxCalendar - ', () => {
 
                 const calendarHeader = dom.query(By.css(HelperTestFunctions.CALENDAR_HEADER_CSSCLASS));
                 expect(calendarHeader).toBeFalsy();
+            });
+
+            it('Should properly render calendar DOM with week numbers enabled', () => {
+                const today = new Date(Date.now());
+                calendar.viewDate = today;
+                calendar.showWeekNumbers = true;
+                fixture.detectChanges();
+
+                const calendarRows = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_ROW_CSSCLASS));
+                expect(calendarRows.length).toEqual(7);
+
+                // 6 calendar rows * 8 elements in each
+                expect(
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > igx-day-item`)).length +
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} >
+                        ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_CLASS}`)).length
+                ).toEqual(48);
+                expect(
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > span`)).length +
+                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_LABEL_CLASS}`)).length
+                ).toEqual(8);
+
+            });
+
+            it('Week numbers should appear as first column', () => {
+                const firstWeekOfTheYear = new Date(2020, 0, 5);
+                calendar.viewDate = firstWeekOfTheYear;
+                calendar.showWeekNumbers = true;
+                fixture.detectChanges();
+
+                const calendarRows = dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}`));
+
+                const maxWeeks = 52;
+                calendarRows.forEach((row, idx) => {
+                    const firstRowItem = row.nativeElement.children[0];
+                    idx === 0 ?
+                        expect(firstRowItem.firstChild.innerText).toEqual('Wk') :
+                        expect(firstRowItem.firstChild.innerText).toEqual((idx === 1 ? maxWeeks : idx - 1).toString());
+                });
             });
 
             it('Calendar DOM structure - year view | month view', () => {

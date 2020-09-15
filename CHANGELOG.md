@@ -2,11 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 10.2.0
-- IgxInputGroup
+
+### General
+- `IgxInputGroup`
     - **Breaking Chage** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property. 
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
-
-## 10.2.0
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -15,6 +15,8 @@ All notable changes for each version of this project will be documented in this 
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
+- `IgxTimePicker`
+    - Added a custom label functionality.
 
 ## 10.1.0
 
