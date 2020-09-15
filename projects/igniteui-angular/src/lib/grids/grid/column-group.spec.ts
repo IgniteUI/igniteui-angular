@@ -12,7 +12,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     BlueWhaleGridComponent, ColumnGroupTestComponent, ColumnGroupChildLevelTestComponent, ColumnGroupFourLevelTestComponent,
@@ -29,7 +29,7 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
 // tslint:disable:max-line-length
-fdescribe('IgxGrid - multi-column headers #grid', () => {
+describe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
 
     let fixture, grid: IgxGridComponent, componentInstance;
@@ -64,13 +64,10 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
     }));
 
     describe('Initialization and rendering tests: ', () => {
-        beforeEach(fakeAsync(() => {
+        it('should initialize a grid with column groups', () => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        }));
-
-        it('should initialize a grid with column groups', () => {
             const expectedColumnGroups = 5;
             const expectedLevel = 2;
 
@@ -279,7 +276,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             grid = fixture.componentInstance.grid;
-            const button = fixture.componentInstance.removeBtn;
+            const button = fixture.debugElement.query(By.css('.removeFirstColGroup'));
 
             let columnLength = grid.columnList.length;
             let firstColumnGroup = grid.columnList.first;
@@ -291,11 +288,11 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             expect(() => {
                 // Delete first column group
-                button.nativeElement.dispatchEvent(new Event('click'));
+                button.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
                 // Delete first column group
-                button.nativeElement.dispatchEvent(new Event('click'));
+                button.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
             }).not.toThrow();
 
@@ -308,7 +305,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(expectedColumnListLength).toEqual(columnLength);
         });
 
-        xit('There shouldn\'t be any errors when dynamically removing or adding a column in column group', () => {
+        it('There shouldn\'t be any errors when dynamically removing or adding a column in column group', () => {
             fixture = TestBed.createComponent(DynamicColGroupsGridComponent);
             fixture.detectChanges();
 
@@ -401,22 +398,19 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(cityColumn.width).toBe(gridWidthInPx);
         });
 
-        it('Width should be correct. Column group with column. Column width in px.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with column. Column width in px.', () => {
             const gridColWidth = '200px';
-            grid.ngAfterViewInit();
             grid.columnWidth = gridColWidth;
-            tick();
             fixture.detectChanges();
 
             const locationColGroup = getColGroup(grid, 'Location');
             expect(locationColGroup.width).toBe(gridColWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(gridColWidth);
-        }));
+        });
 
-        it('Width should be correct. Column group with column. Column width in percent.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with column. Column width in percent.', () => {
             const gridColWidth = '50%';
-            grid.ngAfterViewInit();
             grid.columnWidth = gridColWidth;
             fixture.detectChanges();
 
@@ -425,11 +419,10 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(locationColGroup.width).toBe(expectedWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(gridColWidth);
-        }));
+        });
 
-        it('Width should be correct. Column group with column. Column with width in px.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with column. Column with width in px.', () => {
             const columnWidth = '200px';
-            grid.ngAfterViewInit();
             componentInstance.columnWidth = columnWidth;
             fixture.detectChanges();
 
@@ -437,11 +430,10 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(locationColGroup.width).toBe(columnWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(columnWidth);
-        }));
+        });
 
-        it('Width should be correct. Column group with column. Column with width in percent.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with column. Column with width in percent.', () => {
             const columnWidth = '50%';
-            grid.ngAfterViewInit();
             componentInstance.columnWidth = columnWidth;
             fixture.detectChanges();
 
@@ -450,10 +442,10 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(locationColGroup.width).toBe(expectedWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(columnWidth);
-        }));
+        });
 
         it('Should not throw exception if multi-column header columns width is set as number',
-        fakeAsync(/** height/width setter rAF */() => {
+        fakeAsync(() => {
             expect(() => {
                 fixture = TestBed.createComponent(NumberColWidthGridComponent);
                 fixture.detectChanges();
@@ -471,8 +463,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
         }));
 
         it('Width should be correct. Column group with three columns. No width.', () => {
-            grid.ngAfterViewInit();
-
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
             const availableWidth = (parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh).toString();
             const locationColGroup = getColGroup(grid, 'Location');
@@ -489,9 +479,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
         it('Width should be correct. Column group with three columns. Width in px.', () => {
             const gridWidth = '600px';
-            grid.ngAfterViewInit();
             grid.width = gridWidth;
-            // tick();
             fixture.detectChanges();
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
             const gridWidthInPx = parseInt(gridWidth, 10) - scrWitdh;
@@ -537,7 +525,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
 
             // check that if grid is resized, group size is updated.
-
             componentInstance.gridWrapperWidthPx = '500';
             fixture.detectChanges();
 
@@ -589,9 +576,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
         it('Width should be correct. Column group with three columns. Width in percent.', () => {
             const gridWidth = '50%';
-            grid.ngAfterViewInit();
             grid.width = gridWidth;
-            // tick();
             fixture.detectChanges();
 
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
@@ -612,7 +597,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
         it('Width should be correct. Column group with three columns. Column width in px.', () => {
             const gridColWidth = '200px';
-            grid.ngAfterViewInit();
             grid.columnWidth = gridColWidth;
             fixture.detectChanges();
 
@@ -629,7 +613,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
         it('Width should be correct. Colum group with three columns. Column width in percent.', () => {
             const gridColWidth = '20%';
-            grid.ngAfterViewInit();
             grid.columnWidth = gridColWidth;
             fixture.detectChanges();
 
@@ -646,7 +629,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
         it('Width should be correct. Column group with three columns. Columns with width in px.', () => {
                 const columnWidth = '200px';
-                grid.ngAfterViewInit();
                 componentInstance.columnWidth = columnWidth;
                 fixture.detectChanges();
 
@@ -663,7 +645,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
         it('Width should be correct. Column group with three columns. Columns with width in percent.', () => {
             const columnWidth = '20%';
-            grid.ngAfterViewInit();
             componentInstance.columnWidth = columnWidth;
             fixture.detectChanges();
 
@@ -1087,15 +1068,15 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             testColumnsVisibleIndexes(postPinningColList);
             testColumnPinning(ci.genInfoColGroup, true);
 
-            // // unpinning to non-existent index
-            // expect(grid.unpinColumn(ci.genInfoColGroup, 15)).toBe(false);
-            // testColumnsVisibleIndexes(postPinningColList);
-            // testColumnPinning(ci.genInfoColGroup, true);
+            // unpinning to non-existent index
+            expect(grid.unpinColumn(ci.genInfoColGroup, 15)).toBe(false);
+            testColumnsVisibleIndexes(postPinningColList);
+            testColumnPinning(ci.genInfoColGroup, true);
 
-            // // unpinning to negative index
-            // expect(grid.unpinColumn(ci.genInfoColGroup, -15)).toBe(false);
-            // testColumnsVisibleIndexes(postPinningColList);
-            // testColumnPinning(ci.genInfoColGroup, true);
+            // unpinning to negative index
+            expect(grid.unpinColumn(ci.genInfoColGroup, -15)).toBe(false);
+            testColumnsVisibleIndexes(postPinningColList);
+            testColumnPinning(ci.genInfoColGroup, true);
         });
 
         it('Should initially pin the whole group when one column of the group is pinned', () => {
@@ -1109,7 +1090,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
     describe('Column moving ', () => {
         // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -1358,7 +1339,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving column to different parent, shound not be allowed
             ci.grid.moveColumn(ci.postalCodeCol, ci.cityCol);
-            tick();
             fixture.detectChanges();
             testColumnsVisibleIndexes(postMovingOrder);
             testColumnPinning(ci.postalCodeCol, true);
@@ -1366,7 +1346,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
         });
     });
 
-    fdescribe('Features integration tests: ', () => {
+    describe('Features integration tests: ', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
             fixture.detectChanges();
@@ -1525,7 +1505,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            // grid.ngAfterViewInit();
 
             // Verify columns and groups
             testGroupsAndColumns(9, 6);

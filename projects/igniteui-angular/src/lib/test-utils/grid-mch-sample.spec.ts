@@ -361,7 +361,7 @@ export class NestedColGroupsGridComponent {
             </igx-column-group>
         </igx-grid>
         <article>
-            <button #removeFirstColGroup (click)="removeFirstColumnGroup()">Remove first column group</button>
+            <button class="removeFirstColGroup" #removeFirstColGroup (click)="removeFirstColumnGroup()">Remove first column group</button>
         </article>
     `
 })
