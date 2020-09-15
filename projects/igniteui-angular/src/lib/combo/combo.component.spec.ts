@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl, NgModel } from '@angular/forms';
 import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState,
     IComboSearchInputEventArgs } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -60,7 +60,7 @@ const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
 describe('igxCombo', () => {
-    let fixture;
+    let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
 
@@ -94,12 +94,10 @@ describe('igxCombo', () => {
 
             // writeValue
             expect(combo.value).toBe('');
-            mockSelection.add_items.and.returnValue(new Set(['test']));
+            mockSelection.get.and.returnValue(new Set(['test']));
             spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['test']);
-            // TODO: Uncomment after fix for write value going through entire selection process
-            // expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-            expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['test'], true);
+            expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
             expect(combo.value).toBe('test');
 
@@ -120,11 +118,8 @@ describe('igxCombo', () => {
             spyOnProperty(combo, 'collapsed').and.returnValue(true);
             spyOnProperty(combo, 'valid', 'set');
 
-            combo.onFocus();
-            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
-
             combo.onBlur();
-            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
         });
         it('should correctly handle ngControl validity', () => {
             pending('Convert existing form test here');
@@ -199,17 +194,18 @@ describe('igxCombo', () => {
             combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
             combo.ngOnInit();
             combo.data = data;
-            spyOn(combo, 'selectItems');
+            mockSelection.select_items.calls.reset();
+            spyOnProperty(combo, 'isRemote').and.returnValue(false);
             combo.writeValue(['EXAMPLE']);
-            expect(combo.selectItems).toHaveBeenCalledTimes(1);
+            expect(mockSelection.select_items).toHaveBeenCalledTimes(1);
 
-            // Calling "SelectItems" through the writeValue accessor should clear the previous values;
+            // Calling "select_items" through the writeValue accessor should clear the previous values;
             // Select items is called with the invalid value and it is written in selection, though no item is selected
             // Controlling the selection is up to the user
-            expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE'], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['EXAMPLE'], true);
             combo.writeValue(combo.data[0]);
             // When value key is specified, the item's value key is stored in the selection
-            expect(combo.selectItems).toHaveBeenCalledWith(combo.data[0], true);
+            expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, [], true);
         });
         it('should select items through setSelctedItem method', () => {
             const selectionService = new IgxSelectionAPIService();
@@ -2578,6 +2574,7 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
+                input.triggerEventHandler('focus', {});
                 combo.selectAllItems();
                 fixture.detectChanges();
                 expect(combo.valid).toEqual(IgxComboState.VALID);
@@ -2589,17 +2586,72 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
             });
-            it('should have correctly bound focus and blur handlers', () => {
-                spyOn(combo, 'onFocus');
-                spyOn(combo, 'onBlur');
+            it('should properly init with empty array and handle consecutive model changes', fakeAsync(() => {
+                const model = fixture.debugElement.query(By.directive(NgModel)).injector.get(NgModel);
+                fixture.componentInstance.values = [];
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(model.valid).toBeFalse();
+                expect(model.dirty).toBeFalse();
+                expect(model.touched).toBeFalse();
 
-                input.triggerEventHandler('focus', {});
-                expect(combo.onFocus).toHaveBeenCalled();
-                expect(combo.onFocus).toHaveBeenCalledWith();
+                fixture.componentInstance.values = ['Missouri'];
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual(['Missouri']);
+                expect(combo.value).toEqual('Missouri');
+                expect(model.valid).toBeTrue();
+                expect(model.touched).toBeFalse();
+
+                fixture.componentInstance.values = ['Missouri', 'Missouri'];
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual(['Missouri']);
+                expect(combo.value).toEqual('Missouri');
+                expect(model.valid).toBeTrue();
+                expect(model.touched).toBeFalse();
+
+                fixture.componentInstance.values = null;
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual([]);
+                expect(combo.value).toEqual('');
+                expect(model.valid).toBeFalse();
+                expect(model.touched).toBeFalse();
+                expect(model.dirty).toBeFalse();
+
+                combo.onBlur();
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+                expect(model.valid).toBeFalse();
+                expect(model.touched).toBeTrue();
+                expect(model.dirty).toBeFalse();
+
+                fixture.componentInstance.values = ['New Jersey'];
+                fixture.detectChanges();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+                expect(combo.selectedItems()).toEqual(['New Jersey']);
+                expect(combo.value).toEqual('New Jersey');
+                expect(model.valid).toBeTrue();
+                expect(model.touched).toBeTrue();
+                expect(model.dirty).toBeFalse();
+            }));
+            it('should have correctly bound blur handler', () => {
+                spyOn(combo, 'onBlur');
 
                 input.triggerEventHandler('blur', {});
                 expect(combo.onBlur).toHaveBeenCalled();
-                expect(combo.onFocus).toHaveBeenCalledWith();
+                expect(combo.onBlur).toHaveBeenCalledWith();
             });
         });
     });
