@@ -8,8 +8,7 @@ import {
     Input,
     ViewChild,
     TemplateRef,
-    ContentChildren,
-    QueryList,
+    OnDestroy
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
@@ -17,8 +16,10 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { GridType } from '../common/grid.interface';
-import { IgxGroupRowSelectorDirective } from '../selection/row-selectors';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { GridSelectionMode } from '../common/enums';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,25 +27,30 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html'
 })
-export class IgxGridGroupByRowComponent {
+export class IgxGridGroupByRowComponent implements OnDestroy {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef,
         public filteringService: IgxFilteringService) {
-            this.gridAPI.grid.onRowSelectionChange.subscribe(() => {
+            this.gridAPI.grid.onRowSelectionChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.markForCheck();
             });
         }
 
     /**
-    * @hidden @internal
-    */
+     * @hidden
+     */
+    protected destroy$ = new Subject<any>();
+
+    /**
+     * @hidden @internal
+     */
     public onGroupSelectorClick(event){
-        if (!this.isMultiRowSelectionEnabled) { return; }
+        if (this.selectionMode === GridSelectionMode.single || this.selectionMode === GridSelectionMode.none) { return; }
         event.stopPropagation();
-        if(this.areAllRowsInTheGroupSelected()) {
+        if(this.areAllRowsInTheGroupSelected) {
             this.groupRow.records.forEach(row => {
                 this.gridSelection.deselectRow(row, false);
             });
@@ -53,56 +59,51 @@ export class IgxGridGroupByRowComponent {
                 this.gridSelection.selectRowById(row, false);
             });
         }
-        console.log(this.groupRow);
     }
 
-    areAllRowsInTheGroupSelected(): boolean {
+    /**
+     * @hidden @internal
+     */
+    public get areAllRowsInTheGroupSelected(): boolean {
         return this.groupRow.records.every(x => this.gridSelection.isRowSelected(x));
     }
 
-    public get groupSelectedRows(): any[] {
+    /**
+     * @hidden @internal
+     */
+    public get selectedRowsInTheGroup(): any[] {
         return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(rowID) > -1);
     }
 
     /**
-    * @hidden @internal
-    */
-    public get isMultiRowSelectionEnabled(): boolean {
-        return this.gridAPI.grid.isMultiRowSelectionEnabled;
-    }
-
-     /**
-     * @hidden
-     * @internal
+     * @hidden @internal
      */
-    public get groupRowSelectorTemplate(): TemplateRef<IgxGroupRowSelectorDirective> {
-        if (this.groupRowSelectorsTemplates && this.groupRowSelectorsTemplates.first) {
-            return this.groupRowSelectorsTemplates.first.templateRef;
+    public get groupByRowCheckboxCheckedState(): boolean {
+        if(this.selectionMode === GridSelectionMode.multiple) {
+            return this.selectedRowsInTheGroup.length === this.groupRow.records.length ? true : false;
         }
-
-        return null;
+        return false;
     }
 
-     /**
-     * @hidden
-     * @internal
+    /**
+     * @hidden @internal
      */
-    @ContentChildren(IgxGroupRowSelectorDirective, { read: IgxGroupRowSelectorDirective, descendants: false })
-    public groupRowSelectorsTemplates: QueryList<IgxGroupRowSelectorDirective>;
-
-     /**
-     * @hidden
-     * @internal
-     */
-    public get totalRowsCountAfterFilter() {
-        if (this.gridAPI.get_data()) {
-            return this.gridSelection.allData.length;
+    public get groupByRowCheckboxIndeterminateState(): boolean {
+        if(this.selectedRowsInTheGroup.length > 0){
+            if(this.selectionMode === GridSelectionMode.multiple) {
+                return this.selectedRowsInTheGroup.length !== this.groupRow.records.length ? true : false;
+            }
+            return true;
         }
-
-        return 0;
+        return false;
     }
 
-    //Originalno
+    /**
+     * @hidden @internal
+     */
+    public get groupRowSelectorBaseAriaLabel() {
+        return this.areAllRowsInTheGroupSelected ? 'Deselect all rows in the group' : 'Select all rows in the group';
+    }
 
     /**
      * @hidden
@@ -131,6 +132,12 @@ export class IgxGridGroupByRowComponent {
      */
     @Input()
     protected isFocused = false;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    public selectionMode: string;
 
     /**
      * Returns whether the row is focused.
@@ -281,5 +288,10 @@ export class IgxGridGroupByRowComponent {
     get dataType(): any {
         const column = this.groupRow.column;
         return (column && column.dataType) || DataType.String;
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

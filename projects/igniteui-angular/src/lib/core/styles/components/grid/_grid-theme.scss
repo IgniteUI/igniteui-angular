@@ -2069,12 +2069,12 @@
     }
 
     %igx-grid__row-indentation--cosy {
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'cosy');
+        // padding-#{$left}: map-get($grid-grouping-indicator-padding, 'cosy');
         padding-#{$right}: map-get($grid-grouping-indicator-padding, 'cosy')
     }
 
     %igx-grid__row-indentation--compact {
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'compact');
+        // padding-#{$left}: map-get($grid-grouping-indicator-padding, 'compact');
         padding-#{$right}: map-get($grid-grouping-indicator-padding, 'compact')
     }
 
@@ -2199,12 +2199,12 @@
     }
 
     %igx-grid__grouping-indicator--cosy {
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'cosy');
+        // padding-#{$left}: map-get($grid-grouping-indicator-padding, 'cosy');
         min-height: map-get($grid-header-height, 'cosy');
     }
 
     %igx-grid__grouping-indicator--compact {
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'compact');
+        // padding-#{$left}: map-get($grid-grouping-indicator-padding, 'compact');
         min-height: map-get($grid-header-height, 'compact');
     }
 
@@ -2261,10 +2261,11 @@
         %igx-grid__row-indentation--level-#{$i} {
             background: inherit;
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
+            padding-#{$right}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
 
-        %igx-grid__row-header-indentation--level-#{$i} {
-            background: inherit;
+        %igx-grid__group-row-indentation--level-#{$i} {
+            // background: inherit;
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')});
         }
 
@@ -2275,19 +2276,29 @@
         // COSY
         %igx-grid__row-indentation-cosy--level-#{$i} {
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+            padding-#{$right}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
+        }
+
+        %igx-grid__group-row-indentation-cosy--level-#{$i} {
+            padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')});
         }
 
         %igx-grid__group-row-cosy--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+            padding-#{$left}: #{0*map-get($grid-grouping-indicator-padding, 'cosy')};
         }
 
         // COMPACT
         %igx-grid__row-indentation-compact--level-#{$i} {
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+            padding-#{$right}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
+        }
+
+        %igx-grid__group-row-indentation-compact--level-#{$i} {
+            padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+            padding-#{$left}: #{0*map-get($grid-grouping-indicator-padding, 'compact')};
         }
     }
 
@@ -2672,8 +2683,7 @@
         }
     }
 
-    %igx-grid__hierarchical-expander--no-border,
-    %igx-grid__header-indentation--no-border {
+    %igx-grid__hierarchical-expander--no-border {
         border-#{$right}: 1px solid transparent;
     }
 

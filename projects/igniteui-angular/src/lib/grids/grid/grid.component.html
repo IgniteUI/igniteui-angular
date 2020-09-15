@@ -63,9 +63,7 @@
             </ng-container>
             <ng-container *ngIf="groupingExpressions.length > 0">
                 <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
-                    [ngClass]="{
-                    'igx-grid__header-indentation': isRowSelectable || rowDraggable
-                }" #headerGroupContainer  (click)="toggleAllGroupRows()" (pointerdown)="$event.preventDefault()">
+                    #headerGroupContainer  (click)="toggleAllGroupRows()" (pointerdown)="$event.preventDefault()">
 
                 <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
                 </div>
@@ -165,7 +163,7 @@
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template let-rowIndex="index" let-rowData>
-            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
+            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" [selectionMode]="rowSelection" #row>
             </igx-grid-groupby-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>

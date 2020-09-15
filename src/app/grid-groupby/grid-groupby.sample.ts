@@ -20,7 +20,7 @@ export class GridGroupBySampleComponent implements OnInit {
     public groupingExpressions: Array<ISortingExpression>;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
-    public selectionMode;
+    public selectionModes: any[];
     public position = GridSummaryPosition.top;
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
@@ -37,7 +37,8 @@ export class GridGroupBySampleComponent implements OnInit {
             { dataType: 'string', field: 'Phone', width: 150, groupable: true  },
             { dataType: 'string', field: 'Fax', width: 150, groupable: true  }
         ];
-        this.selectionMode = GridSelectionMode.multiple;
+        this.selectionModes = ['multiple', 'single', 'none'];
+        this.grid1.rowSelection = this.selectionModes[0];
         this.hideGroupedColumns = true;
         this.summaryModes = [
             { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
@@ -108,6 +109,9 @@ export class GridGroupBySampleComponent implements OnInit {
             case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
             case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
         }
+    }
+    onRowSelection(event){
+        this.grid1.rowSelection = event.newSelection.element.nativeElement.textContent.trim();
     }
     getRowsList() {
         console.log(this.grid1.rowList);

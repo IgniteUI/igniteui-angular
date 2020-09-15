@@ -1,17 +1,18 @@
 <ng-container #defaultGroupRow>
 
-    <ng-container *ngIf="isMultiRowSelectionEnabled">
-        <div class="igx-grid__cbx-selection" (pointerdown)="$event.preventDefault()" (click)="onGroupSelectorClick($event)">
+    <ng-container *ngIf="selectionMode !== 'none'">
+        <div class="igx-grid__cbx-selection" style="background: none;" (pointerdown)="$event.preventDefault()" (click)="onGroupSelectorClick($event)">
             <ng-template #groupRowSelector *ngTemplateOutlet="
-                this.groupRowSelectorTemplate ? this.groupRowSelectorTemplate : groupRowSelectorBaseTemplate;
+                this.grid.groupRowSelectorTemplate ? this.grid.groupRowSelectorTemplate : groupRowSelectorBaseTemplate;
                 context: { $implicit: {
-                    selectedCount: groupSelectedRows.length,
-                    totalCount: this.groupRow.records.length }}">
+                    selectedCount: selectedRowsInTheGroup.length,
+                    totalCount: this.groupRow.records.length,
+                    groupRow: this.groupRow }}">
             </ng-template>
          </div>
     </ng-container>
 
-    <div class="igx-grid__row-indentation igx-grid__row-header-indentation--level-{{this.groupRow.level}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
+    <div class="igx-grid__row-indentation igx-grid__group-row-indentation--level-{{this.groupRow.level}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
 
     <div (click)="toggle()" class="igx-grid__grouping-indicator">
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
@@ -56,20 +57,17 @@
             <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'></igx-badge>
         </div>
     </ng-template>
-
-    <ng-template #groupRowSelectorBaseTemplate igxGroupRowSelector let-context>
+    <ng-template #groupRowSelectorBaseTemplate let-context>
         <div class="igx-grid__cbx-padding">
             <igx-checkbox
                 [tabindex]="-1"
                 [readonly]="true"
-                [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+                [checked]="groupByRowCheckboxCheckedState"
                 disableRipple="true"
-                [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-                [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+                [indeterminate]="groupByRowCheckboxIndeterminateState"
+                [disabled]="selectionMode === 'single'"
                 #groupRowCheckbox>
             </igx-checkbox>
-            <!-- [aria-label]="headSelectorBaseAriaLabel" -->
-
         </div>
     </ng-template>
 </ng-container>
