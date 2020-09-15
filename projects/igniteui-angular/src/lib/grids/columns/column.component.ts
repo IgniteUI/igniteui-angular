@@ -969,7 +969,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /** @hidden */
-    @Input('collapsibleIndicatorTemplate')
+    @Input()
     public collapsibleIndicatorTemplate: TemplateRef<any>;
     /**
      * Gets the cells of the column.
@@ -1184,13 +1184,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public collapsible = false;
+    public get collapsible() { return false; }
+    public set collapsible(_value: boolean) {}
 
     /**
      * @hidden
      * @internal
      */
-    public expanded = true;
+    public get expanded() { return true; }
+    public set expanded(_value: boolean) {}
 
     /**
      * hidden
@@ -1259,10 +1261,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected _filterCellTemplate: TemplateRef<any>;
-    /**
-     * @hidden
-     */
-    protected _collapseIndicatorTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
