@@ -60,7 +60,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     @HostBinding('class')
     get styleClasses(): string {
-        let classes;
+        let classes: string;
 
         this.column && this.column.selected ?
             classes = 'igx-grid__filtering-cell--selected' :
