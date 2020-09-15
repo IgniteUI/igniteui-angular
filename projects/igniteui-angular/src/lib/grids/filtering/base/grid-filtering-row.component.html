@@ -9,7 +9,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" [displayDensity]="displayDensity" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
                     (click)="inputGroupPrefixClick($event)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -49,7 +49,7 @@
         (onSelection)="onDateSelected($event)"
         (onClosed)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="box" [displayDensity]="displayDensity" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="inputGroupPrefixClick($event)"
@@ -92,7 +92,7 @@
                     (onRemove)="onChipRemoved($event, item)"
                     [selectable]="false"
                     [selected]="item.isSelected"
-                    [displayDensity]="'cosy'"
+                    [displayDensity]="displayDensity"
                     [removable]="true">
                     <igx-icon
                         igxPrefix
@@ -122,11 +122,11 @@
 </button>
 
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
-    <button [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
+    <button [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
         <igx-icon>refresh</igx-icon>
         {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}
     </button>
-    <button #closeButton [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
+    <button #closeButton [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
         <igx-icon>close</igx-icon>
         {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}
     </button>

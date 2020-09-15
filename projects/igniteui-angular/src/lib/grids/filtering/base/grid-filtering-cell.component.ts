@@ -15,6 +15,7 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
+import { DisplayDensity } from '../../../core/displayDensity';
 
 /**
  * @hidden
@@ -63,7 +64,17 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             return 'igx-grid__filtering-cell--selected';
         }
 
-        return 'igx-grid__filtering-cell';
+        let classes = 'igx-grid__filtering-cell';
+
+        switch (this.column.grid.displayDensity) {
+            case DisplayDensity.compact:
+                classes = classes + ' igx-grid__filtering-cell--compact';
+                break;
+            case DisplayDensity.cosy:
+                classes = classes + ' igx-grid__filtering-cell--cosy';
+                break;
+        }
+        return classes;
     }
 
     constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
@@ -96,6 +107,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     public updateFilterCellArea() {
         this.expressionsList = this.filteringService.getExpressions(this.column.field);
         this.updateVisibleFilters();
+    }
+
+    get displayDensity(): string {
+        return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 
     get template(): TemplateRef<any> {
