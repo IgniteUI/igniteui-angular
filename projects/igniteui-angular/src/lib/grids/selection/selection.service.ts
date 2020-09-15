@@ -205,22 +205,6 @@ export class IgxGridCRUDService {
             const newCell = this.beginCellEdit(cell);
             this.rowEditing ? this.beginRowEdit(newCell) : this.emitCellEditEnter(newCell);
         }
-
-
-        // if (cell && cell.column.editable && !cell.row.deleted) {
-        //     if (this.cellInEditMode) {
-                // const canceled = this.grid.endEdit(true);
-                // if (this.grid.rowEditable && canceled) {
-                //     this.exitCellEdit();
-                //     this._rowEditingBlocked = canceled;
-                // }
-
-                // this.grid.tbody.nativeElement.focus();
-            // }
-            // else {
-            //     /** Firstly enters in row edit if it's enabled then emits cell edit enter */
-            // }
-        // }
     }
 
     public exitEditMode() {
