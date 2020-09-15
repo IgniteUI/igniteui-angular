@@ -47,14 +47,11 @@ export interface IPathSegment {
     rowIslandKey: string;
 }
 
-@Directive({
-    selector: '[igxHierarchicalGridBase]'
-})
-export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
-    public rootGrid;
+@Directive()
+export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
+    public abstract rootGrid;
 
-    @Input()
-    public expandChildren: boolean;
+    public abstract expandChildren: boolean;
 
     @Input()
     public hasChildrenKey: string;
