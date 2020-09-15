@@ -17,7 +17,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
+        !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
 
         const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
         if (targetGrid !== this.grid.nativeElement) {
