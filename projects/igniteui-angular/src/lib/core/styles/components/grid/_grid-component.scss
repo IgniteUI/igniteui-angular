@@ -536,6 +536,7 @@
         @extend %igx-grid__filtering-cell--compact !optional;
     }
 
+
     @include e(filtering-cell, $m: 'selected') {
         @extend %igx-grid__filtering-cell !optional;
         @extend %igx-grid__filtering-cell--selected !optional;
