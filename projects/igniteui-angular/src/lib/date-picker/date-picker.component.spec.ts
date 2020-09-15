@@ -194,6 +194,7 @@ describe('IgxDatePicker', () => {
             const fixtureProjectedLabel = TestBed.createComponent(IgxDatePickerProjectedLabelTestComponent);
             const dom = fixtureProjectedLabel.debugElement;
             const testComponent = fixtureProjectedLabel.componentInstance;
+            fixtureProjectedLabel.detectChanges();
 
             let label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
             expect(label).toEqual(testComponent.customLabel);
@@ -209,14 +210,18 @@ describe('IgxDatePicker', () => {
             label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
             expect(label).toEqual('Date');
 
+            testComponent.customLabelVisibility = false;
+            fixtureProjectedLabel.detectChanges();
+            testComponent.labelVisibility = false;
             fixtureProjectedLabel.detectChanges();
             label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
-            expect(label).toEqual('Date');
+            fixtureProjectedLabel.detectChanges();
+            expect(label).toEqual('Date1');
 
-            testComponent.customLabelVisibility = true;
-            fixtureProjectedLabel.detectChanges();
-            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
-            expect(label).toEqual(testComponent.customLabel);
+            // testComponent.customLabelVisibility = true;
+            // fixtureProjectedLabel.detectChanges();
+            // label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            // expect(label).toEqual(testComponent.customLabel);
         });
 
         it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
@@ -1554,7 +1559,7 @@ export class IgxDatePickerWithWeekStartComponent {
 
 @Component({
     template: `
-        <igx-date-picker>
+        <igx-date-picker [labelVisibility]="true">
             <label igxLabel *ngIf="customLabelVisibility">{{ customLabel }}</label>
         </igx-date-picker>
     `
@@ -1564,6 +1569,7 @@ export class IgxDatePickerProjectedLabelTestComponent {
 
     public customLabelVisibility = true;
     public customLabel = 'Custom label';
+    // public labelVisibility = false;
 }
 
 @Component({
