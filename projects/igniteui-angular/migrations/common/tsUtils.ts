@@ -9,7 +9,7 @@ export const PACKAGE_IMPORT = 'igniteui-angular';
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
 // }
 
-export function getIdentifierPositions(sourceText: string, name: string): Array<{start: number, end: number}> {
+export function getIdentifierPositions(sourceText: string, name: string): Array<{ start: number, end: number }> {
     const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
     const positions = [];
 
@@ -25,10 +25,10 @@ export function getIdentifierPositions(sourceText: string, name: string): Array<
             // make sure it's not prop assign  `= { IgxClass: "fake"}`
             //                  definition `prop: { IgxClass: string; }`
             //                                     name: initializer
-           const propAssign: ts.PropertyAssignment | ts.PropertySignature = node.parent as ts.PropertyAssignment | ts.PropertySignature;
-           if (propAssign.name.getText() === name) {
-               return false;
-           }
+            const propAssign: ts.PropertyAssignment | ts.PropertySignature = node.parent as ts.PropertyAssignment | ts.PropertySignature;
+            if (propAssign.name.getText() === name) {
+                return false;
+            }
         }
         return (node as ts.Identifier).text === name;
     };
@@ -45,13 +45,13 @@ export function getIdentifierPositions(sourceText: string, name: string): Array<
 }
 
 /** Returns the positions of import from module string literals  */
-export function getImportModulePositions(sourceText: string, startsWith: string): Array<{start: number, end: number}> {
+export function getImportModulePositions(sourceText: string, startsWith: string): Array<{ start: number, end: number }> {
     const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
     const positions = [];
 
     for (const statement of source.statements) {
         if (statement.kind === ts.SyntaxKind.ImportDeclaration) {
-            const specifier =  (statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral;
+            const specifier = (statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral;
             if (specifier.text.startsWith(startsWith)) {
                 // string literal pos will include quotes, trim with 1
                 positions.push({ start: specifier.getStart() + 1, end: specifier.end - 1 });
@@ -73,7 +73,7 @@ const namedImportFilter = (statement: ts.Statement) => {
 };
 
 export function getRenamePositions(sourcePath: string, name: string, service: ts.LanguageService):
-        Array<{start: number, end: number}> {
+    Array<{ start: number, end: number }> {
 
     const source = service.getProgram().getSourceFile(sourcePath);
     const positions = [];
@@ -84,8 +84,8 @@ export function getRenamePositions(sourcePath: string, name: string, service: ts
     }
     const elements: ts.NodeArray<ts.ImportSpecifier> =
         imports
-        .map(x => (x.importClause.namedBindings as ts.NamedImports).elements)
-        .reduce((prev, current) => prev.concat(current) as unknown as ts.NodeArray<ts.ImportSpecifier>);
+            .map(x => (x.importClause.namedBindings as ts.NamedImports).elements)
+            .reduce((prev, current) => prev.concat(current) as unknown as ts.NodeArray<ts.ImportSpecifier>);
 
     for (const elem of elements) {
         if (elem.propertyName && elem.propertyName.text === name) {
@@ -98,7 +98,7 @@ export function getRenamePositions(sourcePath: string, name: string, service: ts
         if (!elem.propertyName && elem.name.text === name) {
             const renames = service.findRenameLocations(sourcePath, elem.name.getStart(), false, false, false);
             if (renames) {
-                const renamesPos = renames.map(x => ({ start: x.textSpan.start, end: x.textSpan.start + x.textSpan.length}) );
+                const renamesPos = renames.map(x => ({ start: x.textSpan.start, end: x.textSpan.start + x.textSpan.length }));
                 positions.push(...renamesPos);
             }
         }
@@ -111,16 +111,22 @@ export function getRenamePositions(sourcePath: string, name: string, service: ts
 
 /**
  * Create a TypeScript language service
+ * @param serviceHost A TypeScript language service host
+ */
+export function getLanguageService(servicesHost: ts.LanguageServiceHost): ts.LanguageService {
+    return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
+}
+
+/**
+ * Create a TypeScript language service host
  * @param filePaths Paths for files to include for the language service host
  * @param host Virtual FS host
  * @param options Typescript compiler options for the service
  */
-export function getLanguageService(filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageService {
-    // https://stackoverflow.com/a/14221483
+export function getLanguageServiceHost(filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageServiceHost {
     const fileVersions = new Map<string, number>();
     patchHostOverwrite(host, fileVersions);
-
-    const servicesHost: ts.LanguageServiceHost = {
+    return {
         getCompilationSettings: () => options,
         getScriptFileNames: () => filePaths,
         getScriptVersion: fileName => {
@@ -140,7 +146,6 @@ export function getLanguageService(filePaths: string[], host: Tree, options: ts.
             return filePaths.indexOf(fileName) !== -1;
         }
     };
-    return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
 }
 
 function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {

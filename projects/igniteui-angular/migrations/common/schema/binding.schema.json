@@ -50,6 +50,10 @@
         },
         "TemplateElement": {
             "properties": {
+                "className": {
+                    "description": "Base type of the element",
+                    "type": "string"
+                },
                 "selector": {
                     "description": "Original selector to apply change to",
                     "type": "string"
@@ -60,6 +64,7 @@
                 }
             },
             "required": [
+                "className",
                 "selector",
                 "type"
             ],

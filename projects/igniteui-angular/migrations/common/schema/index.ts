@@ -16,7 +16,7 @@ export interface SelectorChanges {
     /** An array of changes to component/directive selectors */
     changes: SelectorChange[];
 }
-export interface SelectorChange extends TemplateElement, ChangeAction {}
+export interface SelectorChange extends TemplateElement, ChangeAction { }
 
 export interface BindingChanges {
     /** An array of changes to input/output properties */
@@ -33,6 +33,17 @@ export interface BindingChange extends ChangeAction {
     conditions?: string[];
     /** A function that transforms the value of an Input */
     valueTransform?: string;
+}
+
+export interface MemberChange extends ChangeAction {
+    /** The full definition of a member */
+    definition: string; // memberMatch?
+    /** The class/interface that this member belongs to */
+    owner: Pick<TemplateElement, 'className'>;
+}
+export interface MemberChanges {
+    /** An array of changes to class members */
+    changes: MemberChange[];
 }
 
 export interface ClassChanges {
@@ -58,6 +69,8 @@ export interface TemplateElement {
     type: ElementType;
     /** Original selector to apply change to */
     selector: string;
+    /** Base type of the element */
+    className: string;
 }
 
 export interface ImportsChange {

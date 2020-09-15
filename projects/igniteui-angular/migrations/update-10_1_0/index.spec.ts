@@ -41,7 +41,7 @@ describe('Update 10.1.0', () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
-            `<igx-navbar title="Test title">
+                `<igx-navbar title="Test title">
             <igx-navbar-action>
             <igx-icon>arrow_back</igx-icon>
             </igx-navbar-action>
@@ -59,7 +59,7 @@ describe('Update 10.1.0', () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.ts'))
             .toEqual(
-            `import { IgxNavbarActionDirective } from 'igniteui-angular';
+                `import { IgxNavbarActionDirective } from 'igniteui-angular';
             export class TestNavbar {
             @ViewChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
             private actionIcon: IgxNavbarActionDirective; }`);
@@ -119,4 +119,70 @@ describe('Update 10.1.0', () => {
 
     });
 
+    fit('should replace selectedRows() with selectedRows in ts files', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/grid-base.directive.ts',
+            `import { Directive } from '@angular/core';
+            @Directive({
+                selector: '[igxGridBaseComponent]'
+            })
+            export class GridBaseDirective {
+                public get selectedRows {
+                    return null;
+                }
+            }`);
+        appTree.create(
+            '/testSrc/appPrefix/component/grid.component.ts',
+            `import { Component } from '@angular/core';
+            import { GridBaseDirective } from './grid-base.directive.ts';
+            @Component({
+                template: '<div>Grid</div>',
+                selector: 'igx-grid'
+            })
+            export class IgxGridComponent extends GridBaseDirective { }`);
+
+        appTree.create(
+            '/testSrc/appPrefix/component/grid-sample.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+            import { IgxGridComponent } from './grid.component.ts';
+            @Component({
+                template: '<igx-grid #grid1></igx-grid>',
+                selector: 'grid-sample-component'
+            })
+            export class GridSampleComponent {
+                @ViewChild('grid1')
+                public grid: IgxGridComponent;
+
+                public selectedRows() {
+                    return this.grid.selectedRows();
+                }
+            }`);
+
+        appTree.create(
+            '/testSrc/appPrefix/component/grid-sample.module.ts',
+            `import { GridSampleComponent } from './grid.component-sample.ts';
+            import { GridBaseDirective } from './grid-base.directive.ts';
+            import { IgxGridComponent } from './grid.component.ts';
+            import { NgModule } from '@angular/core';
+            @NgModule({
+                declarations: [GridSampleComponent, GridBaseDirective, IgxGridComponent]
+            })
+            export class GridSampleModule { }`);
+
+        appTree.create(
+            '/testSrc/appPrefix/component/tsconfig.json',
+            `{
+                "compilerOptions": {
+                    "module": "commonjs",
+                    "target": "es6",
+                    "outDir": "/"
+                },
+                "plugins": [
+                    {"name": "@angular/language-service"}
+                ]
+            }`
+        );
+
+        const tree = await schematicRunner.runSchematicAsync('migration-16', {}, appTree).toPromise();
+    });
 });

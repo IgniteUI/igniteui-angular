@@ -3,11 +3,15 @@ import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
-import { getLanguageService, getRenamePositions } from './tsUtils';
+import {
+    ClassChanges, BindingChanges, SelectorChange,
+    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
+} from './schema';
+import { getLanguageService, getRenamePositions, getLanguageServiceHost } from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
-import { LanguageService } from 'typescript';
-
+import { ServerHost } from './ServerHost';
+import { Logger } from './TSLogger';
+import ts = require('typescript/lib/tsserverlibrary');
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -21,6 +25,8 @@ export interface BoundPropertyObject {
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
+    public projectService: ts.server.ProjectService;
+    protected serverHost: ServerHost;
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
     protected classChanges: ClassChanges;
@@ -29,6 +35,7 @@ export class UpdateChanges {
     protected selectorChanges: SelectorChanges;
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
+    protected membersChanges: MemberChanges;
     protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
@@ -58,7 +65,7 @@ export class UpdateChanges {
     }
 
     private _sassFiles: string[] = [];
-    /** Sass (both .scss and .sass) files in the project being updagraded. */
+    /** Sass (both .scss and .sass) files in the project being updated. */
     public get sassFiles(): string[] {
         if (!this._sassFiles.length) {
             // files can be outside the app prefix, so start from sourceRoot
@@ -73,12 +80,20 @@ export class UpdateChanges {
         return this._sassFiles;
     }
 
-    private _service: LanguageService;
-    public get service(): LanguageService {
+    private _service: ts.LanguageService;
+    public get service(): ts.LanguageService {
         if (!this._service) {
-            this._service = getLanguageService(this.tsFiles, this.host);
+            this._service = getLanguageService(this.serviceHost);
         }
         return this._service;
+    }
+
+    private _serviceHost: ts.LanguageServiceHost;
+    public get serviceHost(): ts.LanguageServiceHost {
+        if (!this._serviceHost) {
+            this._serviceHost = getLanguageServiceHost([...this.tsFiles, ...this.templateFiles], this.host);
+        }
+        return this._serviceHost;
     }
 
     /**
@@ -95,33 +110,75 @@ export class UpdateChanges {
         this.inputChanges = this.loadConfig('inputs.json');
         this.themePropsChanges = this.loadConfig('theme-props.json');
         this.importsChanges = this.loadConfig('imports.json');
+        this.membersChanges = this.loadConfig('members.json');
+        this.serverHost = new ServerHost(this.host);
+        this.projectService = this.createProjectService();
     }
 
-    /** Apply configured changes to the Host Tree */
-    public applyChanges() {
+    private updateTemplateFiles() {
         if (this.selectorChanges && this.selectorChanges.changes.length) {
             for (const entryPath of this.templateFiles) {
                 this.updateSelectors(entryPath);
             }
         }
         if (this.outputChanges && this.outputChanges.changes.length) {
+            // name change of output
             for (const entryPath of this.templateFiles) {
                 this.updateBindings(entryPath, this.outputChanges);
             }
         }
-
         if (this.inputChanges && this.inputChanges.changes.length) {
+            // name change of input
             for (const entryPath of this.templateFiles) {
                 this.updateBindings(entryPath, this.inputChanges, BindingType.input);
             }
         }
+    }
 
-        /** TS files */
+    private updateTsFiles() {
         if (this.classChanges && this.classChanges.changes.length) {
+            // change class name
             for (const entryPath of this.tsFiles) {
                 this.updateClasses(entryPath);
             }
         }
+        if (this.importsChanges && this.importsChanges.changes.length) {
+            // TODO: move logic to 7.0.2 migration
+            for (const entryPath of this.tsFiles) {
+                this.updateImports(entryPath);
+            }
+        }
+        if (this.membersChanges && this.membersChanges.changes.length) {
+            for (const entryPath of this.tsFiles) {
+                this.updateClassMembers(entryPath, this.membersChanges);
+            }
+        }
+    }
+
+    private updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
+        let content = this.host.read(entryPath).toString();
+        for (const change of memberChanges.changes) {
+            if (!change.replaceWith) { continue; }
+            const regex = this.toRegExp(change.definition, 'g');
+            let matches: RegExpExecArray;
+            while ((matches = regex.exec(content)) !== null) {
+                // move 2 indices to the right of the start of the match be sure we're getting the correct info
+                const info = this.getQuickInfoAtPosition(entryPath, matches.index + 2);
+                const target = info?.displayParts
+                    .filter(p => p.kind === 'className' || p.kind === 'interfaceName')[0];
+                if (target && target.text === change.owner.className) {
+                    content = this.replaceMatch(content, change.replaceWith, matches);
+                }
+            }
+        }
+
+        this.host.overwrite(entryPath, content);
+    }
+
+    /** Apply configured changes to the Host Tree */
+    public applyChanges() {
+        this.updateTemplateFiles();
+        this.updateTsFiles();
 
         /** Sass files */
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
@@ -129,21 +186,41 @@ export class UpdateChanges {
                 this.updateThemeProps(entryPath);
             }
         }
-
-        if (this.importsChanges && this.importsChanges.changes.length) {
-            for (const entryPath of this.tsFiles) {
-                this.updateImports(entryPath);
-            }
-        }
     }
 
-    /** Add condition funtion. */
+    /** Add condition function. */
     public addCondition(conditionName: string, callback: (ownerMatch: string) => boolean) {
         this.conditionFunctions.set(conditionName, callback);
     }
 
     public addValueTransform(functionName: string, callback: TransformFunction) {
         this.valueTransforms.set(functionName, callback);
+    }
+
+    public getQuickInfoAtPosition(entryPath: string, position: number): ts.QuickInfo {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        return langServ.getQuickInfoAtPosition(entryPath, position);
+    }
+
+    public getCompletionsAtPosition(entryPath: string, position: number, options: ts.GetCompletionsAtPositionOptions)
+        : ts.WithMetadata<ts.CompletionInfo> {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        return langServ.getCompletionsAtPosition(entryPath, position, options);
+    }
+
+    public getDefinitionAndBoundSpan(entryPath: string, position: number): ts.DefinitionInfoAndBoundSpan {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        return langServ.getDefinitionAndBoundSpan(entryPath, position);
+    }
+
+    public getSemanticDiagnostics(entryPath: string): ts.Diagnostic[] {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        return langServ.getSemanticDiagnostics(entryPath);
+    }
+
+    public getReferencesAtPosition(entryPath: string, position: number): ts.ReferenceEntry[] {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        return langServ.getReferencesAtPosition(entryPath, position);
     }
 
     protected updateSelectors(entryPath: string) {
@@ -224,9 +301,9 @@ export class UpdateChanges {
             let searchPattern;
 
             if (type === BindingType.output) {
-                base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 replace = `(${change.replaceWith})=$1$2$1`;
             } else {
+                base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 // Match both bound - [name] - and regular - name
                 base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])(.*?)\3`;
                 replace = String.raw`$1${change.replaceWith}$2$3$4$3`;
@@ -271,8 +348,9 @@ export class UpdateChanges {
                         transform(args);
                         if (args.bindingType !== bindingType) {
                             replaceStatement = args.bindingType === InputPropertyType.EVAL ?
-                            replaceStatement.replace(`$1`, `$1[`).replace(`$2`, `]$2`) :
-                            replaceStatement.replace(`$1`, regExpMatch[1].replace('[', '')).replace('$2', regExpMatch[2].replace(']', ''));
+                                replaceStatement.replace(`$1`, `$1[`).replace(`$2`, `]$2`) :
+                                replaceStatement.replace(`$1`,
+                                    regExpMatch[1].replace('[', '')).replace('$2', regExpMatch[2].replace(']', ''));
 
                         }
                         replaceStatement = replaceStatement.replace('$4', args.value);
@@ -433,6 +511,61 @@ export class UpdateChanges {
         }
         parts.push(body.substring(lastIndex));
         return parts;
+    }
+
+    private createProjectService(): ts.server.ProjectService {
+        // set traceToConsole to true to enable logging
+        const logger = new Logger(false, ts.server.LogLevel.verbose);
+        const projectService = new ts.server.ProjectService({
+            host: this.serverHost,
+            logger: logger,
+            cancellationToken: ts.server.nullCancellationToken,
+            useSingleInferredProject: true,
+            useInferredProjectPerProjectRoot: true,
+            typingsInstaller: ts.server.nullTypingsInstaller,
+            suppressDiagnosticEvents: true,
+            globalPlugins: ['@angular/language-service'],
+            eventHandler: () => { },
+            allowLocalPluginLoads: false
+        });
+        projectService.setHostConfiguration({
+            formatOptions: projectService.getHostFormatCodeOptions(),
+            extraFileExtensions: [
+                {
+                    extension: '.html',
+                    isMixedContent: false,
+                    scriptKind: ts.ScriptKind.External,
+                }
+            ]
+        });
+        projectService.configurePlugin({
+            pluginName: '@angular/language-service',
+            configuration: {
+                angularOnly: false,
+            },
+        });
+
+        return projectService;
+    }
+
+    private getDefaultLanguageService(entryPath: string): ts.LanguageService | undefined {
+        const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(ts.server.asNormalizedPath(entryPath), false);
+        this.projectService.openClientFile(scriptInfo.fileName);
+        const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
+        // TODO: check if file is already in project?
+        project.addMissingFileRoot(scriptInfo.fileName);
+        return project.getLanguageService();
+    }
+
+    private toRegExp(str: string, flags?: string): RegExp {
+        const escapeChars = /[|\\{}()[\]^$+*?.]/g;
+        return new RegExp(str.replace(escapeChars, '\\$&'), flags);
+    }
+
+    private replaceMatch(content: string, replaceWith: string, matches: RegExpExecArray): string {
+        return content.substring(0, matches.index)
+            + replaceWith
+            + content.substring(matches.index + matches[0].length, content.length);
     }
 }
 
