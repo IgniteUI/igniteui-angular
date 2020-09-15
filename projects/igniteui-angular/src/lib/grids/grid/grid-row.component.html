@@ -7,7 +7,7 @@
     </div>
 </ng-container>
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
-    <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
+    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
 </ng-container>
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()">
