@@ -703,7 +703,7 @@
         grid-template-columns: 1fr;
         overflow: hidden;
         box-shadow: $grid-shadow;
-        
+
         @if $variant == 'fluent' {
             box-shadow: 0 0 0 1px --var($theme, 'grid-border-color');
         }
@@ -2429,6 +2429,7 @@
         }
 
         igx-input-group {
+            --igx-input-group-variant: fluent;
             width: 100%;
             max-width: rem(200px);
             min-width: rem(140px);
