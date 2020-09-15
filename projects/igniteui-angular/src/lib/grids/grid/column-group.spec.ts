@@ -64,28 +64,25 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
     }));
 
     describe('Initialization and rendering tests: ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
 
-        it('should initialize a grid with column groups', fakeAsync(/** height/width setter rAF */() => {
-            grid.ngAfterViewInit();
+        it('should initialize a grid with column groups', () => {
             const expectedColumnGroups = 5;
             const expectedLevel = 2;
 
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(grid.getColumnByName('ContactName').level).toEqual(expectedLevel);
-        }));
+        });
 
-        it('Should render column group headers correctly.', async () => {
+        it('Should render column group headers correctly.', fakeAsync(() => {
             fixture = TestBed.createComponent(BlueWhaleGridComponent);
             fixture.detectChanges();
             componentInstance = fixture.componentInstance;
             grid = componentInstance.grid;
-            grid.ngAfterViewInit();
             const columnWidthPx = parseInt(componentInstance.columnWidth, 10);
             // 2 levels of column group and 1 level of columns
             const gridHeadersDepth = 3;
@@ -95,7 +92,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             const secondSubGroupChildrenCount = 50;
             const secondSubGroupHeadersDepth = 2;
 
-            fixture.detectChanges();
             const firstGroup = fixture.debugElement.query(By.css('.firstGroup'));
             testColumnGroupHeaderRendering(firstGroup, firstGroupChildrenCount * columnWidthPx,
                 gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
@@ -105,9 +101,8 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
             horizontalScroll.scrollLeft = scrollToNextGroup;
 
-
+            tick();
             fixture.detectChanges();
-            await wait(200);
             const secondGroup = fixture.debugElement.query(By.css('.secondGroup'));
             testColumnGroupHeaderRendering(secondGroup,
                 secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
@@ -131,8 +126,8 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             horizontalScroll.scrollLeft = scrollToNextGroup;
 
+            tick();
             fixture.detectChanges();
-            await wait(200);
 
             const idColumn = fixture.debugElement.query(By.css('.lonelyId'));
             testColumnHeaderRendering(idColumn, columnWidthPx,
@@ -147,9 +142,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
                 2 * grid.defaultRowHeight, componentInstance.personDetailsTitle,
                 'personDetailsColumn', 2);
 
-        });
+        }));
 
-        it('Should not render empty column group.', fakeAsync(/** height/width setter rAF */() => {
+        it('Should not render empty column group.', () => {
             fixture = TestBed.createComponent(EmptyColGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
@@ -158,9 +153,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             const emptyColGroup = fixture.debugElement.query(By.css('.emptyColGroup'));
             expect(parseInt(ci.emptyColGroup.width, 10)).toBe(0);
             expect(emptyColGroup).toBe(null);
-        }));
+        });
 
-        it('Should render headers correctly when having a column per group.', fakeAsync(/** height/width setter rAF */() => {
+        it('Should render headers correctly when having a column per group.', () => {
             fixture = TestBed.createComponent(OneColPerGroupGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
@@ -204,21 +199,19 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             testColumnHeaderRendering(faxCol, parseInt(ci.faxColWidth, 10),
                 grid.defaultRowHeight, ci.faxColTitle);
-        }));
+        });
 
-        it('Should render headers correctly when having nested column groups.', fakeAsync(/** height/width setter rAF */() => {
+        it('Should render headers correctly when having nested column groups.', () => {
             fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
             fixture.detectChanges();
             NestedColGroupsTests.testHeadersRendering(fixture);
-        }));
+        });
 
-        it('Should render headers correctly when having nested column groups with huge header text.',
-       /** height/width setter rAF */() => {
+        it('Should render headers correctly when having nested column groups with huge header text.', () => {
             fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
             grid = ci.grid;
-            grid.ngAfterViewInit();
 
             const title = 'Lorem Ipsum is simply dummy text of the printing and typesetting' +
                 ' industry.Lorem Ipsum has been the industry\'s standard dummy text ever since' +
@@ -230,13 +223,11 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             ci.masterColGroupTitle = ci.firstSlaveColGroupTitle =
                 ci.secondSlaveColGroupTitle = ci.addressColTitle = ci.phoneColTitle =
                 ci.faxColTitle = ci.cityColTitle = title;
-
-            fixture.detectChanges();
             fixture.detectChanges();
             NestedColGroupsTests.testHeadersRendering(fixture);
         });
 
-        it('Should correctly initialize column group templates.', fakeAsync(() => {
+        it('Should correctly initialize column group templates.', () => {
             fixture = TestBed.createComponent(NestedColGroupsWithTemplatesGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
@@ -249,9 +240,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             const headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.col-group-template'));
             expect(headerSpans.length).toBe(1);
             expect(headerSpans[0].nativeElement.textContent).toMatch('Column group template');
-        }));
+        });
 
-        it('Should correctly change column group templates dynamically.', fakeAsync(() => {
+        it('Should correctly change column group templates dynamically.', () => {
             fixture = TestBed.createComponent(NestedColGroupsWithTemplatesGridComponent);
             fixture.detectChanges();
             componentInstance = fixture.componentInstance;
@@ -281,7 +272,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(headerSpans.length).toBe(0);
             headerSpans = fixture.debugElement.queryAll(By.css('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
             expect(headerSpans[1].nativeElement.textContent).toBe('Location');
-        }));
+        });
 
         it('There shouldn\'t be any errors when dynamically removing a column group with filtering enabled', () => {
             fixture = TestBed.createComponent(DynamicColGroupsGridComponent);
@@ -369,28 +360,25 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
     });
 
     describe('Columns widths tests (1 group 1 column) ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(OneGroupOneColGridComponent);
             fixture.detectChanges();
             componentInstance = fixture.componentInstance;
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Width should be correct. Column group with column. No width.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with column. No width.', () => {
             grid.ngAfterViewInit();
-            tick();
-
+            fixture.detectChanges();
             const locationColGroup = getColGroup(grid, 'Location');
             expect(parseInt(locationColGroup.width, 10) + grid.scrollSize).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
             const cityColumn = grid.getColumnByName('City');
             expect(parseInt(cityColumn.width, 10) + grid.scrollSize).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
-        }));
+        });
 
-        it('Width should be correct. Column group with column. Width in px.', fakeAsync(() => {
+        it('Width should be correct. Column group with column. Width in px.', () => {
             const gridWidth = '600px';
             const gridWidthPx = parseInt(gridWidth, 10);
-            grid.ngAfterViewInit();
             grid.width = gridWidth;
             fixture.detectChanges();
 
@@ -398,13 +386,11 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(parseInt(locationColGroup.width, 10) + grid.scrollSize).toBe(gridWidthPx);
             const cityColumn = grid.getColumnByName('City');
             expect(parseInt(cityColumn.width, 10) + grid.scrollSize).toBe(gridWidthPx);
-        }));
+        });
 
-        it('Width should be correct. Column group with column. Width in percent.', fakeAsync(() => {
-            grid.ngAfterViewInit();
+        it('Width should be correct. Column group with column. Width in percent.', () => {
             const gridWidth = '50%';
             grid.width = gridWidth;
-            tick();
             fixture.detectChanges();
 
             const locationColGroup = getColGroup(grid, 'Location');
@@ -413,7 +399,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(locationColGroup.width).toBe(gridWidthInPx);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(gridWidthInPx);
-        }));
+        });
 
         it('Width should be correct. Column group with column. Column width in px.', fakeAsync(/** height/width setter rAF */() => {
             const gridColWidth = '200px';
@@ -477,15 +463,14 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
     });
 
     describe('Columns widths tests (1 group 3 columns) ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
             fixture.detectChanges();
             componentInstance = fixture.componentInstance;
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Width should be correct. Column group with three columns. No width.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with three columns. No width.', () => {
             grid.ngAfterViewInit();
 
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
@@ -500,13 +485,13 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(regionColumn.width).toBe(colWidthPx);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(colWidthPx);
-        }));
+        });
 
-        it('Width should be correct. Column group with three columns. Width in px.', fakeAsync(() => {
+        it('Width should be correct. Column group with three columns. Width in px.', () => {
             const gridWidth = '600px';
             grid.ngAfterViewInit();
             grid.width = gridWidth;
-            tick();
+            // tick();
             fixture.detectChanges();
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
             const gridWidthInPx = parseInt(gridWidth, 10) - scrWitdh;
@@ -520,7 +505,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(regionColumn.width).toBe(colWidthPx);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(colWidthPx);
-        }));
+        });
 
         it('Width should be correct. Column group with three columns. Columns with mixed width - px and percent.', async() => {
             const col1 = grid.getColumnByName('Country');
@@ -602,11 +587,11 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
         });
 
-        it('Width should be correct. Column group with three columns. Width in percent.', fakeAsync(() => {
+        it('Width should be correct. Column group with three columns. Width in percent.', () => {
             const gridWidth = '50%';
             grid.ngAfterViewInit();
             grid.width = gridWidth;
-            tick();
+            // tick();
             fixture.detectChanges();
 
             const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
@@ -623,9 +608,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(regionColumn.width).toBe(colWidthPx);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(colWidthPx);
-        }));
+        });
 
-        it('Width should be correct. Column group with three columns. Column width in px.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with three columns. Column width in px.', () => {
             const gridColWidth = '200px';
             grid.ngAfterViewInit();
             grid.columnWidth = gridColWidth;
@@ -640,9 +625,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(regionColumn.width).toBe(gridColWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(gridColWidth);
-        }));
+        });
 
-        it('Width should be correct. Colum group with three columns. Column width in percent.', fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Colum group with three columns. Column width in percent.', () => {
             const gridColWidth = '20%';
             grid.ngAfterViewInit();
             grid.columnWidth = gridColWidth;
@@ -657,10 +642,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(regionColumn.width).toBe(gridColWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(gridColWidth);
-        }));
+        });
 
-        it('Width should be correct. Column group with three columns. Columns with width in px.',
-            fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with three columns. Columns with width in px.', () => {
                 const columnWidth = '200px';
                 grid.ngAfterViewInit();
                 componentInstance.columnWidth = columnWidth;
@@ -675,10 +659,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
                 expect(regionColumn.width).toBe(columnWidth);
                 const cityColumn = grid.getColumnByName('City');
                 expect(cityColumn.width).toBe(columnWidth);
-            }));
+            });
 
-        it('Width should be correct. Column group with three columns. Columns with width in percent.',
-        fakeAsync(/** height/width setter rAF */() => {
+        it('Width should be correct. Column group with three columns. Columns with width in percent.', () => {
             const columnWidth = '20%';
             grid.ngAfterViewInit();
             componentInstance.columnWidth = columnWidth;
@@ -693,83 +676,68 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(regionColumn.width).toBe(columnWidth);
             const cityColumn = grid.getColumnByName('City');
             expect(cityColumn.width).toBe(columnWidth);
-        }));
+        });
     });
 
     describe('Column hiding: ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
 
-        it('column hiding - parent level', fakeAsync(() => {
-            grid.ngAfterViewInit();
-            tick();
+        it('column hiding - parent level', () => {
             const addressGroup = grid.columnList.filter(c => c.header === 'Address Information')[0];
 
             addressGroup.hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(document.querySelectorAll('igx-grid-header').length).toEqual(4);
             expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(6);
-        }));
+        });
 
-        it('column hiding - child level', fakeAsync(() => {
+        it('column hiding - child level', () => {
             fixture = TestBed.createComponent(ColumnGroupChildLevelTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            tick();
             const addressGroup = grid.columnList.filter(c => c.header === 'Address')[0];
 
             addressGroup.children.first.hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(5);
             expect(addressGroup.children.first.hidden).toBe(true);
             expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
-        }));
+        });
 
-        it('column hiding - Verify column hiding of Individual column and Child column', fakeAsync(() => {
-            tick();
+        it('column hiding - Verify column hiding of Individual column and Child column', () => {
             testGroupsAndColumns(18, 11);
 
             // Hide individual column
             grid.getColumnByName('ID').hidden = true;
             fixture.detectChanges();
-            tick();
-
             testGroupsAndColumns(17, 10);
 
             // Hide column in goup
             grid.getColumnByName('CompanyName').hidden = true;
             fixture.detectChanges();
-            tick();
             expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(16);
             expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(9);
 
             grid.getColumnByName('Address').hidden = true;
             fixture.detectChanges();
-            tick();
 
             testGroupsAndColumns(15, 8);
-        }));
+        });
 
-        it('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', fakeAsync(() => {
-            tick();
-
+        it('column hiding - Verify when 2 of 2 child columns are hidden, the Grouped column would be hidden as well.', () => {
             testGroupsAndColumns(18, 11);
 
             // Hide 2 columns in the group
             grid.getColumnByName('ContactName').hidden = true;
             fixture.detectChanges();
-            tick();
             grid.getColumnByName('ContactTitle').hidden = true;
             fixture.detectChanges();
-            tick();
 
             testGroupsAndColumns(15, 9);
             expect(getColGroup(grid, 'Person Details').hidden).toEqual(true);
@@ -777,25 +745,19 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             // Show one of the columns
             grid.getColumnByName('ContactName').hidden = false;
             fixture.detectChanges();
-            tick();
 
             testGroupsAndColumns(17, 10);
             expect(getColGroup(grid, 'Person Details').hidden).toEqual(false);
-        }));
+        });
 
-        it('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.',
-            fakeAsync(() => {
-                tick();
-
+        it('column hiding - Verify when 1 child column and 1 group are hidden, the Grouped column would be hidden as well.', () => {
                 testGroupsAndColumns(18, 11);
 
                 // Hide 2 columns in the group
                 grid.getColumnByName('CompanyName').hidden = true;
                 fixture.detectChanges();
-                tick();
                 getColGroup(grid, 'Person Details').hidden = true;
                 fixture.detectChanges();
-                tick();
 
                 testGroupsAndColumns(13, 8);
                 expect(getColGroup(grid, 'General Information').hidden).toEqual(true);
@@ -803,27 +765,23 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
                 // Show the group
                 getColGroup(grid, 'Person Details').hidden = false;
                 fixture.detectChanges();
-                tick();
                 testGroupsAndColumns(17, 10);
                 expect(getColGroup(grid, 'General Information').hidden).toEqual(false);
-            }));
+            });
     });
 
     describe('API methods tests ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
 
-        it('API method level should return correct values', fakeAsync(() => {
+        it('API method level should return correct values', () => {
             grid.getColumnByName('Fax').hidden = true;
             fixture.detectChanges();
-            tick();
             getColGroup(grid, 'Person Details').hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
@@ -846,15 +804,13 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(getColGroup(grid, 'Postal Code').level).toEqual(1);
             // Get level of hidden group
             expect(getColGroup(grid, 'Person Details').level).toEqual(1);
-        }));
+        });
 
-        it('API method columnGroup should return correct values', fakeAsync(() => {
+        it('API method columnGroup should return correct values', () => {
             grid.getColumnByName('Fax').hidden = true;
             fixture.detectChanges();
-            tick();
             getColGroup(grid, 'Person Details').hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
             // Get columnGroup of column
@@ -868,15 +824,13 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(getColGroup(grid, 'Contact Information').columnGroup).toEqual(true);
             expect(getColGroup(grid, 'Postal Code').columnGroup).toEqual(true);
             expect(getColGroup(grid, 'Person Details').columnGroup).toEqual(true);
-        }));
+        });
 
-        it('API method allChildren should return correct values', fakeAsync(() => {
+        it('API method allChildren should return correct values', () => {
             grid.getColumnByName('Fax').hidden = true;
             fixture.detectChanges();
-            tick();
             getColGroup(grid, 'Person Details').hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
             // Get allChildren of column
@@ -907,15 +861,13 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Country'))).toBeGreaterThanOrEqual(0);
             expect(addressGroupedColumnAllChildren.indexOf(grid.getColumnByName('Fax'))).toBeGreaterThanOrEqual(0);
             expect(addressGroupedColumnAllChildren.indexOf(getColGroup(grid, 'General Information'))).toEqual(-1);
-        }));
+        });
 
-        it('API method children should return correct values', fakeAsync(() => {
+        it('API method children should return correct values', () => {
             grid.getColumnByName('Fax').hidden = true;
             fixture.detectChanges();
-            tick();
             getColGroup(grid, 'Person Details').hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
@@ -932,15 +884,13 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             // Get children of group with more levels
             const addressGroupedColumnAllChildren = getColGroup(grid, 'Address Information').children;
             expect(addressGroupedColumnAllChildren.length).toEqual(3);
-        }));
+        });
 
-        it('API method topLevelParent should return correct values', fakeAsync(() => {
+        it('API method topLevelParent should return correct values', () => {
             grid.getColumnByName('Fax').hidden = true;
             fixture.detectChanges();
-            tick();
             getColGroup(grid, 'Person Details').hidden = true;
             fixture.detectChanges();
-            tick();
 
             expect(grid.columnList.filter(col => col.columnGroup).length).toEqual(7);
 
@@ -965,9 +915,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(getColGroup(grid, 'Person Details').topLevelParent).toEqual(genInfGroupedColumn);
             expect(getColGroup(grid, 'Postal Code').topLevelParent).toEqual(addressGroupedColumn);
             expect(getColGroup(grid, 'Location City').topLevelParent).toEqual(addressGroupedColumn);
-        }));
+        });
 
-        it('Should emit "columnInit" event when having multi-column headers.', fakeAsync(/** height/width setter rAF */() => {
+        it('Should emit "columnInit" event when having multi-column headers.', () => {
             fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
             const ci = fixture.componentInstance;
             grid = ci.grid;
@@ -978,9 +928,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             const colGroupsCount = 3;
 
             expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount + colGroupsCount);
-        }));
+        });
 
-        it('Should fire "columnInit" event when adding a multi-column header.', fakeAsync(/** height/width setter rAF */() => {
+        it('Should fire "columnInit" event when adding a multi-column header.', () => {
             fixture = TestBed.createComponent(DynamicGridComponent);
             componentInstance = fixture.componentInstance;
             grid = componentInstance.grid;
@@ -991,92 +941,89 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
             const colsCount = 2; // 1 col group and 1 col
             expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
-        }));
+        });
     });
 
     describe('Column Pinning ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
 
-        it('column pinning - Pin a column in a group using property.', fakeAsync(() => {
+        it('column pinning - Pin a column in a group using property.', () => {
             PinningTests.testColumnGroupPinning((component) => {
                 component.contactTitleCol.pinned = true;
-                tick();
+                fixture.detectChanges();
             }, (component) => {
                 component.contactTitleCol.pinned = false;
-                tick();
+                fixture.detectChanges();
             });
-        }));
+        });
 
-        it('column pinning - Pin a column in a group using grid API.', fakeAsync(() => {
+        it('column pinning - Pin a column in a group using grid API.', () => {
             PinningTests.testColumnGroupPinning((component) => {
                 component.grid.pinColumn(component.contactTitleCol);
-                tick();
+                fixture.detectChanges();
             }, (component) => {
                 component.grid.unpinColumn(component.contactTitleCol);
-                tick();
+                fixture.detectChanges();
             });
-        }));
+        });
 
-        it('column pinning - Pin an inner column group using property.', fakeAsync(() => {
+        it('column pinning - Pin an inner column group using property.', () => {
             PinningTests.testColumnGroupPinning((component) => {
                 component.pDetailsColGroup.pinned = true;
-                tick();
+                fixture.detectChanges();
             }, (component) => {
                 component.pDetailsColGroup.pinned = false;
-                tick();
+                fixture.detectChanges();
             });
-        }));
+        });
 
-        it('column pinning - Pin an inner column group using grid API.', fakeAsync(() => {
+        it('column pinning - Pin an inner column group using grid API.', () => {
             PinningTests.testColumnGroupPinning((component) => {
                 component.grid.pinColumn(component.pDetailsColGroup);
-                tick();
+                fixture.detectChanges();
             }, (component) => {
                 component.grid.unpinColumn(component.pDetailsColGroup);
-                tick();
+                fixture.detectChanges();
             });
-        }));
+        });
 
-        it('column pinning - Pin a group using property.', fakeAsync(() => {
+        it('column pinning - Pin a group using property.', () => {
             PinningTests.testColumnGroupPinning((component) => {
                 component.genInfoColGroup.pinned = true;
-                tick();
+                fixture.detectChanges();
             }, (component) => {
                 component.genInfoColGroup.pinned = false;
-                tick();
+                fixture.detectChanges();
             });
-        }));
+        });
 
-        it('column pinning - Pin a group using API.', fakeAsync(() => {
+        it('column pinning - Pin a group using API.', () => {
             PinningTests.testColumnGroupPinning((component) => {
                 component.grid.pinColumn(component.genInfoColGroup);
-                tick();
+                fixture.detectChanges();
             }, (component) => {
                 component.grid.unpinColumn(component.genInfoColGroup);
-                tick();
+                fixture.detectChanges();
             });
-        }));
+        });
 
-        it('column pinning - Verify pin a not fully visble group', fakeAsync(() => {
-            const fixture = TestBed.createComponent(ColumnGroupTwoGroupsTestComponent);
+        it('column pinning - Verify pin a not fully visble group', () => {
+            fixture = TestBed.createComponent(ColumnGroupTwoGroupsTestComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
-            const grid = ci.grid;
-            tick();
+            grid = ci.grid;
+            fixture.detectChanges();
             expect(grid.pinnedColumns.length).toEqual(0);
             expect(grid.unpinnedColumns.length).toEqual(13);
 
             // Pin a Group which is not fully visble
             const grAdressInf = getColGroup(grid, 'Address Information');
-            tick();
             grAdressInf.pinned = true;
             fixture.detectChanges();
-            tick();
 
             // Verify group and all its children are not pinned
             testColumnPinning(grAdressInf, true);
@@ -1088,33 +1035,28 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
             expect(grid.getCellByColumn(0, 'Country').value).toEqual('Germany');
             expect(grid.getCellByColumn(0, 'City').value).toEqual('Berlin');
-        }));
+        });
 
-        it('Should pin column groups using indexes correctly.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(StegosaurusGridComponent);
+        it('Should pin column groups using indexes correctly.', () => {
+            fixture = TestBed.createComponent(StegosaurusGridComponent);
             fixture.detectChanges();
-
             const ci = fixture.componentInstance;
-            const grid = ci.grid;
+            grid = ci.grid;
 
             ci.genInfoColGroup.pinned = true;
-            tick();
             fixture.detectChanges();
             ci.idCol.pinned = true;
-            tick();
             fixture.detectChanges();
             ci.postalCodeColGroup.pinned = true;
-            tick();
             fixture.detectChanges();
             ci.cityColGroup.pinned = true;
-            tick();
             fixture.detectChanges();
-    
+
             testColumnsVisibleIndexes(ci.genInfoColList.concat(ci.idCol)
                 .concat(ci.postalCodeColList).concat(ci.cityColList).concat(ci.countryColList)
                 .concat(ci.regionColList).concat(ci.addressColList).concat(ci.phoneColList)
                 .concat(ci.faxColList));
-    
+
             // unpinning with index
             expect(grid.unpinColumn(ci.genInfoColGroup, 2)).toBe(true);
             fixture.detectChanges();
@@ -1123,19 +1065,19 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
                 .concat(ci.addressColList).concat(ci.phoneColList).concat(ci.faxColList);
             testColumnsVisibleIndexes(postUnpinningColList);
             testColumnPinning(ci.genInfoColGroup, false);
-    
+
             // pinning to non-existent index
             expect(grid.pinColumn(ci.genInfoColGroup, 15)).toBe(false);
             fixture.detectChanges();
             testColumnsVisibleIndexes(postUnpinningColList);
             testColumnPinning(ci.genInfoColGroup, false);
-    
+
             // pinning to negative index
             expect(grid.pinColumn(ci.genInfoColGroup, -15)).toBe(false);
             fixture.detectChanges();
             testColumnsVisibleIndexes(postUnpinningColList);
             testColumnPinning(ci.genInfoColGroup, false);
-    
+
             // pinning with index
             expect(grid.pinColumn(ci.genInfoColGroup, 2)).toBe(true);
             fixture.detectChanges();
@@ -1144,25 +1086,25 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
                 .concat(ci.addressColList).concat(ci.phoneColList).concat(ci.faxColList);
             testColumnsVisibleIndexes(postPinningColList);
             testColumnPinning(ci.genInfoColGroup, true);
-    
+
             // // unpinning to non-existent index
             // expect(grid.unpinColumn(ci.genInfoColGroup, 15)).toBe(false);
             // testColumnsVisibleIndexes(postPinningColList);
             // testColumnPinning(ci.genInfoColGroup, true);
-    
+
             // // unpinning to negative index
             // expect(grid.unpinColumn(ci.genInfoColGroup, -15)).toBe(false);
             // testColumnsVisibleIndexes(postPinningColList);
             // testColumnPinning(ci.genInfoColGroup, true);
-        }));
-    
-        it('Should initially pin the whole group when one column of the group is pinned', fakeAsync(() => {
-            const fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
+        });
+
+        it('Should initially pin the whole group when one column of the group is pinned', () => {
+            fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
             fixture.componentInstance.cnPinned = true;
             fixture.detectChanges();
             const contactTitle = fixture.componentInstance.grid.getColumnByName('ContactTitle');
             expect(contactTitle.pinned).toBeTruthy();
-        }));
+        });
     });
 
     describe('Column moving ', () => {
@@ -1173,9 +1115,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Should not allow moving group to another level via API.', fakeAsync(/** height/width setter rAF */() => {
-            grid.ngAfterViewInit();
-
+        it('Should not allow moving group to another level via API.', () => {
             expect(grid.pinnedColumns.length).toEqual(0);
             expect(grid.unpinnedColumns.length).toEqual(16);
             expect(grid.rowList.first.cells.first.value).toMatch('ALFKI');
@@ -1227,14 +1167,15 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             grid.moveColumn(compName, persDetails);
             grid.moveColumn(contName, contTitle);
             fixture.detectChanges();
+            fixture.detectChanges();
 
             expect(grid.rowList.first.cells.first.value).toMatch('Sales Representative');
             expect(grid.rowList.first.cells.toArray()[1].value).toMatch('Maria Anders');
             expect(grid.rowList.first.cells.toArray()[2].value).toMatch('Alfreds Futterkiste');
             expect(grid.rowList.first.cells.toArray()[3].value).toMatch('ALFKI');
-        }));
+        });
 
-        it('Should move column group correctly. One level column groups.', fakeAsync(() => {
+        it('Should move column group correctly. One level column groups.', () => {
             fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
@@ -1248,42 +1189,36 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving last to be first
             grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
 
             // moving first to be last
             grid.moveColumn(ci.contactInfoColGroup, ci.locationColGroup);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoCols.concat(locCols).concat(contactInfoCols));
 
             // moving inner to be last
             grid.moveColumn(ci.locationColGroup, ci.contactInfoColGroup);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoCols.concat(contactInfoCols).concat(locCols));
 
             // moving inner to be first
             grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
 
             // moving to the same spot, no change expected
             grid.moveColumn(ci.genInfoColGroup, ci.genInfoColGroup);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
 
             // moving column group to the place of a column, no change expected
             grid.moveColumn(ci.genInfoColGroup, ci.countryCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
-        }));
+        });
 
-        it('Should move columns within column groups. One level column groups.', fakeAsync(() => {
+        it('Should move columns within column groups. One level column groups.', () => {
             fixture = TestBed.createComponent(ThreeGroupsThreeColumnsGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
@@ -1294,55 +1229,48 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving last to be first
             grid.moveColumn(ci.postalCodeCol, ci.phoneCol, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
             // moving first to be last
             grid.moveColumn(ci.postalCodeCol, ci.faxCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.phoneCol, ci.faxCol, ci.postalCodeCol]));
 
             // moving inner to be last
             grid.moveColumn(ci.faxCol, ci.postalCodeCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.phoneCol, ci.postalCodeCol, ci.faxCol]));
 
             // moving inner to be first
             grid.moveColumn(ci.postalCodeCol, ci.phoneCol, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
             // moving to the sample spot, no change expected
             grid.moveColumn(ci.postalCodeCol, ci.postalCodeCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
             // moving column to the place of its column group, no change expected
             grid.moveColumn(ci.postalCodeCol, ci.contactInfoColGroup);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
 
             //// moving column to the place of a column group, no change expected
             grid.moveColumn(ci.postalCodeCol, ci.genInfoColGroup);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
             ci.postalCodeCol, ci.phoneCol, ci.faxCol]));
-        }));
+        });
 
-        it('Should move columns and groups. Two level column groups.', fakeAsync(() => {
+        it('Should move columns and groups. Two level column groups.', () => {
             fixture = TestBed.createComponent(NestedColGroupsGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
@@ -1350,14 +1278,12 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving a two-level col
             grid.moveColumn(ci.phoneCol, ci.locationColGroup, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             testColumnsOrder([ci.contactInfoColGroup, ci.phoneCol, ci.locationColGroup, ci.countryCol,
             ci.genInfoColGroup, ci.companyNameCol, ci.cityCol]);
 
             // moving a three-level col
             grid.moveColumn(ci.cityCol, ci.contactInfoColGroup, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             const colsOrder = [ci.cityCol, ci.contactInfoColGroup, ci.phoneCol,
             ci.locationColGroup, ci.countryCol, ci.genInfoColGroup, ci.companyNameCol];
@@ -1365,53 +1291,43 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving between different groups, hould stay the same
             grid.moveColumn(ci.locationColGroup, ci.companyNameCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(colsOrder);
 
             // moving between different levels, should stay the same
             grid.moveColumn(ci.countryCol, ci.phoneCol);
-            tick();
             testColumnsOrder(colsOrder);
 
             // moving between different levels, should stay the same
             grid.moveColumn(ci.cityCol, ci.phoneCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(colsOrder);
 
             grid.moveColumn(ci.genInfoColGroup, ci.companyNameCol);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(colsOrder);
 
             grid.moveColumn(ci.locationColGroup, ci.contactInfoColGroup);
-            tick();
             fixture.detectChanges();
             testColumnsOrder(colsOrder);
-        }));
+        });
 
-        it('Should move columns and groups. Pinning enabled.', fakeAsync(() => {
+        it('Should move columns and groups. Pinning enabled.', () => {
             fixture = TestBed.createComponent(StegosaurusGridComponent);
             fixture.detectChanges();
             const ci = fixture.componentInstance;
 
             ci.idCol.pinned = true;
-            tick();
             fixture.detectChanges();
             ci.genInfoColGroup.pinned = true;
-            tick();
             fixture.detectChanges();
             ci.postalCodeColGroup.pinned = true;
-            tick();
             fixture.detectChanges();
             ci.cityColGroup.pinned = true;
-            tick();
             fixture.detectChanges();
 
             // moving group from unpinned to pinned
             ci.grid.moveColumn(ci.phoneColGroup, ci.idCol, DropPosition.BeforeDropTarget);
-            tick();
             fixture.detectChanges();
             let postMovingOrder = ci.phoneColList.concat([ci.idCol]).concat(ci.genInfoColList)
                 .concat(ci.postalCodeColList).concat(ci.cityColList).concat(ci.countryColList)
@@ -1422,7 +1338,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving sub group to different parent, should not be allowed
             ci.grid.moveColumn(ci.pDetailsColGroup, ci.regionCol);
-            tick();
             fixture.detectChanges();
             testColumnsVisibleIndexes(postMovingOrder);
             testColumnPinning(ci.pDetailsColGroup, true);
@@ -1430,10 +1345,8 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
 
             // moving pinned group as firstly unpinned
             ci.grid.moveColumn(ci.idCol, ci.cityColGroup);
-            tick();
             fixture.detectChanges();
             ci.idCol.pinned = false;
-            tick();
             fixture.detectChanges();
             postMovingOrder = ci.phoneColList.concat(ci.genInfoColList)
                 .concat(ci.postalCodeColList).concat(ci.cityColList).concat([ci.idCol])
@@ -1450,25 +1363,22 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             testColumnsVisibleIndexes(postMovingOrder);
             testColumnPinning(ci.postalCodeCol, true);
             testColumnPinning(ci.cityCol, true);
-        }));
+        });
     });
 
-    describe('Features integration tests: ', () => {
-        // configureTestSuite();
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    fdescribe('Features integration tests: ', () => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
 
-        it('sorting - sort a grouped column by API', fakeAsync(() => {
+        it('sorting - sort a grouped column by API', () => {
             // Verify columns and groups
             testGroupsAndColumns(18, 11);
 
             grid.getColumnByName('CompanyName').sortable = true;
-            tick();
             grid.getColumnByName('ContactName').sortable = true;
-            tick();
             fixture.detectChanges();
             // Sort column
             grid.sort({ fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true });
@@ -1486,7 +1396,6 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getCellByColumn(4, 'Country').value).toEqual('UK');
 
             grid.clearSort();
-            tick();
             fixture.detectChanges();
             // Verify columns and groups
             testGroupsAndColumns(18, 11);
@@ -1512,20 +1421,18 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getCellByColumn(3, 'ID').value).toEqual('FAMIA');
             expect(grid.getCellByColumn(3, 'ContactTitle').value).toEqual('Marketing Assistant');
             expect(grid.getCellByColumn(3, 'Country').value).toEqual('Brazil');
-        }));
+        });
 
-        it('sorting - sort a grouped column by clicking on header cell UI', fakeAsync(() => {
+        it('sorting - sort a grouped column by clicking on header cell UI', () => {
             // Verify columns and groups
             testGroupsAndColumns(18, 11);
 
             grid.getColumnByName('CompanyName').sortable = true;
-            tick();
             fixture.detectChanges();
 
             // Sort column by clicking on it
             const contactTitleHeaderCell = fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS))[3];
             contactTitleHeaderCell.triggerEventHandler('click', new Event('click'));
-            tick();
             fixture.detectChanges();
 
             // Verify columns and groups
@@ -1537,9 +1444,9 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             expect(grid.getCellByColumn(4, 'ID').value).toEqual('BERGS');
             expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual('Order Administrator');
             expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
-        }));
+        });
 
-        it('summaries - verify summaries when there are grouped columns', fakeAsync(() => {
+        it('summaries - verify summaries when there are grouped columns', () => {
             const allColumns = grid.columnList;
             allColumns.forEach((col) => {
                 if (!col.columnGroup) {
@@ -1556,7 +1463,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['27']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['27']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 6, ['Count'], ['27']);
-        }));
+        });
 
         it('filtering - filter a grouped column', fakeAsync(() => {
             const initialRowListLenght = grid.rowList.length;
@@ -1614,11 +1521,11 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             testGroupsAndColumns(18, 11);
         }));
 
-        it('grouping - verify grouping when there are grouped columns', fakeAsync(/** height/width setter rAF */() => {
+        it('grouping - verify grouping when there are grouped columns', () => {
             fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            grid.ngAfterViewInit();
+            // grid.ngAfterViewInit();
 
             // Verify columns and groups
             testGroupsAndColumns(9, 6);
@@ -1651,7 +1558,7 @@ fdescribe('IgxGrid - multi-column headers #grid', () => {
             const firstGroupedRow = groupRows[0].groupRow;
             expect(firstGroupedRow.value).toEqual('Sales Representative');
             expect(firstGroupedRow.records.length).toEqual(4);
-        }));
+        });
     });
 });
 
