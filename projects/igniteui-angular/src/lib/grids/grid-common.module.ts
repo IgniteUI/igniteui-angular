@@ -4,7 +4,7 @@ import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxGridBodyDirective
 } from './grid.common';
-import { IgxGridTransaction, IgxGridBaseDirective } from './grid-base.directive';
+import { IgxGridTransaction } from './grid-base.directive';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowEditTemplateDirective,
@@ -35,7 +35,6 @@ import { IgxRowDirective } from './row.directive';
  */
 @NgModule({
     declarations: [
-        IgxGridBaseDirective,
         IgxRowDirective,
         IgxGridCellComponent,
         IgxRowEditTemplateDirective,
