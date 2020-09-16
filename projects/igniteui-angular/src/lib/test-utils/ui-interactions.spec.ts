@@ -1,9 +1,22 @@
+import { first } from 'rxjs/operators';
 import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
 export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
+
+export function waitScroll(grid) {
+    // wait for grid scroll operation to complete and state to be updated.
+    return new Promise((resolve, reject) => {
+        grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+            grid.cdr.detectChanges();
+            // ensure all other subscriptions to this event are resolved.
+            setTimeout(resolve, 0);
+        });
+    });
+}
+
 declare var Touch: {
     prototype: Touch;
     new(prop): Touch;
