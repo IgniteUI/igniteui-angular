@@ -70,7 +70,7 @@
         @extend %grid-tbody !optional;
 
         &:focus {
-            @extend %disable-focus-styles !optional;;
+            @extend %disable-focus-styles !optional;
         }
     }
 
