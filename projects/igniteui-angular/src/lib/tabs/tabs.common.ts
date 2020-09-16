@@ -22,7 +22,7 @@ export abstract class IgxTabsBase {
 
 /** @hidden */
 export abstract class IgxTabItemBase {
-    nativeTabItem: ElementRef;
+    abstract readonly nativeTabItem: ElementRef;
     get index(): number { return 0; }
     select(): void {}
     setSelectedInternal(newValue: boolean) {}

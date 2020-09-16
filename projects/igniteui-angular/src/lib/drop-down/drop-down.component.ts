@@ -162,11 +162,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.selection.set(`${this.id}-active`, new Set([this._focusedItem]));
     }
 
-    @Input()
-    get id(): string {
+    public get id(): string {
         return this._id;
     }
-    set id(value: string) {
+    public set id(value: string) {
         this.selection.set(value, this.selection.get(this.id));
         this.selection.clear(this.id);
         this.selection.set(value, this.selection.get(`${this.id}-active`));
@@ -460,9 +459,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    // temp workaround until fix --> https://github.com/angular/angular/issues/34992
     ngOnChanges(changes: SimpleChanges) {
         if (changes.id) {
+            // temp workaround until fix --> https://github.com/angular/angular/issues/34992
             this.toggleDirective.id = changes.id.currentValue;
         }
     }
