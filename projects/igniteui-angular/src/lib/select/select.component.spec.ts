@@ -2858,7 +2858,7 @@ class IgxSelectReactiveFormComponent {
     ];
 
     public validationType = {
-        'firstName': new FormControl(Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')),
+        'firstName': [Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')],
         'password': [Validators.required, Validators.maxLength(12)],
         'optionsSelect': [Validators.required]
     };

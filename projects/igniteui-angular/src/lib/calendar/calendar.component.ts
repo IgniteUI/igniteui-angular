@@ -151,6 +151,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Show/hide week numbers
+     *
+     * @example
+     * ```html
+     * <igx-calendar [showWeekNumbers]="true"></igx-calendar>
+     * ``
+     */
+    @Input()
+    public showWeekNumbers = false;
+
+    /**
      * Apply the different states for the transitions of animateChange
      * @hidden
      * @internal
