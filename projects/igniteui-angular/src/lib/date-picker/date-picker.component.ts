@@ -270,6 +270,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public monthsViewNumber = 1;
 
     /**
+     * Show/hide week numbers
+     *
+     * @exmpale
+     * ```html
+     * <igx-date-picker [showWeekNumbers]="true"></igx-date-picker>
+     * ``
+     */
+    @Input()
+    public showWeekNumbers: boolean;
+
+    /**
      * Sets the format options of the `IgxDatePickerComponent`.
      * @example
      * ```typescript
@@ -1283,6 +1294,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.calendar.subheaderTemplate = this.subheaderTemplate;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.monthsViewNumber;
+        this.calendar.showWeekNumbers = this.showWeekNumbers;
         this.calendar.onSelection.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
 
         if (this.value) {
