@@ -421,7 +421,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     @HostBinding('class.igx-grid__td--active')
-    public active: boolean;
+    public active = false;
 
     @HostBinding('attr.aria-selected')
     get ariaSelected() {
@@ -547,6 +547,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             };
     }
 
+    /** @hidden @internal @deprecated */
     public focused = this.active;
     protected compositionStartHandler;
     protected compositionEndHandler;

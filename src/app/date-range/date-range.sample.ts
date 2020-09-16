@@ -14,8 +14,8 @@ export class DateRangeSampleComponent {
     public range3: DateRange = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
     public range4: DateRange;
     public range5: DateRange = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
-    public range6Start;
-    public range6End;
+    public range6Start = null;
+    public range6End = null;
     public range6: DateRange = { start: this.range6Start, end: this.range6End };
     public minDate: Date = new Date();
     public maxDate: Date = new Date(new Date().setDate(new Date().getDate() + 25));
