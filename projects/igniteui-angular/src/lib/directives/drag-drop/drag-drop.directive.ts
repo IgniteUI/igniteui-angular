@@ -1331,7 +1331,13 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * @memberof IgxDropDirective
      */
     @Input('igxDrop')
-    public data: any;
+    private _data: any;
+    public get data(): any {
+        return this._data;
+    }
+    public set data(v: any) {
+        this._data = v;
+    }
 
     /**
      * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.

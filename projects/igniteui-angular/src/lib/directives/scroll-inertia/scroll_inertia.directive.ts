@@ -97,6 +97,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (!this.IgxScrollInertiaScrollContainer) {
             return;
         }
+        // if ctrl key is pressed and the user want to zoom in/out the page
+        if (evt.ctrlKey) {
+            return;
+        }
         let scrollDeltaX;
         let scrollDeltaY;
         const scrollStep = this.wheelStep;

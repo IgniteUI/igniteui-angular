@@ -26,6 +26,7 @@
             <h4 class="sample-title">Days View</h4>
             <igx-card>
                 <igx-days-view [(ngModel)]="date" #daysView
+                    [showWeekNumbers]="true"
                     [viewDate]="date || selection"
                     [locale]="locale"
                     [selection]="'single'"
