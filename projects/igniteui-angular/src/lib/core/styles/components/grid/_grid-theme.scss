@@ -2040,7 +2040,7 @@
         align-items: center;
         padding-#{$left}: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-#{$right}: map-get($grid-grouping-indicator-padding, 'comfortable');
-        border-#{$right}: 1px solid transparent;
+        border-#{$right}: 1px solid --var($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
 
