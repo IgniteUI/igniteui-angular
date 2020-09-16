@@ -44,7 +44,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public customValuesFlag = true;
     public autoFocusSearch = true;
     public items: any[] = [];
-    public values1:  Array<any>;
+    public values1:  Array<any> = ['Arizona'];
     public values2:  Array<any>;
 
     public valueKeyVar = 'field';
@@ -53,9 +53,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
 
-    comfortable = DisplayDensity.comfortable;
-    cosy = DisplayDensity.cosy;
-    compact = DisplayDensity.compact;
+    public comfortable: DisplayDensity = DisplayDensity.comfortable;
+    public cosy: DisplayDensity = DisplayDensity.cosy;
+    public compact: DisplayDensity = DisplayDensity.compact;
 
     public genres = [];
     public user: FormGroup;

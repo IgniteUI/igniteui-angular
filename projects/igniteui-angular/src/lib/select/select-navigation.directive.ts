@@ -9,9 +9,15 @@ import { IgxSelectBase } from './select.common';
     selector: '[igxSelectItemNavigation]'
 })
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
+    protected _target: IgxSelectBase = null;
 
     @Input('igxSelectItemNavigation')
-    public target: IgxSelectBase;
+    get target(): IgxSelectBase {
+        return this._target;
+    }
+    set target(target: IgxSelectBase) {
+        this._target = target ? target : this.dropdown as IgxSelectBase;
+    }
 
     constructor() { super(null); }
 
