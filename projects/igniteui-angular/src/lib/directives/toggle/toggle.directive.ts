@@ -454,8 +454,10 @@ export class IgxToggleActionDirective implements OnInit {
      * @returns returns updated copy of provided overlay settings
      */
     protected updateOverlaySettings(settings: OverlaySettings): OverlaySettings {
-        if (!settings.target) {
+        if (settings && settings.positionStrategy) {
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
             settings.target = this.element.nativeElement;
+            settings.positionStrategy = positionStrategyClone;
         }
 
         return settings;

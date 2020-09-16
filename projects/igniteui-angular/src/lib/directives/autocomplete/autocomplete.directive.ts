@@ -112,7 +112,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     private get settings(): OverlaySettings {
         const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
-        if (!settings.target) {
+        const target = settings.target || settings.positionStrategy.settings.target;
+        if (!target) {
             const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
             settings.target = this.parentElement;
             settings.positionStrategy = positionStrategyClone;
