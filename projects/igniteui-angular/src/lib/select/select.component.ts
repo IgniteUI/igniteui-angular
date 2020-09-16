@@ -375,9 +375,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     ngAfterContentInit() {
         this._overlayDefaults = {
+            target: this.getEditElement(),
             modal: false,
             closeOnOutsideClick: false,
-            positionStrategy: new SelectPositioningStrategy(this, { target: this.getEditElement() }),
+            positionStrategy: new SelectPositioningStrategy(this),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
         };

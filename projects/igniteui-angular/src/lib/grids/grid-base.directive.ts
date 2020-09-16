@@ -6332,7 +6332,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!targetRow) {
             return;
         }
-        this.rowEditPositioningStrategy.settings.target = targetRow.element.nativeElement;
+        this.rowEditSettings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 

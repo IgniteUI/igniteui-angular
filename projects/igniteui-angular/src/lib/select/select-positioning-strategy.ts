@@ -53,7 +53,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             selectFit.itemRect = selectFit.itemElement.getBoundingClientRect();
 
             // Calculate input and selected item elements style related variables
-            selectFit.styles = this.calculateStyles(selectFit);
+            selectFit.styles = this.calculateStyles(selectFit, targetElement);
 
             selectFit.scrollAmount = this.calculateScrollAmount(selectFit);
             // Calculate how much to offset the overlay container.
@@ -139,9 +139,9 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * Calculate & Set default items container width.
      * @param selectFit selectFit to use for computation.
      */
-    private calculateStyles(selectFit: SelectFit): SelectStyles  {
+    private calculateStyles(selectFit: SelectFit, target: Point | HTMLElement): SelectStyles  {
         const styles: SelectStyles = {};
-        const inputElementStyles = window.getComputedStyle(this.settings.target as Element);
+        const inputElementStyles = window.getComputedStyle(target as Element);
         const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
         const numericInputFontSize = parseFloat(inputElementStyles.fontSize);
         const numericItemFontSize = parseFloat(itemElementStyles.fontSize);

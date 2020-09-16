@@ -16,8 +16,6 @@ import { ConnectedFit } from '../utilities';
  */
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   private _defaultSettings: PositionSettings = {
-    // default Point(0, 0) in getPointFromPositionsSettings
-    target: null,
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
     horizontalStartPoint: HorizontalAlignment.Left,
