@@ -1,6 +1,4 @@
-<igx-grid-toolbar [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" role="toolbar" *ngIf="showToolbar" [gridID]="id"
-    [displayDensity]="displayDensity" #toolbar>
-</igx-grid-toolbar>
+<ng-content select="igx-grid-toolbar"></ng-content>
 
 <div [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
     *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)" #groupArea>

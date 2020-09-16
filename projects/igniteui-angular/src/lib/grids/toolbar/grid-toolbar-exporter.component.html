@@ -1,0 +1,34 @@
+<div class="igx-grid-toolbar__dropdown" id="btnExport">
+    <button [disabled]="isExporting" igxButton="outlined" [displayDensity]="grid.displayDensity" igxRipple #btn
+        (click)="toggle(btn, toggleRef)">
+        <span class="igx-grid-toolbar__button-space">
+            <igx-icon>import_export</igx-icon>
+            <span #ref>
+                <ng-content></ng-content>
+            </span>
+            <span *ngIf="!ref.childNodes.length">Export</span>
+            <igx-icon>arrow_drop_down</igx-icon>
+        </span>
+    </button>
+
+    <ul class="igx-grid-toolbar__dd-list" igxToggle #toggleRef="toggle">
+        <!-- Angular sucks donkey balls with default content -->
+        <li *ngIf="exportExcel" #btnExportExcel id="btnExportExcel" class="igx-grid-toolbar__dd-list-items" igxRipple
+            (click)="export('excel', toggleRef)">
+            <ng-template #excel>
+                <ng-content select=[excelText],excel-text></ng-content>
+            </ng-template>
+            <excel-text *ngIf="!hasExcelAttr">Export Excel</excel-text>
+            <ng-container *ngTemplateOutlet="excel"></ng-container>
+        </li>
+
+        <li *ngIf="exportCSV" #btnExportCsv id="btnExportCsv" class="igx-grid-toolbar__dd-list-items" igxRipple
+            (click)="export('csv', toggleRef)">
+            <ng-template #csv>
+                <ng-content select=[csvText],csv-text></ng-content>
+            </ng-template>
+            <csv-text *ngIf="!hasCSVAttr">Export CSV</csv-text>
+            <ng-container *ngTemplateOutlet="csv"></ng-container>
+        </li>
+    </ul>
+</div>

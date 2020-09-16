@@ -25,9 +25,7 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive,
-    OnChanges,
-    SimpleChanges
+    Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -143,7 +141,6 @@ import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
-import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
@@ -1703,16 +1700,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
      * ```
      */
-    public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
-        return this.toolbarCustomContentTemplates.first;
-    }
+    // public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
+    //     return this.toolbarCustomContentTemplates.first;
+    // }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
-    public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
+    // /**
+    //  * @hidden
+    //  * @internal
+    //  */
+    // @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
+    // public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
 
     /**
      * @hidden
@@ -2133,6 +2130,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Gets the number of pinned columns.
+     */
+    get pinnedColumnsCount() {
+        return this.pinnedColumns.filter(col => !col.columnLayout).length;
+    }
+
+    /**
      * Gets/Sets the text to be displayed inside the toggle button.
      * @remarks
      * Used for the built-in column hiding UI of the`IgxColumnComponent`.
@@ -2200,18 +2204,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._currentRowState;
     }
 
-    /**
-     * Provides access to the `IgxToolbarComponent`.
-     * @example
-     * ```typescript
-     * const gridToolbar = this.grid.toolbar;
-     * ```
-     */
-    @ViewChild('toolbar', { read: IgxGridToolbarComponent })
-    public toolbar: IgxGridToolbarComponent = null;
+    // /**
+    //  * Provides access to the `IgxToolbarComponent`.
+    //  * @example
+    //  * ```typescript
+    //  * const gridToolbar = this.grid.toolbar;
+    //  * ```
+    //  */
+    // @ViewChild('toolbar', { read: IgxGridToolbarComponent })
+    // public toolbar: IgxGridToolbarComponent = null;
 
-    @ViewChild('toolbar', { read: ElementRef })
-    private toolbarHtml: ElementRef = null;
+    // @ViewChild('toolbar', { read: ElementRef })
+    // private toolbarHtml: ElementRef = null;
+    @ContentChildren(IgxGridToolbarComponent)
+    public toolbar: QueryList<IgxGridToolbarComponent>;
+
 
     /**
      * Gets/Sets whether the toolbar is shown.
@@ -3140,6 +3147,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+        this.toolbar.changes.pipe(takeUntil(this.destroy$), filter(() => !this._init)).subscribe(() => this.notifyChanges(true));
     }
 
     /**
@@ -4724,11 +4732,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected getToolbarHeight(): number {
         let toolbarHeight = 0;
-        if (this.showToolbar && this.toolbarHtml != null) {
-            const height = this.getComputedHeight(this.toolbarHtml.nativeElement);
-            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-            height : 0;
+        if (this.toolbar.first) {
+            toolbarHeight = this.getComputedHeight(this.toolbar.first.nativeElement);
         }
+        // if (this.showToolbar && this.toolbarHtml != null) {
+        //     const height = this.getComputedHeight(this.toolbarHtml.nativeElement);
+        //     toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+        //     height : 0;
+        // }
         return toolbarHeight;
     }
 

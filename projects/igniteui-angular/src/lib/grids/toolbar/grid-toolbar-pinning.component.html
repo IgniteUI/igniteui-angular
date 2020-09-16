@@ -1,0 +1,11 @@
+<button #btn igxButton="outlined" name="btnColumnPinning" (click)="toggle(btn, ref)"
+    [displayDensity]="grid.displayDensity">
+    <div class="igx-grid-toolbar__button-space">
+        <igx-icon fontSet="pinning-icons" [name]="!grid.pinnedColumnsCount ? 'unpin' : 'pin'"></igx-icon>
+        <span>{{ grid.pinnedColumnsCount }}</span>
+        <span>{{ grid.pinnedColumnsText }}</span>
+    </div>
+</button>
+<igx-column-actions igxColumnPinning igxToggle #ref="toggle" [columns]="grid.columns" [title]="title"
+    [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
+</igx-column-actions>
