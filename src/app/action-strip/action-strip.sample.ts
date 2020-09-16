@@ -13,9 +13,9 @@ export class ActionStripSampleComponent implements OnInit {
     public result: string;
     public isVisible = false;
     private counter = 0;
-    public comfortable = DisplayDensity.comfortable;
-    public cosy = DisplayDensity.cosy;
-    public compact = DisplayDensity.compact;
+    public comfortable: DisplayDensity = DisplayDensity.comfortable;
+    public cosy: DisplayDensity = DisplayDensity.cosy;
+    public compact: DisplayDensity = DisplayDensity.compact;
     public displayDensity = this.comfortable;
 
     data: any[];
