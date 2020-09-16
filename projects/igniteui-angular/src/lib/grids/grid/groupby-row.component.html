@@ -12,8 +12,6 @@
          </div>
     </ng-container>
 
-    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{this.groupRow.level}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
-
     <div (click)="toggle()" class="igx-grid__grouping-indicator">
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
