@@ -3,7 +3,7 @@ import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait, waitScroll} from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, waitForActiveNodeChange} from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
@@ -639,7 +639,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await waitScroll(grid);
+            await waitForActiveNodeChange(grid);
             fix.detectChanges();
 
             const fRow = grid.getRowByIndex(0);
