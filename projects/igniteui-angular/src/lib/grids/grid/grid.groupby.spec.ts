@@ -974,7 +974,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + RowSelectors
-    it('should not render row selectors in group row.', fakeAsync(() => {
+    it('should render row selectors in group row.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -994,7 +994,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         for (const grRow of grRows) {
-            expect(GridSelectionFunctions.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
+            expect(GridSelectionFunctions.getRowCheckboxDiv(grRow.element.nativeElement)).toBeDefined();
         }
         for (const dRow of dataRows) {
             expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
