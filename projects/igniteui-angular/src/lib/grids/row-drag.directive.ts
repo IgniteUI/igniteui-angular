@@ -21,18 +21,14 @@ const cellActiveClass = 'igx-grid__td--active';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
-    private row: IgxRowDirective<IgxGridBaseDirective & GridType>;
     private subscription$: Subscription;
     private _rowDragStarted = false;
+    private get row(): IgxRowDirective<IgxGridBaseDirective & GridType> {
+        return this.data;
+    }
 
     @Input('igxRowDrag')
-    set data(val) {
-        this.row = val;
-    }
-
-    get data() {
-        return this.row;
-    }
+    public data: any;
 
     public onPointerDown(event) {
         event.preventDefault();

@@ -1,75 +1,133 @@
 <ng-template #defaultPinnedIndicator>
-    <igx-chip *ngIf="displayPinnedChip" class="igx-grid__td--pinned-chip" [disabled]="true" [displayDensity]="'compact'">{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip>
+    <igx-chip
+        *ngIf="displayPinnedChip"
+        class="igx-grid__td--pinned-chip"
+        [disabled]="true"
+        [displayDensity]="'compact'"
+        >{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip
+    >
 </ng-template>
 <ng-template #defaultCell>
-    <div igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    <div
+        igxTextHighlight
+        class="igx-grid__td-text"
+        style="pointer-events: none;"
         [cssClass]="highlightClass"
         [activeCssClass]="activeHighlightClass"
         [groupName]="gridID"
-        [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+        [value]="
+            formatter
+                ? (value | columnFormatter: formatter)
+                : column.dataType === 'number'
+                ? (value | igxdecimal: grid.locale)
+                : column.dataType === 'date'
+                ? (value | igxdate: grid.locale)
+                : value
+        "
         [row]="rowData"
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) :
-            column.dataType === 'number' ?
-            (value | igxdecimal:grid.locale) :
-            column.dataType === 'date' ?
-            (value | igxdate: grid.locale) :
-            column.dataType === 'boolean' ? "" :
-            value
+        [metadata]="searchMetadata"
+    >{{
+            formatter
+                ? (value | columnFormatter: formatter)
+                : column.dataType === "number"
+                ? (value | igxdecimal: grid.locale)
+                : column.dataType === "date"
+                ? (value | igxdate: grid.locale)
+                : column.dataType === "boolean"
+                ? ""
+                : value
         }}</div>
-    <igx-icon *ngIf="column.dataType === 'boolean'">{{value ? 'check' : 'close'}}</igx-icon>
+    <igx-icon
+        *ngIf="column.dataType === 'boolean'"
+        [ngClass]="{ 'igx-icon--success': value, 'igx-icon--error': !value }"
+        >{{ value ? "check" : "close" }}</igx-icon
+    >
 </ng-template>
-<ng-template #inlineEditor  let-cell="cell">
+<ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="focused">
+            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="focused"  type="number">
+            <input
+                igxInput
+                [(ngModel)]="editValue"
+                [igxFocus]="true"
+                type="number"
+            />
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
-        <igx-checkbox (change)="editValue = $event.checked" [value]="editValue" [checked]="editValue" [disableRipple]="true"></igx-checkbox>
+        <igx-checkbox
+            (change)="editValue = $event.checked"
+            [value]="editValue"
+            [checked]="editValue"
+            [disableRipple]="true"
+        ></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-date-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown"
-        [locale]="grid.locale" [(value)]="editValue" [igxFocus]="focused" [labelVisibility]="false">
-    </igx-date-picker>
+        <igx-date-picker
+            [style.width.%]="100"
+            [outlet]="grid.outlet"
+            mode="dropdown"
+            [locale]="grid.locale"
+            [(value)]="editValue"
+            [igxFocus]="true"
+            [labelVisibility]="false"
+        >
+        </igx-date-picker>
     </ng-container>
 </ng-template>
 <ng-container *ngIf="!editMode">
     <ng-container *ngIf="level > 0">
-        <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{level}}"></div>
+        <div
+            #indentationDiv
+            class="igx-grid__tree-cell--padding-level-{{ level }}"
+        ></div>
     </ng-container>
-    <div #indicator
-         *ngIf="!isLoading"
-         class="igx-grid__tree-grouping-indicator"
-         [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
-         (click)="toggle($event)" (focus)="onIndicatorFocus()">
-         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
+    <div
+        #indicator
+        *ngIf="!isLoading"
+        class="igx-grid__tree-grouping-indicator"
+        [ngStyle]="{ visibility: showIndicator ? 'visible' : 'hidden' }"
+        (click)="toggle($event)"
+        (focus)="onIndicatorFocus()"
+    >
+        <ng-container
+            *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }"
+        >
         </ng-container>
-        <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
+        <ng-container
+            *ngTemplateOutlet="pinnedIndicatorTemplate; context: context"
+        >
         </ng-container>
     </div>
-    <div *ngIf="isLoading"
-         (dblclick)="onLoadingDblClick($event)"
-         class="igx-grid__tree-loading-indicator">
-        <ng-container *ngTemplateOutlet="grid.rowLoadingIndicatorTemplate ? grid.rowLoadingIndicatorTemplate : defaultLoadingIndicatorTemplate">
+    <div
+        *ngIf="isLoading"
+        (dblclick)="onLoadingDblClick($event)"
+        class="igx-grid__tree-loading-indicator"
+    >
+        <ng-container
+            *ngTemplateOutlet="
+                grid.rowLoadingIndicatorTemplate
+                    ? grid.rowLoadingIndicatorTemplate
+                    : defaultLoadingIndicatorTemplate
+            "
+        >
         </ng-container>
     </div>
     <ng-template #defaultLoadingIndicatorTemplate>
-        <igx-circular-bar [indeterminate]="true">
-        </igx-circular-bar>
+        <igx-circular-bar [indeterminate]="true"> </igx-circular-bar>
     </ng-template>
 </ng-container>
-<ng-container *ngTemplateOutlet="template; context: context">
-</ng-container>
+<ng-container *ngTemplateOutlet="template; context: context"> </ng-container>
 <ng-template #defaultExpandedTemplate>
-        <igx-icon fontSet="material">expand_more</igx-icon>
+    <igx-icon fontSet="material">expand_more</igx-icon>
 </ng-template>
 <ng-template #defaultCollapsedTemplate>
-        <igx-icon fontSet="material">chevron_right</igx-icon>
+    <igx-icon fontSet="material">chevron_right</igx-icon>
 </ng-template>
