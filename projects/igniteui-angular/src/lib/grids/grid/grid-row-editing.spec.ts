@@ -27,6 +27,8 @@ import {
     IgxGridEmptyRowEditTemplateComponent,
     VirtualGridComponent
 } from '../../test-utils/grid-samples.spec';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -842,7 +844,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         let cell: IgxGridCellComponent;
-
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
@@ -1570,6 +1571,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let cell: IgxGridCellComponent;
         let initialRow: IgxRowDirective<IgxGridBaseDirective>;
         let initialData: any;
+        const $destroyer = new Subject<boolean>();
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1581,6 +1583,209 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
         }));
+
+        afterEach(fakeAsync(() => {
+            $destroyer.next(true);
+        }));
+
+        it(`Should strictly follow the right execution sequence of editing events`, () => {
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditExit, 'emit').and.callThrough();
+
+            grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditEnter.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEdit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEdit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditDone.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditDone.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditExit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEdit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEdit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditDone.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEditDone.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditExit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEditExit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            cell.editValue = 'new Value';
+            grid.endRowEdit(true, null, false);
+            fix.detectChanges();
+        });
+
+        it('Should not enter edit mode when rowEditEnter is canceled', () => {
+            grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            expect(grid.crudService.rowInEditMode).toEqual(false);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+        });
+
+        it('Should not enter cell edit when cellEditEnter is canceled but row edit should be entered', () => {
+            let canceled = true;
+            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = canceled;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            expect(grid.crudService.rowInEditMode).toEqual(true);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+
+            grid.crudService.exitEditMode();
+            fix.detectChanges();
+
+            canceled = false;
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            expect(grid.crudService.rowInEditMode).toEqual(true);
+            expect(grid.crudService.cellInEditMode).toEqual(true);
+        });
+
+        it('When cellEdit is canceled the new value of the cell should never be commited and editing should be closed', () => {
+            grid.cellEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            const cellValue = cell.value;
+            cell.editValue = 'new value';
+
+            grid.endRowEdit(true);
+            fix.detectChanges();
+
+            expect(grid.crudService.rowInEditMode).toEqual(false);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(cell.value).toEqual(cellValue);
+        });
+
+        it('When cellEditExit is canceled the new value of the cell should never be commited nor the editing should be closed', () => {
+            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            const expectedRes = cell.value;
+            cell.editValue = 'new value';
+
+            grid.endRowEdit(true);
+            fix.detectChanges();
+
+            expect(grid.crudService.rowInEditMode).toEqual(true);
+            expect(grid.crudService.cellInEditMode).toEqual(true);
+            expect(cell.value).toEqual(expectedRes);
+        });
+
+        it('When rowEdit is canceled the new row data should never be commited', () => {
+            grid.rowEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            const newRowData = {ProductName: 'new product name', ReorderLevel: 20};
+            grid.updateRow(newRowData, 0);
+
+            grid.endRowEdit(true, null, false);
+            fix.detectChanges();
+
+            const rowData = Object.assign(cell.row.rowData, newRowData);
+            expect(grid.crudService.rowInEditMode).toEqual(true);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(cell.row.rowData).not.toEqual(rowData);
+
+            grid.endRowEdit(false, null, true);
+            fix.detectChanges();
+
+            expect(grid.crudService.rowInEditMode).toEqual(false);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(cell.row.rowData).not.toEqual(rowData);
+        });
+
+        it('When rowEditExit is canceled the new row data should be commited but editing should remain open', () => {
+            grid.rowEditExit.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fix.detectChanges();
+
+            let expectedRes: string | number = 'new value';
+            cell.update(expectedRes);
+
+            grid.endRowEdit(true);
+            fix.detectChanges();
+
+            let rowData = Object.assign(cell.row.rowData, {ProductName: expectedRes});
+            expect(grid.crudService.rowInEditMode).toEqual(true);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(cell.value).toEqual(expectedRes);
+            expect(cell.row.rowData).toEqual(rowData);
+
+            expectedRes = 20;
+            cell = grid.getCellByColumn(0, 'ReorderLevel');
+
+            cell.update(expectedRes);
+
+            grid.endRowEdit(true);
+            fix.detectChanges();
+
+            rowData = Object.assign(cell.row.rowData, {ReorderLevel: expectedRes});
+            expect(grid.crudService.rowInEditMode).toEqual(true);
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(cell.value).toEqual(expectedRes);
+            expect(cell.row.rowData).toEqual(rowData);
+        });
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
