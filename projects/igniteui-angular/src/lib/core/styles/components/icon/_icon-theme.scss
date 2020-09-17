@@ -74,6 +74,14 @@
         }
     }
 
+    %igx-icon--success {
+        color: igx-color(map-get($theme, 'palette'), 'success');
+    }
+
+    %igx-icon--error {
+        color: igx-color(map-get($theme, 'palette'), 'error');
+    }
+
     %igx-icon--inactive {
         color: --var($theme, 'disabled-color') !important;
         opacity: .54;
