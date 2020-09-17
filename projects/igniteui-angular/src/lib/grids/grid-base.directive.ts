@@ -5842,9 +5842,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public navigateToAddedRow(event) {
-        this.navigateTo(this.dataView.length - 1);
-        this.addRowSnackbar.hide();
+    public showSnackbarFor(id: number) {
+        if (id === -1) {
+            this.addRowSnackbar.actionText = '';
+            this.addRowSnackbar.show();
+            return;
+        }
+        this.addRowSnackbar.actionText = this.snackbarActionText;
+        this.addRowSnackbar.show();
+        this.addRowSnackbar.onAction.subscribe(() => {
+            this.navigateTo(id);
+            this.addRowSnackbar.hide();
+        });
     }
 
     /**
@@ -6441,7 +6450,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
-        row.newData = this.transactions.getAggregatedValue(row.id, true);
+        const id = this.transactions.enabled && !row.id ? this.transactions.getStateByValue(row.data) : row.id;
+        row.newData = this.transactions.getAggregatedValue(id, true);
 
         let args = row.createEditEventArgs();
 
@@ -6517,17 +6527,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         if (commit) {
-            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+            this.onRowAdded.subscribe(rowData => {
             // A check whether the row is in the current view
-            const shouldScroll = this.navigation.shouldPerformVerticalScroll(this.dataLength - 1, 0);
-            if (shouldScroll) {
-                this.addRowSnackbar.show();
-            }
+            const index = this.dataView.findIndex(data => data === rowData);
+            const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
+            const showIndex = shouldScroll ? index : -1;
+            this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
             this.gridAPI.addRowToData(row.data);
             this.crudService.endRowEdit();
-            this.onRowAdded.emit(row.data);
             this.addRowParent = null;
         } else {
             this.gridAPI.escape_editMode();
@@ -6536,6 +6545,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
         this._pipeTrigger++;
+        if (!this.cancelAddMode) {
+            this.cdr.detectChanges();
+            this.onRowAdded.emit(row.data);
+        }
     }
 
     /**
