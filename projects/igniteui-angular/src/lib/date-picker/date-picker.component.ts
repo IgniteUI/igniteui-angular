@@ -811,7 +811,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         };
 
         this._defaultDropDownOverlaySettings = {
-            //target: this.inputGroupElement,
+            target: this.inputGroupElement,
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
