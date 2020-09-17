@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.1.16
+
+### General
+- `IgxSelect`
+    - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
+
 ## 9.1.9
 
 ### New Features
