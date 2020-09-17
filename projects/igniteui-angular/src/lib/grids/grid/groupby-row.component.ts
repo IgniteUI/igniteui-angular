@@ -34,70 +34,15 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         public element: ElementRef,
         public cdr: ChangeDetectorRef,
         public filteringService: IgxFilteringService) {
-            this.gridAPI.grid.onRowSelectionChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this.cdr.markForCheck();
-            });
-        }
+        this.gridAPI.grid.onRowSelectionChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
+    }
 
     /**
      * @hidden
      */
     protected destroy$ = new Subject<any>();
-
-    /**
-     * @hidden @internal
-     */
-    public onGroupSelectorClick(event){
-        if (this.selectionMode === GridSelectionMode.single || this.selectionMode === GridSelectionMode.none) { return; }
-        event.stopPropagation();
-        if(this.areAllRowsInTheGroupSelected) {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.deselectRow(row, false);
-            });
-        } else {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.selectRowById(row, false);
-            });
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get areAllRowsInTheGroupSelected(): boolean {
-        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(x));
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get selectedRowsInTheGroup(): any[] {
-        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(rowID) > -1);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get groupByRowCheckboxCheckedState(): boolean {
-        return this.selectedRowsInTheGroup.length === this.groupRow.records.length ? true : false;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get groupByRowCheckboxIndeterminateState(): boolean {
-        if(this.selectedRowsInTheGroup.length > 0){
-            return this.selectedRowsInTheGroup.length !== this.groupRow.records.length ? true : false;
-        }
-        return false;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get groupRowSelectorBaseAriaLabel() {
-        return this.areAllRowsInTheGroupSelected ? 'Deselect all rows in the group' : 'Select all rows in the group';
-    }
 
     /**
      * @hidden
@@ -238,7 +183,24 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     @HostListener('pointerdown')
     public activate() {
-        this.grid.navigation.setActiveNode({row: this.index}, 'groupRow');
+        this.grid.navigation.setActiveNode({ row: this.index }, 'groupRow');
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onGroupSelectorClick(event) {
+        if (this.selectionMode === GridSelectionMode.single || this.selectionMode === GridSelectionMode.none) { return; }
+        event.stopPropagation();
+        if (this.areAllRowsInTheGroupSelected) {
+            this.groupRow.records.forEach(row => {
+                this.gridSelection.deselectRow(row, false);
+            });
+        } else {
+            this.groupRow.records.forEach(row => {
+                this.gridSelection.selectRowById(row, false);
+            });
+        }
     }
 
     /**
@@ -282,6 +244,44 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     get dataType(): any {
         const column = this.groupRow.column;
         return (column && column.dataType) || DataType.String;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get areAllRowsInTheGroupSelected(): boolean {
+        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(x));
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get selectedRowsInTheGroup(): any[] {
+        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(rowID) > -1);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupByRowCheckboxCheckedState(): boolean {
+        return this.selectedRowsInTheGroup.length === this.groupRow.records.length ? true : false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupByRowCheckboxIndeterminateState(): boolean {
+        if (this.selectedRowsInTheGroup.length > 0) {
+            return this.selectedRowsInTheGroup.length !== this.groupRow.records.length ? true : false;
+        }
+        return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupRowSelectorBaseAriaLabel() {
+        return this.areAllRowsInTheGroupSelected ? 'Deselect all rows in the group' : 'Select all rows in the group';
     }
 
     ngOnDestroy(): void {

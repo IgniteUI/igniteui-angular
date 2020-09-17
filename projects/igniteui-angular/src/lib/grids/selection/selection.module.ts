@@ -17,4 +17,4 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
         IgxGridDragSelectDirective
     ]
 })
-export class IgxGridSelectionModule {}
+export class IgxGridSelectionModule { }
