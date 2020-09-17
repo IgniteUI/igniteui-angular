@@ -1,3 +1,14 @@
+@import '../../styles/igniteui-theme.scss';
+
+.display-density-actions {
+    max-width: 600px;
+    margin: 16px;
+
+    h4 {
+        margin: 20px 0;
+    }
+}
+
 .parent {
     display: flex;
     align-items: center;
@@ -5,8 +16,8 @@
     padding: 16px;
     width: 400px;
     height: 200px;
-    background-color: #f9f9f9;
     position: relative;
+    background-color: var(--igx-grays-200);
 }
 
 .my-action-strip {
@@ -22,7 +33,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width:100%;
+    width: 100%;
     height: 100%;
 }
 

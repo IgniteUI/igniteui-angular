@@ -19,7 +19,7 @@ export class RootRelsFile implements IExcelFile {
  */
 export class AppFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('app.xml', ExcelStrings.getApp());
+        folder.file('app.xml', ExcelStrings.getApp(worksheetData.options.worksheetName));
     }
 }
 
@@ -143,6 +143,7 @@ export class WorksheetFile implements IExcelFile {
         return new Promise(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+
                 folder.file('sheet1.xml', ExcelStrings.getSheetXML(
                     this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
                 resolve();
@@ -292,7 +293,7 @@ export class StyleFile implements IExcelFile {
  */
 export class WorkbookFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('workbook.xml', ExcelStrings.getWorkbook());
+        folder.file('workbook.xml', ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
     }
 }
 

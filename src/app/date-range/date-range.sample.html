@@ -1,207 +1,202 @@
-<div class="sample-wrapper">
-    <app-page-header title="Date Range Picker">
-        Allows the user to select a range of dates from a calendar or input fields.
-    </app-page-header>
-    <section class="sample-content">
-        <div class="sample-row">
-            <div class="range-holder">
-                <div class="range-sample-column">
-                    <h5>Without forms</h5>
-                    <p>Default range picker</p>
-                    <igx-date-range-picker></igx-date-range-picker>
+<section class="sample-content">
+    <div class="sample-row">
+        <div class="range-holder">
+            <div class="range-sample-column">
+                <h5>Without forms</h5>
+                <p>Default range picker</p>
+                <igx-date-range-picker></igx-date-range-picker>
 
-                    <p>Drop down single input with custom suffix</p>
-                    <igx-date-range-picker mode="dropdown">
-                        <igx-picker-toggle igxSuffix>
+                <p>Drop down single input with custom suffix</p>
+                <igx-date-range-picker mode="dropdown">
+                    <igx-picker-toggle igxSuffix>
+                        <igx-icon>calendar_view_day</igx-icon>
+                    </igx-picker-toggle>
+                </igx-date-range-picker>
+
+                <p>Drop down two inputs with prefix</p>
+                <igx-date-range-picker [mode]="'dropdown'"
+                    [value]="range"
+                    [minValue]="'2000/10/1'"
+                    [maxValue]="'some invalid value'"
+                >
+                    <igx-date-range-start>
+                        <input igxInput igxDateTimeEditor type="text">
+                        <igx-picker-toggle igxPrefix>
                             <igx-icon>calendar_view_day</igx-icon>
                         </igx-picker-toggle>
+                    </igx-date-range-start>
+                    <igx-date-range-end>
+                        <input igxInput igxDateTimeEditor type="text">
+                    </igx-date-range-end>
+                </igx-date-range-picker>
+
+            </div>
+            <div class="range-sample-column">
+                <h5>Template-driven form</h5>
+                <form>
+                    <p>Single template with initial value</p>
+                    <igx-date-range-picker name="dp1" [(ngModel)]="range1" required>
+                        <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
-                    <p>Drop down two inputs with prefix</p>
-                    <igx-date-range-picker [mode]="'dropdown'"
-                        [value]="range"
-                        [minValue]="'2000/10/1'"
-                        [maxValue]="'some invalid value'"
-                    >
+                    <p>Single template without initial value</p>
+                    <igx-date-range-picker name="dp2" [(ngModel)]="range2" required>
+                        <label igxLabel>Select dates</label>
+                    </igx-date-range-picker>
+
+                    <p>Single template with initial value on the picker</p>
+                    <igx-date-range-picker name="dp3" [mode]="'dropdown'" [(ngModel)]="range3" [minValue]="minDate"
+                        [maxValue]="maxDate" required>
                         <igx-date-range-start>
-                            <input igxInput igxDateTimeEditor type="text">
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>
                             </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input igxInput igxDateTimeEditor type="text">
                         </igx-date-range-start>
                         <igx-date-range-end>
+                            <label igxLabel>End date</label>
                             <input igxInput igxDateTimeEditor type="text">
                         </igx-date-range-end>
                     </igx-date-range-picker>
 
+                    <p>Single template without initial value on the picker</p>
+                    <igx-date-range-picker name="dp4" [mode]="'dropdown'" [(ngModel)]="range4" [minValue]="minDate"
+                        [maxValue]="maxDate" required>
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
+
+                    <p>Single template with initial value on inputs</p>
+                    <igx-date-range-picker [mode]="'dropdown'">
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input name="start5" igxInput igxDateTimeEditor type="text" [(ngModel)]="range5.start"
+                                [minValue]="minDate" required>
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input name="end5" igxInput igxDateTimeEditor type="text" [(ngModel)]="range5.end"
+                                [maxValue]="maxDate" required>
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
+
+                    <p>Single template without initial value on inputs</p>
+                    <igx-date-range-picker [mode]="'dropdown'">
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input name="start6" igxInput igxDateTimeEditor type="text" [(ngModel)]="range6Start"
+                                [minValue]="minDate" required>
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input name="end6" igxInput igxDateTimeEditor type="text" [(ngModel)]="range6End"
+                                [maxValue]="maxDate" required>
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
+                </form>
+            </div>
+            <div class="range-sample-column">
+                <h5>Template-driven form</h5>
+                <div class="radio-container">
+                    <igx-radio *ngFor="let option of updateOnOptions" value="{{option}}" [(ngModel)]="updateOn"
+                        (change)="updateOnChange($event)">
+                        {{option}}
+                    </igx-radio>
                 </div>
-                <div class="range-sample-column">
-                    <h5>Template-driven form</h5>
-                    <form>
-                        <p>Single template with initial value</p>
-                        <igx-date-range-picker name="dp1" [(ngModel)]="range1" required>
-                            <label igxLabel>Select dates</label>
-                        </igx-date-range-picker>
+                <form [formGroup]="reactiveForm">
+                    <p>Single template with initial value</p>
+                    <igx-date-range-picker formControlName="dp1">
+                        <label igxLabel>Select dates</label>
+                    </igx-date-range-picker>
 
-                        <p>Single template without initial value</p>
-                        <igx-date-range-picker name="dp2" [(ngModel)]="range2" required>
-                            <label igxLabel>Select dates</label>
-                        </igx-date-range-picker>
+                    <p>Single template without initial value</p>
+                    <igx-date-range-picker formControlName="dp2">
+                        <label igxLabel>Select dates</label>
+                    </igx-date-range-picker>
 
-                        <p>Single template with initial value on the picker</p>
-                        <igx-date-range-picker name="dp3" [mode]="'dropdown'" [(ngModel)]="range3" [minValue]="minDate"
-                            [maxValue]="maxDate" required>
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
+                    <p>Single template with initial value on the picker</p>
+                    <igx-date-range-picker formControlName="dp3" [mode]="'dropdown'">
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
 
-                        <p>Single template without initial value on the picker</p>
-                        <igx-date-range-picker name="dp4" [mode]="'dropdown'" [(ngModel)]="range4" [minValue]="minDate"
-                            [maxValue]="maxDate" required>
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
+                    <p>Single template without initial value on the picker</p>
+                    <igx-date-range-picker formControlName="dp4" [mode]="'dropdown'">
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
 
-                        <p>Single template with initial value on inputs</p>
-                        <igx-date-range-picker [mode]="'dropdown'">
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input name="start5" igxInput igxDateTimeEditor type="text" [(ngModel)]="range5.start"
-                                    [minValue]="minDate" required>
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input name="end5" igxInput igxDateTimeEditor type="text" [(ngModel)]="range5.end"
-                                    [maxValue]="maxDate" required>
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
+                    <p>Single template with initial value on the input</p>
+                    <igx-date-range-picker [mode]="'dropdown'">
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input formControlName="start5" igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input formControlName="end5" igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
 
-                        <p>Single template without initial value on inputs</p>
-                        <igx-date-range-picker [mode]="'dropdown'">
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input name="start6" igxInput igxDateTimeEditor type="text" [(ngModel)]="range6Start"
-                                    [minValue]="minDate" required>
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input name="end6" igxInput igxDateTimeEditor type="text" [(ngModel)]="range6End"
-                                    [maxValue]="maxDate" required>
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
-                    </form>
-                </div>
-                <div class="range-sample-column">
-                    <h5>Template-driven form</h5>
-                    <div class="radio-container">
-                        <igx-radio *ngFor="let option of updateOnOptions" value="{{option}}" [(ngModel)]="updateOn"
-                            (change)="updateOnChange($event)">
-                            {{option}}
-                        </igx-radio>
-                    </div>
-                    <form [formGroup]="reactiveForm">
-                        <p>Single template with initial value</p>
-                        <igx-date-range-picker formControlName="dp1">
-                            <label igxLabel>Select dates</label>
-                        </igx-date-range-picker>
-
-                        <p>Single template without initial value</p>
-                        <igx-date-range-picker formControlName="dp2">
-                            <label igxLabel>Select dates</label>
-                        </igx-date-range-picker>
-
-                        <p>Single template with initial value on the picker</p>
-                        <igx-date-range-picker formControlName="dp3" [mode]="'dropdown'">
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
-
-                        <p>Single template without initial value on the picker</p>
-                        <igx-date-range-picker formControlName="dp4" [mode]="'dropdown'">
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
-
-                        <p>Single template with initial value on the input</p>
-                        <igx-date-range-picker [mode]="'dropdown'">
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input formControlName="start5" igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input formControlName="end5" igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
-
-                        <p>Single template without initial value on the input</p>
-                        <igx-date-range-picker formControlName="dp4" [mode]="'dropdown'">
-                            <igx-date-range-start>
-                                <igx-picker-toggle igxPrefix>
-                                    <igx-icon>calendar_view_day</igx-icon>
-                                </igx-picker-toggle>
-                                <label igxLabel>Start date</label>
-                                <input formControlName="start6" igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-start>
-                            <igx-date-range-end>
-                                <label igxLabel>End date</label>
-                                <input formControlName="end6" igxInput igxDateTimeEditor type="text">
-                            </igx-date-range-end>
-                        </igx-date-range-picker>
-                    </form>
-                </div>
+                    <p>Single template without initial value on the input</p>
+                    <igx-date-range-picker formControlName="dp4" [mode]="'dropdown'">
+                        <igx-date-range-start>
+                            <igx-picker-toggle igxPrefix>
+                                <igx-icon>calendar_view_day</igx-icon>
+                            </igx-picker-toggle>
+                            <label igxLabel>Start date</label>
+                            <input formControlName="start6" igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-start>
+                        <igx-date-range-end>
+                            <label igxLabel>End date</label>
+                            <input formControlName="end6" igxInput igxDateTimeEditor type="text">
+                        </igx-date-range-end>
+                    </igx-date-range-picker>
+                </form>
             </div>
         </div>
-    </section>
-    <ul class="sample-ul">
-        <li>Valid: {{ reactiveForm.valid }}</li>
-        <li>Dirty: {{ reactiveForm.dirty }}</li>
-        <li>Touched: {{ reactiveForm.touched }}</li>
-        <li>Value: {{ reactiveForm.value | json }}</li>
-    </ul>
-</div>
+    </div>
+</section>
+<ul class="sample-ul">
+    <li>Valid: {{ reactiveForm.valid }}</li>
+    <li>Dirty: {{ reactiveForm.dirty }}</li>
+    <li>Touched: {{ reactiveForm.touched }}</li>
+    <li>Value: {{ reactiveForm.value | json }}</li>
+</ul>

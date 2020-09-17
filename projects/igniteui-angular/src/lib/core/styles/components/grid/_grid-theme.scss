@@ -689,13 +689,6 @@
     $drag-icon-size: rem(24px);
     $grouping-padding-right: rem(12px);
 
-    $grid-border-width: map-get((
-        material: 0,
-        fluent: 1px,
-        bootstrap: 0,
-        indigo-design: 0
-    ), $variant);
-
     $grid-header-weight: map-get((
         material: 600,
         fluent: 800,
@@ -710,9 +703,13 @@
         grid-template-columns: 1fr;
         overflow: hidden;
         box-shadow: $grid-shadow;
+
+        @if $variant == 'fluent' {
+            box-shadow: 0 0 0 1px --var($theme, 'grid-border-color');
+        }
+
         outline-style: none;
         z-index: 1;
-        border: $grid-border-width solid --var($theme, 'grid-border-color');
 
         %cbx-display {
             min-width: $cbx-size;
@@ -1142,16 +1139,19 @@
     %igx-grid__td--bool {
         justify-content: center;
 
-        igx-icon {
+        %igx-icon-display {
             height: rem(18px);
             width: rem(18px);
             font-size: rem(18px);
+        }
+
+        %igx-icon--error {
             color: igx-color($palette, 'grays', 500);
         }
     }
 
     %igx-grid__td--bool-true {
-        igx-icon {
+        %igx-icon--success {
             color: igx-color($palette, 'grays', 700);
         }
     }
@@ -1598,11 +1598,19 @@
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
         opacity: if($variant != 'indigo-design', .7, 1);
+
+        .sort-icon::after {
+            background: --var($theme, 'header-selected-background');
+        }
     }
 
     %igx-grid__th--selected {
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
+
+        .sort-icon::after {
+            background: --var($theme, 'header-selected-background');
+        }
     }
 
     %igx-grid__th--active {

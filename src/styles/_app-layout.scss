@@ -26,6 +26,10 @@
 #igniteui-demo-app {
     @include fade-in-fwd();
 
+    .sample-wrapper {
+        padding: rem(16px);
+    }
+
     .logo {
         min-width: 172px;
         min-height: 56.666px;
@@ -50,6 +54,7 @@
         position: relative;
         overflow-y: scroll;
         perspective: 5000px;
+        padding-top: 90px;
     }
 
     .nav-header {
@@ -98,4 +103,6 @@
             @include animation(fade-in-fwd .3s $ease-out-quad);
         }
     }
+
+
 }

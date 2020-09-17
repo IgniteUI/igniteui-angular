@@ -13,13 +13,14 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE, IBaseEventArgs } from '../core/utils';
+import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
-export enum LabelPosition {
-    BEFORE = 'before',
-    AFTER = 'after'
-}
+export const LabelPosition = mkenum({
+    BEFORE: 'before',
+    AFTER: 'after'
+});
+export type LabelPosition = (typeof LabelPosition)[keyof typeof LabelPosition];
 
 export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
     checked: boolean;

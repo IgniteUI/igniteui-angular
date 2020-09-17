@@ -1,18 +1,9 @@
-.sample-content {
-    flex-flow: column nowrap;
-}
-
 .settings {
-    max-width: 400px;
+    display: grid;
+    grid-row-gap: 40px;
 }
 
 .setting-container {
-    width: 100%;
-}
-
-.setting-container.radio {
-    display: flex;
-    flex-flow: row wrap;
     margin: 8px 0;
 }
 
@@ -22,12 +13,12 @@
 
 .setting-title {
     margin-bottom: 0;
-    color: #EC6F74;
+    color: var(--igx-secondary-500);
 }
 
 .setting-note {
     font-size: 14px;
-    color: #484848;
+    color: var(--igx-grays-400);
     margin: 4px 0;
 }
 

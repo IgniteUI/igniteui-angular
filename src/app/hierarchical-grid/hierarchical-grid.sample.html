@@ -119,20 +119,20 @@
 
     <h4 class="sample-title">Sample 4</h4>
     <div class="sample-actions">
-        <button igxButton="raised" (click)='LoadMoreColumns()'>Change columns runtime</button>
+        <button igxButton="raised" (click)='LoadMoreColumns()'>Add columns runtime</button>
         <button igxButton="raised" (click)='changeData()'>Change data runtime</button>
+        <button  igxButton="raised" (click)='changeHeaderRI(ri1, 0)'>Change child col header 1</button>
+        <button igxButton="raised" (click)='changeHeaderRI(ri1, 1)'>Change child col header 2</button>
     </div>
     <igx-hierarchical-grid [data]="localData1" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
         <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
         <igx-column field="ProductName" hasSummary='true'></igx-column>
         <igx-column *ngFor="let c of columns" [field]="c"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode'
+        <igx-row-island #ri1 [key]="'childData'" [autoGenerate]="false" [rowSelection]='selectionMode'
             [allowFiltering]='true'>
-            <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
+            <igx-column field="ID"  header='ID' [hasSummary]='true' [dataType]="'number'"></igx-column>
             <igx-column *ngFor="let c of childColumns" [field]="c"></igx-column>
         </igx-row-island>
     </igx-hierarchical-grid>
-
-
 </div>

@@ -1,9 +1,11 @@
 import { Directive, HostBinding, NgModule, Input } from '@angular/core';
+import { mkenum } from '../../core/utils';
 
-export enum IgxDividerType {
-    SOLID = 'solid',
-    DASHED = 'dashed'
-}
+export const IgxDividerType = mkenum({
+    SOLID: 'solid',
+    DASHED: 'dashed'
+});
+export type IgxDividerType = (typeof IgxDividerType)[keyof typeof IgxDividerType];
 
 let NEXT_ID = 0;
 

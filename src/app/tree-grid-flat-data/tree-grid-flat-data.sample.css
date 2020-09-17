@@ -1,10 +1,21 @@
+.sample-column {
+    max-width: 900px;
+}
+
+.density-chooser{
+    margin-bottom: 16px;
+}
+
+igx-buttongroup {
+    display: block;
+}
+
 .topMargin {
     margin-top: 20px;
 }
 
 .toggle-group {
     padding: 16px;
-    width: 25%;
     border-radius: 8px;
 }
 
@@ -13,3 +24,8 @@
     flex-flow: row wrap;
     justify-content: space-between;
 }
+
+.sample-buttons button{
+    margin: 8px 4px;
+}
+

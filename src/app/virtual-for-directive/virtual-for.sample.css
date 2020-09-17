@@ -1,8 +1,44 @@
 .overflowContainer > .igx-display-container {
     overflow: visible !important;
 }
-.overflowContainer  {
+
+.overflowContainer {
     position: relative;
     overflow: hidden;
 }
-.even { background-color: #1f1f1f; }
+
+.even {
+    background-color: var(--igx-grays-100);
+}
+
+.horizontal-container {
+    display: block;
+    position: relative;
+    height: 150px;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+        0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+        0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+    margin: 0 auto 24px;
+    max-width: 880px;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 8px 0;
+}
+
+.item-container {
+    display: flex;
+    align-items: center;
+}
+
+.vertical-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    column-gap: 40px;
+}
+
+igx-input-group {
+    margin: 16px 0;
+}

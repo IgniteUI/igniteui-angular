@@ -167,7 +167,7 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+    private _columnDisplayOrder: ColumnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
     /**
      * Gets the display order of the columns.
      * @example

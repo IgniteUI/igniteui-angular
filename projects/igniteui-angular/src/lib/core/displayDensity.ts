@@ -1,15 +1,15 @@
 import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit, Directive, NgModule, Optional, Inject } from '@angular/core';
-import { IBaseEventArgs } from './utils';
-
+import { IBaseEventArgs, mkenum } from './utils';
 
 /**
- * Defines the posible values of the components' display density.
+ * Defines the possible values of the components' display density.
  */
-export enum DisplayDensity {
-    comfortable = 'comfortable',
-    cosy = 'cosy',
-    compact = 'compact'
-}
+export const DisplayDensity = mkenum({
+    comfortable: 'comfortable',
+    cosy: 'cosy',
+    compact: 'compact'
+});
+export type DisplayDensity = (typeof DisplayDensity)[keyof typeof DisplayDensity];
 
 /**
  * Describes the object used to configure the DisplayDensity in Angular DI.

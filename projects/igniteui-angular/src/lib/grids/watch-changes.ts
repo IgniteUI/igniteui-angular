@@ -42,13 +42,12 @@ export function WatchColumnChanges(): PropertyDecorator {
         const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
 
         propDesc.set = function (this: any, val: any) {
-            const init = this._init;
             const oldValue = this[key];
             originalSetter.call(this, val);
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
-                if (this.rowIslandAPI.rowIsland) {
-                    this.rowIslandAPI.rowIsland.updateColumnList();
-               }
+                if (this.onColumnChange) {
+                    this.onColumnChange.emit();
+                }
             }
         };
         return propDesc;

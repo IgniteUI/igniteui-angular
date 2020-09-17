@@ -11,7 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
-    AfterContentInit,
+    AfterContentInit
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -29,15 +29,9 @@ import {
 } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 
 let NEXT_ID = 0;
-
-enum IgxInputGroupEnum {
-    line,
-    box,
-    border,
-    search,
-}
 
 enum IgxInputGroupThemeEnum {
     'material',
@@ -45,11 +39,6 @@ enum IgxInputGroupThemeEnum {
     'bootstrap',
     'indigo-design',
 }
-
-/**
- * Determines the Input Group type.
- */
-export type IgxInputGroupType = keyof typeof IgxInputGroupEnum;
 
 /**
  * Determines the Input Group theme.
@@ -60,12 +49,12 @@ export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [
-        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
+        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
     implements IgxInputGroupBase, AfterContentInit {
-    private _type: IgxInputGroupType = 'line';
+    private _type: IgxInputGroupType = null;
     private _filled = false;
     private _variant: IgxInputGroupTheme = 'material';
 
@@ -219,7 +208,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get type() {
-        return this._type;
+        return this._type || this._inputGroupType || 'line';
     }
 
     /** @hidden @internal */
@@ -250,6 +239,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         @Optional()
         @Inject(DisplayDensityToken)
         private _displayDensityOptions: IDisplayDensityOptions,
+        @Optional()
+        @Inject(IGX_INPUT_GROUP_TYPE)
+        private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
         private document: any
     ) {
@@ -289,7 +281,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     public get hasBorder() {
         return (
-            (this._type === 'line' || this._type === 'box') &&
+            (this.type === 'line' || this.type === 'box') &&
             this._variant === 'material'
         );
     }
@@ -305,7 +297,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      * ```
      */
     public get isTypeLine(): boolean {
-        return this._type === 'line' && this._variant === 'material';
+        return this.type === 'line' && this._variant === 'material';
     }
 
     /**
@@ -320,7 +312,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
-        return this._type === 'box' && this._variant === 'material';
+        return this.type === 'box' && this._variant === 'material';
     }
 
     /**
@@ -335,7 +327,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
-        return this._type === 'border' && this._variant === 'material';
+        return this.type === 'border' && this._variant === 'material';
     }
 
     /**
@@ -395,7 +387,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
      */
     @HostBinding('class.igx-input-group--search')
     public get isTypeSearch() {
-        return this._type === 'search';
+        return this.type === 'search';
     }
 
     /** @hidden */
