@@ -6,13 +6,12 @@ export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
 
-export function waitScroll(grid) {
+export function waitForActiveNodeChange (grid) {
     // wait for grid scroll operation to complete and state to be updated.
     return new Promise((resolve, reject) => {
-        grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+        grid.activeNodeChange.pipe(first()).subscribe(() => {
             grid.cdr.detectChanges();
-            // ensure all other subscriptions to this event are resolved.
-            setTimeout(resolve, 0);
+            resolve();
         });
     });
 }
