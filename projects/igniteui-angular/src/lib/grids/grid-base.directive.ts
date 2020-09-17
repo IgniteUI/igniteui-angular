@@ -5843,7 +5843,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public navigateToAddedRow(event) {
-        // TO DO: add navigation logic
+        this.navigateTo(this.dataView.length - 1);
+        this.addRowSnackbar.hide();
     }
 
     /**
@@ -6440,7 +6441,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
-        row.newData = this.transactions.getAggregatedValue(row.id, true);
+        const id = this.transactions.enabled && !row.id ? this.transactions.getStateByValue(row.data) : row.id;
+        row.newData = this.transactions.getAggregatedValue(id, true);
 
         let args = row.createEditEventArgs();
 
@@ -6482,14 +6484,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const row = this.crudService.row;
         const cell = this.crudService.cell;
 
+        // TODO: Merge the crudService with with BaseAPI service
+        if (!row && !cell) { return; }
+
         if (row?.isAddRow) {
             this.endAdd(commit, event);
             return;
         }
-
-        // TODO: Merge the crudService with with BaseAPI service
-        if (!row && !cell) { return; }
-
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
@@ -6517,10 +6518,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         if (commit) {
+            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+            // A check whether the row is in the current view
+            const shouldScroll = this.navigation.shouldPerformVerticalScroll(this.dataLength - 1, 0);
+            if (shouldScroll) {
+                this.addRowSnackbar.show();
+            }
+            });
             this.gridAPI.submit_add_value();
-            this.data.push(row.data);
+            this.gridAPI.addRowToData(row.data);
+            this.crudService.endRowEdit();
+            this.onRowAdded.emit(row.data);
             this.addRowParent = null;
-            this.addRowSnackbar.show();
         } else {
             this.gridAPI.escape_editMode();
             this.cancelAddMode = true;
