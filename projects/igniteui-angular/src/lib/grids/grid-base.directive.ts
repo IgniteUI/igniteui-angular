@@ -161,10 +161,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
-@Directive({
-    selector: '[igxGridBaseComponent]'
-})
-export class IgxGridBaseDirective extends DisplayDensityBase implements
+@Directive()
+export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
@@ -247,7 +245,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public id: string;
+    public abstract id: string;
 
     /**
      * Gets/Sets a custom template when empty.
@@ -2532,8 +2530,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
-    data: any[];
-    filteredData: any[];
+    abstract data: any[];
+    abstract filteredData: any[];
 
     /**
      * @hidden

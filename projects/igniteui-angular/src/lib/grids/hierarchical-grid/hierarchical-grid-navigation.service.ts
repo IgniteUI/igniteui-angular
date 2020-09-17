@@ -241,9 +241,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const nextColumnIndex = columnIndex <= lastVisibleIndex ? columnIndex : lastVisibleIndex;
         this._pendingNavigation = true;
         const cbFunc = (args) => {
-            args.target.grid.tbody.nativeElement.focus();
             this._pendingNavigation = false;
             cb(args);
+            args.target.grid.tbody.nativeElement.focus();
         };
         this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cbFunc);
     }
