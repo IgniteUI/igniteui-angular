@@ -4,7 +4,7 @@
 
 <ng-template #readOnlyDatePickerTemplate>
     <igx-input-group (click)="openDialog()">
-        <label igxLabel *ngIf="!labelDirective&&!labelVisibility">Date1</label>
+        <label igxLabel *ngIf="!labelDirective&&!labelVisibility">Date</label>
         <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <igx-prefix>
             <igx-icon>today</igx-icon>
