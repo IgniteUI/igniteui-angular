@@ -129,6 +129,8 @@ The DatePicker action buttons could be retemplated.
 | `weekStart`| `Number \| WEEKDAYS` | Sets on which day will the week start. |
 | `locale` | `string` | Sets the locale used for formatting and displaying the dates in the calendar. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. |
 | `formatOptions` | `Object` | The format options passed along with the `locale` property used for formatting the dates. |
+| `label` | `string` | Deprecated. Configure the input label text. |	
+| `labelVisibility` | `string` | Deprecated. Configure the input label text visibility. |
 | `format` | `string` | Configure the date display format when in edit mode. Accepts formats using the d, M and y symbols, custom separators and the following pre-defined format options - shortDate, mediumDate, longDate and fullDate. |
 | `mask` | `string` | Configure the date editor mask. Accepts the d, M and y symbols as mask - for example dd-MM-y. |
 | `disabledDates` | `DateRangeDescriptor[]` | Configure the disabled dates. |

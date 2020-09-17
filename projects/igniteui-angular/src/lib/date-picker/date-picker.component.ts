@@ -163,7 +163,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * ```html
      * <igx-date-picker [label]="Calendar"></igx-date-picker>
      * ```
-     * @deprecated By default the label is set to 'Date'. Use
+     * @deprecated Use igxLabel inside the date picker to change the label:
      * ````html
      * <igx-date-picker>
      *      <label igxLabel>Custom label</label>
@@ -171,7 +171,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * ````
      * to set a custom label.
      */
-    @DeprecateProperty(`By default the label is set to 'Date'.`)
+    @DeprecateProperty(`Use igxLabel inside the date picker to change the label:
+    <igx-date-picker>
+        <label igxLabel>Custom label</label>
+    </igx-date-picker> `)
     @Input()
     public label = 'Date';
 

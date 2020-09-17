@@ -16,7 +16,7 @@ All notable changes for each version of this project will be documented in this 
 - ` IgxExcelExporterService`
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
 - `IgxDatePicker`
-    - The `labelVisibility` has been removed and now a custom label is set by nesting a <label igxLabel></label> inside the <igx-date-picker><igx-date-picker> tags.
+    - The `labelVisibility` property has been deprecated and now a custom label is set by nesting a <label igxLabel></label> inside the <igx-date-picker><igx-date-picker> tags.
 - `IgxTimePicker`
     - Added a custom label functionality.
 
