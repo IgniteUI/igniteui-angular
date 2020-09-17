@@ -17,6 +17,7 @@ All notable changes for each version of this project will be documented in this 
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
 - `IgxTimePicker`
     - Added a custom label functionality.
+- `IgxCalendar` and `IgxDatePicker` - new `showWeekNumbers` input, that allows showing of the week number at left side of content area.
 
 ## 10.1.0
 
