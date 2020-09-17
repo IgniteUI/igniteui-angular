@@ -5845,15 +5845,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public showSnackbarFor(id: number) {
         if (id === -1) {
             this.addRowSnackbar.actionText = '';
-            this.addRowSnackbar.show();
-            return;
+        } else {
+            this.addRowSnackbar.actionText = this.snackbarActionText;
+            this.addRowSnackbar.onAction.subscribe(() => {
+                this.navigateTo(id);
+                this.addRowSnackbar.hide();
+            });
         }
-        this.addRowSnackbar.actionText = this.snackbarActionText;
         this.addRowSnackbar.show();
-        this.addRowSnackbar.onAction.subscribe(() => {
-            this.navigateTo(id);
-            this.addRowSnackbar.hide();
-        });
     }
 
     /**
@@ -6450,8 +6449,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
-        const id = this.transactions.enabled && !row.id ? this.transactions.getStateByValue(row.data) : row.id;
-        row.newData = this.transactions.getAggregatedValue(id, true);
+        row.newData = this.transactions.getAggregatedValue(row.id, true);
 
         let args = row.createEditEventArgs();
 
