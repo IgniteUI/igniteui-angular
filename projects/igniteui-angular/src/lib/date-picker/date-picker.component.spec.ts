@@ -159,7 +159,6 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            // expect(label).toBeNull();
             expect(label.nativeElement.innerText).toBe('Date');
         });
 
@@ -180,7 +179,6 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            // expect(label).toBeNull();
             expect(label.nativeElement.innerText).toBe('Date');
 
             fixture.componentInstance.labelVisibility = true;
