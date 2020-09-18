@@ -191,7 +191,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should correctly initialize pinned columns z-index values.', () => {
 
-                const headers = GridFunctions.getColumnGroupHeaders(fix);
+                const headers = GridFunctions.getColumnHeaders(fix);
 
                 // First two headers are pinned
                 expect(headers[0].componentInstance.zIndex).toEqual(9999);
@@ -201,7 +201,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
 
                 // First three headers are pinned
-                const secondColumnGroupHeader = GridFunctions.getColumnGroupHeaders(fix)[2];
+                const secondColumnGroupHeader = GridFunctions.getColumnHeaders(fix)[2];
                 expect(secondColumnGroupHeader.componentInstance.zIndex).toEqual(9997);
             });
 
