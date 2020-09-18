@@ -202,7 +202,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 // First three headers are pinned
                 const secondColumnGroupHeader = GridFunctions.getColumnHeaders(fix)[2];
-                expect(secondColumnGroupHeader.componentInstance.zIndex).toEqual(9997);
+                expect(secondColumnGroupHeader.parent.componentInstance.zIndex).toEqual(9997);
             });
 
             it('should not pin/unpin columns which are already pinned/unpinned', () => {
