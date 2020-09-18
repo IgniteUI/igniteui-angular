@@ -194,8 +194,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const headers = GridFunctions.getColumnHeaders(fix);
 
                 // First two headers are pinned
-                expect(headers[0].componentInstance.zIndex).toEqual(9999);
-                expect(headers[1].componentInstance.zIndex).toEqual(9998);
+                expect(headers[0].parent.componentInstance.zIndex).toEqual(9999);
+                expect(headers[1].parent.componentInstance.zIndex).toEqual(9998);
 
                 grid.pinColumn('Region');
                 fix.detectChanges();
