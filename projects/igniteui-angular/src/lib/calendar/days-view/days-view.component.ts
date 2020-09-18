@@ -55,6 +55,17 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public changeDaysView = false;
 
     /**
+     * Show/hide week numbers
+     *
+     * @example
+     * ```html
+     * <igx-days-view [showWeekNumbers]="true"></igx-days-view>
+     * ``
+     */
+    @Input()
+    public showWeekNumbers: boolean;
+
+    /**
      * @hidden
      */
     @Output()
@@ -123,6 +134,15 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         if (!this.changeDaysView && this.dates) {
             this.disableOutOfRangeDates();
         }
+    }
+
+    /**
+     * Returns the week number by date
+     *
+     * @hidden
+     */
+    public getWeekNumber(date): number {
+        return this.calendarModel.getWeekNumber(date);
     }
 
     /**

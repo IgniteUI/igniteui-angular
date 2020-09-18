@@ -5,7 +5,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 # Usage
 ```html
-<igx-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
+<igx-avatar [roundShape]="true" icon="person" bgColor="#0375be" data-init="SS">
 </igx-avatar>
 ```
 
@@ -27,7 +27,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 Using `igx-avatar` tag to include it into your app.
 ```html
-<igx-avatar roundShape="true" icon="person" bgColor="#0375be" data-init="SS">
+<igx-avatar [roundShape]="true" icon="person" bgColor="#0375be" data-init="SS">
 </igx-avatar>
 ```
 

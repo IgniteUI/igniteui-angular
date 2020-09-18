@@ -9,7 +9,7 @@
         <ng-content select="igx-hint, [igxHint]"></ng-content>
     </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [attr.placeholder]="placeholder"
-        [disabled]="disabled" (blur)="onBlur()" (focus)="onFocus()" />
+        [disabled]="disabled" (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
@@ -51,7 +51,7 @@
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <igx-combo-item role="option" [itemHeight]='itemHeight' *igxFor="let item of data
-            | comboFiltering:searchValue:displayKey:filterable:filteringOptions
+            | comboFiltering:filterValue:displayKey:filterable:filteringOptions
             | comboGrouping:groupKey:valueKey;
             index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
             [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">

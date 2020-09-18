@@ -14,6 +14,14 @@
     margin-bottom: 0;
 }
 
+.button-sample button {
+    margin: 10px 5px 10px 0;
+}
+
+.button-sample label {
+    margin-right: 5px;
+}
+
 .cards-container {
     display: flex;
     justify-content: space-between;
@@ -41,7 +49,7 @@
 }
 
 .toggle-group:nth-child(odd) {
-    background: #F3F3F3;
+    background: var(--igx-surface-500);
 }
 
 .paging-config {
@@ -64,4 +72,8 @@ igx-card {
 
 igx-card~igx-card {
     margin-left: 16px;
+}
+
+article {
+    margin-top: 30px;
 }

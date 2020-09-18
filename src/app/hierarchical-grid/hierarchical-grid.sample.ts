@@ -103,6 +103,10 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         console.log(this.hgridState);
     }
 
+    changeHeaderRI(ri, index) {
+        ri.childColumns.toArray()[index].header = 'New';
+    }
+
     generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;

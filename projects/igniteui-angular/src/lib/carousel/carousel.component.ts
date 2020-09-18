@@ -21,7 +21,7 @@ import {
     Injectable
 } from '@angular/core';
 import { IgxIconModule } from '../icon/public_api';
-import { IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
@@ -34,16 +34,18 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 
 let NEXT_ID = 0;
 
-export enum CarouselIndicatorsOrientation {
-    bottom = 'bottom',
-    top = 'top'
-}
+export const CarouselIndicatorsOrientation = mkenum({
+    bottom: 'bottom',
+    top: 'top'
+});
+export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
 
-export enum CarouselAnimationType {
-    none = 'none',
-    slide = 'slide',
-    fade = 'fade'
-}
+export const CarouselAnimationType = mkenum({
+    none: 'none',
+    slide: 'slide',
+    fade: 'fade'
+});
+export type CarouselAnimationType = (typeof CarouselAnimationType)[keyof typeof CarouselAnimationType];
 
 export interface CarouselAnimationSettings {
     enterAnimation: AnimationReferenceMetadata;

@@ -6,10 +6,11 @@
 .sample-buttons {
     margin-top: 24px;
     display: flex;
+    flex-wrap: wrap;
 }
 
 igx-checkbox {
-    margin: 0px 10px; 
+    margin: 0px 10px;
 }
 
 [igxButton]+[igxButton] {

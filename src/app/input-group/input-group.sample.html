@@ -1,4 +1,3 @@
-<app-page-header title="Input Group"></app-page-header>
 <div class="input-group-sample">
     <form class="input-group-sample-form">
         <div class="form__fields-settings">
@@ -28,13 +27,9 @@
         </div>
         <div class="form__fields">
             <!-- input type search - suffix/prefix -->
-            <igx-input-group
-                [displayDensity]="density"
-                [type]="inputSearchType"
-            >
-                <igx-prefix>
-                    <igx-icon>search</igx-icon>
-                </igx-prefix>
+            <igx-input-group class="material-theme" [displayDensity]="density">
+                <label igxLabel>Always Material & Use Input type TOKEN</label>
+                <igx-icon igxPrefix>search</igx-icon>
                 <input
                     name="inputTest"
                     #input
@@ -55,7 +50,7 @@
 
             <!-- text field -->
             <igx-input-group class="material-theme" [displayDensity]="density" [type]="inputType">
-                <label for="fluentfirstName" igxLabel>Always Material</label>
+                <label for="fluentfirstName" igxLabel>Always Material - set type</label>
                 <igx-prefix>
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
@@ -69,9 +64,7 @@
                     [(ngModel)]="inputValue"
                     [disabled]="isDisabled"
                 />
-                <igx-suffix>
-                    <igx-icon>data_usage</igx-icon>
-                </igx-suffix>
+                <igx-icon igxSuffix>data_usage</igx-icon>
             </igx-input-group>
             <br />
 
@@ -182,8 +175,9 @@
                 [displayDensity]="density"
                 [placeholder]="'Pick One'"
                 [disabled]="isDisabled"
+                class="material-theme"
             >
-                <label igxLabel>Input type select</label>
+                <label igxLabel>Always Material & Use Input type TOKEN</label>
                 <igx-prefix igxPrefix>
                     <igx-icon fontSet="material">favorite</igx-icon>
                 </igx-prefix>

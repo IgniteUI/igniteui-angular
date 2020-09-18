@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe } from 'rxjs';
+import { Subject, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -72,7 +72,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
-import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -161,10 +161,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
-@Directive({
-    selector: '[igxGridBaseComponent]'
-})
-export class IgxGridBaseDirective extends DisplayDensityBase implements
+@Directive()
+export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
@@ -247,7 +245,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public id: string;
+    public abstract id: string;
 
     /**
      * Gets/Sets a custom template when empty.
@@ -971,7 +969,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._filterMode;
     }
 
-    set filterMode(value) {
+    set filterMode(value: FilterMode) {
         this._filterMode = value;
 
         if (this.filteringService.isFilterRowVisible) {
@@ -994,7 +992,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryPosition;
     }
 
-    set summaryPosition(value) {
+    set summaryPosition(value: GridSummaryPosition) {
         this._summaryPosition = value;
         this.notifyChanges();
     }
@@ -1013,7 +1011,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._summaryCalculationMode;
     }
 
-    set summaryCalculationMode(value) {
+    set summaryCalculationMode(value: GridSummaryCalculationMode) {
         this._summaryCalculationMode = value;
         if (!this._init) {
             this.endEdit(true);
@@ -2535,8 +2533,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
-    data: any[];
-    filteredData: any[];
+    abstract data: any[];
+    abstract filteredData: any[];
 
     /**
      * @hidden
@@ -2637,7 +2635,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _allowAdvancedFiltering = false;
-    protected _filterMode = FilterMode.quickFilter;
+    protected _filterMode: FilterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver = new ResizeObserver(() => { });
 
@@ -2672,12 +2670,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected _defaultTargetRecordNumber = 10;
 
-    private _summaryPosition = GridSummaryPosition.bottom;
-    private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _summaryPosition: GridSummaryPosition = GridSummaryPosition.bottom;
+    private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
-    private _cellSelectionMode = GridSelectionMode.multiple;
-    private _rowSelectionMode = GridSelectionMode.none;
-    private _columnSelectionMode = GridSelectionMode.none;
+    private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
+    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
+    private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
@@ -2884,6 +2882,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
+
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
@@ -2917,6 +2916,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
+                this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                this.navigation.activeNode = {} as IActiveNode;
+                this.notifyChanges();
+            }
+        });
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -2972,6 +2980,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
+                    instance.lastActiveNode = this.navigation.activeNode;
                     instance.setAddButtonFocus();
                 }
                 return;
@@ -3839,6 +3848,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Reorder columns in the main columnList and _columns collections.
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
@@ -3868,94 +3878,79 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Reorders columns inside the passed column collection.
+     * When reordering column group collection, the collection is not flattened.
+     * In all other cases, the columns collection is flattened, this is why adittional calculations on the dropIndex are done.
      * @hidden
      */
-    protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
+    protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[],
+        inGroup = false) {
         const fromIndex = columnCollection.indexOf(from);
-        const childColumnsCount = from.allChildren.length;
-        // remove item(s) to be moved.
-        const fromCollection = columnCollection.splice(fromIndex, childColumnsCount + 1);
-
+        const childColumnsCount = inGroup ? 1 : from.allChildren.length + 1;
+        columnCollection.splice(fromIndex, childColumnsCount);
         let dropIndex = columnCollection.indexOf(to);
-
         if (position === DropPosition.AfterDropTarget) {
             dropIndex++;
-            if (to.columnGroup) {
+            if (!inGroup && to.columnGroup) {
                 dropIndex += to.allChildren.length;
             }
         }
-        columnCollection.splice(dropIndex, 0, ...fromCollection);
+        columnCollection.splice(dropIndex, 0, from);
     }
+
     /**
+     * Reorder column group collection.
      * @hidden
      */
     protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
         const buffer = parent.children.toArray();
-        this._reorderColumns(from, to, pos, buffer);
+        this._reorderColumns(from, to, pos, buffer, true);
         parent.children.reset(buffer);
     }
     /**
-     * Moves a column to the specified drop target.
+     * Places a column before or after the specified target column.
      * @example
      * ```typescript
-     * grid.moveColumn(compName, persDetails);
+     * grid.moveColumn(column, target);
      * ```
      */
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
+    public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
 
-        if (column === dropTarget) {
-            return;
-        }
-        let position = pos;
-        if ((column.level !== dropTarget.level) ||
-            (column.topLevelParent !== dropTarget.topLevelParent)) {
+        if (column === target || (column.level !== target.level) ||
+            (column.topLevelParent !== target.topLevelParent)) {
             return;
         }
 
         this.endEdit(true);
         if (column.level) {
-            this._moveChildColumns(column.parent, column, dropTarget, position);
+            this._moveChildColumns(column.parent, column, target, pos);
         }
 
-        if (dropTarget.pinned && column.pinned) {
-            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
-        }
-
-        if (dropTarget.pinned && !column.pinned) {
+        if (target.pinned && !column.pinned) {
             column.pin();
-            if (!this.isPinningToStart) {
-                if (pos === DropPosition.AfterDropTarget) {
-                    position = DropPosition.AfterDropTarget;
-                }
-            }
-            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
         }
 
-        if (!dropTarget.pinned && column.pinned) {
+        if (!target.pinned && column.pinned) {
             column.unpin();
-            let list = [];
-
-            if (this.pinnedColumns.indexOf(column) === -1 && this.pinnedColumns.indexOf(dropTarget) === -1) {
-                list = this._unpinnedColumns;
-            } else {
-                list = this._pinnedColumns;
-            }
-
-            const fi = list.indexOf(column);
-            const ti = list.indexOf(dropTarget);
-
-            if (pos === DropPosition.BeforeDropTarget && fi < ti) {
-                position = DropPosition.BeforeDropTarget;
-            } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
-                position = DropPosition.AfterDropTarget;
-            }
         }
 
-        if (!dropTarget.pinned) {
-            this._reorderColumns(column, dropTarget, position, this._unpinnedColumns);
+        if (target.pinned && column.pinned) {
+            this._reorderColumns(column, target, pos, this._pinnedColumns);
         }
 
-        this._moveColumns(column, dropTarget, position);
+        if (!target.pinned && !column.pinned) {
+           this._reorderColumns(column, target, pos, this._unpinnedColumns);
+        }
+
+        this._moveColumns(column, target, pos);
+        this._columnsReordered(column, target);
+    }
+
+    /**
+     * Notiy changes, reset cache and populateVisibleIndexes.
+     * @hidden
+     */
+    private _columnsReordered(column: IgxColumnComponent, target) {
         this.notifyChanges();
         if (this.hasColumnLayouts) {
             this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
@@ -3966,7 +3961,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const args = {
             source: column,
-            target: dropTarget
+            target: target
         };
 
         this.onColumnMovingEnd.emit(args);

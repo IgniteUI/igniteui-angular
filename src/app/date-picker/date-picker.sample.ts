@@ -50,10 +50,6 @@ export class DatePickerSampleComponent {
         datePicker.deselectDate();
     }
 
-    public showHide() {
-        this.datepicker1.hideOutsideDays = !this.datepicker1.hideOutsideDays;
-    }
-
     public setMonthsViewNumber(args: HTMLInputElement) {
         this.datepicker1.monthsViewNumber = parseInt(args.value, 10);
     }

@@ -141,22 +141,24 @@
 }
 
 /// Generates CSS class names for all colors from
-/// the color palette for a given property, with
+/// for a given property and color palette, with
 /// optional prefix and suffix attached to the class name.
 /// @access private
 /// @param {string} $prop - The CSS property to assign the palette color to.
 /// @param {string} $prefix - A prefix to be attached to the class name.
 /// @param {string} $suffix - A suffix to be attached to the class name.
+/// @param {Map} $palette [$default-palette] - The igx palette to use to generate css class names for.
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .my-primary-500-bg { ... };
 ///   @include gen-color-classes(
 ///     $prop: 'background-color',
-///     $prefix: 'my', $suffix: 'bg'
+///     $prefix: 'my',
+///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-class
-@mixin gen-color-classes($prop, $prefix, $suffix) {
-    @each $palette-name, $sub-palette in $default-palette {
+@mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
+    @each $palette-name, $sub-palette in $palette {
         @each $variant, $color in $sub-palette {
             @if type-of($color) != 'map' {
                 @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
@@ -211,12 +213,13 @@
 }
 
 /// Generates CSS class names for all colors from
-/// the color palette for a given property, with
+/// for a given property and color palette, with
 /// optional prefix and suffix attached to the class name.
 /// @access private
 /// @param {string} $prop - The CSS property to assign the palette color to.
 /// @param {string} $prefix [igx] - A prefix to be attached to the class name.
 /// @param {string} $suffix [null] - A suffix to be attached to the class name.
+/// @param {Map} $palette [$default-palette] - The igx palette to use to generate css class names for.
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .igx-primary-500-bg { ... };
@@ -225,8 +228,8 @@
 ///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-classes
-@mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx') {
-    @include gen-color-classes($prop, $prefix, $suffix);
+@mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
+    @include gen-color-classes($prop, $prefix, $suffix, $palette);
 }
 
 /// Parses a map of key value pairs

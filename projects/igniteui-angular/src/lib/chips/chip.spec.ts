@@ -230,31 +230,26 @@ describe('IgxChip', () => {
 
         it('should apply correct tabIndex to the chip area only when tabIndex is set as property of the chip and chip is disabled', () => {
             const firstTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[4];
-            expect(firstTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(firstTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
+            expect(firstTabChip.nativeElement.getAttribute('tabindex')).toEqual('1');
 
             // Chip is disabled, but attribute tabindex has bigger priority.
             const secondTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[5];
-            expect(secondTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(secondTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('2');
+            expect(secondTabChip.nativeElement.getAttribute('tabindex')).toEqual('2');
         });
 
         it('should apply correct tab indexes when tabIndex and removeTabIndex are set as inputs', () => {
             const thirdTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[6];
             const deleteBtn = ControlsFunction.getChipRemoveButton(thirdTabChip.componentInstance.chipArea.nativeElement);
-            expect(thirdTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(thirdTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('3');
+            expect(thirdTabChip.nativeElement.getAttribute('tabindex')).toEqual('3');
             expect(deleteBtn.getAttribute('tabindex')).toEqual('3');
 
             // tabIndex attribute has higher priority than tabIndex.
             const fourthTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[7];
-            expect(fourthTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(fourthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
+            expect(fourthTabChip.nativeElement.getAttribute('tabindex')).toEqual('1');
 
             // tabIndex attribute has higher priority than tabIndex input and chip being disabled.
             const fifthTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[8];
-            expect(fifthTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(fifthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
+            expect(fifthTabChip.nativeElement.getAttribute('tabindex')).toEqual('1');
         });
     });
 

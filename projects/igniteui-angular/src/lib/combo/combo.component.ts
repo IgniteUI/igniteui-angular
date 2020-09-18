@@ -38,6 +38,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
 /**
  * @hidden
@@ -165,12 +166,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filteringOptions: IComboFilteringOptions = {
         caseSensitive: false
     };
+    /** @hidden @internal */
+    public filterValue = '';
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
     protected _displayKey: string;
     protected _prevInputValue = '';
     private _dataType = '';
+    private _searchValue = '';
+    private _type = null;
     private ngControl: NgControl = null;
     private destroy$ = new Subject<any>();
     private _data = [];
@@ -196,6 +201,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected comboAPI: IgxComboAPIService,
         private _iconService: IgxIconService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         @Optional() private _injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);
@@ -856,8 +862,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public type = 'box';
+    public get type(): IgxInputGroupType {
+            return this._type || this._inputGroupType || 'box';
+        }
 
+    public set type(val: IgxInputGroupType) {
+        this._type = val;
+    }
     /**
      * An @Input property that controls whether the combo's search box
      * should be focused after the `onOpened` event is called
@@ -894,7 +905,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public searchValue = '';
+    public get searchValue(): string {
+        return this._searchValue;
+    }
+
+    public set searchValue(val: string) {
+        this.filterValue = val;
+        this._searchValue = val;
+    }
 
     /**
      * @hidden @internal
@@ -1036,8 +1054,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             };
             this.onSearchInput.emit(args);
             if (args.cancel) {
-                this.searchValue = null;
-                return;
+                this.filterValue = null;
             }
         }
         this.checkMatch();
@@ -1175,7 +1192,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            if (!this.collapsed || this.inputGroup.isFocused) {
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            } else {
+                this.valid = this.ngControl.valid ? IgxComboState.INITIAL : IgxComboState.INVALID;
+            }
         }
         this.manageRequiredAsterisk();
     }
@@ -1199,13 +1220,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             } else {
                 this.valid = IgxComboState.INITIAL;
             }
-        }
-    }
-
-    /** @hidden @internal */
-    public onFocus() {
-        if (this.collapsed) {
-            this._onTouchedCallback();
         }
     }
 
@@ -1249,8 +1263,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        this.selectItems(value, true);
-        this.cdr.markForCheck();
+        const selection = Array.isArray(value) ? value : [];
+        const oldSelection = this.selectedItems();
+        this.selection.select_items(this.id, selection, true);
+        this._value = this.createDisplayText(this.selectedItems(), oldSelection);
     }
 
     /**

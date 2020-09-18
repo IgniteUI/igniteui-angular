@@ -1,3 +1,4 @@
+import { IgxLabelDirective } from './../directives/label/label.directive';
 import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -44,6 +45,32 @@ describe('IgxTimePicker', () => {
 
         expect(timePicker.id).toBe('customTimePicker');
         expect(domTimePicker.id).toBe('customTimePicker');
+    }));
+
+    it('Should display default and custom label', (() => {
+        const fixture = TestBed.createComponent(IgxTimePickerCustomLabelComponent);
+        const testComponent = fixture.componentInstance;
+        testComponent.mode = InteractionMode.DropDown;
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        let label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+        expect(label).toEqual('Custom label');
+
+        testComponent.customLabel = false;
+        fixture.detectChanges();
+        label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+        expect(label).toEqual('Time');
+
+        testComponent.mode = InteractionMode.Dialog;
+        fixture.detectChanges();
+        label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+        expect(label).toEqual('Time');
+
+        testComponent.customLabel = true;
+        fixture.detectChanges();
+        label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+        expect(label).toEqual('Custom label');
     }));
 
     it('@Input properties', (() => {
@@ -1640,34 +1667,34 @@ describe('IgxTimePicker', () => {
         }));
 
         it('When timepicker is closed via outside click, the focus should NOT remain on the input',
-        fakeAsync(() => {
-            fixture.detectChanges();
-            input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
-            let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            fakeAsync(() => {
+                fixture.detectChanges();
+                input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
 
-            expect(overlayToggle.length).toEqual(0);
+                expect(overlayToggle.length).toEqual(0);
 
-            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
-            UIInteractions.simulateClickAndSelectEvent(iconTime);
-            tick();
-            fixture.detectChanges();
+                const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+                UIInteractions.simulateClickAndSelectEvent(iconTime);
+                tick();
+                fixture.detectChanges();
 
-            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-            expect(overlayToggle[0]).not.toBeNull();
-            expect(overlayToggle[0]).not.toBeUndefined();
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+                expect(overlayToggle[0]).not.toBeNull();
+                expect(overlayToggle[0]).not.toBeUndefined();
 
-            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
-            dummyInput.focus();
-            dummyInput.click();
-            tick();
-            fixture.detectChanges();
+                const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
+                dummyInput.focus();
+                dummyInput.click();
+                tick();
+                fixture.detectChanges();
 
-            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-            input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
-            expect(overlayToggle[0]).toEqual(undefined);
-            expect(input).not.toEqual(document.activeElement);
-            expect(dummyInput).toEqual(document.activeElement);
-        }));
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+                input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                expect(overlayToggle[0]).toEqual(undefined);
+                expect(input).not.toEqual(document.activeElement);
+                expect(dummyInput).toEqual(document.activeElement);
+            }));
 
         it('should apply disabled style for time outside the min and max values', fakeAsync(() => {
             timePicker = new IgxTimePickerComponent(null, null);
@@ -2080,7 +2107,7 @@ describe('IgxTimePicker', () => {
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-            inputDirectiveElement.triggerEventHandler('focus', { target: { value: null }});
+            inputDirectiveElement.triggerEventHandler('focus', { target: { value: null } });
             tick(16);
             fixture.detectChanges();
 
@@ -2094,7 +2121,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-            inputDirectiveElement.triggerEventHandler('blur', { target: { value: null}});
+            inputDirectiveElement.triggerEventHandler('blur', { target: { value: null } });
             fixture.detectChanges();
 
             expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
@@ -2132,7 +2159,7 @@ describe('IgxTimePicker', () => {
                 nativeElement: { getBoundingClientRect: () => 0 },
                 style: { width: null }
             };
-            cdr = { detectChanges: () => {}};
+            cdr = { detectChanges: () => { } };
             toggleRef = {
                 onOpened: new EventEmitter<any>(),
                 onClosed: new EventEmitter<any>(),
@@ -2140,14 +2167,14 @@ describe('IgxTimePicker', () => {
                 element
             };
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(element, null, document);
+            inputGroup = new IgxInputGroupComponent(element, null, null, document);
         });
 
         it('should initialize time picker with required correctly', () => {
             const timePicker = new IgxTimePickerComponent(injector, cdr);
             timePicker['_inputGroup'] = inputGroup;
             timePicker['toggleRef'] = toggleRef;
-            ngModel.control.validator = () => ({ required: true});
+            ngModel.control.validator = () => ({ required: true });
             timePicker.ngOnInit();
             timePicker.ngAfterViewInit();
             timePicker.ngAfterViewChecked();
@@ -2167,11 +2194,11 @@ describe('IgxTimePicker', () => {
             expect(timePicker).toBeDefined();
             expect(inputGroup.isRequired).toBeFalsy();
 
-            ngModel.control.validator = () => ({ required: true});
+            ngModel.control.validator = () => ({ required: true });
             ngModel.statusChanges.emit();
             expect(inputGroup.isRequired).toBeTruthy();
 
-            ngModel.control.validator = () => ({ required: false});
+            ngModel.control.validator = () => ({ required: false });
             ngModel.statusChanges.emit();
             expect(inputGroup.isRequired).toBeFalsy();
         });
@@ -2288,6 +2315,19 @@ export class IgxTimePickerRetemplatedComponent { }
 
 @Component({
     template: `
+    <igx-time-picker [mode]="mode">
+        <label igxLabel *ngIf="customLabel">Custom label</label>
+    </igx-time-picker>
+    `
+})
+export class IgxTimePickerCustomLabelComponent {
+    public customLabel = true;
+    public mode = InteractionMode.DropDown;
+}
+
+
+@Component({
+    template: `
     <input class="dummyInput" #dummyInput/>
     <igx-time-picker mode="dropdown"
             [isSpinLoop]="isSpinLoop"
@@ -2395,7 +2435,7 @@ export class IgxTimePickerReactiveFormComponent {
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
             timePickerOnChange: [null, Validators.required],
-            timePickerOnBlur: [null, { updateOn: 'blur', validators: Validators.required}]
+            timePickerOnBlur: [null, { updateOn: 'blur', validators: Validators.required }]
         });
     }
     onSubmitReactive() { }
@@ -2417,7 +2457,8 @@ export class IgxTimePickerReactiveFormComponent {
         IgxTimePickerDropDownNoValueComponent,
         IgxTimePickerRetemplatedDropDownComponent,
         IgxTimePickerWithOutletComponent,
-        IgxTimePickerReactiveFormComponent
+        IgxTimePickerReactiveFormComponent,
+        IgxTimePickerCustomLabelComponent
     ],
     imports: [
         IgxTimePickerModule,
