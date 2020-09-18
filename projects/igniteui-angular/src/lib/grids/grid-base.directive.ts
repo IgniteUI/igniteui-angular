@@ -2704,6 +2704,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
+    private lastAddedRowId;
+
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -3247,6 +3249,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .subscribe((change: QueryList<IgxGridRowComponent>) => {
                 this.onPinnedRowsChanged(change);
             });
+
+        this.addRowSnackbar.onAction.subscribe(() => {
+            this.navigateTo(this.lastAddedRowId);
+            this.addRowSnackbar.hide();
+        });
     }
 
     /**
@@ -5843,15 +5850,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public showSnackbarFor(id: number) {
-        if (id === -1) {
-            this.addRowSnackbar.actionText = '';
-        } else {
-            this.addRowSnackbar.actionText = this.snackbarActionText;
-            this.addRowSnackbar.onAction.subscribe(() => {
-                this.navigateTo(id);
-                this.addRowSnackbar.hide();
-            });
-        }
+        this.addRowSnackbar.actionText = id === -1 ? '' : this.snackbarActionText;
+        this.lastAddedRowId = id;
         this.addRowSnackbar.show();
     }
 
