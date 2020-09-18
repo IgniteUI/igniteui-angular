@@ -12,7 +12,7 @@
         [value]="this.selectionValue"
         role="combobox"
         aria-haspopup="listbox"
-        [attr.aria-labelledby]="this.label ? this.label.id : ''"
+        [attr.aria-labelledby]="this.label?.id"
         [attr.aria-expanded]="!this.collapsed"
         [attr.aria-owns]="this.listId"
         [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
@@ -40,7 +40,8 @@
     </div>
 
     <!-- #7436 LMB scrolling closes items container - unselectable attribute is IE specific  -->
-    <div #scrollContainer class="igx-drop-down__list-scroll" unselectable="on" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
+    <div #scrollContainer class="igx-drop-down__list-scroll" unselectable="on" [style.maxHeight]="maxHeight"
+        [attr.id]="this.listId" role="listbox" [attr.aria-labelledby]="this.label?.id">
         <ng-content select="igx-select-item, igx-select-item-group"></ng-content>
     </div>
 

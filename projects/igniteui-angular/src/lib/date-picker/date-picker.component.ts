@@ -68,6 +68,8 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
+import { IgxLabelDirective } from '../directives/label/label.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -168,7 +170,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * ```html
      * <igx-date-picker [label]="Calendar"></igx-date-picker>
      * ```
+     * @deprecated Use igxLabel inside the date picker to change the label:
+     * ````html
+     * <igx-date-picker>
+     *      <label igxLabel>Custom label</label>
+     * </igx-date-picker>
+     * ````
+     * to set a custom label.
      */
+    @DeprecateProperty(`Use igxLabel inside the date picker to change the label:
+    <igx-date-picker>
+        <label igxLabel>Custom label</label>
+    </igx-date-picker> `)
     @Input()
     public label = 'Date';
 
@@ -178,7 +191,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * By default the visibility is set to true.
      * @example
      * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
+     * @deprecated Use
+     * ````html
+     * <igx-date-picker>
+     *      <label igxLabel>Custom label</label>
+     * </igx-date-picker>
+     * ````
+     * to set a custom label.
      */
+    @DeprecateProperty(`Deprecated. Use
+    <igx-date-picker>
+        <label igxLabel>Custom label</label>
+    </igx-date-picker> to set a label.` )
     @Input()
     public labelVisibility = true;
 
@@ -640,6 +664,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     @ViewChild('readOnlyDatePickerTemplate', { read: TemplateRef, static: true })
     protected readOnlyDatePickerTemplate: TemplateRef<any>;
+
+    /*
+     * @hidden @internal
+     */
+    @ContentChild(IgxLabelDirective)
+    public labelDirective: IgxLabelDirective;
 
     /*
      * @hidden
