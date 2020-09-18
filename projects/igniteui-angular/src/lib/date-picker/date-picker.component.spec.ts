@@ -27,6 +27,7 @@ describe('IgxDatePicker', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
+                IgxDatePickerProjectedLabelTestComponent,
                 IgxDatePickerWithWeekStartComponent,
                 IgxDatePickerWithCustomFormatterComponent,
                 IgxDatePickerWithPassedDateComponent,
@@ -149,7 +150,7 @@ describe('IgxDatePicker', () => {
             expect(datePicker.value).toEqual(date);
         });
 
-        it('When labelVisability is set to false the label should not be visible', () => {
+        it('When labelVisibility is set to false the label should not be visible', () => {
             let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
 
             expect(label.nativeElement.innerText).toBe(datePicker.label);
@@ -158,7 +159,7 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label).toBeNull();
+            expect(label.nativeElement.innerText).toBe('Date');
         });
 
         it('When update label property it should reflect on the label text of the datepicker', () => {
@@ -178,13 +179,42 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label).toBeNull();
+            expect(label.nativeElement.innerText).toBe('Date');
 
             fixture.componentInstance.labelVisibility = true;
             fixture.detectChanges();
 
             label = fixture.debugElement.query(By.directive(IgxLabelDirective));
             expect(label).not.toBeNull();
+        });
+
+        it('should display default and custom label', () => {
+            const fixtureProjectedLabel = TestBed.createComponent(IgxDatePickerProjectedLabelTestComponent);
+            const dom = fixtureProjectedLabel.debugElement;
+            const testComponent = fixtureProjectedLabel.componentInstance;
+            fixtureProjectedLabel.detectChanges();
+
+            let label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual(testComponent.customLabel);
+
+            testComponent.customLabelVisibility = false;
+            fixtureProjectedLabel.detectChanges();
+
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual('Date');
+
+            testComponent.labelVisibility = false;
+            fixtureProjectedLabel.detectChanges();
+            testComponent.customLabelVisibility = false;
+            fixtureProjectedLabel.detectChanges();
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            fixtureProjectedLabel.detectChanges();
+            expect(label).toEqual('Date');
+
+            testComponent.customLabelVisibility = true;
+            fixtureProjectedLabel.detectChanges();
+            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            expect(label).toEqual(testComponent.customLabel);
         });
 
         it('Handling keyboard navigation with `space`(open) and `esc`(close) buttons', fakeAsync(() => {
@@ -1522,6 +1552,21 @@ export class IgxDatePickerWithWeekStartComponent {
 
 @Component({
     template: `
+        <igx-date-picker [labelVisibility]="labelVisibility">
+            <label igxLabel *ngIf="customLabelVisibility">{{ customLabel }}</label>
+        </igx-date-picker>
+    `
+})
+export class IgxDatePickerProjectedLabelTestComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+
+    public customLabelVisibility = true;
+    public customLabel = 'Custom label';
+    public labelVisibility = true;
+}
+
+@Component({
+    template: `
         <igx-date-picker [labelVisibility]="labelVisibility"></igx-date-picker>
     `
 })
@@ -1530,7 +1575,6 @@ export class IgxDatePickerTestComponent {
 
     public labelVisibility = true;
 }
-
 @Component({
     template: `
         <igx-date-picker [value]="date" [formatOptions]="formatOptions"></igx-date-picker>

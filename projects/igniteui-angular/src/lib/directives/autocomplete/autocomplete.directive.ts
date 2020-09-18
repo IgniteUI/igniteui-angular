@@ -132,7 +132,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocomplete')
-    public target: IgxDropDownComponent;
+    public get target(): IgxDropDownComponent {
+        return this._target as IgxDropDownComponent;
+    }
+    public set target(v: IgxDropDownComponent) {
+        this._target = v;
+    }
 
     /**
      * Enables/disables autocomplete component
