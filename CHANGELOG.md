@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
 - `IgxSelect`
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
+- `IgxDatePicker`
+    - **Breaking Change** - Deprecated the `label` and `labelVisibility` properties.
 
 
 ### New Features
@@ -20,6 +22,8 @@ All notable changes for each version of this project will be documented in this 
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
+- `IgxDatePicker`
+    - The `labelVisibility` and the `label` property have been deprecated and now a custom label is set by nesting a <label igxLabel></label> inside the <igx-date-picker><igx-date-picker> tags.
 - `IgxTimePicker`
     - Added a custom label functionality.
 - `IgxCalendar` and `IgxDatePicker` - new `showWeekNumbers` input, that allows showing of the week number at left side of content area.
