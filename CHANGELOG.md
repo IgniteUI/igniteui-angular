@@ -7,7 +7,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxInputGroup`
     - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property. 
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
+- `IgxOverlay`
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
+- `IgxSelect`
+    - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
+
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -18,10 +22,11 @@ All notable changes for each version of this project will be documented in this 
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
 - `IgxTimePicker`
     - Added a custom label functionality.
+- `IgxCalendar` and `IgxDatePicker` - new `showWeekNumbers` input, that allows showing of the week number at left side of content area.
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
-    - An optional Point/HTML Element parameter `target` has been added to the `position()` method.
-
+    - An optional Point/HTML Element parameter `target` has been added to the `position()` method
+    
 ## 10.1.0
 
 ### General
