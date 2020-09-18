@@ -35,11 +35,11 @@ export interface BindingChange extends ChangeAction {
     valueTransform?: string;
 }
 
-export interface MemberChange extends ChangeAction {
+export interface MemberChange extends Pick<ChangeAction, 'replaceWith'> {
     /** The full definition of a member */
-    definition: string; // memberMatch?
+    member: string;
     /** The class/interface that this member belongs to */
-    owner: Pick<TemplateElement, 'className'>;
+    definedIn: string;
 }
 export interface MemberChanges {
     /** An array of changes to class members */
@@ -69,8 +69,6 @@ export interface TemplateElement {
     type: ElementType;
     /** Original selector to apply change to */
     selector: string;
-    /** Base type of the element */
-    className: string;
 }
 
 export interface ImportsChange {

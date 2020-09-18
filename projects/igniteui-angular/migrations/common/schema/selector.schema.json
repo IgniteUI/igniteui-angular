@@ -10,10 +10,6 @@
         },
         "SelectorChange": {
             "properties": {
-                "className": {
-                    "description": "Base type of the element",
-                    "type": "string"
-                },
                 "remove": {
                     "description": "Remove directive/component/property",
                     "type": "boolean"
@@ -32,7 +28,6 @@
                 }
             },
             "required": [
-                "className",
                 "selector",
                 "type"
             ],

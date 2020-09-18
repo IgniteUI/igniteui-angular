@@ -3,17 +3,13 @@
     "definitions": {
         "MemberChange": {
             "properties": {
-                "definition": {
-                    "description": "The full definition of a member",
+                "definedIn": {
+                    "description": "The class/interface that this member belongs to",
                     "type": "string"
                 },
-                "owner": {
-                    "$ref": "#/definitions/Pick<TemplateElement,\"className\">",
-                    "description": "The class/interface that this member belongs to"
-                },
-                "remove": {
-                    "description": "Remove directive/component/property",
-                    "type": "boolean"
+                "member": {
+                    "description": "The full definition of a member",
+                    "type": "string"
                 },
                 "replaceWith": {
                     "description": "Replace original selector/property with new one",
@@ -21,21 +17,8 @@
                 }
             },
             "required": [
-                "definition",
-                "owner"
-            ],
-            "type": "object"
-        },
-        "Pick<TemplateElement,\"className\">": {
-            "description": "From T, pick a set of properties whose keys are in the union K",
-            "properties": {
-                "className": {
-                    "description": "Base type of the element",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "className"
+                "definedIn",
+                "member"
             ],
             "type": "object"
         }

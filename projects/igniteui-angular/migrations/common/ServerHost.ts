@@ -1,5 +1,5 @@
 import { Tree } from '@angular-devkit/schematics';
-import ts = require('typescript/lib/tsserverlibrary');
+import * as ts from 'typescript/lib/tsserverlibrary';
 
 export class ServerHost implements ts.server.ServerHost {
     readonly args: string[];

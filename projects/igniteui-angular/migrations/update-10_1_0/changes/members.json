@@ -2,11 +2,14 @@
     "$schema": "../../common/schema/members-changes.schema.json",
     "changes": [
         {
-            "definition": "selectedRows()",
+            "member": "gridMember",
             "replaceWith": "selectedRows",
-            "owner": {
-                "className": "IgxGridBaseDirective"
-            }
+            "definedIn": "IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent"
+        },
+        {
+            "member": "selectedRows()",
+            "replaceWith": "selectedRows",
+            "definedIn": "IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent"
         }
     ]
 }

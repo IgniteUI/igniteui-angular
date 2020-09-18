@@ -1,6 +1,6 @@
-import fs = require('fs');
-import path = require('path');
-import ts = require('typescript/lib/tsserverlibrary');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as ts from 'typescript/lib/tsserverlibrary';
 
 function noop() { }
 
@@ -38,46 +38,46 @@ export class Logger implements ts.server.Logger {
         return (str + padding).slice(0, padding.length);
     }
 
-    close() {
+    public close() {
         if (this.fd >= 0) {
             fs.close(this.fd, noop);
         }
     }
 
-    getLogFileName() {
+    public getLogFileName() {
         return this.logFilename;
     }
 
-    perftrc(s: string) {
+    public perftrc(s: string) {
         this.msg(s, ts.server.Msg.Perf);
     }
 
-    info(s: string) {
+    public info(s: string) {
         this.msg(s, ts.server.Msg.Info);
     }
 
-    err(s: string) {
+    public err(s: string) {
         this.msg(s, ts.server.Msg.Err);
     }
 
-    startGroup() {
+    public startGroup() {
         this.inGroup = true;
         this.firstInGroup = true;
     }
 
-    endGroup() {
+    public endGroup() {
         this.inGroup = false;
     }
 
-    loggingEnabled() {
+    public loggingEnabled() {
         return !!this.logFilename || this.traceToConsole;
     }
 
-    hasLevel(level: ts.server.LogLevel) {
+    public hasLevel(level: ts.server.LogLevel) {
         return this.loggingEnabled() && this.level >= level;
     }
 
-    msg(s: string, type: ts.server.Msg = ts.server.Msg.Err) {
+    public msg(s: string, type: ts.server.Msg = ts.server.Msg.Err) {
         if (!this.canWrite) { return; }
 
         s = `[${nowString()}] ${s}\n`;

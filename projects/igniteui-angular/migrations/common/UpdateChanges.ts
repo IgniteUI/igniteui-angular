@@ -1,8 +1,9 @@
-import { FileEntry, SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as ts from 'typescript/lib/tsserverlibrary';
 import {
     ClassChanges, BindingChanges, SelectorChange,
     SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
@@ -11,7 +12,6 @@ import { getLanguageService, getRenamePositions, getLanguageServiceHost } from '
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
 import { ServerHost } from './ServerHost';
 import { Logger } from './TSLogger';
-import ts = require('typescript/lib/tsserverlibrary');
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -158,18 +158,22 @@ export class UpdateChanges {
     private updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
         let content = this.host.read(entryPath).toString();
         for (const change of memberChanges.changes) {
-            if (!change.replaceWith) { continue; }
-            const regex = this.toRegExp(change.definition, 'g');
+            const definedIn = change.definedIn.split('|').map(s => s.trim());
+            const regex = this.toRegExp(change.member, 'g');
             let matches: RegExpExecArray;
-            while ((matches = regex.exec(content)) !== null) {
-                // move 2 indices to the right of the start of the match be sure we're getting the correct info
-                const info = this.getQuickInfoAtPosition(entryPath, matches.index + 2);
-                const target = info?.displayParts
-                    .filter(p => p.kind === 'className' || p.kind === 'interfaceName')[0];
-                if (target && target.text === change.owner.className) {
-                    content = this.replaceMatch(content, change.replaceWith, matches);
+            do {
+                matches = regex.exec(content);
+                if (matches) {
+                    // get the info of the identifier that tries to access the missing member
+                    const info = this.getQuickInfoAtPosition(entryPath, matches.index - 1
+                        - this.getNormalizedPosition(change.member.length, change.replaceWith.length));
+                    const target = info?.displayParts
+                        .filter(p => p.kind === 'aliasName')[0];
+                    if (target && definedIn.indexOf(target.text) !== -1) {
+                        content = this.replaceMatch(content, change.member, change.replaceWith, matches.index);
+                    }
                 }
-            }
+            } while (matches);
         }
 
         this.host.overwrite(entryPath, content);
@@ -519,14 +523,15 @@ export class UpdateChanges {
         const projectService = new ts.server.ProjectService({
             host: this.serverHost,
             logger: logger,
+            /* not needed since we will run only migrations */
             cancellationToken: ts.server.nullCancellationToken,
+            /* do not allow more than one InferredProject per project root */
             useSingleInferredProject: true,
             useInferredProjectPerProjectRoot: true,
-            typingsInstaller: ts.server.nullTypingsInstaller,
-            suppressDiagnosticEvents: true,
+            /* will load only global plug-ins */
             globalPlugins: ['@angular/language-service'],
-            eventHandler: () => { },
-            allowLocalPluginLoads: false
+            allowLocalPluginLoads: false,
+            typingsInstaller: ts.server.nullTypingsInstaller
         });
         projectService.setHostConfiguration({
             formatOptions: projectService.getHostFormatCodeOptions(),
@@ -562,10 +567,15 @@ export class UpdateChanges {
         return new RegExp(str.replace(escapeChars, '\\$&'), flags);
     }
 
-    private replaceMatch(content: string, replaceWith: string, matches: RegExpExecArray): string {
-        return content.substring(0, matches.index)
+    private replaceMatch(content: string, toReplace: string, replaceWith: string, index: number): string {
+        return content.substring(0, index)
             + replaceWith
-            + content.substring(matches.index + matches[0].length, content.length);
+            + content.substring(index + toReplace.length, content.length);
+    }
+
+    private getNormalizedPosition(memberLength: number, replaceWithLength: number): number {
+        return Math.max(memberLength, replaceWithLength)
+            - Math.min(memberLength, replaceWithLength);
     }
 }
 
