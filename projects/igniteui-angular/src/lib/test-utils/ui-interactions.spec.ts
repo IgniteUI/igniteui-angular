@@ -16,6 +16,16 @@ export function waitForActiveNodeChange (grid) {
     });
 }
 
+export function waitForSelectionChange (grid) {
+    // wait for grid scroll operation to complete and state to be updated.
+    return new Promise((resolve, reject) => {
+        grid.onSelection.pipe(first()).subscribe(() => {
+            grid.cdr.detectChanges();
+            resolve();
+        });
+    });
+}
+
 declare var Touch: {
     prototype: Touch;
     new(prop): Touch;
