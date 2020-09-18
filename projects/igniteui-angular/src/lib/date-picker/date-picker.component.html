@@ -24,7 +24,7 @@
 
 <ng-template #editableDatePickerTemplate>
     <igx-input-group #editableInputGroup>
-        <label igxLabel *ngIf="!labelDirective&&!labelVisibility">Date1</label>
+        <label igxLabel *ngIf="!labelDirective&&!labelVisibility">Date</label>
         <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <igx-prefix (click)="onOpenClick($event)">
             <igx-icon>today</igx-icon>
