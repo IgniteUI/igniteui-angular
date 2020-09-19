@@ -730,10 +730,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            let childHeader = GridFunctions.getColumnGroupHeaders(fixture)[4];
+            let childHeader = GridFunctions.getColumnHeaders(fixture)[3];
             const firstHeaderIcon = childHeader.query(By.css('.igx-icon'));
 
-            expect(GridFunctions.isHeaderPinned(childHeader)).toBeFalsy();
+            expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeFalsy();
             expect(childGrid.columnList.first.pinned).toBeFalsy();
             expect(firstHeaderIcon).toBeDefined();
 
@@ -741,9 +741,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             tick();
 
-            childHeader = GridFunctions.getColumnGroupHeaders(fixture)[4];
+            childHeader = GridFunctions.getColumnHeaders(fixture)[3];
             expect(childGrid.columnList.first.pinned).toBeTruthy();
-            expect(GridFunctions.isHeaderPinned(childHeader)).toBeTruthy();
+            expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeTruthy();
         }));
 
         it('should be applied correctly for child grid with multi-column header.', fakeAsync(() => {
