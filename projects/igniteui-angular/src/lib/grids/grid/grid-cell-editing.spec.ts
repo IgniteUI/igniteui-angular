@@ -13,6 +13,8 @@ import {
     ColumnEditablePropertyTestComponent
 } from '../../test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -546,12 +548,18 @@ describe('IgxGrid - Cell Editing #grid', () => {
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
+        const $destroyer = new Subject<boolean>();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(CellEditingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fixture);
             grid.ngAfterViewInit();
+        }));
+
+        afterEach(fakeAsync(() => {
+            $destroyer.next(true);
         }));
 
         it(`Should properly emit 'cellEditEnter' event`, () => {
@@ -1046,6 +1054,64 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const spyDoneArgs = doneSpy.calls.mostRecent().args[0] as IGridEditDoneEventArgs;
             expect(spyDoneArgs.rowData).toBe(grid.data[0]);
+        });
+
+        it('Should not enter cell edit when cellEditEnter is canceled', () => {
+            let canceled = true;
+            const cell = grid.getCellByColumn(0, 'fullName');
+            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = canceled;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fixture.detectChanges();
+
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+            grid.crudService.exitEditMode();
+            fixture.detectChanges();
+
+            canceled = false;
+            grid.crudService.enterEditMode(cell);
+            fixture.detectChanges();
+            expect(grid.crudService.cellInEditMode).toEqual(true);
+        });
+
+        it('When cellEdit is canceled the new value of the cell should never be commited nor the editing should be closed', () => {
+            const cell = grid.getCellByColumn(0, 'fullName');
+            grid.cellEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fixture.detectChanges();
+
+            const cellValue = cell.value;
+            cell.update('new value');
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.crudService.cellInEditMode).toEqual(true);
+            expect(cell.value).toEqual(cellValue);
+        });
+
+        it('When cellEditExit is canceled the new value of the cell should be commited and the editing should not be closed', () => {
+            const cell = grid.getCellByColumn(0, 'fullName');
+            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
+
+            grid.crudService.enterEditMode(cell);
+            fixture.detectChanges();
+
+            const expectedRes = 'new value';
+            cell.update(expectedRes);
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.crudService.cellInEditMode).toEqual(true);
+            expect(cell.value).toEqual(expectedRes);
         });
     });
 
