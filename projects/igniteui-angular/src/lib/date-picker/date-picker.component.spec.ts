@@ -1521,6 +1521,7 @@ describe('IgxDatePicker', () => {
             const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
+            spyOnProperty(datePicker, 'inputGroupElement').and.returnValue(null);
             ngModel.control.validator = () => ({ required: true });
             datePicker.ngOnInit();
             datePicker.ngAfterViewInit();
@@ -1534,6 +1535,7 @@ describe('IgxDatePicker', () => {
             const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroupUserTemplate'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
+            spyOnProperty(datePicker, 'inputGroupElement').and.returnValue(null);
             ngModel.control.validator = () => ({ required: true });
             datePicker.ngOnInit();
             datePicker.ngAfterViewInit();
@@ -1547,6 +1549,7 @@ describe('IgxDatePicker', () => {
             const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
+            spyOnProperty(datePicker, 'inputGroupElement').and.returnValue(null);
             datePicker.ngOnInit();
             datePicker.ngAfterViewInit();
             datePicker.ngAfterViewChecked();

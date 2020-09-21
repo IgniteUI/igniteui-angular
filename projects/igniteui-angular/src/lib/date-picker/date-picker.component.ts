@@ -855,6 +855,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         };
 
         this._defaultDropDownOverlaySettings = {
+            target: this.inputGroupElement,
             closeOnOutsideClick: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
@@ -1068,7 +1069,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this.hasHeader = false;
                 const target = this.inputGroupElement;
                 if (target) {
-                    this.dropDownOverlaySettings.positionStrategy.settings.target = target;
+                    this.dropDownOverlaySettings.target = target;
                 }
                 this._componentID = this._overlayService.attach(IgxCalendarContainerComponent,
                     this.dropDownOverlaySettings, this._moduleRef);

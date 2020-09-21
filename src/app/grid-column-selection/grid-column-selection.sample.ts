@@ -119,7 +119,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
     }
 
     public toggleColumnSelection() {
-        this._overlaySettings.positionStrategy.settings.target = this.columnSelectionButton.nativeElement;
+        this._overlaySettings.target = this.columnSelectionButton.nativeElement;
         this._overlaySettings.outlet = this.grid1.outlet;
         this.columnSelectionDropdown.toggle(this._overlaySettings);
     }
