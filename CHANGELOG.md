@@ -29,6 +29,8 @@ All notable changes for each version of this project will be documented in this 
     - Added a disabled style for time parts outside of the minimum and maximum range.
 - `igxDatePicker`
     -  Added new property - `editorTabIndex`, that allows setting tabindex for the default editor.
+- `IgxSelect`
+    - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
 
 ### New Theme
 Ignite UI for Angular now has a new theme based on our own design system.
