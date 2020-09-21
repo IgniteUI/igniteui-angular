@@ -51,7 +51,7 @@
         (onSelection)="onDateSelected($event)"
         (onClosed)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="displayDensity" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="fluent" [displayDensity]="displayDensity" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="inputGroupPrefixClick($event)"
