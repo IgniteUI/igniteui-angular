@@ -68,7 +68,6 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { IgxLabelDirective } from '../directives/label/label.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
@@ -666,19 +665,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     protected readOnlyDatePickerTemplate: TemplateRef<any>;
 
     /*
-     * @hidden @internal
-     */
-    @ContentChild(IgxLabelDirective)
-    public labelDirective: IgxLabelDirective;
-
-    /*
      * @hidden
      */
     @ViewChild('editableDatePickerTemplate', { read: TemplateRef, static: true })
     protected editableDatePickerTemplate: TemplateRef<any>;
 
     /*
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild(IgxInputGroupComponent)
     protected _inputGroup: IgxInputGroupComponent;
@@ -699,10 +692,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _inputDirectiveUserTemplates: QueryList<IgxInputDirective>;
 
     @ViewChild(IgxLabelDirective)
-    private _labelDirectiveDefault: IgxLabelDirective;
+    protected _labelDirective: IgxLabelDirective;
 
-    @ContentChildren(IgxLabelDirective, { descendants: true })
-    private _labelDirectiveUserTemplates: QueryList<IgxLabelDirective>;
+    @ContentChild(IgxLabelDirective)
+    protected _labelDirectiveUserTemplate: IgxLabelDirective;
 
     /**
      * @hidden
@@ -851,7 +844,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /** @hidden @internal */
     public get labelDirective(): IgxLabelDirective {
-        return this._labelDirectiveDefault || this._labelDirectiveUserTemplates.first || null;
+        return this._labelDirective || this._labelDirectiveUserTemplate || null;
     }
 
     /** @hidden @internal */
@@ -940,7 +933,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this.attachTemplateBlur();
          });
         this.attachTemplateBlur();
-        this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-labelledby', this.labelDirective.id);
+
+        if (this.labelDirective) {
+            this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-labelledby', this.labelDirective.id);
+        }
     }
 
     private attachTemplateBlur() {

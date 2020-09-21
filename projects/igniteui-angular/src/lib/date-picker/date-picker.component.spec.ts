@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, EventEmitter, QueryList, Renderer2 } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +23,7 @@ import {
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
@@ -1488,7 +1488,7 @@ describe('IgxDatePicker', () => {
         let moduleRef;
         let injector;
         let inputGroup: IgxInputGroupComponent;
-        let renderer: Renderer2;
+        let renderer2: Renderer2;
 
         beforeEach(() => {
             ngModel = {
@@ -1512,10 +1512,13 @@ describe('IgxDatePicker', () => {
             moduleRef = {};
             injector = { get: () => ngModel };
             inputGroup = new IgxInputGroupComponent(null, null, null, document);
+            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [element, 'aria-labelledby', 'test-label-id-1']);
+            spyOn(renderer2, 'setAttribute').and.callFake(() => {
+            });
         });
 
         it('should initialize date picker with required correctly', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             ngModel.control.validator = () => ({ required: true });
@@ -1528,7 +1531,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('should initialize date picker with required correctly with user template input-group', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroupUserTemplate'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             ngModel.control.validator = () => ({ required: true });
@@ -1541,7 +1544,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('should update inputGroup isRequired correctly', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             datePicker.ngOnInit();
