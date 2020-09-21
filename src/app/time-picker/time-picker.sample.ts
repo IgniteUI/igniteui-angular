@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositionStrategy } from 'igniteui-angular';
+import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositionStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
@@ -23,7 +23,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
 
     isRequired = true;
 
-    myOverlaySettings = {
+    myOverlaySettings: OverlaySettings = {
         modal: false,
         closeOnOutsideClick: true,
         positionStrategy: new AutoPositionStrategy()
@@ -36,7 +36,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     public target: IgxInputDirective;
 
     ngAfterViewInit() {
-        this.myOverlaySettings.positionStrategy.settings.target = this.target.nativeElement;
+        this.myOverlaySettings.target = this.target.nativeElement;
     }
 
     showDate(date) {

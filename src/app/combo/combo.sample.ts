@@ -165,7 +165,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
         this.overlaySettings[1] = {
-            positionStrategy: new ElasticPositionStrategy({ target: this.comboRef.nativeElement,
+            target: this.comboRef.nativeElement,
+            positionStrategy: new ElasticPositionStrategy({
                 verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
                 horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right }),
             modal: false,
@@ -177,7 +178,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             closeOnOutsideClick: true
         };
         this.overlaySettings[3] = {
-            positionStrategy: new ConnectedPositioningStrategy({ target: this.comboRef.nativeElement }),
+            target: this.comboRef.nativeElement,
+            positionStrategy: new ConnectedPositioningStrategy(),
             modal: false,
             closeOnOutsideClick: true
         };
