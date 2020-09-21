@@ -470,8 +470,10 @@ describe('IgxToggle', () => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
+            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
 
             const defaults: OverlaySettings = {
+                target: button,
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
@@ -493,8 +495,10 @@ describe('IgxToggle', () => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
+            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
 
             const settings: OverlaySettings = {
+                target: button,
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,
@@ -540,16 +544,8 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
 
             fixture.componentInstance.toggleAction.onClick();
+            settings.target = button;
             expect(toggleSpy).toHaveBeenCalledWith(settings);
-            let positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
-            expect(positionStrategy.settings.target).toBe(button);
-
-            fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy({ target: document.body });
-            fixture.detectChanges();
-
-            fixture.componentInstance.toggleAction.onClick();
-            positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
-            expect(positionStrategy.settings.target).toBe(button);
         });
 
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {
@@ -585,9 +581,11 @@ describe('IgxToggle', () => {
             const fixture = TestBed.createComponent(IgxToggleOutletComponent);
             const outlet = fixture.debugElement.query(By.css('.outlet-container')).nativeElement;
             const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
             fixture.detectChanges();
 
             const settings: OverlaySettings = {
+                target: button,
                 positionStrategy: jasmine.any(ConnectedPositioningStrategy) as any,
                 closeOnOutsideClick: true,
                 modal: false,

@@ -1,4 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit  } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit, Point  } from '../services/overlay/utilities';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
@@ -31,9 +31,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_styles: SelectStyles = {};
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
+    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         this.select.scrollContainer.scrollTop = 0;
-        const rects = super.calculateElementRectangles(contentElement);
+        const targetElement = target || this.settings.target;
+        const rects = super.calculateElementRectangles(contentElement, targetElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
         const selectFit: SelectFit = {
             verticalOffset: this.global_yOffset,
@@ -52,7 +53,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             selectFit.itemRect = selectFit.itemElement.getBoundingClientRect();
 
             // Calculate input and selected item elements style related variables
-            selectFit.styles = this.calculateStyles(selectFit);
+            selectFit.styles = this.calculateStyles(selectFit, targetElement);
 
             selectFit.scrollAmount = this.calculateScrollAmount(selectFit);
             // Calculate how much to offset the overlay container.
@@ -138,9 +139,9 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * Calculate & Set default items container width.
      * @param selectFit selectFit to use for computation.
      */
-    private calculateStyles(selectFit: SelectFit): SelectStyles  {
+    private calculateStyles(selectFit: SelectFit, target: Point | HTMLElement): SelectStyles  {
         const styles: SelectStyles = {};
-        const inputElementStyles = window.getComputedStyle(this.settings.target as Element);
+        const inputElementStyles = window.getComputedStyle(target as Element);
         const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
         const numericInputFontSize = parseFloat(inputElementStyles.fontSize);
         const numericItemFontSize = parseFloat(itemElementStyles.fontSize);
