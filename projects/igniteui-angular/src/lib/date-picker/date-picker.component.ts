@@ -694,8 +694,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ViewChild(IgxLabelDirective)
     protected _labelDirective: IgxLabelDirective;
 
+    /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
-    protected _labelDirectiveUserTemplate: IgxLabelDirective;
+    public _labelDirectiveUserTemplate: IgxLabelDirective;
 
     /**
      * @hidden
