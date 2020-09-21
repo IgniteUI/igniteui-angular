@@ -1228,7 +1228,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        this._overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
+        this._overlaySettings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitiveIcon.name, caseSensitiveIcon.value, 'case-sensitive');
     }

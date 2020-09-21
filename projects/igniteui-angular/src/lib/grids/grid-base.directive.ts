@@ -2714,7 +2714,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         closeAnimation: null
     });
 
-    private rowEditSettings = {
+    private rowEditSettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
@@ -6421,7 +6421,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!targetRow) {
             return;
         }
-        this.rowEditPositioningStrategy.settings.target = targetRow.element.nativeElement;
+        this.rowEditSettings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
@@ -6686,7 +6686,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public openAdvancedFilteringDialog() {
         if (!this._advancedFilteringOverlayId) {
-            this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
+            this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
             this._advancedFilteringOverlaySettings.outlet = this.outlet;
 
