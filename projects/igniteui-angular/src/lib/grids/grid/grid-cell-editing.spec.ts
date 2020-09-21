@@ -1072,8 +1072,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             canceled = false;
             grid.crudService.enterEditMode(cell);
-            expect(grid.crudService.cellInEditMode).toEqual(true);
             fixture.detectChanges();
+            expect(grid.crudService.cellInEditMode).toEqual(true);
         });
 
         it('When cellEdit is canceled the new value of the cell should never be commited nor the editing should be closed', () => {
