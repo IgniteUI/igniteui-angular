@@ -250,7 +250,8 @@ export class IgxOverlayService implements OnDestroy {
                 height: contentElementRect.height
             },
             this._document,
-            false);
+            false,
+            overlayInfo.settings.target);
     }
 
     /**
@@ -312,7 +313,8 @@ export class IgxOverlayService implements OnDestroy {
                 info.elementRef.nativeElement.parentElement,
                 { width: info.initialSize.width, height: info.initialSize.height },
                 document,
-                true);
+                true,
+                info.settings.target);
             info.settings.scrollStrategy.initialize(this._document, this, info.id);
             info.settings.scrollStrategy.attach();
         }
@@ -651,7 +653,7 @@ export class IgxOverlayService implements OnDestroy {
                 //  if the click is on the element do not close this overlay
                 if (!info.elementRef.nativeElement.contains(target)) {
                     // if we should exclude position target check if the click is over it. If so do not close overlay
-                    const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
+                    const positionTarget = info.settings.target as HTMLElement;
                     let clickOnPositionTarget = false;
                     if (positionTarget) {
                         clickOnPositionTarget = positionTarget.contains(target);
