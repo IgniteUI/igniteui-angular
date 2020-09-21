@@ -1,4 +1,4 @@
-import { PositionSettings, Size } from './../utilities';
+import { PositionSettings, Size, Point } from './../utilities';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html)
@@ -16,11 +16,12 @@ export interface IPositionStrategy {
      * @param size Size of the element
      * @param document reference to the Document object
      * @param initialCall should be true if this is the initial call to the method
+     * @param target attaching target for the component to show
      * ```typescript
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void;
+     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void;
 
     /**
      * Clone the strategy instance.
