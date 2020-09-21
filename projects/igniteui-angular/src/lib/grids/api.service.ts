@@ -147,12 +147,20 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public update_add_cell(cell: IgxCell, value: any) {
         cell.editValue = value;
+        const args = cell.createEditEventArgs();
+        this.grid.onCellEdit.emit(args);
 
+        if (args.cancel) {
+            return args;
+        }
         if (isEqual(cell.value, cell.editValue)) {
-            return;
+            return args;
         }
         const data = cell.rowData;
-        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, cell.editValue));
+        mergeObjects(data, reverseMapper(cell.column.field, cell.editValue));
+
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
+        this.grid.cellEditDone.emit(doneArgs);
     }
 
     update_cell(cell: IgxCell, value: any) {
