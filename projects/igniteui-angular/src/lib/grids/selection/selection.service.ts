@@ -64,7 +64,7 @@ export class IgxRow {
             oldValue: this.data,
             cancel: false,
             owner: this.grid,
-            isAddRow: this.isAddRow
+            isAddRow: this.isAddRow || false
         };
         if (includeNewValue) {
             args.newValue = this.newData;
@@ -81,7 +81,7 @@ export class IgxRow {
             oldValue: cachedRowData,
             newValue: updatedData,
             owner: this.grid,
-            isAddRow: this.isAddRow
+            isAddRow: this.isAddRow || false
         };
         return args;
     }
