@@ -1,9 +1,31 @@
+import { first } from 'rxjs/operators';
 import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
 export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
+
+export function waitForActiveNodeChange (grid) {
+    // wait for grid scroll operation to complete and state to be updated.
+    return new Promise((resolve, reject) => {
+        grid.activeNodeChange.pipe(first()).subscribe(() => {
+            grid.cdr.detectChanges();
+            resolve();
+        });
+    });
+}
+
+export function waitForSelectionChange (grid) {
+    // wait for grid scroll operation to complete and state to be updated.
+    return new Promise((resolve, reject) => {
+        grid.onSelection.pipe(first()).subscribe(() => {
+            grid.cdr.detectChanges();
+            resolve();
+        });
+    });
+}
+
 declare var Touch: {
     prototype: Touch;
     new(prop): Touch;
