@@ -7,6 +7,7 @@
         igxInput
         tabindex="0"
         [(ngModel)]="searchValue"
+        (ngModelChange)="filterListData()"
         [placeholder]="esf.column?.grid.resourceStrings.igx_grid_excel_search_placeholder"
         autocomplete="off"/>
     <igx-icon
@@ -21,7 +22,7 @@
 <igx-list #list [displayDensity]="esf.displayDensity" [isLoading]="isLoading">
     <div [style.overflow]="'hidden'" [style.position]="'relative'">
         <igx-list-item
-        *igxFor="let item of esf.listData | excelStyleSearchFilter: searchValue; scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
+        *igxFor="let item of displayedListData scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox
             [value]="item"
             tabindex="-1"

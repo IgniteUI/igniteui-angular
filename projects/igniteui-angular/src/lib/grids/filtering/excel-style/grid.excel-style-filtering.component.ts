@@ -35,6 +35,7 @@ export class FilterListItem {
     public label: any;
     public isSelected: boolean;
     public indeterminate: boolean;
+    public isFiltered: boolean;
     public isSpecial = false;
     public isBlanks = false;
 }
@@ -570,15 +571,19 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 if (this.column.filteringExpressionsTree) {
                     if (element === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true' )) {
                         filterListItem.isSelected = true;
+                        filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
                     } else if (element === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false' )) {
                             filterListItem.isSelected = true;
+                            filterListItem.isFiltered = true;
                             this.selectAllIndeterminate = true;
                     } else {
                         filterListItem.isSelected = false;
+                        filterListItem.isFiltered = false;
                     }
                 } else {
                     filterListItem.isSelected = true;
+                    filterListItem.isFiltered = false;
                 }
                 filterListItem.value = element;
                 filterListItem.label = element;
@@ -604,16 +609,20 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     if (shouldUpdateSelection) {
                         if (this.filterValues.has(element)) {
                             filterListItem.isSelected = true;
+                            filterListItem.isFiltered = true;
                         } else {
                             filterListItem.isSelected = false;
+                            filterListItem.isFiltered = false;
                         }
                         this.selectAllIndeterminate = true;
                     } else {
                         filterListItem.isSelected = false;
+                        filterListItem.isFiltered = false;
                         this.selectAllSelected = false;
                     }
                 } else {
                     filterListItem.isSelected = true;
+                    filterListItem.isFiltered = false;
                 }
                 if (this.column.dataType === DataType.Date) {
                     const date = new Date(element);
