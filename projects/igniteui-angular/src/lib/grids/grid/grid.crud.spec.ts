@@ -162,7 +162,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             rowData: { index: 200, value: 200 },
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
-            owner: grid
+            owner: grid,
+            isAddRow: false
         };
 
         (grid as IgxGridComponent).onRowEdit.pipe(first()).subscribe(e => {
@@ -210,7 +211,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             rowData: { index: 777, value: 777 },
             oldValue: { index: 1, value: 1 },
             newValue: { index: 777, value: 777 },
-            owner: grid
+            owner: grid,
+            isAddRow: false
         };
 
         // Update an existing cell - changing the new value in the event
