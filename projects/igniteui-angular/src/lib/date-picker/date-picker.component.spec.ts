@@ -1,5 +1,5 @@
-import { Component, ViewChild, ElementRef, EventEmitter, QueryList } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { Component, ViewChild, ElementRef, EventEmitter, QueryList, Renderer2 } from '@angular/core';
+import { waitForAsync, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +23,7 @@ import {
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
@@ -278,6 +278,42 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
+    });
+
+    describe('ARIA Tests', () => {
+        let fixture: any;
+        let datePicker: IgxDatePickerComponent;
+        let labelID: string;
+
+        beforeEach(() => {
+        });
+
+        it('ARIA Test for a picker with an input group template', () => {
+            fixture = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
+            datePicker = fixture.componentInstance.datePicker;
+            fixture.detectChanges();
+
+            labelID = fixture.debugElement.query(By.css('.igx-input-group__label')).nativeElement.id;
+            expect(datePicker.inputDirective.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+        });
+
+        it('ARIA Test for picker with a dialog mode', () => {
+            fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+            datePicker = fixture.componentInstance.datePicker;
+            fixture.detectChanges();
+
+            labelID = fixture.debugElement.query(By.css('.igx-input-group__label')).nativeElement.id;
+            expect(datePicker.inputDirective.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+        });
+
+        it('ARIA Test for picker with a dropdown mode', () => {
+            fixture = TestBed.createComponent(IgxDatePickerComponent);
+            datePicker = fixture.componentInstance;
+            fixture.detectChanges();
+
+            labelID = fixture.debugElement.query(By.css('.igx-input-group__label')).nativeElement.id;
+            expect(datePicker.inputDirective.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+        });
     });
 
     describe('DatePicker with passed date', () => {
@@ -1416,6 +1452,7 @@ describe('IgxDatePicker', () => {
         let moduleRef;
         let injector;
         let inputGroup: IgxInputGroupComponent;
+        let renderer2: Renderer2;
 
         beforeEach(() => {
             ngModel = {
@@ -1439,10 +1476,12 @@ describe('IgxDatePicker', () => {
             moduleRef = {};
             injector = { get: () => ngModel };
             inputGroup = new IgxInputGroupComponent(null, null);
+            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
+            spyOn(renderer2, 'setAttribute').and.callFake(() => {});
         });
 
         it('should initialize date picker with required correctly', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             ngModel.control.validator = () => ({ required: true });
@@ -1455,7 +1494,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('should initialize date picker with required correctly with user template input-group', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroupUserTemplate'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             ngModel.control.validator = () => ({ required: true });
@@ -1468,7 +1507,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('should update inputGroup isRequired correctly', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             datePicker.ngOnInit();
@@ -1565,14 +1604,16 @@ export class IgxDatePickerNgModelComponent {
 <igx-date-picker>
     <ng-template igxDatePickerTemplate let-displayData="displayData">
         <igx-input-group>
-            <label igxLabel>Date</label>
+            <label igxLabel>Custom Date Label</label>
             <input igxInput [value]="displayData" required />
         </igx-input-group>
     </ng-template>
 </igx-date-picker>
     `
 })
-export class IgxDatePickerRetemplatedComponent { }
+export class IgxDatePickerRetemplatedComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+}
 
 @Component({
     template: `
