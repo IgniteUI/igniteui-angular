@@ -1,26 +1,28 @@
 import {
     AfterContentInit,
-    ChangeDetectionStrategy,
-    Component,
-    ContentChildren,
-    Input,
-    QueryList,
-    OnInit,
-    Inject,
-    ElementRef,
-    ChangeDetectorRef,
-    ComponentFactoryResolver,
-    IterableDiffers,
-    ViewContainerRef,
-    NgZone,
     AfterViewInit,
-    OnChanges,
-    Output,
-    EventEmitter,
-    Optional,
-    OnDestroy,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ComponentFactoryResolver,
+    ContentChild,
+    ContentChildren,
     DoCheck,
-    IterableChangeRecord
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    IterableChangeRecord,
+    IterableDiffers,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridTransaction, IgxGridBaseDirective } from '../grid-base.directive';
@@ -29,12 +31,10 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { TransactionService, Transaction, State } from '../../services/public_api';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
-
 import { IgxOverlayService } from '../../services/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -42,6 +42,7 @@ import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
+import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -53,10 +54,10 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     selector: 'igx-row-island',
     template: ``,
     providers: [IgxRowIslandAPIService,
-                IgxGridSelectionService]
+        IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
-            implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
+    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -84,7 +85,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @Input()
     set expandChildren(value: boolean) {
-        this._defaultExpandState  = value;
+        this._defaultExpandState = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {
             if (document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
@@ -119,6 +120,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
+
+    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
+    public islandToolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
     /**
      * @hidden
@@ -160,14 +164,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     get id() {
         const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';
-        return this.layout_id + pId +  this.key;
+        return this.layout_id + pId + this.key;
     }
 
     /**
      * @hidden
      */
     get parentId() {
-       return this.parentIsland ? this.parentIsland.id : null;
+        return this.parentIsland ? this.parentIsland.id : null;
     }
 
     /**
@@ -259,16 +263,20 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     ngAfterContentInit() {
+        // TODO: Discuss should it always take the parent toolbar if present
+        this.onGridCreated.pipe(takeUntil(this.destroy$)).subscribe(e => {
+            e.grid.toolbarTemplate = this.islandToolbarTemplate || e.grid.parent.toolbarTemplate;
+        });
         this.updateChildren();
         this.children.notifyOnChanges();
         this.children.changes.pipe(takeUntil(this.destroy$))
-        .subscribe((change) => {
-            this.updateChildren();
-            // update existing grids since their child ri have been changed.
-            this.getGridsForIsland(this.key).forEach(grid => {
-                (grid as any).onRowIslandChange(this.children);
+            .subscribe((change) => {
+                this.updateChildren();
+                // update existing grids since their child ri have been changed.
+                this.getGridsForIsland(this.key).forEach(grid => {
+                    (grid as any).onRowIslandChange(this.children);
+                });
             });
-        });
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
         const topCols = this.columnList.filter((item) => {
@@ -279,19 +287,19 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             Promise.resolve().then(() => {
                 this.updateColumnList();
             });
-         });
+        });
 
-         // handle column changes so that they are passed to child grid instances when onColumnChange is emitted.
-         this.ri_columnListDiffer.diff(this.childColumns);
-         this.childColumns.toArray().forEach(x => x.onColumnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
-         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent> ) => {
+        // handle column changes so that they are passed to child grid instances when onColumnChange is emitted.
+        this.ri_columnListDiffer.diff(this.childColumns);
+        this.childColumns.toArray().forEach(x => x.onColumnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+        this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.ri_columnListDiffer.diff(change);
             if (diff) {
                 diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                     record.item.onColumnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
                 });
             }
-         });
+        });
     }
 
     protected updateChildren() {
@@ -358,12 +366,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    reflow() {}
+    reflow() { }
 
     /**
      * @hidden
      */
-    calculateGridHeight() {}
+    calculateGridHeight() { }
 
     protected updateColumnList() {
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());

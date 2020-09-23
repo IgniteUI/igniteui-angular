@@ -1,6 +1,7 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, TemplateRef } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
+import { IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 import { GridType } from '../common/grid.interface';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import {
@@ -51,6 +52,15 @@ export class IgxGridToolbarTitleDirective { }
  */
 @Directive({ selector: '[igxGridToolbarActions],igx-grid-toolbar-actions' })
 export class IgxGridToolbarActionsDirective { }
+
+export interface IgxGridToolbarTemplateContext {
+    $implicit: IgxHierarchicalGridComponent;
+}
+
+@Directive({ selector: '[igxGridToolbar]'})
+export class IgxGridToolbarDirective {
+    constructor(public template: TemplateRef<IgxGridToolbarTemplateContext>) {}
+}
 
 /**
  * Base class for the pinning/hiding column actions.

@@ -4735,11 +4735,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.toolbar.first) {
             toolbarHeight = this.getComputedHeight(this.toolbar.first.nativeElement);
         }
-        // if (this.showToolbar && this.toolbarHtml != null) {
-        //     const height = this.getComputedHeight(this.toolbarHtml.nativeElement);
-        //     toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-        //     height : 0;
-        // }
         return toolbarHeight;
     }
 

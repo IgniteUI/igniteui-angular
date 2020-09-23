@@ -1,6 +1,5 @@
-<igx-grid-toolbar role="toolbar" [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
-    [displayDensity]="displayDensity" #toolbar>
-</igx-grid-toolbar>
+<ng-container *ngTemplateOutlet="toolbarTemplate; context: { $implicit: this }"></ng-container>
+
 
 <div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper"  tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"

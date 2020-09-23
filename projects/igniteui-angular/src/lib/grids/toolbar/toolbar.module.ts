@@ -12,6 +12,7 @@ import {
     IgxCSVTextDirective,
     IgxExcelTextDirective,
     IgxGridToolbarActionsDirective,
+    IgxGridToolbarDirective,
     IgxGridToolbarTitleDirective
 } from './common';
 
@@ -27,7 +28,8 @@ import {
         IgxGridToolbarExporterComponent,
         IgxGridToolbarHidingComponent,
         IgxGridToolbarPinningComponent,
-        IgxGridToolbarTitleDirective
+        IgxGridToolbarTitleDirective,
+        IgxGridToolbarDirective
     ],
     imports: [
         IgxColumnActionsModule,
@@ -44,7 +46,8 @@ import {
         IgxGridToolbarExporterComponent,
         IgxGridToolbarHidingComponent,
         IgxGridToolbarPinningComponent,
-        IgxGridToolbarTitleDirective
+        IgxGridToolbarTitleDirective,
+        IgxGridToolbarDirective
     ]
 })
 export class IgxGridToolbarModule {}
