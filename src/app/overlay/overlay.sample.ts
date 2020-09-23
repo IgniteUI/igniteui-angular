@@ -352,7 +352,7 @@ export class OverlaySampleComponent implements OnInit {
             }
             this.cdr.detectChanges();
             this.onChange2();
-            this._overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+            this._overlaySettings.target = this.button.nativeElement;
         }
         this.igxDropDown.toggle(this._overlaySettings);
     }

@@ -77,7 +77,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
-            this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.currentTarget;
+            this._subMenuOverlaySettings.target = eventArgs.currentTarget;
 
             const gridRect = this.esf.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.esf.mainDropdown.nativeElement.getBoundingClientRect();
