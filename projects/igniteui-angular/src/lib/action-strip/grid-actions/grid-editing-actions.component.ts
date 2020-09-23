@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/deprecateDecorators';
 
@@ -8,7 +8,18 @@ import { showMessage } from '../../core/deprecateDecorators';
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }]
 })
 
-export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
+export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective implements AfterViewInit {
+
+    @ViewChild('edit') public editButton: TemplateRef<any>;
+    @ViewChild('delete') public deleteButton: TemplateRef<any>;
+
+    ngAfterViewInit() {
+        if (this.addActionsToMenu) {
+            this.strip.menuItems.push({ templateRef: this.editButton });
+            this.strip.menuItems.push({ templateRef: this.deleteButton });
+        }
+    }
+
     /**
      * Host `class.igx-action-strip` binding.
      * @hidden

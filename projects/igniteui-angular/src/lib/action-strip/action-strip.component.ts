@@ -10,7 +10,8 @@ import {
     ContentChildren,
     QueryList,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    AfterContentInit
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down/public_api';
@@ -51,7 +52,7 @@ export class IgxActionStripMenuItemDirective {
     templateUrl: 'action-strip.component.html'
 })
 
-export class IgxActionStripComponent extends DisplayDensityBase {
+export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit {
     constructor(
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
@@ -129,7 +130,17 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @ContentChildren(IgxActionStripMenuItemDirective)
-    public menuItems: QueryList<IgxActionStripMenuItemDirective>;
+    public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
+
+
+    public menuItems = [];
+
+    ngAfterContentInit() {
+        this.menuItems = [... this._menuItems.toArray()];
+        this._menuItems.changes.subscribe(x => {
+            this.menuItems = [... this._menuItems.toArray()];
+        });
+    }
 
     /**
      * Reference to the menu

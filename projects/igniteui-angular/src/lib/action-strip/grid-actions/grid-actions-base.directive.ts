@@ -1,4 +1,4 @@
-import { Directive, Inject } from '@angular/core';
+import { Directive, Inject, Input } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/public_api';
 import { IgxGridIconService } from '../../grids/common/grid-icon.service';
@@ -9,6 +9,8 @@ import { IgxGridIconService } from '../../grids/common/grid-icon.service';
 export class IgxGridActionsBaseDirective {
     constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent, protected iconService: IgxGridIconService) { }
 
+    @Input()
+    addActionsToMenu = true;
     /**
      * Getter to be used in template
      * @hidden
