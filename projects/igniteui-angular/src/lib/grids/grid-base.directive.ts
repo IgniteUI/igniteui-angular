@@ -3263,7 +3263,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         this.addRowSnackbar?.onAction.subscribe(() => {
-            this.navigateTo(this.lastAddedRowId);
+            this.navigateTo(this.lastAddedRowId, 0);
             this.addRowSnackbar.hide();
         });
     }
