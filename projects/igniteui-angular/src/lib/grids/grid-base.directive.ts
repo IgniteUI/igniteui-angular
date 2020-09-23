@@ -161,10 +161,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
-@Directive({
-    selector: '[igxGridBaseComponent]'
-})
-export class IgxGridBaseDirective extends DisplayDensityBase implements
+@Directive()
+export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
@@ -247,7 +245,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public id: string;
+    public abstract id: string;
 
     /**
      * Gets/Sets a custom template when empty.
@@ -2535,8 +2533,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
-    data: any[];
-    filteredData: any[];
+    abstract data: any[];
+    abstract filteredData: any[];
 
     /**
      * @hidden
@@ -2687,7 +2685,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         closeAnimation: null
     });
 
-    private rowEditSettings = {
+    private rowEditSettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: false,
@@ -6334,7 +6332,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!targetRow) {
             return;
         }
-        this.rowEditPositioningStrategy.settings.target = targetRow.element.nativeElement;
+        this.rowEditSettings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
@@ -6564,7 +6562,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public openAdvancedFilteringDialog() {
         if (!this._advancedFilteringOverlayId) {
-            this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
+            this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
             this._advancedFilteringOverlaySettings.outlet = this.outlet;
 

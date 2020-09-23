@@ -130,7 +130,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     }
 
     public open(esf) {
-        this._customDialogOverlaySettings.positionStrategy.settings.target =
+        this._customDialogOverlaySettings.target =
             this.overlayComponentId ?
                 this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement :
                 esf;

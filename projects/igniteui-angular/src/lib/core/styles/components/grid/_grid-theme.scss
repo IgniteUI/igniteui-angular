@@ -696,6 +696,10 @@
         indigo-design: 600,
     ), $variant);
 
+    %disable-focus-styles {
+        outline: 0;
+    }
+
     %grid-display {
         position: relative;
         display: grid;
@@ -1139,16 +1143,19 @@
     %igx-grid__td--bool {
         justify-content: center;
 
-        igx-icon {
+        %igx-icon-display {
             height: rem(18px);
             width: rem(18px);
             font-size: rem(18px);
+        }
+
+        %igx-icon--error {
             color: igx-color($palette, 'grays', 500);
         }
     }
 
     %igx-grid__td--bool-true {
-        igx-icon {
+        %igx-icon--success {
             color: igx-color($palette, 'grays', 700);
         }
     }

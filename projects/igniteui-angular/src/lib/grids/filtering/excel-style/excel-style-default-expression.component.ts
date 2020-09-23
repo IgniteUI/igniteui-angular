@@ -117,9 +117,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.dropDownOverlaySettings.outlet = this.overlayOutlet;
-        this.dropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
-            target : this.dropdownConditions.inputGroup.element.nativeElement
-        });
+        this.dropDownOverlaySettings.target = this.dropdownConditions.inputGroup.element.nativeElement;
+        this.dropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy();
     }
 
     public focus() {

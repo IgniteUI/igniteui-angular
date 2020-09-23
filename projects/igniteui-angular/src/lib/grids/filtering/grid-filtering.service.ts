@@ -74,7 +74,7 @@ export class IgxFilteringService implements OnDestroy {
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
 
-            this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
+            this._filterMenuOverlaySettings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
             if (this.grid.excelStyleFilteringComponent) {

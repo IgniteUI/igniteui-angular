@@ -191,7 +191,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         super.ngOnInit();
 
         const positionSettings: PositionSettings = {
-            target: this.nativeElement,
             horizontalDirection: HorizontalAlignment.Center,
             horizontalStartPoint: HorizontalAlignment.Center,
             openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),

@@ -88,9 +88,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private destroy$ = new Subject();
 
     private defaultSettings: OverlaySettings = {
+        target: this.parentElement,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy({ target: this.parentElement }),
+        positionStrategy: new AutoPositionStrategy(),
         excludePositionTarget: true
     };
 
@@ -111,9 +112,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     private get settings(): OverlaySettings {
         const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
-        if (!settings.positionStrategy.settings.target) {
+        const target = settings.target || settings.positionStrategy.settings.target;
+        if (!target) {
             const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
-            positionStrategyClone.settings.target = this.parentElement;
+            settings.target = this.parentElement;
             settings.positionStrategy = positionStrategyClone;
         }
         return settings;
@@ -132,7 +134,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocomplete')
-    public target: IgxDropDownComponent;
+    public get target(): IgxDropDownComponent {
+        return this._target as IgxDropDownComponent;
+    }
+    public set target(v: IgxDropDownComponent) {
+        this._target = v;
+    }
 
     /**
      * Enables/disables autocomplete component

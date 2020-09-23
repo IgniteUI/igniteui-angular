@@ -215,8 +215,8 @@ describe('IgxTooltip', () => {
 
             // Use custom overlaySettings.
             tooltipTarget.overlaySettings = /*<OverlaySettings>*/ {
+                target: tooltipTarget.nativeElement,
                 positionStrategy: new AutoPositionStrategy({
-                    target: tooltipTarget.nativeElement,
                     horizontalStartPoint: HorizontalAlignment.Right,
                     verticalStartPoint: VerticalAlignment.Bottom,
                     horizontalDirection: HorizontalAlignment.Right,
