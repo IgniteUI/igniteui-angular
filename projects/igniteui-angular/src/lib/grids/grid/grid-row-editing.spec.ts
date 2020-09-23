@@ -1787,7 +1787,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1814,7 +1815,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: true,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 

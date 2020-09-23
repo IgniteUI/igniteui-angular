@@ -154,7 +154,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
             cancel: false,
-            owner: grid
+            owner: grid,
+            isAddRow: false
         };
 
         const doneArgs: IGridEditDoneEventArgs = {
@@ -197,7 +198,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: { index: 1, value: 1 },
             newValue: { index: 777, value: 777 },
             cancel: false,
-            owner: grid
+            owner: grid,
+            isAddRow: false
         };
 
         (grid as IgxGridComponent).onRowEdit.pipe(first()).subscribe(e => {
