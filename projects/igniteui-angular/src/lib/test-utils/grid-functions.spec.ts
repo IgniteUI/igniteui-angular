@@ -91,6 +91,7 @@ export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
 const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
 const RESIZE_AREA_CLASS = '.igx-grid__th-resize-handle';
+const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
 export class GridFunctions {
 
@@ -1020,10 +1021,6 @@ export class GridFunctions {
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-list-item')));
     }
 
-    public static getColumnGroupHeaders(fix: ComponentFixture<any>): DebugElement[] {
-        return fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-    }
-
     public static getColumnHeaders(fix: ComponentFixture<any>): DebugElement[] {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
     }
@@ -1033,6 +1030,23 @@ export class GridFunctions {
             const col = header.componentInstance.column;
             return col.field === columnField && (forGrid ? forGrid === col.grid : true);
         });
+    }
+
+    public static getColumnGroupHeaders(fix: ComponentFixture<any>): DebugElement[] {
+        const allHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const groupHeaders = allHeaders.filter(h => {
+            return h.componentInstance.column.columnGroup;
+        });
+        return groupHeaders;
+    }
+
+    public static getColumnGroupHeader(header: string, fix: ComponentFixture<any>, forGrid?: IgxGridBaseDirective): DebugElement {
+        const headers = this.getColumnGroupHeaders(fix);
+        const head = headers.find((gr) => {
+            const col = gr.componentInstance.column;
+            return col.header === header && (forGrid ? forGrid === col.grid : true);
+        });
+        return head;
     }
 
     public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
@@ -1048,6 +1062,10 @@ export class GridFunctions {
     }
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
+        return fix.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS))[3];
+    }
+
+    public static getColumnHeaderTitleByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
             .map((header) => header.nativeElement);
         const sortedNativeHeaders = GridFunctions.sortNativeElementsHorizontally(nativeHeaders);
