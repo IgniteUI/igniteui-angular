@@ -160,6 +160,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         mergeObjects(data, reverseMapper(cell.column.field, cell.editValue));
 
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
+        doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
     }
 
