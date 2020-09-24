@@ -544,7 +544,7 @@
         @extend %igx-grid__row-editing-outlet !optional;
     }
 
-    @include e(grid-addrow-snackbar) {
+    @include e(addrow-snackbar) {
         @extend %igx-grid__addrow-snackbar !optional;
     }
 
