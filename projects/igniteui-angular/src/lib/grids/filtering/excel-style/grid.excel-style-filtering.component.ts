@@ -12,7 +12,7 @@ import {
     ViewRef,
     ContentChild,
     Output,
-    EventEmitter
+    EventEmitter,
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -729,7 +729,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public onKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE) {
+        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE ||
+            eventArgs.ctrlKey && eventArgs.shiftKey && eventArgs.key.toLowerCase() === 'l') {
             this.closeDropdown();
         }
         eventArgs.stopPropagation();
