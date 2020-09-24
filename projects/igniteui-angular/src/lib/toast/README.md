@@ -1,6 +1,6 @@
 # igx-toast
 
-The Toast component shows application messages in a stylized pop-up box positioned inside the global overlay outlet(default). Toasts can't be be dismissed, they are non-interactive and can appear on top, middle, and the bottom of the screen. A walkthrough on how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
+The Toast component shows application messages in a stylized pop-up box positioned inside the global overlay outlet(default). Toasts can't be dismissed, they are non-interactive and can appear on top, middle, and the bottom of the screen. A walkthrough on how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
 
 # Usage
 
