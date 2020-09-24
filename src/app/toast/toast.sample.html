@@ -2,26 +2,72 @@
     <article class="column">
         <h4 class="sample-title">Bottom Position</h4>
         <div class="btn-group">
-            <button igxButton="raised" igxRipple="white" (click)="showToast(toast, null)" [disabled]="toast.isVisible">Show Toast</button>
-            <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="showToast(toast, 'bottom')"
+                [disabled]="toast.isVisible"
+            >
+                Show Toast
+            </button>
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="toast.hide()"
+                [disabled]="!toast.isVisible"
+            >
+                Hide Toast
+            </button>
         </div>
     </article>
+
     <article class="column">
         <h4 class="sample-title">Middle Position</h4>
         <div class="btn-group">
-            <button igxButton="raised" igxRipple="white" (click)="showToast(toast, 'middle')" [disabled]="toast.isVisible">Show Toast</button>
-            <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="showToast(toast, 'middle')"
+                [disabled]="toast.isVisible"
+            >
+                Show Toast
+            </button>
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="toast.hide()"
+                [disabled]="!toast.isVisible"
+            >
+                Hide Toast
+            </button>
         </div>
     </article>
+
     <article class="column">
         <h4 class="sample-title">Top Position</h4>
         <div class="btn-group">
-            <button igxButton="raised" igxRipple="white" (click)="showToast(toast, 'top')" [disabled]="toast.isVisible">Show Toast</button>
-            <button igxButton="raised" igxRipple="white" (click)="toast.hide()" [disabled]="!toast.isVisible">Hide Toast</button>
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="showToast(toast, 'top')"
+                [disabled]="toast.isVisible"
+            >
+                Show Toast
+            </button>
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="toast.hide()"
+                [disabled]="!toast.isVisible"
+            >
+                Hide Toast
+            </button>
         </div>
     </article>
 </div>
 
-<igx-toast #toast [position]="toastPosition">
+<div igxOverlayOutlet #outlet="overlay-outlet"></div>
+
+<igx-toast #toast [outlet]="outlet">
     This message will self-destruct in 4 seconds.
 </igx-toast>
