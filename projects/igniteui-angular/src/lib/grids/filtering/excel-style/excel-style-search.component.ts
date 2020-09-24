@@ -23,6 +23,7 @@ import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
+import { KEYS } from '../../../core/utils';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -224,7 +225,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public filterListData() {
+    public onInputKeyDown(event): void {
+        if (event.key === KEYS.ENTER) {
+            event.preventDefault();
+            this.applyFilter();
+        }
+    }
+
+    public filterListData(): void {
         if (!this.esf.listData || !this.esf.listData) {
             this.displayedListData = [];
 
