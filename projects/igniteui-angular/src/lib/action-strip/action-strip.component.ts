@@ -11,7 +11,10 @@ import {
     QueryList,
     ViewChild,
     TemplateRef,
-    AfterContentInit
+    AfterContentInit,
+    IterableDiffers,
+    OnInit,
+    IterableChangeRecord
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down/public_api';
@@ -52,9 +55,10 @@ export class IgxActionStripMenuItemDirective {
     templateUrl: 'action-strip.component.html'
 })
 
-export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit {
+export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, OnInit {
     constructor(
         private _viewContainer: ViewContainerRef,
+        protected differs: IterableDiffers,
         private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
@@ -148,14 +152,35 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     @ViewChild('dropdown')
     private menu: IgxDropDownComponent;
 
+    private menuDiffer;
+    /**
+     * @hidden
+     * @internal
+     */
+    ngOnInit() {
+        this.menuDiffer = this.differs.find([]).create(null);
+    }
+
     /**
      * @hidden
      * @internal
      */
     ngAfterContentInit() {
         this.menuItems = [... this._menuItems.toArray()];
-        this._menuItems.changes.subscribe(x => {
-            this.menuItems = [... this._menuItems.toArray()];
+        this.menuDiffer.diff(this.menuItems);
+        this._menuItems.changes.subscribe((change: QueryList<IgxActionStripMenuItemDirective>) => {
+            const diff = this.menuDiffer.diff(change);
+            if (diff) {
+                diff.forEachAddedItem((record: IterableChangeRecord<IgxActionStripMenuItemDirective>) => {
+                    // add
+                    this.menuItems.splice(0, 0, record.item);
+                });
+                diff.forEachRemovedItem((record: IterableChangeRecord<IgxActionStripMenuItemDirective>) => {
+                    // remove
+                    const index = this.menuItems.indexOf(record.item);
+                    this.menuItems.splice(index, 1);
+                });
+            }
         });
     }
 

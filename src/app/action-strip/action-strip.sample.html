@@ -71,14 +71,14 @@
         </igx-column>
 
         <igx-action-strip #actionstrip3 [(displayDensity)]="displayDensity">
-            <div *igxActionStripMenuItem>
-                <igx-icon (click)="doSomeAction()">alarm</igx-icon>
-                <label igxLabel>Custom</label>
-            </div>           
+            <ng-container *ngIf='customItem'>
+                    <igx-icon *igxActionStripMenuItem (click)="doSomeAction()">alarm</igx-icon>
+            </ng-container>     
             <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
             <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
+    <button (click)='customItem = !customItem'>Toggle extra menu item</button>
 </div>
 
 
