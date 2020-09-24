@@ -705,21 +705,24 @@ describe('IgxCalendar - ', () => {
                 });
             });
 
-            it('Calendar keyboard navigation - PageUp/PageDown', () => {
+            it('Calendar keyboard navigation - PageUp/PageDown', fakeAsync(() => {
                 const component = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS));
 
                 UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement);
                 fixture.detectChanges();
+                tick(100);
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 calendar.viewDate = new Date(2017, 5, 13);
                 fixture.detectChanges();
                 UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement);
                 fixture.detectChanges();
+                tick(100);
 
                 expect(calendar.viewDate.getMonth()).toEqual(6);
                 UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement, true, false, true);
                 fixture.detectChanges();
+                tick(100);
 
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
 
@@ -728,9 +731,10 @@ describe('IgxCalendar - ', () => {
 
                 UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement, true, false, true);
                 fixture.detectChanges();
+                tick(100);
 
                 expect(calendar.viewDate.getFullYear()).toEqual(2018);
-            });
+            }));
 
             it('Calendar keyboard navigation - Home/End/Enter', () => {
                 const component = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS));

@@ -466,6 +466,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public previousMonth(isKeydownTrigger = false) {
+        debugger;
+        if (isKeydownTrigger && this.animationAction === ScrollMonth.NEXT) { return; }
         this.viewDate = this.calendarModel.getPrevMonth(this.viewDate);
         this.animationAction = ScrollMonth.PREV;
         this.isKeydownTrigger = isKeydownTrigger;
@@ -478,6 +480,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public nextMonth(isKeydownTrigger = false) {
+        if (isKeydownTrigger && this.animationAction === 'prev') { return; }
         this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
         this.isKeydownTrigger = isKeydownTrigger;
@@ -491,7 +494,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public startPrevMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
         this.monthScrollDirection = ScrollMonth.PREV;
-
+        this.animationAction = ScrollMonth.PREV;
         this.previousMonth(isKeydownTrigger);
     }
 
@@ -503,7 +506,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public startNextMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
         this.monthScrollDirection = ScrollMonth.NEXT;
-
+        this.animationAction = ScrollMonth.NEXT;
         this.nextMonth(isKeydownTrigger);
     }
 
@@ -745,10 +748,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
-
         if (this.activeView !== CalendarView.DEFAULT) {
             return;
         }
+
 
         const isPageDown = event.key === 'PageDown';
         const step = isPageDown ? 1 : -1;
@@ -792,8 +795,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             };
         }
 
-        if (isPageDown) { this.nextMonth(true); } else {
-            this.previousMonth(true);
+        if (isPageDown) {
+            event.repeat ? requestAnimationFrame(() => this.nextMonth(true)) : this.nextMonth(true);
+        } else {
+            event.repeat ? requestAnimationFrame(() => this.previousMonth(true)) : this.previousMonth(true);
         }
     }
 
