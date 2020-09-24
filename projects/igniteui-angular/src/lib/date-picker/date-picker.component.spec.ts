@@ -1,5 +1,5 @@
-import { Component, ViewChild, ElementRef, EventEmitter, QueryList, Renderer2 } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { Component, ViewChild, ElementRef, EventEmitter, QueryList, Renderer2, DebugElement } from '@angular/core';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,7 +23,7 @@ import {
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
@@ -288,38 +288,39 @@ describe('IgxDatePicker', () => {
     });
 
     describe('ARIA Tests', () => {
-        let fixture: any;
-        let datePicker: IgxDatePickerComponent;
         let labelID: string;
-
-        beforeEach(() => {
-        });
+        let inputLabelledBy: string;
+        let dom: DebugElement;
 
         it('ARIA Test for a picker with an input group template', () => {
-            fixture = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
-            datePicker = fixture.componentInstance.datePicker;
+            const fixture = TestBed.createComponent(IgxDatePickerRetemplatedComponent);
             fixture.detectChanges();
+            dom = fixture.debugElement;
 
-            labelID = fixture.debugElement.query(By.css('.igx-input-group__label')).nativeElement.id;
-            expect(datePicker.inputDirective.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+            labelID = dom.query(By.directive(IgxLabelDirective)).nativeElement.id;
+            inputLabelledBy = dom.query(By.directive(IgxInputDirective)).nativeElement.getAttribute('aria-labelledby');
+            expect(inputLabelledBy).toEqual(labelID);
         });
 
         it('ARIA Test for picker with a dialog mode', () => {
-            fixture = TestBed.createComponent(IgxDatePickerTestComponent);
-            datePicker = fixture.componentInstance.datePicker;
+            const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
             fixture.detectChanges();
+            dom = fixture.debugElement;
 
-            labelID = fixture.debugElement.query(By.css('.igx-input-group__label')).nativeElement.id;
-            expect(datePicker.inputDirective.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+            labelID = dom.query(By.directive(IgxLabelDirective)).nativeElement.id;
+            inputLabelledBy = dom.query(By.directive(IgxInputDirective)).nativeElement.getAttribute('aria-labelledby');
+            expect(inputLabelledBy).toEqual(labelID);
         });
 
-        it('ARIA Test for picker with a dropdown mode', () => {
-            fixture = TestBed.createComponent(IgxDatePickerComponent);
-            datePicker = fixture.componentInstance;
-            fixture.detectChanges();
 
-            labelID = fixture.debugElement.query(By.css('.igx-input-group__label')).nativeElement.id;
-            expect(datePicker.inputDirective.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+        it('ARIA Test for picker with a dropdown mode', () => {
+            const fixture = TestBed.createComponent(IgxDatePickerOpeningComponent);
+            fixture.detectChanges();
+            dom = fixture.debugElement;
+
+            labelID = dom.query(By.directive(IgxLabelDirective)).nativeElement.id;
+            inputLabelledBy = dom.query(By.directive(IgxInputDirective)).nativeElement.getAttribute('aria-labelledby');
+            expect(inputLabelledBy).toEqual(labelID);
         });
     });
 
@@ -1482,8 +1483,10 @@ describe('IgxDatePicker', () => {
             };
             moduleRef = {};
             injector = { get: () => ngModel };
+
             inputGroup = new IgxInputGroupComponent(null, null);
-            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [element, 'aria-labelledby', 'test-label-id-1']);
+            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
+
             spyOn(renderer2, 'setAttribute').and.callFake(() => {
             });
         });
