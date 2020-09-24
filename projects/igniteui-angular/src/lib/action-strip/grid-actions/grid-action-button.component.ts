@@ -6,27 +6,52 @@ import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter } from '
 
 export class IgxGridActionButtonComponent {
 
+    /**
+     * Event emitted when action button is clicked.
+     * @example
+     * ```html
+     *  <igx-grid-action-button (onActionClick)="startEdit($event)"></igx-grid-action-button>
+     * ```
+     */
     @Output()
     onActionClick = new EventEmitter<Event>();
 
+    /**
+     * Reference to the current template.
+     * @hidden
+     * @internal
+     */
     @ViewChild(TemplateRef)
     public templateRef: TemplateRef<any>;
 
+    /**
+     * Whether button action is rendered in menu and should container text label.
+     */
     @Input()
     public asMenuItem = false;
 
-    @Input()
-    public clickHandler;
-
+    /**
+     * Name of the icon to display in the button.
+     */
     @Input()
     public iconName: string;
 
+    /**
+     * The name of the icon set. Used in case the icon is from a different icon set.
+     */
     @Input()
     public iconSet: string;
 
+    /**
+     * The text of the label.
+     */
     @Input()
     public labelText: string;
 
+    /**
+     * @hidden
+     * @internal
+     */
     public handleClick(event) {
        this.onActionClick.emit(event);
     }

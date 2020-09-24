@@ -133,6 +133,11 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
 
+    /**
+     * Menu Items list.
+     * @hidden
+     * @internal
+     */
     public menuItems = [];
 
     /**

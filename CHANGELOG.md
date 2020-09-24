@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
 - `IgxDatePicker`
     - **Breaking Change** - Deprecated the `label` and `labelVisibility` properties.
+- `igxGridActions`
+    - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
 
 
 ### New Features
