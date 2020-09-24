@@ -1,7 +1,6 @@
 # igx-toast
 
-**igx-toast** IgxToast provides information and warning messages. They could not be dismissed, are non-interactive and can appear on top, middle and the bottom of the screen.  
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
+The Toast component shows application messages in a stylized pop-up box positioned inside the global overlay outlet(default). Toasts can't be be dismissed, they are non-interactive and can appear on top, middle, and the bottom of the screen. A walkthrough on how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
 
 # Usage
 
@@ -11,53 +10,49 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 <button (click)="toast.show()">Show toast</button>
 <button (click)="toast.hide()">Hide toast</button>
 
-<igx-toast #toast
-           message="Something happened!">
-</igx-toast>
+<igx-toast #toast>Well, hi there!</igx-toast>
 ```
-You can set the id of the component by `id="myToast"` or will be automatically generated;
 
-You can be more descriptive and set message `message="Something happened!"`.
+You can set the id of the component by setting the attribute `id` on the component (e.g. `id="myToast"`), or it will be automatically generated for you if you don't provide anything;
 
-You can show the toast by using `toast.show()` method.
+The toast can be shown by using the `show()` method.
 
-You can show hide toast by using `toast.hide()` method.
+You can hide the toast by using the `hide()` method.
 
-## Toast positioned on top
+## Toast Position
+You can set the `positon` property to `top`, `middle`, or `bottom`, which will position the toast near the top, middle, or bottom of the document*.
+
+*By default the toast renders inside a global overlay outlet. You can specify a different overlay outlet by setting the `outlet` property on the toast;
 
 ```html
 <button (click)="toast.show()">Show toast</button>
-
-<igx-toast #toast
-           message="Something happened!"
-           position="IgxToastPosition.Top">
-</igx-toast>
+<igx-toast #toast position="top">Top Positioned Toast</igx-toast>
 ```
-
-You can modify the position of the toast by setting `postion="IgxToastPosition.Top"`.
 
 ## Toast with different content
 
 ```html
-<igx-toast #toast [position]="toastPosition">
+<igx-toast #toast [position]="bottom">
     <igx-icon>notifications</igx-icon>
     This message will self-destruct in 4 seconds.
 </igx-toast>
 ```
 
-You can display various content by placing it between the igx-toast tags. If so, the message property will be overwritten.
+You can display various content by placing it between the `igx-toast` tags.
 
-## Toast with events
+## Toast Events
 
 ```html
 <button (click)="toast.show()">Show toast</button>
 
-<igx-toast #toast
-           message="Something happened!"
-           (onShowing)="onToastShowing($event)"
-           (onShown)="onToastShown($event)"
-           (onHiding)="onToastShowing($event)"
-           (onHidden)="onToastHidden($event)">
+<igx-toast
+    #toast
+    message="Something happened!"
+    (onShowing)="onToastShowing($event)"
+    (onShown)="onToastShown($event)"
+    (onHiding)="onToastShowing($event)"
+    (onHidden)="onToastHidden($event)"
+>
 </igx-toast>
 ```
 
