@@ -8,10 +8,5 @@
 @include b(igx-toast) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
-
     @extend %igx-toast-display !optional;
-
-    @include m(active) {
-        @extend %igx-toast--active !optional;
-    }
 }

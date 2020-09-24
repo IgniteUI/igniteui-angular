@@ -102,7 +102,6 @@
     ), $variant);
 
     %igx-toast-display {
-        position: absolute;
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -115,17 +114,6 @@
         border-radius: --var($theme, 'border-radius');
         box-shadow: map-get($theme, 'shadow');
         backdrop-filter: blur(10px);
-        z-index: 999999;
-        left: -999999px;
-        top: -999999px;
-        opacity: 0;
-    }
-
-    %igx-toast--active {
-        position: relative;
-        left: initial;
-        top: initial;
-        opacity: 1;
     }
 }
 

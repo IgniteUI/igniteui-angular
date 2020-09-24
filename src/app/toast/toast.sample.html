@@ -64,6 +64,19 @@
             </button>
         </div>
     </article>
+
+    <article class="column">
+        <h4 class="sample-title">Toggle Toast</h4>
+        <div class="btn-group">
+            <button
+                igxButton="raised"
+                igxRipple="white"
+                (click)="toast.toggle()"
+            >
+                Toggle Toast
+            </button>
+        </div>
+    </article>
 </div>
 
 <div igxOverlayOutlet #outlet="overlay-outlet"></div>
