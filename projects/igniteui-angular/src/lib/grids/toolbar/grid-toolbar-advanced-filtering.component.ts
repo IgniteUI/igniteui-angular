@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridType } from '../common/grid.interface';
+import { Component, Host } from '@angular/core';
+import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 
 /**
@@ -27,8 +25,8 @@ export class IgxGridToolbarAdvancedFilteringComponent {
      * Returns the grid containing this component.
      */
     get grid() {
-        return this.api.grid;
+        return this.toolbar.grid;
     }
 
-    constructor(private api: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+    constructor(@Host() private toolbar: IgxGridToolbarComponent) { }
 }

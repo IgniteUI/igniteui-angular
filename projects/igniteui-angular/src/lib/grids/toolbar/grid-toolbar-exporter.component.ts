@@ -1,5 +1,8 @@
-import { Component, ContentChild, Input, Output, EventEmitter, Optional } from '@angular/core';
-import { IgxExcelTextDirective, IgxCSVTextDirective, BaseToolbarDirective } from './common';
+import { Component, ContentChild, Input, Output, EventEmitter, Optional, Host } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { BaseToolbarDirective } from './grid-toolbar.base';
+import { IgxGridToolbarComponent } from './grid-toolbar.component';
+import { IgxExcelTextDirective, IgxCSVTextDirective } from './common';
 import {
     CsvFileTypes,
     IgxBaseExporter,
@@ -9,10 +12,7 @@ import {
     IgxExcelExporterService
 } from '../../services/public_api';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { GridBaseAPIService } from '../api.service';
-import { GridType } from '../common/grid.interface';
 import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
-import { first } from 'rxjs/operators';
 
 
 export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions;
@@ -107,11 +107,11 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     public exportEnded = new EventEmitter<void>();
 
     constructor(
-        protected api: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        @Host() protected toolbar: IgxGridToolbarComponent,
         @Optional() private excelExporter: IgxExcelExporterService,
         @Optional() private csvExporter: IgxCsvExporterService,
     ) {
-        super(api);
+        super(toolbar);
     }
 
     public export(type: 'excel' | 'csv', toggleRef?: IgxToggleDirective): void {

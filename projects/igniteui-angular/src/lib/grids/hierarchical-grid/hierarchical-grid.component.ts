@@ -15,7 +15,8 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -223,6 +224,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
     public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+
+    @ViewChild('toolbarOutlet', { read: ViewContainerRef })
+    public toolbarOutlet: ViewContainerRef;
     /**
      * @hidden
      */

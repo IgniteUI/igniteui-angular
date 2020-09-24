@@ -7,7 +7,6 @@ import {
     ElementRef,
     ContentChild
 } from '@angular/core';
-
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxGridIconService } from '../common/grid-icon.service';
 import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../pinning/pinning-icons';
@@ -37,11 +36,16 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     @Input()
     public showProgress = false;
 
-    /**
-     * Returns the grid containing this component.
-     */
+    @Input()
     get grid() {
+        if (this._grid) {
+            return this._grid;
+        }
         return this.api.grid;
+    }
+
+    set grid(value: IgxGridBaseDirective) {
+        this._grid = value;
     }
 
     public get nativeElement() {
@@ -83,9 +87,11 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     @HostBinding('class.igx-grid-toolbar--compact')
     get compactStyle() { return this.displayDensity === 'compact'; }
 
+    protected _grid: IgxGridBaseDirective;
+
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        protected api: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        private api: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         private iconService: IgxGridIconService,
         private element: ElementRef<HTMLElement>
     ) {

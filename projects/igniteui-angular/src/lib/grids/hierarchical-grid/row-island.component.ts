@@ -36,13 +36,14 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/public_api';
-import { takeUntil } from 'rxjs/operators';
+import { delay, takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
+
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -263,10 +264,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     ngAfterContentInit() {
-        // TODO: Discuss should it always take the parent toolbar if present
-        this.onGridCreated.pipe(takeUntil(this.destroy$)).subscribe(e => {
-            e.grid.toolbarTemplate = this.islandToolbarTemplate || e.grid.parent.toolbarTemplate;
-        });
         this.updateChildren();
         this.children.notifyOnChanges();
         this.children.changes.pipe(takeUntil(this.destroy$))
@@ -322,6 +319,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.rootGrid.hgridAPI.registerChildRowIsland(this);
         }
         this._init = false;
+        this.onGridCreated.pipe(delay(0), takeUntil(this.destroy$)).subscribe(e => {
+            if (this.islandToolbarTemplate) {
+                e.grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: e.grid });
+            }
+        });
     }
 
     /**

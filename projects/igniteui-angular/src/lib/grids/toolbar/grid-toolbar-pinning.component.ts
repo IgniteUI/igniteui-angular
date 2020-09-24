@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { BaseToolbarDirective } from './common';
+import { BaseToolbarDirective } from './grid-toolbar.base';
 
 /**
  * Provides a pre-configured column pinning component for the grid.
