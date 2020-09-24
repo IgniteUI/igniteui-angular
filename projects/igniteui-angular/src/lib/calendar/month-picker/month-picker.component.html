@@ -1,6 +1,6 @@
 <div *ngIf="isDefaultView" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" class="igx-calendar__body" (swiperight)="previousYear()" (swipeleft)="nextYear()">
     <div class="igx-calendar-picker">
-        <div tabindex="0" class="igx-calendar-picker__prev" (click)="previousYear()" (keydown)="previousYearKB($event)" [ngStyle]="{
+        <div tabindex="0" class="igx-calendar-picker__prev" (click)="previousYear()" (keydown)="changeYearKB($event, false)" [ngStyle]="{
             'min-width.%': 25,
             'left': 0
         }">
@@ -11,7 +11,7 @@
                 {{ formattedYear(viewDate) }}
             </span>
         </div>
-        <div tabindex="0" class="igx-calendar-picker__next" (click)="nextYear()" (keydown)="nextYearKB($event)" [ngStyle]="{
+        <div tabindex="0" class="igx-calendar-picker__next" (click)="nextYear()" (keydown)="changeYearKB($event)" [ngStyle]="{
             'min-width.%': 25,
             'right': 0
         }">

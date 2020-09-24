@@ -206,11 +206,11 @@ describe('IgxChipsArea ', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            firstChipComp.chipArea.nativeElement.focus();
-            expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+            firstChipComp.elementRef.nativeElement.focus();
+            expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
 
-            secondChipComp.chipArea.nativeElement.focus();
-            expect(document.activeElement).toBe(secondChipComp.chipArea.nativeElement);
+            secondChipComp.elementRef.nativeElement.focus();
+            expect(document.activeElement).toBe(secondChipComp.elementRef.nativeElement);
         });
 
         it('should focus on previous and next chips after arrows are pressed', () => {
@@ -220,22 +220,22 @@ describe('IgxChipsArea ', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            firstChipComp.chipArea.nativeElement.focus();
+            firstChipComp.elementRef.nativeElement.focus();
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+            expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
 
             const rightKey = new KeyboardEvent('keydown', { 'key': 'ArrowRight' });
             firstChipComp.onChipKeyDown(rightKey);
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(secondChipComp.chipArea.nativeElement);
+            expect(document.activeElement).toBe(secondChipComp.elementRef.nativeElement);
 
             const leftKey = new KeyboardEvent('keydown', { 'key': 'ArrowLeft' });
             secondChipComp.onChipKeyDown(leftKey);
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+            expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
         });
 
         it('should fire onSelection event', () => {
@@ -432,8 +432,8 @@ describe('IgxChipsArea ', () => {
 
         it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const firstChipAreaElem = chipComponents[0].componentInstance.chipArea.nativeElement;
-            const secondChipAreaElem = chipComponents[1].componentInstance.chipArea.nativeElement;
+            const firstChipAreaElem = chipComponents[0].componentInstance.elementRef.nativeElement;
+            const secondChipAreaElem = chipComponents[1].componentInstance.elementRef.nativeElement;
             const firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
             const secondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
 
@@ -459,7 +459,7 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const targetChip = chipComponents[2].componentInstance;
-            const targetChipElem = targetChip.chipArea.nativeElement;
+            const targetChipElem = targetChip.elementRef.nativeElement;
 
             targetChipElem.focus();
             fix.detectChanges();

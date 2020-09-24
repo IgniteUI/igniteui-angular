@@ -159,12 +159,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    get collapsibleIndicatorTemplate(): TemplateRef<any> {
-        return this._collapseIndicatorTemplate;
-    }
-    set collapsibleIndicatorTemplate(template: TemplateRef<any>) {
-        this._collapseIndicatorTemplate = template;
-    }
+    public collapsibleIndicatorTemplate: TemplateRef<any>;
 
     /**
      * Returns a reference to the inline editor template.
@@ -271,7 +266,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
         if (this.collapseIndicatorTemplate) {
-            this._collapseIndicatorTemplate = this.collapseIndicatorTemplate.template;
+            this.collapsibleIndicatorTemplate = this.collapseIndicatorTemplate.template;
         }
         // currently only ivy fixes the issue, we have to slice only if the first child is group
         if (this.children.first === this) {
@@ -357,4 +352,15 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);
     // }
+
+    /**
+     * @hidden
+     * Calculates the number of visible columns, based on indexes of first and last visible columns.
+     */
+    public calcChildren(): number {
+        const visibleChildren = this.allChildren.filter(c => c.visibleIndex > -1);
+        const fi = visibleChildren[0].visibleIndex;
+        const li = visibleChildren[visibleChildren.length - 1].visibleIndex;
+        return li - fi + 1;
+    }
 }

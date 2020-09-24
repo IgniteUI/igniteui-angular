@@ -470,7 +470,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
-            tick(DEBOUNCETIME);
+            tick(100);
             fix.detectChanges();
 
             // Verify AF dialog is closed.

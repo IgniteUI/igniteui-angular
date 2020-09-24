@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -142,6 +142,7 @@ describe('igxSelect', () => {
             expect(select.disabled).toBeFalsy();
             expect(select.placeholder).toEqual('Choose a city');
             expect(select.value).toBeUndefined();
+            // Default type will be set - currently 'line'
             expect(select.type).toEqual('line');
             expect(select.displayDensity).toEqual('comfortable');
             expect(select.overlaySettings).toBeUndefined();
@@ -380,8 +381,11 @@ describe('igxSelect', () => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
+            const labelID = fixture.componentInstance.label1.nativeElement.getAttribute('id');
             expect(inputElement.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(inputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
+            expect(inputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
+            expect(dropdownListElement.nativeElement.getAttribute('aria-labelledby')).toEqual(labelID);
             expect(inputElement.nativeElement.getAttribute('aria-owns')).toEqual(select.listId);
             expect(inputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
@@ -417,7 +421,7 @@ describe('igxSelect', () => {
         });
         it('should render input type properly', () => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            // Default type is 'line'
+            // Default type will be set - currently 'line'
             expect(select.type).toEqual('line');
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BOX)).toBeFalsy();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_BORDER)).toBeFalsy();
@@ -2614,7 +2618,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         });
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, mockInjector);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -2657,15 +2661,18 @@ describe('igxSelect ControlValueAccessor Unit', () => {
 @Component({
     template: `
     <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
-    <igx-select-item *ngFor="let item of items" [value]="item" [text]="item">
-        {{ item }} {{'©'}}
-    </igx-select-item>
+        <label igxLabel #simpleLabel>Select Simple Component</label>
+        <igx-select-item *ngFor="let item of items" [value]="item" [text]="item">
+            {{ item }} {{'©'}}
+        </igx-select-item>
     </igx-select>
 `
 })
 class IgxSelectSimpleComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    @ViewChild('simpleLabel', { read: ElementRef, static: true })
+    public label1: ElementRef;
     public items: string[] = [
         'New York',
         'Sofia',
@@ -2857,7 +2864,7 @@ class IgxSelectReactiveFormComponent {
     ];
 
     public validationType = {
-        'firstName': new FormControl(Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')),
+        'firstName': [Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')],
         'password': [Validators.required, Validators.maxLength(12)],
         'optionsSelect': [Validators.required]
     };

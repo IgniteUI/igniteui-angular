@@ -9,3 +9,8 @@
 .categoryStyle{
     font-weight: 600;
 }
+
+[igxButton] {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}

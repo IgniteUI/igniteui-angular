@@ -17,6 +17,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxColumnComponent } from '../tree-grid/public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
@@ -50,7 +51,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Should be able to reorder columns programmatically.', (() => {
+        it('Should be able to reorder columns.', (() => {
             let columnsList = grid.columnList.toArray();
 
             grid.moveColumn(columnsList[0], columnsList[2]);
@@ -60,6 +61,212 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[1].field).toEqual('LastName');
             expect(columnsList[2].field).toEqual('ID');
         }));
+
+        it('Should be able to reorder columns programmatically.', () => {
+            let columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('LastName');
+            expect(columnsList[2].field).toEqual('ID');
+        });
+
+        it('Should not reorder columns, if passed incorrect index.', () => {
+            let columnsList = grid.columnList.toArray();
+
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(-1);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+
+            column.move(columnsList.length);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        });
+
+        it('Should show hidden column on correct index', () => {
+            let columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+
+            column.hidden = true;
+            fixture.detectChanges();
+
+            column.move(2);
+            column.hidden = false;
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('LastName');
+            expect(columnsList[2].field).toEqual('ID');
+        });
+
+        it('Should fire onColumnMovingEnd with correct values of event arguments.', () => {
+            let columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+
+            spyOn(grid.onColumnMovingEnd, 'emit').and.callThrough();
+
+            column.move(2);
+
+            columnsList = grid.columnList.toArray();
+            const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1] };
+            expect(grid.onColumnMovingEnd.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onColumnMovingEnd.emit).toHaveBeenCalledWith(args);
+        });
+
+        it('Should exit edit mode and commit the new value when column moving programmatically', () => {
+            fixture.componentInstance.isEditable = true;
+            fixture.detectChanges();
+
+            // step 1 - enter edit mode on a cell
+            const cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+            fixture.detectChanges();
+
+            cell.triggerEventHandler('dblclick', {});
+            fixture.detectChanges();
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(true);
+
+            // step 2 - enter some new value
+            const editTemplate = cell.query(By.css('input'));
+            editTemplate.nativeElement.value = '4';
+            editTemplate.nativeElement.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+
+            // step 3 - move a column
+            const columnsList = grid.columnList.toArray();
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            // step 4 - verify cell has exited edit mode correctly
+            expect(grid.columnList.toArray()[2].field).toEqual('ID');
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(false);
+            expect(grid.getCellByColumn(0, 'ID').value).toBe('4');
+        });
+
+        it('Should preserve hidden columns order after columns are reordered programmatically', () => {
+
+            // step 1 - hide a column
+            fixture.componentInstance.isHidden = true;
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            // step 2 - move a column
+            const columnsList = grid.columnList.toArray();
+            const column = columnsList[2] as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+
+            expect(grid.visibleColumns[1].field).toEqual('LastName');
+
+            // step 3 - show hidden columns and verify correct order
+            fixture.componentInstance.isHidden = false;
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(grid.visibleColumns[0].field).toEqual('ID');
+            expect(grid.visibleColumns[1].field).toEqual('Name');
+            expect(grid.visibleColumns[2].field).toEqual('LastName');
+        });
+
+        it('Should not break vertical or horizontal scrolling after columns are reordered programmatically', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            // step 1 - move a column
+            const column = columnsList[1] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('LastName');
+            expect(columnsList[2].field).toEqual('Name');
+
+            // step 2 - verify vertical scrolling is not broken
+            grid.verticalScrollContainer.getScroll().scrollTop = 200;
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(grid.columnList.toArray()[0].cells[3].value).toBeTruthy(7);
+
+            // step 3 - verify horizontal scrolling is not broken
+            grid.headerContainer.getScroll().scrollLeft = 200;
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(grid.columnList.toArray()[2].cells[3].value).toBeTruthy('BRown');
+        }));
+
+        it('Should be able to reorder columns programmatically when a column is grouped.', (async() => {
+            fixture.componentInstance.isGroupable = true;
+            fixture.detectChanges();
+            let columnsList = grid.columnList.toArray();
+
+            // step 1 - group a column
+            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+
+            // step 2 - move a column
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('LastName');
+            expect(columnsList[2].field).toEqual('ID');
+        }));
+
+        it('Should not break KB after columns are reordered programmatically - selection belongs to the moved column.', (async () => {
+            let columnsList = grid.columnList.toArray();
+
+            // step 1 - select a cell from 'ID' column
+            const cell = grid.getCellByColumn(0, 'ID');
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fixture.detectChanges();
+
+            // step 2 - move that column
+
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('ID');
+            expect(columnsList[2].field).toEqual('LastName');
+
+            // step 3 - navigate right and verify cell selection is updated
+            const gridContent = GridFunctions.getGridContent(fixture);
+            GridFunctions.focusFirstCell(fixture);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
+            await wait(50);
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
+        }));
+
+
 
         it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async() => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -673,6 +880,27 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
         }));
 
+        it('Should preserve cell selection after columns are reordered programatically.', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            // step 1 - select a cell from the 'ID' column
+            const cell = grid.getCellByColumn(0, 'ID');
+            cell.activate(null);
+            fixture.detectChanges();
+            expect(cell.selected).toBeTruthy();
+
+            // step 2 - move that column and verify selection is preserved
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[2].field).toEqual('ID');
+            expect(grid.getCellByColumn(0, 'CompanyName').selected).toBeTruthy();
+        }));
+
         it('Should preserve cell selection after columns are reordered - horizontal scrolling.', (async() => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -755,6 +983,27 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
+        it('Should affect all pages when columns are reordered programatically and paging is enabled.', (async() => {
+            fixture.componentInstance.paging = true;
+            fixture.detectChanges();
+
+            let columnsList = grid.columnList.toArray();
+
+            // step 1 - move a column
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            // step 2 - navigate to page 2 and verify correct column order
+            grid.paginate(1);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.toArray();
+            expect(columnsList[2].field).toEqual('ID');
+            expect(columnsList[3].field).toEqual('ContactTitle');
+            expect(columnsList[4].field).toEqual('Address');
+        }));
+
         it('Should affect all pages when columns are reordered and paging is enabled.', (async() => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
@@ -807,6 +1056,25 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
         }));
 
+        it('Should preserve sorting after columns are reordered programatically.', (async() => {
+            const columnsList = grid.columnList.toArray();
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+            // step 1 - sort the 'ID' column
+            headers[0].triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+
+            // step 2 - move that column
+            const column = columnsList[0] as IgxColumnComponent;
+            column.move(3);
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            // step 3 - verify column remains sorted
+            expect(grid.columnList.toArray()[3].field).toEqual('ID');
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
+        }));
+
         it('Pinning - should be able to reorder pinned columns among themselves.', (async() => {
 
             // step 1 - pin some columns
@@ -831,6 +1099,24 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.pinnedColumns[0].field).toEqual('ID');
             expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
             expect(grid.pinnedColumns[2].field).toEqual('Address');
+        }));
+
+        it('Pinning - should be able to programatically reorder pinned columns among themselves.', (async() => {
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ID').pinned = true;
+            grid.getColumnByName('ContactTitle').pinned = true;
+            fixture.detectChanges();
+
+            // step 2 - move a pinned column
+            const column = grid.getColumnByName('ID');
+            column.move(2);
+            fixture.detectChanges();
+
+            // step 3 - verify pinned columns are reordered correctly
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
+            expect(grid.pinnedColumns[2].field).toEqual('ID');
         }));
 
         it('Pinning - should pin an unpinned column when drag/drop it among pinned columns.', (async() => {
@@ -912,6 +1198,28 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
         }));
 
+        it('Pinning - Should be able to pin/unpin columns programmatically', (async() => {
+            const columnsList = grid.columnList.toArray();
+
+            // step 1 - pin some columns
+            grid.getColumnByName('ID').pinned = true;
+            grid.getColumnByName('CompanyName').pinned = true;
+            fixture.detectChanges();
+
+            // step 2 - pin a column interactively via drag/drop
+            // step 2 - move that column and verify selection is preserved
+            const column = columnsList[4] as IgxColumnComponent;
+            column.move(2);
+            fixture.detectChanges();
+
+            // step 3 - unpin that column programmatically and verify correct order
+            grid.getColumnByName('ID').unpin();
+            fixture.detectChanges();
+
+            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+            expect(grid.unpinnedColumns[0].field).toEqual('ID');
+        }));
+
         it('Pinning - Should be able to pin/unpin columns both: programmatically and interactively via drag/drop.', (async() => {
 
             // step 1 - pin some columns
@@ -967,6 +1275,30 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
         }));
 
+        it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async() => {
+            const columnsList = grid.columnList.toArray();
+
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ID').pinned = true;
+            grid.getColumnByName('ContactName').disablePinning = true;
+            fixture.detectChanges();
+
+            // step 2 - drag/drop an unpinned column among pinned columns
+            // step 2 - move that column and verify selection is preserved
+            const column = grid.getColumnByName('ContactName') as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+            // step 3 - verify column is still unpinned
+            expect(grid.pinnedColumns.length).toEqual(2);
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ID');
+            expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
+            expect(grid.unpinnedColumns[1].field).toEqual('ContactName');
+            expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
+        }));
+
         it('Pinning - Should not be able to move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -996,6 +1328,38 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
             expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
             expect(grid.unpinnedColumns[1].field).toEqual('ID');
+            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+        }));
+
+        // tslint:disable-next-line:max-line-length
+        it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ContactTitle').pinned = true;
+            fixture.detectChanges();
+
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
+            expect(grid.unpinnedColumns[0].field).toEqual('ID');
+            expect(grid.unpinnedColumns[1].field).toEqual('CompanyName');
+
+            grid.columnList.forEach((col) => {
+                if (col.field !== 'Address' && col.field !== 'ContactTitle') {
+                    col.disablePinning = true;
+                }
+            });
+            fixture.detectChanges();
+
+            // step 2 - drag/drop a pinned column among unpinned columns
+            const column = grid.getColumnByName('ID') as IgxColumnComponent;
+            column.move(1);
+            fixture.detectChanges();
+
+            // step 3 - verify column is unpinned at the correct place
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
+            expect(grid.unpinnedColumns[0].field).toEqual('ID');
+            expect(grid.unpinnedColumns[1].field).toEqual('CompanyName');
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
     });
@@ -1055,6 +1419,207 @@ describe('IgxGrid - Column Moving #grid', () => {
             columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
             expect(columnsList[0].field).toEqual('CompanyName');
             expect(columnsList[3].field).toEqual('Missing');
+        }));
+
+        it('MCH - should programmatically reorder columns', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            // step 1 - move level 0 column to first position
+            let column = grid.getColumnByName('ID');
+            column.move(0);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Missing');
+            expect(columnsList[2].field).toEqual('CompanyName');
+
+            // step 2 - try moving level 0 column into column group // not possible
+            column.move(3);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Missing');
+            expect(columnsList[2].field).toEqual('CompanyName');
+            expect(columnsList[3].field).toEqual('ContactName');
+
+            // step 3 - try moving level 0 column into column group // not possible
+            column.move(5);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Missing');
+            expect(columnsList[2].field).toEqual('CompanyName');
+            expect(columnsList[3].field).toEqual('ContactName');
+
+            // step 4 - try moving level 0 column between two column groups
+            column.move(4);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('ContactTitle');
+            expect(columnsList[4].field).toEqual('ID');
+
+            // step 5 - move level 0 column to last position
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('ID');
+
+            // step 6 - move last column between two column groups
+            column.move(4);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('ContactTitle');
+            expect(columnsList[4].field).toEqual('ID');
+
+
+            // step 7 - move level 1 column in the group
+            column = grid.getColumnByName('Address');
+            column.move(5);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[4].field).toEqual('ID');
+            expect(columnsList[5].field).toEqual('Address');
+            expect(columnsList[6].field).toEqual('Country');
+
+            // step 8 - move level 1 column outside the group // not possible
+            column.move(4);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[4].field).toEqual('ID');
+            expect(columnsList[5].field).toEqual('Address');
+            expect(columnsList[6].field).toEqual('Country');
+
+            // step 9 - move level 2 column outsuide the group
+            column = grid.getColumnByName('ContactName');
+            column.move(0);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('ContactTitle');
+
+            // step 10 - move level 2 column inside the group
+            column = grid.getColumnByName('ContactTitle');
+            column.move(2);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactTitle');
+            expect(columnsList[3].field).toEqual('ContactName');
+
+            // step 11 - move level 2 column inside the group
+            column = grid.getColumnByName('Missing');
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactTitle');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[7].field).toEqual('City');
+            expect(columnsList[8].field).toEqual('Missing');
+
+            column = grid.getColumnByName('CompanyName');
+            column.move(1);
+            fixture.detectChanges();
+
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactTitle');
+            expect(columnsList[2].field).toEqual('ContactName');
+
+            column.move(2);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('ContactTitle');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[2].field).toEqual('CompanyName');
+        }));
+
+        it('MCH - should not move group column to last position', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            let column = grid.getColumnByName('Missing');
+            column.move(3);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('Missing');
+
+            column = grid.getColumnByName('CompanyName').topLevelParent;
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('Missing');
+        }));
+
+        it('MCH - should be able to move group column to position lastIndex - group.children.length', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            let column = grid.getColumnByName('Missing');
+            column.move(3);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('CompanyName');
+            expect(columnsList[1].field).toEqual('ContactName');
+            expect(columnsList[3].field).toEqual('Missing');
+
+            column = grid.getColumnByName('CompanyName').topLevelParent;
+            column.move(6);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[6].field).toEqual('CompanyName');
+            expect(columnsList[7].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('ContactTitle');
+        }));
+
+        it('MCH - trying to move level 1 column to last position should be impossible', (async() => {
+            let columnsList = grid.columnList.toArray();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('Address');
+
+            // step 1 - move level 0 column to first position
+            const column = grid.getColumnByName('CompanyName');
+            column.move(8);
+            fixture.detectChanges();
+
+            columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
+            expect(columnsList[0].field).toEqual('Missing');
+            expect(columnsList[1].field).toEqual('CompanyName');
+            expect(columnsList[2].field).toEqual('ContactName');
+            expect(columnsList[8].field).toEqual('Address');
         }));
 
         it('MCH - should reorder only columns on the same level (top level group column).', (async() => {

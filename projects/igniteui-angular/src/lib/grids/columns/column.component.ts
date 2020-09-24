@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import {
     AfterContentInit,
     ChangeDetectorRef,
@@ -9,11 +10,11 @@ import {
     QueryList,
     TemplateRef,
     Output,
-    EventEmitter
+    EventEmitter,
+    OnDestroy,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
-import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { DataType } from '../../data-operations/data-util';
 import {
     IgxFilteringOperand,
@@ -43,6 +44,8 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { DropPosition } from '../moving/moving.service';
+import { IgxColumnGroupComponent } from './column-group.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -58,7 +61,7 @@ import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
     selector: 'igx-column',
     template: ``
 })
-export class IgxColumnComponent implements AfterContentInit {
+export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -338,6 +341,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /** @hidden */
     @Output()
     public visibleWhenCollapsedChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public onColumnChange = new EventEmitter<void>();
 
     /**
      * Gets whether the hiding is disabled.
@@ -969,7 +976,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /** @hidden */
-    @Input('collapsibleIndicatorTemplate')
+    @Input()
     public collapsibleIndicatorTemplate: TemplateRef<any>;
     /**
      * Gets the cells of the column.
@@ -1184,13 +1191,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public collapsible = false;
+    public get collapsible() { return false; }
+    public set collapsible(_value: boolean) {}
 
     /**
      * @hidden
      * @internal
      */
-    public expanded = true;
+    public get expanded() { return true; }
+    public set expanded(_value: boolean) {}
 
     /**
      * hidden
@@ -1235,6 +1244,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     children: QueryList<IgxColumnComponent>;
 
+
+    /**
+     * @hidden
+     */
+    public destroy$ = new Subject<any>();
     /**
      * @hidden
      */
@@ -1259,10 +1273,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected _filterCellTemplate: TemplateRef<any>;
-    /**
-     * @hidden
-     */
-    protected _collapseIndicatorTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
@@ -1357,8 +1367,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -1371,6 +1380,13 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
     /**
      * @hidden
      */
@@ -1746,6 +1762,65 @@ export class IgxColumnComponent implements AfterContentInit {
 
         return true;
     }
+
+    /**
+     * Moves a column to the specified visible index.
+     * If passed index is invalid, or if column would receive a different visible index after moving, moving is not performed.
+     * If passed index would move the column to a different column group. moving is not performed.
+     * @example
+     * ```typescript
+     * column.move(index);
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public move(index: number) {
+        let target;
+        const grid = (this.grid as IgxGridBaseDirective);
+        let columns: Array<IgxColumnComponent | IgxColumnGroupComponent> = grid.columnList.filter(c => c.visibleIndex > -1);
+        // grid last visible index
+        const li = columns.map(c => c.visibleIndex).reduce(function(a, b) {
+            return Math.max(a, b);
+        });
+        const parent = this.parent;
+        const isPreceding = this.visibleIndex < index;
+
+        if (index === this.visibleIndex || index < 0 || index > li) {
+            return;
+        }
+
+        if (parent) {
+            columns = columns.filter(c => c.level >= this.level && c !== this && c.parent !== this &&
+                c.topLevelParent === this.topLevelParent);
+        }
+        // tslint:disable:max-line-length
+        // If isPreceding, find a target such that when the current column is placed after it, current colummn will receive a visibleIndex === index. This takes into account visible children of the columns.
+        // If !isPreceding, finds a column of the same level and visible index that equals the passed index agument (c.visibleIndex === index). No need to consider the children here.
+        // tslint:enable:max-line-length
+        if (isPreceding) {
+            columns = columns.filter(c => c.visibleIndex > this.visibleIndex);
+            target = columns.find(c => c.level === this.level && c.visibleIndex + c.calcChildren() - this.calcChildren() === index);
+        } else {
+            columns = columns.filter(c => c.visibleIndex < this.visibleIndex);
+            target = columns.find(c => c.level === this.level && c.visibleIndex === index);
+        }
+
+        if (!target || (target.pinned && this.disablePinning)) {
+            return;
+        }
+
+        const pos = isPreceding ? DropPosition.AfterDropTarget : DropPosition.BeforeDropTarget;
+        grid.moveColumn(this, target as IgxColumnComponent, pos);
+    }
+
+    /**
+     * No children for the column, so will returns 1 or 0, if the column is hidden.
+     * @hidden
+     */
+    public calcChildren(): number {
+        const children = this.hidden ? 0 : 1;
+        return children;
+    }
+
     /**
      * Returns a reference to the top level parent column.
      * ```typescript

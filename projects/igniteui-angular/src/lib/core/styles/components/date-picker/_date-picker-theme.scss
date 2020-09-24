@@ -52,7 +52,7 @@
 
         %cal-value {
             color: --var($theme, 'content-text-color');
-            flex-basis: 14.28%;
+            min-width: 14.28%;
 
             @if $bootstrap-theme {
                 &:hover,

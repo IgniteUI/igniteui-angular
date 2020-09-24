@@ -4,6 +4,7 @@
     EventEmitter,
     ElementRef,
     HostBinding,
+    HostListener,
     Input,
     Output,
     ViewChild,
@@ -97,6 +98,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip [id]="'igx-chip-1'" [tabIndex]="1"></igx-chip>
      * ```
      */
+    @HostBinding('attr.tabIndex')
     @Input()
     public set tabIndex(value: number) {
         this._tabIndex = value;
@@ -376,13 +378,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @HostBinding('attr.tabIndex')
-    public hostTabIndex = null;
-
-    /**
-     * @hidden
-     * @internal
-     */
     @HostBinding('attr.class')
     get hostClass(): string {
         const classes = [this.getComponentDensityClass('igx-chip')];
@@ -560,6 +555,15 @@ export class IgxChipComponent extends DisplayDensityBase {
         if (event.key !== 'Tab') {
             event.preventDefault();
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keydown', ['$event'])
+    public keyEvent(event: KeyboardEvent) {
+        this.onChipKeyDown(event);
     }
 
     /**

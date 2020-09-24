@@ -10,17 +10,9 @@
     margin-bottom: 30px;
 }
 
-.items-wrapper__item-small {
-    max-width: 40%;
-}
-
 @media only screen and (max-width: 710px) {
     .items-wrapper__item {
         padding: 0;
-    }
-
-    .items-wrapper__item-small {
-        max-width: 100%;
     }
 }
 

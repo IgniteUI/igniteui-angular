@@ -45,6 +45,10 @@
         @extend %cal-value--label !optional;
     }
 
+    @include e(label, 'week-number') {
+        @extend %label--week-number !optional;
+    }
+
     @include e(date) {
         @extend %cal-value !optional;
 
@@ -52,6 +56,10 @@
         &:focus {
             @extend %cal-value--hover !optional;
         }
+    }
+
+    @include e(date, 'week-number') {
+        @extend %cal-value-date--week-number !optional;
     }
 
     @include e(date, 'inactive') {
@@ -141,6 +149,10 @@
 
     @include e(date-content) {
         @extend %cal-value-content !optional;
+    }
+
+    @include e(date-content, 'week-number') {
+        @extend %cal-value-content--week-number !optional;
     }
 
     @include e(year) {

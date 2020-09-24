@@ -51,6 +51,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
+import { IgxLabelDirective } from '../directives/label/label.directive';
 
 
 let NEXT_ID = 0;
@@ -504,6 +505,12 @@ export class IgxTimePickerComponent implements
      */
     @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective })
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxLabelDirective)
+    public labelDirective: IgxLabelDirective;
 
     /**
      * @hidden
@@ -1612,7 +1619,7 @@ export class IgxTimePickerComponent implements
         const settings = this.overlaySettings;
 
         if (target && settings && settings.positionStrategy) {
-            settings.positionStrategy.settings.target = target;
+            settings.target = target;
         }
         if (this.outlet) {
             settings.outlet = this.outlet;

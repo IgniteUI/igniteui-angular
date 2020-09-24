@@ -52,6 +52,9 @@
     </igx-nav-drawer>
 
     <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
-        <router-outlet></router-outlet>
+        <app-page-header [title]="urlString"></app-page-header>
+        <div class="sample-wrapper">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>

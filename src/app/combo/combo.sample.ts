@@ -3,6 +3,7 @@ import { IgxComboComponent, IComboSelectionChangeEventArgs,
     DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
     scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy
 } from 'igniteui-angular';
+import { ButtonGroupAlignment } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
@@ -38,13 +39,14 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true }) public igxCombo: IgxComboComponent;
     @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    alignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
     public customValuesFlag = true;
     public autoFocusSearch = true;
     public items: any[] = [];
-    public values1:  Array<any>;
+    public values1:  Array<any> = ['Arizona'];
     public values2:  Array<any>;
 
     public valueKeyVar = 'field';
@@ -53,9 +55,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
 
-    comfortable = DisplayDensity.comfortable;
-    cosy = DisplayDensity.cosy;
-    compact = DisplayDensity.compact;
+    public comfortable: DisplayDensity = DisplayDensity.comfortable;
+    public cosy: DisplayDensity = DisplayDensity.cosy;
+    public compact: DisplayDensity = DisplayDensity.compact;
 
     public genres = [];
     public user: FormGroup;
@@ -163,7 +165,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
         this.overlaySettings[1] = {
-            positionStrategy: new ElasticPositionStrategy({ target: this.comboRef.nativeElement,
+            target: this.comboRef.nativeElement,
+            positionStrategy: new ElasticPositionStrategy({
                 verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
                 horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right }),
             modal: false,
@@ -175,7 +178,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             closeOnOutsideClick: true
         };
         this.overlaySettings[3] = {
-            positionStrategy: new ConnectedPositioningStrategy({ target: this.comboRef.nativeElement }),
+            target: this.comboRef.nativeElement,
+            positionStrategy: new ConnectedPositioningStrategy(),
             modal: false,
             closeOnOutsideClick: true
         };

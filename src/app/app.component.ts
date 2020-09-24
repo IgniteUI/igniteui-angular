@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
 
@@ -9,6 +9,7 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+    public urlString: string;
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     navdrawer;
@@ -514,6 +515,14 @@ export class AppComponent implements OnInit {
     constructor(private router: Router, private iconService: IgxIconService) {
         iconService.registerFontSetAlias('fa-solid', 'fa');
         iconService.registerFontSetAlias('fa-brands', 'fab');
+
+        router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
+            for (const component of this.componentLinks) {
+                if (component.link === router.url) {
+                    this.urlString = component.name;
+                }
+            }
+        });
     }
 
     ngOnInit() {
@@ -529,6 +538,5 @@ export class AppComponent implements OnInit {
         // register custom SVG icons
         this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
         this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
-
     }
 }

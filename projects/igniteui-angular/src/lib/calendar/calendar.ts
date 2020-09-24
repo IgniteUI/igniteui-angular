@@ -354,6 +354,14 @@ export class Calendar {
         return this.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 
+    public getWeekNumber(date: Date) {
+        const firstJan = new Date(date.getFullYear(), 0, 1).getTime();
+        const today = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+        const dayInMilSeconds = 86400000;
+        const dayOfYear = ((today - firstJan + 1) / dayInMilSeconds);
+        return Math.ceil(dayOfYear / 7);
+    }
+
     private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {
         return {
             date,

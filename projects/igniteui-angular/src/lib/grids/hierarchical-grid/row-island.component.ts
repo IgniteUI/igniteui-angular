@@ -19,7 +19,8 @@ import {
     EventEmitter,
     Optional,
     OnDestroy,
-    DoCheck
+    DoCheck,
+    IterableChangeRecord
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridTransaction, IgxGridBaseDirective } from '../grid-base.directive';
@@ -187,6 +188,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public initialChanges = [];
 
+    private ri_columnListDiffer;
+
     /**
      * @hidden
      */
@@ -243,6 +246,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     ngOnInit() {
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
+        this.ri_columnListDiffer = this.differs.find([]).create(null);
     }
 
     /**
@@ -275,6 +279,18 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             Promise.resolve().then(() => {
                 this.updateColumnList();
             });
+         });
+
+         // handle column changes so that they are passed to child grid instances when onColumnChange is emitted.
+         this.ri_columnListDiffer.diff(this.childColumns);
+         this.childColumns.toArray().forEach(x => x.onColumnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent> ) => {
+            const diff = this.ri_columnListDiffer.diff(change);
+            if (diff) {
+                diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                    record.item.onColumnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
+                });
+            }
          });
     }
 

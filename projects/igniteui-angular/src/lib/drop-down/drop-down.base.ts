@@ -17,10 +17,8 @@ let NEXT_ID = 0;
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
-@Directive({
-    selector: '[igxDropDownBase]'
-})
-export class IgxDropDownBaseDirective extends DisplayDensityBase implements IDropDownList {
+@Directive()
+export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implements IDropDownList {
     protected _width;
     protected _height;
     protected _focusedItem: any = null;
@@ -93,7 +91,12 @@ export class IgxDropDownBaseDirective extends DisplayDensityBase implements IDro
      * ```
      */
     @Input()
-    public id: string;
+    public get id(): string {
+        return this._id;
+    }
+    public set id(value: string) {
+        this._id = value;
+    }
 
     /**
      * Gets/Sets the drop down's container max height.
@@ -171,7 +174,7 @@ export class IgxDropDownBaseDirective extends DisplayDensityBase implements IDro
     /**
      * Gets if the dropdown is collapsed
      */
-    public collapsed: boolean;
+    public abstract readonly collapsed: boolean;
 
     constructor(
         protected elementRef: ElementRef,

@@ -37,7 +37,7 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
-import { IgxHintDirective } from '../input-group/public_api';
+import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 
 /** @hidden @internal */
 @Directive({
@@ -96,6 +96,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private ngControl: NgControl = null;
     private _overlayDefaults: OverlaySettings;
     private _value: any;
+    private _type = null;
     protected destroy$ = new Subject<boolean>();
 
     /** @hidden @internal do not use the drop-down container class */
@@ -182,13 +183,19 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * An @Input property that sets how the select will be styled.
-     * The allowed values are `line`, `box` and `border`. The default is `line`.
+     * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
      * ```html
      * <igx-select [type]="'box'"></igx-select>
      * ```
      */
     @Input()
-    public type = 'line';
+    public get type(): IgxInputGroupType {
+            return this._type || this._inputGroupType || 'line';
+        }
+
+    public set type(val: IgxInputGroupType) {
+        this._type = val;
+    }
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
@@ -272,8 +279,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
         super(elementRef, cdr, selection, _displayDensityOptions);
     }
@@ -368,9 +375,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     ngAfterContentInit() {
         this._overlayDefaults = {
+            target: this.getEditElement(),
             modal: false,
             closeOnOutsideClick: false,
-            positionStrategy: new SelectPositioningStrategy(this, { target: this.getEditElement() }),
+            positionStrategy: new SelectPositioningStrategy(this),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
         };

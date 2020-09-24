@@ -2,32 +2,6 @@
 @import '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-component';
 @import '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-theme';
 
-$chip-border-theme: igx-chip-theme(
-    $background: white,
-    $border-color: igx-color($default-palette, 'grays', 400),
-    $text-color: igx-color($default-palette, 'grays', 800)
-);
-
-$dark-chip-theme: igx-chip-theme(
-    $border-radius: 4px,
-    $background: #180505,
-    $text-color: white
-);
-
-:host ::ng-deep {
-    .chip-border-theme {
-        @include igx-chip($chip-border-theme);
-    }
-
-    .chip-dark-theme {
-        @include igx-chip($dark-chip-theme);
-        @include igx-chip-typography(
-            $default-type-scale,
-            $categories: (text: 'caption')
-        );
-    }
-}
-
 igx-chip {
     margin: rem(4px);
 }
@@ -42,6 +16,10 @@ igx-chip {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+
+    igx-chip {
+        margin: rem(4px);
+    }
 }
 
 .chip-area-connector {
@@ -53,12 +31,6 @@ igx-chip {
     width: 24px;
     height: 24px;
     min-width: 24px;
-}
-
-.fluent-excel-theme .chip-area-avatar,
-.fluent-word-theme .chip-area-avatar,
-.fluent-excel-dark-theme .chip-area-avatar {
-    margin-left: rem(-4px) !important;
 }
 
 .wrapperAreaCc,

@@ -449,3 +449,5 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
     };
     chunk();
 }
+
+export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) { return x; }

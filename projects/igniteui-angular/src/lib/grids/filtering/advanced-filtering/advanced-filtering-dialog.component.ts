@@ -129,6 +129,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public searchValue: any;
 
+    /**
+     * @hidden @internal
+     */
+    public lastActiveNode;
+
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
@@ -652,8 +657,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
         this.cdr.detectChanges();
 
-        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({ target: this.columnSelect.element });
-        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({ target: this.conditionSelect.element });
+        this.columnSelectOverlaySettings.target = this.columnSelect.element;
+        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
+        this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
+        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
 
         if (!this.selectedColumn) {
             this.columnSelect.input.nativeElement.focus();
@@ -915,7 +922,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
         maxRight = Math.max(maxRight, containerRect.left);
         maxRight = Math.min(maxRight, containerRect.right);
-        this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
+        this._overlaySettings.target = new Point(maxRight, minTop);
     }
 
     private scrollElementIntoView(target: HTMLElement) {
@@ -1075,6 +1082,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this._overlayComponentId) {
             this._overlayService.hide(this._overlayComponentId);
         }
+        this.grid.navigation.activeNode = this.lastActiveNode;
         if (this.grid.navigation.activeNode && this.grid.navigation.activeNode.row === -1) {
             (this.grid as any).theadRow.nativeElement.focus();
         }

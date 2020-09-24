@@ -18,24 +18,26 @@ import {
     IgxProcessBarTextTemplateDirective,
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
 
-export enum IgxTextAlign {
-    START = 'start',
-    CENTER = 'center',
-    END = 'end'
-}
+export const IgxTextAlign = mkenum({
+    START: 'start',
+    CENTER: 'center',
+    END: 'end'
+});
+export type IgxTextAlign = (typeof IgxTextAlign)[keyof typeof IgxTextAlign];
 
-export enum IgxProgressType {
-    ERROR = 'error',
-    INFO = 'info',
-    WARNING = 'warning',
-    SUCCESS = 'success'
-}
+export const IgxProgressType = mkenum({
+    ERROR: 'error',
+    INFO: 'info',
+    WARNING: 'warning',
+    SUCCESS: 'success'
+});
+export type IgxProgressType = (typeof IgxProgressType)[keyof typeof IgxProgressType];
 
 export interface IChangeProgressEventArgs extends IBaseEventArgs {
     previousValue: number;

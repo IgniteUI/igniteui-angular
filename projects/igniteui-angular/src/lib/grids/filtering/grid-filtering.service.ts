@@ -47,11 +47,11 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
-    private _filterIconsRegistered = false;
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
     private _filterMenuOverlaySettings: OverlaySettings;
     private column;
+    private lastActiveNode;
 
     public isFilterRowVisible = false;
     public filteredColumn: IgxColumnComponent = null;
@@ -74,7 +74,7 @@ export class IgxFilteringService implements OnDestroy {
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
 
-            this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
+            this._filterMenuOverlaySettings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
             if (this.grid.excelStyleFilteringComponent) {
@@ -109,6 +109,7 @@ export class IgxFilteringService implements OnDestroy {
                     eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
 
                 if (instance) {
+                    this.lastActiveNode = this.grid.navigation.activeNode;
                     instance.initialize(this.column, this._overlayService, eventArgs.id);
                 }
             });
@@ -124,6 +125,7 @@ export class IgxFilteringService implements OnDestroy {
                     instance.column = null;
                 }
                 this._componentOverlayId = null;
+                this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
             });
     }

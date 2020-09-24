@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit, HostListener
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -24,7 +24,6 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 
@@ -67,8 +66,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService,
-        IgxRowIslandAPIService
+        IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
