@@ -61,14 +61,13 @@ export type IgxToastPosition = keyof typeof IgxToastPositionEnum;
     templateUrl: 'toast.component.html',
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
+    private _isVisible = false;
+
     /**
      * @hidden
      */
     @HostBinding('class.igx-toast')
     public cssClass = 'igx-toast';
-
-    @HostBinding('class.igx-toast--active')
-    private _isVisible = false;
 
     /**
      * Sets/gets the `id` of the toast.
@@ -202,6 +201,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * ```
      * @memberof IgxToastComponent
      */
+    @HostBinding('class.igx-toast--active')
     @Input()
     public get isVisible() {
         return this._isVisible;
