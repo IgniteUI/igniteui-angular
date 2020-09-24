@@ -36,23 +36,22 @@ describe('igxGridPinningActions #grid ', () => {
     }));
 
     it('should allow pinning and unpinning rows in a grid', () => {
-        let pinIcon, unpinIcon;
         actionStrip.show(grid.rowList.first);
         fixture.detectChanges();
-        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
-        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
-        expect(unpinIcon).toBeNull();
-        pinIcon.parent.triggerEventHandler('click', new Event('click'));
+        let pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+        expect(pinningButtons.length).toBe(1);
+        expect(pinningButtons[0].componentInstance.iconName).toBe('pin');
+        pinningButtons[0].triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
         expect(grid.pinnedRows.length).toBe(1);
 
         actionStrip.show(grid.pinnedRows[0]);
         fixture.detectChanges();
-        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
-        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
-        expect(pinIcon).toBe(null);
-        unpinIcon.parent.triggerEventHandler('click', new Event('click'));
+        pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+        expect(pinningButtons.length).toBe(2);
+        expect(pinningButtons[1].componentInstance.iconName).toBe('unpin');
+        pinningButtons[1].triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
         expect(grid.pinnedRows.length).toBe(0);
@@ -64,9 +63,9 @@ describe('igxGridPinningActions #grid ', () => {
 
         actionStrip.show(grid.pinnedRows[0]);
         fixture.detectChanges();
-
-        const jumpIcon = fixture.debugElement.query(By.css(`igx-icon[name=jump_down]`));
-        jumpIcon.parent.triggerEventHandler('click', new Event('click'));
+        const pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+        const jumpButton = pinningButtons[0];
+        jumpButton.triggerEventHandler('click', new Event('click'));
         await wait();
         fixture.detectChanges();
         await wait();
