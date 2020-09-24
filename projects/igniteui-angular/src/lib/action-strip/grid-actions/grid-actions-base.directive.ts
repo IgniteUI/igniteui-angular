@@ -1,3 +1,5 @@
+import { IgxGridActionButtonComponent } from './grid-action-button.component';
+import { IgxButtonDirective } from './../../directives/button/button.directive';
 import { Directive, Inject, Input, AfterViewInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/public_api';
@@ -9,10 +11,10 @@ import { IgxGridIconService } from '../../grids/common/grid-icon.service';
 export class IgxGridActionsBaseDirective implements AfterViewInit {
     constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent, protected iconService: IgxGridIconService) { }
 
-    @ViewChildren('button') public buttons: QueryList<TemplateRef<any>>;
+    @ViewChildren(IgxGridActionButtonComponent) public buttons: QueryList<IgxGridActionButtonComponent>;
 
     @Input()
-    asMenuItems = true;
+    asMenuItems = false;
 
     /**
      * @hidden
@@ -20,8 +22,12 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      */
     ngAfterViewInit() {
         if (this.asMenuItems) {
-            this.buttons.forEach(button => {
-                this.strip.menuItems.push({ templateRef: button });
+            this.buttons.changes.subscribe(() => {
+                this.buttons.forEach(button => {
+                    if (!this.strip.menuItems.includes(button)) {
+                        this.strip.menuItems.push(button);
+                    }
+                });
             });
         }
     }
