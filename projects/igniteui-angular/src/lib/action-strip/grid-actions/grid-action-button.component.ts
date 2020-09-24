@@ -22,7 +22,7 @@ export class IgxGridActionButtonComponent {
     public iconName: string;
 
     @Input()
-    public disabled = false;
+    public iconSet: string;
 
     @Input()
     public labelText: string;

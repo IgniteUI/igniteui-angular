@@ -1,6 +1,6 @@
 
 <ng-container *ngIf="isRowContext">
-    <igx-grid-action-button [asMenuItem]="asMenuItems" iconName="edit" labelText="Edit" [disabled]="disabled" (onActionClick)="startEdit($event)"></igx-grid-action-button>
-    <igx-grid-action-button [asMenuItem]="asMenuItems" iconName="delete" labelText="Delete" [disabled]="disabled" (onActionClick)="deleteRow($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="!disabled" [asMenuItem]="asMenuItems" iconName="edit" labelText="Edit" (onActionClick)="startEdit($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="!disabled" [asMenuItem]="asMenuItems" iconName="delete" labelText="Delete" (onActionClick)="deleteRow($event)"></igx-grid-action-button>
 </ng-container>
 

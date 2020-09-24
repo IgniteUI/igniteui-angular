@@ -1,5 +1,5 @@
 <ng-container *ngIf="!asMenuItem">
-<button igxButton="icon" [disabled]="disabled" igxRipple (click)="handleClick($event)">
+<button igxButton="icon" igxRipple (click)="handleClick($event)">
     <igx-icon>{{iconName}}</igx-icon>
 </button>
 <label *ngIf='asMenuItem' igxLabel>{{labelText}}</label>

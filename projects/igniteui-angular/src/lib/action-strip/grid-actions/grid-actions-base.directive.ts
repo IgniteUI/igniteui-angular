@@ -1,6 +1,5 @@
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { IgxButtonDirective } from './../../directives/button/button.directive';
-import { Directive, Inject, Input, AfterViewInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { Directive, Inject, Input, AfterViewInit, QueryList, TemplateRef, ViewChildren, OnInit, IterableDiffers, IterableChangeRecord } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/public_api';
 import { IgxGridIconService } from '../../grids/common/grid-icon.service';
@@ -8,9 +7,12 @@ import { IgxGridIconService } from '../../grids/common/grid-icon.service';
 @Directive({
     selector: '[igxGridActionsBase]'
 })
-export class IgxGridActionsBaseDirective implements AfterViewInit {
-    constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent, protected iconService: IgxGridIconService) { }
-
+export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit {
+    constructor(
+        @Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent,
+        protected iconService: IgxGridIconService,
+        protected differs: IterableDiffers) { }
+    private actionButtonsDiffer;
     @ViewChildren(IgxGridActionButtonComponent) public buttons: QueryList<IgxGridActionButtonComponent>;
 
     @Input()
@@ -20,14 +22,27 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @hidden
      * @internal
      */
+    ngOnInit() {
+        this.actionButtonsDiffer = this.differs.find([]).create(null);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     ngAfterViewInit() {
         if (this.asMenuItems) {
-            this.buttons.changes.subscribe(() => {
-                this.buttons.forEach(button => {
-                    if (!this.strip.menuItems.includes(button)) {
-                        this.strip.menuItems.push(button);
-                    }
-                });
+            this.buttons.changes.subscribe((change: QueryList<IgxGridActionButtonComponent>) => {
+                const diff = this.actionButtonsDiffer.diff(change);
+                if (diff) {
+                    diff.forEachAddedItem((record: IterableChangeRecord<IgxGridActionButtonComponent>) => {
+                        this.strip.menuItems.push(record.item);
+                    });
+                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxGridActionButtonComponent>) => {
+                        const index = this.strip.menuItems.indexOf(record.item);
+                        this.strip.menuItems.splice(index, 1);
+                    });
+                }
             });
         }
     }
