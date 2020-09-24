@@ -10,7 +10,7 @@ export class IgxGridActionsBaseDirective {
     constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent, protected iconService: IgxGridIconService) { }
 
     @Input()
-    addActionsToMenu = true;
+    asMenuItems = true;
     /**
      * Getter to be used in template
      * @hidden

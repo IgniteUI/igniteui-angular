@@ -13,12 +13,6 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     @ViewChild('edit') public editButton: TemplateRef<any>;
     @ViewChild('delete') public deleteButton: TemplateRef<any>;
 
-    ngAfterViewInit() {
-        if (this.addActionsToMenu) {
-            this.strip.menuItems.push({ templateRef: this.editButton });
-            this.strip.menuItems.push({ templateRef: this.deleteButton });
-        }
-    }
 
     /**
      * Host `class.igx-action-strip` binding.
@@ -29,6 +23,17 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     public cssClass = 'igx-action-strip__editing-actions';
 
     private isMessageShown = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    ngAfterViewInit() {
+        if (this.asMenuItems) {
+            this.strip.menuItems.push({ templateRef: this.editButton });
+            this.strip.menuItems.push({ templateRef: this.deleteButton });
+        }
+    }
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option

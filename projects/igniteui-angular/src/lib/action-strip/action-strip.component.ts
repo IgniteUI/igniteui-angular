@@ -135,13 +135,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     public menuItems = [];
 
-    ngAfterContentInit() {
-        this.menuItems = [... this._menuItems.toArray()];
-        this._menuItems.changes.subscribe(x => {
-            this.menuItems = [... this._menuItems.toArray()];
-        });
-    }
-
     /**
      * Reference to the menu
      * @hidden
@@ -149,6 +142,17 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      */
     @ViewChild('dropdown')
     private menu: IgxDropDownComponent;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    ngAfterContentInit() {
+        this.menuItems = [... this._menuItems.toArray()];
+        this._menuItems.changes.subscribe(x => {
+            this.menuItems = [... this._menuItems.toArray()];
+        });
+    }
 
     /**
      * Showing the Action Strip and appending it the specified context element.
