@@ -30,6 +30,14 @@ export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit {
      * @hidden
      * @internal
      */
+    get grid() {
+        return this.strip.context.grid;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     ngOnInit() {
         this.actionButtonsDiffer = this.differs.find([]).create(null);
     }
