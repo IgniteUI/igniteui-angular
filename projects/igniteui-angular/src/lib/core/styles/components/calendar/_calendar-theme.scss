@@ -605,8 +605,7 @@
         }
 
         %cal-value,
-        %cal-value--label,
-        {
+        %cal-value--label {
             // 100 divided by the number of weekdays
             min-width: 14.28%;
 
@@ -683,11 +682,7 @@
 
                 &::after {
                     top: 100%;
-                    @if $not-bootstrap-theme{
-                        height: ($cal-row-padding / 2) + rem(2px);
-                    } @else {
-                        height: $cal-row-padding + rem(5px);
-                    }
+                    height: if($not-bootstrap-theme, ($cal-row-padding / 2) + rem(2px), $cal-row-padding + rem(5px));
                 }
 
                 &::before {
@@ -718,7 +713,7 @@
         }
 
         &:nth-child(2) {
-            @if $not-bootstrap-theme{
+            @if $not-bootstrap-theme {
                 margin-top: 0;
             }
         }
@@ -733,7 +728,7 @@
                 }
             }
 
-            @if $bootstrap-theme{
+            @if $bootstrap-theme {
                 margin-bottom: 0;
             }
         }

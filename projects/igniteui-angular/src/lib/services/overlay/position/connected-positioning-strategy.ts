@@ -16,8 +16,6 @@ import { ConnectedFit } from '../utilities';
  */
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   private _defaultSettings: PositionSettings = {
-    // default Point(0, 0) in getPointFromPositionsSettings
-    target: null,
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
     horizontalStartPoint: HorizontalAlignment.Left,
@@ -38,16 +36,17 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * Obtains the ClientRect objects for the required elements - target and element to position
    * @returns target and element ClientRect objects
    */
-  protected calculateElementRectangles(contentElement): { targetRect: ClientRect, elementRect: ClientRect } {
+  protected calculateElementRectangles(contentElement, target: Point | HTMLElement): { targetRect: ClientRect, elementRect: ClientRect } {
       return {
-          targetRect: Util.getTargetRect(this.settings),
+          targetRect: Util.getTargetRect(target),
           elementRect: contentElement.getBoundingClientRect() as ClientRect
       };
   }
 
   /** @inheritdoc */
-  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-    const rects =  this.calculateElementRectangles(contentElement);
+  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+    const targetElement = target || this.settings.target;
+    const rects =  this.calculateElementRectangles(contentElement, targetElement);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }
 

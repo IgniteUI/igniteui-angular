@@ -425,7 +425,8 @@ export class IgxToggleActionDirective implements OnInit {
      */
     public ngOnInit() {
         this._overlayDefaults = {
-            positionStrategy: new ConnectedPositioningStrategy({ target: this.element.nativeElement }),
+            target: this.element.nativeElement,
+            positionStrategy: new ConnectedPositioningStrategy(),
             scrollStrategy: new AbsoluteScrollStrategy(),
             closeOnOutsideClick: true,
             modal: false,
@@ -455,7 +456,7 @@ export class IgxToggleActionDirective implements OnInit {
     protected updateOverlaySettings(settings: OverlaySettings): OverlaySettings {
         if (settings && settings.positionStrategy) {
             const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
-            positionStrategyClone.settings.target = this.element.nativeElement;
+            settings.target = this.element.nativeElement;
             settings.positionStrategy = positionStrategyClone;
         }
 
