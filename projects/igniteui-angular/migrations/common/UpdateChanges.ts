@@ -1,4 +1,4 @@
-import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import { SchematicContext, Tree, FileVisitor, source } from '@angular-devkit/schematics';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 import * as fs from 'fs';
@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
+    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges, MemberChange
 } from './schema';
 import { getLanguageService, getRenamePositions, getLanguageServiceHost } from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
@@ -115,74 +115,11 @@ export class UpdateChanges {
         this.projectService = this.createProjectService();
     }
 
-    private updateTemplateFiles() {
-        if (this.selectorChanges && this.selectorChanges.changes.length) {
-            for (const entryPath of this.templateFiles) {
-                this.updateSelectors(entryPath);
-            }
-        }
-        if (this.outputChanges && this.outputChanges.changes.length) {
-            // name change of output
-            for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.outputChanges);
-            }
-        }
-        if (this.inputChanges && this.inputChanges.changes.length) {
-            // name change of input
-            for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
-            }
-        }
-    }
-
-    private updateTsFiles() {
-        if (this.classChanges && this.classChanges.changes.length) {
-            // change class name
-            for (const entryPath of this.tsFiles) {
-                this.updateClasses(entryPath);
-            }
-        }
-        if (this.importsChanges && this.importsChanges.changes.length) {
-            // TODO: move logic to 7.0.2 migration
-            for (const entryPath of this.tsFiles) {
-                this.updateImports(entryPath);
-            }
-        }
-        if (this.membersChanges && this.membersChanges.changes.length) {
-            for (const entryPath of this.tsFiles) {
-                this.updateClassMembers(entryPath, this.membersChanges);
-            }
-        }
-    }
-
-    private updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
-        let content = this.host.read(entryPath).toString();
-        for (const change of memberChanges.changes) {
-            const definedIn = change.definedIn.split('|').map(s => s.trim());
-            const regex = this.toRegExp(change.member, 'g');
-            let matches: RegExpExecArray;
-            do {
-                matches = regex.exec(content);
-                if (matches) {
-                    // get the info of the identifier that tries to access the missing member
-                    const info = this.getQuickInfoAtPosition(entryPath, matches.index - 1
-                        - this.getNormalizedPosition(change.member.length, change.replaceWith.length));
-                    const target = info?.displayParts
-                        .filter(p => p.kind === 'aliasName')[0];
-                    if (target && definedIn.indexOf(target.text) !== -1) {
-                        content = this.replaceMatch(content, change.member, change.replaceWith, matches.index);
-                    }
-                }
-            } while (matches);
-        }
-
-        this.host.overwrite(entryPath, content);
-    }
-
     /** Apply configured changes to the Host Tree */
     public applyChanges() {
         this.updateTemplateFiles();
         this.updateTsFiles();
+        this.updateMembers();
 
         /** Sass files */
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
@@ -553,13 +490,133 @@ export class UpdateChanges {
         return projectService;
     }
 
-    private getDefaultLanguageService(entryPath: string): ts.LanguageService | undefined {
+    private updateTemplateFiles() {
+        if (this.selectorChanges && this.selectorChanges.changes.length) {
+            for (const entryPath of this.templateFiles) {
+                this.updateSelectors(entryPath);
+            }
+        }
+        if (this.outputChanges && this.outputChanges.changes.length) {
+            // name change of output
+            for (const entryPath of this.templateFiles) {
+                this.updateBindings(entryPath, this.outputChanges);
+            }
+        }
+        if (this.inputChanges && this.inputChanges.changes.length) {
+            // name change of input
+            for (const entryPath of this.templateFiles) {
+                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
+            }
+        }
+    }
+
+    private updateTsFiles() {
+        if (this.classChanges && this.classChanges.changes.length) {
+            // change class name
+            for (const entryPath of this.tsFiles) {
+                this.updateClasses(entryPath);
+            }
+        }
+        if (this.importsChanges && this.importsChanges.changes.length) {
+            // TODO: move logic to 7.0.2 migration
+            for (const entryPath of this.tsFiles) {
+                this.updateImports(entryPath);
+            }
+        }
+    }
+
+    private updateMembers() {
+        if (this.membersChanges && this.membersChanges.changes.length) {
+            const dirs = [...this.templateFiles, ...this.tsFiles];
+            for (const entryPath of dirs) {
+                this.updateClassMembers(entryPath, this.membersChanges);
+            }
+        }
+    }
+
+    private findMatches(content: string, change: MemberChange): number[] {
+        let matches: RegExpExecArray;
+        const regex = this.toRegExp(change.member, 'g');
+        const matchesPositions = [];
+        do {
+            matches = regex.exec(content);
+            if (matches) {
+                matchesPositions.push(matches.index);
+            }
+        } while (matches);
+
+        return matchesPositions;
+    }
+
+    private getTypeDefinitionAtPosition(entryPath: string, position: number): ts.DefinitionInfo | null {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
+        if (!definition) { return null; }
+        if (definition.kind.toString() === 'reference') {
+            // variable in an internal/external template
+            return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
+        }
+        let typeDefs = langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
+        if (!typeDefs) {
+            // ts property referred in an internal/external template
+            const classDeclaration = langServ
+                .getProgram()
+                .getSourceFile(definition.fileName)
+                .statements.find(m => m.kind === ts.SyntaxKind.ClassDeclaration) as ts.ClassDeclaration;
+            const member: ts.ClassElement = classDeclaration
+                .members
+                .filter(m => m.end === definition.textSpan.start + definition.textSpan.length)[0];
+            if (!member || !member.name) { return null; }
+            typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
+        }
+        if (typeDefs?.length) {
+            return typeDefs[0];
+        }
+
+        return null;
+    }
+
+    private updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
+        let content = this.host.read(entryPath).toString();
+        const changes = new Set<{ change, position }>();
+        for (const change of memberChanges.changes) {
+            const definedIn = change.definedIn.split('|').map(s => s.trim());
+            const matches = this.findMatches(content, change);
+            for (const matchPosition of matches) {
+                const typeDef = this.getTypeDefinitionAtPosition(entryPath, matchPosition - 1);
+                if (!typeDef) { continue; }
+                if (this.memberIsIgniteUI(typeDef.fileName) && definedIn.indexOf(typeDef.name) !== -1) {
+                    changes.add({ change, position: matchPosition });
+                }
+            }
+        }
+
+        const changesArr = Array.from(changes).sort((c, c1) => c.position - c1.position).reverse();
+        for (const fileChange of changesArr) {
+            content = this.replaceMatch(content, fileChange.change.member,
+                fileChange.change.replaceWith, fileChange.position);
+        }
+
+        if (changes.size) {
+            this.host.overwrite(entryPath, content);
+        }
+    }
+
+    private getDefaultProjectForFile(entryPath: string): ts.server.Project {
         const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(ts.server.asNormalizedPath(entryPath), false);
         this.projectService.openClientFile(scriptInfo.fileName);
         const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
-        // TODO: check if file is already in project?
         project.addMissingFileRoot(scriptInfo.fileName);
+        return project;
+    }
+
+    private getDefaultLanguageService(entryPath: string): ts.LanguageService | undefined {
+        const project = this.getDefaultProjectForFile(entryPath);
         return project.getLanguageService();
+    }
+
+    private memberIsIgniteUI(str: string): boolean {
+        return !!this.toRegExp('igniteui-angular').exec(str);
     }
 
     private toRegExp(str: string, flags?: string): RegExp {
@@ -571,11 +628,6 @@ export class UpdateChanges {
         return content.substring(0, index)
             + replaceWith
             + content.substring(index + toReplace.length, content.length);
-    }
-
-    private getNormalizedPosition(memberLength: number, replaceWithLength: number): number {
-        return Math.max(memberLength, replaceWithLength)
-            - Math.min(memberLength, replaceWithLength);
     }
 }
 

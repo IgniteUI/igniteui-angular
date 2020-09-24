@@ -2,11 +2,6 @@
     "$schema": "../../common/schema/members-changes.schema.json",
     "changes": [
         {
-            "member": "gridMember",
-            "replaceWith": "selectedRows",
-            "definedIn": "IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent"
-        },
-        {
             "member": "selectedRows()",
             "replaceWith": "selectedRows",
             "definedIn": "IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent"
