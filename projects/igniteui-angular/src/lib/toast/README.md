@@ -32,7 +32,7 @@ You can set the `positon` property to `top`, `middle`, or `bottom`, which will p
 ## Toast with different content
 
 ```html
-<igx-toast #toast [position]="bottom">
+<igx-toast #toast position="bottom">
     <igx-icon>notifications</igx-icon>
     This message will self-destruct in 4 seconds.
 </igx-toast>
