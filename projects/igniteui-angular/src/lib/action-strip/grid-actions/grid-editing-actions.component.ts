@@ -1,4 +1,4 @@
-import { Component, HostBinding, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/deprecateDecorators';
 
@@ -8,11 +8,7 @@ import { showMessage } from '../../core/deprecateDecorators';
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent }]
 })
 
-export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective implements AfterViewInit {
-
-    @ViewChild('edit') public editButton: TemplateRef<any>;
-    @ViewChild('delete') public deleteButton: TemplateRef<any>;
-
+export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
 
     /**
      * Host `class.igx-action-strip` binding.
@@ -23,17 +19,6 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     public cssClass = 'igx-action-strip__editing-actions';
 
     private isMessageShown = false;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    ngAfterViewInit() {
-        if (this.asMenuItems) {
-            this.strip.menuItems.push({ templateRef: this.editButton });
-            this.strip.menuItems.push({ templateRef: this.deleteButton });
-        }
-    }
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
