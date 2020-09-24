@@ -201,65 +201,20 @@ export class IgxGridCRUDService {
 
             this.grid.tbody.nativeElement.focus();
         } else {
+
             /** Changing the reference with the new editable cell */
-            const newCell = this.beginCellEdit(cell);
-            this.rowEditing ? this.beginRowEdit(newCell) : this.emitCellEditEnter(newCell);
+            const newCell = this.createCell(cell);
+            if (this.rowEditing)  {
+                this.beginRowEdit(newCell);
+                this.beginCellEdit(newCell);
+            } else {
+                this.beginCellEdit(newCell);
+            }
         }
     }
 
-    public exitEditMode() {
-        if (this.isInCompositionMode) {
-            return;
-        }
-        if (this.cellInEditMode || this.rowInEditMode) {
-            this.grid.endEdit(false);
-            if (isEdge()) { this.grid.cdr.detectChanges(); }
-            this.grid.tbody.nativeElement.focus();
-        }
-    }
-
-    public isInEditMode(rowIndex: number, columnIndex: number): boolean {
-        if (!this.cell) {
-            return false;
-        }
-        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
-    }
-
-    public exitCellEdit(): boolean {
-        if (!this.cell) {
-            return false;
-        }
-
-        const args = this.cell?.createEditEventArgs(true);
-        this.grid.cellEditExit.emit(args);
-        if (args && args.cancel) {
-            return this._rowEditingBlocked = this._cellEditingBlocked = true;
-        }
-
-        this._rowEditingBlocked = this._cellEditingBlocked = false;
-        this.cell = null;
-        return false;
-    }
-
-    public exitRowEdit() {
-        this.row = null;
-    }
-
-    /** This method serves for unblocking row/cell edit when filter/sort is performed */
-    public releaseBlockedEditing() {
-        this._rowEditingBlocked = this._cellEditingBlocked = false;
-    }
-
-    /** This method is used when filtering/sortinging is triggered */
-    public exitEditRegardlessCancelation() {
-        this.cell = null;
-        if (this.grid.rowEditable) {
-            this.exitRowEdit();
-            this.grid.closeRowEditingOverlay();
-        }
-    }
-
-    private beginRowEdit(newCell) {
+    /** Enters row edit mode */
+    public beginRowEdit(newCell) {
         if (this.row && !this.sameRow(newCell.id.rowID)) {
             this._rowEditingBlocked = this.grid.endEdit(true);
             this.cell = newCell;
@@ -268,7 +223,7 @@ export class IgxGridCRUDService {
             }
 
             this._rowEditingBlocked = false;
-            this.exitRowEdit();
+            this.endRowEdit();
         }
 
         if (this.grid.rowEditable && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
@@ -282,7 +237,7 @@ export class IgxGridCRUDService {
 
             this.grid.rowEditEnter.emit(rowArgs);
             if (rowArgs.cancel) {
-                this.exitRowEdit();
+                this.endRowEdit();
                 this.cell = null;
                 return true;
             }
@@ -291,27 +246,83 @@ export class IgxGridCRUDService {
             this.grid.transactions.startPending();
             this.grid.openRowOverlay(this.row.id);
         }
-
-        this.emitCellEditEnter(newCell);
     }
 
-    private beginCellEdit(cell) {
-        const newCell = this.createCell(cell);
-        newCell.primaryKey = this.primaryKey;
-        return newCell;
+    public exitRowEdit(commit: boolean) {
+        if (!this.grid.rowEditable ||
+            this.grid.rowEditingOverlay &&
+            this.grid.rowEditingOverlay.collapsed || !this.row) {
+            return false;
+        }
+
+        if (this.rowEditingBlocked && this.cellEditingBlocked) {
+            return true;
+        }
+
+        const canceled = this.grid.endRowTransaction(commit, this.row);
+        if (canceled) {
+            return true;
+        }
     }
 
-    private emitCellEditEnter(newCell) {
+    /** Enters cell edit mode */
+    public beginCellEdit(newCell) {
         const args = newCell.createEditEventArgs(false);
         this.grid.cellEditEnter.emit(args);
 
         this._cellEditingBlocked = args.cancel;
         if (args.cancel) {
-            this.cell = null;
+            this.endCellEdit();
         } else {
             this.cell = newCell;
         }
 
+    }
+
+    /** Exit cell edit mode and submit it's value if necessary */
+    public exitCellEdit(commit?: boolean): boolean {
+        if (!this.cell) {
+            return false;
+        }
+
+        if (commit) {
+            this.grid.gridAPI.submit_value();
+        }
+
+        const args = this.cell.createEditEventArgs(true);
+        this.grid.cellEditExit.emit(args);
+        if (args && args.cancel) {
+            return this._rowEditingBlocked = this._cellEditingBlocked = true;
+        }
+
+        this._rowEditingBlocked = this._cellEditingBlocked = false;
+        this.endCellEdit();
+        return false;
+    }
+
+    /** Clears cell editing state */
+    public endCellEdit() {
+        this.cell = null;
+    }
+
+    /** Clears row editing state */
+    public endRowEdit() {
+        this.row = null;
+    }
+
+
+    /** Cleares cell and row editing state and closes row editing template if it is open */
+    public endEditMode() {
+        this.endCellEdit();
+        if (this.grid.rowEditable) {
+            this.endRowEdit();
+            this.grid.closeRowEditingOverlay();
+        }
+    }
+
+    /** Unblocks row/cell edit process when filter/sort is performed */
+    public releaseBlockedEditing() {
+        this._rowEditingBlocked = this._cellEditingBlocked = false;
     }
 }
 

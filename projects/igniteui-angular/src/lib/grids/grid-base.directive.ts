@@ -4141,7 +4141,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.crudService.releaseBlockedEditing();
         this.endEdit(false);
-        this.crudService.exitEditRegardlessCancelation();
+        this.crudService.endEditMode();
 
 
         if (expression instanceof Array) {
@@ -6381,7 +6381,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return true;
         }
 
-        this.crudService.exitRowEdit();
+        this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
     }
 
@@ -6412,25 +6412,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
-        let args;
-        commit ? args = this.gridAPI.submit_value() : this.crudService.exitCellEdit();
+        this.crudService.exitCellEdit(commit);
 
-        /** Exit cell edit mode via row edit template if cellEdit is canceled. */
-        if (this.rowEditable && args && args.cancel) {
-            this.crudService.exitEditMode();
-        }
-
-        if (!this.rowEditable ||
-            this.rowEditingOverlay &&
-            this.rowEditingOverlay.collapsed || !row) {
-            return false;
-        }
-
-        if (this.crudService.rowEditingBlocked && this.crudService.cellEditingBlocked) {
-            return true;
-        }
-
-        const canceled = this.endRowTransaction(commit, row);
+        // /** Exit cell edit mode via row edit template if cellEdit is canceled. */
+        // if (this.rowEditable && args && args.cancel) {
+        //     this.crudService.exitEditMode();
+        // }
+        const canceled = this.crudService.exitRowEdit(commit);
         if (canceled) {
             return true;
         }

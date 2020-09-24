@@ -129,16 +129,16 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     update_cell(cell: IgxCell, value: any) {
         cell.editValue = value;
         const args = cell.createEditEventArgs();
-        this.grid.cellEdit.emit(args);
-        // TODO Implement cellEditExit event end emit if isEqual(args.oldValue, args.newValue)
-        // TODO do not emit cellEdit & cellEditDone if isEqual(args.oldValue, args.newValue)
-        if (args.cancel) {
-            return args;
-        }
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
+
+        this.grid.cellEdit.emit(args);
+        if (args.cancel) {
+            return args;
+        }
+
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
