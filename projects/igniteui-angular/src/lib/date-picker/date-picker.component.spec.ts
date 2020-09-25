@@ -159,7 +159,7 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label.nativeElement.innerText).toBe('Date');
+            expect(label).toBeNull();
         });
 
         it('When update label property it should reflect on the label text of the datepicker', () => {
@@ -179,7 +179,7 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
 
             let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
-            expect(label.nativeElement.innerText).toBe('Date');
+            expect(label).toBeNull();
 
             fixture.componentInstance.labelVisibility = true;
             fixture.detectChanges();
@@ -207,9 +207,9 @@ describe('IgxDatePicker', () => {
             fixtureProjectedLabel.detectChanges();
             testComponent.customLabelVisibility = false;
             fixtureProjectedLabel.detectChanges();
-            label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
+            label = dom.query(By.directive(IgxLabelDirective));
             fixtureProjectedLabel.detectChanges();
-            expect(label).toEqual('Date');
+            expect(label).toBeNull();
 
             testComponent.customLabelVisibility = true;
             fixtureProjectedLabel.detectChanges();
