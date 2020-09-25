@@ -11,7 +11,7 @@ import {
 import { getLanguageService, getRenamePositions, getLanguageServiceHost } from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
 import { ServerHost } from './ServerHost';
-import { Logger } from './TSLogger';
+import { Logger } from './tsLogger';
 
 export enum InputPropertyType {
     EVAL = 'eval',
