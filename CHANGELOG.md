@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
         `onCellEditEnter` to `cellEditEnter`
         `onCellEdit` to `cellEdit`
         `onRowEdit` to `rowEdit`
+    - **Breaking Change** - The `onCellEditCancel` event is replaced by the new `cellEditExit` event that emits every time the editable cell exits edit mode.
+    - **Breaking Change** - The `onRowEditCancel` event is replaced by the new `rowEditExit` event that emits every time the editable row exits edit mode.
 - `IgxOverlay`
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
 - `IgxSelect`
@@ -23,8 +25,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
-    - Replace `onCellEditCancel` with `cellEditExit` event. The new `cellEditExit` emits every time the editable cell/row is changed/exited.
-    - Replace `onRowEditCancel` with `rowEditExit` event.
+    - `cellEditExit` is a new event that fires when cell exits edit"
+    - `rowEditExit` is a new event that fires when row exits edit"
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
