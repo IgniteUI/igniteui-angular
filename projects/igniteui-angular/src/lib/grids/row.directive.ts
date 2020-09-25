@@ -27,6 +27,7 @@ import merge from 'lodash.merge';
 export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
 
     protected _rowData: any;
+    protected _addRow: boolean;
 
     /**
      *  The data passed to the row component.
@@ -78,6 +79,14 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
+    }
+    @Input()
+    public get addRow(): any {
+        return this._addRow;
+    }
+
+    public set addRow(v: any) {
+        this._addRow = v;
     }
 
     /**

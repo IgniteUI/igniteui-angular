@@ -53,6 +53,7 @@ export class IgxRow {
     transactionState: any;
     state: any;
     newData: any;
+    isAddRow: boolean;
 
     constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
@@ -202,6 +203,10 @@ export class IgxGridCRUDService {
             this.grid.tbody.nativeElement.focus();
         } else {
 
+            if (cell?.row.addRow) {
+                this.beginAddRow(cell);
+                return;
+            }
             /** Changing the reference with the new editable cell */
             const newCell = this.createCell(cell);
             if (this.rowEditing)  {
@@ -269,6 +274,16 @@ export class IgxGridCRUDService {
     }
 
     /** Enters cell edit mode */
+    beginAddRow(cell) {
+        const newCell = this.createCell(cell);
+        newCell.primaryKey = this.primaryKey;
+        cell.enterAddMode = true;
+        this.cell = newCell;
+        this.row = this.createRow(this.cell);
+        this.row.isAddRow = true;
+        this.grid.openRowOverlay(this.row.id);
+    }
+
     public beginCellEdit(newCell) {
         const args = newCell.createEditEventArgs(false);
         this.grid.cellEditEnter.emit(args);
@@ -326,6 +341,13 @@ export class IgxGridCRUDService {
 
     /** Returns whether a particular cell is in edit mode */
     public isCellInEditByPos(rowIndex: number, columnIndex: number): boolean {
+        if (!this.cell) {
+            return false;
+        }
+        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+    }
+
+    isInAddMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
             return false;
         }

@@ -75,7 +75,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return -1;
         }
         const data = dataCollection ?? this.get_all_data(grid.transactions.enabled);
-        return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
+        return grid.primaryKey ? data.findIndex(record => record.recordRef ? record.recordRef[grid.primaryKey] === rowID
+            : record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
     public get_row_by_key(rowSelector: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
@@ -124,6 +125,24 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             }
             this.grid.crudService.exitCellEdit();
         }
+    }
+
+    public submit_add_value() {
+        const cell = this.grid.crudService.cell;
+        if (cell) {
+            this.update_add_cell(cell, cell.editValue);
+            this.grid.crudService.endCellEdit();
+        }
+    }
+
+    public update_add_cell(cell: IgxCell, value: any) {
+        cell.editValue = value;
+
+        if (isEqual(cell.value, cell.editValue)) {
+            return;
+        }
+        const data = cell.rowData;
+        this.updateData(this.grid, cell.id.rowID, data, cell.rowData, reverseMapper(cell.column.field, cell.editValue));
     }
 
     update_cell(cell: IgxCell, value: any) {
