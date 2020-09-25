@@ -77,14 +77,11 @@ fdescribe('IgxToast', () => {
         expect(toast.isVisible).toBeTruthy();
     }));
 
-    it('should emit onShowing when super onOpening is fired', waitForAsync(() => {
+    it('should emit onShowing when toast is shown', () => {
+        spyOn(toast.onShowing, 'emit');
         toast.show();
-
-        toast.onOpening.subscribe(() => {
-            spyOn(toast.onShowing, 'emit');
-            expect(toast.onShowing.emit).toHaveBeenCalled();
-        });
-    }));
+        expect(toast.onShowing.emit).toHaveBeenCalled();
+    });
 
     it('should emit onShown when super onAppended is fired', waitForAsync(() => {
         toast.show();
@@ -95,15 +92,11 @@ fdescribe('IgxToast', () => {
         });
     }));
 
-    it('should emit onHiding when super onClosing is fired', waitForAsync(() => {
-        toast.isVisible = true;
+    it('should emit onHiding when toast is hidden', () => {
+        spyOn(toast.onHiding, 'emit');
         toast.hide();
-
-        toast.onClosing.subscribe(() => {
-            spyOn(toast.onHiding, 'emit');
-            expect(toast.onHiding.emit).toHaveBeenCalled();
-        });
-    }));
+        expect(toast.onHiding.emit).toHaveBeenCalled();
+    });
 
     it('should emit onHidden when super onClosed is fired', waitForAsync(() => {
         toast.isVisible = true;
@@ -115,14 +108,15 @@ fdescribe('IgxToast', () => {
         });
     }));
 
-    it('visibility is updated by the toggle() method', waitForAsync(() => {
-        toast.isVisible = true;
+    it('visibility is updated by the toggle() method', () => {
         toast.toggle();
+        fixture.detectChanges();
+        expect(toast.isVisible).toEqual(true);
 
-        toast.onHiding.subscribe(() => {
-            expect(toast.isVisible).toEqual(false);
-        });
-    }));
+        toast.toggle();
+        fixture.detectChanges();
+        expect(toast.isVisible).toEqual(false);
+    });
 
     it('can set message through show method', fakeAsync(() => {
         toast.displayTime = 100;

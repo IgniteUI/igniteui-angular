@@ -9,9 +9,13 @@ import {
     Inject,
     Input,
     NgModule,
+    OnDestroy,
+    OnInit,
     Optional,
     Output,
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -61,7 +65,8 @@ export type IgxToastPosition = keyof typeof IgxToastPositionEnum;
     templateUrl: 'toast.component.html',
 })
 export class IgxToastComponent extends IgxToggleDirective
-    implements IToggleView {
+    implements IToggleView, OnInit, OnDestroy {
+    private d$ = new Subject<boolean>();
     private _isVisible = false;
 
     /**
@@ -262,7 +267,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * @memberof IgxToastComponent
      */
     public get element() {
-        return this.element.nativeElement;
+        return this._element.nativeElement;
     }
 
     /**
@@ -277,7 +282,7 @@ export class IgxToastComponent extends IgxToggleDirective
     private timeoutId: number;
 
     constructor(
-        _element: ElementRef,
+        private _element: ElementRef,
         cdr: ChangeDetectorRef,
         @Optional() navService: IgxNavigationService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService
@@ -316,14 +321,8 @@ export class IgxToastComponent extends IgxToggleDirective
             this.toastMessage = message;
         }
 
-        this.onOpening.subscribe(() => {
-            this.isVisible = true;
-            this.onShowing.emit(this);
-        });
-
-        this.onAppended.subscribe(() => {
-            this.onShown.emit(this);
-        });
+        this.isVisible = true;
+        this.onShowing.emit(this);
 
         super.open(overlaySettings);
 
@@ -343,17 +342,9 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     public hide(): void {
         clearInterval(this.timeoutId);
-
-        this.onClosing.subscribe(() => {
-            this.isVisible = false;
-            this.onHiding.emit(this);
-        });
-
+        this.isVisible = false;
+        this.onHiding.emit(this);
         super.close();
-
-        this.onClosed.subscribe(() => {
-            this.onHidden.emit(this);
-        });
     }
 
     /**
@@ -381,6 +372,27 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     public toggle() {
         super.toggle();
+    }
+
+    /**
+     * @hidden
+     */
+    ngOnInit() {
+        this.onAppended.pipe(takeUntil(this.d$)).subscribe(() => {
+            this.onShown.emit(this);
+        });
+
+        this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
+            this.onHidden.emit(this);
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    ngOnDestroy() {
+        this.d$.next(true);
+        this.d$.complete();
     }
 }
 
