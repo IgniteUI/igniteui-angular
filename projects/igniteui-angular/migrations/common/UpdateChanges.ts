@@ -616,7 +616,7 @@ export class UpdateChanges {
     }
 
     private memberIsIgniteUI(str: string): boolean {
-        return !!this.toRegExp('igniteui-angular').exec(str);
+        return str.includes('igniteui-angular');
     }
 
     private toRegExp(str: string, flags?: string): RegExp {
