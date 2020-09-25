@@ -248,6 +248,7 @@ export class IgxGridCRUDService {
         }
     }
 
+    /** Exit row edit mode */
     public exitRowEdit(commit: boolean) {
         if (!this.grid.rowEditable ||
             this.grid.rowEditingOverlay &&
@@ -323,6 +324,14 @@ export class IgxGridCRUDService {
     /** Unblocks row/cell edit process when filter/sort is performed */
     public releaseBlockedEditing() {
         this._rowEditingBlocked = this._cellEditingBlocked = false;
+    }
+
+    /** Returns whether a particular cell is in edit mode */
+    public isCellInEditByPos(rowIndex: number, columnIndex: number): boolean {
+        if (!this.cell) {
+            return false;
+        }
+        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
     }
 }
 
