@@ -65,6 +65,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit, OnDes
                         const index = this.strip.menuItems.indexOf(record.item);
                         this.strip.menuItems.splice(index, 1);
                     });
+                    this.strip.cdr.detectChanges();
                 }
             });
 

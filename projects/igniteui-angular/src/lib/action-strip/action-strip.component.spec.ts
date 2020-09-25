@@ -25,16 +25,17 @@ describe('igxActionStrip', () => {
         const mockContext = jasmine.createSpyObj('context', ['element']);
         const mockDisplayDensity = jasmine.createSpyObj('IDisplayDensityOptions', ['displayDensity']);
         const mockDiffer = jasmine.createSpyObj('IterableDiffers', ['diff']);
+        const cdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
 
         it('should properly get/set hidden', () => {
-            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockDiffer, mockRenderer2, mockDisplayDensity);
+            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockDiffer, mockRenderer2, mockDisplayDensity, cdr);
             expect(actionStrip.hidden).toBeFalsy();
             actionStrip.hidden = true;
             expect(actionStrip.hidden).toBeTruthy();
         });
 
         it('should properly show and hide using API', () => {
-            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockDiffer, mockRenderer2, mockDisplayDensity);
+            actionStrip = new IgxActionStripComponent(mockViewContainerRef, mockDiffer, mockRenderer2, mockDisplayDensity, cdr);
             actionStrip.show(mockContext);
             expect(actionStrip.hidden).toBeFalsy();
             expect(actionStrip.context).toBe(mockContext);

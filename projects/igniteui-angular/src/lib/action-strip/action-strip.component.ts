@@ -14,7 +14,8 @@ import {
     AfterContentInit,
     IterableDiffers,
     OnInit,
-    IterableChangeRecord
+    IterableChangeRecord,
+    ChangeDetectorRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down/public_api';
@@ -60,7 +61,8 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         private _viewContainer: ViewContainerRef,
         protected differs: IterableDiffers,
         private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        public cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
     }
 
@@ -205,6 +207,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         if (this.context && this.context.element) {
             this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
+        this.cdr.detectChanges();
     }
 
     /**
