@@ -1,13 +1,13 @@
 import { Directive, Inject } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/public_api';
-import { IgxGridIconService } from '../../grids/common/grid-icon.service';
+import { IgxIconService } from '../../icon/icon.service';
 
 @Directive({
     selector: '[igxGridActionsBase]'
 })
 export class IgxGridActionsBaseDirective {
-    constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent, protected iconService: IgxGridIconService) { }
+    constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent, protected iconService: IgxIconService) { }
 
     /**
      * Getter to be used in template
