@@ -24,6 +24,7 @@ import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
 import { KEYS } from '../../../core/utils';
+import { CurrentResourceStrings } from '../../../core/i18n/resources';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -42,17 +43,19 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
+    private readonly resourceStrings = CurrentResourceStrings.GridResStrings;
+    private _isLoading;
+    private destroy$ = new Subject<boolean>();
+
     private readonly addToCurrentFilter: FilterListItem = {
         isSelected: false,
-        value: 'addToCurrentFilter',
-        label: 'addToCurrentFilter',
+        value: this.resourceStrings.igx_grid_excel_add_to_filter,
+        label: this.resourceStrings.igx_grid_excel_add_to_filter,
         isFiltered: false,
         indeterminate: false,
         isSpecial: true,
         isBlanks: false,
     };
-    private _isLoading;
-    private destroy$ = new Subject<boolean>();
 
     /**
      * @hidden @internal
@@ -116,13 +119,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         } else {
             return this.defaultExcelStyleLoadingValuesTemplate;
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    get applyButtonDisabled() {
-        return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate;
     }
 
     constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) {
@@ -225,6 +221,16 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+
+    /**
+     * @hidden @internal
+     */
+    get applyButtonDisabled(): boolean {
+        return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate ||
+            this.displayedListData && this.displayedListData.length === 0;
+    }
+
+
     public onInputKeyDown(event): void {
         if (event.key === KEYS.ENTER) {
             event.preventDefault();
@@ -233,7 +239,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     }
 
     public filterListData(): void {
-        if (!this.esf.listData || !this.esf.listData) {
+        if (!this.esf.listData || !this.esf.listData.length) {
             this.displayedListData = [];
 
             return;
