@@ -184,18 +184,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * By default the visibility is set to true.
      * @example
      * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
-     * @deprecated Use
-     * ````html
-     * <igx-date-picker>
-     *      <label igxLabel>Custom label</label>
-     * </igx-date-picker>
-     * ````
-     * to set a custom label.
      */
-    @DeprecateProperty(`Deprecated. Use
-    <igx-date-picker>
-        <label igxLabel>Custom label</label>
-    </igx-date-picker> to set a label.` )
     @Input()
     public labelVisibility = true;
 
