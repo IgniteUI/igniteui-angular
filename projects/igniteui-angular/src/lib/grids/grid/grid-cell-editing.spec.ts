@@ -1067,7 +1067,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(grid.crudService.cellInEditMode).toEqual(false);
-            grid.crudService.exitEditMode();
+            grid.crudService.endEditMode();
             fixture.detectChanges();
 
             canceled = false;

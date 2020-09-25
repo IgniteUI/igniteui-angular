@@ -1676,7 +1676,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.crudService.rowInEditMode).toEqual(true);
             expect(grid.crudService.cellInEditMode).toEqual(false);
 
-            grid.crudService.exitEditMode();
+            grid.crudService.endEditMode();
             fix.detectChanges();
 
             canceled = false;
