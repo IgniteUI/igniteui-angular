@@ -4135,9 +4135,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * If the primary key is not specified the row selector match the row data.
      * @example
      * ```typescript
-     * const data = grid.getRowData({
-     *       ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
-     *   });
      * const data = grid.getRowData(94741);
      * ```
      * @param rowSelector correspond to rowID
