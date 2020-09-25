@@ -149,6 +149,7 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -246,6 +247,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public abstract id: string;
+
+    /**
+     * @hidden @internal
+     */
+    public cancelAddMode = false;
 
     /**
      * Gets/Sets a custom template when empty.
@@ -614,6 +620,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public dragRowID = null;
 
+    /**
+     * @hidden @interal
+     */
+    public addRowParent = null;
 
     /**
      * Gets/Sets whether the rows are editable.
@@ -1510,6 +1520,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public activeNodeChange = new EventEmitter<IActiveNodeChangeEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxSnackbarComponent)
+    public addRowSnackbar: IgxSnackbarComponent;
 
     /**
      * @hidden @internal
@@ -2450,6 +2466,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowEditMessage;
 
     /**
+     * @hidden @internal
+     */
+    public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
+
+    /**
+     * @hidden @internal
+     */
+    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
+
+
+    /**
      * Emitted when an export process is initiated by the user.
      * @example
      * ```typescript
@@ -2677,6 +2704,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
+    private lastAddedRowId;
+
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -2767,6 +2796,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public isGhostRecord(record: any): boolean {
         return record.ghostRecord !== undefined;
+    }
+    /**
+     * @hidden @internal
+     */
+    public isAddRowRecord(record: any): boolean {
+        return record.addRow !== undefined;
     }
 
     /**
@@ -3214,6 +3249,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             .subscribe((change: QueryList<IgxGridRowComponent>) => {
                 this.onPinnedRowsChanged(change);
             });
+
+        this.addRowSnackbar?.onAction.subscribe(() => {
+            this.navigateTo(this.lastAddedRowId, 0);
+            this.addRowSnackbar.hide();
+        });
     }
 
     /**
@@ -3992,6 +4032,46 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public markForCheck() {
         this.cdr.detectChanges();
+    }
+
+    /**
+     * Spawns the add row UI for a specific row.
+     * If rowID is not specified, the grid spawns the UI under the first visible row in the view.
+     * @example
+     * ```typescript
+     * this.grid1.beginAddRow(rowID);
+     * ```
+     * @param rowID
+     */
+
+    public beginAddRow(rowID?: any) {
+        if (!rowID) {
+            rowID = this.rowList.first.rowData[this.primaryKey];
+        }
+        const index = this.data.findIndex(record => record[this.primaryKey] === rowID);
+        this.beginAddRowByIndex(rowID, index);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public beginAddRowByIndex(rowID: any, index: number) {
+        this.endEdit(true);
+        this.cancelAddMode = false;
+
+        this.addRowParent = {
+            rowID: rowID,
+            index: index
+        };
+        this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+            this.cdr.detectChanges();
+            const row = this.getRowByIndex(this.addRowParent.index + 1);
+            const cell = row.cells.find(c => c.editable);
+            cell.setEditMode(true);
+            cell.activate();
+        });
+        this._pipeTrigger++;
+        this.notifyChanges();
     }
 
     /**
@@ -5789,6 +5869,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden @internal
+     */
+    public showSnackbarFor(id: number) {
+        this.addRowSnackbar.actionText = id === -1 ? '' : this.snackbarActionText;
+        this.lastAddedRowId = id;
+        this.addRowSnackbar.show();
+    }
+
+    /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      * @remarks
      * Also can execute a custom logic over the target element,
@@ -6427,6 +6516,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
+        if (row?.isAddRow) {
+            this.endAdd(commit, event);
+            return;
+        }
         commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
@@ -6444,6 +6537,37 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     c.target.activate(event);
                 }
             });
+        }
+    }
+
+    public endAdd(commit = true, event?: Event) {
+        const row = this.crudService.row;
+        const cell = this.crudService.cell;
+        if (!row && !cell) {
+            return;
+        }
+        if (commit) {
+            this.onRowAdded.subscribe(rowData => {
+            // A check whether the row is in the current view
+            const index = this.dataView.findIndex(data => data === rowData);
+            const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
+            const showIndex = shouldScroll ? index : -1;
+            this.showSnackbarFor(showIndex);
+            });
+            this.gridAPI.submit_add_value();
+            this.gridAPI.addRowToData(row.data);
+            this.crudService.endRowEdit();
+            this.addRowParent = null;
+        } else {
+            this.gridAPI.escape_editMode();
+            this.cancelAddMode = true;
+        }
+        this.crudService.endRowEdit();
+        this.closeRowEditingOverlay();
+        this._pipeTrigger++;
+        if (!this.cancelAddMode) {
+            this.cdr.detectChanges();
+            this.onRowAdded.emit(row.data);
         }
     }
 

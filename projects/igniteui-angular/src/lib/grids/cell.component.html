@@ -45,6 +45,19 @@
         >{{ value ? "check" : "close" }}</igx-icon
     >
 </ng-template>
+<ng-template #addRowCell let-cell="cell">
+    <div igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    [cssClass]="highlightClass"
+    [activeCssClass]="activeHighlightClass"
+    [groupName]="gridID"
+    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+    [row]="rowData"
+    [column]="this.column.field"
+    [containerClass]="'igx-grid__td-text'"
+    [metadata]="searchMetadata">{{
+        value ? value : column.field
+    }}</div>
+</ng-template>
 <ng-template #inlineEditor let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
