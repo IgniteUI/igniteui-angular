@@ -1087,8 +1087,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellValue = cell.value;
             cell.update('new value');
-
-            grid.endEdit(true);
             fixture.detectChanges();
 
             expect(grid.crudService.cellInEditMode).toEqual(true);

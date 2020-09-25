@@ -205,8 +205,11 @@ export class IgxGridCRUDService {
             /** Changing the reference with the new editable cell */
             const newCell = this.createCell(cell);
             if (this.rowEditing)  {
-                this.beginRowEdit(newCell);
-                this.beginCellEdit(newCell);
+                const canceled = this.beginRowEdit(newCell);
+                if (!canceled) {
+                    this.beginCellEdit(newCell);
+                }
+
             } else {
                 this.beginCellEdit(newCell);
             }
@@ -237,8 +240,7 @@ export class IgxGridCRUDService {
 
             this.grid.rowEditEnter.emit(rowArgs);
             if (rowArgs.cancel) {
-                this.endRowEdit();
-                this.cell = null;
+                this.endEditMode();
                 return true;
             }
 
@@ -281,16 +283,12 @@ export class IgxGridCRUDService {
     }
 
     /** Exit cell edit mode and submit it's value if necessary */
-    public exitCellEdit(commit?: boolean): boolean {
+    public exitCellEdit(): boolean {
         if (!this.cell) {
             return false;
         }
 
-        if (commit) {
-            this.grid.gridAPI.submit_value();
-        }
-
-        const args = this.cell.createEditEventArgs(true);
+        const args = this.cell?.createEditEventArgs(true);
         this.grid.cellEditExit.emit(args);
         if (args && args.cancel) {
             return this._rowEditingBlocked = this._cellEditingBlocked = true;
