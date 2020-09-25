@@ -119,7 +119,7 @@ describe('Update 10.1.0', () => {
 
     });
 
-    xit('should replace selectedRows() with selectedRows in ts files', async () => {
-        // TODO: set up tests for migrations through lang service
+    it('should replace selectedRows() with selectedRows in ts files', async () => {
+        pending('set up tests for migrations through lang service');
     });
 });
