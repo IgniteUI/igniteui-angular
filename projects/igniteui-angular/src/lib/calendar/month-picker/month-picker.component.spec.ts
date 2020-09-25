@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -259,21 +259,35 @@ describe('IgxMonthPicker', () => {
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
+    });
 
-        yearBtn.nativeElement.focus();
-
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', yearBtn.nativeElement);
+    it('should navigate to the previous/next year via arrowLeft and arrowRight', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
+        tick();
+        flush();
 
-        expect(monthPicker.viewDate.getFullYear()).toEqual(2022);
-        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2022');
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const yearBtn = fixture.debugElement.query(By.css('.igx-calendar-picker__date'));
+
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
+        yearBtn.nativeElement.focus();
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', yearBtn.nativeElement);
         fixture.detectChanges();
+        tick(50);
+        flush();
 
-        expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
-        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
-    });
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2018);
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2018');
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', yearBtn.nativeElement);
+        fixture.detectChanges();
+        flush();
+
+        expect(monthPicker.viewDate.getFullYear()).toEqual(2019);
+        expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
+    }));
 
     it('should not emit onSelection when navigating to the next year', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);

@@ -143,6 +143,11 @@ export class AppComponent implements OnInit {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
+        },
+        {
+            link: '/gridAddRow',
+            icon: 'view_column',
+            name: 'Grid Add Row'
         }, {
             link: '/gridMasterDetail',
             icon: 'view_column',

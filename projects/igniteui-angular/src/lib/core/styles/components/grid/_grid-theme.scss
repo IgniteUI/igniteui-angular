@@ -2335,6 +2335,13 @@
         }
     }
 
+    %igx-grid__addrow-snackbar {
+        position: absolute;
+        z-index: 5;
+        left: 35%;
+        bottom: 25%;
+    }
+
     %igx-grid__filtering-cell {
         display: flex;
         align-items: center;
