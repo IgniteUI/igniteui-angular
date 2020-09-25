@@ -22,6 +22,7 @@ import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxGridStateModule } from '../state.directive';
 import { IgxGridIconService } from './grid-icon.service';
+import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { IgxGridIconService } from './grid-icon.service';
         IgxButtonGroupModule,
         IgxProgressBarModule,
         IgxSelectModule,
-        IgxGridStateModule
+        IgxGridStateModule,
+        IgxSnackbarModule
     ],
     exports: [
         CommonModule,
@@ -71,7 +73,8 @@ import { IgxGridIconService } from './grid-icon.service';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxProgressBarModule,
-        IgxSelectModule
+        IgxSelectModule,
+        IgxSnackbarModule
     ],
     providers: [
         IgxGridIconService
