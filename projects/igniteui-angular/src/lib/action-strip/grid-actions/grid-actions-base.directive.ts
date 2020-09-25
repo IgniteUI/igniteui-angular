@@ -2,7 +2,7 @@ import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { Directive, Inject, Input, AfterViewInit, QueryList, TemplateRef, ViewChildren, OnInit, IterableDiffers, IterableChangeRecord } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/public_api';
-import { IgxGridIconService } from '../../grids/common/grid-icon.service';
+import { IgxIconService } from '../../icon/icon.service';
 
 @Directive({
     selector: '[igxGridActionsBase]'
@@ -10,7 +10,7 @@ import { IgxGridIconService } from '../../grids/common/grid-icon.service';
 export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit {
     constructor(
         @Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent,
-        protected iconService: IgxGridIconService,
+        protected iconService: IgxIconService,
         protected differs: IterableDiffers) { }
     private actionButtonsDiffer;
     @ViewChildren(IgxGridActionButtonComponent) public buttons: QueryList<IgxGridActionButtonComponent>;

@@ -1,6 +1,6 @@
 <ng-container *ngIf="isRowContext">
-    <igx-grid-action-button *ngIf="inPinnedArea && pinnedTop" [asMenuItem]="asMenuItems" iconSet="pinning-actions-icons" iconName="jump_down" [labelText]="grid.resourceStrings.igx_grid_actions_jumpDown_label" (onActionClick)="scrollToRow($event)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="inPinnedArea && !pinnedTop" [asMenuItem]="asMenuItems" iconSet="pinning-actions-icons" iconName="jump_up" [labelText]="grid.resourceStrings.igx_grid_actions_jumpUp_label" (onActionClick)="scrollToRow($event)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="!pinned" [asMenuItem]="asMenuItems" iconSet="pinning-icons" iconName="pin" [labelText]="grid.resourceStrings.igx_grid_actions_pin_label" (onActionClick)="pin($event)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="pinned" [asMenuItem]="asMenuItems" iconSet="pinning-icons" iconName="unpin" [labelText]="grid.resourceStrings.igx_grid_actions_unpin_label" (onActionClick)="unpin($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="inPinnedArea && pinnedTop" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="jump-down" [labelText]="grid.resourceStrings.igx_grid_actions_jumpDown_label" (onActionClick)="scrollToRow($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="inPinnedArea && !pinnedTop" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="jump-up" [labelText]="grid.resourceStrings.igx_grid_actions_jumpUp_label" (onActionClick)="scrollToRow($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="!pinned" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="pin-left" [labelText]="grid.resourceStrings.igx_grid_actions_pin_label" (onActionClick)="pin($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="pinned" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="unpin-left" [labelText]="grid.resourceStrings.igx_grid_actions_unpin_label" (onActionClick)="unpin($event)"></igx-grid-action-button>
 </ng-container>
