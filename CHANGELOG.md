@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.1.7
+
+### General
+- `IgxDatePicker`
+    - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
+
 ## 10.1.0
 
 ### General
