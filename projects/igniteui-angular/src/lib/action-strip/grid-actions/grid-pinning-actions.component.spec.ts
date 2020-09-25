@@ -40,7 +40,7 @@ describe('igxGridPinningActions #grid ', () => {
         fixture.detectChanges();
         let pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
         expect(pinningButtons.length).toBe(1);
-        expect(pinningButtons[0].componentInstance.iconName).toBe('pin');
+        expect(pinningButtons[0].componentInstance.iconName).toBe('pin-left');
         pinningButtons[0].triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
@@ -50,7 +50,7 @@ describe('igxGridPinningActions #grid ', () => {
         fixture.detectChanges();
         pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
         expect(pinningButtons.length).toBe(2);
-        expect(pinningButtons[1].componentInstance.iconName).toBe('unpin');
+        expect(pinningButtons[1].componentInstance.iconName).toBe('unpin-left');
         pinningButtons[1].triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
