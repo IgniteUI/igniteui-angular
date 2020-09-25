@@ -4,12 +4,11 @@
 
 <ng-template #readOnlyDatePickerTemplate>
     <igx-input-group (click)="openDialog()">
-        <label igxLabel *ngIf="!labelDirective&&!labelVisibility">Date</label>
         <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <igx-prefix>
             <igx-icon>today</igx-icon>
         </igx-prefix>
-        <label *ngIf="labelVisibility&&!labelDirective" igxLabel>{{label}}</label>
+        <label *ngIf="labelVisibility&&!_labelDirectiveUserTemplate" igxLabel>{{label}}</label>
         <input
             class="igx-date-picker__input-date"
             igxInput
@@ -24,12 +23,11 @@
 
 <ng-template #editableDatePickerTemplate>
     <igx-input-group #editableInputGroup>
-        <label igxLabel *ngIf="!labelDirective&&!labelVisibility">Date</label>
         <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <igx-prefix (click)="onOpenClick($event)">
             <igx-icon>today</igx-icon>
         </igx-prefix>
-        <label *ngIf="labelVisibility&&!labelDirective" igxLabel>{{label}}</label>
+        <label *ngIf="labelVisibility&&!_labelDirectiveUserTemplate" igxLabel>{{label}}</label>
         <input
             class="igx-date-picker__input-date"
             igxInput

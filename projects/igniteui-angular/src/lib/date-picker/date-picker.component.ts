@@ -20,7 +20,8 @@ import {
     Injector,
     AfterViewChecked,
     ContentChildren,
-    QueryList
+    QueryList,
+    Renderer2
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl, NG_VALIDATORS, ValidationErrors } from '@angular/forms';
 import {
@@ -32,7 +33,13 @@ import {
     isDateInRanges
 } from '../calendar/public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/public_api';
+import {
+    IgxInputGroupModule,
+    IgxInputDirective,
+    IgxInputGroupComponent,
+    IgxInputState,
+    IgxLabelDirective
+} from '../input-group/public_api';
 import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -61,7 +68,6 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { IgxLabelDirective } from '../directives/label/label.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
@@ -184,18 +190,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * By default the visibility is set to true.
      * @example
      * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
-     * @deprecated Use
-     * ````html
-     * <igx-date-picker>
-     *      <label igxLabel>Custom label</label>
-     * </igx-date-picker>
-     * ````
-     * to set a custom label.
      */
-    @DeprecateProperty(`Deprecated. Use
-    <igx-date-picker>
-        <label igxLabel>Custom label</label>
-    </igx-date-picker> to set a label.` )
     @Input()
     public labelVisibility = true;
 
@@ -429,7 +424,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         public element: ElementRef,
         private _cdr: ChangeDetectorRef,
         private _moduleRef: NgModuleRef<any>,
-        private _injector: Injector) { }
+        private _injector: Injector,
+        private _renderer: Renderer2) {
+        }
+
 
     /**
      * Gets the input group template.
@@ -656,19 +654,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     protected readOnlyDatePickerTemplate: TemplateRef<any>;
 
     /*
-     * @hidden @internal
-     */
-    @ContentChild(IgxLabelDirective)
-    public labelDirective: IgxLabelDirective;
-
-    /*
      * @hidden
      */
     @ViewChild('editableDatePickerTemplate', { read: TemplateRef, static: true })
     protected editableDatePickerTemplate: TemplateRef<any>;
 
     /*
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild(IgxInputGroupComponent)
     protected _inputGroup: IgxInputGroupComponent;
@@ -687,6 +679,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     @ContentChildren(IgxInputDirective, { descendants: true })
     private _inputDirectiveUserTemplates: QueryList<IgxInputDirective>;
+
+    @ViewChild(IgxLabelDirective)
+    protected _labelDirective: IgxLabelDirective;
+
+    /** @hidden @internal */
+    @ContentChild(IgxLabelDirective)
+    public _labelDirectiveUserTemplate: IgxLabelDirective;
 
     /**
      * @hidden
@@ -834,6 +833,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /** @hidden @internal */
+    public get labelDirective(): IgxLabelDirective {
+        return this._labelDirective || this._labelDirectiveUserTemplate || null;
+    }
+
+    /** @hidden @internal */
     public ngOnInit(): void {
         this._positionSettings = {
             openAnimation: fadeIn,
@@ -951,6 +955,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
         // TODO: persist validation state when dynamically changing 'dropdown' to 'dialog' ot vice versa.
         // For reference -> it is currently persisted if a user template is passed (as template is not recreated)
+
+        if (this.labelDirective) {
+            this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-labelledby', this.labelDirective.id);
+        }
     }
 
     protected onStatusChanged() {
