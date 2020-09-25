@@ -178,6 +178,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
+        if (this.grid.rowEditable && this.row.addRow) {
+            return this.addMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
+        }
         if (this.editMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
@@ -354,6 +357,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('class.igx-grid__td--editing')
     editMode = false;
 
+    /**
+     * Returns whether the cell is in add mode
+     */
+    @Input()
+    addMode = false;
 
     /**
      * Sets/get the `role` property of the cell.
@@ -517,6 +525,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
+    @ViewChild('addRowCell', { read: TemplateRef, static: true})
+    protected addRowCellTemplate: TemplateRef<any>;
+
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     protected set highlight(value: IgxTextHighlightDirective) {
         this._highlight = value;
@@ -631,7 +642,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
-                this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                if (this.row.addRow) {
+                    this.gridAPI.update_add_cell(editableCell, editableCell.editValue);
+                    this.row.rowData = editableCell.rowData;
+                } else {
+                    this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                }
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
                  * the next cell in edit mode is with wrong value /its context is not updated/;
@@ -789,6 +805,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (event.type === 'doubletap') {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
+        }
+        if (this.grid.rowEditable && this.row.addRow) {
+            this.crudService.begin(this);
         }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);
