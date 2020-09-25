@@ -887,10 +887,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this.attachTemplateBlur();
          });
         this.attachTemplateBlur();
-
-        if (this.labelDirective) {
-            this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-labelledby', this.labelDirective.id);
-        }
     }
 
     private attachTemplateBlur() {
@@ -922,6 +918,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
         // TODO: persist validation state when dynamically changing 'dropdown' to 'dialog' ot vice versa.
         // For reference -> it is currently persisted if a user template is passed (as template is not recreated)
+
+        if (this.labelDirective) {
+            this._renderer.setAttribute(this.inputDirective.nativeElement, 'aria-labelledby', this.labelDirective.id);
+        }
     }
 
     protected onStatusChanged() {
