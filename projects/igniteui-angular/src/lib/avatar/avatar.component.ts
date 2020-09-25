@@ -47,7 +47,7 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
  *
  * @example
  * ```html
- * <igx-avatar initials="MS" roundShape="true" size="large">
+ * <igx-avatar initials="MS" [roundShape]="true" size="large">
  * </igx-avatar>
  * ```
  */
@@ -145,12 +145,12 @@ export class IgxAvatarComponent implements OnInit {
     public id = `igx-avatar-${NEXT_ID++}`;
 
     /**
-     * Sets a round shape to the avatar, if `roundShape` is set to `true`.
+     * Sets a round shape to the avatar, if `[roundShape]` is set to `true`.
      * By default the shape of the avatar is a square.
      *
      * @example
      * ```html
-     * <igx-avatar roundShape="true" ></igx-avatar>
+     * <igx-avatar [roundShape]="true" ></igx-avatar>
      * ```
      */
 
