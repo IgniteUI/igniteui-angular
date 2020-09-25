@@ -1,7 +1,17 @@
 <ng-container *ngIf="!asMenuItem">
-<button igxButton="icon" igxRipple (click)="handleClick($event)">
-    <igx-icon *ngIf="iconSet" [fontSet]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
-    <igx-icon *ngIf="!iconSet" >{{iconName}}</igx-icon>
-</button>
-<label *ngIf='asMenuItem' igxLabel>{{labelText}}</label>
+
+    <ng-container *ngIf="!asMenuItem">
+        <button igxButton="icon" igxRipple (click)="handleClick($event)">
+            <igx-icon *ngIf="iconSet" [fontSet]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
+            <igx-icon *ngIf="!iconSet" >{{iconName}}</igx-icon>
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="asMenuItem">
+        <div #container class='igx-action-strip__menu-button'>
+            <igx-icon *ngIf="iconSet" [fontSet]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
+            <igx-icon *ngIf="!iconSet" >{{iconName}}</igx-icon>
+            <label *ngIf='asMenuItem' igxLabel>{{labelText}}</label>
+        </div>
+    </ng-container>
 </ng-container>

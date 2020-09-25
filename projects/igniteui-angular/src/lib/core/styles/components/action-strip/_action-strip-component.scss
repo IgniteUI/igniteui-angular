@@ -35,4 +35,12 @@
     @include e(pining-actions) {
         @extend %igx-action-strip__pining-actions !optional;
     }
+
+    @include e(menu-item) {
+        @extend %igx-action-strip__menu-item !optional;
+    }
+
+    @include e(menu-button) {
+        @extend %igx-action-strip__menu-button !optional;
+    }
 }

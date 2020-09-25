@@ -1,19 +1,26 @@
+import { takeUntil } from 'rxjs/operators';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { Directive, Inject, Input, AfterViewInit, QueryList, TemplateRef, ViewChildren, OnInit, IterableDiffers, IterableChangeRecord } from '@angular/core';
+import { Directive, Inject, Input, AfterViewInit, QueryList, ViewChildren,
+     OnInit, IterableDiffers, IterableChangeRecord, OnDestroy } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/public_api';
 import { IgxIconService } from '../../icon/icon.service';
+import { Subject } from 'rxjs';
 
 @Directive({
     selector: '[igxGridActionsBase]'
 })
-export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit {
+export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit, OnDestroy {
     constructor(
         @Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent,
         protected iconService: IgxIconService,
         protected differs: IterableDiffers) { }
+
     private actionButtonsDiffer;
-    @ViewChildren(IgxGridActionButtonComponent) public buttons: QueryList<IgxGridActionButtonComponent>;
+    protected destroy$ = new Subject<boolean>();
+
+    @ViewChildren(IgxGridActionButtonComponent)
+    public buttons: QueryList<IgxGridActionButtonComponent>;
 
     /**
      * Gets/Sets if the action buttons will be rendered as menu items. When in menu, items will be rendered with text label.
@@ -60,7 +67,25 @@ export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit {
                     });
                 }
             });
+
+            // on drop-down selection, trigger click action on related button.
+            this.strip.menu.onSelection.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
+               const newSelection = ($event.newSelection as any).elementRef.nativeElement;
+               const button = this.buttons.find(x => newSelection.contains(x.container.nativeElement));
+               if (button) {
+                    button.onActionClick.emit();
+               }
+            });
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     /**

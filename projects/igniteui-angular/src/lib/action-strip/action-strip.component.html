@@ -7,7 +7,7 @@
             <igx-icon>more_vert</igx-icon>
         </button>
         <igx-drop-down #dropdown>
-            <igx-drop-down-item *ngFor="let item of menuItems">
+            <igx-drop-down-item *ngFor="let item of menuItems" class='igx-action-strip__menu-item'>
                 <div class="igx-drop-down__item-template">
                     <ng-container *ngTemplateOutlet="item.templateRef; context: {$implicit: item}"></ng-container>
                 </div>

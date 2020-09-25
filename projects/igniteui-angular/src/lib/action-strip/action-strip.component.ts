@@ -150,7 +150,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      * @internal
      */
     @ViewChild('dropdown')
-    private menu: IgxDropDownComponent;
+    public menu: IgxDropDownComponent;
 
     private menuDiffer;
     /**

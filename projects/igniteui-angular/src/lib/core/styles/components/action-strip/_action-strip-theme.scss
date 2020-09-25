@@ -128,6 +128,20 @@
         justify-content: center;
     }
 
+    %igx-action-strip__menu-item {
+        padding: map-get($padding, 'compact') !important;
+    }
+
+    %igx-action-strip__menu-button {
+        display: flex;
+        align-items: center;
+
+        [igxLabel] {
+            cursor: pointer;
+            padding: map-get($padding, 'compact');
+        }
+    }
+
     %igx-action-strip__actions {
         display: inline-flex;
         align-items: center;

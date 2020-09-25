@@ -1,10 +1,13 @@
-import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, Output, EventEmitter, ElementRef } from '@angular/core';
 @Component({
     selector: 'igx-grid-action-button',
     templateUrl: 'grid-action-button.component.html'
 })
 
 export class IgxGridActionButtonComponent {
+
+    @ViewChild('container')
+    public container: ElementRef;
 
     /**
      * Event emitted when action button is clicked.
