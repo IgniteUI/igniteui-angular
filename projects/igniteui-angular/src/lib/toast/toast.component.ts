@@ -262,7 +262,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * @memberof IgxToastComponent
      */
     public get element() {
-        return this._element.nativeElement;
+        return this.element.nativeElement;
     }
 
     /**
@@ -277,7 +277,7 @@ export class IgxToastComponent extends IgxToggleDirective
     private timeoutId: number;
 
     constructor(
-        private _element: ElementRef,
+        _element: ElementRef,
         cdr: ChangeDetectorRef,
         @Optional() navService: IgxNavigationService,
         @Inject(IgxOverlayService) overlayService: IgxOverlayService
@@ -321,17 +321,17 @@ export class IgxToastComponent extends IgxToggleDirective
             this.onShowing.emit(this);
         });
 
+        this.onAppended.subscribe(() => {
+            this.onShown.emit(this);
+        });
+
+        super.open(overlaySettings);
+
         if (this.autoHide) {
             this.timeoutId = window.setTimeout(() => {
                 this.hide();
             }, this.displayTime);
         }
-
-        super.open(overlaySettings);
-
-        this.onOpened.subscribe(() => {
-            this.onShown.emit(this);
-        });
     }
 
     /**
