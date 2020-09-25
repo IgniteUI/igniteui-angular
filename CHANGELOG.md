@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 10.1.6
+## 10.1.7
 
 ### General
 - `IgxDatePicker`
