@@ -81,6 +81,13 @@
 
 <div igxOverlayOutlet #outlet="overlay-outlet"></div>
 
-<igx-toast #toast [outlet]="outlet">
+<igx-toast
+    #toast
+    [outlet]="outlet"
+    (onShowing)="handleShowing($event)"
+    (onShown)="handleShown($event)"
+    (onHiding)="handleHiding($event)"
+    (onHidden)="handleHidden($event)"
+>
     This message will self-destruct in 4 seconds.
 </igx-toast>
