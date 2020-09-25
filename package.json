@@ -52,6 +52,7 @@
     "@angular/platform-browser": "^10.1.0",
     "@angular/platform-browser-dynamic": "^10.1.0",
     "@angular/router": "^10.1.0",
+    "@igniteui/material-icons-extended": "^2.3.0",
     "@types/hammerjs": "^2.0.36",
     "@types/source-map": "0.5.2",
     "classlist.js": "^1.1.20150312",
@@ -62,8 +63,8 @@
     "lodash.merge": "^4.6.2",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.6.3",
-    "tslib": "^2.0.0",
     "setimmediate": "^1.0.5",
+    "tslib": "^2.0.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.10.3"
   },

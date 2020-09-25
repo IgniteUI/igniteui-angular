@@ -127,7 +127,7 @@ export class DropDownSampleComponent implements OnInit {
             outlet: this.igxOverlayOutlet
         };
 
-        overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+        overlaySettings.target = this.button.nativeElement;
         this.igxDropDown.toggle(overlaySettings);
     }
 
@@ -140,7 +140,7 @@ export class DropDownSampleComponent implements OnInit {
             outlet: this.igxOverlayOutlet
         };
 
-        overlaySettings.positionStrategy.settings.target = this.button.nativeElement;
+        overlaySettings.target = this.button.nativeElement;
         this.igxDropDown.open(overlaySettings);
     }
 

@@ -489,7 +489,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Opens the conditions dropdown.
      */
     public toggleConditionsDropDown(target: any) {
-        this._conditionsOverlaySettings.positionStrategy.settings.target = target;
+        this._conditionsOverlaySettings.target = target;
         this.dropDownConditions.toggle(this._conditionsOverlaySettings);
     }
 
@@ -497,7 +497,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Opens the logic operators dropdown.
      */
     public toggleOperatorsDropDown(eventArgs, index) {
-        this._operatorsOverlaySettings.positionStrategy.settings.target = eventArgs.target.parentElement;
+        this._operatorsOverlaySettings.target = eventArgs.target.parentElement;
         this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
     }
 

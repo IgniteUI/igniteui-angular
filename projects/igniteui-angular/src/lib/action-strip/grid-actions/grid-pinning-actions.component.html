@@ -1,14 +1,14 @@
 <ng-container *ngIf="isRowContext">
     <button *ngIf="inPinnedArea && pinnedTop" igxRipple igxButton="icon" (click)="scrollToRow($event)">
-        <igx-icon fontSet="pinning-actions-icons" name="jump_down"></igx-icon>
+        <igx-icon fontSet="imx-icons" name="jump-down"></igx-icon>
     </button>
     <button *ngIf="inPinnedArea && !pinnedTop" igxRipple igxButton="icon" (click)="scrollToRow($event)">
-        <igx-icon fontSet="pinning-actions-icons" name="jump_up"></igx-icon>
+        <igx-icon fontSet="imx-icons" name="jump-up"></igx-icon>
     </button>
     <button *ngIf="!pinned" igxRipple igxButton="icon" (click)="pin($event)">
-        <igx-icon fontSet="pinning-icons" name="pin"></igx-icon>
+        <igx-icon fontSet="imx-icons" name="pin-left"></igx-icon>
     </button>
     <button *ngIf="pinned" igxRipple igxButton="icon" (click)="unpin($event)">
-        <igx-icon fontSet="pinning-icons" name="unpin"></igx-icon>
+        <igx-icon fontSet="imx-icons" name="unpin-left"></igx-icon>
     </button>
 </ng-container>
