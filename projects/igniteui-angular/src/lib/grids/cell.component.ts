@@ -26,8 +26,6 @@ import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
-import { debounceTime } from 'rxjs/operators';
-import { fromEvent } from 'rxjs';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
