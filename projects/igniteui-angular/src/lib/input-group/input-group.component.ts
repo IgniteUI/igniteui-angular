@@ -184,7 +184,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         }
     }
 
-    onEvent(event) {
+    hintClickHandler(event) {
         event.stopPropagation();
      }
 
