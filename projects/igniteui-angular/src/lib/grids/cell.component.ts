@@ -16,7 +16,7 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil } from '../core/utils';
+import { getNodeSizeViaRange, isIE, isLeftClick, isRightClick, PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateMethod } from '../core/deprecateDecorators';
@@ -753,7 +753,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.activate(event);
             return;
         }
-        if (!isLeftClick(event)) {
+        if (!isLeftClick(event) && !isRightClick(event)) {
             event.preventDefault();
             this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
             this.selectionService.addKeyboardRange();
