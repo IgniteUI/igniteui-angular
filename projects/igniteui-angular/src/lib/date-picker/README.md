@@ -41,7 +41,7 @@ DatePicker with cancel and today buttons
 </igx-date-picker>
 ```
 
-The DatePicker's custom label can be set in the way shown below. If `labelVisibility` is set to `false` and a custom label is not used, a default one will be set.
+The DatePicker's custom label can be set in two ways, either by changing the `label` property or in the way shown below.
 ````html
 <igx-date-picker>
     <label igxLabel>Custom label</label>
