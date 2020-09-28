@@ -1,17 +1,19 @@
-import { SchematicContext, Tree, FileVisitor, source } from '@angular-devkit/schematics';
+import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as ts from 'typescript/lib/tsserverlibrary';
+import * as tss from 'typescript/lib/tsserverlibrary';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges, MemberChange
+    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
 } from './schema';
-import { getLanguageService, getRenamePositions, getLanguageServiceHost } from './tsUtils';
+import {
+    getLanguageService, getRenamePositions, getLanguageServiceHost,
+    findMatches, getTypeDefinitionAtPosition, replaceMatch, createProjectService
+} from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
 import { ServerHost } from './ServerHost';
-import { Logger } from './tsLogger';
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -25,7 +27,7 @@ export interface BoundPropertyObject {
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
-    public projectService: ts.server.ProjectService;
+    public projectService: tss.server.ProjectService;
     protected serverHost: ServerHost;
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
@@ -80,16 +82,16 @@ export class UpdateChanges {
         return this._sassFiles;
     }
 
-    private _service: ts.LanguageService;
-    public get service(): ts.LanguageService {
+    private _service: tss.LanguageService;
+    public get service(): tss.LanguageService {
         if (!this._service) {
             this._service = getLanguageService(this.serviceHost);
         }
         return this._service;
     }
 
-    private _serviceHost: ts.LanguageServiceHost;
-    public get serviceHost(): ts.LanguageServiceHost {
+    private _serviceHost: tss.LanguageServiceHost;
+    public get serviceHost(): tss.LanguageServiceHost {
         if (!this._serviceHost) {
             this._serviceHost = getLanguageServiceHost([...this.tsFiles, ...this.templateFiles], this.host);
         }
@@ -112,7 +114,7 @@ export class UpdateChanges {
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
         this.serverHost = new ServerHost(this.host);
-        this.projectService = this.createProjectService();
+        this.projectService = createProjectService(this.serverHost);
     }
 
     /** Apply configured changes to the Host Tree */
@@ -138,30 +140,9 @@ export class UpdateChanges {
         this.valueTransforms.set(functionName, callback);
     }
 
-    public getQuickInfoAtPosition(entryPath: string, position: number): ts.QuickInfo {
-        const langServ = this.getDefaultLanguageService(entryPath);
-        return langServ.getQuickInfoAtPosition(entryPath, position);
-    }
-
-    public getCompletionsAtPosition(entryPath: string, position: number, options: ts.GetCompletionsAtPositionOptions)
-        : ts.WithMetadata<ts.CompletionInfo> {
-        const langServ = this.getDefaultLanguageService(entryPath);
-        return langServ.getCompletionsAtPosition(entryPath, position, options);
-    }
-
-    public getDefinitionAndBoundSpan(entryPath: string, position: number): ts.DefinitionInfoAndBoundSpan {
-        const langServ = this.getDefaultLanguageService(entryPath);
-        return langServ.getDefinitionAndBoundSpan(entryPath, position);
-    }
-
-    public getSemanticDiagnostics(entryPath: string): ts.Diagnostic[] {
-        const langServ = this.getDefaultLanguageService(entryPath);
-        return langServ.getSemanticDiagnostics(entryPath);
-    }
-
-    public getReferencesAtPosition(entryPath: string, position: number): ts.ReferenceEntry[] {
-        const langServ = this.getDefaultLanguageService(entryPath);
-        return langServ.getReferencesAtPosition(entryPath, position);
+    public getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
+        const project = this.getDefaultProjectForFile(entryPath);
+        return project.getLanguageService();
     }
 
     protected updateSelectors(entryPath: string) {
@@ -242,9 +223,9 @@ export class UpdateChanges {
             let searchPattern;
 
             if (type === BindingType.output) {
+                base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 replace = `(${change.replaceWith})=$1$2$1`;
             } else {
-                base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 // Match both bound - [name] - and regular - name
                 base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])(.*?)\3`;
                 replace = String.raw`$1${change.replaceWith}$2$3$4$3`;
@@ -376,6 +357,32 @@ export class UpdateChanges {
         }
     }
 
+    protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        let content = this.host.read(entryPath).toString();
+        const changes = new Set<{ change, position }>();
+        for (const change of memberChanges.changes) {
+            const matches = findMatches(content, change);
+            for (const matchPosition of matches) {
+                const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
+                if (!typeDef) { continue; }
+                if (typeDef.fileName.includes('igniteui-angular') && change.definedIn.indexOf(typeDef.name) !== -1) {
+                    changes.add({ change, position: matchPosition });
+                }
+            }
+        }
+
+        const changesArr = Array.from(changes).sort((c, c1) => c.position - c1.position).reverse();
+        for (const fileChange of changesArr) {
+            content = replaceMatch(content, fileChange.change.member,
+                fileChange.change.replaceWith, fileChange.position);
+        }
+
+        if (changes.size) {
+            this.host.overwrite(entryPath, content);
+        }
+    }
+
     private loadConfig(configJson: string) {
         const filePath = path.join(this.rootPath, 'changes', configJson);
         if (fs.existsSync(filePath)) {
@@ -454,42 +461,6 @@ export class UpdateChanges {
         return parts;
     }
 
-    private createProjectService(): ts.server.ProjectService {
-        // set traceToConsole to true to enable logging
-        const logger = new Logger(false, ts.server.LogLevel.verbose);
-        const projectService = new ts.server.ProjectService({
-            host: this.serverHost,
-            logger: logger,
-            /* not needed since we will run only migrations */
-            cancellationToken: ts.server.nullCancellationToken,
-            /* do not allow more than one InferredProject per project root */
-            useSingleInferredProject: true,
-            useInferredProjectPerProjectRoot: true,
-            /* will load only global plug-ins */
-            globalPlugins: ['@angular/language-service'],
-            allowLocalPluginLoads: false,
-            typingsInstaller: ts.server.nullTypingsInstaller
-        });
-        projectService.setHostConfiguration({
-            formatOptions: projectService.getHostFormatCodeOptions(),
-            extraFileExtensions: [
-                {
-                    extension: '.html',
-                    isMixedContent: false,
-                    scriptKind: ts.ScriptKind.External,
-                }
-            ]
-        });
-        projectService.configurePlugin({
-            pluginName: '@angular/language-service',
-            configuration: {
-                angularOnly: false,
-            },
-        });
-
-        return projectService;
-    }
-
     private updateTemplateFiles() {
         if (this.selectorChanges && this.selectorChanges.changes.length) {
             for (const entryPath of this.templateFiles) {
@@ -534,100 +505,12 @@ export class UpdateChanges {
         }
     }
 
-    private findMatches(content: string, change: MemberChange): number[] {
-        let matches: RegExpExecArray;
-        const regex = this.toRegExp(change.member, 'g');
-        const matchesPositions = [];
-        do {
-            matches = regex.exec(content);
-            if (matches) {
-                matchesPositions.push(matches.index);
-            }
-        } while (matches);
-
-        return matchesPositions;
-    }
-
-    private getTypeDefinitionAtPosition(entryPath: string, position: number): ts.DefinitionInfo | null {
-        const langServ = this.getDefaultLanguageService(entryPath);
-        const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
-        if (!definition) { return null; }
-        if (definition.kind.toString() === 'reference') {
-            // variable in an internal/external template
-            return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
-        }
-        let typeDefs = langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
-        if (!typeDefs) {
-            // ts property referred in an internal/external template
-            const classDeclaration = langServ
-                .getProgram()
-                .getSourceFile(definition.fileName)
-                .statements.find(m => m.kind === ts.SyntaxKind.ClassDeclaration) as ts.ClassDeclaration;
-            const member: ts.ClassElement = classDeclaration
-                .members
-                .filter(m => m.end === definition.textSpan.start + definition.textSpan.length)[0];
-            if (!member || !member.name) { return null; }
-            typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
-        }
-        if (typeDefs?.length) {
-            return typeDefs[0];
-        }
-
-        return null;
-    }
-
-    private updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
-        let content = this.host.read(entryPath).toString();
-        const changes = new Set<{ change, position }>();
-        for (const change of memberChanges.changes) {
-            const definedIn = change.definedIn.split('|').map(s => s.trim());
-            const matches = this.findMatches(content, change);
-            for (const matchPosition of matches) {
-                const typeDef = this.getTypeDefinitionAtPosition(entryPath, matchPosition - 1);
-                if (!typeDef) { continue; }
-                if (this.memberIsIgniteUI(typeDef.fileName) && definedIn.indexOf(typeDef.name) !== -1) {
-                    changes.add({ change, position: matchPosition });
-                }
-            }
-        }
-
-        const changesArr = Array.from(changes).sort((c, c1) => c.position - c1.position).reverse();
-        for (const fileChange of changesArr) {
-            content = this.replaceMatch(content, fileChange.change.member,
-                fileChange.change.replaceWith, fileChange.position);
-        }
-
-        if (changes.size) {
-            this.host.overwrite(entryPath, content);
-        }
-    }
-
-    private getDefaultProjectForFile(entryPath: string): ts.server.Project {
-        const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(ts.server.asNormalizedPath(entryPath), false);
+    private getDefaultProjectForFile(entryPath: string): tss.server.Project {
+        const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(entryPath), false);
         this.projectService.openClientFile(scriptInfo.fileName);
         const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
         project.addMissingFileRoot(scriptInfo.fileName);
         return project;
-    }
-
-    private getDefaultLanguageService(entryPath: string): ts.LanguageService | undefined {
-        const project = this.getDefaultProjectForFile(entryPath);
-        return project.getLanguageService();
-    }
-
-    private memberIsIgniteUI(str: string): boolean {
-        return str.includes('igniteui-angular');
-    }
-
-    private toRegExp(str: string, flags?: string): RegExp {
-        const escapeChars = /[|\\{}()[\]^$+*?.]/g;
-        return new RegExp(str.replace(escapeChars, '\\$&'), flags);
-    }
-
-    private replaceMatch(content: string, toReplace: string, replaceWith: string, index: number): string {
-        return content.substring(0, index)
-            + replaceWith
-            + content.substring(index + toReplace.length, content.length);
     }
 }
 

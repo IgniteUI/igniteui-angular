@@ -1,6 +1,10 @@
 // tslint:disable-next-line:no-implicit-dependencies
 import * as ts from 'typescript';
+import * as tss from 'typescript/lib/tsserverlibrary';
 import { Tree } from '@angular-devkit/schematics';
+import { MemberChange } from './schema';
+import { escapeRegExp } from './util';
+import { Logger } from './tsLogger';
 
 export const PACKAGE_IMPORT = 'igniteui-angular';
 
@@ -107,6 +111,26 @@ export function getRenamePositions(sourcePath: string, name: string, service: ts
     return positions;
 }
 
+export function findMatches(content: string, change: MemberChange): number[] {
+    let matches: RegExpExecArray;
+    const regex = new RegExp(escapeRegExp(change.member), 'g');
+    const matchesPositions = [];
+    do {
+        matches = regex.exec(content);
+        if (matches) {
+            matchesPositions.push(matches.index);
+        }
+    } while (matches);
+
+    return matchesPositions;
+}
+
+export function replaceMatch(content: string, toReplace: string, replaceWith: string, index: number): string {
+    return content.substring(0, index)
+        + replaceWith
+        + content.substring(index + toReplace.length, content.length);
+}
+
 //#region Language Service
 
 /**
@@ -155,6 +179,69 @@ function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {
         fileVersions.set(path, version + 1);
         original.call(host, path, content);
     };
+}
+
+export function createProjectService(serverHost: tss.server.ServerHost): tss.server.ProjectService {
+    // set traceToConsole to true to enable logging
+    const logger = new Logger(false, tss.server.LogLevel.verbose);
+    const projectService = new tss.server.ProjectService({
+        host: serverHost,
+        logger: logger,
+        /* not needed since we will run only migrations */
+        cancellationToken: tss.server.nullCancellationToken,
+        /* do not allow more than one InferredProject per project root */
+        useSingleInferredProject: true,
+        useInferredProjectPerProjectRoot: true,
+        /* will load only global plug-ins */
+        globalPlugins: ['@angular/language-service'],
+        allowLocalPluginLoads: false,
+        typingsInstaller: tss.server.nullTypingsInstaller
+    });
+    projectService.setHostConfiguration({
+        formatOptions: projectService.getHostFormatCodeOptions(),
+        extraFileExtensions: [
+            {
+                extension: '.html',
+                isMixedContent: false,
+                scriptKind: tss.ScriptKind.External,
+            }
+        ]
+    });
+    projectService.configurePlugin({
+        pluginName: '@angular/language-service',
+        configuration: {
+            angularOnly: false,
+        },
+    });
+
+    return projectService;
+}
+
+export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
+    const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
+    if (!definition) { return null; }
+    if (definition.kind.toString() === 'reference') {
+        // variable in an internal/external template
+        return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
+    }
+    let typeDefs = langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
+    if (!typeDefs) {
+        // ts property referred in an internal/external template
+        const classDeclaration = langServ
+            .getProgram()
+            .getSourceFile(definition.fileName)
+            .statements.find(m => m.kind === ts.SyntaxKind.ClassDeclaration) as tss.ClassDeclaration;
+        const member: tss.ClassElement = classDeclaration
+            .members
+            .filter(m => m.end === definition.textSpan.start + definition.textSpan.length)[0];
+        if (!member || !member.name) { return null; }
+        typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
+    }
+    if (typeDefs?.length) {
+        return typeDefs[0];
+    }
+
+    return null;
 }
 
 //#endregion

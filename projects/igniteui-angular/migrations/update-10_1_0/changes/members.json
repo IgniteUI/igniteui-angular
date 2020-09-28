@@ -4,7 +4,11 @@
         {
             "member": "selectedRows()",
             "replaceWith": "selectedRows",
-            "definedIn": "IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent"
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
         }
     ]
 }

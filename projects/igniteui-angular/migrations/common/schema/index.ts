@@ -39,7 +39,7 @@ export interface MemberChange extends Pick<ChangeAction, 'replaceWith'> {
     /** The full definition of a member */
     member: string;
     /** The class/interface that this member belongs to */
-    definedIn: string;
+    definedIn: string[];
 }
 export interface MemberChanges {
     /** An array of changes to class members */

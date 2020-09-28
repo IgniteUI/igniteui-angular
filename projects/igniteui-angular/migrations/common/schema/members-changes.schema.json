@@ -5,7 +5,10 @@
             "properties": {
                 "definedIn": {
                     "description": "The class/interface that this member belongs to",
-                    "type": "string"
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
                 },
                 "member": {
                     "description": "The full definition of a member",
