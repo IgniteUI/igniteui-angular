@@ -445,6 +445,11 @@ export class AppComponent implements OnInit {
             name: 'Tree Grid Load On Demand'
         },
         {
+            link: '/treeGridAddRow',
+            icon: 'view_column',
+            name: 'TreeGrid Add Row'
+        },
+        {
             link: '/dateRange',
             icon: 'date_range',
             name: 'DateRange'
