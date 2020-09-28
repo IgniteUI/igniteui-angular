@@ -139,7 +139,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public changeYearKB(event, next = true) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.stopPropagation();
-            next ? this.nextYear(event) :  this.previousYear(event);
+            next ? this.nextYear() :  this.previousYear();
         }
     }
 
@@ -173,8 +173,6 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         if (!value) {
             return new Date();
         }
-
-        // TO DO: to be refactored after discussion on the desired behavior
         super.selectDate(value);
         this.viewDate = value;
     }
@@ -183,8 +181,6 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      * @hidden
      */
     public writeValue(value: Date) {
-
-        // TO DO: to be refactored after discussion on the desired behavior
         if (value) {
             this.viewDate = this.selectedDates = value;
         }
@@ -196,6 +192,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     @HostListener('keydown.pageup', ['$event'])
     public previousYear(event?: KeyboardEvent) {
         event?.preventDefault();
+        if (event && this.yearAction === 'next') { return; }
         this.yearAction = 'prev';
         this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
     }
@@ -206,6 +203,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     @HostListener('keydown.pagedown', ['$event'])
     public nextYear(event?: KeyboardEvent) {
         event?.preventDefault();
+        if (event && this.yearAction === 'prev') { return; }
         this.yearAction = 'next';
         this.viewDate = this.calendarModel.getNextYear(this.viewDate);
     }
