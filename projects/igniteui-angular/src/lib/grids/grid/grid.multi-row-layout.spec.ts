@@ -1168,7 +1168,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fix.detectChanges();
 
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
-        
+
         const row = grid.getRowByIndex(NAVIGATE);
         expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
     }));
