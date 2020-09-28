@@ -55,13 +55,6 @@ export class IgxRowEditTabStopDirective {
 
     @HostListener('keydown.Enter', ['$event'])
     public handleEnter(event: KeyboardEvent): void {
-        const commit = this.grid.rowEditTabs.first === this ? false : true;
-
-        const canceled = this.grid.endEdit(commit, event);
-        if (!canceled) {
-            this.grid.tbody.nativeElement.focus();
-        }
-
         event.stopPropagation();
     }
 

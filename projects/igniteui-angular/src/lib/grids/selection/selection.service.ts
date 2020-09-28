@@ -267,7 +267,7 @@ export class IgxGridCRUDService {
             return false;
         }
 
-        if (this.rowEditingBlocked || this.cellEditingBlocked) {
+        if (this.rowEditingBlocked && this.cellEditingBlocked) {
             return true;
         }
 
