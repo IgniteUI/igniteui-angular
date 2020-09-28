@@ -435,6 +435,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this._pipeTrigger++;
     }
 
+   protected findRecordIndexInView(rec) {
+        return this.dataView.findIndex(x => x.data === rec);
+    }
+
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -615,10 +619,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         return {
-            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+            $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false,
+            addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
         };
     }
 
@@ -664,6 +669,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
+    }
+
+    public getEmptyRecordObjectFor(rec) {
+        const row = {...rec};
+        row.data = {... rec.data};
+        Object.keys(row.data).forEach(key => {
+            // persist foreign key if one is set.
+            if (this.foreignKey && key === this.foreignKey) {
+                row.data[key] = rec.data[key];
+            } else {
+                row.data[key] = undefined;
+            }
+        });
+        return row;
     }
 
     protected writeToData(rowIndex: number, value: any) {

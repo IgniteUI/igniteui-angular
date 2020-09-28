@@ -6525,9 +6525,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         if (commit) {
-            this.onRowAdded.subscribe(rowData => {
+            this.onRowAdded.pipe(first()).subscribe(rowData => {
             // A check whether the row is in the current view
-            const index = this.dataView.findIndex(data => data === rowData);
+            const index = this.findRecordIndexInView(rowData);
             const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
             const showIndex = shouldScroll ? index : -1;
             this.showSnackbarFor(showIndex);
@@ -6560,6 +6560,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.tbody.nativeElement.focus();
         }
     }
+
+    protected findRecordIndexInView(rec) {
+        return this.dataView.findIndex(data => data === rec);
+    }
+
     /**
      * @hidden
      */
@@ -6715,5 +6720,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             advancedFilteringDialog.closeDialog();
         }
+    }
+
+    public getEmptyRecordObjectFor(rec) {
+        const row = {...rec};
+        Object.keys(row).forEach(key => row[key] = undefined);
+        return row;
     }
 }

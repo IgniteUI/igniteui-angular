@@ -118,6 +118,18 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * Getter if the row is root.
+     * @hidden
+     * @internal
+     */
+    get isRootRow() : boolean {
+        if (!this.isRow(this.strip.context)) {
+            return false;
+        }
+        return this.strip.context.isRoot;
+    }
+
+    /**
      * @hidden
      * @internal
      */
