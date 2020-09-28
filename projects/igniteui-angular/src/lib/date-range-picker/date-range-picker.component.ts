@@ -605,7 +605,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.subscribeToDateEditorEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
-        this.updateDisabledState();
         this.cacheFocusedInput();
         this.attachOnTouched();
 
@@ -624,9 +623,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
 
-        // delay the invocation of initialSetValue
-        // until the current change detection cycle has completed
+        // delay invocations until the current change detection cycle has completed
         Promise.resolve().then(() => {
+            this.updateDisabledState();
             this.initialSetValue();
             this.updateInputs();
         });
