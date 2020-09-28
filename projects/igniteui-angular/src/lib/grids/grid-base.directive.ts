@@ -4213,6 +4213,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the data that is contained in the row component.
+     * @remarks
+     * If the primary key is not specified the row selector match the row data.
+     * @example
+     * ```typescript
+     * const data = grid.getRowData(94741);
+     * ```
+     * @param rowSelector correspond to rowID
+     */
+    public getRowData(rowSelector: any) {
+        if (!this.primaryKey) {
+            return rowSelector;
+        }
+        const data = this.gridAPI.get_all_data(this.transactions.enabled);
+        const index = this.gridAPI.get_row_index_in_data(rowSelector);
+        return index < 0 ? {} : data[index];
+    }
+
+    /**
      * Sort a single `IgxColumnComponent`.
      * @remarks
      * Sort the `IgxGridComponent`'s `IgxColumnComponent` based on the provided array of sorting expressions.
