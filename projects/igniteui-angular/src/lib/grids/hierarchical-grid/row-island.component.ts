@@ -36,7 +36,7 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/public_api';
-import { delay, takeUntil } from 'rxjs/operators';
+import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
@@ -319,10 +319,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.rootGrid.hgridAPI.registerChildRowIsland(this);
         }
         this._init = false;
-        this.onGridCreated.pipe(delay(0), takeUntil(this.destroy$)).subscribe(e => {
-            if (this.islandToolbarTemplate) {
-                e.grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: e.grid });
-            }
+
+        // Create the child toolbar if the parent island has a toolbar definition
+        this.onGridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
+            grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
+                .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
         });
     }
 
