@@ -4,42 +4,34 @@ import { IgxColumnComponent } from '../columns/column.component';
 @Directive()
 export abstract class IgxColumnActionsBaseDirective {
 
-    /**
-     * @hidden @internal
-     */
+    /** @hidden @internal */
     public actionEnabledColumnsFilter: (
         value: IgxColumnComponent,
         index: number,
         array: IgxColumnComponent[]
     ) => boolean;
 
-    /**
-     * @hidden @internal
-     */
+    /** @hidden @internal */
     public checkAllLabel: string;
 
-    /**
-     * @hidden @internal
-     */
+    /** @hidden @internal */
     public uncheckAllLabel: string;
 
-    /**
-     * @hidden @internal
-     */
+    /** @hidden @internal */
     public abstract columnChecked(column: IgxColumnComponent): boolean;
 
-    /**
-     * @hidden @internal
-     */
-    public abstract toggleColumn(column: IgxColumnComponent);
+    /** @hidden @internal */
+    public abstract toggleColumn(column: IgxColumnComponent): void;
 
-    /**
-     * @hidden @internal
-     */
-    public abstract uncheckAll();
+    /** @hidden @internal */
+    public abstract uncheckAll(): void;
 
-    /**
-     * @hidden @internal
-     */
-    public abstract checkAll();
+    /** @hidden @internal */
+    public abstract checkAll(): void;
+
+    /** @hidden @internal */
+    public abstract get allChecked(): boolean;
+
+    /** @hidden @internal */
+    public abstract get allUnchecked(): boolean;
 }

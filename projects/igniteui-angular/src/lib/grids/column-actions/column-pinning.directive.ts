@@ -42,7 +42,7 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = c => !c.disablePinning && !c.level;
+    public actionEnabledColumnsFilter = (c: IgxColumnComponent) => !c.disablePinning && !c.level;
 
     /**
      * @hidden @internal
@@ -56,5 +56,13 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
      */
     public toggleColumn(column: IgxColumnComponent) {
         column.pinned = !column.pinned;
+    }
+
+    public get allUnchecked() {
+        return !this.columnActions.filteredColumns.some(col => !this.columnChecked(col));
+    }
+
+    public get allChecked() {
+        return !this.columnActions.filteredColumns.some(col => this.columnChecked(col));
     }
 }
