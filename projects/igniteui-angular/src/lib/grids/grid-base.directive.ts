@@ -30,7 +30,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
+import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -2567,6 +2567,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
+    protected _rendered = new Subject<boolean>();
+
+    /** Emitted after the ngAfterViewInit hook. At this point the grid exists in the DOM */
+    public rendered$ = this._rendered.asObservable().pipe(shareReplay(1));
+
     abstract data: any[];
     abstract filteredData: any[];
 
@@ -3262,6 +3267,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.navigateTo(this.lastAddedRowId, 0);
             this.addRowSnackbar.hide();
         });
+
+
+        Promise.resolve(null).then(() => this._rendered.next(true));
     }
 
     /**
