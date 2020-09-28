@@ -54,6 +54,13 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
+     * @hidden
+     */
+    public get hasChildren(): boolean {
+        return true;
+    }
+
+    /**
      * Sets whether the row is pinned.
      * Default value is `false`.
      * ```typescript

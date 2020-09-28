@@ -4055,13 +4055,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public beginAddRowByIndex(rowID: any, index: number) {
+    public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
         this.endEdit(true);
         this.cancelAddMode = false;
 
         this.addRowParent = {
             rowID: rowID,
-            index: index
+            index: index,
+            asChild: asChild
         };
         this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
             this.cdr.detectChanges();

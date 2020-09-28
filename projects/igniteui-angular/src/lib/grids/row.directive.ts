@@ -217,6 +217,13 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
+    public get hasChildren(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this.grid.unpinnedColumns;
     }
