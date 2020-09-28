@@ -34,7 +34,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         public element: ElementRef,
         public cdr: ChangeDetectorRef,
         public filteringService: IgxFilteringService) {
-        this.gridAPI.grid.onRowSelectionChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.cdr.markForCheck();
         });
     }

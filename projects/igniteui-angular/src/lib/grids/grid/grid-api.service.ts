@@ -35,7 +35,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         const sortingState = cloneArray(this.grid.sortingExpressions);
 
         if (name) {
-            const names = typeof name === 'string' ? [ name ] : name;
+            const names = typeof name === 'string' ? [name] : name;
             const groupedCols = groupingState.filter((state) => names.indexOf(state.fieldName) < 0);
             const newSortingExpr = sortingState.filter((state) => names.indexOf(state.fieldName) < 0);
             this.grid.groupingExpressions = groupedCols;
@@ -43,15 +43,15 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
             names.forEach((colName) => {
                 const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
                 const grpExpandState = this.grid.groupingExpansionState;
-                 /* remove expansion states related to the cleared group
-                    and all with deeper hierarchy than the cleared group */
+                /* remove expansion states related to the cleared group
+                   and all with deeper hierarchy than the cleared group */
                 const newExpandState = grpExpandState.filter((val) => {
                     return val.hierarchy && val.hierarchy.length <= grExprIndex;
                 });
                 /* Do not set the new instance produced by filter
                     when there are no differences between expansion states */
                 if (newExpandState.length !== grpExpandState.length) {
-                   this.grid.groupingExpansionState = newExpandState;
+                    this.grid.groupingExpansionState = newExpandState;
                 }
             });
         } else {
@@ -117,6 +117,14 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         if (groupRow.groupParent) {
             this.groupBy_fully_expand_group(groupRow.groupParent);
         }
+    }
+
+    public groupBy_select_all_rows_in_group(groupRow: IGroupByRecord, clearPrevSelection) {
+        this.grid.selectionService.selectRowsWithNoEvent(groupRow.records, clearPrevSelection);
+    }
+
+    public groupBy_deselect_all_rows_in_group(groupRow: IGroupByRecord) {
+        this.grid.selectionService.deselectRowsWithNoEvent(groupRow.records);
     }
 
     protected remove_grouping_expression(fieldName) {

@@ -501,7 +501,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public detailsViewFocused(container, rowIndex) {
-        this.navigation.setActiveNode({row: rowIndex});
+        this.navigation.setActiveNode({ row: rowIndex });
     }
 
     /**
@@ -519,8 +519,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             return this.defaultGroupTemplate;
         } else if (this.isSummaryRow(rowData)) {
             return this.summaryTemplate;
-        }  else if (this.hasDetails && this.isDetailRecord(rowData)) {
-                return this.detailTemplateContainer;
+        } else if (this.hasDetails && this.isDetailRecord(rowData)) {
+            return this.detailTemplateContainer;
         } else {
             return this.recordTemplate;
         }
@@ -629,7 +629,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public preventHeaderScroll(args) {
         if (args.target.scrollLeft !== 0) {
-            (this.navigation as any).forOfDir().getScroll().scrollLeft =  args.target.scrollLeft;
+            (this.navigation as any).forOfDir().getScroll().scrollLeft = args.target.scrollLeft;
             args.target.scrollLeft = 0;
         }
     }
@@ -659,6 +659,34 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public toggleGroup(groupRow: IGroupByRecord) {
         this._toggleGroup(groupRow);
+        this.notifyChanges();
+    }
+
+    /**
+     * Select all rows within a group.
+     * @param groupRow: The group record which rows would be selected.
+     * @param clearCurrentSelection if true clears the current selection
+     * @example
+     * ```typescript
+     * this.grid.selectAllRowsInGroup(this.groupRow, true);
+     * ```
+     */
+    public selectAllRowsInGroup(groupRow: IGroupByRecord, clearPrevSelection?: boolean) {
+        this._gridAPI.groupBy_select_all_rows_in_group(groupRow, clearPrevSelection);
+        this.notifyChanges();
+    }
+
+    /**
+     * Deselect all rows within a group.
+     * @param groupRow The group record which rows would be deselected.
+     * @example
+     * ```typescript
+     * public groupRow: IGroupByRecord;
+     * this.grid.deselectAllRowsInGroup(this.groupRow);
+     * ```
+     */
+    public deselectAllRowsInGroup(groupRow: IGroupByRecord) {
+        this._gridAPI.groupBy_deselect_all_rows_in_group(groupRow);
         this.notifyChanges();
     }
 
@@ -931,7 +959,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
-            && typeof(row) !== 'number') {
+            && typeof (row) !== 'number') {
             const rowIndex = this.groupingResult.indexOf(row);
             const groupByRecord = this.groupingMetadata[rowIndex];
             if (groupByRecord) {
