@@ -25,6 +25,9 @@ export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
      */
     public uncheckAllLabel = 'Ungroup All';
 
+    public get allUnchecked() { return false; }
+    public get allChecked() { return false; }
+
     /**
      * @hidden @internal
      */

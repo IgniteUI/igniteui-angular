@@ -3,7 +3,9 @@
 <igx-hierarchical-grid #grid1 displayDensity="cosy" [data]="remoteData" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
     <igx-grid-toolbar>
         <igx-grid-toolbar-title>Parent Toolbar</igx-grid-toolbar-title>
-        <igx-grid-toolbar-actions></igx-grid-toolbar-actions>
+        <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+        </igx-grid-toolbar-actions>
     </igx-grid-toolbar>
     <igx-column field="CustomerID"></igx-column>
     <igx-column field="CompanyName"></igx-column>

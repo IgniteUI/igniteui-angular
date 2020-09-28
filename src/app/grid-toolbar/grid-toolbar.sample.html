@@ -2,23 +2,26 @@
     <article class="grid-sample">
         <h4 class="sample-title">Toolbar</h4>
 
-        <igx-grid #grid1 displayDensity="compact" [data]="data" [allowAdvancedFiltering]="true" [autoGenerate]="true" height="500px" width="600px" (onColumnInit)="initColumns($event)" [allowFiltering]="true">
+        <igx-grid #grid1 displayDensity="compact" [data]="data" [allowAdvancedFiltering]="true" [autoGenerate]="false" height="500px" width="600px" (onColumnInit)="initColumns($event)" [allowFiltering]="true">
 
             <igx-grid-toolbar *ngIf="showToolbar" [showProgress]="showProgress" [displayDensity]="grid1.displayDensity">
                 <img *ngIf="customContent" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQjLxyJgjnweUFqmVzds_myRIKFmNBxLs-E0A&usqp=CAU" alt="">
                 <igx-grid-toolbar-title>{{ title }}</igx-grid-toolbar-title>
 
                 <igx-grid-toolbar-actions>
-                   <igx-grid-toolbar-pinning *ngIf="pinningEnabled"  columnListHeight="150px"></igx-grid-toolbar-pinning>
+                   <igx-grid-toolbar-pinning *ngIf="pinningEnabled"></igx-grid-toolbar-pinning>
                    <igx-grid-toolbar-hiding *ngIf="hidingEnabled"></igx-grid-toolbar-hiding>
-                    <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                    <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
                     <igx-grid-toolbar-exporter [exportCSV]="csv" [exportExcel]="excel">
-                        <span excelText>Haha Angular go BRRRRR</span>
-                        <h3 csvText>comma separated values</h3>
+                        <h5 excelText>Transform to Excel 👌</h5>
+                        <h5 csvText>Transform to CSV 👍</h5>
                     </igx-grid-toolbar-exporter>
                 </igx-grid-toolbar-actions>
 
             </igx-grid-toolbar>
+
+            <igx-column field="Name" [disableHiding]="true"></igx-column>
+            <igx-column field="Age"></igx-column>
 
         </igx-grid>
 
