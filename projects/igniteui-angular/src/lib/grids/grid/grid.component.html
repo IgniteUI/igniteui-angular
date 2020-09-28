@@ -296,8 +296,8 @@
 </ng-template>
 
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event, true)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event, false)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, Host, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
 import { GridType } from './common/grid.interface';
 
@@ -51,6 +51,18 @@ export class IgxRowEditTabStopDirective {
     public handleEscape(event: KeyboardEvent): void {
         this.grid.endEdit(false, event);
         this.grid.tbody.nativeElement.focus();
+    }
+
+    @HostListener('keydown.Enter', ['$event'])
+    public handleEnter(event: KeyboardEvent): void {
+        const commit = this.grid.rowEditTabs.first === this ? false : true;
+
+        const canceled = this.grid.endEdit(commit, event);
+        if (!canceled) {
+            this.grid.tbody.nativeElement.focus();
+        }
+
+        event.stopPropagation();
     }
 
     /**

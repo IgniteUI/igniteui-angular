@@ -1648,7 +1648,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             cell.editValue = 'new Value';
-            grid.endRowEdit(true, null, false);
+            grid.endRowEdit(true, null);
             fix.detectChanges();
         });
 
@@ -1736,7 +1736,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const newRowData = {ProductName: 'new product name', ReorderLevel: 20};
             grid.updateRow(newRowData, 0);
 
-            grid.endRowEdit(true, null, false);
+            grid.endRowEdit(true, null);
             fix.detectChanges();
 
             const rowData = Object.assign(cell.row.rowData, newRowData);
@@ -1744,7 +1744,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
 
-            grid.endRowEdit(false, null, true);
+            grid.endRowEdit(false, null);
             fix.detectChanges();
 
             expect(grid.crudService.rowInEditMode).toEqual(false);

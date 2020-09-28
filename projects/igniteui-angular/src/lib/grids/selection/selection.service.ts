@@ -189,6 +189,10 @@ export class IgxGridCRUDService {
         return this._rowEditingBlocked;
     }
 
+    set rowEditingBlocked(val: boolean) {
+        this._rowEditingBlocked = val;
+    }
+
     public enterEditMode(cell) {
         if (this.isInCompositionMode) {
             return;
@@ -225,11 +229,11 @@ export class IgxGridCRUDService {
     public beginRowEdit(newCell) {
         if (this.row && !this.sameRow(newCell.id.rowID)) {
             this._rowEditingBlocked = this.grid.endEdit(true);
-            this.cell = newCell;
             if (this.rowEditingBlocked) {
                 return true;
             }
 
+            this.cell = newCell;
             this._rowEditingBlocked = false;
             this.endRowEdit();
         }
@@ -263,7 +267,7 @@ export class IgxGridCRUDService {
             return false;
         }
 
-        if (this.rowEditingBlocked && this.cellEditingBlocked) {
+        if (this.rowEditingBlocked || this.cellEditingBlocked) {
             return true;
         }
 
@@ -297,7 +301,7 @@ export class IgxGridCRUDService {
 
     }
 
-    /** Exit cell edit mode and submit it's value if necessary */
+    /** Exit cell edit mode */
     public exitCellEdit(): boolean {
         if (!this.cell) {
             return false;
@@ -347,7 +351,7 @@ export class IgxGridCRUDService {
         return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
     }
 
-    isInAddMode(rowIndex: number, columnIndex: number): boolean {
+    public isInAddMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
             return false;
         }
