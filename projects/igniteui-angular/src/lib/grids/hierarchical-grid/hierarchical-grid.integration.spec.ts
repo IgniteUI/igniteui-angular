@@ -225,6 +225,26 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
         }));
+
+        it('should return correctly the rowData', () => {
+            hierarchicalGrid.primaryKey = 'ID';
+            fixture.detectChanges();
+
+            const rowData = hierarchicalGrid.getRowByKey('2').rowData;
+            expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
+
+            hierarchicalGrid.sort({ fieldName: 'ChildLevels', dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
+            expect(hierarchicalGrid.getRowData('101')).toEqual({});
+
+            hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('startsWith'));
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
+            expect(hierarchicalGrid.getRowData('101')).toEqual({});
+        });
     });
 
     describe('Sorting', () => {
@@ -730,10 +750,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            let childHeader = GridFunctions.getColumnGroupHeaders(fixture)[4];
+            let childHeader = GridFunctions.getColumnHeaders(fixture)[3];
             const firstHeaderIcon = childHeader.query(By.css('.igx-icon'));
 
-            expect(GridFunctions.isHeaderPinned(childHeader)).toBeFalsy();
+            expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeFalsy();
             expect(childGrid.columnList.first.pinned).toBeFalsy();
             expect(firstHeaderIcon).toBeDefined();
 
@@ -741,9 +761,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             tick();
 
-            childHeader = GridFunctions.getColumnGroupHeaders(fixture)[4];
+            childHeader = GridFunctions.getColumnHeaders(fixture)[3];
             expect(childGrid.columnList.first.pinned).toBeTruthy();
-            expect(GridFunctions.isHeaderPinned(childHeader)).toBeTruthy();
+            expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeTruthy();
         }));
 
         it('should be applied correctly for child grid with multi-column header.', fakeAsync(() => {

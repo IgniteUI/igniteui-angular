@@ -696,6 +696,10 @@
         indigo-design: 600,
     ), $variant);
 
+    %disable-focus-styles {
+        outline: 0;
+    }
+
     %grid-display {
         position: relative;
         display: grid;
@@ -703,7 +707,7 @@
         grid-template-columns: 1fr;
         overflow: hidden;
         box-shadow: $grid-shadow;
-        
+
         @if $variant == 'fluent' {
             box-shadow: 0 0 0 1px --var($theme, 'grid-border-color');
         }
@@ -1139,16 +1143,19 @@
     %igx-grid__td--bool {
         justify-content: center;
 
-        igx-icon {
+        %igx-icon-display {
             height: rem(18px);
             width: rem(18px);
             font-size: rem(18px);
+        }
+
+        %igx-icon--error {
             color: igx-color($palette, 'grays', 500);
         }
     }
 
     %igx-grid__td--bool-true {
-        igx-icon {
+        %igx-icon--success {
             color: igx-color($palette, 'grays', 700);
         }
     }
@@ -2326,6 +2333,13 @@
             /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
             position: absolute;
         }
+    }
+
+    %igx-grid__addrow-snackbar {
+        position: absolute;
+        z-index: 5;
+        left: 35%;
+        bottom: 25%;
     }
 
     %igx-grid__filtering-cell {

@@ -2566,7 +2566,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterUIRow).not.toBeNull();
 
             // Click on a column with custom filter
-            const header = GridFunctions.getColumnHeaderByIndex(fix, 1);
+            const header = GridFunctions.getColumnHeaderTitleByIndex(fix, 1);
             header.click();
             fix.detectChanges();
 
@@ -3202,16 +3202,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
             tick(100);
             fix.detectChanges();
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ID');
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ProductName');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
             expect(productNameCol.pinned).toBe(true);
 
             // Move 'ProductName' one step to the left. (should move)
             GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
             tick(100);
             fix.detectChanges();
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ID');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ID');
             expect(productNameCol.pinned).toBe(true);
 
             // Try move 'ProductName' one step to the left. (Button should be disabled since it's already first)
@@ -3225,8 +3225,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickMoveRightInExcelStyleFiltering(fix);
             tick(100);
             fix.detectChanges();
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ID');
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('ProductName');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ID');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('ProductName');
             expect(productNameCol.pinned).toBe(false);
         }));
 
@@ -3237,8 +3237,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             productNameCol.pinned = true;
             downloadsCol.movable = true;
             fix.detectChanges();
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 2).innerText).toBe('Downloads');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 2).innerText).toBe('Downloads');
             expect(downloadsCol.pinned).toBe(false);
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
@@ -3250,8 +3250,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 1).innerText).toBe('Downloads');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 0).innerText).toBe('ProductName');
+            expect(GridFunctions.getColumnHeaderTitleByIndex(fix, 1).innerText).toBe('Downloads');
             expect(downloadsCol.pinned).toBe(true);
         }));
 
