@@ -76,8 +76,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
         if (!super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex)) { return false; }
-        if (!this.isDataRow(targetRowIndex) || visibleColIndex < 0) { 
-            return super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex); 
+        if (!this.isDataRow(targetRowIndex) || visibleColIndex < 0) {
+            return super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex);
         }
 
         const targetRow = super.getRowElementByIndex(targetRowIndex);
@@ -146,7 +146,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex: number, cb?: () => void) {
         const children = this.parentByChildIndex(visibleColIndex || 0)?.children;
-        if (!super.isDataRow(rowIndex) || (children && children.length < 2)) {
+        if (!super.isDataRow(rowIndex) || (children && children.length < 2) || visibleColIndex < 0) {
             return super.performVerticalScrollToCell(rowIndex, visibleColIndex, cb);
         }
 
