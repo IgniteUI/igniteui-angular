@@ -53,7 +53,9 @@ describe('igxActionStrip', () => {
                 ],
                 imports: [
                     IgxActionStripModule,
-                    IgxIconModule
+                    IgxIconModule,
+                    NoopAnimationsModule,
+                    IgxToggleModule
                 ]
             }).compileComponents();
         }));
