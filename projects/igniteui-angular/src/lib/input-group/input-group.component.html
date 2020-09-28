@@ -4,7 +4,7 @@
 
 <div class="igx-input-group__border" *ngIf="hasBorder"></div>
 
-<div class="igx-input-group__hint" onclick="event.stopPropagation()">
+<div class="igx-input-group__hint" (click)="onEvent($event)">
     <ng-content select="igx-hint, [igxHint]"></ng-content>
 </div>
 
