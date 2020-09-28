@@ -122,7 +122,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    get isRootRow() : boolean {
+    get isRootRow(): boolean {
         if (!this.isRow(this.strip.context)) {
             return false;
         }
