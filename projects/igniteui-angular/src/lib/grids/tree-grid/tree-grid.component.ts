@@ -495,56 +495,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        if (parentRowID !== undefined && parentRowID !== null) {
-            super.endEdit(true);
-
-            const state = this.transactions.getState(parentRowID);
-            // we should not allow adding of rows as child of deleted row
-            if (state && state.type === TransactionType.DELETE) {
-                throw Error(`Cannot add child row to deleted parent row`);
-            }
-
-            const parentRecord = this.records.get(parentRowID);
-
-            if (!parentRecord) {
-                throw Error('Invalid parent row ID!');
-            }
-            this.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
-            if (this.primaryKey && this.foreignKey) {
-                data[this.foreignKey] = parentRowID;
-                super.addRow(data);
-            } else {
-                const parentData = parentRecord.data;
-                const childKey = this.childDataKey;
-                if (this.transactions.enabled) {
-                    const rowId = this.primaryKey ? data[this.primaryKey] : data;
-                    const path: any[] = [];
-                    path.push(...this.generateRowPath(parentRowID));
-                    path.push(parentRowID);
-                    this.transactions.add({
-                        id: rowId,
-                        path: path,
-                        newValue: data,
-                        type: TransactionType.ADD
-                    } as HierarchicalTransaction,
-                        null);
-                } else {
-                    if (!parentData[childKey]) {
-                        parentData[childKey] = [];
-                    }
-                    parentData[childKey].push(data);
-                }
-                this.onRowAdded.emit({ data });
-                this._pipeTrigger++;
-                this.notifyChanges();
-            }
-        } else {
-            if (this.primaryKey && this.foreignKey) {
-                const rowID = data[this.foreignKey];
-                this.summaryService.clearSummaryCache({rowID: rowID});
-            }
-            super.addRow(data);
-        }
+        super.endEdit(true);
+        this.gridAPI.addRowToData(data, parentRowID);
     }
 
     /** @hidden */

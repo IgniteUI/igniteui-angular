@@ -6534,7 +6534,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
-            this.gridAPI.addRowToData(row.data);
+            this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
             this.crudService.endRowEdit();
             this.addRowParent = null;
         } else {
