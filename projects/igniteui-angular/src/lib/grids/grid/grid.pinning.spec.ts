@@ -191,18 +191,18 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             it('should correctly initialize pinned columns z-index values.', () => {
 
-                const headers = GridFunctions.getColumnGroupHeaders(fix);
+                const headers = GridFunctions.getColumnHeaders(fix);
 
                 // First two headers are pinned
-                expect(headers[0].componentInstance.zIndex).toEqual(9999);
-                expect(headers[1].componentInstance.zIndex).toEqual(9998);
+                expect(headers[0].parent.componentInstance.zIndex).toEqual(9999);
+                expect(headers[1].parent.componentInstance.zIndex).toEqual(9998);
 
                 grid.pinColumn('Region');
                 fix.detectChanges();
 
                 // First three headers are pinned
-                const secondColumnGroupHeader = GridFunctions.getColumnGroupHeaders(fix)[2];
-                expect(secondColumnGroupHeader.componentInstance.zIndex).toEqual(9997);
+                const secondColumnGroupHeader = GridFunctions.getColumnHeaders(fix)[2];
+                expect(secondColumnGroupHeader.parent.componentInstance.zIndex).toEqual(9997);
             });
 
             it('should not pin/unpin columns which are already pinned/unpinned', () => {

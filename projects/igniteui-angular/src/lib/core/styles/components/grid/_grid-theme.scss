@@ -696,6 +696,10 @@
         indigo-design: 600,
     ), $variant);
 
+    %disable-focus-styles {
+        outline: 0;
+    }
+
     %grid-display {
         position: relative;
         display: grid;
@@ -2331,6 +2335,13 @@
             /* Change wrapper position from 'fixed' to 'absolute' so that it is hidden when scrolled below the parent grid body content. */
             position: absolute;
         }
+    }
+
+    %igx-grid__addrow-snackbar {
+        position: absolute;
+        z-index: 5;
+        left: 35%;
+        bottom: 25%;
     }
 
     %igx-grid__filtering-cell {

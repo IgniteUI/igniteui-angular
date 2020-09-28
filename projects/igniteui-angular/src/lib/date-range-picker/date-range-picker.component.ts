@@ -927,10 +927,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private configPositionStrategy(): void {
         this._positionSettings = {
             openAnimation: fadeIn,
-            closeAnimation: fadeOut,
-            target: this.element.nativeElement
+            closeAnimation: fadeOut
         };
         this._dropDownOverlaySettings.positionStrategy = new AutoPositionStrategy(this._positionSettings);
+        this.dropdownOverlaySettings.target = this.element.nativeElement;
     }
 
     private configOverlaySettings(): void {

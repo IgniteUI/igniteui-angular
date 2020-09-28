@@ -37,6 +37,7 @@ Then initialize the overlay settings, only if you need some different from defau
 
 ```typescript
 overlaySettings: OverlaySettings = {
+    target: new Point(0, 0),
     positionStrategy: new GlobalPositionStrategy(),
     scrollStrategy: new NoOpScrollStrategy(),
     modal: true,
@@ -64,6 +65,7 @@ this.overlay.show(component, overlaySettings);
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
+| target              | Point | HTMLElement                     | Attaching target for the component to show          |
 | positionStrategy    | IPositionStrategy                       | Position strategy to use with this settings         | 
 | scrollStrategy      | IScrollStrategy                         | Scroll strategy to use with this settings           |
 | modal               | boolean                                 | Set if the overlay should be in modal mode          |
@@ -74,7 +76,6 @@ this.overlay.show(component, overlaySettings);
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-|target              | Point | HTMLElement                     | Attaching target for the component to show          |
 |horizontalDirection | HorizontalAlignment                     | Direction in which the component should show        |
 |verticalDirection   | VerticalAlignment                       | Direction in which the component should show        |
 |horizontalStartPoint| HorizontalAlignment                     | Target's starting point                             |

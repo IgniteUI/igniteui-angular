@@ -30,6 +30,10 @@
         igx-display-container {
             @extend %grid-display-container-thead !optional;
         }
+
+        &:focus {
+            @extend %disable-focus-styles !optional;
+        }
     }
 
     @include e(thead-title) {
@@ -64,6 +68,10 @@
 
     @include e(tbody-content) {
         @extend %grid-tbody !optional;
+
+        &:focus {
+            @extend %disable-focus-styles !optional;
+        }
     }
 
     @include e(tbody-message) {
@@ -104,6 +112,10 @@
 
     @include e(tfoot) {
         @extend %grid-tfoot !optional;
+
+        &:focus {
+            @extend %disable-focus-styles !optional;
+        }
     }
 
     @include e(tfoot-thumb) {
@@ -530,6 +542,10 @@
 
     @include e(row-editing-outlet) {
         @extend %igx-grid__row-editing-outlet !optional;
+    }
+
+    @include e(addrow-snackbar) {
+        @extend %igx-grid__addrow-snackbar !optional;
     }
 
     @include e(filtering-cell) {

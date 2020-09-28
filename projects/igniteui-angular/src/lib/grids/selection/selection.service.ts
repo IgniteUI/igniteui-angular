@@ -54,6 +54,7 @@ export class IgxRow {
     transactionState: any;
     state: any;
     newData: any;
+    isAddRow: boolean;
 
     constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
@@ -196,7 +197,21 @@ export class IgxGridCRUDService {
         this.row = null;
     }
 
+    beginAddRow(cell) {
+        const newCell = this.createCell(cell);
+        newCell.primaryKey = this.primaryKey;
+        cell.enterAddMode = true;
+        this.cell = newCell;
+        this.row = this.createRow(this.cell);
+        this.row.isAddRow = true;
+        this.grid.openRowOverlay(this.row.id);
+    }
+
     begin(cell): void {
+        if (cell.row.addRow) {
+            this.beginAddRow(cell);
+            return;
+        }
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
         const args = newCell.createEditEventArgs(false);
@@ -262,6 +277,13 @@ export class IgxGridCRUDService {
     }
 
     isInEditMode(rowIndex: number, columnIndex: number): boolean {
+        if (!this.cell) {
+            return false;
+        }
+        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+    }
+
+    isInAddMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
             return false;
         }

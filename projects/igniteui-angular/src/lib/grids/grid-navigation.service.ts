@@ -293,7 +293,13 @@ export class IgxGridNavigationService {
         event.preventDefault();
         if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
-            this.grid.gridAPI.submit_value();
+            if (this.grid.crudService.row?.isAddRow) {
+                this.grid.gridAPI.submit_add_value();
+                const row = this.grid.rowList.find(r => r.rowID === this.grid.crudService.row.id);
+                row.rowData = this.grid.crudService.row.data;
+            } else {
+                this.grid.gridAPI.submit_value();
+            }
             shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
             return;
