@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { InteractionMode } from '../core/enums';
@@ -206,7 +206,7 @@ describe('IgxDateRangePicker', () => {
         describe('Single Input', () => {
             let singleInputElement: DebugElement;
             configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeAll(async(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
@@ -640,7 +640,7 @@ describe('IgxDateRangePicker', () => {
             let startInput: DebugElement;
             let endInput: DebugElement;
             configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeAll(async(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
@@ -998,7 +998,7 @@ describe('IgxDateRangePicker', () => {
 
         describe('Rendering', () => {
             configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            beforeAll(async(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
@@ -1157,7 +1157,8 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [disabled]="disabled" [(ngModel)]="range" [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
+    <igx-date-range-picker [mode]="mode" [disabled]="disabled" [(ngModel)]="range"
+        [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
             <igx-date-range-start>
                 <igx-picker-toggle igxPrefix>
                     <igx-icon>calendar_view_day</igx-icon>
