@@ -40,6 +40,17 @@ export class IgxGridActionButtonComponent {
     public iconName: string;
 
     /**
+     * Additional Menu item container element classes.
+     */
+    @Input()
+    public classNames: string;
+
+    /** @hidden @internal */
+    get containerClass(): string {
+        return 'igx-action-strip__menu-button ' + (this.classNames || '');
+    }
+
+    /**
      * The name of the icon set. Used in case the icon is from a different icon set.
      */
     @Input()

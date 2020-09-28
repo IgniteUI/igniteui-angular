@@ -3,6 +3,6 @@
     <igx-grid-action-button *ngIf="!disabled" [asMenuItem]="asMenuItems" iconName="edit" [labelText]="grid.resourceStrings.igx_grid_actions_edit_label" (onActionClick)="startEdit($event)"></igx-grid-action-button>
     <igx-grid-action-button *ngIf="addRow && isRootRow" [asMenuItem]="asMenuItems" iconName="add-row" iconSet="imx-icons" [labelText]="grid.resourceStrings.igx_grid_actions_add_label" (onActionClick)="addRowHandler($event)"></igx-grid-action-button>
     <igx-grid-action-button *ngIf="addChild && hasChildren" [asMenuItem]="asMenuItems" iconName="add-child" iconSet="imx-icons" [labelText]="grid.resourceStrings.igx_grid_actions_add_child_label" (onActionClick)="addRowHandler($event, true)"></igx-grid-action-button>
-    <igx-grid-action-button *ngIf="!disabled" class="igx-action-strip__delete" [asMenuItem]="asMenuItems" iconName="delete" [labelText]="grid.resourceStrings.igx_grid_actions_delete_label" (onActionClick)="deleteRow($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="!disabled" class="igx-action-strip__delete" classNames='igx-action-strip__menu-item--danger' [asMenuItem]="asMenuItems" iconName="delete" [labelText]="grid.resourceStrings.igx_grid_actions_delete_label" (onActionClick)="deleteRow($event)"></igx-grid-action-button>
 </ng-container>
 
