@@ -3552,7 +3552,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify that the first item is 'Select All' and the third item is 'false'.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(3, 'incorrect rendered list items count');
-            expect(listItems[0].innerText).toBe('Select All');
+            expect(listItems[0].innerText).toBe('Select all search results');
             expect(listItems[2].innerText).toBe('false');
         }));
 
