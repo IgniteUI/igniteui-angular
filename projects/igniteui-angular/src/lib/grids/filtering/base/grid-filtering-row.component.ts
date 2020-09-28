@@ -26,6 +26,7 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { IgxFilteringService } from '../grid-filtering.service';
 import { KEYS, isEdge, isIE } from '../../../core/utils';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
+import { DisplayDensity } from '../../../core/displayDensity';
 
 /**
  * @hidden
@@ -108,6 +109,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.filter();
     }
 
+    public get displayDensity() {
+        return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
+    }
+
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
 
@@ -141,8 +146,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChild('closeButton', { static: true })
     public closeButton: ElementRef;
 
-    @HostBinding('class.igx-grid__filtering-row')
-    public cssClass = 'igx-grid__filtering-row';
+    @HostBinding('class')
+    get styleClasses(): string {
+        let classes = 'igx-grid__filtering-row';
+
+        switch (this.column.grid.displayDensity) {
+            case DisplayDensity.compact:
+                classes = classes + ' igx-grid__filtering-row--compact';
+                break;
+            case DisplayDensity.cosy:
+                classes = classes + ' igx-grid__filtering-row--cosy';
+                break;
+        }
+        return classes;
+    }
 
     constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
