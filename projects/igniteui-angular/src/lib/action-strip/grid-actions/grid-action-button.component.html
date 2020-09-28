@@ -8,7 +8,7 @@
     </ng-container>
 
     <ng-container *ngIf="asMenuItem">
-        <div #container class='igx-action-strip__menu-button'>
+        <div #container [className]='containerClass'>
             <igx-icon *ngIf="iconSet" [fontSet]="iconSet" [name]="iconName">{{iconName}}</igx-icon>
             <igx-icon *ngIf="!iconSet" >{{iconName}}</igx-icon>
             <label *ngIf='asMenuItem' igxLabel>{{labelText}}</label>

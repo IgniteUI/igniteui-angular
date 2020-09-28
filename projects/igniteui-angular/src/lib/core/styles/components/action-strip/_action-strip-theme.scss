@@ -157,12 +157,10 @@
     }
 
     %igx-action-strip__menu-item--danger {
-        &%igx-drop-down__item {
-            color: igx-color(map-get($theme, 'palette'), 'error');
+        color: igx-color(map-get($theme, 'palette'), 'error');
 
-            &:hover {
-                color: igx-color(map-get($theme, 'palette'), 'error');
-            }
+        &:hover {
+            color: igx-color(map-get($theme, 'palette'), 'error');
         }
     }
 
