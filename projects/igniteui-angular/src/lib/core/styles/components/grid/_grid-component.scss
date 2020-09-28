@@ -536,6 +536,14 @@
         @extend %igx-grid__filtering-cell !optional;
     }
 
+    @include e(filtering-cell, $m: cosy) {
+        @extend %igx-grid__filtering-cell--cosy !optional;
+    }
+
+    @include e(filtering-cell, $m: compact) {
+        @extend %igx-grid__filtering-cell--compact !optional;
+    }
+
     @include e(filtering-cell, $m: 'selected') {
         @extend %igx-grid__filtering-cell !optional;
         @extend %igx-grid__filtering-cell--selected !optional;
