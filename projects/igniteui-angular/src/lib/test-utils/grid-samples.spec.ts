@@ -1351,7 +1351,8 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
         <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
