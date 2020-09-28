@@ -127,12 +127,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
         esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.isLoading = false;
-            this.displayedListData = esf.listData;
             this.refreshSize();
         });
         esf.initialized.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
-                this.displayedListData = esf.listData;
                 this.searchInput.nativeElement.focus();
 
             });
@@ -140,8 +138,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.virtDir.resetScrollPosition();
         });
-    }
 
+        esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.displayedListData = esf.listData;
+        });
+    }
 
     public ngAfterViewInit() {
         this.refreshSize();
@@ -256,6 +257,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             }
 
             this.displayedListData = this.esf.listData;
+            this.displayedListData[0].label = this.resourceStrings.igx_grid_excel_select_all;
 
             return;
         }
@@ -272,6 +274,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         this.displayedListData.splice(1, 0, this.addToCurrentFilter);
 
         this.displayedListData[0].indeterminate = false;
+        this.displayedListData[0].label = this.resourceStrings.igx_grid_excel_select_all_search_results;
 
         if (this.displayedListData.length === 2) {
             this.displayedListData = [];

@@ -289,6 +289,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    @Output()
+    public listDataLoaded = new EventEmitter();
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelColumnOperations', { read: TemplateRef, static: true })
     protected defaultExcelColumnOperations: TemplateRef<any>;
 
@@ -545,6 +551,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (!(this.cdr as any).destroyed) {
             this.cdr.detectChanges();
         }
+
+        this.listDataLoaded.emit();
     }
 
     private getColumnFilterExpressionsTree() {

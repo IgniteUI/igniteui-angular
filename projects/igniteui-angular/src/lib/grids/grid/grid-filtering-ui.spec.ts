@@ -3269,7 +3269,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
@@ -3549,11 +3549,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            // Verify that the first item is 'Select All' and the second item is 'false'.
+            // Verify that the first item is 'Select All' and the third item is 'false'.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
             expect(listItems[0].innerText).toBe('Select All');
-            expect(listItems[1].innerText).toBe('false');
+            expect(listItems[2].innerText).toBe('false');
         }));
 
         it('should scroll items in search list correctly', (async () => {
@@ -3653,7 +3653,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.clickAndSendInputElementValue(input, 'a', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(4);
+            expect(listItems.length).toBe(5);
 
             UIInteractions.clickAndSendInputElementValue(input, 'al', fix);
             tick(100);
@@ -4332,8 +4332,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBeGreaterThan(1);
-            for (let i = 1; i < listItems.length; i++) {
+            expect(listItems.length).toBeGreaterThan(2);
+            for (let i = 2; i < listItems.length; i++) {
                 expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
             }
 
@@ -4405,7 +4405,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
 
             // Clear filtering of ESF search.
             const clearIcon: any = Array.from(searchComponent.querySelectorAll('igx-icon'))
