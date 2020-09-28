@@ -1637,7 +1637,39 @@ describe('IgxGrid Component Tests #grid', () => {
                 scrollPosition: grid.headerContainer.getScrollForIndex(6, true),
                 event: horizontalScrollEvent
             });
+        });
 
+        it(`Verify that getRowData returns correct data`, () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const cols = fix.componentInstance.columns;
+
+            const row = {'col0': 0, 'col1': 4, 'col2': 8, 'col3': 12, 'col4': 16};
+            const secondRow = {'col0': 0, 'col1': 1, 'col2': 2, 'col3': 3, 'col4': 4};
+
+            expect(grid.getRowData(row)).toEqual(row);
+
+            grid.primaryKey = 'col1';
+            fix.detectChanges();
+
+            expect(grid.getRowData(4)).toEqual(row);
+
+            grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+
+            expect(grid.getRowData(4)).toEqual(row);
+            expect(grid.getRowData(1)).toEqual(secondRow);
+            expect(grid.getRowData(7)).toEqual({});
+
+            grid.sort({ fieldName: 'col2', dir: SortingDirection.Desc, ignoreCase: true });
+            fix.detectChanges();
+
+            expect(grid.getRowData(4)).toEqual(row);
+            expect(grid.getRowData(1)).toEqual(secondRow);
+            expect(grid.getRowData(7)).toEqual({});
         });
     });
 
