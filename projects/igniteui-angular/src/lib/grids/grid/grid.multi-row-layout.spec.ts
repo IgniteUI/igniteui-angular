@@ -17,6 +17,7 @@ const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
+    const DEBOUNCETIME = 60;
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -1145,9 +1146,9 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(pos.visibleColumnIndex).toEqual(2);
     }));
 
-    fit('should navigate to the proper row in MRL scenario', fakeAsync(() => {
-        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
-        fixture.componentInstance.colGroups = [{
+    xit('should navigate to the proper row in MRL scenario', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
             group: 'group1',
             columns: [
                 { field: 'CompanyName', rowStart: 1, rowEnd: 2, colStart: 3, colEnd: 4, dataType: 'number', editable: true },
@@ -1155,8 +1156,21 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 { field: 'ContactName', rowStart: 1, rowEnd: 2, colStart: 2, colEnd: 3, dataType: 'string', editable: false },
             ]
         }];
-        const grid = fixture.componentInstance.grid;
-        fixture.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const NAVIGATE = 20;
+
+        fix.detectChanges();
+
+        grid.navigateTo(NAVIGATE);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
+        
+        const row = grid.getRowByIndex(NAVIGATE);
+        expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
     }));
 });
 
