@@ -76,7 +76,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
         if (!super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex)) { return false; }
-        if (!this.isDataRow(targetRowIndex)) { return super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex); }
+        if (!this.isDataRow(targetRowIndex) || visibleColIndex < 0) { 
+            return super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex); 
+        }
 
         const targetRow = super.getRowElementByIndex(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
