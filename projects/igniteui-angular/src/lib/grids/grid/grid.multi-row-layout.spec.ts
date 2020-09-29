@@ -1146,24 +1146,16 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(pos.visibleColumnIndex).toEqual(2);
     }));
 
-    xit('should navigate to the proper row in MRL scenario', (async () => {
+    it('should navigate to the proper row in MRL scenario', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
-        fix.componentInstance.colGroups = [{
-            group: 'group1',
-            columns: [
-                { field: 'CompanyName', rowStart: 1, rowEnd: 2, colStart: 3, colEnd: 4, dataType: 'number', editable: true },
-                { field: 'ID', rowStart: 1, rowEnd: 2, colStart: 1, colEnd: 2, dataType: 'number', editable: false },
-                { field: 'ContactName', rowStart: 1, rowEnd: 2, colStart: 2, colEnd: 3, dataType: 'string', editable: false },
-            ]
-        }];
         const grid = fix.componentInstance.grid;
         const NAVIGATE = 20;
 
         fix.detectChanges();
+        await wait(DEBOUNCETIME);
 
         grid.navigateTo(NAVIGATE);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+
         await wait(DEBOUNCETIME);
         fix.detectChanges();
 
