@@ -6478,10 +6478,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (!commit) {
             this.rowEditExit.emit(rowArgs);
-            if (rowArgs.cancel) {
-                return true;
-            }
-
             this.transactions.endPending(false);
         } else {
             rowEditArgs = this.gridAPI.update_row(row, row.newData);
@@ -6490,9 +6486,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
 
             this.rowEditExit.emit(rowArgs);
-            if (rowArgs.cancel) {
-                return true;
-            }
+        }
+
+        if (rowArgs.cancel) {
+            this.transactions.startPending();
+            return true;
         }
 
 
@@ -6542,8 +6540,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         canceled = this.crudService.exitRowEdit(commit);
+        this.crudService.rowEditingBlocked = canceled;
         if (canceled) {
-            this.crudService.rowEditingBlocked = true;
             return true;
         }
 
