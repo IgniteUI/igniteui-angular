@@ -14,12 +14,13 @@ import {
     AfterContentInit,
     IterableDiffers,
     OnInit,
-    IterableChangeRecord,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    AfterViewInit
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down/public_api';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
+import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -56,10 +57,9 @@ export class IgxActionStripMenuItemDirective {
     templateUrl: 'action-strip.component.html'
 })
 
-export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, OnInit {
+export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
     constructor(
         private _viewContainer: ViewContainerRef,
-        protected differs: IterableDiffers,
         private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public cdr: ChangeDetectorRef) {
@@ -140,11 +140,30 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
 
     /**
+     * ActionButton as ContentChildren inside the Action Strip
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGridActionsBaseDirective)
+    public actionButtons: QueryList<IgxGridActionsBaseDirective>;
+
+    /**
      * Menu Items list.
      * @hidden
      * @internal
      */
-    public menuItems = [];
+    public get menuItems() {
+        const actions = [];
+        this.actionButtons.forEach(button => {
+            if (button.asMenuItems) {
+                const children = button.buttons;
+                if (children) {
+                    children.toArray().forEach(x => actions.push(x));
+                }
+            }
+        });
+        return [... this._menuItems.toArray(), ... actions];
+    }
 
     /**
      * Reference to the menu
@@ -154,36 +173,35 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     @ViewChild('dropdown')
     public menu: IgxDropDownComponent;
 
-    private menuDiffer;
-    /**
-     * @hidden
-     * @internal
-     */
-    ngOnInit() {
-        this.menuDiffer = this.differs.find([]).create(null);
-    }
-
     /**
      * @hidden
      * @internal
      */
     ngAfterContentInit() {
-        this.menuItems = [... this._menuItems.toArray()];
-        this.menuDiffer.diff(this.menuItems);
-        this._menuItems.changes.subscribe((change: QueryList<IgxActionStripMenuItemDirective>) => {
-            const diff = this.menuDiffer.diff(change);
-            if (diff) {
-                diff.forEachAddedItem((record: IterableChangeRecord<IgxActionStripMenuItemDirective>) => {
-                    // add
-                    this.menuItems.splice(0, 0, record.item);
-                });
-                diff.forEachRemovedItem((record: IterableChangeRecord<IgxActionStripMenuItemDirective>) => {
-                    // remove
-                    const index = this.menuItems.indexOf(record.item);
-                    this.menuItems.splice(index, 1);
-                });
-            }
+        this.actionButtons.forEach(button => {
+            button.strip = this;
         });
+        this.actionButtons.changes.subscribe(change => {
+            this.actionButtons.forEach(button => {
+                button.strip = this;
+            });
+        });
+    }
+
+    ngAfterViewInit() {
+        this.menu.onSelection.subscribe(($event) => {
+            const newSelection = ($event.newSelection as any).elementRef.nativeElement;
+            let allButtons = [];
+            this.actionButtons.forEach( actionButtons => {
+                if (actionButtons.asMenuItems) {
+                    allButtons = [... allButtons, ... actionButtons.buttons.toArray()];
+                }
+            });
+            const button = allButtons.find(x => newSelection.contains(x.container.nativeElement));
+            if (button) {
+                 button.onActionClick.emit();
+            }
+         });
     }
 
     /**
