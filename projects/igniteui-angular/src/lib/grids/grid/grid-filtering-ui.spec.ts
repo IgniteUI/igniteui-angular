@@ -1641,25 +1641,32 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(conditionChips.length).toBe(0);
         }));
 
-        it('Should open filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.', fakeAsync(() => {
-            // Verify filterRow is not opened.
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+        it('Should open/close filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
+            fakeAsync(() => {
+                // Verify filterRow is not opened.
+                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
-            const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
-            UIInteractions.simulateClickAndSelectEvent(releaseDateColumn);
-            fix.detectChanges();
+                const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
+                UIInteractions.simulateClickAndSelectEvent(releaseDateColumn);
+                fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('l', releaseDateColumn.nativeElement, true, false, true, true);
-            tick(200);
-            fix.detectChanges();
+                UIInteractions.triggerKeyDownEvtUponElem('l', releaseDateColumn.nativeElement, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
 
-            // Verify filterRow is opened for the 'ReleaseDate' column.
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
-            const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerGroupsFiltering = headerGroups.filter(
-                (hg) => hg.nativeElement.classList.contains('igx-grid__th--filtering'));
-            expect(headerGroupsFiltering.length).toBe(1);
-            expect(headerGroupsFiltering[0].componentInstance.column.field).toBe('ReleaseDate');
+                // Verify filterRow is opened for the 'ReleaseDate' column.
+                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
+                const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+                const headerGroupsFiltering = headerGroups.filter(
+                    (hg) => hg.nativeElement.classList.contains('igx-grid__th--filtering'));
+                expect(headerGroupsFiltering.length).toBe(1);
+                expect(headerGroupsFiltering[0].componentInstance.column.field).toBe('ReleaseDate');
+
+                UIInteractions.triggerKeyDownEvtUponElem('l', releaseDateColumn.nativeElement, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
+
+                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
         }));
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
@@ -4346,7 +4353,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
-             // Open excel style custom filtering dialog.
+             // Open excel style filtering dialog.
              GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
              // Type string in search box.
@@ -4356,7 +4363,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
              tick(100);
              fix.detectChanges();
 
-             // Verify that the first item is 'Select All' and the third item is 'false'.
+             // Verify that the second item is 'Add to current filter selection'.
              const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
              expect(listItems.length).toBe(6, 'incorrect rendered list items count');
              expect(listItems[1].innerText).toBe('Add current selection to filter');
@@ -4500,6 +4507,37 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         expect(gridCellValues.length).toEqual(3);
         expect(gridCellValues).toEqual(totalListItems);
+        }));
+
+        it('Should commit and close ESF on pressing \'Enter\'', fakeAsync(() => {
+            // Open excel style filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2', fix);
+            tick(100);
+            fix.detectChanges();
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+                .splice(2)
+                .map(c => c.innerText)
+                .sort();
+
+            // Press 'Enter'
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick(100);
+            fix.detectChanges();
+
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            // Verify that excel style filtering dialog is closed and data is filtered.
+            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            expect(gridCellValues.length).toEqual(4);
+            expect(gridCellValues).toEqual(listItems);
         }));
 });
 
