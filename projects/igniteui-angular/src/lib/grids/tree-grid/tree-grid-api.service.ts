@@ -263,9 +263,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                     }
                     parentData[childKey].push(data);
                 }
-                this.grid.onRowAdded.emit({ data });
-                (this.grid as any)._pipeTrigger++;
-                this.grid.notifyChanges();
             }
         } else {
             if (this.grid.primaryKey && this.grid.foreignKey) {
