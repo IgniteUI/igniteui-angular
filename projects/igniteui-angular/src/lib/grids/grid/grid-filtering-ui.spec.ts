@@ -4435,7 +4435,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
-        let totalListItems = [];
+        const totalListItems = [];
 
         // Open excel style custom filtering dialog.
         GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
