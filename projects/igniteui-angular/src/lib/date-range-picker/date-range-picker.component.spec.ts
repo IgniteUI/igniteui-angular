@@ -1,4 +1,4 @@
-import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { InteractionMode } from '../core/enums';
@@ -206,7 +206,7 @@ describe('IgxDateRangePicker', () => {
         describe('Single Input', () => {
             let singleInputElement: DebugElement;
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
@@ -599,14 +599,48 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                 }));
+
+                it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.disabled = true;
+                    fixture.detectChanges();
+
+                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
+                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    tick(DEBOUNCE_TIME * 2);
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(0);
+                }));
             });
+
+            it('should expand the calendar if the default icon is clicked', fakeAsync(() => {
+                const input = fixture.debugElement.query(By.css('igx-input-group'));
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
+            }));
+
+            it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
+                fixture.componentInstance.disabled = true;
+                fixture.detectChanges();
+                const input = fixture.debugElement.query(By.css('igx-input-group'));
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
+            }));
         });
 
         describe('Two Inputs', () => {
             let startInput: DebugElement;
             let endInput: DebugElement;
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
@@ -876,6 +910,21 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                 }));
+
+                it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
+                    fixture.componentInstance.disabled = true;
+                    fixture.detectChanges();
+
+                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
+                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    tick(DEBOUNCE_TIME * 2);
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(0);
+                }));
             });
 
             it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
@@ -915,6 +964,24 @@ describe('IgxDateRangePicker', () => {
                     .toBeTruthy();
             }));
 
+            it('should expand the calendar if the default icon is clicked', fakeAsync(() => {
+                const icon = fixture.debugElement.query(By.css('igx-picker-toggle'));
+                icon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeFalsy();
+            }));
+
+            it('should not expand the calendar if the default icon is clicked when disabled is set to true', fakeAsync(() => {
+                fixture.componentInstance.disabled = true;
+                fixture.detectChanges();
+                const icon = fixture.debugElement.query(By.css('igx-picker-toggle'));
+                icon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateRange.collapsed).toBeTruthy();
+            }));
+
             describe('Data binding', () => {
                 it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
                     fixture = TestBed.createComponent(DateRangeTwoInputsNgModelTestComponent);
@@ -931,7 +998,7 @@ describe('IgxDateRangePicker', () => {
 
         describe('Rendering', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
@@ -1065,6 +1132,7 @@ export class DateRangeTestComponent implements OnInit {
     [x: string]: any;
     public doneButtonText: string;
     public mode: InteractionMode;
+    public disabled = false;
     public minValue: Date | String;
     public maxValue: Date | String;
 
@@ -1078,16 +1146,18 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-single-input-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
+    <igx-date-range-picker [mode]="mode" [disabled]="disabled" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `
 })
-export class DateRangeDefaultComponent extends DateRangeTestComponent { }
+export class DateRangeDefaultComponent extends DateRangeTestComponent {
+    public disabled = false;
+}
 
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [(ngModel)]="range" [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
+    <igx-date-range-picker [mode]="mode" [disabled]="disabled" [(ngModel)]="range" [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
             <igx-date-range-start>
                 <igx-picker-toggle igxPrefix>
                     <igx-icon>calendar_view_day</igx-icon>
@@ -1101,9 +1171,10 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent { }
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
-    range;
-    inputFormat: string;
-    displayFormat: string;
+    public range;
+    public inputFormat: string;
+    public displayFormat: string;
+    public disabled = false;
 }
 @Component({
     selector: 'igx-date-range-two-inputs-ng-model',
