@@ -166,10 +166,11 @@
     $variant: map-get($theme, variant);
 
 
-    %animation {
+    %navdrawer-display {
         transition: flex-basis;
         transition-duration: .3s;
         transition-timing-function: $ease-out-quad;
+        flex-shrink: 0;
     }
 
     %aside {
