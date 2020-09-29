@@ -9,6 +9,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxGridActionButtonComponent } from './grid-actions/grid-action-button.component';
 
 /**
  * @hidden
@@ -19,7 +20,8 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
         IgxActionStripMenuItemDirective,
         IgxGridPinningActionsComponent,
         IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective
+        IgxGridActionsBaseDirective,
+        IgxGridActionButtonComponent
     ],
     entryComponents: [
     ],
@@ -28,7 +30,8 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
         IgxActionStripMenuItemDirective,
         IgxGridPinningActionsComponent,
         IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective
+        IgxGridActionsBaseDirective,
+        IgxGridActionButtonComponent
     ],
     imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule, IgxRippleModule]
 })
