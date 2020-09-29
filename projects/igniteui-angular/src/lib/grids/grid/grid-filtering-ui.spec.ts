@@ -4344,7 +4344,164 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
-    });
+
+        it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
+             // Open excel style custom filtering dialog.
+             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+             // Type string in search box.
+             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2', fix);
+             tick(100);
+             fix.detectChanges();
+
+             // Verify that the first item is 'Select All' and the third item is 'false'.
+             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+             expect(listItems[1].innerText).toBe('Add current selection to filter');
+        }));
+
+        it('Should filter grid the same way as in Excel', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            // Type string in search box.
+            let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2', fix);
+            tick(100);
+            fix.detectChanges();
+
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+                .splice(2)
+                .map(c => c.innerText)
+                .sort();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Get the results and verify that they match the list items.
+            let gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            expect(gridCellValues.length).toEqual(4);
+            expect(gridCellValues).toEqual(listItems);
+
+             // Open excel style custom filtering dialog again.
+             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+             // Type string in search box.
+             searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
+             tick(100);
+             fix.detectChanges();
+
+             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+                 .splice(2)
+                 .map(c => c.innerText)
+                 .sort();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Get the results and verify that they match the list items.
+            gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
+                .map(c => c.nativeElement.innerText)
+                .sort();
+
+            expect(gridCellValues.length).toEqual(1);
+            expect(gridCellValues).toEqual(listItems);
+        }));
+
+        it('Should disable the apply button when there are no results.', fakeAsync(() => {
+        GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+        const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+        UIInteractions.clickAndSendInputElementValue(inputNativeElement, '3', fix);
+        tick(100);
+        fix.detectChanges();
+
+        ControlsFunction.verifyButtonIsDisabled(applyButton);
+        }));
+
+        it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
+        let totalListItems = [];
+
+        // Open excel style custom filtering dialog.
+        GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+        // Type string in search box.
+        let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+        UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
+        tick(100);
+        fix.detectChanges();
+
+        let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+            .splice(2)
+            .map(c => c.innerText);
+
+        listItems.forEach(c => totalListItems.push(c));
+
+        // Click 'apply' button to apply filter.
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+
+        // Get the results and verify that they match the list items.
+        let gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
+            .map(c => c.nativeElement.innerText);
+
+        expect(gridCellValues.length).toEqual(1);
+        expect(gridCellValues).toEqual(totalListItems);
+
+        // Open excel style custom filtering dialog again.
+        GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+        // Type string in search box.
+        searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+        UIInteractions.clickAndSendInputElementValue(inputNativeElement, '7', fix);
+        tick(100);
+        fix.detectChanges();
+
+        listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
+            .splice(2)
+            .map(c => c.innerText);
+
+        listItems.forEach(c => totalListItems.push(c));
+        totalListItems.sort();
+
+        // Select 'Add to current filter selection'.
+        const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+        checkbox[1].click();
+        tick();
+        fix.detectChanges();
+
+        // Click 'apply' button to apply filter.
+        GridFunctions.clickApplyExcelStyleFiltering(fix);
+        tick(100);
+        fix.detectChanges();
+
+        // Get the results and verify that they match the list items.
+        gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
+            .map(c => c.nativeElement.innerText)
+            .sort();
+
+        expect(gridCellValues.length).toEqual(3);
+        expect(gridCellValues).toEqual(totalListItems);
+        }));
+});
 
     describe('Templates: ', () => {
         let fix, grid;
