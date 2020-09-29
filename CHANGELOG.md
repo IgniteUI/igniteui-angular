@@ -4,26 +4,29 @@ All notable changes for each version of this project will be documented in this 
 ## 10.2.0
 
 ### General
+- `IgxDatePicker`
+    - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
 - `IgxInputGroup`
-    - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property. 
+    - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property.
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
 - `IgxOverlay`
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
 - `IgxSelect`
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
-- `IgxDatePicker`
-    - **Breaking Change** - Deprecated the `label` and `labelVisibility` properties.
+- `IgxDatePicker`	
+    - **Breaking Change** - Deprecated the `label` property.
 
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
+    - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
     - Added `worksheetName` property to the `IgxExcelExporterOptions`, that allows setting the name of the worksheet.
 - `IgxDatePicker`
-    - The `labelVisibility` and the `label` property have been deprecated and now a custom label is set by nesting a <label igxLabel></label> inside the <igx-date-picker><igx-date-picker> tags.
+    - The the `label` property have been deprecated and a custom label can also be set by nesting a <label igxLabel></label> inside the <igx-date-picker><igx-date-picker> tags.
 - `IgxTimePicker`
     - Added a custom label functionality.
 - `IgxCalendar` and `IgxDatePicker` - new `showWeekNumbers` input, that allows showing of the week number at left side of content area.
@@ -56,7 +59,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxGrid`
     - **Behavioral Change** - For numeric columns, the onCellEdit arguments' newValue will now contain the numeric value that will be committed instead of the string input.
     - Added `onScroll` event, which is emitted when the grid is scrolled vertically or horizontally.
-    - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default. 
+    - Each grid now expose a default handling for boolean column types. The column will display `check` or `close` icon, instead of true/false by default.
 - `igxTreeGrid`
     - Removed `onDataPreLoad` event as it is specific for remote virtualization implementation, which is not supported for the `igxTreeGrid`. A more generic `onScroll` event is exposed and can be used instead.
 - `IgxTimePicker`
