@@ -142,4 +142,17 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
         this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.rowID) : false;
         super.ngDoCheck();
     }
+
+    /**
+     * Spawns the add child row UI for the specific row.
+     * @example
+     * ```typescript
+     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
+     * row.beginAddChild();
+     * ```
+     * @param rowID
+     */
+    public beginAddChild() {
+        this.grid.beginAddRowByIndex(this.rowID, this.index, true);
+    }
 }

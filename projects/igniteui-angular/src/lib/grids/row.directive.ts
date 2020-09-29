@@ -488,4 +488,16 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
         return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
     }
+
+    /**
+     * Spawns the add row UI for the specific row.
+     * @example
+     * ```typescript
+     * const row = this.grid1.getRowByIndex(1);
+     * row.beginAddRow();
+     * ```
+     */
+    public beginAddRow() {
+        this.grid.beginAddRowByIndex(this.rowID, this.index);
+    }
 }

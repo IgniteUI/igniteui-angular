@@ -4035,24 +4035,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Spawns the add row UI for a specific row.
-     * If rowID is not specified, the grid spawns the UI under the first visible row in the view.
-     * @example
-     * ```typescript
-     * this.grid1.beginAddRow(rowID);
-     * ```
-     * @param rowID
-     */
-
-    public beginAddRow(rowID?: any) {
-        if (!rowID) {
-            rowID = this.rowList.first.rowData[this.primaryKey];
-        }
-        const index = this.data.findIndex(record => record[this.primaryKey] === rowID);
-        this.beginAddRowByIndex(rowID, index);
-    }
-
-    /**
      * @hidden @internal
      */
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
