@@ -1879,9 +1879,11 @@ describe('IgxTimePicker', () => {
             UIInteractions.simulateClickAndSelectEvent(clearTime);
             fixture.detectChanges();
             input.nativeElement.dispatchEvent(new Event('focus'));
+            tick();
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toEqual('');
@@ -1891,6 +1893,21 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('-- AM');
+        }));
+
+        it('should allow editing of input after clear', fakeAsync(() => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+            spyOn(fixture.componentInstance.timePicker, 'onInput');
+
+            const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
+            UIInteractions.simulateClickAndSelectEvent(clearTime);
+            fixture.detectChanges();
+            const _input = fixture.debugElement.query(By.css('input'));
+            UIInteractions.simulateTyping('12 AM', _input);
+            expect(fixture.componentInstance.timePicker.onInput).not.toThrow();
+            expect(_input.nativeElement.value).toEqual('12 AM');
         }));
 
         it('Should navigate dropdown lists correctly when format contains only hours.', fakeAsync(() => {

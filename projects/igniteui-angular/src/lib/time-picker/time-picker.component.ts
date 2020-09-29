@@ -50,7 +50,7 @@ import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
-import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
+import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 
 
@@ -1952,7 +1952,11 @@ export class IgxTimePickerComponent implements
 
             const oldVal = new Date(this.value);
 
-            this.displayValue = '';
+            this.displayValue = this.parseMask(false);
+            requestAnimationFrame(() => {
+                this._setCursorPosition(0);
+            });
+            // TODO: refactoring - this.value should be null #8135
             this.value.setHours(0, 0);
 
             if (oldVal.getTime() !== this.value.getTime()) {
@@ -1971,33 +1975,34 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public onInput(event): void {
-        const val = event.target.value;
+        const inputMask = event.target.value;
         const oldVal = new Date(this.value);
 
-        this.isNotEmpty = val !== this.parseMask(false);
+        this.isNotEmpty = inputMask !== this.parseMask(false);
 
         // handle cases where all empty positions (promts) are filled and we want to update
         // timepicker own value property if it is a valid Date
-        if (val.indexOf(this.promptChar) === -1) {
-            if (this._isEntryValid(val)) {
-                const newVal = this.convertMinMaxValue(val);
+        if (inputMask.indexOf(this.promptChar) === -1) {
+            if (this._isEntryValid(inputMask)) {
+                const newVal = this.convertMinMaxValue(inputMask);
                 if (oldVal.getTime() !== newVal.getTime()) {
                     this.value = newVal;
                 }
             } else {
                 const args: IgxTimePickerValidationFailedEventArgs = {
                     timePicker: this,
-                    currentValue: val,
+                    currentValue: inputMask,
                     setThroughUI: false
                 };
                 this.onValidationFailed.emit(args);
             }
             // handle cases where the user deletes the display value (when pressing backspace or delete)
-        } else if (!this.value || !val || val === this.parseMask(false)) {
+        } else if (inputMask === this.parseMask(false)) {
             this.isNotEmpty = false;
 
+            // TODO: refactoring - this.value should be null #8135
             this.value.setHours(0, 0);
-            this.displayValue = val;
+            this.displayValue = inputMask;
 
             if (oldVal.getTime() !== this.value.getTime()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
