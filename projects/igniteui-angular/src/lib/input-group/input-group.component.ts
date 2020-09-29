@@ -184,6 +184,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         }
     }
 
+    hintClickHandler(event) {
+        event.stopPropagation();
+    }
+
     /**
      * An @Input property that sets how the input will be styled.
      * Allowed values of type IgxInputGroupType.
