@@ -142,7 +142,7 @@ import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filter
 import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective, IgxGroupRowSelectorDirective } from './selection/row-selectors';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective, IgxGroupByRowSelectorDirective } from './selection/row-selectors';
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
@@ -1788,9 +1788,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public get groupRowSelectorTemplate(): TemplateRef<IgxGroupRowSelectorDirective> {
-        if (this.groupRowSelectorsTemplates && this.groupRowSelectorsTemplates.first) {
-            return this.groupRowSelectorsTemplates.first.templateRef;
+    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorDirective> {
+        if (this.groupByRowSelectorsTemplates && this.groupByRowSelectorsTemplates.first) {
+            return this.groupByRowSelectorsTemplates.first.templateRef;
         }
 
         return null;
@@ -1800,8 +1800,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxGroupRowSelectorDirective, { read: IgxGroupRowSelectorDirective, descendants: true })
-    public groupRowSelectorsTemplates: QueryList<IgxGroupRowSelectorDirective>;
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: true })
+    public groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
 
     /**
      * @hidden

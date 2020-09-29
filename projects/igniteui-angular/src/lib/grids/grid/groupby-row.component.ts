@@ -280,7 +280,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public get groupRowSelectorBaseAriaLabel() {
+    public get groupByRowSelectorBaseAriaLabel() {
         return this.areAllRowsInTheGroupSelected ? 'Deselect all rows in the group' : 'Select all rows in the group';
     }
 

@@ -2,8 +2,8 @@
 
     <ng-container *ngIf="selectionMode !== 'none'">
         <div class="igx-grid__cbx-selection" style="background: none;" (pointerdown)="$event.preventDefault()" (click)="onGroupSelectorClick($event)">
-            <ng-template #groupRowSelector *ngTemplateOutlet="
-                this.grid.groupRowSelectorTemplate ? this.grid.groupRowSelectorTemplate : groupRowSelectorBaseTemplate;
+            <ng-template #groupByRowSelector *ngTemplateOutlet="
+                this.grid.groupByRowSelectorTemplate ? this.grid.groupByRowSelectorTemplate : groupByRowSelectorBaseTemplate;
                 context: { $implicit: {
                     selectedCount: selectedRowsInTheGroup.length,
                     totalCount: this.groupRow.records.length,
@@ -55,7 +55,7 @@
             <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'></igx-badge>
         </div>
     </ng-template>
-    <ng-template #groupRowSelectorBaseTemplate let-context>
+    <ng-template #groupByRowSelectorBaseTemplate let-context>
         <div class="igx-grid__cbx-padding">
             <igx-checkbox
                 [tabindex]="-1"
@@ -64,6 +64,7 @@
                 disableRipple="true"
                 [indeterminate]="groupByRowCheckboxIndeterminateState"
                 [disabled]="selectionMode === 'single'"
+                [aria-label]="groupByRowSelectorBaseAriaLabel"
                 #groupRowCheckbox>
             </igx-checkbox>
         </div>

@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
-import { IgxRowSelectorDirective, IgxHeadSelectorDirective, IgxGroupRowSelectorDirective } from './row-selectors';
+import { IgxRowSelectorDirective, IgxHeadSelectorDirective, IgxGroupByRowSelectorDirective } from './row-selectors';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 
 
 @NgModule({
     declarations: [
         IgxRowSelectorDirective,
-        IgxGroupRowSelectorDirective,
+        IgxGroupByRowSelectorDirective,
         IgxHeadSelectorDirective,
         IgxGridDragSelectDirective
     ],
     exports: [
         IgxRowSelectorDirective,
-        IgxGroupRowSelectorDirective,
+        IgxGroupByRowSelectorDirective,
         IgxHeadSelectorDirective,
         IgxGridDragSelectDirective
     ]
