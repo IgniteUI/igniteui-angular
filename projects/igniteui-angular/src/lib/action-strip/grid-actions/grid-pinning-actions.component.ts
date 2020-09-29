@@ -13,8 +13,8 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-action-strip__pining-actions')
-    public cssClass = 'igx-action-strip__pining-actions';
+    @HostBinding('class.igx-action-strip__pinning-actions')
+    public cssClass = 'igx-action-strip__pinning-actions';
 
     private iconsRendered = false;
 
