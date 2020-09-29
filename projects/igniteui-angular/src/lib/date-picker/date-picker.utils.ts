@@ -68,8 +68,9 @@ export abstract class DatePickerUtil {
             }
             parts[dp.type] = value;
         });
+        parts[DatePart.Month] -= 1;
 
-        if (parts[DatePart.Month] < 1 || 12 < parts[DatePart.Month]) {
+        if (parts[DatePart.Month] < 0 || 11 < parts[DatePart.Month]) {
             return null;
         }
 
@@ -88,7 +89,7 @@ export abstract class DatePickerUtil {
 
         return new Date(
             parts[DatePart.Year] || 2000,
-            parts[DatePart.Month] - 1 || 0,
+            parts[DatePart.Month] || 0,
             parts[DatePart.Date] || 1,
             parts[DatePart.Hours] || 0,
             parts[DatePart.Minutes] || 0,
