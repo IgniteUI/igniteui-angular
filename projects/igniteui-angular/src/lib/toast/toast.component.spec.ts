@@ -83,12 +83,13 @@ describe('IgxToast', () => {
         expect(toast.onShowing.emit).toHaveBeenCalled();
     });
 
-    it('should emit onShown when super onAppended is fired', waitForAsync(() => {
+    it('should emit onShown when super onAppended is fired', waitForAsync((done: DoneFn) => {
         toast.show();
 
         toast.onAppended.subscribe(() => {
             spyOn(toast.onShown, 'emit');
             expect(toast.onShown.emit).toHaveBeenCalled();
+            done();
         });
     }));
 
@@ -98,13 +99,14 @@ describe('IgxToast', () => {
         expect(toast.onHiding.emit).toHaveBeenCalled();
     });
 
-    it('should emit onHidden when super onClosed is fired', waitForAsync(() => {
+    it('should emit onHidden when super onClosed is fired', waitForAsync((done: DoneFn) => {
         toast.isVisible = true;
         toast.hide();
 
         toast.onClosed.subscribe(() => {
             spyOn(toast.onHidden, 'emit');
             expect(toast.onHidden.emit).toHaveBeenCalled();
+            done();
         });
     }));
 
