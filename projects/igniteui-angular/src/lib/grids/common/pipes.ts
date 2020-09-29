@@ -171,20 +171,20 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 @Pipe({
     name: 'igxdate'
 })
-export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+export class IgxDatePipeComponent implements PipeTransform {
 
     private readonly DEFAULT_DATE_FORMAT = 'mediumDate';
+    private readonly ngDatePipe: DatePipe;
 
     constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
+        this.ngDatePipe = new DatePipe(locale);
     }
     transform(value: any, locale: string): string {
         if (value && value instanceof Date) {
             if (locale) {
-                return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
+                return this.ngDatePipe.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
             } else {
-                return super.transform(value);
+                return this.ngDatePipe.transform(value);
             }
         } else {
             return value;
@@ -199,17 +199,18 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
 @Pipe({
     name: 'igxdecimal'
 })
-export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+export class IgxDecimalPipeComponent implements PipeTransform {
+    private readonly ngDecimalPipe: DecimalPipe;
+
     constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
+        this.ngDecimalPipe = new DecimalPipe(locale);
     }
     transform(value: any, locale: string): string {
         if (value && typeof value === 'number') {
             if (locale) {
-                return super.transform(value, undefined, locale);
+                return this.ngDecimalPipe.transform(value, undefined, locale);
             } else {
-                return super.transform(value);
+                return this.ngDecimalPipe.transform(value);
             }
         } else {
             return value;
