@@ -39,8 +39,8 @@ describe('igxGridPinningActions #grid ', () => {
         let pinIcon, unpinIcon;
         actionStrip.show(grid.rowList.first);
         fixture.detectChanges();
-        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
-        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
+        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin-left]`));
+        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin-left]`));
         expect(unpinIcon).toBeNull();
         pinIcon.parent.triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
@@ -49,8 +49,8 @@ describe('igxGridPinningActions #grid ', () => {
 
         actionStrip.show(grid.pinnedRows[0]);
         fixture.detectChanges();
-        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
-        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
+        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin-left]`));
+        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin-left]`));
         expect(pinIcon).toBe(null);
         unpinIcon.parent.triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
@@ -65,7 +65,7 @@ describe('igxGridPinningActions #grid ', () => {
         actionStrip.show(grid.pinnedRows[0]);
         fixture.detectChanges();
 
-        const jumpIcon = fixture.debugElement.query(By.css(`igx-icon[name=jump_down]`));
+        const jumpIcon = fixture.debugElement.query(By.css(`igx-icon[name=jump-down]`));
         jumpIcon.parent.triggerEventHandler('click', new Event('click'));
         await wait();
         fixture.detectChanges();

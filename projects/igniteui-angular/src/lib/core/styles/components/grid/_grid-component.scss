@@ -544,8 +544,20 @@
         @extend %igx-grid__row-editing-outlet !optional;
     }
 
+    @include e(addrow-snackbar) {
+        @extend %igx-grid__addrow-snackbar !optional;
+    }
+
     @include e(filtering-cell) {
         @extend %igx-grid__filtering-cell !optional;
+    }
+
+    @include e(filtering-cell, $m: cosy) {
+        @extend %igx-grid__filtering-cell--cosy !optional;
+    }
+
+    @include e(filtering-cell, $m: compact) {
+        @extend %igx-grid__filtering-cell--compact !optional;
     }
 
     @include e(filtering-cell, $m: 'selected') {
