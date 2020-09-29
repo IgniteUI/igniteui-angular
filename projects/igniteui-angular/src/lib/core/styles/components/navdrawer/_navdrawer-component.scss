@@ -9,7 +9,7 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
-    @extend %animation !optional;
+    @extend %navdrawer-display !optional;
 
     // Main aside element
     @include e(aside) {
