@@ -120,7 +120,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
 
     process(event) {
         this.toast.message = 'Loading remote data';
-        this.toast.position = 1;
+        this.toast.position = 'bottom';
         this.toast.show();
         this.remoteService.getData(this.grid3.data, () => {
             this.toast.hide();
