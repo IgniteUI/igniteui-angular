@@ -10,14 +10,11 @@ import { Subject } from 'rxjs';
 @Directive({
     selector: '[igxGridActionsBase]'
 })
-export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit, OnDestroy {
-    constructor(
-        @Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent,
-        protected iconService: IgxIconService,
+export class IgxGridActionsBaseDirective implements AfterViewInit {
+    constructor(protected iconService: IgxIconService,
         protected differs: IterableDiffers) { }
 
-    private actionButtonsDiffer;
-    protected destroy$ = new Subject<boolean>();
+    public strip: IgxActionStripComponent;
 
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
@@ -45,48 +42,12 @@ export class IgxGridActionsBaseDirective implements AfterViewInit, OnInit, OnDes
      * @hidden
      * @internal
      */
-    ngOnInit() {
-        this.actionButtonsDiffer = this.differs.find([]).create(null);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     ngAfterViewInit() {
         if (this.asMenuItems) {
-            this.buttons.changes.subscribe((change: QueryList<IgxGridActionButtonComponent>) => {
-                const diff = this.actionButtonsDiffer.diff(change);
-                if (diff) {
-                    diff.forEachAddedItem((record: IterableChangeRecord<IgxGridActionButtonComponent>) => {
-                        this.strip.menuItems.push(record.item);
-                    });
-                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxGridActionButtonComponent>) => {
-                        const index = this.strip.menuItems.indexOf(record.item);
-                        this.strip.menuItems.splice(index, 1);
-                    });
-                    this.strip.cdr.detectChanges();
-                }
-            });
-
-            // on drop-down selection, trigger click action on related button.
-            this.strip.menu.onSelection.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
-               const newSelection = ($event.newSelection as any).elementRef.nativeElement;
-               const button = this.buttons.find(x => newSelection.contains(x.container.nativeElement));
-               if (button) {
-                    button.onActionClick.emit();
-               }
-            });
+                this.buttons.changes.subscribe((change: QueryList<IgxGridActionButtonComponent>) => {
+                        this.strip.cdr.detectChanges();
+                });
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
     }
 
     /**
