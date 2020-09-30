@@ -312,11 +312,6 @@ export class IgxGridCRUDService {
         this.cell.value = args.newValue;
 
         this.grid.cellEditExit.emit(args);
-        if (args && args.cancel) {
-            return this._rowEditingBlocked = this._cellEditingBlocked = true;
-        }
-
-        this._rowEditingBlocked = this._cellEditingBlocked = false;
         this.endCellEdit();
         return false;
     }
