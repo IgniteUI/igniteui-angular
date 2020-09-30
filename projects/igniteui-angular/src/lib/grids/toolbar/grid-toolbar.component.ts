@@ -27,13 +27,11 @@ import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position';
 import { GridType } from '../common/grid.interface';
-import { IgxGridIconService } from '../common/grid-icon.service';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../pinning/pinning-icons';
-import { GridIconsFeature } from '../common/enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
-import { Subscription } from 'rxjs';
+import { IgxIconService } from '../../icon/public_api';
+import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { first } from 'rxjs/operators';
 
 /**
@@ -245,7 +243,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        private iconService: IgxGridIconService) {
+        private iconService: IgxIconService) {
         super(_displayDensityOptions);
     }
 
@@ -430,7 +428,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      * @internal
      */
     ngAfterViewInit() {
-        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
 
     /**
