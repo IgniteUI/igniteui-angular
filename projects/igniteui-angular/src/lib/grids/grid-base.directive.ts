@@ -3706,7 +3706,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public getColumnByVisibleIndex(index: number): IgxColumnComponent {
-        return this.visibleColumns.find((col) => !col.columnGroup && !col.columnLayout && col.visibleIndex === index);
+        return this.visibleColumns.find((col) =>
+            !col.columnGroup && !col.columnLayout &&
+            col.visibleIndex === index
+        );
     }
 
     /**
@@ -6564,11 +6567,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         if (commit) {
             this.onRowAdded.subscribe(rowData => {
-            // A check whether the row is in the current view
-            const index = this.dataView.findIndex(data => data === rowData);
-            const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
-            const showIndex = shouldScroll ? index : -1;
-            this.showSnackbarFor(showIndex);
+                // A check whether the row is in the current view
+                const index = this.dataView.findIndex(data => data === rowData);
+                const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
+                const showIndex = shouldScroll ? index : -1;
+                this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
             this.gridAPI.addRowToData(row.data);
