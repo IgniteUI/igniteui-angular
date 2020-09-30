@@ -50,6 +50,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
+- `IgxToast`
+    - The component now utilizes the `IgxOverlayService` to position itself in the DOM.
+    - An additional input property `outlet` has been added to allow users to specify custom Overlay Outlets using the `IgxOverlayOutletDirective`;
+    - The `position` property now accepts values of type `IgxToastPosition` that work with strict templates.
 
 ## 10.1.0
 
