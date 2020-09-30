@@ -1,14 +1,6 @@
 <ng-container *ngIf="isRowContext">
-    <button *ngIf="inPinnedArea && pinnedTop" igxRipple igxButton="icon" (click)="scrollToRow($event)">
-        <igx-icon fontSet="pinning-actions-icons" name="jump_down"></igx-icon>
-    </button>
-    <button *ngIf="inPinnedArea && !pinnedTop" igxRipple igxButton="icon" (click)="scrollToRow($event)">
-        <igx-icon fontSet="pinning-actions-icons" name="jump_up"></igx-icon>
-    </button>
-    <button *ngIf="!pinned" igxRipple igxButton="icon" (click)="pin($event)">
-        <igx-icon fontSet="pinning-icons" name="pin"></igx-icon>
-    </button>
-    <button *ngIf="pinned" igxRipple igxButton="icon" (click)="unpin($event)">
-        <igx-icon fontSet="pinning-icons" name="unpin"></igx-icon>
-    </button>
+    <igx-grid-action-button *ngIf="inPinnedArea && pinnedTop" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="jump-down" [labelText]="grid.resourceStrings.igx_grid_actions_jumpDown_label" (onActionClick)="scrollToRow($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="inPinnedArea && !pinnedTop" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="jump-up" [labelText]="grid.resourceStrings.igx_grid_actions_jumpUp_label" (onActionClick)="scrollToRow($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="!pinned" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="pin-left" [labelText]="grid.resourceStrings.igx_grid_actions_pin_label" (onActionClick)="pin($event)"></igx-grid-action-button>
+    <igx-grid-action-button *ngIf="pinned" [asMenuItem]="asMenuItems" iconSet="imx-icons" iconName="unpin-left" [labelText]="grid.resourceStrings.igx_grid_actions_unpin_label" (onActionClick)="unpin($event)"></igx-grid-action-button>
 </ng-container>

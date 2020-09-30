@@ -225,6 +225,26 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
         }));
+
+        it('should return correctly the rowData', () => {
+            hierarchicalGrid.primaryKey = 'ID';
+            fixture.detectChanges();
+
+            const rowData = hierarchicalGrid.getRowByKey('2').rowData;
+            expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
+
+            hierarchicalGrid.sort({ fieldName: 'ChildLevels', dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
+            expect(hierarchicalGrid.getRowData('101')).toEqual({});
+
+            hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('startsWith'));
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
+            expect(hierarchicalGrid.getRowData('101')).toEqual({});
+        });
     });
 
     describe('Sorting', () => {
