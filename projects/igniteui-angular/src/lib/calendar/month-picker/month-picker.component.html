@@ -1,25 +1,53 @@
-<div *ngIf="isDefaultView" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" class="igx-calendar__body" (swiperight)="previousYear()" (swipeleft)="nextYear()">
-    <div class="igx-calendar-picker">
-        <div tabindex="0" class="igx-calendar-picker__prev" (click)="previousYear()" (keydown)="changeYearKB($event, false)" [ngStyle]="{
-            'min-width.%': 25,
-            'left': 0
-        }">
+<div
+    *ngIf="isDefaultView"
+    [@animateView]="activeView"
+    (@animateView.done)="viewRendered($event)"
+    class="igx-calendar__body"
+    (swiperight)="previousYear()"
+    (swipeleft)="nextYear()">
+
+    <div role="rowheader" class="igx-calendar-picker">
+        <div
+            tabindex="0"
+            class="igx-calendar-picker__prev"
+            (click)="previousYear()"
+            (keydown)="changeYearKB($event, false)"
+            [ngStyle]="{'min-width.%': 25, 'left': 0}">
+            role="button"
+            aria-label="Previous Year"
+            data-action="prev"
+            aria-disabled="false"
+
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
         <div [style.width.%]="100">
-            <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()" class="igx-calendar-picker__date">
+            <span
+                tabindex="0"
+                #yearsBtn
+                (keydown)="activeViewDecadeKB($event)"
+                (click)="activeViewDecade()"
+                class="igx-calendar-picker__date">
                 {{ formattedYear(viewDate) }}
             </span>
         </div>
-        <div tabindex="0" class="igx-calendar-picker__next" (click)="nextYear()" (keydown)="changeYearKB($event)" [ngStyle]="{
-            'min-width.%': 25,
-            'right': 0
-        }">
+        <div
+            tabindex="0"
+            class="igx-calendar-picker__next"
+            (click)="nextYear()"
+            (keydown)="changeYearKB($event)"
+            [ngStyle]="{'min-width.%': 25,'right': 0}">
+            role="button"
+            aria-label="Next Year"
+            data-action="next"
+            aria-disabled="false"
+
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
 
-    <igx-months-view [@animateChange]="yearAction" #months
+    <igx-months-view
+                     role="grid"
+                     [@animateChange]="yearAction" #months
                      (@animateChange.done)="animationDone($event)"
                      (@animateView.done)="viewRendered($event)"
                      [date]="viewDate"
@@ -30,6 +58,7 @@
     </igx-months-view>
 </div>
 <igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade (@animateView.done)="viewRendered($event)"
+                role="grid"
                 [date]="viewDate"
                 [locale]="locale"
                 [formatView]="formatViews.year"

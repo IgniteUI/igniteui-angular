@@ -755,6 +755,9 @@
     }
 
     %cal-column-year {
+        padding: 0;
+        margin: 0;
+
         %cal-value--year {
             flex: 1 0 0;
         }
@@ -766,9 +769,7 @@
         justify-content: center;
         align-items: center;
         color: --var($theme, 'content-text-color');
-        cursor: pointer;
         outline: none;
-        // transition: background .15s ease-out;
     }
 
     %cal-value--hover {

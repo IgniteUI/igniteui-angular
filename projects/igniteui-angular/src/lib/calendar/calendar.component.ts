@@ -29,6 +29,7 @@ import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
+import { formatDate } from '@angular/common';
 
 let NEXT_ID = 0;
 
@@ -201,22 +202,22 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public tabindex = 0;
 
     /**
-     * The default aria role attribute for the component.
+     * The default aria-label attribute for the component.
      *
      * @hidden
      * @internal
      */
-    @HostBinding('attr.role')
-    public role = 'grid';
+    @HostBinding('attr.aria-label')
+    public ariaLabel = 'Entering calendar, use tab to navigate';
 
     /**
-     * The default aria lebelled by attribute for the component.
+     * The default aria-labelledby attribute for the component.
      *
      * @hidden
      * @internal
      */
-    @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy = 'calendar';
+    // @HostBinding('attr.aria-labelledby')
+    // public ariaLabelledBy = 'igx-aria-calendar-title-month igx-aria-calendar-title-year';
 
     /**
      * The default css class applied to the component.
@@ -494,6 +495,24 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
         this.isKeydownTrigger = isKeydownTrigger;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getPrevMonthYear(): String {
+        const prevMonthYer = this.calendarModel.getPrevMonth(this.viewDate).toString()
+        return formatDate(prevMonthYer, 'MMMM yyyy', this.locale);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getNextMonthYer(): String {
+        const nextMonthYer = this.calendarModel.getNextMonth(this.viewDate).toString()
+        return formatDate(nextMonthYer, 'MMMM yyyy', this.locale);
     }
 
     /**

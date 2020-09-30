@@ -94,6 +94,11 @@ export class IgxDayItemComponent {
     public get isToday(): boolean {
         const today = new Date(Date.now());
         const date = this.date.date;
+
+        if (date.getDate() === today.getDate()) {
+            this.nativeElement.setAttribute('aria-current', 'date');
+        }
+
         return (date.getFullYear() === today.getFullYear() &&
             date.getMonth() === today.getMonth() &&
             date.getDate() === today.getDate()
