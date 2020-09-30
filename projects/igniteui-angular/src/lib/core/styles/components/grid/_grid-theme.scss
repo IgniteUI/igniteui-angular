@@ -2338,7 +2338,7 @@
     %igx-grid__addrow-snackbar {
         position: absolute;
         z-index: 5;
-        bottom: 25%;
+        bottom: rem(24px);
         left: 50%;
         transform: translateX(-50%);
     }
