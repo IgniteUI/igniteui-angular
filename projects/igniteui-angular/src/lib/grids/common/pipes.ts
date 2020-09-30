@@ -374,6 +374,7 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
         const row = {...collection[parentIndex]};
         Object.keys(row).forEach(key => row[key] = undefined);
+        row[grid.primaryKey] = grid.generateRowID();
         const rec = {
             recordRef: row,
             addRow: true
