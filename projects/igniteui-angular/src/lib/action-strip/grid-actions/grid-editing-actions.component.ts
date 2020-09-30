@@ -10,6 +10,7 @@ import { addRow } from '@igniteui/material-icons-extended';
 })
 
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
+
     /**
      * Host `class.igx-action-strip` binding.
      * @hidden
