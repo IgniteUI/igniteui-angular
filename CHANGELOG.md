@@ -29,8 +29,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
-    - `cellEditExit` is a new event that fires when cell exits edit"
-    - `rowEditExit` is a new event that fires when row exits edit"
+    - `cellEditExit` is a new event that fires when cell exits edit mode
+    - `rowEditExit` is a new event that fires when row exits edit mode
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
