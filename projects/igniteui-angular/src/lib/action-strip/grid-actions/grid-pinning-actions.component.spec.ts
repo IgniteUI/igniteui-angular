@@ -18,7 +18,8 @@ describe('igxGridPinningActions #grid ', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxActionStripTestingComponent
+                IgxActionStripTestingComponent,
+                IgxActionStripPinMenuComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -28,52 +29,77 @@ describe('igxGridPinningActions #grid ', () => {
             ]
         }).compileComponents();
     }));
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
-        fixture = TestBed.createComponent(IgxActionStripTestingComponent);
-        fixture.detectChanges();
-        actionStrip = fixture.componentInstance.actionStrip;
-        grid = fixture.componentInstance.grid;
-    }));
 
-    it('should allow pinning and unpinning rows in a grid', () => {
-        let pinIcon, unpinIcon;
-        actionStrip.show(grid.rowList.first);
-        fixture.detectChanges();
-        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin-left]`));
-        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin-left]`));
-        expect(unpinIcon).toBeNull();
-        pinIcon.parent.triggerEventHandler('click', new Event('click'));
-        actionStrip.hide();
-        fixture.detectChanges();
-        expect(grid.pinnedRows.length).toBe(1);
+    describe('Base ', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxActionStripTestingComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        }));
 
-        actionStrip.show(grid.pinnedRows[0]);
-        fixture.detectChanges();
-        pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin-left]`));
-        unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin-left]`));
-        expect(pinIcon).toBe(null);
-        unpinIcon.parent.triggerEventHandler('click', new Event('click'));
-        actionStrip.hide();
-        fixture.detectChanges();
-        expect(grid.pinnedRows.length).toBe(0);
+        it('should allow pinning and unpinning rows in a grid', () => {
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            let pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+            expect(pinningButtons.length).toBe(1);
+            expect(pinningButtons[0].componentInstance.iconName).toBe('pin-left');
+            pinningButtons[0].triggerEventHandler('click', new Event('click'));
+            actionStrip.hide();
+            fixture.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+
+            actionStrip.show(grid.pinnedRows[0]);
+            fixture.detectChanges();
+            pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+            expect(pinningButtons.length).toBe(2);
+            expect(pinningButtons[1].componentInstance.iconName).toBe('unpin-left');
+            pinningButtons[1].triggerEventHandler('click', new Event('click'));
+            actionStrip.hide();
+            fixture.detectChanges();
+            expect(grid.pinnedRows.length).toBe(0);
+        });
+
+        it('should allow navigating to disabled row in unpinned area', async() => {
+            grid.pinRow('FAMIA');
+            fixture.detectChanges();
+
+            actionStrip.show(grid.pinnedRows[0]);
+            fixture.detectChanges();
+            const pinningButtons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+            const jumpButton = pinningButtons[0];
+            jumpButton.triggerEventHandler('click', new Event('click'));
+            await wait();
+            fixture.detectChanges();
+            await wait();
+            fixture.detectChanges();
+
+            const secondToLastVisible = grid.rowList.toArray()[grid.rowList.length - 2];
+            expect(secondToLastVisible.rowID).toEqual('FAMIA');
+        });
     });
 
-    it('should allow navigating to disabled row in unpinned area', async() => {
-        grid.pinRow('FAMIA');
-        fixture.detectChanges();
+    describe('Menu ', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxActionStripPinMenuComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        }));
+        it('should allow pinning row via menu', async() => {
+            const row = grid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
 
-        actionStrip.show(grid.pinnedRows[0]);
-        fixture.detectChanges();
-
-        const jumpIcon = fixture.debugElement.query(By.css(`igx-icon[name=jump-down]`));
-        jumpIcon.parent.triggerEventHandler('click', new Event('click'));
-        await wait();
-        fixture.detectChanges();
-        await wait();
-        fixture.detectChanges();
-
-        const secondToLastVisible = grid.rowList.toArray()[grid.rowList.length - 2];
-        expect(secondToLastVisible.rowID).toEqual('FAMIA');
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            expect(actionStrip.menu.items.length).toBe(1);
+            const pinMenuItem = actionStrip.menu.items[0];
+            // select pin
+            actionStrip.menu.selectItem(pinMenuItem);
+            fixture.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+        });
     });
 });
 
@@ -148,4 +174,21 @@ class IgxActionStripTestingComponent implements OnInit {
         ];
         // tslint:enable:max-line-length
     }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
+    </igx-action-strip>
+</igx-grid>
+    `
+})
+class IgxActionStripPinMenuComponent extends IgxActionStripTestingComponent {
 }
