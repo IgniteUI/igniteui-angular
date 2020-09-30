@@ -122,10 +122,51 @@
     }
 
     %igx-action-strip__editing-actions,
-    %igx-action-strip__pining-actions {
+    %igx-action-strip__pinning-actions {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    %igx-action-strip__menu-item {
+        [igxLabel] {
+            cursor: pointer;
+        }
+
+        igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+        }
+
+        igx-icon + [igxLabel] {
+            margin-#{$left}: rem(12px);
+        }
+
+        &%igx-drop-down__item--cosy {
+            igx-icon + [igxLabel] {
+                margin-#{$left}: rem(10px);
+            }
+        }
+
+        &%igx-drop-down__item--compact {
+            igx-icon + [igxLabel] {
+                margin-#{$left}: rem(8px);
+            }
+        }
+    }
+
+    %igx-action-strip__menu-item--danger {
+        color: igx-color(map-get($theme, 'palette'), 'error');
+
+        &:hover {
+            color: igx-color(map-get($theme, 'palette'), 'error');
+        }
+    }
+
+    %igx-action-strip__menu-button {
+        display: flex;
+        align-items: center;
     }
 
     %igx-action-strip__actions {
@@ -151,14 +192,6 @@
             @if $variant == 'indigo-design' {
                 border-radius: --var($theme, 'actions-border-radius');
             }
-        }
-    }
-
-    %igx-action-strip__pining-actions {
-        margin-#{$right}: rem(4px);
-
-        &:last-child {
-            margin-#{$right}: 0;
         }
     }
 
