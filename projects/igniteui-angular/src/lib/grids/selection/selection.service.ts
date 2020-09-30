@@ -141,10 +141,11 @@ export class IgxCell {
 @Injectable()
 export class IgxGridCRUDService {
 
-    grid: IgxGridBaseDirective & GridType;
-    cell: IgxCell | null = null;
-    row: IgxRow | null = null;
+    public grid: IgxGridBaseDirective & GridType;
+    public cell: IgxCell | null = null;
+    public row: IgxRow | null = null;
     public isInCompositionMode = false;
+
     private _cellEditingBlocked = false;
     private _rowEditingBlocked = false;
 
