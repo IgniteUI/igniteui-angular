@@ -4044,6 +4044,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.endEdit(true);
         this.cancelAddMode = false;
 
+        if (this.expansionStates.get(rowID)) {
+            this.collapseRow(rowID);
+        }
+
         this.addRowParent = {
             rowID: rowID,
             index: index,
