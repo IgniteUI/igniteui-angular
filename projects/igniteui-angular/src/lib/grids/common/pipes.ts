@@ -377,6 +377,7 @@ export class IgxGridAddRowPipe implements PipeTransform {
             addRow: true
         };
         copy.splice(parentIndex + 1, 0, rec);
+        grid.unpinnedRecords = copy;
         return copy;
     }
 }
