@@ -2763,7 +2763,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.hideOverlays();
-        const args: IGridScrollEventArgs = { direction: 'horizontal', event: event, scrollPosition: this.headerContainer.scrollPosition  };
+        const args: IGridScrollEventArgs = { direction: 'horizontal', event: event, scrollPosition: this.headerContainer.scrollPosition };
         this.onScroll.emit(args);
     }
 
@@ -2953,7 +2953,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
             if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
-                this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
+                this.navigation.activeNode.row >= 0 && this.navigation.activeNode.row < this.dataView.length)
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                 || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
                 this.navigation.activeNode = {} as IActiveNode;
@@ -3687,7 +3687,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public getColumnByVisibleIndex(index: number): IgxColumnComponent {
-        return this.visibleColumns.find((col) => !col.columnGroup && !col.columnLayout && col.visibleIndex === index);
+        return this.visibleColumns.find((col) =>
+            !col.columnGroup && !col.columnLayout &&
+            col.visibleIndex === index
+        );
     }
 
     /**
@@ -3979,7 +3982,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (!target.pinned && !column.pinned) {
-           this._reorderColumns(column, target, pos, this._unpinnedColumns);
+            this._reorderColumns(column, target, pos, this._unpinnedColumns);
         }
 
         this._moveColumns(column, target, pos);
@@ -4814,8 +4817,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected getTheadRowHeight(): number {
         const height = this.getComputedHeight(this.theadRow.nativeElement);
         return (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
-        height - this.getFilterCellHeight() :
-        height;
+            height - this.getFilterCellHeight() :
+            height;
     }
 
     /**
@@ -4826,7 +4829,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.showToolbar && this.toolbarHtml != null) {
             const height = this.getComputedHeight(this.toolbarHtml.nativeElement);
             toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-            height : 0;
+                height : 0;
         }
         return toolbarHeight;
     }
@@ -4839,7 +4842,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.footer) {
             const height = this.getComputedHeight(this.footer.nativeElement);
             pagingHeight = this.footer.nativeElement.firstElementChild ?
-            height : 0;
+                height : 0;
         }
         return pagingHeight;
     }
@@ -5999,7 +6002,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
 
             if (this.dataView[rowIndex].detailsData) {
-                this.navigation.setActiveNode({row: rowIndex});
+                this.navigation.setActiveNode({ row: rowIndex });
                 this.cdr.detectChanges();
             }
 
@@ -6545,11 +6548,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         if (commit) {
             this.onRowAdded.subscribe(rowData => {
-            // A check whether the row is in the current view
-            const index = this.dataView.findIndex(data => data === rowData);
-            const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
-            const showIndex = shouldScroll ? index : -1;
-            this.showSnackbarFor(showIndex);
+                // A check whether the row is in the current view
+                const index = this.dataView.findIndex(data => data === rowData);
+                const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
+                const showIndex = shouldScroll ? index : -1;
+                this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
             this.gridAPI.addRowToData(row.data);
