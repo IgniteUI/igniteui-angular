@@ -308,6 +308,8 @@ export class IgxGridCRUDService {
         }
 
         const args = this.cell?.createEditEventArgs(true);
+        this.cell.value = args.newValue;
+
         this.grid.cellEditExit.emit(args);
         if (args && args.cancel) {
             return this._rowEditingBlocked = this._cellEditingBlocked = true;
