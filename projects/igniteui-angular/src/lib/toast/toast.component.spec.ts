@@ -50,31 +50,23 @@ describe('IgxToast', () => {
         expect(domToast.id).toBe('customToast');
     });
 
-    it('should auto hide 1 second after it\'s open', fakeAsync(() => {
+    it('should auto hide after it\'s open', fakeAsync(() => {
+        spyOn(toast.onHiding, 'emit');
         toast.displayTime = 1000;
 
         toast.show();
-
-        expect(toast.isVisible).toBeTruthy();
-        expect(toast.autoHide).toBeTruthy();
-
         tick(1000);
-
-        expect(toast.isVisible).toBeFalsy();
+        expect(toast.onHiding.emit).toHaveBeenCalled();
     }));
 
     it('should not auto hide after it\'s open', fakeAsync(() => {
+        spyOn(toast.onHiding, 'emit');
         toast.displayTime = 1000;
         toast.autoHide = false;
 
         toast.show();
-
-        expect(toast.isVisible).toBeTruthy();
-        expect(toast.autoHide).toBeFalsy();
-
         tick(1000);
-
-        expect(toast.isVisible).toBeTruthy();
+        expect(toast.onHiding.emit).not.toHaveBeenCalled();
     }));
 
     it('should emit onShowing when toast is shown', () => {
@@ -83,42 +75,45 @@ describe('IgxToast', () => {
         expect(toast.onShowing.emit).toHaveBeenCalled();
     });
 
-    it('should emit onShown when super onAppended is fired', waitForAsync((done: DoneFn) => {
-        toast.show();
-
-        toast.onAppended.subscribe(() => {
-            spyOn(toast.onShown, 'emit');
-            expect(toast.onShown.emit).toHaveBeenCalled();
-            done();
-        });
-    }));
-
     it('should emit onHiding when toast is hidden', () => {
         spyOn(toast.onHiding, 'emit');
         toast.hide();
         expect(toast.onHiding.emit).toHaveBeenCalled();
     });
 
-    it('should emit onHidden when super onClosed is fired', waitForAsync((done: DoneFn) => {
-        toast.isVisible = true;
-        toast.hide();
+    it('should emit onShown when toggle onOpened is fired', waitForAsync(() => {
+        spyOn(toast.onShown, 'emit');
+        toast.open();
 
-        toast.onClosed.subscribe(() => {
-            spyOn(toast.onHidden, 'emit');
-            expect(toast.onHidden.emit).toHaveBeenCalled();
-            done();
+        toast.onOpened.subscribe(() => {
+            expect(toast.onShown.emit).toHaveBeenCalled();
         });
     }));
 
-    it('visibility is updated by the toggle() method', () => {
-        toast.toggle();
-        fixture.detectChanges();
-        expect(toast.isVisible).toEqual(true);
+    it('should emit onHidden when toggle onClosed is fired', waitForAsync(() => {
+        spyOn(toast.onHidden, 'emit');
+        toast.isVisible = true;
+        toast.close();
+
+        toast.onClosed.subscribe(() => {
+            expect(toast.onHidden.emit).toHaveBeenCalled();
+        });
+    }));
+
+    it('visibility is updated by the toggle() method', waitForAsync((done: DoneFn) => {
+        toast.autoHide = false;
 
         toast.toggle();
-        fixture.detectChanges();
-        expect(toast.isVisible).toEqual(false);
-    });
+        toast.onOpened.subscribe(() => {
+            expect(toast.isVisible).toEqual(true);
+        });
+
+        toast.toggle();
+        toast.onClosed.subscribe(() => {
+            expect(toast.isVisible).toEqual(false);
+            done();
+        });
+    }));
 
     it('can set message through show method', fakeAsync(() => {
         toast.displayTime = 100;

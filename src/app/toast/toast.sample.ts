@@ -27,7 +27,7 @@ export class ToastSampleComponent {
     }
 
     handleHiding(event) {
-        console.log('toast hiding', event);
+        console.log('hiding toast', event);
     }
 
     handleHidden(event) {

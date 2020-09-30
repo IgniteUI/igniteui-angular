@@ -104,7 +104,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * Emits an event when the toast is shown.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onShown) = "onShown($event)"></igx-toast>
+     * <igx-toast (onShown)="onShown($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
@@ -115,7 +115,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * Emits an event prior the toast is hidden.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onHiding) = "onHiding($event)"></igx-toast>
+     * <igx-toast (onHiding)="onHiding($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
@@ -126,7 +126,7 @@ export class IgxToastComponent extends IgxToggleDirective
      *  Emits an event when the toast is hidden.
      *  Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onHidden) = "onHidden($event)"></igx-toast>
+     * <igx-toast (onHidden)="onHidden($event)"></igx-toast>
      * ```
      * @memberof IgxToastComponent
      */
@@ -321,9 +321,7 @@ export class IgxToastComponent extends IgxToggleDirective
             this.toastMessage = message;
         }
 
-        this.isVisible = true;
         this.onShowing.emit(this);
-
         super.open(overlaySettings);
 
         if (this.autoHide) {
@@ -342,7 +340,6 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     public hide(): void {
         clearInterval(this.timeoutId);
-        this.isVisible = false;
         this.onHiding.emit(this);
         super.close();
     }
@@ -378,12 +375,14 @@ export class IgxToastComponent extends IgxToggleDirective
      * @hidden
      */
     ngOnInit() {
-        this.onAppended.pipe(takeUntil(this.d$)).subscribe(() => {
+        this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
             this.onShown.emit(this);
+            this.isVisible = true;
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
             this.onHidden.emit(this);
+            this.isVisible = false;
         });
     }
 
