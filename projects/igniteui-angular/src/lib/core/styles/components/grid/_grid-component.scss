@@ -378,6 +378,10 @@
         @extend %igx-grid__tree-loading-indicator !optional;
     }
 
+    @include e(td, $m: new) {
+        @extend %igx-grid__td--new !optional;
+    }
+
     @include e(td, $m: edited) {
         @extend %igx-grid__td--edited !optional;
     }
