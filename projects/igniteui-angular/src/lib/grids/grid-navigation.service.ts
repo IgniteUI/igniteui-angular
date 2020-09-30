@@ -50,6 +50,7 @@ export class IgxGridNavigationService {
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        const alt = event.altKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
         const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
@@ -78,6 +79,7 @@ export class IgxGridNavigationService {
     }
 
     protected getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
+        
         if (!this.isDataRow(rowIndex, true) && (key.indexOf('down') < 0 || key.indexOf('up') < 0) && ctrl) {
             return { rowIndex, colIndex };
         }
@@ -261,10 +263,23 @@ export class IgxGridNavigationService {
 
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
-        const row = this.grid.getRowByIndex(this.activeNode.row) as any;
-        if (!this.isToggleKey(key) || !row) { return; }
-
-        if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
+        const row = this.grid.getRowByIndex(this.activeNode.row) as any;      
+        if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) { return; }
+        
+        if(this.isAddKey(key)){
+            if (!this.grid.rowEditable) {
+                console.warn('The grid must be in row edit mode to perform row adding!');
+                return;
+            }
+            if(event.shiftKey){
+              //Add child 
+              //this.grid.beginAddChild(row.rowID);
+            }else{                
+                this.grid.beginAddRow(row.rowID);
+            }
+            
+        }
+        else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             row.rowID === undefined ? row.toggle() :
                 this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
@@ -606,5 +621,8 @@ export class IgxGridNavigationService {
 
     private isToggleKey(key: string): boolean {
         return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
+    }
+    private isAddKey(key: string): boolean{
+        return key === '+';
     }
 }

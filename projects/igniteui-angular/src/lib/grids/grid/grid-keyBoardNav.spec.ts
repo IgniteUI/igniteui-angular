@@ -1008,5 +1008,47 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent('keydown')
             });
         });
+        it('should add new row with Alt + plus key.', () => {
+            const initialDataLength = grid.data.length;
+            const cell = grid.getRowByIndex(1).cells[0];
+
+            grid.rowEditable = false;
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            //  cell.nativeElement.dispatchEvent(new Event('pointerdown'));
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fix.detectChanges();
+            expect(grid.data.length).toEqual(initialDataLength);
+
+            grid.rowEditable = true;
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fix.detectChanges();
+            expect(grid.data.length).toEqual(initialDataLength + 1);
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fix.detectChanges();
+            expect(grid.data.length).toEqual(initialDataLength);
+
+
+
+
+        });
+        
     });
 });
