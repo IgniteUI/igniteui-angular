@@ -17,6 +17,7 @@ const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
+    const DEBOUNCETIME = 60;
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -1143,6 +1144,25 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         pos = grid.getPreviousCell(1, 2, col => col.editable === true);
         expect(pos.rowIndex).toEqual(0);
         expect(pos.visibleColumnIndex).toEqual(2);
+    }));
+
+    it('should navigate to the proper row in MRL scenario', (async () => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        const grid = fix.componentInstance.grid;
+        const NAVIGATE = 20;
+
+        fix.detectChanges();
+        await wait(DEBOUNCETIME);
+
+        grid.navigateTo(NAVIGATE);
+
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
+
+        const row = grid.getRowByIndex(NAVIGATE);
+        expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
     }));
 });
 
