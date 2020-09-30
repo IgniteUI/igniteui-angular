@@ -79,7 +79,6 @@ export class IgxGridNavigationService {
     }
 
     protected getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
-        
         if (!this.isDataRow(rowIndex, true) && (key.indexOf('down') < 0 || key.indexOf('up') < 0) && ctrl) {
             return { rowIndex, colIndex };
         }
@@ -263,23 +262,21 @@ export class IgxGridNavigationService {
 
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
-        const row = this.grid.getRowByIndex(this.activeNode.row) as any;      
+        const row = this.grid.getRowByIndex(this.activeNode.row) as any;
+
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) { return; }
-        
-        if(this.isAddKey(key)){
+        if (this.isAddKey(key)) {
             if (!this.grid.rowEditable) {
                 console.warn('The grid must be in row edit mode to perform row adding!');
                 return;
             }
-            if(event.shiftKey){
-              //Add child 
-              //this.grid.beginAddChild(row.rowID);
-            }else{                
+
+            if (event.shiftKey) {
+                // this.grid.beginAddChild(row.rowID)
+            } else {
                 this.grid.beginAddRow(row.rowID);
             }
-            
-        }
-        else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
+        } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             row.rowID === undefined ? row.toggle() :
                 this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
@@ -622,7 +619,8 @@ export class IgxGridNavigationService {
     private isToggleKey(key: string): boolean {
         return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
     }
-    private isAddKey(key: string): boolean{
+
+    private isAddKey(key: string): boolean {
         return key === '+';
     }
 }
