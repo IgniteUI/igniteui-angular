@@ -155,11 +155,11 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        if (isEqual(cell.value, cell.editValue)) {
+        if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
         const data = cell.rowData;
-        mergeObjects(data, reverseMapper(cell.column.field, cell.editValue));
+        mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
