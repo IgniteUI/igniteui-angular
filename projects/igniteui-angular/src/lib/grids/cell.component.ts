@@ -16,7 +16,7 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { getNodeSizeViaRange, isIE, isLeftClick, isRightClick, PlatformUtil } from '../core/utils';
+import { getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateMethod } from '../core/deprecateDecorators';
@@ -753,13 +753,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.activate(event);
             return;
         }
-        if (!isLeftClick(event) && !isRightClick(event)) {
+        if (!isLeftClick(event)) {
             event.preventDefault();
             this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
-            this.gridAPI.submit_value();
+            // Ensure RMB Click on edited cell does not end cell editing
+            if (!this.selected) {
+                this.gridAPI.submit_value();
+            }
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);

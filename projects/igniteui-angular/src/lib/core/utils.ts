@@ -251,10 +251,6 @@ export function isLeftClick(event: PointerEvent) {
     return event.button === 0;
 }
 
-export function isRightClick(event: PointerEvent) {
-    return event.button === 2;
-}
-
 /** @hidden */
 export function isNavigationKey(key: string): boolean {
     return [
