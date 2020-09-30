@@ -11,6 +11,7 @@
       "jszip",
       "resize-observer-polyfill",
       "igniteui-trial-watermark",
-      "lodash.merge"
+      "lodash.merge",
+      "@igniteui/material-icons-extended"
     ]
 }

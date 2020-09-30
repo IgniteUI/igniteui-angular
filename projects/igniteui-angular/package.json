@@ -72,7 +72,8 @@
         "tslib": "^2.0.0",
         "resize-observer-polyfill": "^1.5.1",
         "igniteui-trial-watermark": "^1.0.3",
-        "lodash.merge": "^4.6.2"
+        "lodash.merge": "^4.6.2",
+        "@igniteui/material-icons-extended": "^2.3.0"
     },
     "peerDependencies": {
         "@angular/common": "^10.0.0",
