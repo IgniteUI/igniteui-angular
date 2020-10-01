@@ -638,8 +638,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
         let id = this.generateRowID();
-        if (this.foreignKey && id === row.data[this.foreignKey]) {
-            // safeguard in case generated id matches the foreign key.
+        const rootRecPK = this.foreignKey && this.rootRecords && this.rootRecords.length > 0 ?
+         this.rootRecords[0].data[this.foreignKey] : null;
+        if (id === rootRecPK) {
+            // safeguard in case generated id matches the root foreign key.
             id = this.generateRowID();
         }
         row.rowID = id;
