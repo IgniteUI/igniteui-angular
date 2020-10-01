@@ -51,6 +51,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected _lastSearchInfo: ISearchInfo;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--new')
+    get isEmptyAddRowCell() {
+        return this.row.addRow && (this.value === undefined || this.value === null);
+    }
+
+    /**
      * Gets the column of the cell.
      * ```typescript
      *  let cellColumn = this.cell.column;
@@ -764,7 +773,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
-            this.gridAPI.submit_value();
+            // Ensure RMB Click on edited cell does not end cell editing
+            if (!this.selected) {
+                this.gridAPI.submit_value();
+            }
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);

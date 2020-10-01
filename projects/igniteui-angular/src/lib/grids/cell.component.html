@@ -55,7 +55,7 @@
     [column]="this.column.field"
     [containerClass]="'igx-grid__td-text'"
     [metadata]="searchMetadata">{{
-        value ? value : (column.header || column.field)
+        !isEmptyAddRowCell ? value : (column.header || column.field)
     }}</div>
 </ng-template>
 <ng-template #inlineEditor let-cell="cell">
