@@ -4,11 +4,11 @@ import {
     Tree
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { getIdentifierPositions } from '../common/tsUtils';
+import {  getIdentifierPositions } from '../common/tsUtils';
 
 const version = '10.1.0';
 
-export default function (): Rule {
+export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 

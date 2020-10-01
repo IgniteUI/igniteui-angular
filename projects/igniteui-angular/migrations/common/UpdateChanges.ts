@@ -9,8 +9,8 @@ import {
     SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
 } from './schema';
 import {
-    getLanguageService, getRenamePositions, getLanguageServiceHost,
-    findMatches, getTypeDefinitionAtPosition, replaceMatch, createProjectService
+    getLanguageService, getRenamePositions, findMatches,
+    replaceMatch, createProjectService, isMemberIgniteUI
 } from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
 import { ServerHost } from './ServerHost';
@@ -27,7 +27,7 @@ export interface BoundPropertyObject {
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
-    public projectService: tss.server.ProjectService;
+    protected projectService: tss.server.ProjectService;
     protected serverHost: ServerHost;
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
@@ -85,17 +85,9 @@ export class UpdateChanges {
     private _service: tss.LanguageService;
     public get service(): tss.LanguageService {
         if (!this._service) {
-            this._service = getLanguageService(this.serviceHost);
+            this._service = getLanguageService(this.tsFiles, this.host);
         }
         return this._service;
-    }
-
-    private _serviceHost: tss.LanguageServiceHost;
-    public get serviceHost(): tss.LanguageServiceHost {
-        if (!this._serviceHost) {
-            this._serviceHost = getLanguageServiceHost([...this.tsFiles, ...this.templateFiles], this.host);
-        }
-        return this._serviceHost;
     }
 
     /**
@@ -364,9 +356,7 @@ export class UpdateChanges {
         for (const change of memberChanges.changes) {
             const matches = findMatches(content, change);
             for (const matchPosition of matches) {
-                const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
-                if (!typeDef) { continue; }
-                if (typeDef.fileName.includes('igniteui-angular') && change.definedIn.indexOf(typeDef.name) !== -1) {
+                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition)) {
                     changes.add({ change, position: matchPosition });
                 }
             }

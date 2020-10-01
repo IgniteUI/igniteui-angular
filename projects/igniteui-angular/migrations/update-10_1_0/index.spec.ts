@@ -41,7 +41,7 @@ describe('Update 10.1.0', () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
-                `<igx-navbar title="Test title">
+            `<igx-navbar title="Test title">
             <igx-navbar-action>
             <igx-icon>arrow_back</igx-icon>
             </igx-navbar-action>
@@ -59,7 +59,7 @@ describe('Update 10.1.0', () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.ts'))
             .toEqual(
-                `import { IgxNavbarActionDirective } from 'igniteui-angular';
+            `import { IgxNavbarActionDirective } from 'igniteui-angular';
             export class TestNavbar {
             @ViewChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
             private actionIcon: IgxNavbarActionDirective; }`);
@@ -117,9 +117,5 @@ describe('Update 10.1.0', () => {
         expect(tree.readContent('/testSrc/appPrefix/component/tree-grid.component.html'))
             .toEqual('<igx-tree-grid (onScroll)="handleEvent($event)"></igx-tree-grid>');
 
-    });
-
-    it('should replace selectedRows() with selectedRows in ts files', async () => {
-        pending('set up tests for migrations through lang service');
     });
 });

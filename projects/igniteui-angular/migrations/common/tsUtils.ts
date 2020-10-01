@@ -6,7 +6,7 @@ import { MemberChange } from './schema';
 import { escapeRegExp } from './util';
 import { Logger } from './tsLogger';
 
-export const PACKAGE_IMPORT = 'igniteui-angular';
+export const PACKAGE_NAME = 'igniteui-angular';
 
 /** Returns an source file */
 // export function getFileSource(sourceText: string): ts.SourceFile {
@@ -68,7 +68,7 @@ export function getImportModulePositions(sourceText: string, startsWith: string)
 /** Filters out statements to named imports (e.g. `import {x, y}`) from PACKAGE_IMPORT */
 const namedImportFilter = (statement: ts.Statement) => {
     if (statement.kind === ts.SyntaxKind.ImportDeclaration &&
-        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text === PACKAGE_IMPORT) {
+        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text === PACKAGE_NAME) {
 
         const clause = (statement as ts.ImportDeclaration).importClause;
         return clause && clause.namedBindings && clause.namedBindings.kind === ts.SyntaxKind.NamedImports;
@@ -137,20 +137,10 @@ export function replaceMatch(content: string, toReplace: string, replaceWith: st
  * Create a TypeScript language service
  * @param serviceHost A TypeScript language service host
  */
-export function getLanguageService(servicesHost: ts.LanguageServiceHost): ts.LanguageService {
-    return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
-}
-
-/**
- * Create a TypeScript language service host
- * @param filePaths Paths for files to include for the language service host
- * @param host Virtual FS host
- * @param options Typescript compiler options for the service
- */
-export function getLanguageServiceHost(filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageServiceHost {
+export function getLanguageService(filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageService {
     const fileVersions = new Map<string, number>();
     patchHostOverwrite(host, fileVersions);
-    return {
+    const servicesHost = {
         getCompilationSettings: () => options,
         getScriptFileNames: () => filePaths,
         getScriptVersion: fileName => {
@@ -170,6 +160,8 @@ export function getLanguageServiceHost(filePaths: string[], host: Tree, options:
             return filePaths.indexOf(fileName) !== -1;
         }
     };
+
+    return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
 }
 
 function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {
@@ -181,6 +173,10 @@ function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {
     };
 }
 
+/**
+ * Create a project service singleton that holds all projects within a directory tree
+ * @param serverHost Used by the tss to navigate the directory tree
+ */
 export function createProjectService(serverHost: tss.server.ServerHost): tss.server.ProjectService {
     // set traceToConsole to true to enable logging
     const logger = new Logger(false, tss.server.LogLevel.verbose);
@@ -217,6 +213,12 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
     return projectService;
 }
 
+/**
+ * Get type information about a TypeScript identifier
+ * @param langServ TypeScript/Angular LanguageService
+ * @param entryPath path to file
+ * @param position Index of identifier
+ */
 export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
     if (!definition) { return null; }
@@ -231,8 +233,8 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
             .getProgram()
             .getSourceFile(definition.fileName)
             .statements
-                .filter(<(a: ts.Statement) => a is ts.ClassDeclaration>(m => m.kind === ts.SyntaxKind.ClassDeclaration))
-                .find(m => m.name.getText() === definition.containerName);
+            .filter(<(a: ts.Statement) => a is ts.ClassDeclaration>(m => m.kind === ts.SyntaxKind.ClassDeclaration))
+            .find(m => m.name.getText() === definition.containerName);
         const member: ts.ClassElement = classDeclaration
             .members
             .find(m => m.name.getText() === definition.name);
@@ -244,6 +246,13 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
     }
 
     return null;
+}
+
+export function isMemberIgniteUI(change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number) {
+    const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
+    if (!typeDef) { return false; }
+    return typeDef.fileName.includes(PACKAGE_NAME)
+        && change.definedIn.indexOf(typeDef.name) !== -1;
 }
 
 //#endregion
