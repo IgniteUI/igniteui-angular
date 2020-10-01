@@ -245,9 +245,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     public visibleItemsWidth: number;
 
-    /**
-     * @hidden
-     */
     @Input()
     public enableAnimation = true;
 
