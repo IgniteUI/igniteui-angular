@@ -185,7 +185,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         if (selectedIndex === 0) {
             this.displayedListData.forEach(element => {
-                if (element.value === this.addToCurrentFilter.value) { return; }
+                if (element === this.addToCurrentFilter) { return; }
                 element.isSelected = eventArgs.checked;
             });
 
