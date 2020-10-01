@@ -248,6 +248,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
+    @Input()
+    public enableAnimation = true;
+
+    /**
+     * @hidden
+     */
     public offset = 0;
 
     private _groupChanges$: Subscription;
@@ -462,13 +468,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         this.onTabItemSelected.emit({ tab: newTab, group: newTabRelatedGroup });
 
         requestAnimationFrame(() => {
+            const transitionDuration  =  this.enableAnimation ? 0.2 : 0;
             // bring the new selected tab into view if it is not
             this.bringNewTabIntoView(newTab);
             // animate the new selection indicator
             this.transformIndicatorAnimation(newTab.nativeTabItem.nativeElement);
             // animate the new tab's group content
             if (!this.hasContentTabs) {
-                this.transformContentAnimation(newTab, 0.2);
+                this.transformContentAnimation(newTab, transitionDuration);
             }
         });
     }
