@@ -4,13 +4,13 @@
 (mouseleave)="onMouseLeave(actionstrip)"
 (mouseover)="onMouseOver($event, hGrid, actionstrip)"
 [rowEditable]="true">
-<igx-row-island [key]="'childData'" [autoGenerate]="true"
-    [allowFiltering]='true'>
+<igx-action-strip #actionstrip>
+    <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+</igx-action-strip>
+<igx-row-island #island [key]="'childData'" [autoGenerate]="true"
+    [allowFiltering]='true' [rowEditable]="true" [primaryKey]="'ID'">
     <igx-row-island [key]="'childData'" [autoGenerate]="true"
         [allowFiltering]='true'></igx-row-island>
 </igx-row-island>
 <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
-<igx-action-strip #actionstrip>
-    <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
-</igx-action-strip>
 </igx-hierarchical-grid>
