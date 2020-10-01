@@ -111,7 +111,8 @@
         background: --var($theme, 'background');
         backface-visibility: hidden;
         box-shadow: --var($theme, 'shadow');
-        border-radius: --var($theme, 'border-radius')
+        border-radius: --var($theme, 'border-radius');
+        backdrop-filter: blur(8px);
     }
 
     %igx-snackbar-button {
