@@ -1024,7 +1024,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(grid.selectedRows.length).toEqual(8);
             const grRows = grid.groupsRowList.toArray();
-            for(const grRow of grRows) {
+            for (const grRow of grRows) {
                 expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
             }
             let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
@@ -1035,7 +1035,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.deselectAllRows();
             fix.detectChanges();
             expect(grid.selectedRows.length).toEqual(0);
-            for(const grRow of grRows) {
+            for (const grRow of grRows) {
                 expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
             }
 
@@ -1045,7 +1045,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(grid.selectedRows.length).toEqual(8);
 
             rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
-            for(const grRow of grRows) {
+            for (const grRow of grRows) {
                 expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
             }
             for (const r of rows) {

@@ -128,7 +128,7 @@ export class GridFunctions {
     }
 
     public static getGridScroll(fix): DebugElement {
-    return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
+        return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -299,7 +299,7 @@ export class GridFunctions {
 
     public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
         const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
-                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+            Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
 
@@ -2020,12 +2020,12 @@ export class GridFunctions {
     }
 
     public static getHeaderResizeArea(header: DebugElement): DebugElement {
-         return  header.parent.query(By.css(RESIZE_AREA_CLASS));
+        return header.parent.query(By.css(RESIZE_AREA_CLASS));
     }
 
     public static getResizer(fix): DebugElement {
-        return  fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
-   }
+        return fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
