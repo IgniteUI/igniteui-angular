@@ -33,6 +33,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     event?: Event;
     column?: ColumnType;
     owner?: IgxGridBaseDirective & GridType;
+    isAddRow?: boolean;
 }
 
 export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEventArgs {

@@ -1,27 +1,36 @@
-import {Component, Input} from '@angular/core';
-import {IgxToastPosition} from 'igniteui-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IgxToastComponent, IgxToastPosition } from 'igniteui-angular';
 
 @Component({
     selector: 'app-toast-sample',
     styleUrls: ['toast.sample.css'],
-    templateUrl: 'toast.sample.html'
+    templateUrl: 'toast.sample.html',
 })
 export class ToastSampleComponent {
+    @ViewChild('toast')
+    public toast: IgxToastComponent;
 
-    @Input()
-    toastPosition: IgxToastPosition = IgxToastPosition.Bottom;
+    public toastVisibility = false;
 
-    showToast(toast, position) {
-        switch (position) {
-            case 'middle':
-                this.toastPosition = IgxToastPosition.Middle;
-                break;
-            case 'top':
-                this.toastPosition = IgxToastPosition.Top;
-                break;
-            default:
-                this.toastPosition = IgxToastPosition.Bottom;
-        }
+    showToast(toast: IgxToastComponent, pos: IgxToastPosition) {
+        toast.position = pos;
         toast.show();
+    }
+
+    handleShowing(event) {
+        console.log('showing toast', event);
+    }
+
+    handleShown(event) {
+        console.log('toast shown', event);
+
+    }
+
+    handleHiding(event) {
+        console.log('hiding toast', event);
+    }
+
+    handleHidden(event) {
+        console.log('toast hidden', event);
     }
 }

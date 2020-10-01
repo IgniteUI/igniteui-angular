@@ -159,7 +159,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialRowData,
                 oldValue: row.rowData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: row.addRow
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
@@ -186,7 +187,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: row.rowData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: row.addRow
             };
 
             expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
@@ -218,7 +220,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: row.rowData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: row.addRow
             };
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
@@ -236,7 +239,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: row.rowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
-                owner: grid
+                owner: grid,
+                isAddRow: row.addRow
             };
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
 
@@ -1758,7 +1762,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1795,7 +1800,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: true,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
 
             // Enter cell edit mode again
@@ -1817,7 +1823,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: true,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1846,7 +1853,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1870,7 +1878,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1898,7 +1907,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 oldValue: initialData,
                 cancel: true,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1929,7 +1939,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: expectedRes }),
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -1958,7 +1969,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
+                owner: grid,
+                isAddRow: false
             });
         });
 
@@ -2182,7 +2194,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: row.rowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
-                owner: grid
+                owner: grid,
+                isAddRow: row.addRow
             };
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
