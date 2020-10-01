@@ -178,12 +178,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
-        if (this.grid.rowEditable && this.row.addRow) {
-            return this.addMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
-        }
-        if (this.editMode) {
+        if (this.editMode || this.addMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
+        }
+        if (this.grid.rowEditable && this.row.addRow) {
+            return this.addRowCellTemplate;
         }
         if (this.cellTemplate) {
             return this.cellTemplate;
@@ -759,7 +759,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
-            this.gridAPI.submit_value();
+            // Ensure RMB Click on edited cell does not end cell editing
+            if (!this.selected) {
+                this.gridAPI.submit_value();
+            }
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
