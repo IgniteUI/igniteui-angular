@@ -1852,7 +1852,6 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 newValue: null,
                 oldValue: initialData,
-                cancel: false,
                 owner: grid,
                 isAddRow: false
             });
@@ -1938,7 +1937,6 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: expectedRes }),
                 oldValue: initialData,
-                cancel: false,
                 owner: grid,
                 isAddRow: false
             });
@@ -1968,7 +1966,6 @@ describe('IgxGrid - Row Editing #grid', () => {
                 rowData: initialData,
                 newValue: null,
                 oldValue: initialData,
-                cancel: false,
                 owner: grid,
                 isAddRow: false
             });
