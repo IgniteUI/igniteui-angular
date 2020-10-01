@@ -64,7 +64,8 @@ export class IgxRow {
             rowData: this.data,
             oldValue: this.data,
             cancel: false,
-            owner: this.grid
+            owner: this.grid,
+            isAddRow: this.isAddRow || false
         };
         if (includeNewValue) {
             args.newValue = this.newData;
@@ -80,7 +81,8 @@ export class IgxRow {
             rowData: updatedData,
             oldValue: cachedRowData,
             newValue: updatedData,
-            owner: this.grid
+            owner: this.grid,
+            isAddRow: this.isAddRow || false
         };
         return args;
     }
@@ -200,10 +202,22 @@ export class IgxGridCRUDService {
     beginAddRow(cell) {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
+        const args = newCell.createEditEventArgs(false);
+        this.grid.onCellEditEnter.emit(args);
+        if (args.cancel) {
+            this.end();
+            return;
+        }
         cell.enterAddMode = true;
         this.cell = newCell;
         this.row = this.createRow(this.cell);
         this.row.isAddRow = true;
+        const rowArgs = this.row.createEditEventArgs(false);
+        this.grid.onRowEditEnter.emit(rowArgs);
+        if (rowArgs.cancel) {
+            this.endRowEdit();
+            return;
+        }
         this.grid.openRowOverlay(this.row.id);
     }
 

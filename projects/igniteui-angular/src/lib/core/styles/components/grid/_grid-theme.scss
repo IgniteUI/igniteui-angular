@@ -2349,8 +2349,9 @@
     %igx-grid__addrow-snackbar {
         position: absolute;
         z-index: 5;
-        left: 35%;
-        bottom: 25%;
+        bottom: rem(24px);
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     %igx-grid__filtering-cell {
