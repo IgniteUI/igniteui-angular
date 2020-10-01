@@ -108,7 +108,7 @@
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
                     <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
-                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | igxdate:grid.locale) : expressionItem.expression.searchVal }}
+                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | date:'mediumDate':undefined:grid.locale) : expressionItem.expression.searchVal }}
                     </span>
                 </igx-chip>
                 <div class="igx-filter-tree__expression-actions"

@@ -65,7 +65,7 @@
                        (click)="expression.condition.isUnary ? noop() : openDialog(inputGroup.element.nativeElement)"
                        [placeholder]="placeholder"
                        autocomplete="off"
-                       [value]="value | igxdate: filteringService.grid.locale"
+                       [value]="value | date:'mediumDate':undefined:filteringService.grid.locale"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
                 <igx-suffix *ngIf="value">
