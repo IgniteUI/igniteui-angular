@@ -171,7 +171,6 @@ export class GridRowEditSampleComponent {
             console.log('%cRow' + '%c Edit EXIT', this.cssBig, this.cssRed);
             console.log(evt);
         }
-        evt.cancel = this.cancel.row.exit;
     }
 
     cellEnterEditMode(evt) {
@@ -200,7 +199,6 @@ export class GridRowEditSampleComponent {
             console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
             console.log(evt);
         }
-        evt.cancel = this.cancel.cell.exit;
     }
 
     private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {

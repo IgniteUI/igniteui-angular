@@ -1202,7 +1202,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public cellEditExit = new EventEmitter<IGridEditEventArgs>();
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when cell has been edited.
@@ -1290,7 +1290,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public rowEditExit = new EventEmitter<IGridEditEventArgs>();
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a column is initialized.

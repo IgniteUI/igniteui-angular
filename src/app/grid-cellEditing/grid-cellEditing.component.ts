@@ -20,7 +20,6 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
-    public canceled = false;
 
     kk = false;
     pname = 'ProductName';
@@ -185,21 +184,5 @@ export class GridCellEditingComponent {
             args.cancel = true;
             this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
         }
-    }
-
-    public cellEditEnter(evt) {
-        console.log('cellEditEnter');
-    }
-
-    public cellEdit(evt) {
-        console.log('cellEdit');
-    }
-
-    public cellEditDone(evt) {
-        console.log('cellEditDone');
-    }
-
-    public cellEditExit(evt) {
-        console.log('cellEditExit');
     }
 }
