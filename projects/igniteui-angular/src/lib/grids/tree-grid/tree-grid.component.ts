@@ -637,6 +637,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 row.data[key] = undefined;
             }
         });
+        let id = this.generateRowID();
+        if (this.foreignKey && id === row.data[this.foreignKey]) {
+            // safeguard in case generated id matches the foreign key.
+            id = this.generateRowID();
+        }
+        row.rowID = id;
+        row.data[this.primaryKey] = id;
         return row;
     }
 
