@@ -16,7 +16,6 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DebugElement } from '@angular/core';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
@@ -411,7 +410,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyVisibleSummariesHeight(fix, 3);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.333']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.33']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['2', '79', '39.5']);
@@ -1562,7 +1561,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         GridSummaryFunctions.verifyVisibleSummariesHeight(fix, 3);
 
         let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
-        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.333']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.33']);
 
         summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['2', '79', '39.5']);
