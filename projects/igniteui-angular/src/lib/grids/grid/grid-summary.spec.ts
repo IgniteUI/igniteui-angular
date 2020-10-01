@@ -382,13 +382,13 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 const summaries = summaryClass.operate(fix.componentInstance.data.map((x) => x['OrderDate']));
                 expect(summaries[0].summaryResult).toBe(10);
-                expect(summaries[1].summaryResult).toBe('May 17,1990');
-                expect(summaries[2].summaryResult).toBe('Dec 25,2025');
+                expect(summaries[1].summaryResult.trim()).toBe('May 17, 1990');
+                expect(summaries[2].summaryResult.trim()).toBe('Dec 25, 2025');
 
                 const emptySummaries = summaryClass.operate([]);
                 expect(emptySummaries[0].summaryResult).toBe(0);
-                expect(emptySummaries[1].summaryResult).toBe(undefined);
-                expect(emptySummaries[2].summaryResult).toBe(undefined);
+                expect(emptySummaries[1].summaryResult).toBe(null);
+                expect(emptySummaries[2].summaryResult).toBe(null);
             });
 
             it('should calc tfoot height according number of summary functions', () => {
