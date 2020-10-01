@@ -10,7 +10,7 @@
         [row]="rowData"
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
-        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal:grid.locale) : column.dataType === 'date' ? (value | date:'mediumDate':undefined:grid.locale) : value }}</div>
+        [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | number:undefined:grid.locale) : column.dataType === 'date' ? (value | date:'mediumDate':undefined:grid.locale) : value }}</div>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
