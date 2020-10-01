@@ -24,7 +24,6 @@ import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
 import { KEYS } from '../../../core/utils';
-import { CurrentResourceStrings } from '../../../core/i18n/resources';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -43,19 +42,27 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
-    private readonly resourceStrings = CurrentResourceStrings.GridResStrings;
     private _isLoading;
+    private _addToCurrentFilter: FilterListItem;
     private destroy$ = new Subject<boolean>();
 
-    private readonly addToCurrentFilter: FilterListItem = {
-        isSelected: false,
-        value: this.resourceStrings.igx_grid_excel_add_to_filter,
-        label: this.resourceStrings.igx_grid_excel_add_to_filter,
-        isFiltered: false,
-        indeterminate: false,
-        isSpecial: true,
-        isBlanks: false,
-    };
+    public get addToCurrentFilter(): FilterListItem {
+        if (!this._addToCurrentFilter) {
+            const addToCurrentFilterItem = {
+                isSelected: false,
+                isFiltered: false,
+                indeterminate: false,
+                isSpecial: true,
+                isBlanks: false,
+                value: this.esf.grid.resourceStrings.igx_grid_excel_add_to_filter,
+                label: this.esf.grid.resourceStrings.igx_grid_excel_add_to_filter
+            };
+
+            this._addToCurrentFilter = addToCurrentFilterItem;
+        }
+
+        return this._addToCurrentFilter;
+    }
 
     /**
      * @hidden @internal
@@ -175,27 +182,32 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
         const selectedIndex = this.displayedListData.indexOf(eventArgs.checkbox.value);
+        const selectAllBtn = this.displayedListData[0];
+
         if (selectedIndex === 0) {
-            this.displayedListData.forEach((element, i) => {
+            this.displayedListData.forEach(element => {
                 if (element.value === this.addToCurrentFilter.value) { return; }
                 element.isSelected = eventArgs.checked;
             });
 
-            this.displayedListData[0].indeterminate = false;
+            selectAllBtn.indeterminate = false;
         } else {
             eventArgs.checkbox.value.isSelected = eventArgs.checked;
             const indexToStartSlicing = this.displayedListData.indexOf(this.addToCurrentFilter) > -1 ? 2 : 1;
 
-            if (!this.displayedListData.slice(indexToStartSlicing, this.displayedListData.length).find(el => el.isSelected === false)) {
-                this.displayedListData[0].indeterminate = false;
-                this.displayedListData[0].isSelected = true;
+            const unselectedItem =
+                this.displayedListData.slice(indexToStartSlicing, this.displayedListData.length).find(el => el.isSelected === false);
+
+            if (!unselectedItem) {
+                selectAllBtn.indeterminate = false;
+                selectAllBtn.isSelected = true;
             } else if (!this.displayedListData
                 .slice(indexToStartSlicing, this.displayedListData.length)
                 .find(el => el.isSelected === true)) {
-                this.displayedListData[0].indeterminate = false;
-                this.displayedListData[0].isSelected = false;
+                selectAllBtn.indeterminate = false;
+                selectAllBtn.isSelected = false;
             } else {
-                this.displayedListData[0].indeterminate = true;
+                selectAllBtn.indeterminate = true;
             }
         }
         eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
@@ -247,18 +259,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
+        const selectAllBtn = this.displayedListData[0];
+
         if (!this.searchValue) {
             const anyFiltered = this.esf.listData.some(i => i.isFiltered);
 
             if (anyFiltered) {
                 this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
-                this.displayedListData[0].indeterminate = true;
+                selectAllBtn.indeterminate = true;
             } else {
                 this.esf.listData.forEach(i => i.isSelected = true);
             }
 
             this.displayedListData = this.esf.listData;
-            this.displayedListData[0].label = this.resourceStrings.igx_grid_excel_select_all;
+            selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
 
             return;
         }
@@ -270,12 +284,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             !it.isBlanks &&
             it.label.toString().toLowerCase().indexOf(searchVal) > -1);
 
-        this.esf.listData.forEach(i => this.displayedListData.indexOf(i) === -1 ? i.isSelected = false : i.isSelected = true);
+       this.esf.listData.forEach(i => i.isSelected = false);
+       this.displayedListData.forEach(i => i.isSelected = true);
 
         this.displayedListData.splice(1, 0, this.addToCurrentFilter);
 
-        this.displayedListData[0].indeterminate = false;
-        this.displayedListData[0].label = this.resourceStrings.igx_grid_excel_select_all_search_results;
+        selectAllBtn.indeterminate = false;
+        selectAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all_search_results;
 
         if (this.displayedListData.length === 2) {
             this.displayedListData = [];
@@ -288,9 +303,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.esf.column.field);
 
-        const addToCurrentFilterOption = this.displayedListData[1];
+        const item = this.displayedListData[1];
+        const addToCurrentFilterOptionVisible = item === this.addToCurrentFilter;
 
-        const selectedItems = addToCurrentFilterOption.isSelected ?
+        const selectedItems = addToCurrentFilterOptionVisible && item.isSelected ?
             this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected || el.isFiltered) :
             this.esf.listData.slice(1, this.esf.listData.length).filter(el => el.isSelected);
 
@@ -348,7 +364,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.esf.grid.filteringService.generateExpressionsList(this.esf.column.filteringExpressionsTree,
                 this.esf.grid.filteringLogic, this.esf.expressionsList);
 
-            this.esf.listData.forEach(i => i.isSelected ? i.isFiltered = true : i.isFiltered = false);
+            this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
         } else {
             this.esf.grid.filteringService.clearFilter(this.esf.column.field);
         }
