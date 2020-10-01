@@ -23,6 +23,21 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
+    - Added ability to spawn row adding UI through exoposed methods. Note that rowEditing should be enabled.
+        - `beginAddRow` method which starts the adding row UI.
+        - `beginAddChild` method which starts the adding child UI.
+        ```typescript
+        this.grid.beginAddRow(rowID);
+        ```
+        - Added an input properties to `IgxGridEditingActions` component to show/hide add row and add child buttons which trigger the UI based on context expression.
+        ```html
+        <igx-tree-grid [rowEditing]="true">
+            <igx-action-strip #actionStrip>
+                <igx-grid-editing-actions [addRow]="true" [addChild]="actionStrip.context.level < 3">
+                </igx-grid-editing-actions>
+            </igx-action-strip>
+        </igx-tree-grid>
+        ```
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
@@ -35,6 +50,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
+- `IgxToast`
+    - The component now utilizes the `IgxOverlayService` to position itself in the DOM.
+    - An additional input property `outlet` has been added to allow users to specify custom Overlay Outlets using the `IgxOverlayOutletDirective`;
+    - The `position` property now accepts values of type `IgxToastPosition` that work with strict templates.
 
 ## 10.1.0
 
