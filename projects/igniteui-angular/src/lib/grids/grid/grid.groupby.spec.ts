@@ -1001,7 +1001,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    fit('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
+    it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
