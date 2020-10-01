@@ -5,10 +5,10 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes.
+    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes:
         - You can close the Excel Style Filtering menu by pressing `Ctrl + Shift + L`.
         - You can apply the filter by pressing `Enter`.
-        - When filtering, only the rows that match your search term will be visible.
+        - When searching items in the Excel Style Filtering menu, only the rows that match your search term will be filtered in.
         - By checking the `Add current selection to filter` option, the new search results will be added to the previously filtered items.
 - `IgxDatePicker`
     - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
