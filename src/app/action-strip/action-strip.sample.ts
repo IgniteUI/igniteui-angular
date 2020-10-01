@@ -12,6 +12,7 @@ export class ActionStripSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
     public result: string;
     public isVisible = false;
+    public customItem = true;
     private counter = 0;
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
