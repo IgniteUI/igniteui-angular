@@ -1706,25 +1706,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toEqual(cellValue);
         });
 
-        it('When cellEditExit is canceled the new value of the cell should never be commited nor the editing should be closed', () => {
-            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe((evt) => {
-                evt.cancel = true;
-            });
-
-            grid.crudService.enterEditMode(cell);
-            fix.detectChanges();
-
-            const expectedRes = cell.value;
-            cell.editValue = 'new value';
-
-            grid.endRowEdit(true);
-            fix.detectChanges();
-
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(true);
-            expect(cell.value).toEqual(expectedRes);
-        });
-
         it('When rowEdit is canceled the new row data should never be commited', () => {
             grid.rowEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
                 evt.cancel = true;
@@ -1750,41 +1731,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.crudService.rowInEditMode).toEqual(false);
             expect(grid.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
-        });
-
-        it('When rowEditExit is canceled the new row data should be commited but editing should remain open', () => {
-            grid.rowEditExit.pipe(takeUntil($destroyer)).subscribe((evt) => {
-                evt.cancel = true;
-            });
-
-            grid.crudService.enterEditMode(cell);
-            fix.detectChanges();
-
-            let expectedRes: string | number = 'new value';
-            cell.update(expectedRes);
-
-            grid.endRowEdit(true);
-            fix.detectChanges();
-
-            let rowData = Object.assign(cell.row.rowData, {ProductName: expectedRes});
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(false);
-            expect(cell.value).toEqual(expectedRes);
-            expect(cell.row.rowData).toEqual(rowData);
-
-            expectedRes = 20;
-            cell = grid.getCellByColumn(0, 'ReorderLevel');
-
-            cell.update(expectedRes);
-
-            grid.endRowEdit(true);
-            fix.detectChanges();
-
-            rowData = Object.assign(cell.row.rowData, {ReorderLevel: expectedRes});
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(false);
-            expect(cell.value).toEqual(expectedRes);
-            expect(cell.row.rowData).toEqual(rowData);
         });
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {
@@ -1900,67 +1846,6 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 cancel: false,
-                owner: grid
-            });
-        });
-
-        it(`Should be able to cancel 'rowEditExit' event `, () => {
-            spyOn(grid.rowEditExit, 'emit').and.callThrough();
-
-            grid.rowEditExit.subscribe((e: IGridEditEventArgs) => {
-                e.cancel = true;
-            });
-
-            const gridContent = GridFunctions.getGridContent(fix);
-            const targetCell = grid.getCellByColumn(0, 'ProductName');
-            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
-            fix.detectChanges();
-
-            let overlayContent = GridFunctions.getRowEditingOverlay(fix);
-            expect(cell.editMode).toEqual(true);
-            expect(overlayContent).toBeTruthy();
-            cell.editValue = 'New Name';
-            fix.detectChanges();
-
-            // On button click
-            const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fix);
-            cancelButtonElement.click();
-
-            fix.detectChanges();
-
-            overlayContent = GridFunctions.getRowEditingOverlay(fix);
-            expect(overlayContent).toBeTruthy();
-            expect(cell.editMode).toEqual(false);
-            expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
-                rowID: 1,
-                rowData: initialData,
-                newValue: null,
-                oldValue: initialData,
-                cancel: true,
-                owner: grid
-            });
-
-            // Enter cell edit mode again
-            UIInteractions.simulatePointerOverElementEvent('pointerdown', targetCell.nativeElement);
-            fix.detectChanges();
-
-            // Press enter on cell
-            UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
-
-
-            fix.detectChanges();
-
-            overlayContent = GridFunctions.getRowEditingOverlay(fix);
-            expect(overlayContent).toBeTruthy();
-            expect(cell.editMode).toEqual(false);
-            expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(2);
-            expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
-                rowID: 1,
-                rowData: initialData,
-                newValue: null,
-                oldValue: initialData,
-                cancel: true,
                 owner: grid
             });
         });

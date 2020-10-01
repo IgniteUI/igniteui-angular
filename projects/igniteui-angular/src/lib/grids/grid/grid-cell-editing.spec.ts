@@ -960,42 +960,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(false);
         });
 
-        it(`Should be able to cancel 'cellEditExit' event`, () => {
-            spyOn(grid.cellEditExit, 'emit').and.callThrough();
-            grid.cellEditExit.subscribe((e: IGridEditEventArgs) => {
-                e.cancel = true;
-            });
-            const cell = grid.getCellByColumn(0, 'fullName');
-            const initialRowData = {...cell.rowData};
-
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
-            fixture.detectChanges();
-
-            expect(cell.editMode).toBe(true);
-            const editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
-            fixture.detectChanges();
-
-            // press escape on edited cell
-            UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
-            fixture.detectChanges();
-
-            const cellArgs: IGridEditEventArgs = {
-                cellID: cell.cellID,
-                rowID: cell.row.rowID,
-                rowData: initialRowData,
-                oldValue: 'John Brown',
-                newValue: 'New Name',
-                cancel: true,
-                column: cell.column,
-                owner: grid
-            };
-            expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
-            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
-
-            expect(cell.editMode).toBe(true);
-        });
-
         it(`Should properly emit 'cellEditDone' event`, () => {
             const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
@@ -1091,25 +1055,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(grid.crudService.cellInEditMode).toEqual(true);
             expect(cell.value).toEqual(cellValue);
-        });
-
-        it('When cellEditExit is canceled the new value of the cell should be commited and the editing should not be closed', () => {
-            const cell = grid.getCellByColumn(0, 'fullName');
-            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe((evt) => {
-                evt.cancel = true;
-            });
-
-            grid.crudService.enterEditMode(cell);
-            fixture.detectChanges();
-
-            const expectedRes = 'new value';
-            cell.update(expectedRes);
-
-            grid.endEdit(true);
-            fixture.detectChanges();
-
-            expect(grid.crudService.cellInEditMode).toEqual(true);
-            expect(cell.value).toEqual(expectedRes);
         });
     });
 
