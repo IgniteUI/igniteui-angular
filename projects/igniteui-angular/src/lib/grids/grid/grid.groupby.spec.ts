@@ -1001,7 +1001,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
-    it('should not select group rows when selectAll API is called or when header checkbox is clicked.',
+    fit('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1023,6 +1023,10 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             expect(grid.selectedRows.length).toEqual(8);
+            const grRows = grid.groupsRowList.toArray();
+            for(const grRow of grRows) {
+                expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+            }
             let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
             for (const r of rows) {
                 expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
@@ -1031,6 +1035,9 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.deselectAllRows();
             fix.detectChanges();
             expect(grid.selectedRows.length).toEqual(0);
+            for(const grRow of grRows) {
+                expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+            }
 
             GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
@@ -1038,6 +1045,9 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(grid.selectedRows.length).toEqual(8);
 
             rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
+            for(const grRow of grRows) {
+                expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+            }
             for (const r of rows) {
                 expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
             }
