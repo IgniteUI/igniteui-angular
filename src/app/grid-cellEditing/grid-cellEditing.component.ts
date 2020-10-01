@@ -1,8 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode
+    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -25,6 +28,7 @@ export class GridCellEditingComponent {
     pname = 'ProductName';
     private subscribtion;
     public selectionMode;
+    public earliest = EarliestSummary;
 
     constructor() {
         const date = new Date();
@@ -186,3 +190,21 @@ export class GridCellEditingComponent {
         }
     }
 }
+
+class EarliestSummary extends IgxDateSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'earliest') {
+                const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;
+                obj.summaryResult = date ? new Intl.DateTimeFormat('en-US').format(date) : undefined;
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+

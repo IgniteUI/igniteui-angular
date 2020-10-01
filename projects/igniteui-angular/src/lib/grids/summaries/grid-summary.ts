@@ -1,3 +1,5 @@
+import { DecimalPipe, DatePipe } from '@angular/common';
+
 export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
@@ -148,27 +150,28 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName);
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en', ): IgxSummaryResult[] {
+        const result = super.operate(data);
+        const pipe = new DecimalPipe(locale);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: IgxNumberSummaryOperand.min(data)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data))
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: IgxNumberSummaryOperand.max(data)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data))
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: IgxNumberSummaryOperand.sum(data)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data))
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: IgxNumberSummaryOperand.average(data)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data))
         });
         return result;
     }
@@ -229,17 +232,18 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName);
+    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
+        const result = super.operate(data);
+        const pipe = new DatePipe(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: IgxDateSummaryOperand.earliest(data)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), 'mediumDate')
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: IgxDateSummaryOperand.latest(data)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), 'mediumDate')
         });
         return result;
     }

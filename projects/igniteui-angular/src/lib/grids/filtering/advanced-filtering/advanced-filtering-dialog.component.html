@@ -191,7 +191,7 @@
                                     (click)="openDialog(dropDownTarget.element.nativeElement)"
                                     [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
                                     autocomplete="off"
-                                    [value]="value | igxdate: grid.locale"
+                                    [value]="value | date:'mediumDate':undefined:grid.locale"
                                     [readonly]="true"
                                     [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
                         </igx-input-group>

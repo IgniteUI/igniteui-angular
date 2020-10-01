@@ -19,9 +19,9 @@
             formatter
                 ? (value | columnFormatter: formatter)
                 : column.dataType === 'number'
-                ? (value | igxdecimal: grid.locale)
+                ? (value | number: undefined:grid.locale)
                 : column.dataType === 'date'
-                ? (value | igxdate: grid.locale)
+                ? (value | date:'mediumDate':undefined:grid.locale)
                 : value
         "
         [row]="rowData"
@@ -32,9 +32,9 @@
             formatter
                 ? (value | columnFormatter: formatter)
                 : column.dataType === "number"
-                ? (value | igxdecimal: grid.locale)
+                ? (value | number: undefined:grid.locale)
                 : column.dataType === "date"
-                ? (value | igxdate: grid.locale)
+                ? (value | date:'mediumDate':undefined:grid.locale)
                 : column.dataType === "boolean"
                 ? ""
                 : value

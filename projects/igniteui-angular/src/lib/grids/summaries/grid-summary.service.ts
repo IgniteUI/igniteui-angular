@@ -2,12 +2,13 @@ import { Injectable} from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
+import { IgxGridBaseDirective } from '../grid/public_api';
 
 /** @hidden */
 @Injectable()
 export class IgxGridSummaryService {
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
-    public grid;
+    public grid: IgxGridBaseDirective;
     public rootSummaryID = 'igxGridRootSummary';
     public summaryHeight = 0;
     public maxSummariesLenght = 0;
@@ -37,8 +38,8 @@ export class IgxGridSummaryService {
             let columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
             if (columnName && this.grid.rowEditable) { return; }
 
-            const isGroupedColumn = this.grid.groupingExpressions &&
-                    this.grid.groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
+            const isGroupedColumn = (this.grid as any).groupingExpressions &&
+                (this.grid as any).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
             if (columnName && isGroupedColumn ) {
                 columnName = undefined;
             }
@@ -63,7 +64,7 @@ export class IgxGridSummaryService {
                 this.summaryCacheMap.clear();
             }
         } else {
-           const summaryIds = this.getSummaryID(rowID, this.grid.groupingExpressions);
+           const summaryIds = this.getSummaryID(rowID, (this.grid as any).groupingExpressions);
            summaryIds.forEach(id => {
                this.deleteSummaryCache(id, columnName);
            });
@@ -107,8 +108,9 @@ export class IgxGridSummaryService {
         if (!this.hasSummarizedColumns || !data) {return rowSummaries; }
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
-                rowSummaries.set(column.field,
-                    column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)), data, column.field));
+                const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
+                    data, column.field, this.grid.locale);
+                rowSummaries.set(column.field, summaryResult);
             }
         });
         return rowSummaries;
@@ -179,7 +181,7 @@ export class IgxGridSummaryService {
     }
 
     private removeAllTreeGridSummaries(rowID, columnName?) {
-        let row = this.grid.records.get(rowID);
+        let row = (this.grid as any).records.get(rowID);
         if (!row) { return; }
         row = row.children ? row : row.parent;
         while (row) {

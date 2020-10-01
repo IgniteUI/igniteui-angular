@@ -163,60 +163,6 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 
 }
 
-
-/**
- * @hidden
- * @internal
- */
-@Pipe({
-    name: 'igxdate'
-})
-export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
-
-    private readonly DEFAULT_DATE_FORMAT = 'mediumDate';
-
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        if (value && value instanceof Date) {
-            if (locale) {
-                return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
-    }
-}
-
-/**
- * @hidden
- * @internal
- */
-@Pipe({
-    name: 'igxdecimal'
-})
-export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        if (value && typeof value === 'number') {
-            if (locale) {
-                return super.transform(value, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
-    }
-}
-
 /**
  * @hidden
  */
