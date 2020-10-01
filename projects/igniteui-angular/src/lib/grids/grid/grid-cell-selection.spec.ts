@@ -2584,6 +2584,12 @@ describe('IgxGrid - Cell selection #grid', () => {
             cell.editValue = 'No name';
             fix.detectChanges();
 
+            UIInteractions.simulateNonPrimaryClick(cell);
+            fix.detectChanges();
+            expect(cell.editMode).toEqual(true);
+            expect(cell.editValue).toEqual('No name');
+            expect(cell.value).not.toEqual('No name');
+
             const target = grid.getCellByColumn(0, 'Age');
             UIInteractions.simulateNonPrimaryClick(target);
             fix.detectChanges();
