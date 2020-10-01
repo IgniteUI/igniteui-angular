@@ -256,18 +256,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
+        const searchAllBtn = this.esf.listData[0];
+
         if (!this.searchValue) {
             const anyFiltered = this.esf.listData.some(i => i.isFiltered);
 
             if (anyFiltered) {
                 this.esf.listData.forEach(i => i.isSelected = i.isFiltered);
-                this.displayedListData[0].indeterminate = true;
+                searchAllBtn.indeterminate = true;
             } else {
                 this.esf.listData.forEach(i => i.isSelected = true);
             }
 
             this.displayedListData = this.esf.listData;
-            this.displayedListData[0].label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
+            searchAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all;
 
             return;
         }
@@ -284,8 +286,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         this.displayedListData.splice(1, 0, this.addToCurrentFilter);
 
-        this.displayedListData[0].indeterminate = false;
-        this.displayedListData[0].label = this.esf.grid.resourceStrings.igx_grid_excel_select_all_search_results;
+        searchAllBtn.indeterminate = false;
+        searchAllBtn.label = this.esf.grid.resourceStrings.igx_grid_excel_select_all_search_results;
 
         if (this.displayedListData.length === 2) {
             this.displayedListData = [];
