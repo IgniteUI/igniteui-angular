@@ -150,6 +150,9 @@ import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
+import { v4 as uuidv4 } from 'uuid';
+
+let FAKE_ROW_ID = -1;
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -3101,6 +3104,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public resetColumnsCaches() {
         this.columnList.forEach(column => column.resetCaches());
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public generateRowID(): string | number {
+        const primaryColumn = this.columnList.find(col => col.field === this.primaryKey);
+        const idType = primaryColumn ? primaryColumn.dataType : this.data.length ? typeof (this.data[0][this.primaryKey]) : 'string';
+        return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
     }
 
     /**
@@ -6730,6 +6742,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public getEmptyRecordObjectFor(rec) {
         const row = { ...rec };
         Object.keys(row).forEach(key => row[key] = undefined);
+        row[this.primaryKey] = this.generateRowID();
         return row;
     }
 }
