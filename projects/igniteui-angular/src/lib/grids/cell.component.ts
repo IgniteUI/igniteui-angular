@@ -51,6 +51,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected _lastSearchInfo: ISearchInfo;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--new')
+    get isEmptyAddRowCell() {
+        return this.row.addRow && (this.value === undefined || this.value === null);
+    }
+
+    /**
      * Gets the column of the cell.
      * ```typescript
      *  let cellColumn = this.cell.column;
