@@ -221,7 +221,7 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
     if (!definition) { return null; }
     if (definition.kind.toString() === 'reference') {
-        // variable in an internal/external template
+        // template variable in an internal/external template
         return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
     }
     let typeDefs = langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
@@ -230,10 +230,12 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
         const classDeclaration = langServ
             .getProgram()
             .getSourceFile(definition.fileName)
-            .statements.find(m => m.kind === ts.SyntaxKind.ClassDeclaration) as tss.ClassDeclaration;
-        const member: tss.ClassElement = classDeclaration
+            .statements
+                .filter(<(a: ts.Statement) => a is ts.ClassDeclaration>(m => m.kind === ts.SyntaxKind.ClassDeclaration))
+                .find(m => m.name.getText() === definition.containerName);
+        const member: ts.ClassElement = classDeclaration
             .members
-            .filter(m => m.end === definition.textSpan.start + definition.textSpan.length)[0];
+            .find(m => m.name.getText() === definition.name);
         if (!member || !member.name) { return null; }
         typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
     }
