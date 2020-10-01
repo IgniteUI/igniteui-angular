@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes.
+    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes:
         - You can close the Excel Style Filtering menu by pressing `Ctrl + Shift + L`.
         - You can apply the filter by pressing `Enter`.
         - When searching items in the Excel Style Filtering menu, only the rows that match your search term will be filtered in.
