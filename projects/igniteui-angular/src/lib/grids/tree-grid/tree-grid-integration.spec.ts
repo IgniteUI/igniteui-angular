@@ -1170,6 +1170,40 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(() => grid.addRow(grid.data, 1)).toThrow(Error(`Cannot add child row to deleted parent row`));
             expect(grid.transactions.getTransactionLog().length).toBe(1);
         }));
+
+        it('should return correctly the rowData', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            grid.cascadeOnDelete = false;
+            tick();
+            fixture.detectChanges();
+
+            const row = {'ID': 2, 'ParentID': 1, 'Name': 'Gilberto Todd', 'JobTitle': 'Director', 'Age': 41};
+            expect(grid.getRowData(2)).toEqual(row);
+
+            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expect(grid.getRowData(2)).toEqual(row);
+            expect(grid.getRowData(11)).toEqual({});
+
+            grid.filter('Age', 43, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fixture.detectChanges();
+
+            expect(grid.getRowData(2)).toEqual(row);
+            expect(grid.getRowData(11)).toEqual({});
+
+            const newRow = {'ID': 11, 'ParentID': 1, 'Name': 'Joe Peterson', 'JobTitle': 'Manager', 'Age': 37};
+            grid.addRow(newRow);
+            fixture.detectChanges();
+
+            grid.clearFilter();
+            tick();
+            fixture.detectChanges();
+
+            expect(grid.transactions.getTransactionLog().length).toEqual(1);
+            expect(grid.getRowData(11)).toEqual(newRow);
+        }));
     });
 
     describe('Multi-column header', () => {

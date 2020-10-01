@@ -3,7 +3,7 @@ import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent, IgxCalendarModule } from './public_api';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
 import { DateRangeType } from '../core/dates';
@@ -752,9 +752,9 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(monthDates[10]);
         }));
 
-        it('Verify that months increment/decrement continuously on enter keydown', (fakeAsync(() => {
+        it('Verify that months increment/decrement continuously on enter keydown', (async() => {
             calendar.monthsViewNumber = 2;
-            tick(100);
+            await wait(100);
             fixture.detectChanges();
             const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
             new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
@@ -764,20 +764,21 @@ describe('Multi-View Calendar - ', () => {
             for (let i = 1; i < dates.length - 1; i++) {
                 const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowRight);
-                tick(100);
+                fixture.detectChanges();
+                await wait(100);
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
             }
-            for (let index = dates.length - 2; index > 0; index--) {
+             for (let index = dates.length - 2; index > 0; index--) {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowLeft);
-                tick(100);
                 fixture.detectChanges();
-
+                await wait(200);
+                fixture.detectChanges();
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
             }
-        })));
+        }));
 
         it('Verify that months increment/decrement continuously on mouse down', (fakeAsync(() => {
             calendar.monthsViewNumber = 2;
