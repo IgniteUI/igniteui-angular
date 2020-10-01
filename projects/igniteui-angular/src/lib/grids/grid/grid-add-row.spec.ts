@@ -12,6 +12,7 @@ import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxActionStripModule } from '../../action-strip/action-strip.module';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxGridRowComponent } from './grid-row.component';
 
 describe('IgxGrid - Row Adding #grid', () => {
         let fixture;
@@ -97,7 +98,28 @@ describe('IgxGrid - Row Adding #grid', () => {
             // No much space between the row and the banner
             expect(addRowTop - bannerBottom).toBeLessThan(2);
         });
+        it('Should be able to enter add row mode on Alt + plus key.', () => {
+            GridFunctions.focusFirstCell(fixture);
+            fixture.detectChanges();
 
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
+            fixture.detectChanges();
+
+            const addRow = grid.getRowByIndex(1);
+            expect(addRow.addRow).toBeTrue();
+
+        });
+        it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
+            GridFunctions.focusFirstCell(fixture);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
+            fixture.detectChanges();
+
+            const banner = GridFunctions.getRowEditingOverlay(fixture);
+            expect(banner).toBeNull();
+            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+        });
         it('Should not be able to enter add row mode when rowEditing is disabled', () => {
             grid.rowEditable = false;
             fixture.detectChanges();
@@ -109,6 +131,5 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(banner).toBeNull();
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
-
     });
 });

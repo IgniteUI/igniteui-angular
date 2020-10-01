@@ -1008,38 +1008,5 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent('keydown')
             });
         });
-      /*  it('should add new row with Alt + plus key.', () => {
-            const cell = grid.rowList.first.cells[0];
-            const addRow = grid.getRowByIndex(1);
-
-            grid.rowEditable = false;
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            //  cell.nativeElement.dispatchEvent(new Event('pointerdown'));
-            fix.detectChanges();
-
-            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
-            fix.detectChanges();
-            expect(addRow.addRow).toBeFalse();
-
-
-            grid.rowEditable = true;
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            fix.detectChanges();
-
-            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
-            fix.detectChanges();
-            expect(addRow.addRow).toBeTrue();
-
-            UIInteractions.simulateClickAndSelectEvent(cell);
-            fix.detectChanges();
-
-            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
-            fix.detectChanges();
-            expect(addRow.addRow).toBeFalse();
-
-
-        });
-        */
-
     });
 });
