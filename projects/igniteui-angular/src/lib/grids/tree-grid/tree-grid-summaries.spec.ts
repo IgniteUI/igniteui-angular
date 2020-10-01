@@ -411,7 +411,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyVisibleSummariesHeight(fix, 3);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.33']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.333']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['2', '79', '39.5']);
@@ -1562,7 +1562,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         GridSummaryFunctions.verifyVisibleSummariesHeight(fix, 3);
 
         let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
-        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.33']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['3', '103', '34.333']);
 
         summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['2', '79', '39.5']);
