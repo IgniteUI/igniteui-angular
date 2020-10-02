@@ -593,7 +593,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     }
                 } else {
                     filterListItem.isSelected = true;
-                    filterListItem.isFiltered = false;
+                    filterListItem.isFiltered = true;
                 }
                 filterListItem.value = element;
                 filterListItem.label = element;
@@ -632,7 +632,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     }
                 } else {
                     filterListItem.isSelected = true;
-                    filterListItem.isFiltered = false;
+                    filterListItem.isFiltered = true;
                 }
                 if (this.column.dataType === DataType.Date) {
                     const date = new Date(element);
@@ -673,6 +673,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         selectAll.label = this.grid.resourceStrings.igx_grid_excel_select_all;
         selectAll.indeterminate = this.selectAllIndeterminate;
         selectAll.isSpecial = true;
+        selectAll.isFiltered = this.selectAllSelected;
         this.listData.unshift(selectAll);
     }
 

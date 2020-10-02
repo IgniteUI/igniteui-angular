@@ -2830,6 +2830,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+            console.log(checkboxes.map(c => c.checked).join())
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
         }));
 
@@ -2870,6 +2871,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+
+            fix.detectChanges();
 
             expect(checkboxes[0].checked && checkboxes[0].indeterminate).toBeTruthy();
             expect(!checkboxes[1].checked && !checkboxes[1].indeterminate).toBeTruthy();
@@ -3912,7 +3915,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
                 ['Select All', '20', '100', '254', '702', '1,000'],
-                [true, true, true, true, true, true]);
+                [true, false, true, true, false, false]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
