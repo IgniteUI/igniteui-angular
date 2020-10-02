@@ -272,9 +272,9 @@ export class IgxGridNavigationService {
             }
 
             if (event.shiftKey) {
-                row.beginAddChild(row.rowID);
+                row.beginAddChild();
             } else {
-                row.beginAddRow(row.rowID);
+                row.beginAddRow();
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             row.rowID === undefined ? row.toggle() :
