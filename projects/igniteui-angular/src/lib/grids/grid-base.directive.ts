@@ -1282,7 +1282,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emits when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
-     * This event is cancelable.
      * @example
      * ```html
      * <igx-grid #grid3 (rowEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
@@ -6476,11 +6475,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
-        row.newData = this.transactions.getAggregatedValue(row.id, true);
         const rowArgs = row.createEditEventArgs();
+        row.newData = this.transactions.getAggregatedValue(row.id, true);
+        const nonCancelableArgs = row.createPostCommitEditEventArgs({...rowArgs.oldValue}, true);
 
         if (!commit) {
-            this.rowEditExit.emit(rowArgs);
+            this.rowEditExit.emit(nonCancelableArgs);
             this.transactions.endPending(false);
         } else {
             const rowEditArgs = this.gridAPI.update_row(row, row.newData);
@@ -6488,7 +6488,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return true;
             }
 
-            this.rowEditExit.emit(rowArgs);
+            this.rowEditExit.emit(nonCancelableArgs);
         }
 
         this.crudService.endRowEdit();

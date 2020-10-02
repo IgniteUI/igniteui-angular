@@ -283,7 +283,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
-        const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+        const doneArgs = row.createPostCommitEditEventArgs(cachedRowData);
         grid.rowEditDone.emit(doneArgs);
         return args;
     }
