@@ -360,7 +360,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('should emit closing events on input blur', fakeAsync(() => {
+        it('should emit closing events on input blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -377,6 +377,32 @@ describe('igxSelect', () => {
             expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
+        it('should NOT emit closing events on input blur when closeOnOutsideClick: false', fakeAsync(() => {
+            spyOn(select.onClosing, 'emit');
+            spyOn(select.onClosed, 'emit');
+
+            const customOverlaySettings = {
+                closeOnOutsideClick: false
+            };
+            select.overlaySettings = customOverlaySettings;
+            expect(select.overlaySettings).toBe(customOverlaySettings);
+            expect(select.collapsed).toBeTruthy();
+            fixture.detectChanges();
+
+            expect(select).toBeDefined();
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            expect(select.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(select.onClosed.emit).toHaveBeenCalledTimes(0);
+        }));
+
         it('should render aria attributes properly', fakeAsync(() => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
@@ -444,7 +470,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
-        it('should close dropdown on blur', fakeAsync(() => {
+        it('should close dropdown on blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -456,6 +482,23 @@ describe('igxSelect', () => {
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
+        }));
+        it('should NOT close dropdown on blur when closeOnOutsideClick: false', fakeAsync(() => {
+            const customOverlaySettings = {
+                closeOnOutsideClick: false
+            };
+            select.overlaySettings = customOverlaySettings;
+            expect(select.overlaySettings).toBe(customOverlaySettings);
+            expect(select.collapsed).toBeTruthy();
+            fixture.detectChanges();
+            select.toggle();
+            tick();
+            expect(select.collapsed).toBeFalsy();
+
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
         }));
     });
     describe('Form tests: ', () => {

@@ -377,7 +377,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._overlayDefaults = {
             target: this.getEditElement(),
             modal: false,
-            closeOnOutsideClick: false,
             positionStrategy: new SelectPositioningStrategy(this),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludeFromOutsideClick: [this.inputGroup.element.nativeElement as HTMLElement]
@@ -442,7 +441,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.input.valid = IgxInputState.INITIAL;
         }
         if (!this.collapsed) {
-            this.toggleDirective.close();
+            const appliedOverlaySettings = Object.assign({}, this._overlayDefaults, this.overlaySettings);
+            if (appliedOverlaySettings?.closeOnOutsideClick === false) {
+                return;
+            }
+            this.toggleDirective.close(); // optional remove?
         }
     }
 
