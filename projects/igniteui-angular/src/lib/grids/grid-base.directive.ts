@@ -4066,6 +4066,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
         this.endEdit(true);
         this.cancelAddMode = false;
+        const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
+        const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
+        const unpinIndex = this.unpinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
 
         if (this.expansionStates.get(rowID)) {
             this.collapseRow(rowID);
@@ -4073,18 +4076,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.addRowParent = {
             rowID: rowID,
-            index: index,
-            asChild: asChild
+            index: isInPinnedArea ? pinIndex : unpinIndex,
+            asChild: asChild,
+            isPinned: isInPinnedArea
         };
-        this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
-            this.cdr.detectChanges();
-            const row = this.getRowByIndex(this.addRowParent.index + 1);
-            const cell = row.cells.find(c => c.editable);
-            cell.setEditMode(true);
-            cell.activate();
-        });
         this._pipeTrigger++;
-        this.notifyChanges();
+        this.cdr.detectChanges();
+        const row = this.getRowByIndex(index + 1);
+        const cell = row.cells.find(c => c.editable);
+        cell.setEditMode(true);
+        cell.activate();
     }
 
     /**
@@ -6567,6 +6568,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.gridAPI.submit_add_value();
             this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
             this.crudService.endRowEdit();
+            if (this.addRowParent.isPinned) {
+                this.pinRow(row.id);
+            }
             this.addRowParent = null;
         } else {
             this.gridAPI.escape_editMode();
