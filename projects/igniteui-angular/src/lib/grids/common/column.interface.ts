@@ -9,6 +9,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
  */
 export interface ColumnType {
     field: string;
+    header?: string;
     index: number;
     dataType: DataType;
     inlineEditorTemplate: TemplateRef<any>;

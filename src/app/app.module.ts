@@ -1,3 +1,4 @@
+import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -193,6 +194,7 @@ const components = [
     GridCellEditingComponent,
     GridSampleComponent,
     GridAddRowSampleComponent,
+    TreeGridAddRowSampleComponent,
     GridColumnMovingSampleComponent,
     GridColumnSelectionSampleComponent,
     GridColumnSelectionFilterPipe,

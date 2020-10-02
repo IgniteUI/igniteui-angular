@@ -52,8 +52,9 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(addRow.addRow).toBeTrue();
         });
 
-        it('Should be able to enter add row mode through the exposed API method (w/ and w/o rowID)', () => {
-            grid.beginAddRow();
+        it('Should be able to enter add row mode through the exposed API method.', () => {
+            const rows = grid.rowList.toArray();
+            rows[0].beginAddRow();
             fixture.detectChanges();
             let addRow = grid.getRowByIndex(1);
             expect(addRow.addRow).toBeTrue();
@@ -63,7 +64,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             addRow = grid.getRowByIndex(1);
             expect(addRow.addRow).toBeFalse();
 
-            grid.beginAddRow('ANATR');
+            rows[1].beginAddRow();
             fixture.detectChanges();
             addRow = grid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
@@ -124,7 +125,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowEditable = false;
             fixture.detectChanges();
 
-            grid.beginAddRow();
+            grid.rowList.first.beginAddRow();
             fixture.detectChanges();
 
             const banner = GridFunctions.getRowEditingOverlay(fixture);

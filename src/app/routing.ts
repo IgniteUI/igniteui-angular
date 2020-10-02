@@ -1,3 +1,4 @@
+import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { RouterModule } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
@@ -348,6 +349,10 @@ const appRoutes = [
     {
         path: 'gridAddRow',
         component: GridAddRowSampleComponent
+    },
+    {
+        path: 'treeGridAddRow',
+        component: TreeGridAddRowSampleComponent
     },
     {
         path: 'gridFilterTemplate',
