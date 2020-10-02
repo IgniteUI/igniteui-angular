@@ -4071,7 +4071,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cancelAddMode = false;
         const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
         const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
-        const unpinIndex = this.getUnpinnedIndexById(rowID); 
+        const unpinIndex = this.getUnpinnedIndexById(rowID);
 
         if (this.expansionStates.get(rowID)) {
             this.collapseRow(rowID);

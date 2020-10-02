@@ -20,7 +20,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         let gridContent: DebugElement;
         let actionStrip: IgxActionStripComponent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll( async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent
@@ -122,7 +122,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             row.beginAddRow();
             fixture.detectChanges();
 
-            //add row should be pinned
+            // add row should be pinned
             const addRow = grid.getRowByIndex(1) as IgxGridRowComponent;
             expect(addRow.addRow).toBe(true);
             expect(grid.pinnedRows[1]).toBe(addRow);
@@ -136,7 +136,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
         });
         it('Should allow adding row from ghost row.', () => {
-            let row = grid.getRowByIndex(0);
+            const row = grid.getRowByIndex(0);
             row.pin();
             fixture.detectChanges();
             expect(grid.pinnedRecords.length).toBe(1);
@@ -145,7 +145,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             ghostRow.beginAddRow();
             fixture.detectChanges();
 
-            //add row should be unpinned
+            // add row should be unpinned
             const addRow = grid.getRowByIndex(2);
             expect(addRow.addRow).toBe(true);
             expect(grid.pinnedRows.length).toBe(1);
