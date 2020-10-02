@@ -430,6 +430,11 @@ export class AppComponent implements OnInit {
             name: 'Hierarchical Grid Updating'
         },
         {
+            link: '/hierarchicalGridAddRow',
+            icon: 'view_column',
+            name: 'HierarchicalGrid Add Row'
+        },
+        {
             link: '/treeGrid',
             icon: 'view_column',
             name: 'Tree Grid'
