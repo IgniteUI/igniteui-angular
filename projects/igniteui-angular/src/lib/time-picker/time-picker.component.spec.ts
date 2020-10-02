@@ -1846,17 +1846,14 @@ describe('IgxTimePicker', () => {
             fixture.componentInstance.format = 'hh tt';
             fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
             fixture.detectChanges();
-
             const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
 
             UIInteractions.simulateClickAndSelectEvent(clearTime);
             fixture.detectChanges();
             input.nativeElement.dispatchEvent(new Event('focus'));
-            tick();
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
-            tick();
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toEqual('');

@@ -1,5 +1,5 @@
 <ng-template #dropdownInputTemplate>
-    <igx-input-group #group (mousedown)="mouseDown($event)">
+    <igx-input-group #group (mousedown)="mouseDown($event)" [suppressInputAutofocus]="true">
         <label igxLabel>Time</label>
         <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>

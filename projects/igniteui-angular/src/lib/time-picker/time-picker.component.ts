@@ -1944,13 +1944,12 @@ export class IgxTimePickerComponent implements
             this.isNotEmpty = false;
 
             const oldVal = new Date(this.value);
-
             this.displayValue = this.parseMask(false);
             requestAnimationFrame(() => {
                 this._setCursorPosition(0);
             });
-            // TODO: refactoring - this.value should be null #8135
-            this.value.setHours(0, 0);
+            // TODO: refactoring - this.value should be null #6585
+            this.value?.setHours(0, 0, 0);
 
             if (oldVal.getTime() !== this.value.getTime()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
@@ -1968,7 +1967,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public onInput(event): void {
-        const inputMask = event.target.value;
+        const inputMask: string = event.target.value;
         const oldVal = new Date(this.value);
 
         this.isNotEmpty = inputMask !== this.parseMask(false);
@@ -1984,20 +1983,19 @@ export class IgxTimePickerComponent implements
             } else {
                 const args: IgxTimePickerValidationFailedEventArgs = {
                     timePicker: this,
-                    currentValue: inputMask,
+                    currentValue: new Date(inputMask),
                     setThroughUI: false
                 };
                 this.onValidationFailed.emit(args);
             }
             // handle cases where the user deletes the display value (when pressing backspace or delete)
-        } else if (inputMask === this.parseMask(false)) {
+        } else if (!this.value || inputMask.length === 0 || !this.isNotEmpty) {
             this.isNotEmpty = false;
-
-            // TODO: refactoring - this.value should be null #8135
-            this.value.setHours(0, 0);
+            // TODO: refactoring - this.value should be null #6585
+            this.value?.setHours(0, 0, 0);
             this.displayValue = inputMask;
-
-            if (oldVal.getTime() !== this.value.getTime()) {
+            if (oldVal.getTime() !== this.value?.getTime()) {
+                // TODO: Do not emit event when the editor is empty #6482
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
@@ -2024,7 +2022,7 @@ export class IgxTimePickerComponent implements
             this.isNotEmpty = value !== '';
             this.displayValue = value;
 
-            if (value && value !== this.parseMask()) {
+            if (value && (value !== this.parseMask() || value !== this.parseMask(false))) {
                 if (this._isEntryValid(value)) {
                     const newVal = this.convertMinMaxValue(value);
                     if (!this.value || this.value.getTime() !== newVal.getTime()) {
