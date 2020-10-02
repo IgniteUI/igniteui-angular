@@ -6553,7 +6553,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 // A check whether the row is in the current view
                 const viewIndex = this.findRecordIndexInView(rowData);
                 const dataIndex = this.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
-                const isInView = viewIndex != -1 && !this.navigation.shouldPerformVerticalScroll(viewIndex, 0);
+                const isInView = viewIndex !== -1 && !this.navigation.shouldPerformVerticalScroll(viewIndex, 0);
                 const showIndex = isInView ? -1 : dataIndex;
                 this.showSnackbarFor(showIndex);
             });
