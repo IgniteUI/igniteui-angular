@@ -609,7 +609,7 @@ $_bootstrap-grid: extend(
 /// @prop {Color} header-text-color [igx-color: 'primary'] - The table header text color.
 /// @prop {Map} header-selected-background [igx-color: ('primary', 50)] - The table header background color when selected (ex. column selection).
 /// @prop {Map} header-selected-text-color [igx-color: 'primary'] - The table header text color when selected (ex. column selection).
-/// @prop {Map} header-border-color [igx-color: ('primary', 100)] - The color used for header borders.
+/// @prop {Map} header-border-color [igx-color: ('primary', 500), rgba: .24] - The color used for header borders.
 ///
 /// @prop {Map} filtering-header-text-color [igx-color: ('primary', 900)] - The text color color of the filtered column header.
 /// @prop {Map} filtering-background-or [igx-color: 'warn'] - The background color of advanced filtering "OR" condition.
@@ -678,7 +678,8 @@ $_indigo-grid: extend(
         ),
 
         header-border-color: (
-            igx-color: ('primary', 100)
+            igx-color: ('primary', 500),
+            rgba: .24
         ),
 
         filtering-header-text-color: (
