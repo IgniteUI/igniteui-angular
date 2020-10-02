@@ -176,6 +176,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public snackbarDisplayTime = 2000;
+
+    /**
+     * @hidden @internal
+     */
     public get scrollSize() {
         return this.verticalScrollContainer.getScrollNativeSize();
     }
@@ -4061,6 +4066,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
         this.endEdit(true);
         this.cancelAddMode = false;
+
+        if (this.expansionStates.get(rowID)) {
+            this.collapseRow(rowID);
+        }
 
         this.addRowParent = {
             rowID: rowID,

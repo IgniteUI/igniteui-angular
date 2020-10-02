@@ -134,6 +134,7 @@ import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-directive';
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
+import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -194,6 +195,7 @@ const components = [
     GridCellEditingComponent,
     GridSampleComponent,
     GridAddRowSampleComponent,
+    HierarchicalGridAddRowSampleComponent,
     TreeGridAddRowSampleComponent,
     GridColumnMovingSampleComponent,
     GridColumnSelectionSampleComponent,
