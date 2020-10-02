@@ -1053,7 +1053,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             }
         }));
 
-        it('should deselect all records for group by pressing space when selectionMode is multiple and all records within a group are selected and the groupRow is focused',
+    it('should deselect all records for group by pressing space when selectionMode is multiple and all records within a group are selected and the groupRow is focused',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1086,6 +1086,43 @@ describe('IgxGrid - GroupBy #grid', () => {
             for (const key of grRow.groupRow.records) {
                 expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key), false));
             }
+        }));
+
+    it('group row checkbox should remain the right state after filter is applied, all rows are selected and filter is removed',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            grid.filter('ID', '2', IgxStringFilteringOperand.instance().condition('doesNotEqual'), true);
+            tick();
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            GridSelectionFunctions.clickRowCheckbox(grRow);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            grid.clearFilter();
+            tick();
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(grRow.groupRow.records[0]), false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
     // GroupBy + Resizing
