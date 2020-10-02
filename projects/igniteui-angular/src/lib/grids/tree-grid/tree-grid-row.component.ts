@@ -47,6 +47,20 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
+     * @hidden
+     */
+    public get isRoot(): boolean {
+        return this.treeRow.level === 0;
+    }
+
+    /**
+     * @hidden
+     */
+    public get hasChildren(): boolean {
+        return true;
+    }
+
+    /**
      * Sets whether the row is pinned.
      * Default value is `false`.
      * ```typescript
@@ -127,5 +141,18 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     public ngDoCheck() {
         this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.rowID) : false;
         super.ngDoCheck();
+    }
+
+    /**
+     * Spawns the add child row UI for the specific row.
+     * @example
+     * ```typescript
+     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
+     * row.beginAddChild();
+     * ```
+     * @param rowID
+     */
+    public beginAddChild() {
+        this.grid.beginAddRowByIndex(this.rowID, this.index, true);
     }
 }
