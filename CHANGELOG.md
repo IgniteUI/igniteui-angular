@@ -23,7 +23,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
-    - Added ability to spawn row adding UI through exoposed methods. Note that rowEditing should be enabled.
+    - Added ability to spawn row adding UI through exposed methods. Note that rowEditing should be enabled.
         - `beginAddRow` method which starts the adding row UI.
         - `beginAddChild` method which starts the adding child UI.
         ```typescript
@@ -38,6 +38,15 @@ All notable changes for each version of this project will be documented in this 
             </igx-action-strip>
         </igx-tree-grid>
         ```
+    - A new `locale` parameter is introduced in the `operate` method exposed by the `IgxNumberSummaryOperand` and `IgxDateSummaryOperand`, which exposes the grid locale. Use this parameter to get localized summary data (if not passed, defaults to `'en'`):
+    ```typescript
+    class MySummary extends IgxDateSummaryOperand {
+        operate(columnData: any[], allData = [], fieldName, locale: string): IgxSummaryResult[] {
+            const result = super.operate(columnData, allData, fieldName, locale);
+            return result;
+        }
+    }
+    ```  
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
