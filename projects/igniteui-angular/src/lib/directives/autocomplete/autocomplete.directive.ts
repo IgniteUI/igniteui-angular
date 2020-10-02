@@ -92,7 +92,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new AutoPositionStrategy(),
-        excludePositionTarget: true
+        excludeFromOutsideClick: [this.parentElement]
     };
 
     protected id: string;

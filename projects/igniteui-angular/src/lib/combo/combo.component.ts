@@ -190,7 +190,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         positionStrategy: new AutoPositionStrategy(),
         modal: false,
         closeOnOutsideClick: true,
-        excludePositionTarget: true
+        excludeFromOutsideClick: [this.elementRef.nativeElement as HTMLElement]
     };
     private _value = '';
     private _valid = IgxComboState.INITIAL;

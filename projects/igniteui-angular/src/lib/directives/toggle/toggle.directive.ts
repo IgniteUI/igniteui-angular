@@ -430,7 +430,7 @@ export class IgxToggleActionDirective implements OnInit {
             scrollStrategy: new AbsoluteScrollStrategy(),
             closeOnOutsideClick: true,
             modal: false,
-            excludePositionTarget: true
+            excludeFromOutsideClick: [this.element.nativeElement as HTMLElement]
         };
     }
 
