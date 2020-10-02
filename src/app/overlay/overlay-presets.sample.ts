@@ -25,13 +25,14 @@ import { RelativePositionStrategy, AbsolutePosition, RelativePosition } from 'pr
 export class OverlayPresetsSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
     @ViewChild('button', { static: true }) public button: ElementRef;
+    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
 
     items = [];
     itemsCount = 10;
     private _overlaySettings: OverlaySettings;
-    positionStrategies = ['Auto', 'Connected', 'Global', 'Container', 'Elastic'];
+    relStrategies = ['Auto', 'Connected', 'Elastic'];
+    absStrategies = ['Global', 'Container'];
     positionStrategy = 'Global';
-    isAbsolute = true;
     absPosition: AbsolutePosition = AbsolutePosition.Center;
     absPositions = [AbsolutePosition.Center, AbsolutePosition.TopCenter, AbsolutePosition.BottomCenter];
     relPosition: RelativePosition = RelativePosition.Below;
@@ -53,6 +54,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
+        this.outlet = this.outletElement.nativeElement;
     }
 
     onChange(ev) {
@@ -60,21 +62,21 @@ export class OverlayPresetsSampleComponent implements OnInit {
             case 'Auto':
             case 'Connected':
             case 'Elastic':
-                this.isAbsolute = false;
+                this.absPosition = null;
                 this._overlaySettings = IgxOverlayService.createRelativeOverlaySettings(
                     this.button.nativeElement,
                     RelativePositionStrategy[this.positionStrategy],
                     this.relPosition);
                 break;
             case 'Global':
-                this.isAbsolute = true;
                 this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
                 break;
             case 'Container':
-                this.isAbsolute = true;
+                this.relPosition = null;
                 this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, this.outlet);
                 break;
             default:
+                this.relPosition = null;
                 this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings();
         }
     }

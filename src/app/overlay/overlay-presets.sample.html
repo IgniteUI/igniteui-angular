@@ -2,26 +2,32 @@
     <section class="presets-sample-content">
         <div class="sample-section">
             <div class="column settings">
-                <h4>Preset Settings</h4>
                 <div class="radio-group">
-                    <p>Position Strategies</p>
+                    <p>Absolute Position Strategies</p>
                     <div>
-                    <igx-radio *ngFor="let item of positionStrategies" value="{{item}}" name="ps"
+                    <igx-radio *ngFor="let item of absStrategies" value="{{item}}" name="ps"
                         [(ngModel)]="positionStrategy" (ngModelChange)="onChange($event)">{{item}}</igx-radio>
                     </div>
                 </div>
-                <div class="radio-group" *ngIf="isAbsolute; else relativePositions">
-                    <p>Absolute Position</p>
+                <div class="radio-group">
+                    <p>Absolute Position Settings</p>
                     <igx-radio *ngFor="let item of absPositions" value="{{item}}" name="pos" [(ngModel)]="absPosition"
                         (ngModelChange)="onChange($event)">{{item}}</igx-radio>
                 </div>
-                <ng-template #relativePositions>
+            </div>
+            <div class="column settings">
+                <div class="radio-group">
+                    <p>Relative Position Strategies</p>
+                    <div>
+                    <igx-radio *ngFor="let item of relStrategies" value="{{item}}" name="ps"
+                        [(ngModel)]="positionStrategy" (ngModelChange)="onChange($event)">{{item}}</igx-radio>
+                    </div>
+                </div>
                     <div class="radio-group">
-                        <p>Relative Position</p>
+                        <p>Relative Position Settings</p>
                         <igx-radio *ngFor="let item of relPositions" value="{{item}}" name="pos"
                             [(ngModel)]="relPosition" (ngModelChange)="onChange($event)">{{item}}</igx-radio>
                     </div>
-                </ng-template>
             </div>
             <div #outlet class="outlet">
                 Outlet

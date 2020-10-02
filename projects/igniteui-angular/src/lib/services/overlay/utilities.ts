@@ -44,7 +44,7 @@ export type RelativePosition = (typeof RelativePosition)[keyof typeof RelativePo
  * Defines the possible positions for the absolute overlay settings presets.
  */
 export const AbsolutePosition = mkenum({
-    BottomCenter: 'bottomcenter',
+    BottomCenter: 'bottomCenter',
     TopCenter: 'topCenter',
     Center: 'center'
 });
