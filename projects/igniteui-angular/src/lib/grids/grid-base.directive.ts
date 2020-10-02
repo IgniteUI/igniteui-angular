@@ -176,6 +176,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public snackbarDisplayTime = 2000;
+
+    /**
+     * @hidden @internal
+     */
     public get scrollSize() {
         return this.verticalScrollContainer.getScrollNativeSize();
     }

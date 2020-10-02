@@ -127,7 +127,6 @@
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
         [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.crudService.cell"
         [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
-        [class.igx-grid__td--new]="addRow && !rowData[col.field]"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
         [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
         [expanded]="expanded"
