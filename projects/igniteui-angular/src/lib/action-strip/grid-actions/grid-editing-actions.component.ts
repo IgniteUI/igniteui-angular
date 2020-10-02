@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 import { showMessage } from '../../core/deprecateDecorators';
-import { addRow } from '@igniteui/material-icons-extended';
+import { addRow, addChild  } from '@igniteui/material-icons-extended';
 
 @Component({
     selector: 'igx-grid-editing-actions',
@@ -37,6 +37,12 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         return this._addRow;
     }
+
+    /**
+     * An input to enable/disable action strip child row adding button
+     */
+    @Input()
+    public addChild = false;
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
@@ -88,7 +94,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
-    public addChild(event?): void {
+    public addRowHandler(event?, asChild?: boolean): void {
         if (event) {
             event.stopPropagation();
         }
@@ -101,7 +107,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
             console.warn('The grid must be in row edit mode to perform row adding!');
             return;
         }
-        grid.beginAddRowByIndex(context.rowID, context.index);
+        grid.beginAddRowByIndex(context.rowID, context.index, asChild);
         this.strip.hide();
     }
 
@@ -118,10 +124,30 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * Getter if the row is root.
+     * @hidden
+     * @internal
+     */
+    public get isRootRow(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return false;
+        }
+        return this.strip.context.isRoot;
+    }
+
+    public get hasChildren(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return false;
+        }
+        return this.strip.context.hasChildren;
+    }
+
+    /**
      * @hidden
      * @internal
      */
     private registerIcons() {
         this.iconService.addSvgIconFromText(addRow.name, addRow.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(addChild.name, addChild.value, 'imx-icons');
     }
 }

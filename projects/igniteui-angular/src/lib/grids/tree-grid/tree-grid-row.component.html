@@ -41,6 +41,7 @@
             [active]="isCellActive(col.visibleIndex)"
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+            [addMode]="col.editable && crudService.isInAddMode(index,col.index)"
             #treeCell>
         </igx-grid-cell>
     </ng-template>
@@ -73,6 +74,7 @@
             [active]="isCellActive(col.visibleIndex)"
             [cellSelectionMode]="grid.cellSelection"
             [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+            [addMode]="col.editable && crudService.isInAddMode(index,col.index)"
             #treeCell>
         </igx-tree-grid-cell>
     </ng-template>
