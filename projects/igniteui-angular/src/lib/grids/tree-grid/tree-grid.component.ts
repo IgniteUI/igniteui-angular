@@ -439,6 +439,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.dataView.findIndex(x => x.data === rec);
     }
 
+    protected getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
+    }
+
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 

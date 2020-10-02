@@ -12,6 +12,7 @@ import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxActionStripModule } from '../../action-strip/action-strip.module';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxGridRowComponent } from './grid-row.component';
 
 describe('IgxGrid - Row Adding #grid', () => {
         let fixture;
@@ -111,5 +112,50 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
 
+        it('Should allow adding row from pinned row.', () => {
+            let row = grid.getRowByIndex(0);
+            row.pin();
+            fixture.detectChanges();
+            expect(grid.pinnedRecords.length).toBe(1);
+
+            row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            //add row should be pinned
+            const addRow = grid.getRowByIndex(1) as IgxGridRowComponent;
+            expect(addRow.addRow).toBe(true);
+            expect(grid.pinnedRows[1]).toBe(addRow);
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // added record should be pinned.
+            expect(grid.pinnedRecords.length).toBe(2);
+            expect(grid.pinnedRecords[1]).toBe(grid.data[grid.data.length - 1]);
+
+        });
+        it('Should allow adding row from ghost row.', () => {
+            let row = grid.getRowByIndex(0);
+            row.pin();
+            fixture.detectChanges();
+            expect(grid.pinnedRecords.length).toBe(1);
+
+            const ghostRow = grid.getRowByIndex(1);
+            ghostRow.beginAddRow();
+            fixture.detectChanges();
+
+            //add row should be unpinned
+            const addRow = grid.getRowByIndex(2);
+            expect(addRow.addRow).toBe(true);
+            expect(grid.pinnedRows.length).toBe(1);
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // added record should be unpinned.
+            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.unpinnedRecords[grid.unpinnedRecords.length - 1]).toBe(grid.data[grid.data.length - 1]);
+        });
     });
 });
