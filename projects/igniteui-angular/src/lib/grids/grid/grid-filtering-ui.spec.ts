@@ -2830,7 +2830,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
-            console.log(checkboxes.map(c => c.checked).join())
             checkboxes.forEach(c => expect(c.checked).toBeFalsy());
         }));
 
