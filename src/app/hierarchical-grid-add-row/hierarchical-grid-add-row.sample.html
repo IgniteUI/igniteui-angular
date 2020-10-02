@@ -5,6 +5,7 @@
 (mouseover)="onMouseOver($event, hGrid, actionstrip)"
 [rowEditable]="true">
 <igx-action-strip #actionstrip>
+    <igx-grid-pinning-actions></igx-grid-pinning-actions>
     <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
 </igx-action-strip>
 <igx-row-island #island [key]="'childData'" [autoGenerate]="true"
