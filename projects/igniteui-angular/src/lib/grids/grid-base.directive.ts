@@ -4064,6 +4064,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
+        if (!this.rowEditable) {
+            return;
+        }
         this.endEdit(true);
         this.cancelAddMode = false;
         const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
@@ -4084,8 +4087,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detectChanges();
         const row = this.getRowByIndex(index + 1);
         const cell = row.cells.find(c => c.editable);
-        cell.setEditMode(true);
-        cell.activate();
+        if (cell) {
+            cell.setEditMode(true);
+            cell.activate();
+        }
     }
 
     /**
