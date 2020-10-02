@@ -349,6 +349,12 @@ export class AppComponent implements OnInit {
             name: 'Overlay'
         },
         {
+            link: '/overlay-presets',
+            icon: 'flip_to_front',
+            name: 'Overlay Settings Presets'
+        },
+
+        {
             link: '/overlay-animation',
             icon: 'flip_to_front',
             name: 'Overlay Animation'

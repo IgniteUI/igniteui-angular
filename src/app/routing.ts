@@ -68,6 +68,7 @@ import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-dow
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
+import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
@@ -246,6 +247,10 @@ const appRoutes = [
     {
         path: 'overlay',
         component: OverlaySampleComponent
+    },
+    {
+        path: 'overlay-presets',
+        component: OverlayPresetsSampleComponent
     },
     {
         path: 'overlay-animation',

@@ -4,7 +4,7 @@ import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs, mkenum } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -17,6 +17,38 @@ export enum VerticalAlignment {
     Middle = -0.5,
     Bottom = 0
 }
+
+/**
+ * Defines the possible values of the overlays' position strategy.
+ */
+export const RelativePositionStrategy = mkenum({
+    Connected: 'connected',
+    Auto: 'auto',
+    Elastic: 'elastic'
+});
+export type RelativePositionStrategy = (typeof RelativePositionStrategy)[keyof typeof RelativePositionStrategy];
+
+/**
+ * Defines the possible positions for the relative overlay settings presets.
+ */
+export const RelativePosition = mkenum({
+    Above: 'above',
+    Below: 'below',
+    Left: 'left',
+    Right: 'right',
+    Default: 'default'
+});
+export type RelativePosition = (typeof RelativePosition)[keyof typeof RelativePosition];
+
+/**
+ * Defines the possible positions for the absolute overlay settings presets.
+ */
+export const AbsolutePosition = mkenum({
+    BottomCenter: 'bottomcenter',
+    TopCenter: 'topCenter',
+    Center: 'center'
+});
+export type AbsolutePosition = (typeof AbsolutePosition)[keyof typeof AbsolutePosition];
 
 export class Point {
     constructor(public x: number, public y: number) { }

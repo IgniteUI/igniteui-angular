@@ -1,0 +1,40 @@
+// Import the IgniteUI themes library first
+@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/index';
+
+$new-card-theme: igx-card-theme(
+    $background: royalblue
+);
+
+::ng-deep{
+    @include igx-card($new-card-theme);
+}
+
+.sample-section{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    min-height: 100%; 
+    width: 100%;
+}
+
+.settings{
+    background-color: #444444;
+    flex: 0 0 10%;
+    align-content: center;
+    padding: 0.5%;
+}
+
+.outlet{
+    background-color: #444444;
+    flex: 0 0 70%;
+}
+
+.sample-dropdown{
+        display: flex;
+        justify-content: center;
+}
+
+p {
+ padding: 5% 0;
+}
