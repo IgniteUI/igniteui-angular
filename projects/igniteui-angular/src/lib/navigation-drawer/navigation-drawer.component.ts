@@ -204,6 +204,9 @@ export class IgxNavigationDrawerComponent implements
      */
     @Input() public width = '280px';
 
+    @HostBinding ('class.igx-nav-drawer--disable-animation')
+    @Input() public disableAnimation = false;
+
     /**
      * Width of the drawer in its mini state. Defaults to 68px.
      *
