@@ -317,15 +317,13 @@ export class IgxGridAddRowPipe implements PipeTransform {
         }
         const copy = collection.slice(0);
         const parentIndex = grid.addRowParent.index;
-
-        const row = {...collection[parentIndex]};
-        Object.keys(row).forEach(key => row[key] = undefined);
-        row[grid.primaryKey] = grid.generateRowID();
+        const row = grid.getEmptyRecordObjectFor(collection[parentIndex]);
         const rec = {
             recordRef: row,
             addRow: true
         };
         copy.splice(parentIndex + 1, 0, rec);
+        grid.unpinnedRecords = copy;
         return copy;
     }
 }
