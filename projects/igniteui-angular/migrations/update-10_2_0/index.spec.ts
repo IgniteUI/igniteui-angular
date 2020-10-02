@@ -46,4 +46,8 @@ describe('Update 10.2.0', () => {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(`<igx-input-group type="line"></igx-input-group><igx-input-group type="box"></igx-input-group><igx-input-group type="border"></igx-input-group><igx-input-group type="search"></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group>`);
     });
+
+    it('should replace selectedRows() with selectedRows in ts files', async () => {
+        pending('set up tests for migrations through lang service');
+    });
 });

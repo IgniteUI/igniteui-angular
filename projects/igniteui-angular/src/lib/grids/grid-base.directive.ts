@@ -176,6 +176,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public snackbarDisplayTime = 2000;
+
+    /**
+     * @hidden @internal
+     */
     public get scrollSize() {
         return this.verticalScrollContainer.getScrollNativeSize();
     }
@@ -3014,6 +3019,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+            const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
+
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
@@ -3024,8 +3031,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outlet &&
-                this.overlayIDs.indexOf(event.id) < 0) {
+            // do not hide the overlay if it's attached to a row
+            if (this.rowEditingOverlay?.overlayId === event.id) {
+                return;
+            }
+
+            if (overlaySettings?.outlet === this.outlet && this.overlayIDs.indexOf(event.id) === -1) {
                 this.overlayIDs.push(event.id);
             }
         });
@@ -4050,33 +4061,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Spawns the add row UI for a specific row.
-     * If rowID is not specified, the grid spawns the UI under the first visible row in the view.
-     * @example
-     * ```typescript
-     * this.grid1.beginAddRow(rowID);
-     * ```
-     * @param rowID
-     */
-
-    public beginAddRow(rowID?: any) {
-        if (!rowID) {
-            rowID = this.rowList.first.rowData[this.primaryKey];
-        }
-        const index = this.data.findIndex(record => record[this.primaryKey] === rowID);
-        this.beginAddRowByIndex(rowID, index);
-    }
-
-    /**
      * @hidden @internal
      */
-    public beginAddRowByIndex(rowID: any, index: number) {
+    public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
         this.endEdit(true);
         this.cancelAddMode = false;
 
+        if (this.expansionStates.get(rowID)) {
+            this.collapseRow(rowID);
+        }
+
         this.addRowParent = {
             rowID: rowID,
-            index: index
+            index: index,
+            asChild: asChild
         };
         this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
             this.cdr.detectChanges();
@@ -6559,15 +6557,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         if (commit) {
-            this.onRowAdded.subscribe(rowData => {
+            this.onRowAdded.pipe(first()).subscribe(rowData => {
                 // A check whether the row is in the current view
-                const index = this.dataView.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
+                const index = this.findRecordIndexInView(rowData);
                 const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
                 const showIndex = shouldScroll ? index : -1;
                 this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
-            this.gridAPI.addRowToData(row.data);
+            this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
             this.crudService.endRowEdit();
             this.addRowParent = null;
         } else {
@@ -6594,6 +6592,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.tbody.nativeElement.focus();
         }
     }
+
+    protected findRecordIndexInView(rec) {
+        return this.dataView.findIndex(data => data === rec);
+    }
+
     /**
      * @hidden
      */
@@ -6749,5 +6752,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             advancedFilteringDialog.closeDialog();
         }
+    }
+
+    public getEmptyRecordObjectFor(rec) {
+        const row = { ...rec };
+        Object.keys(row).forEach(key => row[key] = undefined);
+        row[this.primaryKey] = this.generateRowID();
+        return row;
     }
 }
