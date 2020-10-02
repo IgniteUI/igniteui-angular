@@ -6475,23 +6475,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
-        const rowArgs = row.createEditEventArgs();
         row.newData = this.transactions.getAggregatedValue(row.id, true);
-        const nonCancelableArgs = row.createPostCommitEditEventArgs({...rowArgs.oldValue}, true);
 
+        let rowEditArgs;
         if (!commit) {
-            this.rowEditExit.emit(nonCancelableArgs);
             this.transactions.endPending(false);
         } else {
-            const rowEditArgs = this.gridAPI.update_row(row, row.newData);
+            rowEditArgs = this.gridAPI.update_row(row, row.newData);
             if (rowEditArgs?.cancel) {
                 return true;
             }
-
-            this.rowEditExit.emit(nonCancelableArgs);
         }
 
         this.crudService.endRowEdit();
+
+        const nonCancelableArgs = row.createPostCommitEditEventArgs({...row.data, ...rowEditArgs});
+        this.rowEditExit.emit(nonCancelableArgs);
         this.closeRowEditingOverlay();
     }
 

@@ -145,7 +145,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
-            let cellArgs: IGridEditEventArgs = {
+            const cellEditArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 rowData: cell.rowData,
@@ -154,7 +154,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 column: cell.column,
                 owner: grid
             };
-            let rowArgs: IGridEditEventArgs = {
+            let rowEditArgs: IGridEditEventArgs = {
                 rowID: row.rowID,
                 rowData: initialRowData,
                 oldValue: row.rowData,
@@ -162,38 +162,35 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid,
                 isAddRow: row.addRow
             };
-            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
+            expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellEditArgs);
+            expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowEditArgs);
 
 
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
             fix.detectChanges();
 
             expect(row.inEditMode).toBe(false);
-            cellArgs = {
+            let cellEditExitArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: cell.rowData,
+                rowData: null,
                 oldValue: cell.value,
                 newValue: cell.value,
-                cancel: false,
                 column: cell.column,
                 owner: grid
             };
-            // no change, new value is null
-            rowArgs = {
+
+            const rowEditExitArgs: IGridEditDoneEventArgs = {
                 rowID: row.rowID,
                 rowData: initialRowData,
-                newValue: null,
+                newValue: initialRowData,
                 oldValue: row.rowData,
-                cancel: false,
                 owner: grid,
                 isAddRow: row.addRow
             };
 
-            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.rowEditExit.emit).toHaveBeenCalledWith(rowArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
+            expect(grid.rowEditExit.emit).toHaveBeenCalledWith(rowEditExitArgs);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cellDebug);
             fix.detectChanges();
@@ -203,18 +200,20 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
-            cellArgs = {
+            cellEditExitArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 rowData: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
-                cancel: false,
                 column: cell.column,
                 owner: grid
             };
 
-            rowArgs = {
+            cellEditArgs.newValue = newCellValue;
+            cellEditArgs.rowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
+
+            rowEditArgs = {
                 rowID: row.rowID,
                 rowData: initialRowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
@@ -246,10 +245,10 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellEditArgs);
             expect(grid.cellEditDone.emit).toHaveBeenCalledWith(cellDoneArgs);
-            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellArgs);
-            expect(grid.rowEdit.emit).toHaveBeenCalledWith(rowArgs);
+            expect(grid.cellEditExit.emit).toHaveBeenCalledWith(cellEditExitArgs);
+            expect(grid.rowEdit.emit).toHaveBeenCalledWith(rowEditArgs);
             expect(grid.rowEditDone.emit).toHaveBeenCalledWith(rowDoneArgs);
         });
 
@@ -1850,7 +1849,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
-                newValue: null,
+                newValue: initialData,
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false
@@ -1935,7 +1934,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
-                newValue: Object.assign({}, initialData, { ProductName: expectedRes }),
+                newValue: initialData,
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false
@@ -1964,7 +1963,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditExit.emit).toHaveBeenCalledWith({
                 rowID: 1,
                 rowData: initialData,
-                newValue: null,
+                newValue: initialData,
                 oldValue: initialData,
                 owner: grid,
                 isAddRow: false
