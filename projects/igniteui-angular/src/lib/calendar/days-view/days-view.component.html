@@ -27,6 +27,7 @@
         [specialDates]="specialDates"
         [outOfRangeDates]="outOfRangeDates"
         [hideOutsideDays]="hideOutsideDays"
+        [attr.tabindex]="tabIndex(day)"
         (onDateSelection)="selectDay($event)">
         {{ formattedDate(day.date) }}
     </igx-day-item>

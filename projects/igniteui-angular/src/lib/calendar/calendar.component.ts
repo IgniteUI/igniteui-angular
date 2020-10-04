@@ -406,6 +406,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
+    public activeDate = new Date().toLocaleDateString();
+
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true  })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
 
@@ -765,6 +771,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public viewRendered(event) {
         if (event.fromState !== 'void') {
             this.activeViewChanged.emit(this.activeView);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetActiveDate(param?) {
+        if (!this.monthViews) { return; }
+        let dates = [];
+        this.monthViews.map(mv => mv.dates).forEach(days => { dates = dates.concat(days.toArray());  });
+        const date = dates.find(day => day.selected) || dates.find(day => day.isToday) || dates.find(d => d.isFocusable);
+        if (date) {
+            this.activeDate = date.date.date.toLocaleDateString();
         }
     }
 

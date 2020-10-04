@@ -44,7 +44,7 @@ export class IgxDaysViewNavigationService {
                     }
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
-                        return;
+                        return day;
                     }
                 }
                 break;
@@ -60,7 +60,7 @@ export class IgxDaysViewNavigationService {
                     }
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
-                        return;
+                        return day;
                     }
                 }
                 break;
@@ -76,7 +76,7 @@ export class IgxDaysViewNavigationService {
                     }
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
-                        return;
+                        return day;
                     }
                 }
                 break;
@@ -92,7 +92,7 @@ export class IgxDaysViewNavigationService {
                     }
                     if (day && day.isFocusable) {
                         day.nativeElement.focus();
-                        return;
+                        return day;
                     }
                 }
                 break;

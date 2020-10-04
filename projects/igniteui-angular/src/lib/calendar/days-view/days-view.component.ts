@@ -67,6 +67,20 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
     /**
      * @hidden
+     * @internal
+     */
+    @Input()
+    public set activeDate(value: string) {
+        this._activeDate = value;
+        this.activeDateChange.emit(this._activeDate);
+    }
+
+    public get activeDate() {
+        return this._activeDate;
+    }
+
+    /**
+     * @hidden
      */
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
@@ -76,6 +90,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @Output()
     public onViewChanging = new EventEmitter<IViewChangingEventArgs>();
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public activeDateChange = new EventEmitter<string>();
 
     /**
      * @hidden
@@ -97,6 +117,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     public prevMonthView: IgxDaysViewComponent;
+    public _activeDate;
 
     /**
      * The default css class applied to the component.
@@ -134,6 +155,10 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         if (!this.changeDaysView && this.dates) {
             this.disableOutOfRangeDates();
         }
+    }
+
+    public tabIndex(day: ICalendarDate): number {
+        return this.activeDate && this.activeDate === day.date.toLocaleDateString() && day.isCurrentMonth ? 0 : -1;
     }
 
     /**
@@ -361,7 +386,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
+        const day = this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
+        this.activeDate = day?.date.date.toLocaleDateString();
     }
 
     /**

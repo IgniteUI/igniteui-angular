@@ -177,6 +177,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public set viewDate(value: Date) {
         const date = this.getDateOnly(value).setDate(1);
         this._viewDate = new Date(date);
+        this.resetActiveDate();
     }
 
     /**
@@ -650,6 +651,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 this.selectRange(value, true);
                 break;
         }
+        this.resetActiveDate();
     }
 
     /**
@@ -694,4 +696,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 break;
         }
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetActiveDate() {}
 }
