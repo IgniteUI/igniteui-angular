@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.1.19
+
+### New Features
+- `IgxExpansionPanel`
+    - `IgxExpansionPanelHeader.onInteraction` event is now cancellable.
+
 ## 9.1.18
 
 ### General
