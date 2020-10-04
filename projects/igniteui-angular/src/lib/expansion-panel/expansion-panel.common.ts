@@ -1,6 +1,6 @@
 import { EventEmitter, InjectionToken } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 export interface IgxExpansionPanelBase {
     id: string;
@@ -23,3 +23,5 @@ export interface IExpansionPanelEventArgs extends IBaseEventArgs {
     event: Event;
     panel: IgxExpansionPanelBase;
 }
+
+export interface IExpansionPanelInteractionEventArgs extends IExpansionPanelEventArgs, CancelableEventArgs {}

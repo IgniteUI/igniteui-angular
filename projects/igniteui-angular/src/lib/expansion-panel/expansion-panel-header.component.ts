@@ -12,7 +12,7 @@ import {
     Inject
 } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
-import { IExpansionPanelEventArgs, IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansion-panel.common';
+import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelInteractionEventArgs } from './expansion-panel.common';
 import { mkenum } from '../core/utils';
 
 /**
@@ -131,7 +131,7 @@ export class IgxExpansionPanelHeaderComponent {
      * ```
      */
     @Output()
-    public onInteraction = new EventEmitter<IExpansionPanelEventArgs>();
+    public onInteraction = new EventEmitter<IExpansionPanelInteractionEventArgs>();
 
     /**
      * @hidden
@@ -185,7 +185,11 @@ export class IgxExpansionPanelHeaderComponent {
             evt.stopPropagation();
             return;
          }
-         this.onInteraction.emit({ event: evt, panel: this.panel });
+         const eventArgs = { event: evt, panel: this.panel, cancel: false };
+         this.onInteraction.emit(eventArgs);
+         if (eventArgs.cancel === true) {
+             return;
+         }
          this.panel.toggle(evt);
          evt.preventDefault();
      }
@@ -194,8 +198,12 @@ export class IgxExpansionPanelHeaderComponent {
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public openPanel(event: KeyboardEvent) {
         if (event.altKey) {
+            const eventArgs = { event, panel: this.panel, cancel: false };
+            this.onInteraction.emit(eventArgs);
+            if (eventArgs.cancel === true) {
+                return;
+            }
             this.panel.expand(event);
-            this.onInteraction.emit({ event: event, panel: this.panel });
         }
      }
 
@@ -203,8 +211,12 @@ export class IgxExpansionPanelHeaderComponent {
      @HostListener('keydown.Alt.ArrowUp', ['$event'])
      public closePanel(event: KeyboardEvent) {
         if (event.altKey) {
+            const eventArgs = { event, panel: this.panel, cancel: false };
+            this.onInteraction.emit(eventArgs);
+            if (eventArgs.cancel === true) {
+                return;
+            }
             this.panel.collapse(event);
-            this.onInteraction.emit({ event: event, panel: this.panel });
         }
      }
 

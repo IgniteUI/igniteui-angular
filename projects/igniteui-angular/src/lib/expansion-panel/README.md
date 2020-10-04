@@ -88,7 +88,7 @@ The following outputs are available in the **igx-expansion-panel-header** compon
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onInteraction` | `false` | Emitted when a user interacts with the header host | `{ event: Event, panel: IgxExpansionPanelComponent }` |
+| `onInteraction` | `true` | Emitted when a user interacts with the header host | `{ event: Event, panel: IgxExpansionPanelComponent, cancel: boolean }` |
 
 ## IgxExpansionPanelBodyComponent
 ### Inputs
