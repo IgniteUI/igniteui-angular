@@ -229,7 +229,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         }
         this.playCloseAnimation(
             () => {
-                this.onCollapsed.emit({ event: evt, panel: this });
+                this.onCollapsed.emit({ event: evt, panel: this, owner: this });
                 this.collapsed = true;
             }
         );
@@ -253,7 +253,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         this.cdr.detectChanges();
         this.playOpenAnimation(
             () => {
-                this.onExpanded.emit({ event: evt, panel: this });
+                this.onExpanded.emit({ event: evt, panel: this, owner: this });
             }
         );
     }

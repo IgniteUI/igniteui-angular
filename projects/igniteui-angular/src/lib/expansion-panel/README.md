@@ -81,6 +81,7 @@ The following inputs are available in the **igx-expansion-panel-header** compone
 | `role` | `string` | The `role` attribute of the header |
 | `iconPosition` | `string` | The position of the expand/collapse icon of the header |
 | `disabled` | `boolean` | Gets/sets whether the panel header is disabled (blocking user interaction) or not |
+| `iconRef` | `ElementRef` | Gets the reference to the element being used as expand/collapse indicator. If `iconPosition` is `NONE` - return `null` |
 
 
 ### Outputs
@@ -88,7 +89,7 @@ The following outputs are available in the **igx-expansion-panel-header** compon
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onInteraction` | `false` | Emitted when a user interacts with the header host | `{ event: Event, panel: IgxExpansionPanelComponent }` |
+| `onInteraction` | `true` | Emitted when a user interacts with the header host | `{ event: Event, panel: IgxExpansionPanelComponent, cancel: boolean }` |
 
 ## IgxExpansionPanelBodyComponent
 ### Inputs
