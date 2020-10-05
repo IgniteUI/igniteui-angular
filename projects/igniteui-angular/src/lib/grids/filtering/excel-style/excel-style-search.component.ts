@@ -46,6 +46,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private _addToCurrentFilter: FilterListItem;
     private destroy$ = new Subject<boolean>();
 
+    /**
+     * @hidden @internal
+     */
     public get addToCurrentFilter(): FilterListItem {
         if (!this._addToCurrentFilter) {
             const addToCurrentFilterItem = {
@@ -86,6 +89,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      */
     public searchValue: any;
 
+    /**
+     * @hidden @internal
+     */
     public displayedListData: FilterListItem[];
 
     /**
@@ -232,7 +238,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-
     /**
      * @hidden @internal
      */
@@ -241,7 +246,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.displayedListData && this.displayedListData.length === 0;
     }
 
-
+    /**
+     * @hidden @internal
+     */
     public onInputKeyDown(event): void {
         if (event.key === KEYS.ENTER) {
             event.preventDefault();
@@ -249,6 +256,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public filterListData(): void {
         if (!this.esf.listData || !this.esf.listData.length) {
             this.displayedListData = [];
