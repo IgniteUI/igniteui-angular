@@ -133,6 +133,13 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     @Input()
     public class = '';
 
+    /**
+     * Disables all tab animations.
+     * By default all animations are enabled.
+     * ```html
+     * <igx-tabs [disableAnimations]="true"></igx-tabs>
+     * ```
+     */
     @Input()
     public disableAnimations = false;
 

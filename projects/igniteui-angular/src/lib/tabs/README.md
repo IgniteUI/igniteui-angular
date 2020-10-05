@@ -49,6 +49,7 @@ If the total visible items width exceeds the vew port width, scroll buttons are 
 | `label` | string | Set the tab item text. |
 | `disabled` | boolean | 	Set if the tab is enabled/disabled.	 |
 | `type` | IgxTabsType | 	Set the tab item sizing mode. By default, `contentfit` is set, the tab item width is sized to its content in the range of min/max width. When the sizing type is `fixed` - all tabs have equal size to fit the view port. |
+| `disableAnimations` | boolean | Disables all animations related to tab and content changes. |
 
 ## Events
 
