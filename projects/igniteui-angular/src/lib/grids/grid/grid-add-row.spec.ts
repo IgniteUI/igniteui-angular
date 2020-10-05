@@ -5,13 +5,15 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import {
-    IgxAddRowComponent
+    IgxAddRowComponent, IgxGridRowEditingTransactionComponent
 } from '../../test-utils/grid-samples.spec';
 
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxActionStripModule } from '../../action-strip/action-strip.module';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
+import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 
 describe('IgxGrid - Row Adding #grid', () => {
         let fixture;
@@ -22,7 +24,8 @@ describe('IgxGrid - Row Adding #grid', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxAddRowComponent
+                IgxAddRowComponent,
+                ColumnLayoutTestComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -111,5 +114,197 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
 
+        it('Should emit all grid editing events as per row editing specification', () => {
+
+        });
+
+        it('Should generate correct row ID based on the primary column type', () => {
+
+        });
+
+        it('Should correctly add new row as last row', () => {
+
+        });
+    });
+
+    describe('Exit add row mode tests', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+            actionStrip = fixture.componentInstance.actionStrip;
+        }));
+
+        it('Should exit add row mode and commit on clicking DONE button in the overlay', () => {
+
+        });
+
+        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', () => {
+
+        });
+
+        it('Should exit add row mode and discard on ESC KEYDOWN', () => {
+
+        });
+
+        it('Should exit add row mode and commit on ENTER KEYDOWN.', () => {
+
+        });
+    });
+
+    describe('Row Adding - Paging and MRL tests', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should preserve the changes after page navigation', () => {
+
+        });
+
+        it('Should save changes when changing page count', () => {
+
+        });
+    });
+
+    describe('Row Adding - Filtering tests', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+            actionStrip = fixture.componentInstance.actionStrip;
+        }));
+
+        it('Should exit add row mode on filter applied', () => {
+
+        });
+
+        it('Filtering should consider newly added rows', () => {
+
+        });
+
+        it('Should not show the action strip "Show" button if added row is filtered out', () => {
+
+        });
+    });
+
+    describe('Row Adding - Sorting tests', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+            actionStrip = fixture.componentInstance.actionStrip;
+        }));
+
+        it('Should exit add row mode and discard on sorting', () => {
+
+        });
+
+        it('Sorting should consider newly added rows', () => {
+
+        });
+
+        it('Should go to correct row via the the action strip "Show" button when row is added in sorted grid', () => {
+
+        });
+    });
+
+    describe('Row Adding - Master detail view', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(DefaultGridMasterDetailComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should collapse expanded detail view before spawning add row UI', () => {
+
+        });
+    });
+
+    describe('Row Adding - MRL tests', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should render adding row with correct multi row layout', () => {
+
+        });
+    });
+
+    describe('Row Adding - Group by', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should show the action strip "Show" button if added row is in collapsed group and on click should expand the group and scroll to the correct added row', () => {
+
+        });
+    });
+
+    describe('Row Adding - Summaries', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should update summaries after adding new row', () => {
+
+        });
+    });
+
+    describe('Row Adding - Column manipulations', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should exit add row mode when moving a column', () => {
+
+        });
+
+        it('Should exit add row mode when pinning/unpinning a column', () => {
+
+        });
+
+        it('Should exit add row mode when resizing a column', () => {
+
+        });
+
+        it('Should exit add row mode when hiding a column', () => {
+
+        });
+    });
+
+    describe('Row Adding - Transactions', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        it('Should create ADD transaction when adding a new row', () => {
+
+        });
+
+        it('All updates on uncommitted add row should be merged into one ADD transaction', () => {
+
+        });
     });
 });
