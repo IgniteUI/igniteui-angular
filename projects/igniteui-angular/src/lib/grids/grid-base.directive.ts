@@ -6595,6 +6595,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public triggerPipes() {
+        this._pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public endAddRow() {
+        this.cancelAddMode = true;
+        this.triggerPipes();
+    }
+
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
     }

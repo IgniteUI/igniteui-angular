@@ -205,6 +205,7 @@ export class IgxGridCRUDService {
         this.grid.onCellEditEnter.emit(args);
         if (args.cancel) {
             this.end();
+            this.grid.endAddRow();
             return;
         }
         cell.enterAddMode = true;
@@ -215,6 +216,7 @@ export class IgxGridCRUDService {
         this.grid.onRowEditEnter.emit(rowArgs);
         if (rowArgs.cancel) {
             this.endRowEdit();
+            this.grid.endAddRow();
             return;
         }
         this.grid.openRowOverlay(this.row.id);

@@ -140,7 +140,10 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public submit_add_value() {
         const cell = this.grid.crudService.cell;
         if (cell) {
-            this.update_add_cell(cell, cell.editValue);
+            const args = this.update_add_cell(cell, cell.editValue);
+            if (args.cancel) {
+                this.grid.endAddRow();
+            }
             this.escape_editMode();
         }
     }
