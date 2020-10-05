@@ -99,7 +99,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             // No much space between the row and the banner
             expect(addRowTop - bannerBottom).toBeLessThan(2);
         });
-        fit('Should be able to enter add row mode on Alt + plus key.', () => {
+        it('Should be able to enter add row mode on Alt + plus key.', () => {
             GridFunctions.focusFirstCell(fixture);
             fixture.detectChanges();
 
@@ -110,7 +110,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(addRow.addRow).toBeTrue();
 
         });
-        fit('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
+        it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
             GridFunctions.focusFirstCell(fixture);
             fixture.detectChanges();
 
