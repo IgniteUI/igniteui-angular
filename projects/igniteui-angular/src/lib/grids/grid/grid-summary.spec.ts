@@ -382,13 +382,13 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 const summaries = summaryClass.operate(fix.componentInstance.data.map((x) => x['OrderDate']));
                 expect(summaries[0].summaryResult).toBe(10);
-                expect(summaries[1].summaryResult.toLocaleDateString()).toBe('5/17/1990');
-                expect(summaries[2].summaryResult.toLocaleDateString()).toBe('12/25/2025');
+                expect(summaries[1].summaryResult.trim()).toBe('May 17, 1990');
+                expect(summaries[2].summaryResult.trim()).toBe('Dec 25, 2025');
 
                 const emptySummaries = summaryClass.operate([]);
                 expect(emptySummaries[0].summaryResult).toBe(0);
-                expect(emptySummaries[1].summaryResult).toBe(undefined);
-                expect(emptySummaries[2].summaryResult).toBe(undefined);
+                expect(emptySummaries[1].summaryResult).toBe(null);
+                expect(emptySummaries[2].summaryResult).toBe(null);
             });
 
             it('should calc tfoot height according number of summary functions', () => {
@@ -2398,7 +2398,8 @@ class EarliestSummary extends IgxDateSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'earliest') {
-                obj.summaryResult = new Intl.DateTimeFormat('en-US').format(obj.summaryResult);
+                const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;
+                obj.summaryResult = date ? new Intl.DateTimeFormat('en-US').format(date) : undefined;
                 return obj;
             }
         });

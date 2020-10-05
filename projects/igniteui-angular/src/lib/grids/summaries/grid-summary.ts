@@ -1,3 +1,5 @@
+import { IgxDatePipeComponent } from '../common/pipes';
+
 export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
@@ -229,17 +231,18 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName);
+        const pipe = new IgxDatePipeComponent(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: IgxDateSummaryOperand.earliest(data)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), locale)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: IgxDateSummaryOperand.latest(data)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), locale)
         });
         return result;
     }
