@@ -103,7 +103,8 @@
         | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
         | treeGridPaging:page:perPage:id:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:id:pipeTrigger:summaryPipeTrigger
-        | gridRowPinning:id:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger
+        | gridAddRow:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer>
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
@@ -112,8 +113,8 @@
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
-        <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" #row>
+        <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-isAddRow="addRow">
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [addRow]="isAddRow" #row>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
@@ -159,6 +160,10 @@
         </ng-template>
     </div>
     <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
+</div>
+
+<div class="igx-grid__addrow-snackbar">
+    <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
 </div>
 
 <div class="igx-grid__footer" #footer>
@@ -209,7 +214,7 @@
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
-    <div class="igx-banner__message">
+    <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
         <span class="igx-banner__text">
             <ng-container
                 *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">

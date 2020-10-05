@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "MemberChange": {
+            "properties": {
+                "definedIn": {
+                    "description": "The class/interface that this member belongs to",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "member": {
+                    "description": "The full definition of a member",
+                    "type": "string"
+                },
+                "replaceWith": {
+                    "description": "Replace original selector/property with new one",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "definedIn",
+                "member"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "changes": {
+            "description": "An array of changes to class members",
+            "items": {
+                "$ref": "#/definitions/MemberChange"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "changes"
+    ],
+    "type": "object"
+}
+
