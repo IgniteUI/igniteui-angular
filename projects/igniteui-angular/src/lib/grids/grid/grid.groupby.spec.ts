@@ -1125,6 +1125,38 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
+    it('group row checkbox should remain the right state after selecting all rows in group and adding a new row to that group',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            GridSelectionFunctions.clickRowCheckbox(grRow);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            const newRow = {ID: '9', ProductName: 'NetAdvantage', Downloads: '350'};
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        }));
+
     // GroupBy + Resizing
     it('should retain same size for group row after a column is resized.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
