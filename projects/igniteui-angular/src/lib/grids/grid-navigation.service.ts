@@ -272,7 +272,7 @@ export class IgxGridNavigationService {
                 return;
             }
 
-            if (event.shiftKey && row.treeRow !== undefined) {              
+            if (event.shiftKey && row.treeRow !== undefined) {
                 row.beginAddChild();
             } else {
                 row.beginAddRow();
