@@ -136,13 +136,6 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    public get datePipe(): IgxDatePipeComponent {
-        if (!this._datePipe) {
-            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
-        }
-        return this._datePipe;
-    }
-
     /**
      * Subscribe to grid's events.
      */
@@ -416,7 +409,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal, this.grid.locale);
+            return this.grid.datePipe.transform(expression.searchVal, this.grid.locale);
         } else {
             return expression.searchVal;
         }

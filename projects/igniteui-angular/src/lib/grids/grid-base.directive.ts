@@ -25,9 +25,7 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive,
-    OnChanges,
-    SimpleChanges
+    Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -149,6 +147,7 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
+import { isThisTypeNode } from 'typescript';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -180,7 +179,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
-    private _locale = null;
+    private _locale = 'en';
     public _destroyed = false;
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
@@ -201,6 +200,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
+
+    /**
+     * @hidden @internal
+     */
+    public decimalPipe = new IgxDecimalPipeComponent(this.locale);
+    /**
+     * @hidden @internal
+     */
+    public datePipe = new IgxDatePipeComponent(this.locale);
 
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
@@ -410,11 +418,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     get locale(): string {
-        if (this._locale) {
-            return this._locale;
-        } else {
-            return 'en';
-        }
+        return this._locale;
     }
 
     set locale(value) {
@@ -6197,13 +6201,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
-        const numberPipe = new IgxDecimalPipeComponent(this.locale);
-        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
-                    c.dataType === 'number' ? numberPipe.transform(resolveNestedPath(dataRow, c.field), this.locale) :
-                        c.dataType === 'date' ? datePipe.transform(resolveNestedPath(dataRow, c.field), this.locale)
+                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field), this.locale) :
+                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field), this.locale)
                             : resolveNestedPath(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();

@@ -180,15 +180,7 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
         super(locale);
     }
     transform(value: any, locale: string): string {
-        if (value && value instanceof Date) {
-            if (locale) {
-                return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
+        return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
     }
 }
 
@@ -205,15 +197,7 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
         super(locale);
     }
     transform(value: any, locale: string): string {
-        if (value && typeof value === 'number') {
-            if (locale) {
-                return super.transform(value, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
+        return super.transform(value, undefined, locale);
     }
 }
 
