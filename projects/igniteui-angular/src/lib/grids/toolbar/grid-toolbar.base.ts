@@ -13,9 +13,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 /**
  * Base class for the pinning/hiding column actions.
- *
- * @hidden
- * @internal
+ * @hidden @internal
  */
 @Directive()
 export abstract class BaseToolbarDirective {
@@ -30,10 +28,7 @@ export abstract class BaseToolbarDirective {
     constructor(@Host() protected toolbar: IgxGridToolbarComponent) { }
 
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective): void {
-        const settings = _makeOverlaySettings();
-        settings.target = anchorElement;
-        settings.outlet = this.grid.outlet;
-        toggleRef.toggle(settings);
+        toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet }});
     }
 }
 

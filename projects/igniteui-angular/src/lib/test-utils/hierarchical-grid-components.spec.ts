@@ -16,8 +16,8 @@ import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums
                 <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true" [movable]='true'></igx-column>
                 <igx-column field="ProductName" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
         </igx-column-group>
-        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true"
-            [primaryKey]="'ID'" [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
+        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
+            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
             <igx-column field="ID" [groupable]='true' [hasSummary]='true' [movable]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
@@ -191,19 +191,19 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
         [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-grid-toolbar>
+            <button igxButton="raised">Parent Button</button>
+        </igx-grid-toolbar>
         <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
-            <ng-template igxToolbarCustomContent>
+            <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
                 <button igxButton="raised">Child 1 Button</button>
-            </ng-template>
+            </igx-grid-toolbar>
         </igx-row-island>
         <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
-            <ng-template igxToolbarCustomContent>
-                <button igxButton="raised">Child 2 Button</button>
-            </ng-template>
+        <igx-grid-toolbar *igxGridToolbar="let grid" [grid]="grid">
+                <button igxButton="raised">Child2 Button</button>
+            </igx-grid-toolbar>
         </igx-row-island>
-        <ng-template igxToolbarCustomContent>
-            <button igxButton="raised">Parent Button</button>
-        </ng-template>
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }

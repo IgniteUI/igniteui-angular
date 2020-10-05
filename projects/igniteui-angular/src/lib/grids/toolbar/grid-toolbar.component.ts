@@ -16,10 +16,12 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
 
-/**
- * This class encapsulates the Toolbar's logic and is internally used by
- * the `IgxGridComponent`, `IgxTreeGridComponent` and `IgxHierarchicalGridComponent`.
- */
+ /**
+  * Provides a context-aware container component for UI operations for the grid components.
+  *
+  * @igxModule IgxGridToolbarModule
+  *
+  */
 @Component({
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
@@ -36,6 +38,14 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     @Input()
     public showProgress = false;
 
+    /**
+     * Gets/sets the grid component for the toolbar component.
+     *
+     * @remarks
+     * Usually you should not set this property in the context of the default grid/tree grid.
+     * The only grids that demands this to be set are the hierarchical child grids. For additional
+     * information check the toolbar topic.
+     */
     @Input()
     get grid() {
         if (this._grid) {
@@ -48,6 +58,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         this._grid = value;
     }
 
+    /** Returns the native DOM element of the toolbar component */
     public get nativeElement() {
         return this.element.nativeElement;
     }

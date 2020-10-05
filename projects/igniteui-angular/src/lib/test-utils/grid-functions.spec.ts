@@ -545,8 +545,7 @@ export class GridFunctions {
     }
 
     public static getColumnPinningButton<T>(fixture: ComponentFixture<T>) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnColumnPinning');
+        const button = GridFunctions.getToolbar(fixture).query(By.css('igx-grid-toolbar-pinning > button'));
         return button ? button.nativeElement : undefined;
     }
 

@@ -164,7 +164,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 @Component({
     template: `<div>
         <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
-        ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
+        ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable, '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
@@ -212,7 +212,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 @Component({
     template: `<div>
     <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline"></igx-column-actions>
-    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
+    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns, '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {

@@ -2570,10 +2570,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
-    protected _rendered = new Subject<boolean>();
-
     /** Emitted after the ngAfterViewInit hook. At this point the grid exists in the DOM */
-    public rendered$ = this._rendered.asObservable().pipe(shareReplay(1));
+    @Output()
+    public rendered = new EventEmitter<boolean>();
+
+    public rendered$ = this.rendered.asObservable().pipe(shareReplay(1));
 
     abstract data: any[];
     abstract filteredData: any[];
@@ -3287,7 +3288,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
 
-        Promise.resolve(null).then(() => this._rendered.next(true));
+        Promise.resolve().then(() => this.rendered.next(true));
     }
 
     /**
