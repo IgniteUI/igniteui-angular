@@ -133,6 +133,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     @Input()
     public class = '';
 
+    @Input()
+    public disableAnimations = false;
+
     /**
      * Emitted when a tab item is deselected.
      * ```html
@@ -465,10 +468,10 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             // bring the new selected tab into view if it is not
             this.bringNewTabIntoView(newTab);
             // animate the new selection indicator
-            this.transformIndicatorAnimation(newTab.nativeTabItem.nativeElement);
+            this.transformIndicatorAnimation(newTab.nativeTabItem.nativeElement, this.disableAnimations ? 0 : 0.3);
             // animate the new tab's group content
             if (!this.hasContentTabs) {
-                this.transformContentAnimation(newTab, 0.2);
+                this.transformContentAnimation(newTab, this.disableAnimations ? 0 : 0.2);
             }
         });
     }
