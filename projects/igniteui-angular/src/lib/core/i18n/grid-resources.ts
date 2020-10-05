@@ -102,6 +102,7 @@ export interface IGridResourceStrings {
     igx_grid_snackbar_addrow_actiontext?: string;
     igx_grid_actions_edit_label?: string;
     igx_grid_actions_add_label?: string;
+    igx_grid_actions_add_child_label?: string;
     igx_grid_actions_delete_label?: string;
     igx_grid_actions_pin_label?: string;
     igx_grid_actions_unpin_label?: string;
@@ -213,6 +214,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_snackbar_addrow_actiontext: 'SHOW',
     igx_grid_actions_edit_label: 'Edit',
     igx_grid_actions_add_label: 'Add',
+    igx_grid_actions_add_child_label: 'Add Child',
     igx_grid_actions_delete_label: 'Delete',
     igx_grid_actions_pin_label: 'Pin',
     igx_grid_actions_unpin_label: 'Unpin',

@@ -6,6 +6,7 @@ import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { IgxTransactionService } from '../services/transaction/igx-transaction';
 import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
 import { DisplayDensity } from '../core/displayDensity';
+import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 
 @Component({
     template: `
@@ -830,4 +831,25 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
 export class IgxTreeGridCustomExpandersTemplateComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px" [rowEditable]="true">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridEditActionsComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
 }
