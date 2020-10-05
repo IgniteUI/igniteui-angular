@@ -144,7 +144,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     ) { }
 
     public ngOnInit() {
-        this.grid.filteringService.initFilteringSettings();
+        // this.grid.filteringService.initFilteringSettings();
     }
 
     public ngDoCheck() {
@@ -189,6 +189,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
     public onFilteringIconClick(event) {
         event.stopPropagation();
+        this.grid.filteringService.initFilteringSettings();
         this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
     }
 

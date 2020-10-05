@@ -3,7 +3,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -101,9 +101,10 @@ export class IgxFilteringService implements OnDestroy {
             positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
-        this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
+        const overlayOpening = this._overlayService.onOpening.pipe(
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
+                console.log('args', eventArgs);
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
                     eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
@@ -114,8 +115,8 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
 
-        this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
+        const overlayClosed = this._overlayService.onClosed.pipe(
+            first(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -127,6 +128,8 @@ export class IgxFilteringService implements OnDestroy {
                 this._componentOverlayId = null;
                 this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
+                overlayOpening.unsubscribe();
+                overlayClosed.unsubscribe();
             });
     }
 
