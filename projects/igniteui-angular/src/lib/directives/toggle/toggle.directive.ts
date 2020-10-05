@@ -298,6 +298,16 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
+     * Returns the id of the overlay the content is rendered in.
+     * ```typescript
+     * this.myToggle.overlayId;
+     * ```
+     */
+    public get overlayId() {
+        return this._overlayId;
+    }
+
+    /**
      * Repositions the toggle.
      * ```typescript
      * this.myToggle.reposition();
