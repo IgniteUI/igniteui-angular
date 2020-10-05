@@ -6485,8 +6485,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
         row.newData = this.transactions.getAggregatedValue(row.id, true);
+        let rowEditArgs = row.createEditEventArgs();
 
-        let rowEditArgs;
         if (!commit) {
             this.transactions.endPending(false);
         } else {
@@ -6498,7 +6498,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.crudService.endRowEdit();
 
-        const nonCancelableArgs = row.createPostCommitEditEventArgs({...row.data, ...rowEditArgs});
+        const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue);
         this.rowEditExit.emit(nonCancelableArgs);
         this.closeRowEditingOverlay();
     }

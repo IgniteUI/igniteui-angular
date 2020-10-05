@@ -72,12 +72,13 @@ export class IgxRow {
         return args;
     }
 
-    createPostCommitEditEventArgs(cachedRowData: any): IGridEditDoneEventArgs {
+    createDoneEditEventArgs(cachedRowData: any): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
         this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
+        const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
-            rowData: updatedData,
+            rowData: rowData,
             oldValue: cachedRowData,
             newValue: updatedData,
             owner: this.grid,
@@ -125,7 +126,7 @@ export class IgxCell {
         return args;
     }
 
-    createPostCommitEditEventArgs(value: any): IGridEditDoneEventArgs {
+    createDoneEditEventArgs(value: any): IGridEditDoneEventArgs {
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
@@ -324,7 +325,7 @@ export class IgxGridCRUDService {
         }
 
         const newValue = this.cell.castToNumber(this.cell.editValue);
-        const args = this.cell?.createPostCommitEditEventArgs(newValue);
+        const args = this.cell?.createDoneEditEventArgs(newValue);
         this.cell.value = newValue;
 
         this.grid.cellEditExit.emit(args);

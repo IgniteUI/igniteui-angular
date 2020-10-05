@@ -152,7 +152,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const data = cell.rowData;
         mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
-        const doneArgs = cell.createPostCommitEditEventArgs(args.newValue);
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
     }
@@ -189,7 +189,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             (this.grid as any)._pipeTrigger++;
         }
 
-        const doneArgs = cell.createPostCommitEditEventArgs(args.newValue);
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         this.grid.cellEditDone.emit(doneArgs);
         return args;
     }
@@ -283,7 +283,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
-        const doneArgs = row.createPostCommitEditEventArgs(cachedRowData);
+        const doneArgs = row.createDoneEditEventArgs(cachedRowData);
         grid.rowEditDone.emit(doneArgs);
         return args;
     }
