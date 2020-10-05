@@ -9,6 +9,7 @@ import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/e
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IActiveNodeChangeEventArgs } from './common/events';
+import { IgxTreeGridRowComponent } from 'igniteui-angular';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -271,7 +272,7 @@ export class IgxGridNavigationService {
                 return;
             }
 
-            if (event.shiftKey) {
+            if (event.shiftKey && row.treeRow !== undefined) {              
                 row.beginAddChild();
             } else {
                 row.beginAddRow();
