@@ -246,7 +246,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public visibleItemsWidth: number;
 
     @Input()
-    public enableAnimation = true;
+    public disableAnimation = false;
 
     /**
      * @hidden
@@ -465,7 +465,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         this.onTabItemSelected.emit({ tab: newTab, group: newTabRelatedGroup });
 
         requestAnimationFrame(() => {
-            const transitionDuration  =  this.enableAnimation ? 0.2 : 0;
+            const transitionDuration  =  this.disableAnimation ? 0 : 0.2;
             // bring the new selected tab into view if it is not
             this.bringNewTabIntoView(newTab);
             // animate the new selection indicator
