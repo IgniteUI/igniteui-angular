@@ -11,9 +11,9 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxActionStripModule } from '../../action-strip/action-strip.module';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Row Adding #grid', () => {
         let fixture;
@@ -112,6 +112,70 @@ describe('IgxGrid - Row Adding #grid', () => {
             const banner = GridFunctions.getRowEditingOverlay(fixture);
             expect(banner).toBeNull();
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
+        });
+
+        it('should navigate to added row on snackbar button click.', async() => {
+            const rows = grid.rowList.toArray();
+            const dataCount = grid.data.length;
+            rows[0].beginAddRow();
+            fixture.detectChanges();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // check row is in data
+            expect(grid.data.length).toBe(dataCount + 1);
+
+            const addedRec = grid.data[grid.data.length - 1];
+
+            grid.addRowSnackbar.triggerAction();
+            fixture.detectChanges();
+
+            await wait(100);
+            fixture.detectChanges();
+
+            // check added row is rendered and is in view
+            const row = grid.getRowByKey(addedRec[grid.primaryKey]);
+            expect(row).not.toBeNull();
+            const gridOffsets = grid.tbody.nativeElement.getBoundingClientRect();
+            const rowOffsets = row.nativeElement.getBoundingClientRect();
+            expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
+        });
+
+        it('should navigate to added row on snackbar button click when row is not in current view.', async() => {
+            grid.paging = true;
+            grid.perPage = 5;
+            fixture.detectChanges();
+
+            const rows = grid.rowList.toArray();
+            const dataCount = grid.data.length;
+
+            rows[0].beginAddRow();
+            fixture.detectChanges();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // check row is in data
+            expect(grid.data.length).toBe(dataCount + 1);
+
+            const addedRec = grid.data[grid.data.length - 1];
+
+            grid.addRowSnackbar.triggerAction();
+            fixture.detectChanges();
+
+            await wait(100);
+            fixture.detectChanges();
+
+            // check page is correct
+            expect(grid.page).toBe(5);
+
+             // check added row is rendered and is in view
+             const row = grid.getRowByKey(addedRec[grid.primaryKey]);
+             expect(row).not.toBeNull();
+             const gridOffsets = grid.tbody.nativeElement.getBoundingClientRect();
+             const rowOffsets = row.nativeElement.getBoundingClientRect();
+             expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
         });
 
         it('Should emit all grid editing events as per row editing specification', () => {
