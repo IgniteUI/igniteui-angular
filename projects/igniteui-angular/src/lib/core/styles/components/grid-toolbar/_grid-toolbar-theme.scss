@@ -140,7 +140,8 @@
         font-size: $grid-toolbar-fs;
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
-        height: map-get($grid-toolbar-height, 'comfortable');
+        height: auto;
+        min-height: map-get($grid-toolbar-height, 'comfortable');
         position: relative;
 
         @include if-ltr(){
@@ -155,7 +156,7 @@
         %igx-button--raised,
         %igx-button--flat,
         %igx-button--icon{
-            margin-#{$left}: rem(8);
+            margin-#{$left}: rem(16);
         }
 
         %igx-grid-toolbar__button-space {
@@ -205,7 +206,7 @@
     }
 
     %igx-grid-toolbar--cosy {
-        height: map-get($grid-toolbar-height, 'cosy');
+        min-height: map-get($grid-toolbar-height, 'cosy');
         @include if-ltr() {
             padding: map-get($grid-toolbar-padding, 'cosy');
         }
@@ -213,10 +214,17 @@
         @include if-rtl() {
             padding: map-get($grid-toolbar-padding-rtl, 'cosy');
         }
+
+        %igx-button--outlined,
+        %igx-button--raised,
+        %igx-button--flat,
+        %igx-button--icon{
+            margin-#{$left}: rem(12);
+        }
     }
 
     %igx-grid-toolbar--compact {
-        height: map-get($grid-toolbar-height, 'compact');
+        min-height: map-get($grid-toolbar-height, 'compact');
         @include if-ltr() {
             padding: map-get($grid-toolbar-padding, 'compact');
         }
@@ -224,11 +232,13 @@
         @include if-rtl() {
             padding: map-get($grid-toolbar-padding-rtl, 'compact');
         }
-    }
 
-    %grid-caption {
-        display: flex;
-        align-items: center;
+        %igx-button--outlined,
+        %igx-button--raised,
+        %igx-button--flat,
+        %igx-button--icon{
+            margin-#{$left}: rem(8);
+        }
     }
 
     %igx-grid-toolbar__title {
@@ -247,10 +257,10 @@
         align-items: center;
         justify-content: space-between;
 
-        > div {
+        igx-grid-toolbar-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            flex-flow: row wrap;
         }
     }
 
@@ -266,6 +276,10 @@
 
         igx-linear-bar > * {
             border-radius: 0;
+
+            &:first-child > div {
+                background: igx-color(map-get($theme, 'palette'), 'secondary');
+            }
         }
     }
 
@@ -286,13 +300,6 @@
 
     %igx-grid-toolbar__dropdown {
         position: relative;
-
-        %igx-filtering-menu {
-            padding: rem(0);
-            #{$right}: 0;
-            margin: 0;
-            min-width: auto;
-        }
     }
 
     %igx-grid-toolbar__dd-list {
@@ -300,6 +307,8 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
+        border: 0 solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.26), 0 8px 10px 1px rgba(0, 0, 0, 0.12), 0 3px 14px 2px rgba(0, 0, 0, 0.08);
     }
 
     %igx-grid-toolbar__dd-list-items {
