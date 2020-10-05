@@ -666,13 +666,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = {
+            let cellArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.rowID,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 newValue: 'John Brown',
                 oldValue: 'John Brown',
-                cancel: false,
                 column: cell.column,
                 owner: grid
             };
@@ -694,7 +693,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowData: initialRowData,
                 newValue: 20,
                 oldValue: 20,
-                cancel: false,
                 column: cell.column,
                 owner: grid
             };
@@ -944,13 +942,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
             fixture.detectChanges();
 
-            const cellArgs: IGridEditEventArgs = {
+            const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
-                cancel: false,
                 column: cell.column,
                 owner: grid
             };
