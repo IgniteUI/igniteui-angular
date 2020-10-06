@@ -30,7 +30,7 @@ export class ControlsFunction {
     }
 
     public static clickDropDownItem(fix: ComponentFixture<any>, index: number) {
-        const list: HTMLElement = fix.nativeElement.querySelector(DROP_DOWN_SCROLL_CLASS);
+        const list: HTMLElement = document.body.querySelector(DROP_DOWN_SCROLL_CLASS);
         const items = list.querySelectorAll(DROP_DOWN__ITEM_CLASS);
         const item = items.item(index);
         UIInteractions.simulateClickEvent(item);

@@ -3,7 +3,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil, first } from 'rxjs/operators';
+import { takeUntil, filter, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -115,8 +115,14 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
 
+        this._overlayService.onClosing.pipe(
+            first((overlay) => overlay.id === this._componentOverlayId),
+            takeUntil(this.destroy$)).subscribe(() => {
+                overlayOpening.unsubscribe();
+            });
+
         const overlayClosed = this._overlayService.onClosed.pipe(
-            first(overlay => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -128,8 +134,6 @@ export class IgxFilteringService implements OnDestroy {
                 this._componentOverlayId = null;
                 this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();
-                overlayOpening.unsubscribe();
-                overlayClosed.unsubscribe();
             });
     }
 
@@ -366,7 +370,7 @@ export class IgxFilteringService implements OnDestroy {
             }
 
             if ((currExpressionUI.beforeOperator === undefined || currExpressionUI.beforeOperator === null ||
-                 currExpressionUI.beforeOperator === FilteringLogic.Or) &&
+                currExpressionUI.beforeOperator === FilteringLogic.Or) &&
                 currExpressionUI.afterOperator === FilteringLogic.And) {
 
                 currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
@@ -493,8 +497,8 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
-                                    operator: FilteringLogic,
-                                    expressionsUIs: ExpressionUI[]): void {
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
             return;
         }
