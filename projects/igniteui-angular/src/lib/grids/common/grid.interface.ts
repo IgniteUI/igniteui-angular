@@ -84,6 +84,9 @@ export interface FlatGridType extends GridType {
     groupingExpressionsChange: EventEmitter<IGroupingExpression[]>;
 }
 
+/**
+ * An interface describing a Tree Grid type
+ */
 export interface TreeGridType extends GridType {
     records: Map<any, ITreeGridRecord>;
 }

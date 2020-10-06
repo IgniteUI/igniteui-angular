@@ -1,4 +1,5 @@
-import { IgxDatePipeComponent, IgxDecimalPipeComponent } from '../common/pipes';
+import { IgxDecimalPipeComponent, IgxDatePipeComponent } from '../common/pipes';
+
 
 export interface ISummaryExpression {
     fieldName: string;
