@@ -13,7 +13,6 @@ export class GridAddRowSampleComponent implements OnInit {
 
     data: any[];
     columns: any[];
-
     onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
             const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
