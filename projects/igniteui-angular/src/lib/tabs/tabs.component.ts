@@ -245,6 +245,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     public visibleItemsWidth: number;
 
+    /**
+     * Enables/disables the transition animation of the tabs' content. Set to `false` by default.
+     * ````html
+     * <igx-tabs [disableAnimation]="false"></igx-tabs>
+     */
     @Input()
     public disableAnimation = false;
 
