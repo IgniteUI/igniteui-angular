@@ -247,7 +247,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     @Input()
-    public disabled: boolean;
+    public disabled = false;
 
     /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
@@ -431,7 +431,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
-        if (!this.collapsed) { return; }
+        if (!this.collapsed || this.disabled) { return; }
 
         this.updateCalendar();
         const settings = this.mode === InteractionMode.Dialog ? this.dialogOverlaySettings : this.dropdownOverlaySettings;
@@ -623,9 +623,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
 
-        // delay the invocation of initialSetValue
-        // until the current change detection cycle has completed
+        // delay invocations until the current change detection cycle has completed
         Promise.resolve().then(() => {
+            this.updateDisabledState();
             this.initialSetValue();
             this.updateInputs();
         });
@@ -643,6 +643,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         }
         if (changes['inputFormat'] && this.hasProjectedInputs) {
             this.updateInputFormat();
+        }
+        if (changes['disabled']) {
+            this.updateDisabledState();
         }
     }
 
@@ -757,6 +760,19 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             }
         }
         this.setRequiredToInputs();
+    }
+
+    private updateDisabledState() {
+        if (this.hasProjectedInputs) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+            start.inputDirective.disabled = this.disabled;
+            end.inputDirective.disabled = this.disabled;
+            return;
+        }
+        if (this.inputDirective) {
+            this.inputDirective.disabled = this.disabled;
+        }
     }
 
     private getInputState(focused: boolean): IgxInputState {
