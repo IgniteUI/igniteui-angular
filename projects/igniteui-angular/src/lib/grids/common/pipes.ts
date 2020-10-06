@@ -1,10 +1,9 @@
-import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
+import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { GridType } from './grid.interface';
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
