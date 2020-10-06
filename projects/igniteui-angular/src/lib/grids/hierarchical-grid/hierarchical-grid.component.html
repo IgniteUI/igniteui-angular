@@ -119,7 +119,8 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger
+        | gridAddRow:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -130,8 +131,8 @@
             </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
-        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" #row>
+        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-isAddRow="addRow">
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" [addRow]="isAddRow" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
 
@@ -166,6 +167,9 @@
             <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
         </div>
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
+    </div>
+    <div class="igx-grid__addrow-snackbar">
+        <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
     </div>
 </div>
 
@@ -242,7 +246,7 @@
     <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
 </ng-template>
 <ng-template #defaultRowEditTemplate>
-    <div class="igx-banner__message">
+    <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
         <span class="igx-banner__text">
             <ng-container
                 *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">

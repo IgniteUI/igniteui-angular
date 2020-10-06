@@ -1,3 +1,4 @@
+import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { RouterModule } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
@@ -109,6 +110,7 @@ import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualiz
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
+import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 
 const appRoutes = [
     {
@@ -348,6 +350,14 @@ const appRoutes = [
     {
         path: 'gridAddRow',
         component: GridAddRowSampleComponent
+    },
+    {
+        path: 'hierarchicalGridAddRow',
+        component: HierarchicalGridAddRowSampleComponent
+    },
+    {
+        path: 'treeGridAddRow',
+        component: TreeGridAddRowSampleComponent
     },
     {
         path: 'gridFilterTemplate',
