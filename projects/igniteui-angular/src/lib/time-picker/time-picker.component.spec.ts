@@ -1416,15 +1416,14 @@ describe('IgxTimePicker', () => {
             expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
         }));
 
-        it('should trigger onValueChanged if 00:00 is cleared from the input', fakeAsync(() => {
+        it('should trigger onValueChanged if 00:00 is cleared from the input', () => {
             fixture.componentInstance.date = new Date(2018, 10, 27, 0, 0, 0, 0);
             fixture.detectChanges();
             spyOn(timePicker.onValueChanged, 'emit');
-            const clearButton = fixture.debugElement.queryAll(By.css('.igx-icon'))[1];
-            UIInteractions.simulateClickEvent(clearButton.nativeElement);
+            timePicker.clear();
             fixture.detectChanges();
             expect(timePicker.onValueChanged.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         it('should scroll on dropdown opened and accept value when focus lost', fakeAsync(() => {
             fixture.detectChanges();
