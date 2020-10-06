@@ -119,10 +119,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     /**
      * Emitted when the expansion panel finishes collapsing
      * ```typescript
-     *  handleCollapsed(event: {
-     *  panel: IgxExpansionPanelComponent,
-     *  event: Event
-     * })
+     *  handleCollapsed(event: IExpansionPanelEventArgs)
      * ```
      * ```html
      *  <igx-expansion-panel (onCollapsed)="handleCollapsed($event)">
@@ -136,10 +133,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     /**
      * Emitted when the expansion panel finishes expanding
      * ```typescript
-     *  handleExpanded(event: {
-     *  panel: IgxExpansionPanelComponent,
-     *  event: Event
-     * })
+     *  handleExpanded(event: IExpansionPanelEventArgs)
      * ```
      * ```html
      *  <igx-expansion-panel (onExpanded)="handleExpanded($event)">

@@ -56,8 +56,8 @@ The following outputs are available in the **igx-expansion-panel** component:
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onCollapsed` | `false` | Emitted when the panel is collapsed | `{ event: Event, panel: IgxExpansionPanelComponent }` |
-| `onExpanded` | `false` | Emitted when the panel is expanded | `{ event: Event, panel: IgxExpansionPanelComponent }` |
+| `onCollapsed` | `false` | Emitted when the panel is collapsed | `IExpansionPanelEventArgs` |
+| `onExpanded` | `false` | Emitted when the panel is expanded | `IExpansionPanelEventArgs` |
 
 
 ### Methods
@@ -89,7 +89,7 @@ The following outputs are available in the **igx-expansion-panel-header** compon
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onInteraction` | `true` | Emitted when a user interacts with the header host | `{ event: Event, panel: IgxExpansionPanelComponent, cancel: boolean }` |
+| `onInteraction` | `true` | Emitted when a user interacts with the header host | `IExpansionPanelCancelableEventArgs` |
 
 ## IgxExpansionPanelBodyComponent
 ### Inputs

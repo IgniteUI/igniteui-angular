@@ -49,17 +49,15 @@ export class IgxExpansionPanelHeaderComponent {
     private customIconRef: ElementRef;
 
     /** @hidden @internal */
-    @ViewChild(IgxIconComponent, { read: IgxIconComponent })
-    public defaultIconRef: IgxIconComponent;
+    @ViewChild(IgxIconComponent, { read: ElementRef })
+    public defaultIconRef: ElementRef;
 
     /**
      * Returns a reference to the `igx-expansion-panel-icon` element;
      * If `iconPosition` is `NONE` - return null;
      */
     public get iconRef(): ElementRef {
-        const defaultRef = this.defaultIconRef ? this.defaultIconRef.el : null;
-        const customRef = this.customIconRef ? this.customIconRef : null;
-        const renderedTemplate = this.iconTemplate ? customRef : defaultRef;
+        const renderedTemplate = this.customIconRef  ?? this.defaultIconRef;
         return this.iconPosition !== ICON_POSITION.NONE ? renderedTemplate : null;
     }
 
@@ -141,7 +139,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * Emitted whenever a user interacts with the header host
      * ```typescript
-     *  handleInteraction(event: IExpansionPanelCancelabelEventArgs) {
+     *  handleInteraction(event: IExpansionPanelCancelableEventArgs) {
      *  ...
      * }
      * ```
