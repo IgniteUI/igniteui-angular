@@ -998,7 +998,7 @@ export class CustomFilter extends IgxFilteringOperand {
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="filterable" [resizable]="resizable" dataType="date">
         </igx-column>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="filterable"
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`

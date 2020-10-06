@@ -599,11 +599,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         this.uniqueValues.forEach(element => {
             if (element !== undefined && element !== null && element !== '') {
-                const listDataLabels = this.listData.map(el => el.label.toLowerCase());
-
                 if (this.column.dataType === DataType.String &&
                     this.column.filteringIgnoreCase &&
-                    listDataLabels.indexOf(element.toLowerCase()) !== -1) {
+                    this.listData.length > 0 &&
+                    this.listData.map(el => el.label.toLowerCase()).indexOf(element.toLowerCase()) !== -1) {
                         return;
                     }
 
