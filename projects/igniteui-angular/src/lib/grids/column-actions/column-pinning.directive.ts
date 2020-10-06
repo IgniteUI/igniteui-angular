@@ -13,6 +13,7 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     ) {
         super();
         columnActions.actionsDirective = this;
+        columnActions.trackChanges = this.trackColumnChanges;
     }
 
     /**
@@ -49,6 +50,13 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
      */
     public columnChecked(column: IgxColumnComponent): boolean {
         return column.pinned;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    trackColumnChanges = (index, col) => {
+        return col.field + '_' + col.disablePinning;
     }
 
     /**
