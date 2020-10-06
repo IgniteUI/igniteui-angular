@@ -51,6 +51,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected _lastSearchInfo: ISearchInfo;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--new')
+    get isEmptyAddRowCell() {
+        return this.row.addRow && (this.value === undefined || this.value === null);
+    }
+
+    /**
      * Gets the column of the cell.
      * ```typescript
      *  let cellColumn = this.cell.column;
@@ -178,12 +187,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
-        if (this.grid.rowEditable && this.row.addRow) {
-            return this.addMode ? this.inlineEditorTemplate : this.addRowCellTemplate;
-        }
-        if (this.editMode) {
+        if (this.editMode || this.addMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
+        }
+        if (this.grid.rowEditable && this.row.addRow) {
+            return this.addRowCellTemplate;
         }
         if (this.cellTemplate) {
             return this.cellTemplate;
@@ -667,7 +676,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (editableCell && crud.sameRow(this.cellID.rowID)) {
-            this.gridAPI.submit_value();
+            if (this.row.addRow) {
+                this.gridAPI.submit_add_value();
+                this.row.rowData = editableCell.rowData;
+            } else {
+                this.gridAPI.submit_value();
+            }
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.endEdit(true);
         }
@@ -759,7 +773,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
-            this.gridAPI.submit_value();
+            // Ensure RMB Click on edited cell does not end cell editing
+            if (!this.selected) {
+                this.gridAPI.submit_value();
+            }
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
