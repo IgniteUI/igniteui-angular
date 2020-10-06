@@ -5001,8 +5001,7 @@ function verifyExcelCustomFilterDisplayDensity(fix: ComponentFixture<any>, expec
 }
 
 function verifyGridSubmenuDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
-    const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
-    const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
+    const dropdowns = Array.from(document.body.querySelectorAll('.igx-drop-down__list'));
     const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
     const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
     dropdownItems.forEach((dropdownItem) => {
