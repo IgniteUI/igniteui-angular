@@ -173,7 +173,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             let cellEditExitArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: null,
+                rowData: cell.row.rowData,
                 oldValue: cell.value,
                 newValue: cell.value,
                 column: cell.column,

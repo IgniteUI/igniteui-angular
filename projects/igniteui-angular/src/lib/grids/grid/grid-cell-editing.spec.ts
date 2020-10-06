@@ -761,28 +761,28 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
-            let cellArgs: IGridEditEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
-            let initialRowData = {...cell.rowData};
+            let cellArgs: IGridEditEventArgs;
+            const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
-            let editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
+            let cellValue = cell.value;
+            const newValue = 'new value';
+            cell.editValue = newValue;
+
+            grid.endEdit(true);
             fixture.detectChanges();
 
-            // press tab on edited cell
-            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
-            fixture.detectChanges();
 
             cellArgs = {
                 rowID: cell.row.rowID,
                 cellID: cell.cellID,
                 rowData: initialRowData,
-                oldValue: 'John Brown',
-                newValue: 'New Name',
+                oldValue: cellValue,
+                newValue: newValue,
                 cancel: true,
                 column: cell.column,
                 owner: grid
@@ -790,33 +790,27 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
-            expect(cell.editMode).toBe(false);
-            expect(cell.value).toBe('John Brown');
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fixture.detectChanges();
 
-            cell = grid.getCellByColumn(0, 'age');
-            initialRowData = {...cell.rowData};
             expect(cell.editMode).toBe(true);
-            editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
-            fixture.detectChanges();
-
-            // press enter on edited cell
-            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
-            fixture.detectChanges();
-
-            cellArgs = {
-                cellID: cell.cellID,
-                rowID: cell.row.rowID,
-                rowData: initialRowData,
-                oldValue: 20,
-                newValue: 1,
-                cancel: true,
-                column: cell.column,
-                owner: grid
-            };
+            expect(cell.value).toBe(cellValue);
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
+            cell = grid.getCellByColumn(0, 'age');
+            cellValue = cell.value;
+            expect(cell.editMode).toBe(false);
+
+            // activate the new cell
+            cell.activate(null);
+            fixture.detectChanges();
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(3);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
+
+            expect(cell.editMode).toBe(false);
+
+            cell = grid.getCellByColumn(0, 'fullName');
             expect(cell.editMode).toBe(true);
         });
 

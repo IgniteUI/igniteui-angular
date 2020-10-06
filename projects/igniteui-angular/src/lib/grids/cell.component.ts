@@ -651,11 +651,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
+                let editArgs;
                 if (this.row.addRow) {
-                    this.gridAPI.update_add_cell(editableCell, editableCell.editValue);
+                    editArgs = this.gridAPI.update_add_cell(editableCell, editableCell.editValue);
                     this.row.rowData = editableCell.rowData;
                 } else {
-                    this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                    editArgs = this.gridAPI.update_cell(editableCell, editableCell.editValue);
                 }
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
@@ -668,10 +669,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                const canceled = crud.exitCellEdit();
-                if (canceled) {
+                this.crudService.cellEditingBlocked = editArgs ? editArgs.cancel : this.crudService.cellEditingBlocked;
+                if (this.crudService.cellEditingBlocked) {
                     return true;
                 }
+
+                crud.exitCellEdit();
             }
             this.grid.tbody.nativeElement.focus({ preventScroll: true });
             this.grid.notifyChanges();

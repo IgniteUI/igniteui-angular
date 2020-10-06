@@ -127,12 +127,15 @@ export class IgxCell {
     }
 
     createDoneEditEventArgs(value: any): IGridEditDoneEventArgs {
+        const updatedData = this.grid.transactions.enabled ?
+        this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
+        const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
             // rowData - should be the updated/committed rowData - this effectively should be the newValue
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
-            rowData: this.grid.transactions.enabled ? this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData,
+            rowData: rowData,
             oldValue: this.value,
             newValue: value,
             column: this.column,
@@ -188,6 +191,10 @@ export class IgxGridCRUDService {
 
     get cellEditingBlocked() {
         return this._cellEditingBlocked;
+    }
+
+    set cellEditingBlocked(val: boolean) {
+        this._cellEditingBlocked = val;
     }
 
     get rowEditingBlocked() {

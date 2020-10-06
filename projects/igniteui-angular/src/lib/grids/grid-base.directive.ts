@@ -6542,7 +6542,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return true;
             }
         } else {
-            this.crudService.exitCellEdit();
+            if (!this.crudService.cellEditingBlocked) {
+                this.crudService.exitCellEdit();
+            }
         }
 
         canceled = this.crudService.exitRowEdit(commit);
