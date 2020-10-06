@@ -5,7 +5,11 @@ import {
     ViewChildren,
     QueryList,
     EventEmitter,
-    Output
+    Output,
+    AfterViewInit,
+    IterableDiffers,
+    IterableDiffer,
+    DoCheck
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
@@ -26,7 +30,12 @@ let NEXT_ID = 0;
     selector: 'igx-column-actions',
     templateUrl: './column-actions.component.html'
 })
-export class IgxColumnActionsComponent {
+export class IgxColumnActionsComponent implements DoCheck {
+    protected _differ: IterableDiffer<any> | null = null;
+
+    constructor (private differs: IterableDiffers) {
+        this._differ = this.differs.find([]).create(this.trackColumnChanges);
+    }
 
     /**
      * @hidden @internal
@@ -345,6 +354,25 @@ export class IgxColumnActionsComponent {
      */
     get titleID() {
         return this.id + '_title';
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public trackColumnChanges(index, col) {
+        return col.field + '_' + col.disableHiding + '_' + col.disablePinning;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngDoCheck() {
+        if (this._differ) {
+            const changes = this._differ.diff(this.columns);
+            if (changes) {
+                this._pipeTrigger++;
+            }
+        }
     }
 
     /**
