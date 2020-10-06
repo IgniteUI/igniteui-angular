@@ -17,7 +17,7 @@
     [cssClass]="highlightClass"
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"
-    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | number:undefined:grid.locale) : column.dataType === 'date' ? (value | date:'mediumDate':undefined:grid.locale) : value"
     [row]="rowData"
     [column]="this.column.field"
     [containerClass]="'igx-grid__td-text'"

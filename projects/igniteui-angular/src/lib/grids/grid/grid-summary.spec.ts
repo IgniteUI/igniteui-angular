@@ -359,7 +359,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(summaries[4].summaryResult).toBe('3,900.4');
 
                 const emptySummaries = summaryClass.operate();
-                expect(emptySummaries[0].summaryResult).toBe(0);
+                expect(emptySummaries[0].summaryResult).toBe('0');
                 expect(typeof emptySummaries[1].summaryResult).not.toEqual(undefined);
                 expect(typeof emptySummaries[2].summaryResult).not.toEqual(undefined);
                 expect(typeof emptySummaries[3].summaryResult).not.toEqual(undefined);
@@ -381,12 +381,12 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaryClass = fix.componentInstance.dateSummary;
 
                 const summaries = summaryClass.operate(fix.componentInstance.data.map((x) => x['OrderDate']));
-                expect(summaries[0].summaryResult).toBe(10);
+                expect(summaries[0].summaryResult).toBe('10');
                 expect(summaries[1].summaryResult.trim()).toBe('May 17, 1990');
                 expect(summaries[2].summaryResult.trim()).toBe('Dec 25, 2025');
 
                 const emptySummaries = summaryClass.operate([]);
-                expect(emptySummaries[0].summaryResult).toBe(0);
+                expect(emptySummaries[0].summaryResult).toBe('0');
                 expect(emptySummaries[1].summaryResult).toBe(null);
                 expect(emptySummaries[2].summaryResult).toBe(null);
             });

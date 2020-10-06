@@ -61,11 +61,12 @@ export class IgxSummaryOperand {
      * ```
      * @memberof IgxSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
+        const pipe = new DecimalPipe(locale);
         return [{
             key: 'count',
             label: 'Count',
-            summaryResult: IgxSummaryOperand.count(data)
+            summaryResult: pipe.transform(IgxSummaryOperand.count(data))
         }];
     }
 }
@@ -151,7 +152,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en', ): IgxSummaryResult[] {
-        const result = super.operate(data);
+        const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
         result.push({
             key: 'min',
@@ -239,17 +240,17 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
-        const result = super.operate(data);
+        const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DatePipe(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), 'mediumDate')
+            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data))
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), 'mediumDate')
+            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data))
         });
         return result;
     }
