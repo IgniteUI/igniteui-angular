@@ -89,7 +89,7 @@ export interface FlatGridType extends GridType {
  */
 export interface TreeGridType extends GridType {
     records: Map<any, ITreeGridRecord>;
-}	}
+}
 
 export interface GridSVGIcon {
     name: string;
