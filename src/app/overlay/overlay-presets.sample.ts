@@ -34,7 +34,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
     absStrategies = ['Global', 'Container'];
     positionStrategy = 'Global';
     absPosition: AbsolutePosition = AbsolutePosition.Center;
-    absPositions = [AbsolutePosition.Center, AbsolutePosition.TopCenter, AbsolutePosition.BottomCenter];
+    absPositions = [AbsolutePosition.Center, AbsolutePosition.Top, AbsolutePosition.Bottom];
     relPosition: RelativePosition = RelativePosition.Below;
     relPositions = [
         RelativePosition.Above,
@@ -42,7 +42,6 @@ export class OverlayPresetsSampleComponent implements OnInit {
         RelativePosition.Left,
         RelativePosition.Right,
         RelativePosition.Default];
-    outlet;
 
     constructor(
         private cdr: ChangeDetectorRef
@@ -54,7 +53,6 @@ export class OverlayPresetsSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
-        this.outlet = this.outletElement.nativeElement;
     }
 
     onChange(ev) {
@@ -73,7 +71,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
                 break;
             case 'Container':
                 this.relPosition = null;
-                this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, this.outlet);
+                this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition, this.outletElement);
                 break;
             default:
                 this.relPosition = null;

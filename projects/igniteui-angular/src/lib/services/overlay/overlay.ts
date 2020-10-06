@@ -15,7 +15,9 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { IAnimationParams, scaleOutBottom, scaleInTop, slideInTop, slideOutBottom, slideOutTop, slideInBottom, fadeIn, fadeOut } from '../../animations/main';
+import { IAnimationParams, slideInTop, slideOutBottom, slideOutTop, slideInBottom, fadeIn, fadeOut,
+    scaleInVerTop, scaleOutVerTop, scaleOutVerBottom, scaleInVerBottom, scaleInHorRight, scaleOutHorRight,
+    scaleOutHorLeft, scaleInHorLeft } from '../../animations/main';
 import { showMessage } from '../../core/deprecateDecorators';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
@@ -57,129 +59,6 @@ export class IgxOverlayService implements OnDestroy {
         closeOnOutsideClick: true,
         closeOnEscape: false
     };
-
-    public static createAbsoluteOverlaySettings(
-        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings {
-        const positionSettings = this.createAbsolutePositionSettings(position);
-        const strategy = outlet ? new ContainerPositionStrategy(positionSettings) : new GlobalPositionStrategy(positionSettings);
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: strategy,
-            scrollStrategy: new NoOpScrollStrategy(),
-            modal: false,
-            closeOnOutsideClick: true,
-            outlet: outlet
-        };
-        return overlaySettings;
-    }
-
-    public static createRelativeOverlaySettings(
-        target: Point | HTMLElement,
-        strategy: RelativePositionStrategy,
-        position?: RelativePosition):
-        OverlaySettings {
-        const positionSettings = this.createRelativePositionSettings(position);
-        const overlaySettings: OverlaySettings = {
-            target: target,
-            positionStrategy: this.createPositionStrategy(strategy, positionSettings),
-            scrollStrategy: new NoOpScrollStrategy(),
-            modal: false,
-            closeOnOutsideClick: true
-        };
-        return overlaySettings;
-    }
-
-    private static createAbsolutePositionSettings(position: AbsolutePosition): PositionSettings {
-        let positionSettings: PositionSettings;
-        switch (position) {
-            case AbsolutePosition.BottomCenter:
-                positionSettings = {
-                    horizontalDirection: HorizontalAlignment.Center,
-                    verticalDirection: VerticalAlignment.Bottom,
-                    openAnimation: slideInBottom,
-                    closeAnimation: slideOutBottom
-                };
-                break;
-            case AbsolutePosition.TopCenter:
-                positionSettings = {
-                    horizontalDirection: HorizontalAlignment.Center,
-                    verticalDirection: VerticalAlignment.Top,
-                    openAnimation: slideInTop,
-                    closeAnimation: slideOutTop
-                };
-                break;
-            case AbsolutePosition.Center:
-            default:
-                positionSettings = {
-                    horizontalDirection: HorizontalAlignment.Center,
-                    verticalDirection: VerticalAlignment.Middle,
-                    openAnimation: fadeIn,
-                    closeAnimation: fadeOut
-                };
-        }
-        return positionSettings;
-    }
-
-    private static createRelativePositionSettings(position: RelativePosition): PositionSettings {
-        let positionSettings: PositionSettings;
-        switch (position) {
-            case RelativePosition.Above:
-                positionSettings = {
-                    horizontalStartPoint: HorizontalAlignment.Center,
-                    verticalStartPoint: VerticalAlignment.Top,
-                    horizontalDirection: HorizontalAlignment.Center,
-                    verticalDirection: VerticalAlignment.Top
-                };
-                break;
-            case RelativePosition.Below:
-                positionSettings = {
-                    horizontalStartPoint: HorizontalAlignment.Center,
-                    verticalStartPoint: VerticalAlignment.Bottom,
-                    horizontalDirection: HorizontalAlignment.Center,
-                    verticalDirection: VerticalAlignment.Bottom
-                };
-                break;
-            case RelativePosition.Right:
-                positionSettings = {
-                    horizontalStartPoint: HorizontalAlignment.Right,
-                    verticalStartPoint: VerticalAlignment.Middle,
-                    horizontalDirection: HorizontalAlignment.Right,
-                    verticalDirection: VerticalAlignment.Middle
-                };
-                break;
-            case RelativePosition.Left:
-                positionSettings = {
-                    horizontalStartPoint: HorizontalAlignment.Left,
-                    verticalStartPoint: VerticalAlignment.Middle,
-                    horizontalDirection: HorizontalAlignment.Left,
-                    verticalDirection: VerticalAlignment.Middle
-                };
-                break;
-            case RelativePosition.Default:
-            default:
-                positionSettings = {
-                    horizontalStartPoint: HorizontalAlignment.Left,
-                    verticalStartPoint: VerticalAlignment.Bottom,
-                    horizontalDirection: HorizontalAlignment.Right,
-                    verticalDirection: VerticalAlignment.Bottom
-                };
-                break;
-        }
-        return positionSettings;
-    }
-
-    private static createPositionStrategy(strategy: RelativePositionStrategy, positionSettings: PositionSettings): IPositionStrategy {
-        switch (strategy) {
-            case RelativePositionStrategy.Connected:
-                return new ConnectedPositioningStrategy(positionSettings);
-                break;
-            case RelativePositionStrategy.Elastic:
-                return new ElasticPositionStrategy(positionSettings);
-                break;
-            case RelativePositionStrategy.Auto:
-            default:
-                return new AutoPositionStrategy(positionSettings);
-        }
-    }
 
     /**
      * Emitted before the component is opened.
@@ -240,6 +119,148 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      */
     public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
+
+    /**
+     * Creates overlay settings with global or container position strategy and preset position settings
+     * @param position Preset position settings. Default position is 'center'
+     * @param outlet The outlet container to attach the overlay to
+     */
+    public static createAbsoluteOverlaySettings(
+        position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings {
+        const positionSettings = this.createAbsolutePositionSettings(position);
+        const strategy = outlet ? new ContainerPositionStrategy(positionSettings) : new GlobalPositionStrategy(positionSettings);
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: strategy,
+            scrollStrategy: new NoOpScrollStrategy(),
+            modal: false,
+            closeOnOutsideClick: true,
+            outlet: outlet
+        };
+        return overlaySettings;
+    }
+
+    /**
+     * Creates overlay settings with auto, connected or elastic position strategy and preset position settings
+     * @param target Attaching target for the component to show
+     * @param strategy The relative position strategy to be applied to the overlay settings. Default is Auto positioning strategy.
+     * @param position Preset position settings. By default the element is positioned below the target, left aligned.
+     */
+    public static createRelativeOverlaySettings(
+        target: Point | HTMLElement,
+        strategy?: RelativePositionStrategy,
+        position?: RelativePosition):
+        OverlaySettings {
+        const positionSettings = this.createRelativePositionSettings(position);
+        const overlaySettings: OverlaySettings = {
+            target: target,
+            positionStrategy: this.createPositionStrategy(strategy, positionSettings),
+            scrollStrategy: new NoOpScrollStrategy(),
+            modal: false,
+            closeOnOutsideClick: true
+        };
+        return overlaySettings;
+    }
+
+    private static createAbsolutePositionSettings(position: AbsolutePosition): PositionSettings {
+        let positionSettings: PositionSettings;
+        switch (position) {
+            case AbsolutePosition.Bottom:
+                positionSettings = {
+                    horizontalDirection: HorizontalAlignment.Center,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    openAnimation: slideInBottom,
+                    closeAnimation: slideOutBottom
+                };
+                break;
+            case AbsolutePosition.Top:
+                positionSettings = {
+                    horizontalDirection: HorizontalAlignment.Center,
+                    verticalDirection: VerticalAlignment.Top,
+                    openAnimation: slideInTop,
+                    closeAnimation: slideOutTop
+                };
+                break;
+            case AbsolutePosition.Center:
+            default:
+                positionSettings = {
+                    horizontalDirection: HorizontalAlignment.Center,
+                    verticalDirection: VerticalAlignment.Middle,
+                    openAnimation: fadeIn,
+                    closeAnimation: fadeOut
+                };
+        }
+        return positionSettings;
+    }
+
+    private static createRelativePositionSettings(position: RelativePosition): PositionSettings {
+        let positionSettings: PositionSettings;
+        switch (position) {
+            case RelativePosition.Above:
+                positionSettings = {
+                    horizontalStartPoint: HorizontalAlignment.Center,
+                    verticalStartPoint: VerticalAlignment.Top,
+                    horizontalDirection: HorizontalAlignment.Center,
+                    verticalDirection: VerticalAlignment.Top,
+                    openAnimation: scaleInVerTop,
+                    closeAnimation: scaleOutVerTop,
+                };
+                break;
+            case RelativePosition.Below:
+                positionSettings = {
+                    horizontalStartPoint: HorizontalAlignment.Center,
+                    verticalStartPoint: VerticalAlignment.Bottom,
+                    horizontalDirection: HorizontalAlignment.Center,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    openAnimation: scaleInVerBottom,
+                    closeAnimation: scaleOutVerBottom,
+                };
+                break;
+            case RelativePosition.Right:
+                positionSettings = {
+                    horizontalStartPoint: HorizontalAlignment.Right,
+                    verticalStartPoint: VerticalAlignment.Middle,
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Middle,
+                    openAnimation: scaleInHorRight,
+                    closeAnimation: scaleOutHorRight
+                };
+                break;
+            case RelativePosition.Left:
+                positionSettings = {
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Middle,
+                    horizontalDirection: HorizontalAlignment.Left,
+                    verticalDirection: VerticalAlignment.Middle,
+                    openAnimation: scaleInHorLeft,
+                    closeAnimation: scaleOutHorLeft
+                };
+                break;
+            case RelativePosition.Default:
+            default:
+                positionSettings = {
+                    horizontalStartPoint: HorizontalAlignment.Left,
+                    verticalStartPoint: VerticalAlignment.Bottom,
+                    horizontalDirection: HorizontalAlignment.Right,
+                    verticalDirection: VerticalAlignment.Bottom,
+                    openAnimation: scaleInVerTop,
+                    closeAnimation: scaleOutVerTop,
+                };
+                break;
+        }
+        return positionSettings;
+    }
+
+    private static createPositionStrategy(strategy: RelativePositionStrategy, positionSettings: PositionSettings): IPositionStrategy {
+        switch (strategy) {
+            case RelativePositionStrategy.Connected:
+                return new ConnectedPositioningStrategy(positionSettings);
+            case RelativePositionStrategy.Elastic:
+                return new ElasticPositionStrategy(positionSettings);
+            case RelativePositionStrategy.Auto:
+            default:
+                return new AutoPositionStrategy(positionSettings);
+        }
+    }
 
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
