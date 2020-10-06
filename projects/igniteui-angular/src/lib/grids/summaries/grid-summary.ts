@@ -151,7 +151,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en', ): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
         result.push({
