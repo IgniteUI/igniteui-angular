@@ -436,7 +436,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
    protected findRecordIndexInView(rec) {
-        return this.dataView.findIndex(x => x.data === rec);
+        return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
     }
 
     protected getUnpinnedIndexById(id) {

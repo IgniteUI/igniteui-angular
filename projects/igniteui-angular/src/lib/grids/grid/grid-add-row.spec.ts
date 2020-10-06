@@ -11,7 +11,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxActionStripModule } from '../../action-strip/action-strip.module';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 
 describe('IgxGrid - Row Adding #grid', () => {
@@ -99,7 +99,28 @@ describe('IgxGrid - Row Adding #grid', () => {
             // No much space between the row and the banner
             expect(addRowTop - bannerBottom).toBeLessThan(2);
         });
+        it('Should be able to enter add row mode on Alt + plus key.', () => {
+            GridFunctions.focusFirstCell(fixture);
+            fixture.detectChanges();
 
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
+            fixture.detectChanges();
+
+            const addRow = grid.getRowByIndex(1);
+            expect(addRow.addRow).toBeTrue();
+
+        });
+        it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
+            GridFunctions.focusFirstCell(fixture);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
+            fixture.detectChanges();
+
+            const banner = GridFunctions.getRowEditingOverlay(fixture);
+            expect(banner).toBeNull();
+            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+        });
         it('Should not be able to enter add row mode when rowEditing is disabled', () => {
             grid.rowEditable = false;
             fixture.detectChanges();
@@ -157,5 +178,69 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.pinnedRecords.length).toBe(1);
             expect(grid.unpinnedRecords[grid.unpinnedRecords.length - 1]).toBe(grid.data[grid.data.length - 1]);
         });
+        it('should navigate to added row on snackbar button click.', async() => {
+            const rows = grid.rowList.toArray();
+            const dataCount = grid.data.length;
+            rows[0].beginAddRow();
+            fixture.detectChanges();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // check row is in data
+            expect(grid.data.length).toBe(dataCount + 1);
+
+            const addedRec = grid.data[grid.data.length - 1];
+
+            grid.addRowSnackbar.triggerAction();
+            fixture.detectChanges();
+
+            await wait(100);
+            fixture.detectChanges();
+
+            // check added row is rendered and is in view
+            const row = grid.getRowByKey(addedRec[grid.primaryKey]);
+            expect(row).not.toBeNull();
+            const gridOffsets = grid.tbody.nativeElement.getBoundingClientRect();
+            const rowOffsets = row.nativeElement.getBoundingClientRect();
+            expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
+        });
+
+        it('should navigate to added row on snackbar button click when row is not in current view.', async() => {
+            grid.paging = true;
+            grid.perPage = 5;
+            fixture.detectChanges();
+
+            const rows = grid.rowList.toArray();
+            const dataCount = grid.data.length;
+
+            rows[0].beginAddRow();
+            fixture.detectChanges();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // check row is in data
+            expect(grid.data.length).toBe(dataCount + 1);
+
+            const addedRec = grid.data[grid.data.length - 1];
+
+            grid.addRowSnackbar.triggerAction();
+            fixture.detectChanges();
+
+            await wait(100);
+            fixture.detectChanges();
+
+            // check page is correct
+            expect(grid.page).toBe(5);
+
+             // check added row is rendered and is in view
+             const row = grid.getRowByKey(addedRec[grid.primaryKey]);
+             expect(row).not.toBeNull();
+             const gridOffsets = grid.tbody.nativeElement.getBoundingClientRect();
+             const rowOffsets = row.nativeElement.getBoundingClientRect();
+             expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
+        });
+
     });
 });
