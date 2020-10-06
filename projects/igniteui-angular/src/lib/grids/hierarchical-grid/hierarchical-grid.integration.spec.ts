@@ -655,6 +655,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should be displayed correctly for child layout and pinning should apply to the correct child.', fakeAsync(() => {
+            pending('Change test for new scrollbar structure');
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];

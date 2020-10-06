@@ -624,10 +624,12 @@ describe('Column Hiding UI #grid', () => {
             grid.height = '200px';
             fix.detectChanges();
             expect(grid.scr.nativeElement.hidden).toBe(false);
+            const toolbar = GridFunctions.getToolbar(fix);
             const gridHeader = GridFunctions.getGridHeader(fix);
             const gridScroll = GridFunctions.getGridScroll(fix);
             const gridFooter = GridFunctions.getGridFooter(fix);
             let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(toolbar.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
@@ -639,6 +641,7 @@ describe('Column Hiding UI #grid', () => {
             expect(grid.scr.nativeElement.hidden).toBe(true);
 
             expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(toolbar.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 

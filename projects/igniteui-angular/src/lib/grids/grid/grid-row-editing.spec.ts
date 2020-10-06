@@ -1128,13 +1128,13 @@ describe('IgxGrid - Row Editing #grid', () => {
         let gridContent: DebugElement;
         let cell: IgxGridCellComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
-        }));
+        });
 
         it(`Paging: Should preserve the changes after page navigation`, () => {
             grid.paging = true;
@@ -1516,10 +1516,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
         });
 
-        it(`Hiding: Should show correct value when showing the column again`, () => {
-            grid.showToolbar = true;
-            grid.columnHiding = true;
-
+        it(`Hiding: Should show correct value when showing the column again`, waitForAsync(async () => {
+            fix.componentInstance.showToolbar = true;
+            fix.detectChanges();
+            await fix.whenStable();
             fix.detectChanges();
 
             const targetCbText = 'Product Name';
@@ -1543,7 +1543,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
 
             expect(cell.value).toEqual('Chai');
-        });
+        }));
     });
 
     describe('Events', () => {
