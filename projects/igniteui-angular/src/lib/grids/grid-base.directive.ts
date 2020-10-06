@@ -26,8 +26,6 @@ import {
     Optional,
     DoCheck,
     Directive,
-    OnChanges,
-    SimpleChanges
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -142,7 +140,7 @@ import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filter
 import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective, IgxGroupByRowSelectorDirective } from './selection/row-selectors';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
@@ -1791,25 +1789,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
     public rowSelectorsTemplates: QueryList<IgxRowSelectorDirective>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorDirective> {
-        if (this.groupByRowSelectorsTemplates && this.groupByRowSelectorsTemplates.first) {
-            return this.groupByRowSelectorsTemplates.first.templateRef;
-        }
-
-        return null;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: true })
-    public groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
 
     /**
      * @hidden

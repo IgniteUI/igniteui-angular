@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -26,6 +26,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
+import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 
 let NEXT_ID = 0;
 
@@ -476,6 +477,24 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     @ViewChild('summary_template', { read: TemplateRef, static: true })
     protected summaryTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorDirective> {
+        if (this.groupByRowSelectorsTemplates && this.groupByRowSelectorsTemplates.first) {
+            return this.groupByRowSelectorsTemplates.first.templateRef;
+        }
+        return null;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: true })
+    public groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
 
     /**
      * @hidden @internal
