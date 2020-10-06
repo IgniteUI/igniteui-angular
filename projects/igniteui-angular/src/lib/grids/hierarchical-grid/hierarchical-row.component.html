@@ -47,6 +47,7 @@
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
         [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
+        [addMode]="col.editable && crudService.isInAddMode(index,col.index)"
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"

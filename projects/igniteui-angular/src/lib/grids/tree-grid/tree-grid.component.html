@@ -143,6 +143,9 @@
         </div>
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
+    <div class="igx-grid__addrow-snackbar">
+        <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
+    </div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot>
@@ -162,10 +165,6 @@
         </ng-template>
     </div>
     <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
-</div>
-
-<div class="igx-grid__addrow-snackbar">
-    <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" displayTime='2000'>{{snackbarLabel}}</igx-snackbar>
 </div>
 
 <div class="igx-grid__footer" #footer>
