@@ -1,7 +1,7 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxDateSummaryOperand,
     IgxGridModule,
@@ -28,7 +28,7 @@ import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
 
-describe('IgxGrid - Summaries #grid', () => {
+fdescribe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';

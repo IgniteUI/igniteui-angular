@@ -1,5 +1,4 @@
-import { IgxDecimalPipeComponent, IgxDatePipeComponent } from '../common/pipes';
-
+import { DecimalPipe, DatePipe } from '@angular/common';
 
 export interface ISummaryExpression {
     fieldName: string;
@@ -63,11 +62,11 @@ export class IgxSummaryOperand {
      * @memberof IgxSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
-        const pipe = new IgxDecimalPipeComponent(locale);
+        const pipe = new DecimalPipe(locale);
         return [{
             key: 'count',
             label: 'Count',
-            summaryResult: pipe.transform(IgxSummaryOperand.count(data), locale)
+            summaryResult: pipe.transform(IgxSummaryOperand.count(data))
         }];
     }
 }
@@ -154,26 +153,26 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
-        const pipe = new IgxDecimalPipeComponent(locale);
+        const pipe = new DecimalPipe(locale);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), locale)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data))
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), locale)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data))
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), locale)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data))
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), locale)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data))
         });
         return result;
     }
@@ -236,16 +235,16 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
-        const pipe = new IgxDatePipeComponent(locale);
+        const pipe = new DatePipe(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), locale)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data))
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), locale)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data))
         });
         return result;
     }

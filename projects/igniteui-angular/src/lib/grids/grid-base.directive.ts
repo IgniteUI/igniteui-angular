@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, DecimalPipe, DatePipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -138,7 +138,6 @@ import {
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
-import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
@@ -147,7 +146,6 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
-import { isThisTypeNode } from 'typescript';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -157,6 +155,7 @@ const FILTER_ROW_HEIGHT = 50;
 // More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
 // but in the same time we need to set row editing overlay outlet before opening the overlay itself.
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
+const DEFAULT_DATE_FORMAT = 'mediumDate';
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -204,11 +203,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public decimalPipe = new IgxDecimalPipeComponent(this.locale);
+    public decimalPipe = new DecimalPipe(this.locale);
     /**
      * @hidden @internal
      */
-    public datePipe = new IgxDatePipeComponent(this.locale);
+    public datePipe = new DatePipe(this.locale);
 
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
@@ -6204,8 +6203,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
-                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field), this.locale) :
-                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field), this.locale)
+                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field)) :
+                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field), DEFAULT_DATE_FORMAT)
                             : resolveNestedPath(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();

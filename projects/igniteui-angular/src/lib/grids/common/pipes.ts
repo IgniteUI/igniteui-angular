@@ -1,10 +1,9 @@
-import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
+import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { GridType } from './grid.interface';
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
@@ -161,44 +160,6 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
         return hasVisibleColumns ? values : [];
     }
 
-}
-
-
-/**
- * @hidden
- * @internal
- */
-@Pipe({
-    name: 'igxdate'
-})
-export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
-
-    private readonly DEFAULT_DATE_FORMAT = 'mediumDate';
-
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
-    }
-}
-
-/**
- * @hidden
- * @internal
- */
-@Pipe({
-    name: 'igxdecimal'
-})
-export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        return super.transform(value, undefined, locale);
-    }
 }
 
 /**
