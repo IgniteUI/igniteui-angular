@@ -438,6 +438,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     set locale(value) {
         this._locale = value;
+        this._pipeTrigger++;
+        this.notifyChanges(true);
     }
 
     @Input()
