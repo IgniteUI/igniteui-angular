@@ -73,6 +73,7 @@ export interface GridType extends IGridDataBindable {
     isColumnGrouped(fieldName: string): boolean;
     isDetailRecord(rec: any): boolean;
     isGroupByRecord(rec: any): boolean;
+    notifyChanges(repaint: boolean): void;
 }
 
 /**
