@@ -12,6 +12,19 @@
         [containerClass]="'igx-grid__td-text'"
         [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | number:undefined:grid.locale) : column.dataType === 'date' ? (value | date:'mediumDate':undefined:grid.locale) : value }}</div>
 </ng-template>
+<ng-template #addRowCell let-cell="cell">
+    <div igxTextHighlight class="igx-grid__td-text" style="pointer-events: none"
+    [cssClass]="highlightClass"
+    [activeCssClass]="activeHighlightClass"
+    [groupName]="gridID"
+    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+    [row]="rowData"
+    [column]="this.column.field"
+    [containerClass]="'igx-grid__td-text'"
+    [metadata]="searchMetadata">{{
+        value ? value : (column.header || column.field)
+    }}</div>
+</ng-template>
 <ng-template #inlineEditor  let-cell="cell">
     <ng-container *ngIf="column.dataType === 'string'">
         <igx-input-group displayDensity="compact">
