@@ -2254,10 +2254,11 @@ export class GridSelectionFunctions {
         return fix.nativeElement.querySelectorAll(HEADER_ROW_CSS_CLASS);
     }
 
-    public static verifyGroupByRowCheckboxState(groupByRow, checked = false, indeterminate = false) {
+    public static verifyGroupByRowCheckboxState(groupByRow, checked = false, indeterminate = false, disabled = false) {
         const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(groupByRow.element.nativeElement);
         expect(groupByRowCheckboxElement.checked).toBe(checked);
         expect(groupByRowCheckboxElement.indeterminate).toBe(indeterminate);
+        expect(groupByRowCheckboxElement.disabled).toBe(disabled);
     }
 
     public static verifyHeaderRowCheckboxState(parent, checked = false, indeterminate = false) {
