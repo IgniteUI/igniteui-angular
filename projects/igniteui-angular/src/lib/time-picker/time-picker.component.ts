@@ -1948,7 +1948,7 @@ export class IgxTimePickerComponent implements
             this.displayValue = '';
             this.value.setHours(0, 0);
 
-            if (oldVal.getTime() !== this.value.getTime()) {
+            if (oldVal.getTime() !== this.value.getTime() || this.isReset()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
@@ -1992,7 +1992,7 @@ export class IgxTimePickerComponent implements
             this.value.setHours(0, 0);
             this.displayValue = val;
 
-            if (oldVal.getTime() !== this.value.getTime()) {
+            if (oldVal.getTime() !== this.value.getTime() || this.isReset()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
@@ -2143,6 +2143,14 @@ export class IgxTimePickerComponent implements
         } else {
             input.valid = IgxInputState.INITIAL;
         }
+    }
+
+    // Workaround method for #8135
+    // TODO: It must be removed in #6482
+    private isReset(): boolean {
+        return this.value.getHours() === 0
+            && this.value.getMinutes() === 0
+            && this.value.getSeconds() === 0;
     }
 }
 
