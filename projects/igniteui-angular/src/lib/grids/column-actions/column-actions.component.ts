@@ -13,6 +13,7 @@ import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxCheckboxComponent, IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -38,18 +39,23 @@ export class IgxColumnActionsComponent {
     public filteredColumns: IgxColumnComponent[] = [];
 
     /**
-     * @hidden @internal
-     */
-    private _columns: IgxColumnComponent[] = [];
-    /**
      * Gets the grid columns to provide an action for.
+     * @deprecated
      * @example
      * ```typescript
      * let gridColumns = this.columnActions.columns;
      * ```
      */
+    @DeprecateProperty(`Deprecated. Use 'grid' input instead.`)
+    @Input()
     public get columns() {
         return this.grid?.columns;
+    }
+
+    public set columns(value) {
+        if (value && value.length > 0) {
+            this.grid = value[0].grid;
+        }
     }
 
     /**
