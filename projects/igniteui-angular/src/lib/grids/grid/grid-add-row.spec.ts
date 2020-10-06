@@ -11,12 +11,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxActionStripModule } from '../../action-strip/action-strip.module';
-<<<<<<< HEAD
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxGridRowComponent } from './grid-row.component';
-=======
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
->>>>>>> 2b5c0d66f896d99d9b29a30b6965ac9184fd8685
 
 describe('IgxGrid - Row Adding #grid', () => {
         let fixture;
@@ -136,8 +131,6 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(banner).toBeNull();
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
-<<<<<<< HEAD
-=======
 
         it('should navigate to added row on snackbar button click.', async() => {
             const rows = grid.rowList.toArray();
@@ -203,6 +196,5 @@ describe('IgxGrid - Row Adding #grid', () => {
              expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
         });
 
->>>>>>> 2b5c0d66f896d99d9b29a30b6965ac9184fd8685
     });
 });
