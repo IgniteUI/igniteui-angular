@@ -618,14 +618,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
                     filterListItem.label = this.column.formatter ?
                         this.column.formatter(date) :
-                        this.grid.datePipe.transform(date, this.grid.locale);
+                        this.grid.datePipe.transform(date);
 
                 } else if (this.column.dataType === DataType.Number) {
                     filterListItem.value = element;
 
                     filterListItem.label = this.column.formatter ?
                         this.column.formatter(element) :
-                        this.grid.decimalPipe.transform(element, this.grid.locale);
+                        this.grid.decimalPipe.transform(element);
 
                 } else {
                     filterListItem.value = element;
