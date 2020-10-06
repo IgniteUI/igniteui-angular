@@ -1,5 +1,5 @@
 ﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -13,12 +13,23 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
+
+type FixtureType = ColumnLayoutGroupingTestComponent | ColumnLayouHidingTestComponent | ColumnLayoutResizingTestComponent
+    | ColumnLayoutPinningTestComponent;
+interface ColGroupsType {
+    group: string;
+    hidden?: boolean;
+    pinned?: boolean;
+    columns: any[];
+}
+
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     configureTestSuite();
-    let fixture;
+
+    let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
-    let colGroups: Array<any>;
-    beforeAll(async(() => {
+    let colGroups: Array<ColGroupsType>;
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutPinningTestComponent,
@@ -33,12 +44,12 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     }));
 
     describe('Hiding ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             colGroups = fixture.componentInstance.colGroups;
-        }));
+        });
 
         it('should allow setting a whole group as hidden/shown.', () => {
 
@@ -181,7 +192,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
 
         it('should work with horizontal virtualization when some groups are hidden/shown.', async() => {
-            const uniqueGroups = [
+            const uniqueGroups: ColGroupsType[] = [
                 {
                 group: 'group1',
                 hidden: true,
@@ -312,46 +323,49 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
         });
 
-        it('UI - hidden columns count and drop-down items text in hiding toolbar should be correct when group is hidden/shown. ', () => {
-            // enable toolbar for hiding
-            grid.showToolbar = true;
-            grid.columnHiding = true;
-            fixture.detectChanges();
-            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
-            const hidingButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
-            const hidingButtonLabel = hidingButton.query(By.css('span'));
-            hidingButtonLabel.nativeElement.click();
-            fixture.detectChanges();
-            // should show count for actual hidden igxColumns
-            expect(parseInt(hidingButtonLabel.nativeElement.textContent.trim(), 10)).toBe(4);
-            const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
-            const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
-            // should show 2 checkboxes - one for each group
-            expect(checkboxes.length).toBe(2);
-            expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
-            expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
+        it('UI - hidden columns count and drop-down items text in hiding toolbar should be correct when group is hidden/shown. ',
+            waitForAsync(async () => {
+                // enable toolbar for hiding
+                fixture.componentInstance.showToolbar = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
 
-            // verify checked state
-            expect(checkboxes[0].componentInstance.checked).toBeTruthy();
-            expect(checkboxes[1].componentInstance.checked).toBeFalsy();
-        });
+                const hidingButton = GridFunctions.getColumnHidingButton(fixture);
+                hidingButton.click();
+                fixture.detectChanges();
+                // should show count for actual hidden igxColumns
+                expect(parseInt(hidingButton.querySelector('span').textContent.trim(), 10)).toBe(4);
+                const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
+                const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
+                // should show 2 checkboxes - one for each group
+                expect(checkboxes.length).toBe(2);
+                expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
+                expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
 
-        it('UI - toggling column checkbox checked state successfully changes the column\'s hidden state. ', () => {
+                // verify checked state
+                expect(checkboxes[0].componentInstance.checked).toBeFalse();
+                expect(checkboxes[1].componentInstance.checked).toBeTrue();
+        }));
+
+        it(`UI - toggling column checkbox checked state successfully changes the column's hidden state. `, waitForAsync(async () => {
             // enable toolbar for hiding
-            grid.showToolbar = true;
-            grid.columnHiding = true;
+            fixture.componentInstance.showToolbar = true;
             fixture.detectChanges();
-            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
-            const hidingButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
-            hidingButton.nativeElement.click();
+            await fixture.whenStable();
             fixture.detectChanges();
+
+            const hidingButton = GridFunctions.getColumnHidingButton(fixture);
+            hidingButton.click();
+            fixture.detectChanges();
+
             const verifyCheckbox = ControlsFunction.verifyCheckbox;
             const columnChooserElement = GridFunctions.getColumnHidingElement(fixture);
             const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);
-            verifyCheckbox('group1', true, false, columnChooserElement, fixture);
+            verifyCheckbox('group1', false, false, columnChooserElement, fixture);
 
             const column = grid.getColumnByName('group1');
-            expect(column.hidden).toBeTruthy();
+            expect(column.hidden).toBeTrue();
 
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
@@ -362,8 +376,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             checkbox.click();
             fixture.detectChanges();
 
-            expect(checkbox.checked).toBe(false);
-            expect(column.hidden).toBeFalsy();
+            expect(checkbox.checked).toBe(true);
+            expect(column.hidden).toBeFalse();
 
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
@@ -371,19 +385,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             checkbox.click();
             fixture.detectChanges();
 
-            expect(checkbox.checked).toBe(true);
-            expect(column.hidden).toBeTruthy();
-        });
+            expect(checkbox.checked).toBe(false);
+            expect(column.hidden).toBeTrue();
+        }));
 
     });
 
     describe('Pinning ', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayoutPinningTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             colGroups = fixture.componentInstance.colGroups;
-        }));
+        });
 
         it('should allow pinning/unpinning a whole group.', () => {
             // group 1 should be pinned - all child columns should be pinned
@@ -626,33 +640,33 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             .toBeLessThanOrEqual(2);
         });
 
-        it('UI - pinned columns count and drop-down items text in pinnig toolbar should be correct when group is pinned. ', () => {
-            // enable toolbar for pinning
-            grid.showToolbar = true;
-            grid.columnPinning = true;
-            fixture.detectChanges();
-            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
-            const pinningButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
-            const pinningButtonLabel = pinningButton.query(By.css('span'));
-            pinningButtonLabel.nativeElement.click();
-            fixture.detectChanges();
-            // should show count for actual igxColumns displayed in the pinned area
-            expect(parseInt(pinningButtonLabel.nativeElement.textContent.trim(), 10)).toBe(4);
-            const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
-            const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
-            // should show 2 checkboxes - one for each group
-            expect(checkboxes.length).toBe(2);
-            expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
-            expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
+        it('UI - pinned columns count and drop-down items text in pinning toolbar should be correct when group is pinned. ',
+            waitForAsync(async () => {
+                // enable toolbar for pinning
+                fixture.componentInstance.showToolbar = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
 
-            // verify checked state
-            expect(checkboxes[0].componentInstance.checked).toBeTruthy();
-            expect(checkboxes[1].componentInstance.checked).toBeFalsy();
-        });
+                const pinningButton = GridFunctions.getColumnPinningButton(fixture);
+                const pinningButtonLabel = pinningButton.querySelector('span');
+                pinningButton.click();
+                fixture.detectChanges();
+                // should show count for actual igxColumns displayed in the pinned area
+                expect(parseInt(pinningButtonLabel.textContent.trim(), 10)).toBe(4);
+                const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
+                const checkboxes = columnChooserElement.queryAll(By.css('igx-checkbox'));
+                // should show 2 checkboxes - one for each group
+                expect(checkboxes.length).toBe(2);
+                expect(checkboxes[0].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group1');
+                expect(checkboxes[1].query(By.css('.igx-checkbox__label')).nativeElement.textContent.trim()).toBe('group2');
 
-        it('UI - toggling column checkbox checked state successfully changes the column\'s pinned state. ', async(() => {
-            grid.showToolbar = true;
-            grid.columnPinning = true;
+                // verify checked state
+                expect(checkboxes[0].componentInstance.checked).toBeTruthy();
+                expect(checkboxes[1].componentInstance.checked).toBeFalsy();
+        }));
+
+        it(`UI - toggling column checkbox checked state successfully changes the column's pinned state. `, waitForAsync(async () => {
             const uniqueGroups = [
                 {
                 group: 'group1',
@@ -694,13 +708,16 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 ]
             }
             ];
+            fixture.componentInstance.showToolbar = true;
             fixture.componentInstance.colGroups = uniqueGroups;
             grid.columnWidth = '200px';
             fixture.componentInstance.grid.width = '1000px';
             fixture.detectChanges();
-            const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
-            const pinningButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
-            pinningButton.nativeElement.click();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const pinningButton = GridFunctions.getColumnPinningButton(fixture);
+            pinningButton.click();
             fixture.detectChanges();
             const columnChooserElement = GridFunctions.getColumnPinningElement(fixture);
 
@@ -1191,6 +1208,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
+        <igx-grid-toolbar *ngIf="showToolbar"></igx-grid-toolbar>
         <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [hidden]='group.hidden'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
@@ -1202,6 +1220,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 export class ColumnLayouHidingTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
+    showToolbar = false;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2},
@@ -1214,7 +1233,7 @@ export class ColumnLayouHidingTestComponent {
         { field: 'Country', rowStart: 2, colStart: 2},
         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3}
     ];
-    colGroups = [
+    colGroups: ColGroupsType[] = [
         {
             group: 'group1',
             hidden: true,
@@ -1232,6 +1251,7 @@ export class ColumnLayouHidingTestComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" height="500px">
+        <igx-grid-toolbar *ngIf="showToolbar"></igx-grid-toolbar>
         <igx-column-layout *ngFor='let group of colGroups' [field]='group.group' [pinned]='group.pinned'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
@@ -1243,6 +1263,7 @@ export class ColumnLayouHidingTestComponent {
 export class ColumnLayoutPinningTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
+    showToolbar = false;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2},
@@ -1255,7 +1276,7 @@ export class ColumnLayoutPinningTestComponent {
         { field: 'Country', rowStart: 2, colStart: 2},
         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3}
     ];
-    colGroups = [
+    colGroups: ColGroupsType[] = [
         {
             group: 'group1',
             pinned: true,
@@ -1296,6 +1317,7 @@ export class ColumnLayoutFilteringTestComponent extends ColumnLayoutPinningTestC
     `
 })
 export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestComponent {
+    showToolbar = false;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2, groupable: true},
@@ -1324,6 +1346,7 @@ export class ColumnLayoutResizingTestComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
+    showToolbar = false;
 
     cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1, resizable: true },
@@ -1331,7 +1354,7 @@ export class ColumnLayoutResizingTestComponent {
         { field: 'ContactName', rowStart: 1, colStart: 3, resizable: true },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4, resizable: true },
     ];
-    colGroups = [
+    colGroups: ColGroupsType[] = [
         {
             group: 'group1',
             columns: this.cols
