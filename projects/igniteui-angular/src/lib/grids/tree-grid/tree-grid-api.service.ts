@@ -223,4 +223,53 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
         return false;
     }
+
+    public addRowToData(data: any, parentRowID?: any) {
+        if (parentRowID !== undefined && parentRowID !== null) {
+
+            const state = this.grid.transactions.getState(parentRowID);
+            // we should not allow adding of rows as child of deleted row
+            if (state && state.type === TransactionType.DELETE) {
+                throw Error(`Cannot add child row to deleted parent row`);
+            }
+
+            const parentRecord = this.grid.records.get(parentRowID);
+
+            if (!parentRecord) {
+                throw Error('Invalid parent row ID!');
+            }
+            this.grid.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
+            if (this.grid.primaryKey && this.grid.foreignKey) {
+                data[this.grid.foreignKey] = parentRowID;
+                super.addRowToData(data);
+            } else {
+                const parentData = parentRecord.data;
+                const childKey = this.grid.childDataKey;
+                if (this.grid.transactions.enabled) {
+                    const rowId = this.grid.primaryKey ? data[this.grid.primaryKey] : data;
+                    const path: any[] = [];
+                    path.push(...this.grid.generateRowPath(parentRowID));
+                    path.push(parentRowID);
+                    this.grid.transactions.add({
+                        id: rowId,
+                        path: path,
+                        newValue: data,
+                        type: TransactionType.ADD
+                    } as HierarchicalTransaction,
+                        null);
+                } else {
+                    if (!parentData[childKey]) {
+                        parentData[childKey] = [];
+                    }
+                    parentData[childKey].push(data);
+                }
+            }
+        } else {
+            if (this.grid.primaryKey && this.grid.foreignKey) {
+                const rowID = data[this.grid.foreignKey];
+                this.grid.summaryService.clearSummaryCache({rowID: rowID});
+            }
+            super.addRowToData(data);
+        }
+    }
 }

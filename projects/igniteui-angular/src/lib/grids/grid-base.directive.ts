@@ -176,6 +176,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public snackbarDisplayTime = 2000;
+
+    /**
+     * @hidden @internal
+     */
     public get scrollSize() {
         return this.verticalScrollContainer.getScrollNativeSize();
     }
@@ -2726,7 +2731,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
-    private lastAddedRowId;
+    private lastAddedRowIndex;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
@@ -3288,7 +3293,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         this.addRowSnackbar?.onAction.subscribe(() => {
-            this.navigateTo(this.lastAddedRowId, 0);
+            const rec = this.filteredSortedData[this.lastAddedRowIndex];
+            this.scrollTo(rec, 0);
             this.addRowSnackbar.hide();
         });
     }
@@ -4075,33 +4081,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Spawns the add row UI for a specific row.
-     * If rowID is not specified, the grid spawns the UI under the first visible row in the view.
-     * @example
-     * ```typescript
-     * this.grid1.beginAddRow(rowID);
-     * ```
-     * @param rowID
-     */
-
-    public beginAddRow(rowID?: any) {
-        if (!rowID) {
-            rowID = this.rowList.first.rowData[this.primaryKey];
-        }
-        const index = this.data.findIndex(record => record[this.primaryKey] === rowID);
-        this.beginAddRowByIndex(rowID, index);
-    }
-
-    /**
      * @hidden @internal
      */
-    public beginAddRowByIndex(rowID: any, index: number) {
+    public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
         this.endEdit(true);
         this.cancelAddMode = false;
 
+        if (this.expansionStates.get(rowID)) {
+            this.collapseRow(rowID);
+        }
+
         this.addRowParent = {
             rowID: rowID,
-            index: index
+            index: index,
+            asChild: asChild
         };
         this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
             this.cdr.detectChanges();
@@ -5908,9 +5901,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public showSnackbarFor(id: number) {
-        this.addRowSnackbar.actionText = id === -1 ? '' : this.snackbarActionText;
-        this.lastAddedRowId = id;
+    public showSnackbarFor(index: number) {
+        this.addRowSnackbar.actionText = index === -1 ? '' : this.snackbarActionText;
+        this.lastAddedRowIndex = index;
         this.addRowSnackbar.show();
     }
 
@@ -6584,15 +6577,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         if (commit) {
-            this.onRowAdded.subscribe(rowData => {
+            this.onRowAdded.pipe(first()).subscribe(rowData => {
                 // A check whether the row is in the current view
-                const index = this.dataView.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
-                const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
-                const showIndex = shouldScroll ? index : -1;
+                const viewIndex = this.findRecordIndexInView(rowData);
+                const dataIndex = this.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
+                const isInView = viewIndex !== -1 && !this.navigation.shouldPerformVerticalScroll(viewIndex, 0);
+                const showIndex = isInView ? -1 : dataIndex;
                 this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
-            this.gridAPI.addRowToData(row.data);
+            this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
             this.crudService.endRowEdit();
             this.addRowParent = null;
         } else {
@@ -6619,6 +6613,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.tbody.nativeElement.focus();
         }
     }
+
+    protected findRecordIndexInView(rec) {
+        return this.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
+    }
+
     /**
      * @hidden
      */
@@ -6774,5 +6773,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             advancedFilteringDialog.closeDialog();
         }
+    }
+
+    public getEmptyRecordObjectFor(rec) {
+        const row = { ...rec };
+        Object.keys(row).forEach(key => row[key] = undefined);
+        row[this.primaryKey] = this.generateRowID();
+        return row;
     }
 }
