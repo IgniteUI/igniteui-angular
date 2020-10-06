@@ -6554,6 +6554,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endAdd(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
+        const cachedRowData = {...row.data};
         if (!row && !cell) {
             return;
         }
@@ -6568,7 +6569,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
             this.gridAPI.submit_add_value();
             this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
-            this.crudService.endRowEdit();
             this.addRowParent = null;
         } else {
             this.gridAPI.escape_editMode();
@@ -6580,6 +6580,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
             this.onRowAdded.emit(row.data);
+            const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+            this.rowEditDone.emit(doneArgs);
         }
     }
 
