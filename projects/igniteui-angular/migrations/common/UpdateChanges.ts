@@ -1,13 +1,19 @@
-import { FileEntry, SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
-import { getLanguageService, getRenamePositions } from './tsUtils';
+import * as tss from 'typescript/lib/tsserverlibrary';
+import {
+    ClassChanges, BindingChanges, SelectorChange,
+    SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
+} from './schema';
+import {
+    getLanguageService, getRenamePositions, findMatches,
+    replaceMatch, createProjectService, isMemberIgniteUI
+} from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
-import { LanguageService } from 'typescript';
-
+import { ServerHost } from './ServerHost';
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -21,6 +27,8 @@ export interface BoundPropertyObject {
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
+    protected projectService: tss.server.ProjectService;
+    protected serverHost: ServerHost;
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
     protected classChanges: ClassChanges;
@@ -29,6 +37,7 @@ export class UpdateChanges {
     protected selectorChanges: SelectorChanges;
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
+    protected membersChanges: MemberChanges;
     protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
@@ -58,7 +67,7 @@ export class UpdateChanges {
     }
 
     private _sassFiles: string[] = [];
-    /** Sass (both .scss and .sass) files in the project being updagraded. */
+    /** Sass (both .scss and .sass) files in the project being updated. */
     public get sassFiles(): string[] {
         if (!this._sassFiles.length) {
             // files can be outside the app prefix, so start from sourceRoot
@@ -73,8 +82,8 @@ export class UpdateChanges {
         return this._sassFiles;
     }
 
-    private _service: LanguageService;
-    public get service(): LanguageService {
+    private _service: tss.LanguageService;
+    public get service(): tss.LanguageService {
         if (!this._service) {
             this._service = getLanguageService(this.tsFiles, this.host);
         }
@@ -95,33 +104,16 @@ export class UpdateChanges {
         this.inputChanges = this.loadConfig('inputs.json');
         this.themePropsChanges = this.loadConfig('theme-props.json');
         this.importsChanges = this.loadConfig('imports.json');
+        this.membersChanges = this.loadConfig('members.json');
+        this.serverHost = new ServerHost(this.host);
+        this.projectService = createProjectService(this.serverHost);
     }
 
     /** Apply configured changes to the Host Tree */
     public applyChanges() {
-        if (this.selectorChanges && this.selectorChanges.changes.length) {
-            for (const entryPath of this.templateFiles) {
-                this.updateSelectors(entryPath);
-            }
-        }
-        if (this.outputChanges && this.outputChanges.changes.length) {
-            for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.outputChanges);
-            }
-        }
-
-        if (this.inputChanges && this.inputChanges.changes.length) {
-            for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
-            }
-        }
-
-        /** TS files */
-        if (this.classChanges && this.classChanges.changes.length) {
-            for (const entryPath of this.tsFiles) {
-                this.updateClasses(entryPath);
-            }
-        }
+        this.updateTemplateFiles();
+        this.updateTsFiles();
+        this.updateMembers();
 
         /** Sass files */
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
@@ -129,21 +121,20 @@ export class UpdateChanges {
                 this.updateThemeProps(entryPath);
             }
         }
-
-        if (this.importsChanges && this.importsChanges.changes.length) {
-            for (const entryPath of this.tsFiles) {
-                this.updateImports(entryPath);
-            }
-        }
     }
 
-    /** Add condition funtion. */
+    /** Add condition function. */
     public addCondition(conditionName: string, callback: (ownerMatch: string) => boolean) {
         this.conditionFunctions.set(conditionName, callback);
     }
 
     public addValueTransform(functionName: string, callback: TransformFunction) {
         this.valueTransforms.set(functionName, callback);
+    }
+
+    public getDefaultLanguageService(entryPath: string): tss.LanguageService | undefined {
+        const project = this.getDefaultProjectForFile(entryPath);
+        return project.getLanguageService();
     }
 
     protected updateSelectors(entryPath: string) {
@@ -271,8 +262,9 @@ export class UpdateChanges {
                         transform(args);
                         if (args.bindingType !== bindingType) {
                             replaceStatement = args.bindingType === InputPropertyType.EVAL ?
-                            replaceStatement.replace(`$1`, `$1[`).replace(`$2`, `]$2`) :
-                            replaceStatement.replace(`$1`, regExpMatch[1].replace('[', '')).replace('$2', regExpMatch[2].replace(']', ''));
+                                replaceStatement.replace(`$1`, `$1[`).replace(`$2`, `]$2`) :
+                                replaceStatement.replace(`$1`,
+                                    regExpMatch[1].replace('[', '')).replace('$2', regExpMatch[2].replace(']', ''));
 
                         }
                         replaceStatement = replaceStatement.replace('$4', args.value);
@@ -357,6 +349,30 @@ export class UpdateChanges {
         }
     }
 
+    protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
+        const langServ = this.getDefaultLanguageService(entryPath);
+        let content = this.host.read(entryPath).toString();
+        const changes = new Set<{ change, position }>();
+        for (const change of memberChanges.changes) {
+            const matches = findMatches(content, change);
+            for (const matchPosition of matches) {
+                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition)) {
+                    changes.add({ change, position: matchPosition });
+                }
+            }
+        }
+
+        const changesArr = Array.from(changes).sort((c, c1) => c.position - c1.position).reverse();
+        for (const fileChange of changesArr) {
+            content = replaceMatch(content, fileChange.change.member,
+                fileChange.change.replaceWith, fileChange.position);
+        }
+
+        if (changes.size) {
+            this.host.overwrite(entryPath, content);
+        }
+    }
+
     private loadConfig(configJson: string) {
         const filePath = path.join(this.rootPath, 'changes', configJson);
         if (fs.existsSync(filePath)) {
@@ -433,6 +449,58 @@ export class UpdateChanges {
         }
         parts.push(body.substring(lastIndex));
         return parts;
+    }
+
+    private updateTemplateFiles() {
+        if (this.selectorChanges && this.selectorChanges.changes.length) {
+            for (const entryPath of this.templateFiles) {
+                this.updateSelectors(entryPath);
+            }
+        }
+        if (this.outputChanges && this.outputChanges.changes.length) {
+            // name change of output
+            for (const entryPath of this.templateFiles) {
+                this.updateBindings(entryPath, this.outputChanges);
+            }
+        }
+        if (this.inputChanges && this.inputChanges.changes.length) {
+            // name change of input
+            for (const entryPath of this.templateFiles) {
+                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
+            }
+        }
+    }
+
+    private updateTsFiles() {
+        if (this.classChanges && this.classChanges.changes.length) {
+            // change class name
+            for (const entryPath of this.tsFiles) {
+                this.updateClasses(entryPath);
+            }
+        }
+        if (this.importsChanges && this.importsChanges.changes.length) {
+            // TODO: move logic to 7.0.2 migration
+            for (const entryPath of this.tsFiles) {
+                this.updateImports(entryPath);
+            }
+        }
+    }
+
+    private updateMembers() {
+        if (this.membersChanges && this.membersChanges.changes.length) {
+            const dirs = [...this.templateFiles, ...this.tsFiles];
+            for (const entryPath of dirs) {
+                this.updateClassMembers(entryPath, this.membersChanges);
+            }
+        }
+    }
+
+    private getDefaultProjectForFile(entryPath: string): tss.server.Project {
+        const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(entryPath), false);
+        this.projectService.openClientFile(scriptInfo.fileName);
+        const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
+        project.addMissingFileRoot(scriptInfo.fileName);
+        return project;
     }
 }
 
