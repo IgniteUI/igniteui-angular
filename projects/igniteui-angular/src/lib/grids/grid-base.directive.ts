@@ -2725,7 +2725,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
-    private lastAddedRowId;
+    private lastAddedRowIndex;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
@@ -3288,7 +3288,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         this.addRowSnackbar?.onAction.subscribe(() => {
-            this.navigateTo(this.lastAddedRowId, 0);
+            const rec = this.filteredSortedData[this.lastAddedRowIndex];
+            this.scrollTo(rec, 0);
             this.addRowSnackbar.hide();
         });
 
@@ -5896,9 +5897,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public showSnackbarFor(id: number) {
-        this.addRowSnackbar.actionText = id === -1 ? '' : this.snackbarActionText;
-        this.lastAddedRowId = id;
+    public showSnackbarFor(index: number) {
+        this.addRowSnackbar.actionText = index === -1 ? '' : this.snackbarActionText;
+        this.lastAddedRowIndex = index;
         this.addRowSnackbar.show();
     }
 
@@ -6574,9 +6575,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (commit) {
             this.onRowAdded.pipe(first()).subscribe(rowData => {
                 // A check whether the row is in the current view
-                const index = this.findRecordIndexInView(rowData);
-                const shouldScroll = this.navigation.shouldPerformVerticalScroll(index, 0);
-                const showIndex = shouldScroll ? index : -1;
+                const viewIndex = this.findRecordIndexInView(rowData);
+                const dataIndex = this.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
+                const isInView = viewIndex !== -1 && !this.navigation.shouldPerformVerticalScroll(viewIndex, 0);
+                const showIndex = isInView ? -1 : dataIndex;
                 this.showSnackbarFor(showIndex);
             });
             this.gridAPI.submit_add_value();
@@ -6609,7 +6611,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected findRecordIndexInView(rec) {
-        return this.dataView.findIndex(data => data === rec);
+        return this.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
     }
 
     /**
