@@ -307,8 +307,8 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        border: 0 solid rgba(0, 0, 0, 0.12);
-        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.26), 0 8px 10px 1px rgba(0, 0, 0, 0.12), 0 3px 14px 2px rgba(0, 0, 0, 0.08);
+        border: 0 solid rgba(0, 0, 0, .12);
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .26), 0 8px 10px 1px rgba(0, 0, 0, .12), 0 3px 14px 2px rgba(0, 0, 0, .08);
     }
 
     %igx-grid-toolbar__dd-list-items {
