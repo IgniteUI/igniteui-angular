@@ -352,7 +352,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaryClass = fix.componentInstance.numberSummary;
 
                 const summaries = summaryClass.operate(fix.componentInstance.data.map((x) => x['UnitsInStock']));
-                expect(summaries[0].summaryResult).toBe(10);
+                expect(summaries[0].summaryResult).toBe('10');
                 expect(summaries[1].summaryResult).toBe('0');
                 expect(summaries[2].summaryResult).toBe('20,000');
                 expect(summaries[3].summaryResult).toBe('39,004');
