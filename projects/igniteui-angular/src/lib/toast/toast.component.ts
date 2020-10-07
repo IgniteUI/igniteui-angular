@@ -26,23 +26,24 @@ import {
     VerticalAlignment,
     GlobalPositionStrategy,
 } from '../services/public_api';
+import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
 
 /**
  * Enumeration for toast position
  * Can be:
- * bottom
- * middle
- * top
+ * Bottom
+ * Middle
+ * Top
  */
-export enum IgxToastPositionEnum {
-    bottom,
-    middle,
-    top,
-}
+export const IgxToastPosition = mkenum({
+    Bottom: 'bottom',
+    Middle: 'middle',
+    Top: 'top'
+});
 
-export type IgxToastPosition = keyof typeof IgxToastPositionEnum;
+export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPosition];
 
 /**
  * **Ignite UI for Angular Toast** -
