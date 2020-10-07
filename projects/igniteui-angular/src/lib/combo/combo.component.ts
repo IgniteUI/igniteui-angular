@@ -1326,6 +1326,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public handleClearItems(event: Event): void {
+        if (this.disabled) {
+            return;
+        }
         this.deselectAllItems(true, event);
         if (this.collapsed) {
             this.getEditElement().focus();
