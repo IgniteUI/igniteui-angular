@@ -7,7 +7,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
 /// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
@@ -21,6 +21,8 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
+/// @requires igx-elevation
+/// @requires $elevations
 /// @requires text-contrast
 ///
 /// @example scss Change the toolbar background color
@@ -33,6 +35,7 @@
 @function igx-grid-toolbar-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $background-color: null,
     $title-text-color: null,
@@ -98,6 +101,8 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
+/// @requires igx-elevation
+/// @requires $elevations
 /// @requires {mixin} ellipsis
 /// @requires rem
 /// @requires em
@@ -135,7 +140,7 @@
     %igx-grid-toolbar {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
@@ -245,6 +250,7 @@
         color: --var($theme, 'title-text-color');
         flex: 1 1 auto;
         @include ellipsis();
+        max-width: 40ch;
     }
 
     %igx-grid-toolbar__custom-content {
@@ -307,8 +313,9 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        border: 0 solid rgba(0, 0, 0, .12);
-        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .26), 0 8px 10px 1px rgba(0, 0, 0, .12), 0 3px 14px 2px rgba(0, 0, 0, .08);
+        border: 0 solid;
+        border-color: igx-color($palette, 'grays', 300);
+        box-shadow: igx-elevation($elevations, 8);
     }
 
     %igx-grid-toolbar__dd-list-items {
