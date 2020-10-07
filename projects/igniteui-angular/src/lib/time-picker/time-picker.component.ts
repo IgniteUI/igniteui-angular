@@ -2101,9 +2101,9 @@ export class IgxTimePickerComponent implements
     // Workaround method for #8135
     // TODO: It must be removed in #6482
     private isReset(): boolean {
-        return this.value.getHours() === 0
-            && this.value.getMinutes() === 0
-            && this.value.getSeconds() === 0;
+        return this.value?.getHours() === 0
+            && this.value?.getMinutes() === 0
+            && this.value?.getSeconds() === 0;
     }
 }
 
