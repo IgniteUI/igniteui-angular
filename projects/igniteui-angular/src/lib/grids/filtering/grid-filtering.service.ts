@@ -120,7 +120,7 @@ export class IgxFilteringService implements OnDestroy {
                 overlayOpening.unsubscribe();
             });
 
-        const overlayClosed = this._overlayService.onClosed.pipe(
+        this._overlayService.onClosed.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
