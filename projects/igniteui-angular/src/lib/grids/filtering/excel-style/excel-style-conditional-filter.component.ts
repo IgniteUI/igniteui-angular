@@ -56,7 +56,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
                 this._subMenuOverlaySettings.outlet = (this.esf.grid as any).outlet;
             }
         });
-     }
+    }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -78,6 +78,9 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
             this._subMenuOverlaySettings.target = eventArgs.currentTarget;
+            if (!this._subMenuOverlaySettings.outlet) {
+                this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
+            }
 
             const gridRect = this.esf.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.esf.mainDropdown.nativeElement.getBoundingClientRect();
@@ -147,7 +150,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         const exprTree = this.esf.column.filteringExpressionsTree;
         return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
             !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
-            (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
+                (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
     }
 
     /**
