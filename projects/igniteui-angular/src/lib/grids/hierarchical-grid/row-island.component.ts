@@ -292,6 +292,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 });
             }
          });
+
+         if (this.actionStrip) {
+            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
     }
 
     protected updateChildren() {
