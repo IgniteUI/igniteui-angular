@@ -200,7 +200,7 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
         useSingleInferredProject: true,
         useInferredProjectPerProjectRoot: true,
         /* will load only global plug-ins */
-        globalPlugins: ['@angular/language-service'],
+        globalPlugins: [NG_LANG_SERVICE_PACKAGE_NAME],
         allowLocalPluginLoads: false,
         typingsInstaller: tss.server.nullTypingsInstaller
     });
@@ -215,7 +215,7 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
         ]
     });
     projectService.configurePlugin({
-        pluginName: '@angular/language-service',
+        pluginName: NG_LANG_SERVICE_PACKAGE_NAME,
         configuration: {
             angularOnly: false,
         },

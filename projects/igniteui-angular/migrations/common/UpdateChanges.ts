@@ -17,7 +17,6 @@ import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util
 import { ServerHost } from './ServerHost';
 import { getPropertyFromWorkspace } from '../../schematics/utils/dependency-handler';
 
-
 export enum InputPropertyType {
     EVAL = 'eval',
     STRING = 'string'
