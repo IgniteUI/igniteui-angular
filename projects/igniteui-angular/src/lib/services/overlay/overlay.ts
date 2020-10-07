@@ -30,19 +30,7 @@ import { fromEvent, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 import { showMessage } from '../../core/deprecateDecorators';
-<<<<<<< HEAD
-=======
 import { PlatformUtil } from '../../core/utils';
-import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import {
-    OverlayAnimationEventArgs,
-    OverlayCancelableEventArgs,
-    OverlayClosingEventArgs, OverlayEventArgs,
-    OverlayInfo, OverlaySettings
-} from './utilities';
-
->>>>>>> 3ba21201e8... fix(overlay): change cursor in iOS, #5853
 
 let warningShown = false;
 
