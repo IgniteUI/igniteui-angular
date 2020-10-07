@@ -146,7 +146,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         this.grid.cellEdit.emit(args);
-
+        this.grid.crudService.cellEditingBlocked = args.cancel;
         if (args.cancel) {
             return args;
         }
@@ -167,6 +167,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         this.grid.cellEdit.emit(args);
+        this.grid.crudService.cellEditingBlocked = args.cancel;
         if (args.cancel) {
             return args;
         }
@@ -321,7 +322,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        this.grid.crudService.endEditMode();
+        this.grid.endEdit(false);
 
         if (grid.paging) {
             grid.page = 0;
