@@ -3,7 +3,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxAddRowComponent
 } from '../../test-utils/grid-samples.spec';
@@ -14,6 +14,7 @@ import { IgxActionStripModule } from '../../action-strip/action-strip.module';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Row Adding #grid', () => {
+        const SUMMARY_ROW = 'igx-grid-summary-row';
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -98,7 +99,28 @@ describe('IgxGrid - Row Adding #grid', () => {
             // No much space between the row and the banner
             expect(addRowTop - bannerBottom).toBeLessThan(2);
         });
+        it('Should be able to enter add row mode on Alt + plus key.', () => {
+            GridFunctions.focusFirstCell(fixture);
+            fixture.detectChanges();
 
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
+            fixture.detectChanges();
+
+            const addRow = grid.getRowByIndex(1);
+            expect(addRow.addRow).toBeTrue();
+
+        });
+        it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
+            GridFunctions.focusFirstCell(fixture);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
+            fixture.detectChanges();
+
+            const banner = GridFunctions.getRowEditingOverlay(fixture);
+            expect(banner).toBeNull();
+            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+        });
         it('Should not be able to enter add row mode when rowEditing is disabled', () => {
             grid.rowEditable = false;
             fixture.detectChanges();
@@ -173,6 +195,22 @@ describe('IgxGrid - Row Adding #grid', () => {
              const gridOffsets = grid.tbody.nativeElement.getBoundingClientRect();
              const rowOffsets = row.nativeElement.getBoundingClientRect();
              expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
+        });
+
+        it('should update summaries after row is added via the UI.', () => {
+            grid.getColumnByName('ID').hasSummary = true;
+            fixture.detectChanges();
+            let summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
+
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['28']);
         });
 
     });
