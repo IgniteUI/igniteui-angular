@@ -22,7 +22,7 @@ import { SortingDirection, ISortingExpression } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, DatePipe } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -1413,7 +1413,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        it('Should change dates/number display based on locale', fakeAsync(() => {
+        fit('Should change dates/number display based on locale', fakeAsync(() => {
             registerLocaleData(localeDE);
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
@@ -1456,16 +1456,17 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
-            tick(300);
+            tick(500);
+            fixture.detectChanges();
             fixture.detectChanges();
 
-            rows = grid.rowList.toArray();
-            expectedValue = '21.03.2005';
-            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '15.01.2008';
-            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '20.11.2010';
-            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            console.log('Locale is: ' + grid.locale);
+            const pipe = new DatePipe('de-DE');
+            const val = pipe.transform(new Date('Mar 21, 2005'), 'mediumDate');
+            console.log(val);
+            console.log(rows[0].cells.toArray()[4].element.nativeElement.textContent);
+            console.log(rows[1].cells.toArray()[4].element.nativeElement.textContent);
+            console.log(rows[2].cells.toArray()[4].element.nativeElement.textContent);
 
             // verify summaries formatting
             summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
@@ -1474,13 +1475,23 @@ describe('IgxGrid Component Tests #grid', () => {
                 const earliest = summary.query(By.css('[title=\'Earliest\']'));
                 if (avgLabel) {
                     avgValue = avgLabel.nativeElement.nextSibling.innerText;
+                    console.log(avgValue);
                     expect(avgValue).toBe('3.900,4');
                 }
                 if (earliest) {
                     earliestValue = earliest.nativeElement.nextSibling.innerText;
+                    console.log(earliestValue);
                     expect(earliestValue).toBe('17.05.1990');
                 }
             });
+
+            rows = grid.rowList.toArray();
+            expectedValue = 'Mar 21, 2005';
+            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '15.01.2008';
+            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '20.11.2010';
+            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
         }));
 
         it('Should calculate default column width when a column has width in %', async () => {
