@@ -378,23 +378,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * @hidden
-     * @internal
-     */
-    @HostListener('mouseleave', ['$event'])
-    public hideActionStrip(event: MouseEvent) {
-        if (!this.grid.actionStrip) {
-            return;
-        }
-        const menu = this.grid.actionStrip.menu;
-        const menuToggle = (menu as any).toggleDirective.element;
-        const isOnMenu = !menu.collapsed && menuToggle.contains(event.relatedTarget);
-        if (!isOnMenu) {
-            this.grid.actionStrip.hide();
-        }
-    }
-
-    /**
-     * @hidden
      */
     public onRowSelectorClick(event) {
         event.stopPropagation();
