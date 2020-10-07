@@ -1,38 +1,43 @@
 <!-- TODO add localisation  -->
 
 <ng-template let-result #defaultHeader>
-    <span aria-live="polite" id="igx-aria-calendar-weekday">{{ getFormattedDate().weekday }},&nbsp;</span>
-    <span aria-live="polite" id="igx-aria-calendar-monthday">{{ getFormattedDate().monthday }}</span>
+    <span>{{ getFormattedDate().weekday }},&nbsp;</span>
+    <span>{{ getFormattedDate().monthday }}</span>
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-    <span
-        id="igx-calendar-month-button"
-        tabindex="0"
-        role="button"
-        [attr.aria-label]="'Currently selected month is ' + formattedMonth(headerDate) + 'Press enter to Select Month'"
-        #monthsBtn
-        (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)"
-        (click)="onActiveViewYear(getViewDate(obj.index), obj.index, $event)"
-        class="igx-calendar-picker__date">
-        {{ formattedMonth(getViewDate(obj.index)) }}
-    </span>
-    <span
-        id="igx-calendar-year-button"
-        tabindex="0"
-        role="button"
-        [attr.aria-label]="'Currently selected year is ' + formattedYear(getViewDate(obj.index)) + 'Press enter to Select Year'"
-        #yearsBtn
-        (keydown)="onActiveViewDecadeKB($event, getViewDate(obj.index), obj.index)"
-        (click)="onActiveViewDecade(getViewDate(obj.index), obj.index)"
-        class="igx-calendar-picker__date">
-        {{ formattedYear(getViewDate(obj.index)) }}
-    </span>
+    <div
+        aria-live="polite"
+        aria-atomic="true"
+        aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year">
+
+        <span id="igx-aria-calendar-month-button"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="'(' + (getViewDate(obj.index) | date: 'LLLL') + ')' + SelectMonthAriaLabel"
+            #monthsBtn
+            (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)"
+            (click)="onActiveViewYear(getViewDate(obj.index), obj.index, $event)"
+            class="igx-calendar-picker__date">
+            {{ formattedMonth(getViewDate(obj.index)) }}
+        </span>
+
+        <span id="igx-aria-calendar-year-button"
+            tabindex="0"
+            role="button"
+            [attr.aria-label]="'(' + (getViewDate(obj.index) | date: 'yyyy') + ')' + SelectYearAriaLabel"
+            #yearsBtn
+            (keydown)="onActiveViewDecadeKB($event, getViewDate(obj.index), obj.index)"
+            (click)="onActiveViewDecade(getViewDate(obj.index), obj.index)"
+            class="igx-calendar-picker__date">
+            {{ formattedYear(getViewDate(obj.index)) }}
+        </span>
+
+    </div>
 </ng-template>
 
 <header
     aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year"
-    id="igx-aria-calendar-heading"
     class="igx-calendar__header"
     *ngIf="selection === 'single' && hasHeader">
 
@@ -44,18 +49,18 @@
         <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeader; context: headerContext">
         </ng-container>
     </h2>
-
 </header>
 
 <div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
     (swipeleft)="nextMonth()">
-    <div class="igx-calendar-picker">
+    <section tabindex="0" class="igx-calendar-picker" aria-label="Single Calendar navigation">
         <div
             tabindex="0"
             class="igx-calendar-picker__prev"
             role="button"
-            [attr.aria-label]="'Previous Month'"
+            [attr.aria-label]="PreviousMonthAriaLabel + ', ' + getPrevMonthYear()"
             data-action="prev"
+            aria-controls="igx-aria-calendar-month-button"
             #prevMonthBtn
             igxCalendarScrollMonth
             [startScroll]="startPrevMonthScroll"
@@ -74,8 +79,9 @@
             tabindex="0"
             class="igx-calendar-picker__next"
             role="button"
-            [attr.aria-label]="'Next Month'"
+            [attr.aria-label]="NextMonthAriaLabel + ', ' +  getNextMonthYer()"
             data-action="next"
+            aria-controls="igx-aria-calendar-month-button"
             #nextMonthBtn
             igxCalendarScrollMonth
             [startScroll]="startNextMonthScroll"
@@ -83,9 +89,9 @@
             [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
             <igx-icon fontSet="material" aria-hidden="true">keyboard_arrow_right</igx-icon>
         </div>
-    </div>
+    </section>
 
-    <div role="application" style="display: flex"
+    <div style="display: flex"
         [@animateChange]="animationAction"
         (@animateChange.done)="animationDone($event)">
         <igx-days-view role="grid" *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;" [changeDaysView]="true" #days
@@ -107,7 +113,6 @@
 </div>
 
 <igx-months-view *ngIf="isYearView"
-                 role="grid"
                  [@animateView]="activeView"
                  #months
                  (@animateView.done)="viewRendered($event)"
