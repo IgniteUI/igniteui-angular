@@ -1456,7 +1456,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
-            tick(100);
+            tick(300);
             fixture.detectChanges();
 
             rows = grid.rowList.toArray();
