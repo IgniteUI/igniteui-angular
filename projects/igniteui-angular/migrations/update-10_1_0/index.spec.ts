@@ -118,5 +118,4 @@ describe('Update 10.1.0', () => {
             .toEqual('<igx-tree-grid (onScroll)="handleEvent($event)"></igx-tree-grid>');
 
     });
-
 });

@@ -435,6 +435,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this._pipeTrigger++;
     }
 
+   protected findRecordIndexInView(rec) {
+        return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
+    }
+
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -491,56 +495,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        if (parentRowID !== undefined && parentRowID !== null) {
-            super.endEdit(true);
-
-            const state = this.transactions.getState(parentRowID);
-            // we should not allow adding of rows as child of deleted row
-            if (state && state.type === TransactionType.DELETE) {
-                throw Error(`Cannot add child row to deleted parent row`);
-            }
-
-            const parentRecord = this.records.get(parentRowID);
-
-            if (!parentRecord) {
-                throw Error('Invalid parent row ID!');
-            }
-            this.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
-            if (this.primaryKey && this.foreignKey) {
-                data[this.foreignKey] = parentRowID;
-                super.addRow(data);
-            } else {
-                const parentData = parentRecord.data;
-                const childKey = this.childDataKey;
-                if (this.transactions.enabled) {
-                    const rowId = this.primaryKey ? data[this.primaryKey] : data;
-                    const path: any[] = [];
-                    path.push(...this.generateRowPath(parentRowID));
-                    path.push(parentRowID);
-                    this.transactions.add({
-                        id: rowId,
-                        path: path,
-                        newValue: data,
-                        type: TransactionType.ADD
-                    } as HierarchicalTransaction,
-                        null);
-                } else {
-                    if (!parentData[childKey]) {
-                        parentData[childKey] = [];
-                    }
-                    parentData[childKey].push(data);
-                }
-                this.onRowAdded.emit({ data });
-                this._pipeTrigger++;
-                this.notifyChanges();
-            }
-        } else {
-            if (this.primaryKey && this.foreignKey) {
-                const rowID = data[this.foreignKey];
-                this.summaryService.clearSummaryCache({rowID: rowID});
-            }
-            super.addRow(data);
-        }
+        super.endEdit(true);
+        this.gridAPI.addRowToData(data, parentRowID);
+        this.onRowAdded.emit({ data });
+        this._pipeTrigger++;
+        this.notifyChanges();
     }
 
     /** @hidden */
@@ -615,10 +574,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         return {
-            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+            $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false,
+            addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
         };
     }
 
@@ -664,6 +624,29 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
+    }
+
+    public getEmptyRecordObjectFor(rec) {
+        const row = {...rec};
+        row.data = {... rec.data};
+        Object.keys(row.data).forEach(key => {
+            // persist foreign key if one is set.
+            if (this.foreignKey && key === this.foreignKey) {
+                row.data[key] = rec.data[key];
+            } else {
+                row.data[key] = undefined;
+            }
+        });
+        let id = this.generateRowID();
+        const rootRecPK = this.foreignKey && this.rootRecords && this.rootRecords.length > 0 ?
+         this.rootRecords[0].data[this.foreignKey] : null;
+        if (id === rootRecPK) {
+            // safeguard in case generated id matches the root foreign key.
+            id = this.generateRowID();
+        }
+        row.rowID = id;
+        row.data[this.primaryKey] = id;
+        return row;
     }
 
     protected writeToData(rowIndex: number, value: any) {

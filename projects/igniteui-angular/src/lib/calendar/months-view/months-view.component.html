@@ -5,10 +5,10 @@
             [attr.aria-label]="month | date: 'LLLL'"
             [igxCalendarMonth]="month"
             [date]="date"
-            (onMonthSelection)="selectMonth($event)"
-            [index]="i"
+            [attr.tabindex]="activeMonth === month.getMonth() ? 0 : -1"
+            (onMonthSelection)="selectMonth($event)" [index]="i"
             *ngFor="let month of months; index as i; trackBy: monthTracker">
-            <span>{{ formattedMonth(month) | titlecase }}</span>
+            {{ formattedMonth(month) | titlecase }}
         </li>
     </ul>
 </div>

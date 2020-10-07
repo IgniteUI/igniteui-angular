@@ -139,6 +139,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *
      * @hidden
      */
+    @Input()
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 

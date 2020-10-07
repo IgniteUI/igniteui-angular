@@ -443,6 +443,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
+    public activeDate = new Date().toLocaleDateString();
+
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true  })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
 
@@ -795,6 +801,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             this.callback(this.nextDate);
         }
         this.animationAction = ScrollMonth.NONE;
+        this.resetActiveDate();
     }
 
     /**
@@ -804,6 +811,21 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public viewRendered(event) {
         if (event.fromState !== 'void') {
             this.activeViewChanged.emit(this.activeView);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public resetActiveDate() {
+        if (!this.monthViews) { return; }
+        let dates = [];
+        this.monthViews.map(mv => mv.dates).forEach(days => { dates = dates.concat(days.toArray());  });
+        const date = dates.find(day => day.selected && day.isCurrentMonth) || dates.find(day => day.isToday && day.isCurrentMonth)
+            || dates.find(d => d.isFocusable);
+        if (date) {
+            this.activeDate = date.date.date.toLocaleDateString();
         }
     }
 
@@ -819,7 +841,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         if (this.activeView !== CalendarView.DEFAULT) {
             return;
         }
-
 
         const isPageDown = event.key === 'PageDown';
         const step = isPageDown ? 1 : -1;
@@ -959,6 +980,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         if (this.monthScrollDirection !== ScrollMonth.NONE) {
             this.stopMonthScroll(event);
         }
+    }
+
+    @HostListener('focusout', ['$event'])
+    public onPointerDown(event) {
+/*         if (event.path.contains('igx-days-view')) {
+            return;
+        } */
+        console.log(event);
     }
 
     /**

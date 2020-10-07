@@ -35,6 +35,8 @@
         [specialDates]="specialDates"
         [outOfRangeDates]="outOfRangeDates"
         [hideOutsideDays]="hideOutsideDays"
+        [attr.tabindex]="tabIndex(day)"
+        (focus)="activeDate = day.date.toLocaleDateString()"
         (onDateSelection)="selectDay($event)">
         {{ formattedDate(day.date) }}
     </igx-day-item>

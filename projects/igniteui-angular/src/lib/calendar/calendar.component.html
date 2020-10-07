@@ -1,5 +1,3 @@
-<!-- TODO add localisation  -->
-
 <ng-template let-result #defaultHeader>
     <span>{{ getFormattedDate().weekday }},&nbsp;</span>
     <span>{{ getFormattedDate().monthday }}</span>
@@ -93,11 +91,12 @@
 
     <div style="display: flex"
         [@animateChange]="animationAction"
-        (@animateChange.done)="animationDone($event)">
+        (@animateChange.done)="animationDone($event)" >
         <igx-days-view role="grid" *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;" [changeDaysView]="true" #days
                 [selection]="selection"
                 [locale]="locale"
                 [value]="value"
+                [(activeDate)]="activeDate"
                 [viewDate]="i | IgxGetViewDate:viewDate"
                 [weekStart]="weekStart"
                 [formatOptions]="formatOptions"

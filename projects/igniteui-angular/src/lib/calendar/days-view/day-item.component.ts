@@ -160,11 +160,6 @@ export class IgxDayItemComponent {
         return this.selection !== CalendarSelection.RANGE;
     }
 
-    @HostBinding('attr.tabindex')
-    public get tabindex(): number {
-        return this.isDisabled || this.isHidden ? -1 : 0;
-    }
-
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }
