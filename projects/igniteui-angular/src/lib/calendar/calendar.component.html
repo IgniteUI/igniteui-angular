@@ -45,12 +45,12 @@
 
     <div style="display: flex"
         [@animateChange]="animationAction"
-        (@animateChange.done)="animationDone($event)" (focusout)="resetActiveDate()">
+        (@animateChange.done)="animationDone($event)" >
         <igx-days-view *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;" [changeDaysView]="true" #days
                 [selection]="selection"
                 [locale]="locale"
                 [value]="value"
-                [activeDate]="activeDate"
+                [(activeDate)]="activeDate"
                 [viewDate]="i | IgxGetViewDate:viewDate"
                 [weekStart]="weekStart"
                 [formatOptions]="formatOptions"
@@ -60,8 +60,7 @@
                 [hideOutsideDays]="hideOutsideDays"
                 [showWeekNumbers]="showWeekNumbers"
                 (onViewChanging)="viewChanging($event)"
-                (onDateSelection)="childClicked($event)"
-                (activeDateChange)="activeDate = $event">
+                (onDateSelection)="childClicked($event)">
         </igx-days-view>
     </div>
 </div>

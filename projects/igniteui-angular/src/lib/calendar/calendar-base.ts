@@ -651,7 +651,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
                 this.selectRange(value, true);
                 break;
         }
-        this.resetActiveDate();
     }
 
     /**
