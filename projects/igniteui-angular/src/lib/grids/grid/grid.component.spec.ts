@@ -1472,7 +1472,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 const earliest = summary.query(By.css('[title=\'Earliest\']'));
                 if (avgLabel) {
                     avgValue = avgLabel.nativeElement.nextSibling.innerText;
-                    expect(avgValue).toBe('3,900,4');
+                    expect(avgValue).toBe('3.900,4');
                 }
                 if (earliest) {
                     earliestValue = earliest.nativeElement.nextSibling.innerText;
