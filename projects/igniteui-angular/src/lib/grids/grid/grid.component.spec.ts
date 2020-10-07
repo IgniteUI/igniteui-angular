@@ -1413,7 +1413,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        fit('Should change dates/number display based on locale', fakeAsync(() => {
+        it('Should change dates/number display based on locale', fakeAsync(() => {
             registerLocaleData(localeDE);
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
