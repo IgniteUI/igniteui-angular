@@ -151,6 +151,7 @@ import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-d
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
+import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -1558,6 +1559,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
+
+    @ContentChild(IgxActionStripComponent)
+    public actionStrip: IgxActionStripComponent;
 
     /**
      * @hidden @internal

@@ -3,7 +3,7 @@ import { IgxGridActionButtonComponent } from './grid-action-button.component';
 import { Directive, Inject, Input, AfterViewInit, QueryList, ViewChildren,
      OnInit, IterableDiffers, IterableChangeRecord, OnDestroy } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
-import { IgxRowDirective } from '../../grids/public_api';
+import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
 import { Subject } from 'rxjs';
 

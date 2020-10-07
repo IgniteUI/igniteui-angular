@@ -367,6 +367,28 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * @hidden
+     * @internal
+     */
+    @HostListener('mouseover', ['$event'])
+    public showActionStrip(event: MouseEvent) {
+        if (this.grid.actionStrip) {
+            this.grid.actionStrip.show(this);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseleave', ['$event'])
+    public hideActionStrip(event: MouseEvent) {
+        if (this.grid.actionStrip && this.grid.actionStrip.menu.collapsed) {
+            this.grid.actionStrip.hide();
+        }
+    }
+
+    /**
+     * @hidden
      */
     public onRowSelectorClick(event) {
         event.stopPropagation();
