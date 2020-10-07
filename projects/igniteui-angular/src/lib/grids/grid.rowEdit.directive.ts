@@ -1,20 +1,19 @@
 import { Directive, ElementRef, Host, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
-import { GridType } from './common/grid.interface';
 
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: '[igxRowEdit]'
 })
 export class IgxRowEditTemplateDirective { }
 
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: '[igxRowEditText]'
 })
 export class IgxRowEditTextDirective { }
 
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: '[igxRowEditActions]'
 })
@@ -22,7 +21,7 @@ export class IgxRowEditActionsDirective { }
 
 
 // TODO: Refactor circular ref, deps and logic
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: `[igxRowEditTabStop]`
 })
