@@ -573,7 +573,7 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
 
             expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(toggle.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: new Event('click') });
+            expect(toggle.onClosing.emit).toHaveBeenCalledWith({ id: '0', owner: toggle, cancel: false, event: new Event('click') });
             expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
 
