@@ -20,6 +20,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { GridSelectionMode } from '../common/enums';
+import { IgxGridRowComponent } from './grid-row.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -195,16 +196,23 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    getRowID(rowData): IgxGridRowComponent {
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public onGroupSelectorClick(event) {
         if (this.selectionMode === GridSelectionMode.single || this.selectionMode === GridSelectionMode.none) { return; }
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
             this.groupRow.records.forEach(row => {
-                this.gridSelection.deselectRow(row, false);
+                this.gridSelection.deselectRow(this.getRowID(row), false);
             });
         } else {
             this.groupRow.records.forEach(row => {
-                this.gridSelection.selectRowById(row, false);
+                this.gridSelection.selectRowById(this.getRowID(row), false);
             });
         }
     }
@@ -256,14 +264,14 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get areAllRowsInTheGroupSelected(): boolean {
-        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(x));
+        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(this.getRowID(x)));
     }
 
     /**
      * @hidden @internal
      */
     public get selectedRowsInTheGroup(): any[] {
-        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(rowID) > -1);
+        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(this.getRowID(rowID)) > -1);
     }
 
     /**
