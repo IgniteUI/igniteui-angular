@@ -6589,7 +6589,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pipeTrigger++;
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
-            this.onRowAdded.emit(row.data);
+            this.onRowAdded.emit({ data: row.data});
         }
     }
 

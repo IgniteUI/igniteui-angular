@@ -484,6 +484,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden
+     */
+    public refreshGridState(args?) {
+        super.refreshGridState();
+        if (this.primaryKey && this.foreignKey) {
+            const rowID = args.data[this.foreignKey];
+            this.summaryService.clearSummaryCache({rowID: rowID});
+            this._pipeTrigger++;
+            this.cdr.detectChanges();
+        }
+    }
+
+    /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
      * the specified parentRowID. If the parentRowID does not exist, an error would be thrown.
