@@ -1641,10 +1641,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(conditionChips.length).toBe(0);
         }));
 
-        it('Should open filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
+        fit('Should open/close filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
             fakeAsync(() => {
                 // Verify filterRow is not opened.
-                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+                let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                expect(filterUIRow).toBeNull();
 
                 const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
                 UIInteractions.simulateClickAndSelectEvent(releaseDateColumn);
@@ -1655,12 +1656,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix.detectChanges();
 
                 // Verify filterRow is opened for the 'ReleaseDate' column.
-                expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).not.toBeNull();
+                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                expect(filterUIRow).not.toBeNull();
                 const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
                 const headerGroupsFiltering = headerGroups.filter(
                     (hg) => hg.nativeElement.classList.contains('igx-grid__th--filtering'));
                 expect(headerGroupsFiltering.length).toBe(1);
                 expect(headerGroupsFiltering[0].componentInstance.column.field).toBe('ReleaseDate');
+
+                UIInteractions.triggerKeyDownEvtUponElem('l', filterUIRow.nativeElement, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
+
+                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                expect(filterUIRow).toBeNull();
         }));
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
