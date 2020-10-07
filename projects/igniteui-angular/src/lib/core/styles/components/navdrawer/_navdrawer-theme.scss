@@ -434,6 +434,10 @@
         transition: none;
         visibility: hidden;
     }
+
+    %disable-animation {
+        transition-duration: 0s;
+    }
 }
 
 /// Adds typography styles for the igx-navdrawer component.

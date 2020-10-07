@@ -114,7 +114,7 @@ describe('igxExpansionPanel', () => {
 
             spyOn(panel.onCollapsed, 'emit');
             spyOn(panel.onExpanded, 'emit');
-            spyOn(header.onInteraction, 'emit');
+            spyOn(header.onInteraction, 'emit').and.callThrough();
             spyOn(panel, 'toggle').and.callThrough();
             spyOn(panel, 'expand').and.callThrough();
             spyOn(panel, 'collapse').and.callThrough();
@@ -130,7 +130,9 @@ describe('igxExpansionPanel', () => {
             expect(panel.expand).toHaveBeenCalledWith(mockEvent);
             expect(panel.collapse).toHaveBeenCalledTimes(0);
             expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
-            expect(header.onInteraction.emit).toHaveBeenCalledWith({ event: mockEvent, panel: header.panel });
+            expect(header.onInteraction.emit).toHaveBeenCalledWith({
+                event: mockEvent, panel: header.panel, owner: header.panel, cancel: false
+            });
 
             header.onAction(mockEvent);
             tick();
@@ -153,6 +155,40 @@ describe('igxExpansionPanel', () => {
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(2);
             expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
+
+            // cancel event
+            header.disabled = false;
+            const headerSub = header.onInteraction.subscribe((event) => {
+                event.cancel = true;
+            });
+
+            // currently collapsed
+            expect(panel.collapsed).toBeTruthy();
+            header.onAction(mockEvent);
+            tick();
+            fixture.detectChanges();
+
+            // still collapsed, no additional onExpanded calls
+            expect(panel.collapsed).toBeTruthy();
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(3);
+            expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
+
+            // expand via API
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+
+            // currently expanded
+            expect(panel.collapsed).toBeFalsy();
+            header.onAction(mockEvent);
+            tick();
+            fixture.detectChanges();
+
+            // still expanded, no additional onCollapsed calls
+            headerSub.unsubscribe();
+            expect(panel.collapsed).toBeFalsy();
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(4);
+            expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
         }));
     });
 
@@ -447,7 +483,7 @@ describe('igxExpansionPanel', () => {
             let timesExpanded = 0;
             spyOn(panel.onCollapsed, 'emit').and.callThrough();
             spyOn(panel.onExpanded, 'emit').and.callThrough();
-            spyOn(header.onInteraction, 'emit');
+            spyOn(header.onInteraction, 'emit').and.callThrough();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
             panelHeader.dispatchEvent(enterEvent);
@@ -511,6 +547,41 @@ describe('igxExpansionPanel', () => {
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(8);
+
+            // disabled interaction
+            const headerSub = header.onInteraction.subscribe((event) => {
+                event.cancel = true;
+            });
+
+            // currently collapsed
+            expect(panel.collapsed).toEqual(true);
+
+            // cancel openening
+            panelHeader.dispatchEvent(arrowDownEvent);
+            fixture.detectChanges();
+            tick();
+            // do not iterate timesExpanded
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(9);
+
+            // open through API
+            panel.expand();
+            timesExpanded++;
+            tick();
+            fixture.detectChanges();
+
+             // currently expanded
+             expect(panel.collapsed).toEqual(false);
+
+             // cancel closing
+            panelHeader.dispatchEvent(arrowUpEvent);
+            fixture.detectChanges();
+            tick();
+            // do not iterate timesCollapsed
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.onInteraction.emit).toHaveBeenCalledTimes(10);
+
+            headerSub.unsubscribe();
         }));
         it('Should change panel expansion when using different methods', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
@@ -727,15 +798,28 @@ describe('igxExpansionPanel', () => {
             expect(headerButton.children.length).toEqual(2);
             expect(iconContainer.firstElementChild.nodeName).toEqual('IGX-ICON');
             expect(titleContainer.firstElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(header.iconRef).not.toBe(null);
+            expect(header.iconRef.nativeElement).toEqual(iconContainer.firstElementChild);
 
             fixture.componentInstance.customIcon = true;
             fixture.detectChanges();
 
             expect(iconContainer.firstElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-ICON');
             expect(titleContainer.firstElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(header.iconRef).not.toBe(null);
+            expect(header.iconRef.nativeElement).toEqual(iconContainer.firstElementChild);
+
+            fixture.componentInstance.header.iconPosition = ICON_POSITION.NONE;
+            fixture.detectChanges();
+            expect(header.iconRef).toEqual(null);
 
             fixture.componentInstance.customIcon = false;
             fixture.detectChanges();
+            expect(header.iconRef).toEqual(null);
+
+            fixture.componentInstance.header.iconPosition = ICON_POSITION.LEFT;
+            fixture.detectChanges();
+            expect(header.iconRef).not.toBe(null);
 
             expect(iconContainer.firstElementChild.nodeName).toEqual('IGX-ICON');
             expect(titleContainer.firstElementChild.nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
@@ -1010,7 +1094,7 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
             expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
             expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
-            expect(grid.childElementCount).toEqual(8); // +1 because of add row snackbar
+            expect(grid.childElementCount).toEqual(7);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelImageComponent> = TestBed.createComponent(IgxExpansionPanelImageComponent);
