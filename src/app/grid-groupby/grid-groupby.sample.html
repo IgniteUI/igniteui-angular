@@ -4,6 +4,10 @@
     <igx-switch (change)="toggleSummaryPosition($event)">Toggle Summary Position</igx-switch>
     <br />
     <button igxButton="raised" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse"> {{ grid1.showSummaryOnCollapse }}</button> - Show summary on collapse
+    <br />
+    <button igxButton="raised" (click)="grid1.hideRowSelectors ? grid1.hideRowSelectors = false : grid1.hideRowSelectors = true">
+        {{ grid1.hideRowSelectors ? 'Show' : 'Hide' }} row selectors
+    </button>
     <div class="separator"></div>
     <button igxButton="raised" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
     <igx-drop-down #dropDownRowSelection (onSelection)="onRowSelection($event)"  displayDensity="comfortable">

@@ -79,6 +79,12 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     public selectionMode: string;
 
     /**
+     * @hidden
+     */
+    @Input()
+    public hideGroupRowSelectors: boolean;
+
+    /**
      * Returns whether the row is focused.
      * ```
      * let gridRowFocused = this.grid1.rowList.first.focused;
@@ -281,11 +287,19 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get groupByRowSelectorBaseAriaLabel(): string {
-        let ariaLabel: string = this.areAllRowsInTheGroupSelected ?
+        const ariaLabel: string = this.areAllRowsInTheGroupSelected ?
             (this.grid as IgxGridBaseDirective).resourceStrings.igx_grid_groupByArea_deselect_message :
             (this.grid as IgxGridBaseDirective).resourceStrings.igx_grid_groupByArea_select_message;
         return ariaLabel.replace('{0}', this.groupRow.expression.fieldName).replace('{1}', this.groupRow.value);
     }
+
+    /**
+     * @hidden @internal
+     */
+    get showRowSelectors(): boolean {
+        return this.selectionMode !== 'none' && !this.hideGroupRowSelectors;
+    }
+
 
     ngOnDestroy(): void {
         this.destroy$.next();

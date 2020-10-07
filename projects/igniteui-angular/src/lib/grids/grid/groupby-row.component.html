@@ -1,6 +1,6 @@
 <ng-container #defaultGroupRow>
 
-    <ng-container *ngIf="selectionMode !== 'none'">
+    <ng-container *ngIf="showRowSelectors">
         <div class="igx-grid__cbx-selection" style="background: none;" (pointerdown)="$event.preventDefault()" (click)="onGroupSelectorClick($event)">
             <ng-template #groupByRowSelector *ngTemplateOutlet="
                 this.grid.groupByRowSelectorTemplate ? this.grid.groupByRowSelectorTemplate : groupByRowSelectorBaseTemplate;
