@@ -1,0 +1,30 @@
+<div>
+    <igx-grid
+        #grid
+        [data]="data"
+        [width]="'800px'"
+        [paging]="true"
+        [height]="'500px'"
+        [primaryKey]="'ID'"
+        (mouseleave)="onMouseLeave(actionstrip)"
+        (mouseover)="onMouseOver($event, grid, actionstrip)"
+        [rowEditable]="true"
+    >
+        <igx-column
+            *ngFor="let c of columns"
+            [sortable]="true"
+            [field]="c.field"
+            [header]="c.field"
+            [width]="c.width"
+            [pinned]="c.pinned"
+            [hidden]="c.hidden"
+            [groupable]='true'
+            [hasSummary]="true"
+        >
+        </igx-column>
+
+        <igx-action-strip #actionstrip>
+            <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-grid>
+</div>

@@ -9,6 +9,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
  */
 export interface ColumnType {
     field: string;
+    header?: string;
     index: number;
     dataType: DataType;
     inlineEditorTemplate: TemplateRef<any>;
@@ -43,6 +44,5 @@ export interface ColumnType {
     topLevelParent?: ColumnType;
     parent?: ColumnType;
     hasLastPinnedChildColumn: boolean;
-
     getGridTemplate(isRow: boolean, isIE: boolean): string;
 }

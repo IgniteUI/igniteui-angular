@@ -17,7 +17,8 @@ describe('igxGridEditingActions #grid ', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxActionStripTestingComponent,
-                IgxActionStripPinEditComponent
+                IgxActionStripPinEditComponent,
+                IgxActionStripEditMenuComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -27,6 +28,9 @@ describe('igxGridEditingActions #grid ', () => {
             ]
         }).compileComponents();
     }));
+
+
+
     describe('Base ', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
@@ -60,6 +64,37 @@ describe('igxGridEditingActions #grid ', () => {
         });
     });
 
+    describe('Menu ', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxActionStripEditMenuComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        }));
+        it('should allow editing and deleting row via menu', async() => {
+            const row = grid.rowList.toArray()[0];
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            expect(actionStrip.menu.items.length).toBe(2);
+            const editMenuItem = actionStrip.menu.items[0];
+            const deleteMenuItem = actionStrip.menu.items[1];
+            // select edit
+            actionStrip.menu.selectItem(editMenuItem);
+            fixture.detectChanges();
+
+            expect(row.inEditMode).toBeTrue();
+
+            // select delete
+            actionStrip.menu.selectItem(deleteMenuItem);
+            fixture.detectChanges();
+
+            expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
+        });
+    });
+
     describe('integration with pinning actions ', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
@@ -67,16 +102,14 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
         }));
-        it('should disable editing actions on disabled rows', () => {
+        it('should remove editing actions on disabled rows', () => {
             grid.rowList.first.pin();
             fixture.detectChanges();
             actionStrip.show(grid.rowList.toArray()[1]);
             fixture.detectChanges();
             const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions button`));
             const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
-            expect(editingIcons.length).toBe(2);
-            expect(editingIcons[0].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
-            expect(editingIcons[1].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
+            expect(editingIcons.length).toBe(0);
             expect(pinningIcons.length).toBe(1);
             expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
         });
@@ -172,4 +205,21 @@ class IgxActionStripTestingComponent implements OnInit {
 `
 })
 class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
+}
+
+@Component({
+    template: `
+<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripEditMenuComponent extends IgxActionStripTestingComponent {
 }

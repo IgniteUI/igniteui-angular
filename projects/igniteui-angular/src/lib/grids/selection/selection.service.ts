@@ -53,6 +53,7 @@ export class IgxRow {
     transactionState: any;
     state: any;
     newData: any;
+    isAddRow: boolean;
 
     constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
@@ -62,7 +63,8 @@ export class IgxRow {
             rowData:  this.data,
             oldValue: this.data,
             cancel: false,
-            owner: this.grid
+            owner: this.grid,
+            isAddRow: this.isAddRow || false
         };
         if (includeNewValue) {
             args.newValue = this.newData;
@@ -78,7 +80,8 @@ export class IgxRow {
             rowData: updatedData,
             oldValue: cachedRowData,
             newValue: updatedData,
-            owner: this.grid
+            owner: this.grid,
+            isAddRow: this.isAddRow || false
         };
         return args;
     }
@@ -195,7 +198,33 @@ export class IgxGridCRUDService {
         this.row = null;
     }
 
+    beginAddRow(cell) {
+        const newCell = this.createCell(cell);
+        newCell.primaryKey = this.primaryKey;
+        const args = newCell.createEditEventArgs(false);
+        this.grid.onCellEditEnter.emit(args);
+        if (args.cancel) {
+            this.end();
+            return;
+        }
+        cell.enterAddMode = true;
+        this.cell = newCell;
+        this.row = this.createRow(this.cell);
+        this.row.isAddRow = true;
+        const rowArgs = this.row.createEditEventArgs(false);
+        this.grid.onRowEditEnter.emit(rowArgs);
+        if (rowArgs.cancel) {
+            this.endRowEdit();
+            return;
+        }
+        this.grid.openRowOverlay(this.row.id);
+    }
+
     begin(cell): void {
+        if (cell.row.addRow) {
+            this.beginAddRow(cell);
+            return;
+        }
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
         const args = newCell.createEditEventArgs(false);
@@ -261,6 +290,13 @@ export class IgxGridCRUDService {
     }
 
     isInEditMode(rowIndex: number, columnIndex: number): boolean {
+        if (!this.cell) {
+            return false;
+        }
+        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+    }
+
+    isInAddMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
             return false;
         }

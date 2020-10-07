@@ -50,6 +50,7 @@
 /// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
 /// @param {Color} $cell-editing-background [null] - The background color of the cell being edited.
 /// @param {Color} $cell-edited-value-color [null] - The text color of a cell that has been edited.
+/// @param {Color} $cell-new-color [null] - The text color of a new, unedited cell. Used when adding new row in a grid.
 /// @param {Color} $cell-disabled-color [null] - The text color of a disabled cell.
 ///
 /// @param {Color} $edit-mode-color [null] - The color applied around the row when in editing mode.
@@ -161,6 +162,7 @@
     $cell-selected-text-color: null,
     $cell-editing-background: null,
     $cell-edited-value-color: null,
+    $cell-new-color: null,
     $cell-disabled-color: null,
 
     $edit-mode-color: null,
@@ -506,6 +508,7 @@
         edit-mode-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
+        cell-new-color: $cell-new-color,
 
         cell-disabled-color: $cell-disabled-color,
 
@@ -1364,6 +1367,12 @@
     %grid-cell--cross-selected {
         color: --var($theme, 'row-selected-text-color');
         background: --var($theme, 'row-selected-cell-background');
+    }
+
+    %igx-grid__td--new {
+        %grid-cell-text {
+            color: --var($theme, 'cell-new-color');
+        }
     }
 
     %igx-grid__td--edited {
@@ -2335,6 +2344,14 @@
         }
     }
 
+    %igx-grid__addrow-snackbar {
+        position: absolute;
+        z-index: 5;
+        bottom: rem(24px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
     %igx-grid__filtering-cell {
         display: flex;
         align-items: center;
@@ -2436,6 +2453,7 @@
         }
 
         igx-input-group {
+            --igx-input-group-variant: fluent;
             width: 100%;
             max-width: rem(200px);
             min-width: rem(140px);

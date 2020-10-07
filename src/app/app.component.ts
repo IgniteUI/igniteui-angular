@@ -143,6 +143,11 @@ export class AppComponent implements OnInit {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
+        },
+        {
+            link: '/gridAddRow',
+            icon: 'view_column',
+            name: 'Grid Add Row'
         }, {
             link: '/gridMasterDetail',
             icon: 'view_column',
@@ -431,6 +436,11 @@ export class AppComponent implements OnInit {
             name: 'Hierarchical Grid Updating'
         },
         {
+            link: '/hierarchicalGridAddRow',
+            icon: 'view_column',
+            name: 'HierarchicalGrid Add Row'
+        },
+        {
             link: '/treeGrid',
             icon: 'view_column',
             name: 'Tree Grid'
@@ -444,6 +454,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridLoadOnDemand',
             icon: 'view_column',
             name: 'Tree Grid Load On Demand'
+        },
+        {
+            link: '/treeGridAddRow',
+            icon: 'view_column',
+            name: 'TreeGrid Add Row'
         },
         {
             link: '/dateRange',

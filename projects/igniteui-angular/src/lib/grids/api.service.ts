@@ -85,7 +85,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return -1;
         }
         const data = dataCollection ?? this.get_all_data(grid.transactions.enabled);
-        return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
+        return grid.primaryKey ? data.findIndex(record => record.recordRef ? record.recordRef[grid.primaryKey] === rowID
+            : record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
     public get_row_by_key(rowSelector: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
@@ -134,6 +135,34 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             }
             this.escape_editMode();
         }
+    }
+
+    public submit_add_value() {
+        const cell = this.grid.crudService.cell;
+        if (cell) {
+            this.update_add_cell(cell, cell.editValue);
+            this.escape_editMode();
+        }
+    }
+
+    public update_add_cell(cell: IgxCell, value: any) {
+        cell.editValue = value;
+
+        const args = cell.createEditEventArgs();
+        this.grid.onCellEdit.emit(args);
+
+        if (args.cancel) {
+            return args;
+        }
+
+        if (isEqual(args.oldValue, args.newValue)) {
+            return args;
+        }
+        const data = cell.rowData;
+        mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
+        doneArgs.rowData = data;
+        this.grid.cellEditDone.emit(doneArgs);
     }
 
     update_cell(cell: IgxCell, value: any) {
@@ -457,7 +486,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
-    public addRowToData(rowData: any) {
+    public addRowToData(rowData: any, parentRowID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;

@@ -1,8 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
-import { GridIconsFeature } from '../../grids/common/enums';
-import { PINNING_ACTIONS_ICONS_FONT_SET, PINNING_ACTIONS_ICONS, } from './grid-pinning-actions-icons';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../../grids/pinning/pinning-icons';
+import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-extended';
 @Component({
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html',
@@ -15,8 +13,8 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-action-strip__pining-actions')
-    public cssClass = 'igx-action-strip__pining-actions';
+    @HostBinding('class.igx-action-strip__pinning-actions')
+    public cssClass = 'igx-action-strip__pinning-actions';
 
     private iconsRendered = false;
 
@@ -119,8 +117,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         if (grid) {
-            this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
-            this.iconService.registerSVGIcons(GridIconsFeature.RowPinningActions, PINNING_ACTIONS_ICONS, PINNING_ACTIONS_ICONS_FONT_SET);
+            this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+            this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+            this.iconService.addSvgIconFromText(jumpDown.name, jumpDown.value, 'imx-icons');
+            this.iconService.addSvgIconFromText(jumpUp.name, jumpDown.value, 'imx-icons');
         }
     }
 }

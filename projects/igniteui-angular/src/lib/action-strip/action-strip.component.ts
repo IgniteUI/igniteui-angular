@@ -10,11 +10,17 @@ import {
     ContentChildren,
     QueryList,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    AfterContentInit,
+    IterableDiffers,
+    OnInit,
+    ChangeDetectorRef,
+    AfterViewInit
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down/public_api';
 import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
+import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -51,11 +57,12 @@ export class IgxActionStripMenuItemDirective {
     templateUrl: 'action-strip.component.html'
 })
 
-export class IgxActionStripComponent extends DisplayDensityBase {
+export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
     constructor(
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        public cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
     }
 
@@ -129,7 +136,34 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @ContentChildren(IgxActionStripMenuItemDirective)
-    public menuItems: QueryList<IgxActionStripMenuItemDirective>;
+    public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
+
+
+    /**
+     * ActionButton as ContentChildren inside the Action Strip
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGridActionsBaseDirective)
+    public actionButtons: QueryList<IgxGridActionsBaseDirective>;
+
+    /**
+     * Menu Items list.
+     * @hidden
+     * @internal
+     */
+    public get menuItems() {
+        const actions = [];
+        this.actionButtons.forEach(button => {
+            if (button.asMenuItems) {
+                const children = button.buttons;
+                if (children) {
+                    children.toArray().forEach(x => actions.push(x));
+                }
+            }
+        });
+        return [... this._menuItems.toArray(), ... actions];
+    }
 
     /**
      * Reference to the menu
@@ -137,7 +171,38 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @ViewChild('dropdown')
-    private menu: IgxDropDownComponent;
+    public menu: IgxDropDownComponent;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    ngAfterContentInit() {
+        this.actionButtons.forEach(button => {
+            button.strip = this;
+        });
+        this.actionButtons.changes.subscribe(change => {
+            this.actionButtons.forEach(button => {
+                button.strip = this;
+            });
+        });
+    }
+
+    ngAfterViewInit() {
+        this.menu.onSelection.subscribe(($event) => {
+            const newSelection = ($event.newSelection as any).elementRef.nativeElement;
+            let allButtons = [];
+            this.actionButtons.forEach( actionButtons => {
+                if (actionButtons.asMenuItems) {
+                    allButtons = [... allButtons, ... actionButtons.buttons.toArray()];
+                }
+            });
+            const button = allButtons.find(x => newSelection.contains(x.container.nativeElement));
+            if (button) {
+                 button.onActionClick.emit();
+            }
+         });
+    }
 
     /**
      * Showing the Action Strip and appending it the specified context element.
@@ -160,6 +225,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
         if (this.context && this.context.element) {
             this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
+        this.cdr.detectChanges();
     }
 
     /**
