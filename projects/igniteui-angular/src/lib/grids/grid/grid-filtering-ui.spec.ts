@@ -1641,7 +1641,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(conditionChips.length).toBe(0);
         }));
 
-        fit('Should open/close filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
+        it('Should open/close filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
             fakeAsync(() => {
                 // Verify filterRow is not opened.
                 let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -4326,7 +4326,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(excelMenu).toBeNull();
         }));
 
-        it('Should open/close filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
+        it('Should open/close ESF menu for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
         fakeAsync(() => {
             let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             // Verify ESF is not visible.
