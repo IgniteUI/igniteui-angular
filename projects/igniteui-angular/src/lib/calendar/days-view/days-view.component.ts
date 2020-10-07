@@ -326,7 +326,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public selectDay(event) {
         this.selectDateFromClient(event.date);
         this.onDateSelection.emit(event);
-
         this.onSelection.emit(this.selectedDates);
     }
 
@@ -387,7 +386,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         event.preventDefault();
         event.stopPropagation();
         const day = this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
-        this.activeDate = day?.date.date.toLocaleDateString();
     }
 
     /**
