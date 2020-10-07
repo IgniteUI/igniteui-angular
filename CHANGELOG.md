@@ -25,6 +25,10 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - Deprecated the `label` property.
 - `igxGridActions`
     - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
+- `igxNavigationDrawer`
+    - Added `disableAnimation` property which enables/disables the animation, when toggling the drawer. Set to `false` by default.
+- `igxTabs`
+    - Added `disableAnimation` property which enables/disables the transition animation of the tabs' content. Set to `false` by default.
 - `IgxExpansionPanel`
     - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel. 
 
