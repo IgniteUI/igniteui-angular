@@ -1,4 +1,4 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, HostBinding, TemplateRef } from '@angular/core';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
 
 
@@ -23,7 +23,15 @@ export class IgxCSVTextDirective { }
  * ```
  */
 @Directive({ selector: '[igxGridToolbarTitle],igx-grid-toolbar-title' })
-export class IgxGridToolbarTitleDirective { }
+export class IgxGridToolbarTitleDirective {
+    /**
+     * Host `class.igx-grid-toolbar__title` binding.
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-toolbar__title')
+    public cssClass = 'igx-grid-toolbar__title';
+}
 
 /**
  * Provides a way to template the action portion of the toolbar in the grid.
@@ -39,7 +47,15 @@ export class IgxGridToolbarTitleDirective { }
  * ```
  */
 @Directive({ selector: '[igxGridToolbarActions],igx-grid-toolbar-actions' })
-export class IgxGridToolbarActionsDirective { }
+export class IgxGridToolbarActionsDirective {
+    /**
+     * Host `class.igx-grid-toolbar__actions` binding.
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-toolbar__actions')
+    public cssClass = 'igx-grid-toolbar__actions';
+ }
 
 export interface IgxGridToolbarTemplateContext {
     $implicit: IgxHierarchicalGridComponent;

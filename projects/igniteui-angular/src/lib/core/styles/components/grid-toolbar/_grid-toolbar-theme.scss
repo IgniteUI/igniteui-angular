@@ -85,6 +85,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+        elevation: $elevations,
 
         background-color: $background-color,
         title-text-color: $title-text-color,
@@ -261,13 +262,7 @@
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-
-        igx-grid-toolbar-actions {
-            display: flex;
-            align-items: center;
-            flex-flow: row wrap;
-        }
+        flex-flow: row wrap;
     }
 
     %igx-grid-toolbar__progress-bar {
@@ -313,8 +308,7 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        border: 0 solid igx-color(map-get($theme, 'palette'), 'grays', 300);
-        box-shadow: igx-elevation($elevations, 8);
+        box-shadow: igx-elevation(map-get($theme, 'elevation'), 8);
     }
 
     %igx-grid-toolbar__dd-list-items {
