@@ -999,6 +999,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const dRow of dataRows) {
             expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
         }
+        GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
     }));
 
     it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
@@ -1285,7 +1286,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             const grRow = grid.groupsRowList.toArray()[0];
             const grRecord = grid.groupsRecords[0];
 
-            grid.selectAllRowsInGroup(grRecord);
+            grid.selectRowsInGroup(grRecord);
             tick();
             fix.detectChanges();
 
@@ -1295,7 +1296,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
 
-            grid.deselectAllRowsInGroup(grRecord);
+            grid.deselectRowsInGroup(grRecord);
             tick();
             fix.detectChanges();
 
@@ -1304,6 +1305,44 @@ describe('IgxGrid - GroupBy #grid', () => {
             }
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+        }));
+
+    it('ARIA support for groupby row selectors',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+            const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(grRow.element.nativeElement);
+
+            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
+            expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
+
+            grid.selectRows([grRow.groupRow.records[0]]);
+            fix.detectChanges();
+
+            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
+            expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
+
+            grid.selectRows([grRow.groupRow.records[1]]);
+            fix.detectChanges();
+
+            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('true');
+            expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
+
         }));
 
     // GroupBy + Resizing

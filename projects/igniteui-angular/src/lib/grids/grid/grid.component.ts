@@ -688,10 +688,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param clearCurrentSelection if true clears the current selection
      * @example
      * ```typescript
-     * this.grid.selectAllRowsInGroup(this.groupRow, true);
+     * this.grid.selectRowsInGroup(this.groupRow, true);
      * ```
      */
-    public selectAllRowsInGroup(groupRow: IGroupByRecord, clearPrevSelection?: boolean) {
+    public selectRowsInGroup(groupRow: IGroupByRecord, clearPrevSelection?: boolean) {
         this._gridAPI.groupBy_select_all_rows_in_group(groupRow, clearPrevSelection);
         this.notifyChanges();
     }
@@ -702,10 +702,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @example
      * ```typescript
      * public groupRow: IGroupByRecord;
-     * this.grid.deselectAllRowsInGroup(this.groupRow);
+     * this.grid.deselectRowsInGroup(this.groupRow);
      * ```
      */
-    public deselectAllRowsInGroup(groupRow: IGroupByRecord) {
+    public deselectRowsInGroup(groupRow: IGroupByRecord) {
         this._gridAPI.groupBy_deselect_all_rows_in_group(groupRow);
         this.notifyChanges();
     }

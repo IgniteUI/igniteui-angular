@@ -280,9 +280,11 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public get groupByRowSelectorBaseAriaLabel() {
-        let ariaLabel: string = this.areAllRowsInTheGroupSelected ? 'Deselect all rows in the group with field name ' : 'Select all rows in the group with field name ';
-        return ariaLabel += this.groupRow.expression.fieldName + ' and value ' + this.groupRow.value;
+    public get groupByRowSelectorBaseAriaLabel(): string {
+        let ariaLabel: string = this.areAllRowsInTheGroupSelected ?
+            (this.grid as IgxGridBaseDirective).resourceStrings.igx_grid_groupByArea_deselect_message :
+            (this.grid as IgxGridBaseDirective).resourceStrings.igx_grid_groupByArea_select_message;
+        return ariaLabel.replace('{0}', this.groupRow.expression.fieldName).replace('{1}', this.groupRow.value);
     }
 
     ngOnDestroy(): void {

@@ -1,5 +1,7 @@
 export interface IGridResourceStrings {
     igx_grid_groupByArea_message?: string;
+    igx_grid_groupByArea_select_message?: string;
+    igx_grid_groupByArea_deselect_message?: string;
     igx_grid_emptyFilteredGrid_message?: string;
     igx_grid_emptyGrid_message?: string;
     igx_grid_filter?: string;
@@ -110,6 +112,8 @@ export interface IGridResourceStrings {
 
 export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_groupByArea_message: 'Drag a column header and drop it here to group by that column.',
+    igx_grid_groupByArea_select_message: 'Select all rows in the group with field name {0} and value {1}.',
+    igx_grid_groupByArea_deselect_message: 'Deselect all rows in the group with field name {0} and value {1}.',
     igx_grid_emptyFilteredGrid_message: 'No records found.',
     igx_grid_emptyGrid_message: 'Grid has no data.',
     igx_grid_filter: 'Filter',
