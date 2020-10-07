@@ -385,7 +385,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        const day = this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
+        this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
     }
 
     /**
