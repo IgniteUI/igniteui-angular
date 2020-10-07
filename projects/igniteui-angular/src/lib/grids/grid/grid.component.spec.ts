@@ -1413,7 +1413,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        it('Should change dates/number display based on locale', () => {
+        it('Should change dates/number display based on locale', fakeAsync(() => {
             registerLocaleData(localeDE);
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
@@ -1428,6 +1428,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 newRec.OrderDate = rec.OrderDate.getTime();
                 return newRec;
             });
+            tick(300);
             fixture.detectChanges();
 
             let rows = grid.rowList.toArray();
@@ -1455,6 +1456,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
+            tick(100);
             fixture.detectChanges();
 
             rows = grid.rowList.toArray();
@@ -1479,7 +1481,7 @@ describe('IgxGrid Component Tests #grid', () => {
                     expect(earliestValue).toBe('17.05.1990');
                 }
             });
-        });
+        }));
 
         it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
