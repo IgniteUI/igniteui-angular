@@ -135,15 +135,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     public styleClass = true;
 
     /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     */
-    @Input()
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
      * Returns an array of date objects which are then used to properly
      * render the years.
      *

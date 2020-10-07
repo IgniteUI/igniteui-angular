@@ -192,15 +192,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public callback: (next) => void;
 
     /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
      * The default aria role attribute for the component.
      *
      * @hidden
@@ -782,7 +773,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public resetActiveDate() {
         if (!this.monthViews) { return; }
         let dates = [];
-        this.monthViews.map(mv => mv.dates).forEach(days => { dates = dates.concat(days.toArray());  });
+        this.monthViews.map(mv => mv.dates).forEach(days => { dates = dates.concat(days.toArray()); });
         const date = dates.find(day => day.selected && day.isCurrentMonth) || dates.find(day => day.isToday && day.isCurrentMonth)
             || dates.find(d => d.isFocusable);
         if (date) {
@@ -943,12 +934,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
-    @HostListener('focusout', ['$event'])
-    public onPointerDown(event) {
-/*         if (event.path.contains('igx-days-view')) {
-            return;
-        } */
-        console.log(event);
+    @HostListener('document:pointerup')
+    public pointerUp() {
+        this.resetActiveDate();
+    }
+
+    @HostListener('keydown.tab', ['$event'])
+    @HostListener('keydown.shift.tab', ['$event'])
+    public onTab(event) {
+        if (event.target.tagName.toLowerCase() === 'igx-day-item') {
+            requestAnimationFrame(() => this.resetActiveDate());
+        }
     }
 
     /**

@@ -79,7 +79,12 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public select() {
-        this.calendar.selectDate(new Date(this.today.getFullYear(), this.today.getMonth() + 1, 11));
+        if (this.calendar.selection === 'single') {
+            this.calendar.selectDate(new Date(this.today.getFullYear(), this.today.getMonth() + 1, 11));
+        } else {
+            this.calendar.selectDate([new Date(this.today.getFullYear(), this.today.getMonth(), 10),
+                new Date(this.today.getFullYear(), this.today.getMonth(), 13)]);
+        }
     }
 
     public deselect() {
