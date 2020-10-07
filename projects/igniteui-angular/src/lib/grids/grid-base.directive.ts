@@ -6565,7 +6565,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         if (commit) {
-            this.onRowAdded.pipe(first()).subscribe(rowData => {
+            this.onRowAdded.pipe(first()).subscribe((args: IRowDataEventArgs) => {
+                const rowData = args.data;
                 // A check whether the row is in the current view
                 const viewIndex = this.findRecordIndexInView(rowData);
                 const dataIndex = this.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
