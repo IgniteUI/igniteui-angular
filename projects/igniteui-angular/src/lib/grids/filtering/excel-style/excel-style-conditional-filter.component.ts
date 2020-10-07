@@ -53,9 +53,13 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     constructor(public esf: IgxGridExcelStyleFilteringComponent) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
-                this._subMenuOverlaySettings.outlet = (this.esf.grid as any).outlet;
+                this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
             }
         });
+
+        if (this.esf.grid && !this._subMenuOverlaySettings.outlet) {
+            this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
+        }
     }
 
     ngOnDestroy(): void {
@@ -78,9 +82,6 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
             this._subMenuOverlaySettings.target = eventArgs.currentTarget;
-            if (!this._subMenuOverlaySettings.outlet) {
-                this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
-            }
 
             const gridRect = this.esf.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.esf.mainDropdown.nativeElement.getBoundingClientRect();

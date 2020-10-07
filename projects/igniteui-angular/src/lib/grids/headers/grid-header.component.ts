@@ -8,7 +8,6 @@ import {
     HostListener,
     Input,
     NgZone,
-    OnInit,
     OnDestroy
 } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
@@ -31,7 +30,7 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/gr
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
+export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     private _destroy$ = new Subject<boolean>();
 
@@ -142,10 +141,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         public elementRef: ElementRef,
         public zone: NgZone
     ) { }
-
-    public ngOnInit() {
-        // this.grid.filteringService.initFilteringSettings();
-    }
 
     public ngDoCheck() {
         this.getSortDirection();
