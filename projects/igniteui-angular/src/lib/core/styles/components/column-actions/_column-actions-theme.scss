@@ -96,8 +96,7 @@
     %column-actions-display {
         display: flex;
         flex-flow: column nowrap;
-        border: 0 solid;
-        border-color: igx-color($palette, 'grays', 300);
+        border: 0 solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         box-shadow: igx-elevation($elevations, 8);
         width: 100%;

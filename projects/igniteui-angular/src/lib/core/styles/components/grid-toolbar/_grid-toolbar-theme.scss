@@ -313,8 +313,7 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        border: 0 solid;
-        border-color: igx-color($palette, 'grays', 300);
+        border: 0 solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         box-shadow: igx-elevation($elevations, 8);
     }
 
