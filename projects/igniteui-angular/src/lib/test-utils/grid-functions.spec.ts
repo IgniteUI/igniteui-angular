@@ -2271,7 +2271,7 @@ export class GridSelectionFunctions {
     public static verifySelectionCheckBoxesAlignment(grid) {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.dataRowList.first.nativeElement);
-        if (grid.groupingExpressions.length > 0) {
+        if (grid.groupingExpressions && grid.groupingExpressions.length > 0) {
             const groupByRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.groupsRowList.first.nativeElement);
             expect(groupByRowDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
             expect(groupByRowDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
