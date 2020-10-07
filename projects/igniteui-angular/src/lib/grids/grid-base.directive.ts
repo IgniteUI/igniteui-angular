@@ -4381,7 +4381,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public refreshGridState(args?) {
         this.endEdit(true);
         this.selectionService.clearHeaderCBState();
-        this.summaryService.clearSummaryCache(args);
+        this.summaryService.clearSummaryCache();
     }
 
     // TODO: We have return values here. Move them to event args ??
