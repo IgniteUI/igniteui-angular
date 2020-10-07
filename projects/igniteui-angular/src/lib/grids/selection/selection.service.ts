@@ -343,11 +343,13 @@ export class IgxGridCRUDService {
     /** Clears cell editing state */
     public endCellEdit() {
         this.cell = null;
+        this.cellEditingBlocked = false;
     }
 
     /** Clears row editing state */
     public endRowEdit() {
         this.row = null;
+        this.rowEditingBlocked = false;
     }
 
 
@@ -358,11 +360,6 @@ export class IgxGridCRUDService {
             this.endRowEdit();
             this.grid.closeRowEditingOverlay();
         }
-    }
-
-    /** Unblocks row/cell edit process when filter/sort is performed */
-    public releaseBlockedEditing() {
-        this._rowEditingBlocked = this._cellEditingBlocked = false;
     }
 
     /** Returns whether a particular cell is in edit mode */

@@ -4251,8 +4251,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
-        this.crudService.releaseBlockedEditing();
-        this.endEdit(false);
         this.crudService.endEditMode();
 
 
@@ -6542,9 +6540,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return true;
             }
         } else {
-            if (!this.crudService.cellEditingBlocked) {
-                this.crudService.exitCellEdit();
-            }
+            this.crudService.exitCellEdit();
         }
 
         canceled = this.crudService.exitRowEdit(commit);
@@ -6587,7 +6583,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.crudService.endRowEdit();
             this.addRowParent = null;
         } else {
-            this.crudService.endCellEdit();
+            this.crudService.exitCellEdit();
             this.cancelAddMode = true;
         }
         this.crudService.endRowEdit();
