@@ -27,7 +27,8 @@ import {
     DoCheck,
     Directive,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    HostListener
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -3202,6 +3203,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+        if (this.actionStrip) {
+            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
     }
 
     /**
@@ -3253,6 +3257,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseleave', ['$event'])
+    public hideActionStrip(event: MouseEvent) {
+        this.actionStrip?.hide();
     }
 
     /**
