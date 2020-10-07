@@ -208,7 +208,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * Enables/disables the animation, when toggling the drawer. Set to `false` by default.
      * ````html
-     * <igx-nav-drawer [disableAnimation]="false"></igx-nav-drawer>
+     * <igx-nav-drawer [disableAnimation]="true"></igx-nav-drawer>
      * ````
      */
     @HostBinding ('class.igx-nav-drawer--disable-animation')
