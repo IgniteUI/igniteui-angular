@@ -12,7 +12,8 @@ import {
     Optional,
     Output,
     Self,
-    AfterViewInit
+    AfterViewInit,
+    OnInit
 } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -75,7 +76,7 @@ export interface AutocompleteOverlaySettings {
 @Directive({
     selector: '[igxAutocomplete]'
 })
-export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit {
+export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit, OnInit {
 
     private _shouldBeOpen = false;
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
@@ -87,13 +88,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
     private destroy$ = new Subject();
 
-    private defaultSettings: OverlaySettings = {
-        target: this.parentElement,
-        modal: false,
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy(),
-        excludeFromOutsideClick: [this.parentElement]
-    };
+    private defaultSettings: OverlaySettings;
 
     protected id: string;
     protected get model() {
@@ -346,6 +341,18 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.target.navigateFirst();
         this.cdr.detectChanges();
+    }
+
+    /** @hidden @internal */
+    public ngOnInit() {
+        const targetElement = this.parentElement;
+        this.defaultSettings = {
+            target: targetElement,
+            modal: false,
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            positionStrategy: new AutoPositionStrategy(),
+            excludeFromOutsideClick: [targetElement]
+        };
     }
 
     /** @hidden */

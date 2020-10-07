@@ -492,9 +492,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         const args: CancelableEventArgs = { cancel: event.cancel };
         this.onClosing.emit(args);
         event.cancel = args.cancel;
-        if (args.cancel) {
-            return;
-        }
     }
 
     /** @hidden @internal */

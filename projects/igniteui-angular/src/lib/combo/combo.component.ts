@@ -185,13 +185,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _remoteSelection = {};
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
-    private _overlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy(),
-        modal: false,
-        closeOnOutsideClick: true,
-        excludeFromOutsideClick: [this.elementRef.nativeElement as HTMLElement]
-    };
+    private _overlaySettings: OverlaySettings;
     private _value = '';
     private _valid = IgxComboState.INITIAL;
     constructor(
@@ -1228,7 +1222,15 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        this._overlaySettings.target = this.elementRef.nativeElement;
+        const targetElement = this.elementRef.nativeElement;
+        this._overlaySettings = {
+            target: targetElement,
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            positionStrategy: new AutoPositionStrategy(),
+            modal: false,
+            closeOnOutsideClick: true,
+            excludeFromOutsideClick: [targetElement as HTMLElement]
+        };
         this.selection.set(this.id, new Set());
         this._iconService.addSvgIconFromText(caseSensitiveIcon.name, caseSensitiveIcon.value, 'case-sensitive');
     }
