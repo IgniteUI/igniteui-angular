@@ -30,7 +30,20 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
-    
+    - Added `createAbsoluteOverlaySettings` and `createRelativeOverlaySettings` methods which create non-modal `OverlaySettings` based on predefined `PositionSettings`. The methods are exposed off the `IgxOverlayService`.
+        - `createAbsoluteOverlaySettings` creates non-modal `OverlaySettings` with `GlobalPositionStrategy` or `ContainerPositionStrategy` if an outlet is provided. Accepts `AbsolutePosition` enumeration, which could be Center, Top and Bottom. Default is Center.
+        ```typescript
+            const globalOverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Top);
+        ```
+        - `createRelativeOverlaySettings` creates `OverlaySettings` with `AutoPositionStrategy`, `ConnectedPositioningStrategy` or `ElasticPositionStrategy`. Accepts target, strategy and position. The `target` is the attaching point or element for the component to show. The position strategy is a `RelativePositionStrategy` enumeration, which defaults to Auto. The position is a `RelativePosition` enumeration. Possible values are Above, Below, Left, Right and Default. The default option is `Default`, which positions the element below the target, left aligned.
+        ```typescript
+            const targetElement = this.button.nativeElement;
+            const connectedOverlaySettings = IgxOverlayService.createRelativeOverlaySettings(
+                    targetElement,
+                    RelativePositionStrategy.Connected,
+                    RelativePosition.Above);
+        ```
+
 ## 10.1.0
 
 ### General
