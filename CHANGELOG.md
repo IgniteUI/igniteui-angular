@@ -21,6 +21,9 @@ All notable changes for each version of this project will be documented in this 
     - Added `disableAnimation` property which enables/disables the animation, when toggling the drawer. Set to `false` by default.
 - `igxTabs`
     - Added `disableAnimation` property which enables/disables the transition animation of the tabs' content. Set to `false` by default.
+- `IgxExpansionPanel`
+    - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel. 
+
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -57,6 +60,9 @@ All notable changes for each version of this project will be documented in this 
     - The component now utilizes the `IgxOverlayService` to position itself in the DOM.
     - An additional input property `outlet` has been added to allow users to specify custom Overlay Outlets using the `IgxOverlayOutletDirective`;
     - The `position` property now accepts values of type `IgxToastPosition` that work with strict templates.
+- `IgxExpansionPanelHeader`
+    - `onInteraction` is now cancelable
+    - Added `iconRef` property. This can be used to get a reference to the displayed expand/collapsed indicator. Returns `null` if `iconPosition` is set to `NONE`.
 
 ## 10.1.0
 
