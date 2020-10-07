@@ -1,5 +1,4 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
-import { isEdge } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
@@ -155,6 +154,7 @@ export class IgxGridCRUDService {
 
     private _cellEditingBlocked = false;
     private _rowEditingBlocked = false;
+    public _
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
