@@ -7,11 +7,13 @@
 </igx-action-strip>
 <igx-row-island #island [key]="'childData'" [autoGenerate]="true"
     [allowFiltering]='true' [rowEditable]="true" [primaryKey]="'ID'">
-    <igx-action-strip #actionstrip2>
-        <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
-    </igx-action-strip>
+    
     <igx-row-island [key]="'childData'" [autoGenerate]="true"
-        [allowFiltering]='true'></igx-row-island>
+        [allowFiltering]='true'>
+        <igx-action-strip #actionstrip2>
+            <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+        </igx-action-strip>
+    </igx-row-island>
 </igx-row-island>
 <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
 </igx-hierarchical-grid>

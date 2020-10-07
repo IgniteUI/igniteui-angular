@@ -42,6 +42,7 @@ import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
+import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -240,6 +241,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 
+    @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
+    public actionStrips: QueryList<IgxActionStripComponent>;
+
     /**
      * @hidden
      */
@@ -292,7 +296,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 });
             }
          });
-
+         this.actionStrip = this.actionStrips.first;
          if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
