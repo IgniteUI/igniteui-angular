@@ -1901,7 +1901,7 @@ export class IgxTimePickerComponent implements
             // TODO: refactoring - this.value should be null #6585
             this.value?.setHours(0, 0, 0);
 
-            if (oldVal.getTime() !== this.value.getTime() || this.isReset()) {
+            if (oldVal.getTime() !== this.value?.getTime() || this.isReset()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
