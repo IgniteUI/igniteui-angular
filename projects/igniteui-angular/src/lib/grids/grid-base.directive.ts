@@ -4251,7 +4251,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
-        this.crudService.endEditMode();
+        this.endEdit(false);
 
 
         if (expression instanceof Array) {
