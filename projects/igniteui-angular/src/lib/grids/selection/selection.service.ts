@@ -153,7 +153,7 @@ export class IgxGridCRUDService {
     public isInCompositionMode = false;
 
     private _cellEditingBlocked = false;
-    private _rowEditingBlocked = false;\
+    private _rowEditingBlocked = false;
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
