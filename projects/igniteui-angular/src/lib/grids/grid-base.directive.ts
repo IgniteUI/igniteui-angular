@@ -4066,6 +4066,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
         if (!this.rowEditable) {
+            console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
         this.endEdit(true);
