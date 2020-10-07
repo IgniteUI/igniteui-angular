@@ -274,7 +274,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             // hide child layout actions strips when
             // moving outside root grid.
             super.hideActionStrip(event);
-            this.childLayoutList.forEach(ri => {
+            this.allLayoutList.forEach(ri => {
                 ri.actionStrip?.hide();
             });
         }
