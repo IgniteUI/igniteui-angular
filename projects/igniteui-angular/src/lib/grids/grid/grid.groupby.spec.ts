@@ -1396,6 +1396,50 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
         }));
 
+    it('should select/deselect all rows in group from API with PrimaryKey',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            grid.primaryKey = 'ID';
+            fix.detectChanges();
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+            const grRecord = grid.groupsRecords[0];
+
+            grid.selectRowsInGroup(grRecord);
+            tick();
+            fix.detectChanges();
+
+            for (const key of grRow.groupRow.records) {
+                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key.ID)));
+            }
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            grid.deselectRowsInGroup(grRecord);
+            tick();
+            fix.detectChanges();
+
+            for (const key of grRow.groupRow.records) {
+                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key.ID), false));
+            }
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+        }));
+
     it('ARIA support for groupby row selectors',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
