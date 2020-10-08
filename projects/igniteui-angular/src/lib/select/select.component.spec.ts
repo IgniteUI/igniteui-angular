@@ -360,7 +360,8 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('should emit closing events on input blur', fakeAsync(() => {
+        it('should emit closing events on input blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
+            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -370,13 +371,47 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            dummyInput.focus();
+            dummyInput.click();
             tick();
             fixture.detectChanges();
+
+            expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeTruthy();
             expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
+        it('should NOT emit closing events on input blur when closeOnOutsideClick: false', fakeAsync(() => {
+            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
+            spyOn(select.onClosing, 'emit');
+            spyOn(select.onClosed, 'emit');
+
+            const customOverlaySettings = {
+                closeOnOutsideClick: false
+            };
+            select.overlaySettings = customOverlaySettings;
+            expect(select.overlaySettings).toBe(customOverlaySettings);
+            expect(select.collapsed).toBeTruthy();
+            fixture.detectChanges();
+
+            expect(select).toBeDefined();
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            dummyInput.focus();
+            dummyInput.click();
+
+            tick();
+            fixture.detectChanges();
+
+            expect(dummyInput).toEqual(document.activeElement);
+            expect(select.collapsed).toBeFalsy();
+            expect(select.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(select.onClosed.emit).toHaveBeenCalledTimes(0);
+        }));
+
         it('should render aria attributes properly', fakeAsync(() => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
@@ -444,18 +479,42 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
-        it('should close dropdown on blur', fakeAsync(() => {
+        it('should close dropdown on blur when closeOnOutsideClick: true (default value)', fakeAsync(() => {
+            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
             expect(select.collapsed).toBeTruthy();
-
             select.toggle();
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            dummyInput.focus();
+            dummyInput.click();
+
             tick();
             fixture.detectChanges();
+            expect(dummyInput).toEqual(document.activeElement);
             expect(select.collapsed).toBeTruthy();
+        }));
+        it('should NOT close dropdown on blur when closeOnOutsideClick: false', fakeAsync(() => {
+            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
+            const customOverlaySettings = {
+                closeOnOutsideClick: false
+            };
+            select.overlaySettings = customOverlaySettings;
+            expect(select.overlaySettings).toBe(customOverlaySettings);
+            expect(select.collapsed).toBeTruthy();
+            fixture.detectChanges();
+            select.toggle();
+            tick();
+            expect(select.collapsed).toBeFalsy();
+
+            dummyInput.focus();
+            dummyInput.click();
+
+            tick();
+            fixture.detectChanges();
+            expect(dummyInput).toEqual(document.activeElement);
+            expect(select.collapsed).toBeFalsy();
         }));
     });
     describe('Form tests: ', () => {
@@ -2660,6 +2719,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
 
 @Component({
     template: `
+    <input class="dummyInput" #dummyInput/>
     <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
         <label igxLabel #simpleLabel>Select Simple Component</label>
         <igx-select-item *ngFor="let item of items" [value]="item" [text]="item">
@@ -2669,6 +2729,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
 `
 })
 class IgxSelectSimpleComponent {
+    @ViewChild('dummyInput') public dummyInput: ElementRef;
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     @ViewChild('simpleLabel', { read: ElementRef, static: true })
