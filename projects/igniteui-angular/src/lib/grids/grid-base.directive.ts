@@ -272,6 +272,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public emptyGridTemplate: TemplateRef<any>;
 
     /**
+     * Gets/Sets a custom template for adding row UI when grid is empty.
+     * @example
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [addRowEmptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Input()
+    public addRowEmptyGridTemplate: TemplateRef<any>;
+
+    /**
      * Gets/Sets a custom template when loading.
      * @example
      * ```html

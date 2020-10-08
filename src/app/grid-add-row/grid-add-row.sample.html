@@ -9,6 +9,7 @@
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
         [rowEditable]="true"
+        [allowFiltering]="true"
     >
         <igx-column
             *ngFor="let c of columns"
