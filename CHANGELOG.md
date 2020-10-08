@@ -6,6 +6,12 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGridActions`
     - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes:
+        - You can close the Excel Style Filtering menu by pressing `Ctrl + Shift + L`.
+        - You can apply the filter by pressing `Enter`.
+        - When searching items in the Excel Style Filtering menu, only the rows that match your search term will be filtered in.
+        - By checking the `Add current selection to filter` option, the new search results will be added to the previously filtered items.
 - `IgxInputGroup`
     - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property.
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
