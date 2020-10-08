@@ -4087,6 +4087,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this._pipeTrigger++;
         this.cdr.detectChanges();
+        if (isInPinnedArea) {
+            this.calculateGridHeight();
+        }
         const row = this.getRowByIndex(index + 1);
         const cell = row.cells.find(c => c.editable);
         if (cell) {
@@ -6568,8 +6571,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (commit) {
             this.onRowAdded.pipe(first()).subscribe((args: IRowDataEventArgs) => {
                 const rowData = args.data;
+                const pinnedIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowData[this.primaryKey]);
                 // A check whether the row is in the current view
-                const viewIndex = this.findRecordIndexInView(rowData);
+                const viewIndex = pinnedIndex !== -1 ? pinnedIndex : this.findRecordIndexInView(rowData);
                 const dataIndex = this.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
                 const isInView = viewIndex !== -1 && !this.navigation.shouldPerformVerticalScroll(viewIndex, 0);
                 const showIndex = isInView ? -1 : dataIndex;
