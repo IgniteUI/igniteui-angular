@@ -25,7 +25,8 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Directive
+    Directive,
+    LOCALE_ID
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -178,7 +179,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
-    private _locale = 'en';
+    private _locale: string;
     public _destroyed = false;
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
@@ -203,11 +204,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public decimalPipe = new DecimalPipe(this.locale);
+    public decimalPipe: DecimalPipe;
     /**
      * @hidden @internal
      */
-    public datePipe = new DatePipe(this.locale);
+    public datePipe: DatePipe;
 
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
@@ -420,7 +421,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._locale;
     }
 
-    set locale(value) {
+    set locale(value: string) {
         this._locale = value;
         this.summaryService.clearSummaryCache();
         this._pipeTrigger++;
@@ -2907,8 +2908,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) private localeId: string) {
         super(_displayDensityOptions);
+        this.locale = this.locale || this.localeId;
+        this.datePipe = new DatePipe(this.locale);
+        this.decimalPipe = new DecimalPipe(this.locale);
         this.cdr.detach();
     }
 
