@@ -246,6 +246,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public visibleItemsWidth: number;
 
     /**
+     * Enables/disables the transition animation of the tabs' content. Set to `false` by default.
+     * ````html
+     * <igx-tabs [disableAnimation]="true"></igx-tabs>
+     */
+    @Input()
+    public disableAnimation = false;
+
+    /**
      * @hidden
      */
     public offset = 0;
@@ -462,13 +470,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         this.onTabItemSelected.emit({ tab: newTab, group: newTabRelatedGroup });
 
         requestAnimationFrame(() => {
+            const transitionDuration  =  this.disableAnimation ? 0 : 0.2;
             // bring the new selected tab into view if it is not
             this.bringNewTabIntoView(newTab);
             // animate the new selection indicator
             this.transformIndicatorAnimation(newTab.nativeTabItem.nativeElement);
             // animate the new tab's group content
             if (!this.hasContentTabs) {
-                this.transformContentAnimation(newTab, 0.2);
+                this.transformContentAnimation(newTab, transitionDuration);
             }
         });
     }
