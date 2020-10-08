@@ -7,6 +7,9 @@ import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxActionStripModule } from '../action-strip.module';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalRowComponent, IgxHierarchicalGridComponent, IgxHierarchicalGridModule } from '../../grids/hierarchical-grid/public_api';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -18,12 +21,14 @@ describe('igxGridEditingActions #grid ', () => {
             declarations: [
                 IgxActionStripTestingComponent,
                 IgxActionStripPinEditComponent,
-                IgxActionStripEditMenuComponent
+                IgxActionStripEditMenuComponent,
+                IgxHierarchicalGridActionStripComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripModule,
                 IgxGridModule,
+                IgxHierarchicalGridModule,
                 IgxIconModule
             ]
         }).compileComponents();
@@ -112,6 +117,94 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editingIcons.length).toBe(0);
             expect(pinningIcons.length).toBe(1);
             expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
+        });
+    });
+
+    describe('auto show/hide', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        }));
+        it('should auto-show on mouse over of row.', () => {
+            const row = grid.getRowByIndex(0);
+            const rowElem = row.nativeElement;
+            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStrip.context).toBe(row);
+            expect(actionStrip.hidden).toBeFalse();
+        });
+        it('should auto-hide on mouse leave of grid.', () => {
+            const row = grid.getRowByIndex(0);
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeFalse();
+            UIInteractions.simulateMouseEvent('mouseleave', grid.nativeElement, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeTrue();
+        });
+    });
+
+    describe('auto show/hide in HierarchicalGrid', () => {
+        let actionStripRoot, actionStripChild, hierarchicalGrid: IgxHierarchicalGridComponent;
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
+            fixture.detectChanges();
+            actionStripRoot = fixture.componentInstance.actionStripRoot;
+            actionStripChild = fixture.componentInstance.actionStripChild;
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+        }));
+
+        it('should auto-show root actionStrip on mouse over of root row.', () => {
+            const row = hierarchicalGrid.getRowByIndex(0);
+            const rowElem = row.nativeElement;
+            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStripRoot.context).toBe(row);
+            expect(actionStripRoot.hidden).toBeFalse();
+            expect(actionStripChild.context).toBeUndefined();
+        });
+
+        it('should auto-show row island actionStrip on mouse over of child row.', () => {
+            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[1];
+
+            const childRow = childGrid.getRowByIndex(0);
+            const rowElem = childRow.nativeElement;
+            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStripChild.context).toBe(childRow);
+            expect(actionStripChild.hidden).toBeFalse();
+
+            expect(actionStripRoot.context).toBeUndefined();
+        });
+
+        it('should auto-hide all actionStrip on mouse leave of root grid.', () => {
+            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childRow = childGrid.getRowByIndex(0);
+
+            actionStripRoot.show(row);
+            actionStripChild.show(childRow);
+            fixture.detectChanges();
+
+            UIInteractions.simulateMouseEvent('mouseleave', hierarchicalGrid.nativeElement, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStripRoot.hidden).toBeTrue();
+            expect(actionStripChild.hidden).toBeTrue();
         });
     });
 });
