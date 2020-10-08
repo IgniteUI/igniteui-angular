@@ -80,6 +80,8 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
     }
+
+    @HostBinding('class.igx-grid__tr--new')
     @Input()
     public get addRow(): any {
         return this._addRow;
@@ -401,7 +403,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public update(value: any) {
         const crudService = this.crudService;
-        if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
+        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
