@@ -88,7 +88,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
-        if (grid.crudService.isInEditMode) {
+        if (grid.crudService.cellInEditMode) {
             grid.endEdit(true);
         }
 

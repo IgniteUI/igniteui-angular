@@ -1262,12 +1262,12 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should be able to update row through primaryKey', () => {
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
             expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(198);
             grid.updateRow({ ProductID: 2, ProductName: 'Aniseed Syrup', UnitsInStock: 300 }, 2);
-            expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
             fix.detectChanges();
             expect(grid.getRowByIndex(1).rowData['UnitsInStock']).toEqual(300);
             expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(300);

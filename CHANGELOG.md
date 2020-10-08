@@ -6,9 +6,23 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGridActions`
     - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes:
+        - You can close the Excel Style Filtering menu by pressing `Ctrl + Shift + L`.
+        - You can apply the filter by pressing `Enter`.
+        - When searching items in the Excel Style Filtering menu, only the rows that match your search term will be filtered in.
+        - By checking the `Add current selection to filter` option, the new search results will be added to the previously filtered items.
 - `IgxInputGroup`
     - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property.
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Rename outputs**
+        `onRowEditEnter` to `rowEditEnter`
+        `onCellEditEnter` to `cellEditEnter`
+        `onCellEdit` to `cellEdit`
+        `onRowEdit` to `rowEdit`
+    - **Breaking Change** - The `onCellEditCancel` event is replaced by the new `cellEditExit` event that emits every time the editable cell exits edit mode.
+    - **Breaking Change** - The `onRowEditCancel` event is replaced by the new `rowEditExit` event that emits every time the editable row exits edit mode.
 - `IgxOverlay`
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
 - `IgxToggleDirective`
@@ -26,10 +40,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxExpansionPanel`
     - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel. 
 
-
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
+    - `cellEditExit` is a new event that fires when cell exits edit mode
+    - `rowEditExit` is a new event that fires when row exits edit mode
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
     - Added ability to spawn row adding UI through exoposed methods. Note that rowEditing should be enabled.
         - `beginAddRow` method which starts the adding row UI.
