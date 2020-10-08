@@ -4096,7 +4096,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
             this.cdr.detectChanges();
-            const row = this.getRowByIndex(this.addRowParent.index + 1);
+            const newRowIndex = this.addRowParent.index + 1;
+            // ensure adding row is in view.
+            const shouldScroll = this.navigation.shouldPerformVerticalScroll(newRowIndex, -1);
+            if (shouldScroll) {
+                this.navigateTo(newRowIndex, -1);
+            }
+            const row = this.getRowByIndex(newRowIndex);
             const cell = row.cells.find(c => c.editable);
             cell.setEditMode(true);
             cell.activate();
