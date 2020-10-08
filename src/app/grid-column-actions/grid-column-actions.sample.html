@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'">
+    <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [showToolbar]="true"  [columnHiding] = "true">
         <igx-column-group header="General Information" title="General Company Information" >
             <igx-column [field]='"Missing"' [groupable]='true'></igx-column>
         </igx-column-group>
@@ -14,7 +14,7 @@
             <div class="button-sample">
                 <igx-column-actions
                 igxColumnHiding
-                [columns]="grid1.columns"
+                [grid]="grid1"
                 [title]="grid1.columnHidingTitle"
                 (onColumnToggled)="columnToggled($event)">
                 </igx-column-actions>
@@ -26,7 +26,7 @@
                 <div class="button-sample">
                     <igx-column-actions
                     igxColumnPinning
-                    [columns]="grid1.columns">
+                    [grid]="grid1">
                     </igx-column-actions>
                 </div>
         </article>
@@ -37,7 +37,7 @@
                 <igx-column-actions
                 appColumnGrouping
                 [indentation]='100'
-                [columns]="grid1.columns"
+                [grid]="grid1"
                 >
                 </igx-column-actions>
             </div>
