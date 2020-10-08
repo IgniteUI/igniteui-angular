@@ -19,7 +19,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableEventArgs } from '../core/utils';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -563,6 +562,34 @@ describe('igxCombo', () => {
             combo.handleInputChange('Item1');
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
             expect(matchSpy).toHaveBeenCalledTimes(1);
+        });
+        it('should not open on click if combo is disabled', () => {
+            combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['open', 'close', 'toggle']);
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation', 'preventDefault']);
+            combo.ngOnInit();
+            combo.dropdown = dropdown;
+            dropdown.collapsed = true;
+
+            combo.disabled = true;
+            combo.onInputClick(spyObj);
+            expect(combo.dropdown.collapsed).toBeTruthy();
+        });
+        it('should not clear value when combo is disabled', () => {
+            const selectionService = new IgxSelectionAPIService();
+            combo = new IgxComboComponent({ nativeElement: null }, mockCdr, selectionService, mockComboService, null, mockInjector);
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
+            combo.ngOnInit();
+            combo.data = data;
+            combo.dropdown = dropdown;
+            combo.disabled = true;
+            spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
+
+            const item = combo.data.slice(0, 1);
+            combo.selectItems(item, true);
+            combo.handleClearItems(spyObj);
+            expect(combo.value).toEqual(item[0]);
         });
     });
     describe('Initialization and rendering tests: ', () => {
@@ -2468,13 +2495,6 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
-            });
-            it('should not open on click if combo is disabled', () => {
-                combo.disabled = true;
-                fixture.detectChanges();
-                UIInteractions.simulateClickEvent(combo.comboInput.nativeElement);
-                fixture.detectChanges();
-                expect(combo.dropdown.collapsed).toBeTruthy();
             });
             it('should be possible to be enabled/disabled when used as a form control', () => {
                 const form = fixture.componentInstance.reactiveForm;

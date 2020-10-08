@@ -1901,7 +1901,7 @@ export class IgxTimePickerComponent implements
             // TODO: refactoring - this.value should be null #6585
             this.value?.setHours(0, 0, 0);
 
-            if (oldVal.getTime() !== this.value.getTime()) {
+            if (oldVal.getTime() !== this.value?.getTime() || this.isReset()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
@@ -1944,7 +1944,7 @@ export class IgxTimePickerComponent implements
             // TODO: refactoring - this.value should be null #6585
             this.value?.setHours(0, 0, 0);
             this.displayValue = inputMask;
-            if (oldVal.getTime() !== this.value?.getTime()) {
+            if (oldVal.getTime() !== this.value?.getTime() || this.isReset()) {
                 // TODO: Do not emit event when the editor is empty #6482
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
@@ -2096,6 +2096,14 @@ export class IgxTimePickerComponent implements
         } else {
             input.valid = IgxInputState.INITIAL;
         }
+    }
+
+    // Workaround method for #8135
+    // TODO: It must be removed in #6482
+    private isReset(): boolean {
+        return this.value?.getHours() === 0
+            && this.value?.getMinutes() === 0
+            && this.value?.getSeconds() === 0;
     }
 }
 
