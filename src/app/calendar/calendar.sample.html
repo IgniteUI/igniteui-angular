@@ -4,8 +4,9 @@
         <article class="sample-column">
 
             <div class="calendar-sample">
+                {{cal.activeDate}}
                 <h4 class="sample-title">Calendar Sample (NO Card wrapper)</h4>
-                <igx-calendar weekStart="1" selection="multi" [hideOutsideDays]="false" [monthsViewNumber]="2"></igx-calendar>
+                <igx-calendar #cal weekStart="1" selection="multi" [hideOutsideDays]="false" [monthsViewNumber]="2"></igx-calendar>
             </div>
 
             <div class="calendar-sample">
@@ -21,6 +22,7 @@
                     <button igxButton="raised" igxRipple (click)="setSelection('single')">Single</button>
                     <button igxButton="raised" igxRipple (click)="setSelection('multi')">Multi</button>
                     <button igxButton="raised" igxRipple (click)="setSelection('range')">Range</button>
+                    {{calendar.activeDate}}
                 </div>
                 <igx-card>
                     <igx-calendar #calendar [showWeekNumbers]="true" weekStart="1" selection="multi" (viewDateChanged)="viewDateChanged($event)" (activeViewChanged)="activeViewChanged($event)" (onSelection)="onSelection($event)" [hideOutsideDays]="false" [monthsViewNumber]="3"></igx-calendar>

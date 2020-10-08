@@ -139,16 +139,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @ViewChildren(IgxCalendarMonthDirective, { read: IgxCalendarMonthDirective })
     public monthsRef: QueryList<IgxCalendarMonthDirective>;
 
-
-    /**
-     * Gets/sets the `tabindex` attribute for the component.
-     * Default value is 0
-     *
-     */
-    @Input()
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     /**
      * Returns an array of date objects which are then used to
      * properly render the month names.

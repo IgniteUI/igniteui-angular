@@ -157,6 +157,10 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public tabIndex(day: ICalendarDate): number {
         return this.activeDate && this.activeDate === day.date.toLocaleDateString() && day.isCurrentMonth ? 0 : -1;
     }

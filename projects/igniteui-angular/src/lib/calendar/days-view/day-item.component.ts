@@ -164,9 +164,10 @@ export class IgxDayItemComponent {
 
     constructor(private elementRef: ElementRef) { }
 
-    @HostListener('click')
-    @HostListener('keydown.enter')
-    public onSelect() {
+    @HostListener('click', ['$event'])
+    @HostListener('keydown.enter', ['$event'])
+    public onSelect(event) {
+        event.stopPropagation();
         this.onDateSelection.emit(this.date);
     }
 }
