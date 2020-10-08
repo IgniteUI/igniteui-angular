@@ -7,6 +7,7 @@ import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxActionStripModule } from '../action-strip.module';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -112,6 +113,35 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editingIcons.length).toBe(0);
             expect(pinningIcons.length).toBe(1);
             expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
+        });
+    });
+
+    describe('auto show/hide', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        }));
+        it('should auto-show on mouse over of row.', () => {
+            const row = grid.getRowByIndex(0);
+            const rowElem = row.nativeElement;
+            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStrip.context).toBe(row);
+            expect(actionStrip.hidden).toBeFalse();
+        });
+        it('should auto-hide on mouse leave of grid.', () => {
+            const row = grid.getRowByIndex(0);
+            actionStrip.show(row);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeFalse();
+            UIInteractions.simulateMouseEvent('mouseleave', grid.nativeElement, 0, 0);
+            fixture.detectChanges();
+
+            expect(actionStrip.hidden).toBeTrue();
         });
     });
 });
