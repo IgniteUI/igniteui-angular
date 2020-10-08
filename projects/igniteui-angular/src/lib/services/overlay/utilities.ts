@@ -101,9 +101,10 @@ export interface OverlaySettings {
     outlet?: IgxOverlayOutletDirective | ElementRef;
     /**
      * @hidden @internal
-     * Exclude the position strategy target for outside clicks
+     * Elements to be excluded for closeOnOutsideClick.
+     * Clicking on the elements in this collection will not close the overlay when closeOnOutsideClick = true.
      */
-    excludePositionTarget?: boolean;
+    excludeFromOutsideClick?: HTMLElement[];
 }
 
 export interface OverlayEventArgs extends IBaseEventArgs {

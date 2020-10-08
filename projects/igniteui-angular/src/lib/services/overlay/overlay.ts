@@ -53,6 +53,7 @@ export class IgxOverlayService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
 
     private _defaultSettings: OverlaySettings = {
+        excludeFromOutsideClick: [],
         positionStrategy: new GlobalPositionStrategy(),
         scrollStrategy: new NoOpScrollStrategy(),
         modal: true,
@@ -804,24 +805,16 @@ export class IgxOverlayService implements OnDestroy {
             }
             if (info.settings.closeOnOutsideClick) {
                 const target = ev.target as any;
-                //  if the click is on the element do not close this overlay
-                if (!info.elementRef.nativeElement.contains(target)) {
-                    // if we should exclude position target check if the click is over it. If so do not close overlay
-                    const positionTarget = info.settings.target as HTMLElement;
-                    let clickOnPositionTarget = false;
-                    if (positionTarget) {
-                        clickOnPositionTarget = positionTarget.contains(target);
-                    }
-
-                    if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {
-                        //  if the click is outside click, but close animation has started do nothing
-                        if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
-                            this._hide(info.id, ev);
-                        }
-                    }
-                } else {
-                    //  TODO: should we return here, or continue with next overlays
+                const overlayElement = info.elementRef.nativeElement;
+                // check if the click is on the overlay element or on an element from the exclusion list, and if so do not close the overlay
+                const excludeElements = info.settings.excludeFromOutsideClick ?
+                    [...info.settings.excludeFromOutsideClick, overlayElement] : [overlayElement];
+                const isInsideClick: boolean = excludeElements.some(e => e.contains(target as Node));
+                if (isInsideClick) {
                     return;
+                //  if the click is outside click, but close animation has started do nothing
+                } else if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
+                    this._hide(info.id, ev);
                 }
             }
         }
