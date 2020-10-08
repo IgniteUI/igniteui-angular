@@ -60,6 +60,12 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
             deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
+            // grid actions should not showing when the row is in edit mode #
+            expect(deleteIcon).toBeUndefined();
+            grid.endEdit();
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             expect(deleteIcon.nativeElement.innerText).toBe('delete');
             deleteIcon.parent.triggerEventHandler('click', new Event('click'));
             actionStrip.hide();
@@ -85,12 +91,17 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
             expect(actionStrip.menu.items.length).toBe(2);
             const editMenuItem = actionStrip.menu.items[0];
-            const deleteMenuItem = actionStrip.menu.items[1];
+
             // select edit
             actionStrip.menu.selectItem(editMenuItem);
             fixture.detectChanges();
 
             expect(row.inEditMode).toBeTrue();
+
+            grid.endEdit();
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            const deleteMenuItem = actionStrip.menu.items[1];
 
             // select delete
             actionStrip.menu.selectItem(deleteMenuItem);
