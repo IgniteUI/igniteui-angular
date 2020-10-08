@@ -80,6 +80,8 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
     }
+
+    @HostBinding('class.igx-grid__tr--new')
     @Input()
     public get addRow(): any {
         return this._addRow;

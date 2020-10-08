@@ -4,8 +4,8 @@ All notable changes for each version of this project will be documented in this 
 ## 10.2.0
 
 ### General
-- `IgxDatePicker`
-    - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
+- `IgxGridActions`
+    - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
 - `IgxInputGroup`
     - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property.
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
@@ -19,12 +19,14 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - The `onRowEditCancel` event is replaced by the new `rowEditExit` event that emits every time the editable row exits edit mode.
 - `IgxOverlay`
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
+- `IgxToggleDirective`
+    - `onAppended`, `onOpened` and `onClosed` events are emitting now arguments of `ToggleViewEventArgs` type.
+    - `onOpening` and `onClosing` events are emitting now arguments of `ToggleViewCancelableEventArgs` type.
 - `IgxSelect`
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
 - `IgxDatePicker`	
     - **Breaking Change** - Deprecated the `label` property.
-- `igxGridActions`
-    - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
+    - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
 - `igxNavigationDrawer`
     - Added `disableAnimation` property which enables/disables the animation, when toggling the drawer. Set to `false` by default.
 - `igxTabs`
