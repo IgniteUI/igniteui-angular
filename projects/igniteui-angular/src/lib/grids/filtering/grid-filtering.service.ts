@@ -69,7 +69,9 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public toggleFilterDropdown(element, column, classRef) {
-        if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
+        this.initFilteringSettings();
+
+        if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
@@ -101,7 +103,8 @@ export class IgxFilteringService implements OnDestroy {
             positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
-        const overlayOpening = this._overlayService.onOpening.pipe(
+
+        this._overlayService.onOpening.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
@@ -112,12 +115,6 @@ export class IgxFilteringService implements OnDestroy {
                     this.lastActiveNode = this.grid.navigation.activeNode;
                     instance.initialize(this.column, this._overlayService, eventArgs.id);
                 }
-            });
-
-        this._overlayService.onClosing.pipe(
-            first((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this.destroy$)).subscribe(() => {
-                overlayOpening.unsubscribe();
             });
 
         this._overlayService.onClosed.pipe(
