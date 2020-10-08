@@ -1370,7 +1370,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             });
             fix.detectChanges();
 
-            let grRow = grid.groupsRowList.toArray()[0];
+            const grRow = grid.groupsRowList.toArray()[0];
 
             grid.selectRowsInGroup(grRow.groupRow);
             grid.selectRows([5]);

@@ -120,11 +120,13 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
     }
 
     public groupBy_select_all_rows_in_group(groupRow: IGroupByRecord, clearPrevSelection) {
-        this.grid.selectionService.selectRowsWithNoEvent(this.grid.primaryKey ? groupRow.records.map(x => x[this.grid.primaryKey]) : groupRow.records, clearPrevSelection);
+        this.grid.selectionService.selectRowsWithNoEvent(this.grid.primaryKey ?
+            groupRow.records.map(x => x[this.grid.primaryKey]) : groupRow.records, clearPrevSelection);
     }
 
     public groupBy_deselect_all_rows_in_group(groupRow: IGroupByRecord) {
-        this.grid.selectionService.deselectRowsWithNoEvent(this.grid.primaryKey ? groupRow.records.map(x => x[this.grid.primaryKey]) : groupRow.records);
+        this.grid.selectionService.deselectRowsWithNoEvent(this.grid.primaryKey ?
+            groupRow.records.map(x => x[this.grid.primaryKey]) : groupRow.records);
     }
 
     protected remove_grouping_expression(fieldName) {
