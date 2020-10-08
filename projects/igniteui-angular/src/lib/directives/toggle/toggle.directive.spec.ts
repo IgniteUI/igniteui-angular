@@ -470,7 +470,7 @@ describe('IgxToggle', () => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
-            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
+            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement as HTMLElement;
 
             const defaults: OverlaySettings = {
                 target: button,
@@ -478,7 +478,7 @@ describe('IgxToggle', () => {
                 closeOnOutsideClick: true,
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
-                excludePositionTarget: true
+                excludeFromOutsideClick: [button]
             };
 
             fixture.componentInstance.toggleAction.onClick();
@@ -503,7 +503,7 @@ describe('IgxToggle', () => {
                 closeOnOutsideClick: true,
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
-                excludePositionTarget: true
+                excludeFromOutsideClick: [button]
             };
 
             // defaults
@@ -538,7 +538,7 @@ describe('IgxToggle', () => {
                 closeOnOutsideClick: true,
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
-                excludePositionTarget: true
+                excludeFromOutsideClick: [button]
             };
             fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy();
             fixture.detectChanges();
@@ -573,7 +573,7 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
 
             expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(toggle.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: new Event('click') });
+            expect(toggle.onClosing.emit).toHaveBeenCalledWith({ id: '0', owner: toggle, cancel: false, event: new Event('click') });
             expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
 
@@ -591,7 +591,7 @@ describe('IgxToggle', () => {
                 modal: false,
                 scrollStrategy: jasmine.any(AbsoluteScrollStrategy) as any,
                 outlet: jasmine.any(IgxOverlayOutletDirective) as any,
-                excludePositionTarget: true
+                excludeFromOutsideClick: [button]
             };
 
             fixture.componentInstance.toggleAction.onClick();

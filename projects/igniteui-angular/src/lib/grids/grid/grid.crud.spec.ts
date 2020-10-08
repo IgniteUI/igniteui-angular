@@ -139,7 +139,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     });
 
     it('should support updating a row through the grid API', () => {
-        spyOn(grid.onRowEdit, 'emit').and.callThrough();
+        spyOn(grid.rowEdit, 'emit').and.callThrough();
         const doneSpy = spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
         // Update non-existing row
@@ -167,7 +167,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             isAddRow: false
         };
 
-        (grid as IgxGridComponent).onRowEdit.pipe(first()).subscribe(e => {
+        (grid as IgxGridComponent).rowEdit.pipe(first()).subscribe(e => {
             expect(e).toEqual(args);
             expect(e.rowData).toBe(grid.dataView[0]);
             expect(e.rowData).toBe(e.oldValue);
@@ -176,7 +176,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.updateRow(args.newValue, 1);
         fix.detectChanges();
 
-        expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+        expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditDone.emit).toHaveBeenCalledWith(doneArgs);
 
@@ -189,7 +189,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     });
 
     it('should support updating a row through the grid API and event handler', () => {
-        spyOn(grid.onRowEdit, 'emit').and.callThrough();
+        spyOn(grid.rowEdit, 'emit').and.callThrough();
         spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
         const args: IGridEditEventArgs = {
@@ -202,7 +202,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             isAddRow: false
         };
 
-        (grid as IgxGridComponent).onRowEdit.pipe(first()).subscribe(e => {
+        (grid as IgxGridComponent).rowEdit.pipe(first()).subscribe(e => {
             expect(e).toEqual(args);
             expect(e.rowData).toBe(grid.dataView[0]);
             expect(e.rowData).toBe(e.oldValue);
@@ -221,17 +221,17 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.updateRow(666, 1, 'index');
         fix.detectChanges();
 
-        expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+        expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
         expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
 
-        // expect(grid.onRowEdit.emit).toHaveBeenCalledWith(args);
+        // expect(grid.rowEdit.emit).toHaveBeenCalledWith(args);
         expect(grid.rowEditDone.emit).toHaveBeenCalledWith(handlerUpdateArgs);
         expect(grid.rowList.first.cells.first.value).toEqual(777);
         expect(grid.data[0].index).toEqual(777);
     });
 
     it('should support updating a cell value through the grid API', () => {
-        spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        spyOn(grid.cellEdit, 'emit').and.callThrough();
         const doneSpy = spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
         // Update a non-existing cell
@@ -264,7 +264,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
         expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch('-100');
 
-        (grid as IgxGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+        (grid as IgxGridComponent).cellEdit.pipe(first()).subscribe(e => {
             expect(e).toEqual(args);
             expect(e.rowData).toBe(grid.dataView[0]);
             expect(e.rowData.index).toBe(e.oldValue);
@@ -273,7 +273,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.updateCell(200, 1, 'index');
         fix.detectChanges();
 
-        expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
+        expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
         expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
         expect(grid.cellEditDone.emit).toHaveBeenCalledWith(doneArgs);
 
@@ -285,7 +285,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     });
 
     it('should support updating a cell value through the grid API and event handler', () => {
-        spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        spyOn(grid.cellEdit, 'emit').and.callThrough();
         spyOn(grid.cellEditDone, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(0, 'index');
@@ -311,7 +311,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             owner: grid
         };
 
-        (grid as IgxGridComponent).onCellEdit.pipe(first()).subscribe(e => {
+        (grid as IgxGridComponent).cellEdit.pipe(first()).subscribe(e => {
             expect(e).toEqual(args);
         });
 
@@ -497,8 +497,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             [height]="null"
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
-            (onCellEdit)="editDone($event)"
-            (onRowEdit)="editDone($event)"
+            (cellEdit)="editDone($event)"
+            (rowEdit)="editDone($event)"
             [autoGenerate]="true"
             [primaryKey]="'index'">
         </igx-grid>

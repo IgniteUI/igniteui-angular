@@ -3,7 +3,7 @@
 </ng-template>
 
 <ng-template #dropdownInputTemplate>
-    <igx-input-group #group (mousedown)="mouseDown($event)">
+    <igx-input-group #group (mousedown)="mouseDown($event)" [suppressInputAutofocus]="true">
         <label igxLabel *ngIf="!labelDirective">Time</label>
         <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
         <igx-prefix (click)="openDialog(group.element.nativeElement)">
