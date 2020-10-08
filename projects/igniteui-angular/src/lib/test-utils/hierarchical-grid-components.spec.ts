@@ -230,8 +230,8 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
 })
 export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGridTestBaseComponent {
     @ViewChild('actionStrip1', { read: IgxActionStripComponent, static: true })
-    public actionStripRoot: IgxActionStripComponent; 
+    public actionStripRoot: IgxActionStripComponent;
 
     @ViewChild('actionStrip2', { read: IgxActionStripComponent, static: true })
-    public actionStripChild: IgxActionStripComponent; 
+    public actionStripChild: IgxActionStripComponent;
 }
