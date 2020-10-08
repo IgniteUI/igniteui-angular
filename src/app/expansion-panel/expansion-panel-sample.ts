@@ -1,4 +1,4 @@
-import { IgxExpansionPanelComponent, growVerIn, growVerOut, scaleInVerTop } from 'igniteui-angular';
+import { IgxExpansionPanelComponent, growVerIn, growVerOut, scaleInVerTop, IExpansionPanelEventArgs } from 'igniteui-angular';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 
@@ -83,7 +83,8 @@ export class ExpansionPanelSampleComponent implements OnInit {
     handleExpanded(event) {
         console.log(`I'm expanding!`, event);
     }
-    onInterraction(event) {
+    onInteraction(event: IExpansionPanelEventArgs) {
+        console.log(event.owner);
         console.log(`Header's touched!`, event);
     }
 

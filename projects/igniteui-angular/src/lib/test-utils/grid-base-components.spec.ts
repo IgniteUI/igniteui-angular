@@ -150,7 +150,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline"></igx-column-actions>
+    <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
