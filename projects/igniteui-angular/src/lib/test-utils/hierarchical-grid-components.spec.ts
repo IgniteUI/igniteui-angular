@@ -6,7 +6,8 @@ import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarc
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
-import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { IgxActionStripComponent } from '../action-strip/public_api';
+
 
 @Component({
     template: `
@@ -211,35 +212,26 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'"
-        [rowSelection]="'multiple'" [rowEditable]='true'>
-        <igx-column field="ID" ></igx-column>
-        <igx-column field="ChildLevels"></igx-column>
-        <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" #rowIsland [primaryKey]="'ID'" [rowSelection]="'single'">
-            <igx-column field="ID"> </igx-column>
-            <igx-column field="ChildLevels"></igx-column>
-            <igx-column field="ProductName"></igx-column>
-            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'none'">
-                <igx-column field="ID"></igx-column>
-                <igx-column field="ChildLevels"></igx-column>
-                <igx-column field="ProductName"></igx-column>
-            </igx-row-island>
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true" [rowEditable]='true'>
+        <igx-action-strip #actionStrip1>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
         </igx-row-island>
-        <igx-action-strip #actionStrip>
-        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
-    </igx-action-strip>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <igx-action-strip #actionStrip2>
+                <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+            </igx-action-strip>
+        </igx-row-island>
     </igx-hierarchical-grid>`
 })
-export class IgxHierarchicalGridEditActionsComponent {
-    public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
-    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
-    public actionStrip: IgxActionStripComponent;
-    constructor() {
-        // 3 level hierarchy
-        this.data = SampleTestData.generateHGridData(5, 3);
-    }
+export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGridTestBaseComponent {
+    @ViewChild('actionStrip1', { read: IgxActionStripComponent, static: true })
+    public actionStripRoot: IgxActionStripComponent;
+
+    @ViewChild('actionStrip2', { read: IgxActionStripComponent, static: true })
+    public actionStripChild: IgxActionStripComponent;
 }
