@@ -151,8 +151,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public columnSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false,
-        excludePositionTarget: true
+        closeOnOutsideClick: false
     };
 
     /**
@@ -161,8 +160,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public conditionSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: false,
-        excludePositionTarget: true
+        closeOnOutsideClick: false
     };
 
     /**
@@ -658,8 +656,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.cdr.detectChanges();
 
         this.columnSelectOverlaySettings.target = this.columnSelect.element;
+        this.columnSelectOverlaySettings.excludeFromOutsideClick = [this.columnSelect.element as HTMLElement];
         this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
         this.conditionSelectOverlaySettings.target = this.conditionSelect.element;
+        this.conditionSelectOverlaySettings.excludeFromOutsideClick = [this.conditionSelect.element as HTMLElement];
         this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy();
 
         if (!this.selectedColumn) {

@@ -45,7 +45,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _conditionsOverlaySettings: OverlaySettings = {
-        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -53,7 +52,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _operatorsOverlaySettings: OverlaySettings = {
-        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -175,11 +173,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
-    @HostListener('keydown.esc', ['$event'])
-    public onEscHandler(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        this.close();
+    @HostListener('keydown', ['$event'])
+    public onKeydownHandler(evt) {
+        if (evt.key === KEYS.ESCAPE || evt.key === KEYS.ESCAPE_IE ||
+            evt.ctrlKey && evt.shiftKey && evt.key.toLowerCase() === 'l') {
+                evt.preventDefault();
+                evt.stopPropagation();
+                this.close();
+        }
     }
 
     get disabled(): boolean {
@@ -260,8 +261,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
-            this.close();
+        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE ||
+            event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'l') {
+                this.close();
         }
     }
 
@@ -507,6 +509,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public toggleConditionsDropDown(target: any) {
         this._conditionsOverlaySettings.target = target;
+        this._conditionsOverlaySettings.excludeFromOutsideClick = [target as HTMLElement];
         this.dropDownConditions.toggle(this._conditionsOverlaySettings);
     }
 
@@ -515,6 +518,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public toggleOperatorsDropDown(eventArgs, index) {
         this._operatorsOverlaySettings.target = eventArgs.target.parentElement;
+        this._operatorsOverlaySettings.excludeFromOutsideClick = [eventArgs.target.parentElement as HTMLElement];
         this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
     }
 
