@@ -55,7 +55,7 @@ All notable changes for each version of this project will be documented in this 
         ```typescript
             const globalOverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Top);
         ```
-        - `createRelativeOverlaySettings` creates `OverlaySettings` with `AutoPositionStrategy`, `ConnectedPositioningStrategy` or `ElasticPositionStrategy`. Accepts target, strategy and position. The `target` is the attaching point or element for the component to show. The position strategy is a `RelativePositionStrategy` enumeration, which defaults to Auto. The position is a `RelativePosition` enumeration. Possible values are Above, Below, Left, Right and Default. The default option is `Default`, which positions the element below the target, left aligned.
+        - `createRelativeOverlaySettings` creates `OverlaySettings` with `AutoPositionStrategy`, `ConnectedPositioningStrategy` or `ElasticPositionStrategy`. Accepts target, strategy and position. The `target` is the attaching point or element for the component to show. The position strategy is a `RelativePositionStrategy` enumeration, which defaults to `Auto`. The position is a `RelativePosition` enumeration. Possible values are `Above`, `Below`, `Left`, `Right` and `Default`. The default option is `Default`, which positions the element below the target, left aligned.
         ```typescript
             const targetElement = this.button.nativeElement;
             const connectedOverlaySettings = IgxOverlayService.createRelativeOverlaySettings(
