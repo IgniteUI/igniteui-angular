@@ -2751,6 +2751,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = false;
 
         this.hideOverlays();
+        this.actionStrip?.hide();
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
             event: event,
