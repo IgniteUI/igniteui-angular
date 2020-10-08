@@ -23,6 +23,11 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
+    public formatOptions = {
+        timezone: '+0430',
+        format: 'longTime',
+        digitsInfo: '1.3-4'
+    };
 
     kk = false;
     pname = 'ProductName';

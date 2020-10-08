@@ -43,9 +43,12 @@ import {
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArguments } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
+
+const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEFAULT_DIGITS_INFO = '1.0-3';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1185,6 +1188,38 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     get visibleWhenCollapsed(): boolean {
         return this._visibleWhenCollapsed;
+    }
+
+    private _formatOptions: IColumnPipeArguments = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
+    /**
+     * @remarks
+     * Provide parameters for DatePipe and DecimalPipe to customize the display format for date and numeric columns.
+     * Accepts an `IColumnPipeArguments` object with any of the `format`, `timezone` and `digitsInfo` properties.
+     * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
+     * @param IColumnPipeArguments object.
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    /**
+     * Sets the formatOptions.
+     * @example
+     * ```typescript
+     * const formatOptions: IColumnPipeArguments = {
+     *      format: 'longDate',
+     *      timezone: 'UTC'
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" formatOptions="formatOptions"></igx-column>
+     * <igx-column dataType="number" formatOptions="{ digitsInfo: '1.1-2' }"></igx-column>
+     * ```
+     */
+    set formatOptions(value: IColumnPipeArguments) {
+        this._formatOptions = Object.assign(this._formatOptions, value);
+    }
+    get formatOptions(): IColumnPipeArguments {
+        return this._formatOptions;
     }
 
     /**

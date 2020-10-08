@@ -1,4 +1,5 @@
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { IColumnPipeArguments } from '../columns/interfaces';
 
 export interface ISummaryExpression {
     fieldName: string;
@@ -151,28 +152,30 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en',
+        formatOptions: IColumnPipeArguments = {}):
+    IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data))
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), formatOptions.digitsInfo)
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data))
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), formatOptions.digitsInfo)
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data))
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), formatOptions.digitsInfo)
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data))
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), formatOptions.digitsInfo)
         });
         return result;
     }
@@ -239,18 +242,19 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en',
+        formatOptions: IColumnPipeArguments = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DatePipe(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data))
+            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), formatOptions.format, formatOptions.timezone)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data))
+            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), formatOptions.format, formatOptions.timezone)
         });
         return result;
     }
