@@ -974,7 +974,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     // GroupBy + RowSelectors
-    it('should render row selectors in group row.', fakeAsync(() => {
+    it('should render row selectors in group row and remove them when the selection mode is set to none.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -1000,6 +1000,15 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
         }
         GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
+
+        grid.rowSelection = GridSelectionMode.none;
+        fix.detectChanges();
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
+        }
+        for (const dRow of dataRows) {
+            expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeNull();
+        }
     }));
 
     it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
@@ -1343,6 +1352,49 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('true');
             expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
 
+        }));
+
+    it('edit selected row so it goes to another group where all rows are selected as well. The group row checkbox of the new group that the record becomes part of should be checked.',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableEditing = true;
+            fix.componentInstance.width = '1200px';
+            grid.primaryKey = 'ID';
+            grid.columnWidth = '200px';
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            let grRow = grid.groupsRowList.toArray()[0];
+
+            grid.selectRowsInGroup(grRow.groupRow);
+            grid.selectRows([5]);
+            fix.detectChanges();
+
+            const cell = grid.getCellByKey(5, 'ProductName');
+            cell.column.editable = true;
+            fix.detectChanges();
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+            expect(grid.selectedRows.length).toEqual(3);
+
+            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+            const input = editCellDom.query(By.css('input'));
+
+            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+            fix.detectChanges();
+
+            expect(grRow.groupRow.records.length).toEqual(3);
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
     // GroupBy + Resizing
