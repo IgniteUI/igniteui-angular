@@ -20,14 +20,21 @@ $new-card-theme: igx-card-theme(
 
 .settings{
     background-color: #444444;
-    flex: 0 0 10%;
+    flex: 0 0 15%;
     align-content: center;
     padding: 0.5%;
+}
+
+.igx-radio{
+    display: block;
 }
 
 .outlet{
     background-color: #444444;
     flex: 0 0 60%;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
 }
 
 .sample-dropdown{

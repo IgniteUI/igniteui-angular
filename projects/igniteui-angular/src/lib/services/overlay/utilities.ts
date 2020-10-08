@@ -34,8 +34,8 @@ export type RelativePositionStrategy = (typeof RelativePositionStrategy)[keyof t
 export const RelativePosition = mkenum({
     Above: 'above',
     Below: 'below',
-    Left: 'left',
-    Right: 'right',
+    Before: 'before',
+    After: 'after',
     Default: 'default'
 });
 export type RelativePosition = (typeof RelativePosition)[keyof typeof RelativePosition];

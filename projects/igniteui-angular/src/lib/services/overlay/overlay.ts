@@ -201,8 +201,8 @@ export class IgxOverlayService implements OnDestroy {
                     verticalStartPoint: VerticalAlignment.Top,
                     horizontalDirection: HorizontalAlignment.Center,
                     verticalDirection: VerticalAlignment.Top,
-                    openAnimation: scaleInVerTop,
-                    closeAnimation: scaleOutVerTop,
+                    openAnimation: scaleInVerBottom,
+                    closeAnimation: scaleOutVerBottom,
                 };
                 break;
             case RelativePosition.Below:
@@ -211,28 +211,28 @@ export class IgxOverlayService implements OnDestroy {
                     verticalStartPoint: VerticalAlignment.Bottom,
                     horizontalDirection: HorizontalAlignment.Center,
                     verticalDirection: VerticalAlignment.Bottom,
-                    openAnimation: scaleInVerBottom,
-                    closeAnimation: scaleOutVerBottom,
+                    openAnimation: scaleInVerTop,
+                    closeAnimation: scaleOutVerTop
                 };
                 break;
-            case RelativePosition.Right:
+            case RelativePosition.After:
                 positionSettings = {
                     horizontalStartPoint: HorizontalAlignment.Right,
                     verticalStartPoint: VerticalAlignment.Middle,
                     horizontalDirection: HorizontalAlignment.Right,
                     verticalDirection: VerticalAlignment.Middle,
-                    openAnimation: scaleInHorRight,
-                    closeAnimation: scaleOutHorRight
+                    openAnimation: scaleInHorLeft,
+                    closeAnimation: scaleOutHorLeft
                 };
                 break;
-            case RelativePosition.Left:
+            case RelativePosition.Before:
                 positionSettings = {
                     horizontalStartPoint: HorizontalAlignment.Left,
                     verticalStartPoint: VerticalAlignment.Middle,
                     horizontalDirection: HorizontalAlignment.Left,
                     verticalDirection: VerticalAlignment.Middle,
-                    openAnimation: scaleInHorLeft,
-                    closeAnimation: scaleOutHorLeft
+                    openAnimation: scaleInHorRight,
+                    closeAnimation: scaleOutHorRight
                 };
                 break;
             case RelativePosition.Default:

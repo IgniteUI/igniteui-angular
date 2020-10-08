@@ -35,7 +35,7 @@
         </div>
         <div class="sample-dropdown">
             <button #button igxButton="raised" igxRipple igxDrag (click)="toggleDropDown()"
-                [style.position]="'absolute'">Toggle</button>
+                [style.position]="'absolute'" (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
             <igx-drop-down>
                 <igx-drop-down-item *ngFor="let item of items">
                     <div class="igx-drop-down__item-template">
