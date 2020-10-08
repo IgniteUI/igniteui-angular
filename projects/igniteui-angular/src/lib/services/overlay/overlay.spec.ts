@@ -3688,6 +3688,55 @@ describe('igxOverlay', () => {
                 });
         }));
 
+        it('Should remain opened when click is on an element contained in the excludeFromOutsideClick collection', fakeAsync(async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const overlay = fixture.componentInstance.overlay;
+            const divElement = fixture.componentInstance.divElement.nativeElement as HTMLElement;
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new GlobalPositionStrategy(),
+                excludeFromOutsideClick: [divElement]
+            };
+
+            spyOn(overlay, 'show').and.callThrough();
+            spyOn(overlay.onClosing, 'emit');
+            spyOn(overlay.onClosed, 'emit');
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+            expect(overlay.show).toHaveBeenCalledTimes(1);
+
+            divElement.click();
+            tick();
+
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(0);
+
+            overlay.hideAll();
+            tick();
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+
+            overlaySettings.excludeFromOutsideClick = [];
+            tick();
+            const callId = overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+
+            expect(overlay.show).toHaveBeenCalledTimes(2);
+            divElement.click();
+            tick();
+
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(2);
+            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(2);
+            expect(overlay.onClosing.emit)
+                .toHaveBeenCalledWith({
+                    id: callId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
+                    event: new MouseEvent('click')
+                });
+        }));
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {

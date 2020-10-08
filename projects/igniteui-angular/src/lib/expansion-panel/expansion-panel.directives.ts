@@ -1,7 +1,7 @@
 import { Directive, HostBinding } from '@angular/core';
 
 /**
- * @hidden
+ * @hidden @internal
  */
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -13,7 +13,7 @@ export class IgxExpansionPanelTitleDirective {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -25,7 +25,7 @@ export class IgxExpansionPanelDescriptionDirective {
 }
 
 /**
- * @hidden
+ * @hidden @internal
  */
 @Directive({
     // tslint:disable-next-line:directive-selector

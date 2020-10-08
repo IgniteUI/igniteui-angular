@@ -120,7 +120,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
+    <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productHidable) }
     </div>`
 })
@@ -150,7 +150,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline"></igx-column-actions>
+    <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
@@ -162,7 +162,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
 @Component({
     template: `<div>
-        <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
+        <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
         ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     </div>`
 })
@@ -210,7 +210,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 
 @Component({
     template: `<div>
-    <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline"></igx-column-actions>
+    <igx-column-actions igxColumnPinning [grid]="grid" *ngIf="showInline"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
