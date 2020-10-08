@@ -12,6 +12,7 @@
       "resize-observer-polyfill",
       "igniteui-trial-watermark",
       "lodash.merge",
+      "uuid",
       "@igniteui/material-icons-extended"
     ]
 }

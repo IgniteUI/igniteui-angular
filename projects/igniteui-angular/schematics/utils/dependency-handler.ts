@@ -30,6 +30,7 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         { name: '@types/hammerjs', target: PackageTarget.DEV },
         { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
         { name: 'lodash.merge', target: PackageTarget.NONE },
+        { name: 'uuid', target: PackageTarget.NONE },
         { name: 'web-animations-js', target: PackageTarget.REGULAR },
         { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
         // peerDependencies

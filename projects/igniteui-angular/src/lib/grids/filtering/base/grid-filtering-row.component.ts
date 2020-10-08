@@ -45,7 +45,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _conditionsOverlaySettings: OverlaySettings = {
-        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -53,7 +52,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     };
 
     private _operatorsOverlaySettings: OverlaySettings = {
-        excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -511,6 +509,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public toggleConditionsDropDown(target: any) {
         this._conditionsOverlaySettings.target = target;
+        this._conditionsOverlaySettings.excludeFromOutsideClick = [target as HTMLElement];
         this.dropDownConditions.toggle(this._conditionsOverlaySettings);
     }
 
@@ -519,6 +518,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public toggleOperatorsDropDown(eventArgs, index) {
         this._operatorsOverlaySettings.target = eventArgs.target.parentElement;
+        this._operatorsOverlaySettings.excludeFromOutsideClick = [eventArgs.target.parentElement as HTMLElement];
         this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
     }
 

@@ -258,8 +258,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: true,
-        excludePositionTarget: true
+        closeOnOutsideClick: true
     };
 
     /**
@@ -310,6 +309,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      */
     public exportClicked() {
         this._overlaySettings.target = this.exportButton.nativeElement;
+        this._overlaySettings.excludeFromOutsideClick = [this.exportButton.nativeElement as HTMLElement];
         this._overlaySettings.outlet = this.grid.outlet;
         this.exportDropdown.toggle(this._overlaySettings);
     }
