@@ -253,8 +253,8 @@
 <ng-template #emptyFilteredGrid>
     <span class="igx-grid__tbody-message">
         <span>{{emptyFilteredGridMessage}}</span>
-        <span *ngIf='rowEditable && dataView.length === 0'>
-            <ng-container *ngTemplateOutlet='addRowEmptyTemplate'></ng-container>
+        <span *ngIf='showAddButton'>
+            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
         </span>
     </span>
 </ng-template>
@@ -262,7 +262,7 @@
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">
         <span>{{emptyGridMessage}}</span>
-        <span *ngIf='rowEditable && dataView.length === 0'>
+        <span *ngIf='showAddButton'>
             <ng-container *ngTemplateOutlet='addRowEmptyGridTemplate || defaultAddRowEmptyTemplate'></ng-container>
         </span>
     </span>

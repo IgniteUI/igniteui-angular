@@ -3919,6 +3919,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    get showAddButton() {
+        return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
+     }
+
+    /**
+     * @hidden
+     * @internal
+     */
     get showDragIcons(): boolean {
         return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
