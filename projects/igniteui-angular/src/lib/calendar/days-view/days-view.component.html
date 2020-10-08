@@ -24,7 +24,7 @@
         [attr.aria-selected]="isSelected(day)"
         role="gridcell"
         [attr.aria-disabled]="isDateDisabled(day.date)"
-        [attr.aria-label]="day.date.toDateString()"
+        [attr.aria-label]="isFirstInRange(day) ? day.date.toDateString() + ', ' + 'Range start' : isLastInRange(day) ? day.date.toDateString() + ', ' +  'Range End'  : day.date.toDateString()"
         [date]="day"
         [selection]="selection"
         [selected]="isSelected(day)"
@@ -40,5 +40,5 @@
         (onDateSelection)="selectDay($event)">
         {{ formattedDate(day.date) }}
     </igx-day-item>
-
 </div>
+

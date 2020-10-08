@@ -228,32 +228,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     public callback: (next) => void;
 
-    /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
-     * The default aria-labelledby attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.aria-labelledby')
-    public ariaLabelledby = 'igx-aria-calendar-title-month igx-aria-calendar-title-year';
-
-    /**
-     * The default aria-labelledby attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    // @HostBinding('attr.role')
-    // public role = 'application';
 
     /**
      * The default css class applied to the component.

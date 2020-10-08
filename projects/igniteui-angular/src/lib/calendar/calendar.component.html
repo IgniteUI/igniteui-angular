@@ -4,15 +4,13 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-    <div
-        aria-live="polite"
-        aria-atomic="true"
-        aria-labelledby="igx-aria-calendar-title-month igx-aria-calendar-title-year">
-
+        <span class="igx-calendar__header-is-off-screen" aria-live="polite">
+            Selected month is {{(getViewDate(obj.index) | date: 'LLLL yyyy')}}
+        </span>
         <span id="igx-aria-calendar-month-button"
             tabindex="0"
             role="button"
-            [attr.aria-label]="'(' + (getViewDate(obj.index) | date: 'LLLL') + ')' + SelectMonthAriaLabel"
+            [attr.aria-label]="(getViewDate(obj.index) | date: 'LLLL') + ' ' + SelectMonthAriaLabel"
             #monthsBtn
             (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)"
             (click)="onActiveViewYear(getViewDate(obj.index), obj.index, $event)"
@@ -23,15 +21,13 @@
         <span id="igx-aria-calendar-year-button"
             tabindex="0"
             role="button"
-            [attr.aria-label]="'(' + (getViewDate(obj.index) | date: 'yyyy') + ')' + SelectYearAriaLabel"
+            [attr.aria-label]="(getViewDate(obj.index) | date: 'yyyy') + ' ' + SelectYearAriaLabel"
             #yearsBtn
             (keydown)="onActiveViewDecadeKB($event, getViewDate(obj.index), obj.index)"
             (click)="onActiveViewDecade(getViewDate(obj.index), obj.index)"
             class="igx-calendar-picker__date">
             {{ formattedYear(getViewDate(obj.index)) }}
         </span>
-
-    </div>
 </ng-template>
 
 <header
@@ -49,9 +45,12 @@
     </h2>
 </header>
 
-<div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
+<div *ngIf="isDefaultView"  class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
     (swipeleft)="nextMonth()">
-    <section tabindex="0" class="igx-calendar-picker" aria-label="Single Calendar navigation">
+    <section
+            tabindex="0"
+            class="igx-calendar-picker"
+            [attr.aria-label]="'Calendar component navigation'">
         <div
             tabindex="0"
             class="igx-calendar-picker__prev"

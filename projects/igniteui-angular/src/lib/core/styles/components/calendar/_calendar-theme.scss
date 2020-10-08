@@ -1072,6 +1072,20 @@
             visibility: hidden;
         }
     }
+
+    %calendar__header-is-off-screen {
+        position: absolute!important;
+        border: none!important;
+        height: 1px!important;
+        width: 1px!important;
+        left: 0!important;
+        top: 0!important;
+        overflow: hidden!important;
+        padding: 0!important;
+        margin: 0 !important;
+        user-select: none;
+        pointer-events: none;
+    }
 }
 
 /// Adds typography styles for the igx-calendar component.
