@@ -8,7 +8,7 @@
     >
 </ng-template>
 <ng-template #defaultCell>
-    <div
+    <div *ngIf="column.dataType !== 'boolean'"
         igxTextHighlight
         class="igx-grid__td-text"
         style="pointer-events: none;"
