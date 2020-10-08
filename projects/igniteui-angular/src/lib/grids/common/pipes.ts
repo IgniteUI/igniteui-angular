@@ -207,6 +207,9 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
         actionFilter: (value: IgxColumnComponent, index: number, array: IgxColumnComponent[]) => boolean,
         pipeTrigger: number
     ): IgxColumnComponent[] {
+        if (!collection) {
+            return collection;
+        }
         let copy = collection.slice(0);
         if (copy.length && copy[0].grid.hasColumnLayouts) {
             copy = copy.filter(c => c.columnLayout);
@@ -229,6 +232,9 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
     public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
+        if (!collection) {
+            return collection;
+        }
         let copy = collection.slice(0);
         if (filterCriteria && filterCriteria.length > 0) {
             const filterFunc = (c) => {
