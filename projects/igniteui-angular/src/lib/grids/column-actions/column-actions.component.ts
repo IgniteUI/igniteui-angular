@@ -4,16 +4,19 @@ import {
     Input,
     ViewChildren,
     QueryList,
-    DoCheck,
-    KeyValueDiffers,
     EventEmitter,
-    Output
+    Output,
+    IterableDiffers,
+    IterableDiffer,
+    DoCheck
 } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxCheckboxComponent, IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
 import { IColumnToggledEventArgs } from '../common/events';
+import { IgxGridBaseDirective } from '../grid-base.directive';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -27,13 +30,11 @@ let NEXT_ID = 0;
     templateUrl: './column-actions.component.html'
 })
 export class IgxColumnActionsComponent implements DoCheck {
+    protected _differ: IterableDiffer<any> | null = null;
 
-
-    /* todo
-        <!-- (onColumnVisibilityChanged)="onVisibilityChanged($event)" -->
-    */
-
-    private _columnDifferMap = new Map<IgxColumnComponent, any>();
+    constructor (private differs: IterableDiffers) {
+        this._differ = this.differs.find([]).create(this.trackChanges);
+    }
 
     /**
      * @hidden @internal
@@ -46,35 +47,22 @@ export class IgxColumnActionsComponent implements DoCheck {
     public filteredColumns: IgxColumnComponent[] = [];
 
     /**
-     * @hidden @internal
-     */
-    private _columns: IgxColumnComponent[] = [];
-    /**
      * Gets the grid columns to provide an action for.
+     * @deprecated
      * @example
      * ```typescript
      * let gridColumns = this.columnActions.columns;
      * ```
      */
+    @DeprecateProperty(`Deprecated. Use 'grid' input instead.`)
     @Input()
     public get columns() {
-        return this._columns;
+        return this.grid?.columns;
     }
-    /**
-     * Sets the grid columns to provide an action for.
-     * @example
-     * ```html
-     * <igx-column-actions [columns]="grid.columns"></igx-column-actions>
-     * ```
-     */
-    public set columns(value: IgxColumnComponent[]) {
-        if (value) {
-            this._columns = value;
-            this._columnDifferMap.clear();
-            this._columns.forEach(col => {
-                this._columnDifferMap.set(col, this._differs.find(col).create());
-            });
-            this._pipeTrigger++;
+
+    public set columns(value) {
+        if (value && value.length > 0) {
+            this.grid = value[0].grid;
         }
     }
 
@@ -328,11 +316,14 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
 
     /**
-     * @hidden @internal
+     * Gets/Sets the grid to provide column actions for.
+     * @example
+     * ```typescript
+     * let grid = this.columnActions.grid;
+     * ```
      */
-    public get grid() {
-        return this.actionableColumns[0]?.grid ?? null;
-    }
+    @Input()
+    public grid: IgxGridBaseDirective;
 
     /**
      * @hidden @internal
@@ -365,18 +356,23 @@ export class IgxColumnActionsComponent implements DoCheck {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
-    ngDoCheck() {
-        for (const [col, colDiffer] of this._columnDifferMap) {
-            const colDiffers = colDiffer.diff(col);
-            if (colDiffers) {
+    public trackChanges = (index, col) => {
+        return col.field + '_' + this.actionsDirective.actionEnabledColumnsFilter(col, index, []);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngDoCheck() {
+        if (this._differ) {
+            const changes = this._differ.diff(this.columns);
+            if (changes) {
                 this._pipeTrigger++;
             }
         }
     }
-
-    constructor(private _differs: KeyValueDiffers) { }
 
     /**
      * Unchecks all columns and performs the appropriate action.
