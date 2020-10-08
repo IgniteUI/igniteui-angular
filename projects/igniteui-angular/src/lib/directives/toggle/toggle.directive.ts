@@ -25,7 +25,14 @@ import {
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
-import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
+
+export interface ToggleViewEventArgs extends IBaseEventArgs {
+    /** Id of the toggle view */
+    id: string;
+}
+
+export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs { }
 
 @Directive({
     exportAs: 'toggle',
@@ -60,7 +67,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onOpened = new EventEmitter();
+    public onOpened = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Emits an event before the toggle container is opened.
@@ -79,7 +86,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<ToggleViewCancelableEventArgs>();
 
     /**
      * Emits an event after the toggle container is closed.
@@ -98,7 +105,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosed = new EventEmitter();
+    public onClosed = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Emits an event before the toggle container is closed.
@@ -117,7 +124,26 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<ToggleViewCancelableEventArgs>();
+
+    /**
+     * Emits an event after the toggle element is appended to the overlay container.
+     *
+     * ```typescript
+     * onAppended() {
+     *  alert("Content appended!");
+     * }
+     * ```
+     *
+     * ```html
+     * <div
+     *   igxToggle
+     *   (onAppended)='onToggleAppended()'>
+     * </div>
+     * ```
+     */
+    @Output()
+    public onAppended = new EventEmitter<ToggleViewEventArgs>();
 
     private _collapsed = true;
     /**
@@ -172,25 +198,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Emits an event after the toggle element is appended to the overlay container.
-     *
-     * ```typescript
-     * onAppended() {
-     *  alert("Content appended!");
-     * }
-     * ```
-     *
-     * ```html
-     * <div
-     *   igxToggle
-     *   (onAppended)='onToggleAppended()'>
-     * </div>
-     * ```
-     */
-    @Output()
-    public onAppended = new EventEmitter();
-
-    /**
      * Opens the toggle.
      *
      * ```typescript
@@ -214,7 +221,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._collapsed = false;
         this.cdr.detectChanges();
 
-        const openEventArgs: CancelableEventArgs = { cancel: false };
+        const openEventArgs: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
         this.onOpening.emit(openEventArgs);
         if (openEventArgs.cancel) {
             this._collapsed = true;
@@ -225,32 +232,34 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.unsubscribe();
 
         this._overlayAppendedSub = this.overlayService.onAppended.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.onAppended.emit();
+            const appendedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.onAppended.emit(appendedEventArgs);
         });
 
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.onOpened.emit();
+            const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.onOpened.emit(openedEventArgs);
         });
 
         this._overlayClosingSub = this.overlayService
-        .onClosing
-        .pipe(...this._overlaySubFilter)
-        .subscribe((e: OverlayClosingEventArgs) => {
-            const eventArgs: CancelableBrowserEventArgs = { cancel: false, event: e.event };
-            this.onClosing.emit(eventArgs);
-            e.cancel = eventArgs.cancel;
+            .onClosing
+            .pipe(...this._overlaySubFilter)
+            .subscribe((e: OverlayClosingEventArgs) => {
+                const eventArgs: ToggleViewCancelableEventArgs = { cancel: false, event: e.event, owner: this, id: this._overlayId };
+                this.onClosing.emit(eventArgs);
+                e.cancel = eventArgs.cancel;
 
-            //  in case event is not canceled this will close the toggle and we need to unsubscribe.
-            //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
-            //  onClosed was fired we will end with calling onClosing more than once
-            if (!e.cancel) {
-                this.clearSubscription(this._overlayClosingSub);
-            }
-        });
+                //  in case event is not canceled this will close the toggle and we need to unsubscribe.
+                //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
+                //  onClosed was fired we will end with calling onClosing more than once
+                if (!e.cancel) {
+                    this.clearSubscription(this._overlayClosingSub);
+                }
+            });
 
         this._overlayClosedSub = this.overlayService.onClosed
-        .pipe(...this._overlaySubFilter)
-        .subscribe(this.overlayClosed);
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosed);
 
         this.overlayService.show(this._overlayId, overlaySettings);
     }
@@ -295,6 +304,16 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public get isClosing() {
         const info = this.overlayService.getOverlayById(this._overlayId);
         return info ? info.closeAnimationPlayer : false;
+    }
+
+    /**
+     * Returns the id of the overlay the content is rendered in.
+     * ```typescript
+     * this.myToggle.overlayId;
+     * ```
+     */
+    public get overlayId() {
+        return this._overlayId;
     }
 
     /**
@@ -343,7 +362,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.cdr.detectChanges();
         delete this._overlayId;
         this.unsubscribe();
-        this.onClosed.emit();
+        const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+        this.onClosed.emit(closedEventArgs);
     }
 
     private unsubscribe() {

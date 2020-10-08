@@ -80,6 +80,8 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
     }
+
+    @HostBinding('class.igx-grid__tr--new')
     @Input()
     public get addRow(): any {
         return this._addRow;
@@ -205,6 +207,20 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     get pinnedColumns(): IgxColumnComponent[] {
         return this.grid.pinnedColumns;
+    }
+
+    /**
+     * @hidden
+     */
+    public get isRoot(): boolean {
+        return true;
+    }
+
+    /**
+     * @hidden
+     */
+    public get hasChildren(): boolean {
+        return false;
     }
 
     /**
@@ -473,5 +489,17 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const defaultDragIndicatorCssClass = 'igx-grid__drag-indicator';
         const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
         return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
+    }
+
+    /**
+     * Spawns the add row UI for the specific row.
+     * @example
+     * ```typescript
+     * const row = this.grid1.getRowByIndex(1);
+     * row.beginAddRow();
+     * ```
+     */
+    public beginAddRow() {
+        this.grid.beginAddRowByIndex(this.rowID, this.index);
     }
 }

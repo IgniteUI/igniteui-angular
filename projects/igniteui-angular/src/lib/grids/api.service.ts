@@ -486,7 +486,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
-    public addRowToData(rowData: any) {
+    public addRowToData(rowData: any, parentRowID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
