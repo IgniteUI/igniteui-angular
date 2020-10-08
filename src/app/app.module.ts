@@ -87,6 +87,7 @@ import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-dow
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
+import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
@@ -171,6 +172,7 @@ const components = [
     NavdrawerSampleComponent,
     OverlaySampleComponent,
     OverlayAnimationSampleComponent,
+    OverlayPresetsSampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
