@@ -4336,6 +4336,33 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
+
+        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', fakeAsync(() => {
+            const column = grid.getColumnByName('AnotherField');
+            expect(column.filteringIgnoreCase).toBeTrue();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+        }));
+
+        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
+            const column = grid.getColumnByName('AnotherField');
+            column.filteringIgnoreCase = false;
+            expect(column.filteringIgnoreCase).toBeFalse();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
+        }));
     });
 
     describe(null, () => {
