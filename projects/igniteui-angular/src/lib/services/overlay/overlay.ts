@@ -124,6 +124,7 @@ export class IgxOverlayService implements OnDestroy {
      * Creates overlay settings with global or container position strategy and preset position settings
      * @param position Preset position settings. Default position is 'center'
      * @param outlet The outlet container to attach the overlay to
+     * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
      */
     public static createAbsoluteOverlaySettings(
         position?: AbsolutePosition, outlet?: IgxOverlayOutletDirective | ElementRef): OverlaySettings {
@@ -144,6 +145,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param target Attaching target for the component to show
      * @param strategy The relative position strategy to be applied to the overlay settings. Default is Auto positioning strategy.
      * @param position Preset position settings. By default the element is positioned below the target, left aligned.
+     * @returns Non-modal overlay settings based on the provided target, strategy and position.
      */
     public static createRelativeOverlaySettings(
         target: Point | HTMLElement,
