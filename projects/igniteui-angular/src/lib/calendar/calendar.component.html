@@ -45,7 +45,7 @@
 
     <div style="display: flex"
         [@animateChange]="animationAction"
-        (@animateChange.done)="animationDone($event)" (pointerup)="$event.stopPropagation()" >
+        (@animateChange.done)="animationDone($event)">
         <igx-days-view *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;" [changeDaysView]="true" #days
                 [selection]="selection"
                 [locale]="locale"

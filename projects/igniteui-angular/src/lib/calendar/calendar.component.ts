@@ -934,8 +934,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
-    @HostListener('document:pointerup')
-    public pointerUp() {
+    @HostListener('document:click')
+    public outSideClick() {
         this.resetActiveDate();
     }
 
