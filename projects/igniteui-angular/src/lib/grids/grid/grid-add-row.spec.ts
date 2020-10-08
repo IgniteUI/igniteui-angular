@@ -14,6 +14,11 @@ import { IgxActionStripModule } from '../../action-strip/action-strip.module';
 import { DefaultGridMasterDetailComponent } from './grid.master-detail.spec';
 import { ColumnLayoutTestComponent } from './grid.multi-row-layout.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { TransactionType } from '../../services/public_api';
+
 
 describe('IgxGrid - Row Adding #grid', () => {
         const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -26,7 +31,9 @@ describe('IgxGrid - Row Adding #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent,
-                ColumnLayoutTestComponent
+                ColumnLayoutTestComponent,
+                DefaultGridMasterDetailComponent,
+                IgxGridRowEditingTransactionComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -102,6 +109,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             // No much space between the row and the banner
             expect(addRowTop - bannerBottom).toBeLessThan(2);
         });
+
         it('Should be able to enter add row mode on Alt + plus key.', () => {
             GridFunctions.focusFirstCell(fixture);
             fixture.detectChanges();
@@ -113,6 +121,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(addRow.addRow).toBeTrue();
 
         });
+
         it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
             GridFunctions.focusFirstCell(fixture);
             fixture.detectChanges();
@@ -124,6 +133,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(banner).toBeNull();
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
+
         it('Should not be able to enter add row mode when rowEditing is disabled', () => {
             grid.rowEditable = false;
             fixture.detectChanges();
@@ -201,15 +211,45 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should emit all grid editing events as per row editing specification', () => {
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            // spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+            expect(grid.cellEditEnter.emit).toHaveBeenCalled();
+            expect(grid.rowEditEnter.emit).toHaveBeenCalled();
+
+            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'aaa');
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fixture.detectChanges();
+
+            expect(grid.cellEditDone.emit).toHaveBeenCalled();
+            // Remove comments when editing events merge in master
+            // expect(grid.rowEditDone.emit).toHaveBeenCalled();
         });
 
         it('Should generate correct row ID based on the primary column type', () => {
+            const column = grid.columns.find(col => col.field === grid.primaryKey);
+            const type = column.dataType;
 
-        });
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
 
-        it('Should correctly add new row as last row', () => {
-
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+            const cell = newRow.cells.find(c => c.column === column);
+            expect(typeof(cell.value)).toBe(type);
         });
     });
 
@@ -223,23 +263,77 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode and commit on clicking DONE button in the overlay', () => {
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            let newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fixture);
+            doneButtonElement.click();
+            fixture.detectChanges();
+
+            newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeFalse();
+            expect(grid.data.length).toBe(dataLength + 1);
         });
 
         it('Should exit add row mode and discard on clicking CANCEL button in the overlay', () => {
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            let newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
+            cancelButtonElement.click();
+            fixture.detectChanges();
+
+            newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeFalse();
+            expect(grid.data.length).toBe(dataLength);
         });
 
         it('Should exit add row mode and discard on ESC KEYDOWN', () => {
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            let newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
+            fixture.detectChanges();
+
+            newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeFalse();
+            expect(grid.data.length).toBe(dataLength);
         });
 
         it('Should exit add row mode and commit on ENTER KEYDOWN.', () => {
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            let newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fixture.detectChanges();
+
+            newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeFalse();
+            expect(grid.data.length).toBe(dataLength + 1);
         });
     });
 
-    describe('Row Adding - Paging and MRL tests', () => {
+    describe('Row Adding - Paging tests', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(IgxAddRowComponent);
             fixture.detectChanges();
@@ -248,11 +342,39 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should preserve the changes after page navigation', () => {
+            const dataLength = grid.data.length;
+            grid.paging = true;
+            grid.perPage = 5;
+            fixture.detectChanges();
 
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            GridFunctions.navigateToLastPage(grid.nativeElement);
+            fixture.detectChanges();
+            expect(grid.data.length).toBe(dataLength + 1);
+            const addedRow = grid.data[grid.data.length - 1];
+            expect(addedRow).toBe(grid.rowList.last.rowData);
         });
 
         it('Should save changes when changing page count', () => {
+            const dataLength = grid.data.length;
+            grid.paging = true;
+            grid.perPage = 5;
+            fixture.detectChanges();
 
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            const select = GridFunctions.getGridPageSelectElement(fixture);
+            select.click();
+            fixture.detectChanges();
+            const selectList = fixture.debugElement.query(By.css('.igx-drop-down__list-scroll'));
+            selectList.children[2].nativeElement.click();
+            fixture.detectChanges();
+            expect(grid.data.length).toBe(dataLength + 1);
         });
     });
 
@@ -265,16 +387,61 @@ describe('IgxGrid - Row Adding #grid', () => {
             actionStrip = fixture.componentInstance.actionStrip;
         }));
 
-        it('Should exit add row mode on filter applied', () => {
+        it('Should exit add row mode on filter applied and discard', () => {
+            spyOn(grid, 'endEdit').and.callThrough();
 
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            grid.filter('CompanyName', 'al', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fixture.detectChanges();
+
+            expect(grid.endEdit).toHaveBeenCalled();
+            expect(grid.data.length).toBe(dataLength);
         });
 
         it('Filtering should consider newly added rows', () => {
+            grid.filter('CompanyName', 'al', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fixture.detectChanges();
+            expect(grid.dataView.length).toBe(4);
 
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'Alan');
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.dataView.length).toBe(5);
         });
 
         it('Should not show the action strip "Show" button if added row is filtered out', () => {
+            grid.filter('CompanyName', 'al', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fixture.detectChanges();
 
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'Xuary');
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.dataView.length).toBe(4);
+            expect(grid.addRowSnackbar.actionText).toBe('');
         });
     });
 
@@ -288,15 +455,44 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode and discard on sorting', () => {
+            spyOn(grid, 'endEdit').and.callThrough();
 
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            grid.sort({
+                fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            fixture.detectChanges();
+
+            expect(grid.data.length).toBe(dataLength);
+            expect(grid.endEdit).toHaveBeenCalled();
         });
 
         it('Sorting should consider newly added rows', () => {
+            grid.sort({
+                fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            fixture.detectChanges();
 
-        });
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
 
-        it('Should go to correct row via the the action strip "Show" button when row is added in sorted grid', () => {
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
 
+            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'Azua');
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(4, 'CompanyName').value).toBe('Azua');
         });
     });
 
@@ -308,8 +504,18 @@ describe('IgxGrid - Row Adding #grid', () => {
             gridContent = GridFunctions.getGridContent(fixture);
         }));
 
-        it('Should collapse expanded detail view before spawning add row UI', () => {
+       it('Should collapse expanded detail view before spawning add row UI', () => {
+            grid.rowEditable = true;
+            fixture.detectChanges();
+            const row = grid.rowList.first;
+            grid.expandRow(row.rowID);
+            fixture.detectChanges();
+            expect(row.expanded).toBeTrue();
 
+            row.beginAddRow();
+            fixture.detectChanges();
+            expect(row.expanded).toBeFalse();
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
         });
     });
 
@@ -318,11 +524,23 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture = TestBed.createComponent(ColumnLayoutTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            gridContent = GridFunctions.getGridContent(fixture);
         }));
 
         it('Should render adding row with correct multi row layout', () => {
+            grid.rowEditable = true;
+            fixture.detectChanges();
+            const gridFirstRow = grid.rowList.first;
+            const firstRowCells = gridFirstRow.cells.toArray();
+            const headerCells = grid.headerGroups.first.children.toArray();
+            // headers are aligned to cells
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
+            gridFirstRow.beginAddRow();
+            fixture.detectChanges();
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+            const newRowCells = newRow.cells.toArray();
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, newRowCells);
         });
     });
 
@@ -335,7 +553,37 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should show the action strip "Show" button if added row is in collapsed group and on click should expand the group and scroll to the correct added row', () => {
+            grid.groupBy({
+                fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            });
+            fixture.detectChanges();
 
+            const groupRows = grid.groupsRowList.toArray();
+            grid.toggleGroup(groupRows[2].groupRow);
+            fixture.detectChanges();
+            expect(groupRows[2].expanded).toBeFalse();
+
+            let row = grid.getRowByIndex(1);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            const cell =  grid.getCellByColumn(2, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'Antonio Moreno Taquería');
+            grid.endEdit(true);
+            fixture.detectChanges();
+            const addedRec = grid.data[grid.data.length - 1];
+
+            expect(grid.addRowSnackbar.actionText).toBe('SHOW');
+            grid.addRowSnackbar.triggerAction();
+            fixture.detectChanges();
+            row = grid.getRowByKey(addedRec[grid.primaryKey]);
+
+            expect(row).not.toBeNull();
+            expect(groupRows[2].expanded).toBeTrue();
+            expect(groupRows[2].groupRow.records.length).toEqual(2);
+            expect(groupRows[2].groupRow.records[1]).toBe(row.rowData);
         });
     });
 
@@ -373,19 +621,94 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode when moving a column', () => {
+            spyOn(grid, 'endEdit').and.callThrough();
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
+            expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
+            grid.moveColumn(grid.columns[1], grid.columns[2]);
+            fixture.detectChanges();
+
+            expect(grid.endEdit).toHaveBeenCalled();
+            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
         it('Should exit add row mode when pinning/unpinning a column', () => {
+            spyOn(grid, 'endEdit').and.callThrough();
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
+            expect(grid.rowEditingOverlay.collapsed).toEqual(false);
+
+            grid.pinColumn('CompanyName');
+            fixture.detectChanges();
+
+            expect(grid.endEdit).toHaveBeenCalled();
+            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
+
+            row.beginAddRow();
+            fixture.detectChanges();
+            grid.unpinColumn('CompanyName');
+            fixture.detectChanges();
+
+            expect(grid.endEdit).toHaveBeenCalled();
+            expect(grid.data.length).toBe(dataLength + 2);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
-        it('Should exit add row mode when resizing a column', () => {
+        it('Should exit add row mode when resizing a column', async() => {
+            spyOn(grid, 'endEdit').and.callThrough();
 
+            fixture.detectChanges();
+
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
+            expect(grid.rowEditingOverlay.collapsed).toEqual(false);
+
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css('.igx-grid__thead-item'));
+            const headerResArea = headers[2].children[3].nativeElement;
+            UIInteractions.simulateMouseEvent('mousedown', headerResArea, 400, 0);
+            await wait(200);
+            fixture.detectChanges();
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, 450, 0);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, 450, 0);
+            fixture.detectChanges();
+
+            expect(grid.endEdit).toHaveBeenCalled();
+            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
         it('Should exit add row mode when hiding a column', () => {
+            spyOn(grid, 'endEdit').and.callThrough();
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
+            expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
+            const column = grid.columnList.filter(c => c.field === 'ContactName')[0];
+            column.hidden = true;
+            fixture.detectChanges();
+
+            expect(grid.endEdit).toHaveBeenCalled();
+            expect(grid.data.length).toBe(dataLength);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
     });
 
@@ -398,11 +721,36 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should create ADD transaction when adding a new row', () => {
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            grid.endEdit(true);
+            fixture.detectChanges();
+            const states = grid.transactions.getAggregatedChanges(true);
+
+            expect(states.length).toEqual(1);
+            expect(states[0].type).toEqual(TransactionType.ADD);
         });
 
         it('All updates on uncommitted add row should be merged into one ADD transaction', () => {
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
 
+            grid.endEdit(true);
+            fixture.detectChanges();
+            let states = grid.transactions.getAggregatedChanges(true);
+            expect(states.length).toEqual(1);
+            expect(states[0].type).toEqual(TransactionType.ADD);
+
+            const cell =  grid.getCellByColumn(grid.dataView.length - 1, 'ProductName');
+            cell.update('aaa');
+            fixture.detectChanges();
+            states = grid.transactions.getAggregatedChanges(true);
+            expect(states.length).toEqual(1);
+            expect(states[0].type).toEqual(TransactionType.ADD);
+            expect(states[0].newValue['ProductName']).toEqual('aaa');
         });
     });
 });

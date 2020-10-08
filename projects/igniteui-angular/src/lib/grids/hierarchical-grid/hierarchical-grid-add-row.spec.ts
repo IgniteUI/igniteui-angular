@@ -7,7 +7,7 @@ import { IgxHierarchicalGridEditActionsComponent } from '../../test-utils/hierar
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
-    let fix;
+    let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let actionStrip: IgxActionStripComponent;
     beforeAll(async(() => {
@@ -22,18 +22,43 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
     describe(' Basic', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            fix = TestBed.createComponent(IgxHierarchicalGridEditActionsComponent);
-            fix.detectChanges();
-            hierarchicalGrid = fix.componentInstance.treeGrid;
-            actionStrip = fix.componentInstance.actionStrip;
+            fixture = TestBed.createComponent(IgxHierarchicalGridEditActionsComponent);
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            actionStrip = fixture.componentInstance.actionStrip;
         }));
 
         it('Should collapse an expanded record when beginAddRow is called for it', () => {
+            const row = hierarchicalGrid.rowList.first;
+            hierarchicalGrid.expandRow(row.rowID);
+            fixture.detectChanges();
+            expect(row.expanded).toBeTrue();
 
+            row.beginAddRow();
+            fixture.detectChanges();
+            expect(row.expanded).toBeFalse();
+            expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
         });
 
         it('Should allow the expansion of a newly added (commited) record', () => {
+            const row = hierarchicalGrid.rowList.first;
+            hierarchicalGrid.expandRow(row.rowID);
+            fixture.detectChanges();
+            expect(row.expanded).toBeTrue();
 
+            row.beginAddRow();
+            fixture.detectChanges();
+            expect(row.expanded).toBeFalse();
+            expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
+            hierarchicalGrid.endEdit(true);
+            fixture.detectChanges();
+
+            const newRowData = hierarchicalGrid.data[hierarchicalGrid.data.length - 1];
+            const newRow = hierarchicalGrid.rowList.find(r => r.rowID === newRowData[hierarchicalGrid.primaryKey]);
+            expect(newRow.expanded).toBeFalse();
+            hierarchicalGrid.expandRow(newRow.rowID);
+            fixture.detectChanges();
+            expect(newRow.expanded).toBeTrue();
         });
     });
 });

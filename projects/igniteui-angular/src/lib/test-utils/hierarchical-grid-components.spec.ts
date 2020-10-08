@@ -212,7 +212,7 @@ export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchic
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'"
-        [rowSelection]="'multiple'" >
+        [rowSelection]="'multiple'" [rowEditable]='true'>
         <igx-column field="ID" ></igx-column>
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
