@@ -80,7 +80,7 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'all',
             isUnary: true,
-            iconName: 'all',
+            iconName: 'select-all',
             logic: (target: boolean) => {
                 return true;
             }
