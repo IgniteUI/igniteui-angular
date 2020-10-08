@@ -51,7 +51,7 @@ All notable changes for each version of this project will be documented in this 
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
     - Added `createAbsoluteOverlaySettings` and `createRelativeOverlaySettings` methods which create non-modal `OverlaySettings` based on predefined `PositionSettings`. The methods are exposed off the `IgxOverlayService`.
-        - `createAbsoluteOverlaySettings` creates non-modal `OverlaySettings` with `GlobalPositionStrategy` or `ContainerPositionStrategy` if an outlet is provided. Accepts `AbsolutePosition` enumeration, which could be Center, Top and Bottom. Default is Center.
+        - `createAbsoluteOverlaySettings` creates non-modal `OverlaySettings` with `GlobalPositionStrategy` or `ContainerPositionStrategy` if an outlet is provided. Accepts `AbsolutePosition` enumeration, which could be `Center`, `Top` and `Bottom`. Default is `Center`.
         ```typescript
             const globalOverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Top);
         ```
