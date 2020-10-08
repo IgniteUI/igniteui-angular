@@ -1521,6 +1521,174 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
+    it('edit selected row so it goes to another group where all rows are not selected. The group row checkbox of the new group that the record becomes part of should be in indeterminate state.',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableEditing = true;
+            fix.componentInstance.width = '1200px';
+            grid.primaryKey = 'ID';
+            grid.columnWidth = '200px';
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grid.selectRows([5]);
+            fix.detectChanges();
+
+            const cell = grid.getCellByKey(5, 'ProductName');
+            cell.column.editable = true;
+            fix.detectChanges();
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+            expect(grid.selectedRows.length).toEqual(1);
+
+            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+            const input = editCellDom.query(By.css('input'));
+
+            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+            fix.detectChanges();
+
+            expect(grRow.groupRow.records.length).toEqual(3);
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        }));
+
+    it('edit non-selected row so it goes to another group where all rows are selected. The group row checkbox of the new group that the record becomes part of should become in indeterminate state.',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableEditing = true;
+            fix.componentInstance.width = '1200px';
+            grid.primaryKey = 'ID';
+            grid.columnWidth = '200px';
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grid.selectRowsInGroup(grRow.groupRow);
+            fix.detectChanges();
+
+            const cell = grid.getCellByKey(5, 'ProductName');
+            cell.column.editable = true;
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+
+            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+            const input = editCellDom.query(By.css('input'));
+
+            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        }));
+
+    it('edit the only non-selected row in a group so that it moves to another group and check whether the current group row checkbox becomes checked.',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableEditing = true;
+            fix.componentInstance.width = '1200px';
+            grid.primaryKey = 'ID';
+            grid.columnWidth = '200px';
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grid.selectRows([2]);
+            fix.detectChanges();
+
+            const cell = grid.getCellByKey(8, 'ProductName');
+            cell.column.editable = true;
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+
+            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+            const input = editCellDom.query(By.css('input'));
+
+            clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
+            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+        }));
+
+    it('edit the only selected row in a group so that it moves to another group and check whether the current group row checkbox becomes unchecked.',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableEditing = true;
+            fix.componentInstance.width = '1200px';
+            grid.primaryKey = 'ID';
+            grid.columnWidth = '200px';
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grid.selectRows([2]);
+            fix.detectChanges();
+
+            const cell = grid.getCellByKey(2, 'ProductName');
+            cell.column.editable = true;
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+
+            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+            const input = editCellDom.query(By.css('input'));
+
+            clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
+            GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
+        }));
+
     it('groupRowCheckbox should be in the right state by deleting rows from that group',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
