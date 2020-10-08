@@ -37,7 +37,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
                 GroupByEmptyColumnFieldComponent,
-                MultiColumnHeadersWithGroupingComponent
+                MultiColumnHeadersWithGroupingComponent,
+                GridGroupByRowCustomSelectorsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -1775,6 +1776,38 @@ describe('IgxGrid - GroupBy #grid', () => {
                 expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement));
             }
 
+        }));
+
+    it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
+            const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+            const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+            const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+
+            spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+
+            grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+            fix.detectChanges();
+            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelect);
+
+            grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+            fix.detectChanges();
+            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
         }));
 
     // GroupBy + Resizing
@@ -3516,4 +3549,35 @@ export class GroupByEmptyColumnFieldComponent extends DataParent {
 }
 
 export class CustomSortingStrategy extends DefaultSortingStrategy {
+}
+
+@Component({
+    template: `
+        <igx-grid #gridGroupByRowCustomSelectors
+            [width]='width'
+            [height]='height'
+            [data]="data">
+            <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
+                dataType="date"></igx-column>
+            <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"
+                dataType="number"></igx-column>
+            <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <ng-template igxGroupByRowSelector let-context>
+                <igx-checkbox (click)="onGroupByRowClick($event, context)" hidden='true'></igx-checkbox>
+                <p>Selected rows in the group: {{context.selectedCount}};<p>
+                <p>Total rows in the group: {{context.totalCount}};<p>
+                <p>Group Row instance: {{context.groupRow}};<p>
+            </ng-template>
+        </igx-grid>
+    `
+})
+export class GridGroupByRowCustomSelectorsComponent extends DataParent {
+    public width = '800px';
+    public height = '700px';
+
+    @ViewChild('gridGroupByRowCustomSelectors', { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+    public onGroupByRowClick(event, context) {}
 }
