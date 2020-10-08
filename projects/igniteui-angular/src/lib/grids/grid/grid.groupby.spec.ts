@@ -1009,6 +1009,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const dRow of dataRows) {
             expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeNull();
         }
+
+        grid.rowSelection = GridSelectionMode.single;
+        fix.detectChanges();
+        for (const grRow of grRows) {
+            expect(GridSelectionFunctions.getRowCheckboxDiv(grRow.element.nativeElement)).toBeDefined();
+        }
+        for (const dRow of dataRows) {
+            expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
+        }
     }));
 
     it('group row checkboxes should be checked when selectAll API is called or when header checkbox is clicked.',
