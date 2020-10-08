@@ -1063,6 +1063,86 @@ describe('IgxGrid - GroupBy #grid', () => {
             }
         }));
 
+    it('should select all records for group by pressing space when selectionMode is multiple and not all records within a group are selected and the groupRow is focused',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grRow.activate();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.simulateGridContentKeydown(fix, 'Space');
+            fix.detectChanges();
+
+            for (const key of grRow.groupRow.records) {
+                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key)));
+            }
+
+            grid.deselectAllRows();
+            fix.detectChanges();
+
+            grid.selectRows([grRow.groupRow.records[0]]);
+            fix.detectChanges();
+
+            GridFunctions.simulateGridContentKeydown(fix, 'Space');
+            fix.detectChanges();
+
+            for (const key of grRow.groupRow.records) {
+                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key)));
+            }
+        }));
+
+    it('should not affect current row selection by pressing space when selectionMode is single and the groupRow is focused',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.single;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const selectionCount = grid.selectedRows.length;
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grRow.activate();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.simulateGridContentKeydown(fix, 'Space');
+            fix.detectChanges();
+
+            const newSelectioncount = grid.selectedRows.length;
+
+            expect(selectionCount).toEqual(newSelectioncount);
+
+        }));
+
     it('should deselect all records for group by pressing space when selectionMode is multiple and all records within a group are selected and the groupRow is focused',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1395,6 +1475,85 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(grRow.groupRow.records.length).toEqual(3);
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+        }));
+
+    it('groupRowCheckbox should be in the right state by deleting rows from that group',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            const grRow1 = grid.groupsRowList.toArray()[0];
+
+            grid.selectRows([grRow1.groupRow.records[0]]);
+            fix.detectChanges();
+            grid.deleteRowById(grRow1.groupRow.records[0]);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow1, false, false));
+
+            const grRow2 = grid.groupsRowList.toArray()[1];
+
+            grid.selectRows(grRow2.groupRow.records);
+            fix.detectChanges();
+            grid.deleteRowById(grRow2.groupRow.records[0]);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow2, true, false));
+
+            const grRow3 = grid.groupsRowList.toArray()[2];
+
+            grid.selectRows([grRow3.groupRow.records[1]]);
+            fix.detectChanges();
+            grid.deleteRowById(grRow3.groupRow.records[0]);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow3, true, false));
+        }));
+
+    it('should hide/show checkboxes when change hideRowSelectors',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.width = '1200px';
+            tick();
+            grid.columnWidth = '200px';
+            tick();
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            tick();
+            fix.detectChanges();
+
+            grid.hideRowSelectors = true;
+            fix.detectChanges();
+
+            const grRows = grid.groupsRowList.toArray();
+
+            for (const grRow of grRows) {
+                expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement, false, false));
+            }
+
+            grid.hideRowSelectors = false;
+            fix.detectChanges();
+
+            for (const grRow of grRows) {
+                expect(GridSelectionFunctions.verifyRowHasCheckbox(grRow.element.nativeElement));
+            }
+
         }));
 
     // GroupBy + Resizing
