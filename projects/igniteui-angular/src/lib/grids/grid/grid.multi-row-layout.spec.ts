@@ -1172,7 +1172,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='true'></igx-column>
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
     `

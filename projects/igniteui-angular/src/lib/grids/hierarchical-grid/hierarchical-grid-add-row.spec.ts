@@ -3,9 +3,10 @@ import { IgxHierarchicalGridModule, IgxHierarchicalGridComponent } from './publi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
-import { IgxHierarchicalGridEditActionsComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Add Row UI #tGrid', () => {
+describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -13,7 +14,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxHierarchicalGridEditActionsComponent
+                IgxHierarchicalGridActionStripComponent
             ],
             imports: [IgxHierarchicalGridModule, NoopAnimationsModule, IgxActionStripModule]
         })
@@ -22,7 +23,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
     describe(' Basic', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            fixture = TestBed.createComponent(IgxHierarchicalGridEditActionsComponent);
+            fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             actionStrip = fixture.componentInstance.actionStrip;
@@ -40,7 +41,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
         });
 
-        it('Should allow the expansion of a newly added (commited) record', () => {
+        it('Should allow the expansion of a newly added (commited) record', async() => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.rowID);
             fixture.detectChanges();
@@ -51,6 +52,11 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(row.expanded).toBeFalse();
             expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
             hierarchicalGrid.endEdit(true);
+            fixture.detectChanges();
+            hierarchicalGrid.addRowSnackbar.triggerAction();
+            fixture.detectChanges();
+
+            await wait(100);
             fixture.detectChanges();
 
             const newRowData = hierarchicalGrid.data[hierarchicalGrid.data.length - 1];
