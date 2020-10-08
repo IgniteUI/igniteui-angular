@@ -1,20 +1,19 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, Host, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
-import { GridType } from './common/grid.interface';
 
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: '[igxRowEdit]'
 })
 export class IgxRowEditTemplateDirective { }
 
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: '[igxRowEditText]'
 })
 export class IgxRowEditTextDirective { }
 
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: '[igxRowEditActions]'
 })
@@ -22,7 +21,7 @@ export class IgxRowEditActionsDirective { }
 
 
 // TODO: Refactor circular ref, deps and logic
-/** @hidden */
+/** @hidden @internal */
 @Directive({
     selector: `[igxRowEditTabStop]`
 })
@@ -51,6 +50,11 @@ export class IgxRowEditTabStopDirective {
     public handleEscape(event: KeyboardEvent): void {
         this.grid.endEdit(false, event);
         this.grid.tbody.nativeElement.focus();
+    }
+
+    @HostListener('keydown.Enter', ['$event'])
+    public handleEnter(event: KeyboardEvent): void {
+        event.stopPropagation();
     }
 
     /**

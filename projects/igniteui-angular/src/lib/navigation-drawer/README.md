@@ -64,6 +64,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to a falsy value to disable this behavior. |
 | `width` | string| Width of the drawer in its open state. Defaults to "280px".|
 | `miniWidth` | string | Width of the drawer in its mini variant. Defaults to "60px". |
+| `disableAnimation` | boolean | Enables/disables the animation, when toggling the drawer. Set to `false` by default.
 
 ### Outputs
 | Name      |  Description |
