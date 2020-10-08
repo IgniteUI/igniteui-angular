@@ -84,4 +84,8 @@
     @include e(item, header) {
         @extend %item--header !optional;
     }
+
+    @include m(disable-animation) {
+        @extend %disable-animation !optional;
+    }
 }

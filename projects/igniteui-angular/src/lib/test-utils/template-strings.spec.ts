@@ -453,7 +453,7 @@ export class EventSubscriptions {
 
     public static onRowDeleted = ` (onRowDeleted)="rowDeleted($event)"`;
 
-    public static onEditDone = ` (onCellEdit)="editDone($event)"`;
+    public static onEditDone = ` (cellEdit)="editDone($event)"`;
 
     public static onRowSelectionChange = ` (onRowSelectionChange)="rowSelectionChange($event)"`;
 
