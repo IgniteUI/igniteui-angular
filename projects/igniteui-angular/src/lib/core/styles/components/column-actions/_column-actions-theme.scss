@@ -51,7 +51,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        elevation: $elevations,
+        elevations: $elevations,
         title-color: $title-color,
         background-color: $background-color
     ));
@@ -98,7 +98,7 @@
         display: flex;
         flex-flow: column nowrap;
         background: --var($theme, 'background-color');
-        box-shadow: igx-elevation(map-get($theme, 'elevation'), 8);
+        box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);
