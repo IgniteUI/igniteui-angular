@@ -28,11 +28,6 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        //this.calendar.selectDate(new Date(this.today.getFullYear(), this.today.getMonth(), 10));
-/*             [ new Date(this.today.getFullYear(), this.today.getMonth(), 10),
-                new Date(this.today.getFullYear(), this.today.getMonth(), 17),
-                new Date(this.today.getFullYear(), this.today.getMonth(), 27)]) */
-        console.log(this.calendar.selectedDates);
     }
 
     public selectPTOdays(dates: Date[]) {
