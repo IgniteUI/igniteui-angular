@@ -1,0 +1,149 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditEnter",
+            "replaceWith": "rowEditEnter",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditEnter",
+            "replaceWith": "rowEditEnter",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEditEnter",
+            "replaceWith": "rowEditEnter",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEditEnter",
+            "replaceWith": "cellEditEnter",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEditEnter",
+            "replaceWith": "cellEditEnter",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEditEnter",
+            "replaceWith": "cellEditEnter",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEdit",
+            "replaceWith": "cellEdit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEdit",
+            "replaceWith": "cellEdit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellEdit",
+            "replaceWith": "cellEdit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEdit",
+            "replaceWith": "rowEdit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEdit",
+            "replaceWith": "rowEdit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowEdit",
+            "replaceWith": "rowEdit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        }
+    ]
+}
