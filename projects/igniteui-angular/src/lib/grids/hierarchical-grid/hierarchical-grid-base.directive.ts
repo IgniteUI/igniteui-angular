@@ -137,7 +137,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) protected hGridLocale: any) {
+        @Inject(LOCALE_ID) localeId: any) {
         super(
             selectionService,
             crudService,
@@ -156,7 +156,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             overlayService,
             summaryService,
             _displayDensityOptions,
-            hGridLocale);
+            localeId);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 

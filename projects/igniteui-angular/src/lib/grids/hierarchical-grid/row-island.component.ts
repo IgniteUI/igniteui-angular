@@ -220,7 +220,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) protected rowLocale) {
+        @Inject(LOCALE_ID) localeId) {
         super(
             selectionService,
             crudService,
@@ -239,7 +239,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             overlayService,
             summaryService,
             _displayDensityOptions,
-            rowLocale
+            localeId
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }

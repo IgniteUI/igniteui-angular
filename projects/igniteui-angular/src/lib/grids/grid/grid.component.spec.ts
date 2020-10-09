@@ -1414,7 +1414,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        xit('Should change dates/number display based on locale', () => {
+        xit('Should change dates/number display based on locale', fakeAsync(() => {
             registerLocaleData(localeDE);
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
@@ -1456,14 +1456,25 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
+            grid.columnList.toArray()[4].formatOptions = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
+            grid.columnList.toArray()[3].formatOptions = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
+            tick(300);
             fixture.detectChanges();
 
             rows = grid.rowList.toArray();
-            expectedValue = '21.03.2005';
+            expectedValue = '21. März 2005';
             expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '15.01.2008';
+            expectedValue = '15. Januar 2008';
             expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
-            expectedValue = '20.11.2010';
+            expectedValue = '20. November 2010';
             expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
 
             // verify summaries formatting
@@ -1473,14 +1484,14 @@ describe('IgxGrid Component Tests #grid', () => {
                 const earliest = summary.query(By.css('[title=\'Earliest\']'));
                 if (avgLabel) {
                     avgValue = avgLabel.nativeElement.nextSibling.innerText;
-                    expect(avgValue).toBe('3.900,4');
+                    expect(avgValue).toBe('3.900,40');
                 }
                 if (earliest) {
                     earliestValue = earliest.nativeElement.nextSibling.innerText;
-                    expect(earliestValue).toBe('17.05.1990');
+                    expect(earliestValue).toBe('17. Mai 1990');
                 }
             });
-        });
+        }));
 
         it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
