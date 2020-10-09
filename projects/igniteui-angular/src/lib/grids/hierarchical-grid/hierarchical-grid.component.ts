@@ -269,6 +269,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
+    public hideActionStrip(event: MouseEvent) {
+        if (!this.parent) {
+            // hide child layout actions strips when
+            // moving outside root grid.
+            super.hideActionStrip(event);
+            this.allLayoutList.forEach(ri => {
+                ri.actionStrip?.hide();
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     */
     ngOnInit() {
         if (this._transactions instanceof IgxTransactionService) {
             // transaction service cannot be injected in a derived class in a factory manner
@@ -319,6 +333,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+
+        this.actionStrip = this.parentIsland ? this.parentIsland.actionStrip : this.actionStrip;
 
         this.headSelectorsTemplates = this.parentIsland ?
             this.parentIsland.headSelectorsTemplates :
@@ -548,10 +564,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+                $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: 'dataRow',
                 index: this.getDataViewIndex(rowIndex, pinned),
-                disabled: this.isGhostRecord(rowData)
+                disabled: this.isGhostRecord(rowData),
+                addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
             };
         }
     }

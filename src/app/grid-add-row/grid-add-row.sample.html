@@ -3,6 +3,7 @@
         #grid
         [data]="data"
         [width]="'800px'"
+        [paging]="true"
         [height]="'500px'"
         [primaryKey]="'ID'"
         (mouseleave)="onMouseLeave(actionstrip)"
@@ -17,6 +18,8 @@
             [width]="c.width"
             [pinned]="c.pinned"
             [hidden]="c.hidden"
+            [groupable]='true'
+            [hasSummary]="true"
         >
         </igx-column>
 

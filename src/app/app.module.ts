@@ -1,3 +1,4 @@
+import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -86,6 +87,7 @@ import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-dow
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
+import { OverlayPresetsSampleComponent } from './overlay/overlay-presets.sample';
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
@@ -133,6 +135,7 @@ import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-directive';
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
+import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -169,6 +172,7 @@ const components = [
     NavdrawerSampleComponent,
     OverlaySampleComponent,
     OverlayAnimationSampleComponent,
+    OverlayPresetsSampleComponent,
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
@@ -193,6 +197,8 @@ const components = [
     GridCellEditingComponent,
     GridSampleComponent,
     GridAddRowSampleComponent,
+    HierarchicalGridAddRowSampleComponent,
+    TreeGridAddRowSampleComponent,
     GridColumnMovingSampleComponent,
     GridColumnSelectionSampleComponent,
     GridColumnSelectionFilterPipe,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
-import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
+import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS, isEdge } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
@@ -47,9 +47,11 @@ export class IgxGridNavigationService {
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
+            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        const alt = event.altKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
         const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
@@ -109,13 +111,13 @@ export class IgxGridNavigationService {
                 break;
             case 'arrowup':
             case 'up':
-                if (ctrl && !this.isDataRow(rowIndex)) { break; }
+                if (ctrl && !this.isDataRow(rowIndex) || (this.grid.rowEditable && this.grid.crudService.rowEditingBlocked)) { break; }
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row - 1;
                 break;
             case 'arrowdown':
             case 'down':
-                if (ctrl && !this.isDataRow(rowIndex)) { break; }
+                if ((ctrl && !this.isDataRow(rowIndex)) || (this.grid.rowEditable && this.grid.crudService.rowEditingBlocked)) { break; }
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findLastDataRowIndex() : this.activeNode.row + 1;
                 break;
@@ -128,7 +130,16 @@ export class IgxGridNavigationService {
             case 'escape':
             case 'esc':
                 if (!this.isDataRow(rowIndex)) { break; }
-                this.grid.crudService.exitEditMode();
+
+                if (this.grid.crudService.isInCompositionMode) {
+                    return;
+                }
+
+                if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
+                    this.grid.endEdit(false);
+                    if (isEdge()) { this.grid.cdr.detectChanges(); }
+                    this.grid.tbody.nativeElement.focus();
+                }
                 break;
             case ' ':
             case 'spacebar':
@@ -262,9 +273,20 @@ export class IgxGridNavigationService {
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
         const row = this.grid.getRowByIndex(this.activeNode.row) as any;
-        if (!this.isToggleKey(key) || !row) { return; }
 
-        if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
+        if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) { return; }
+        if (this.isAddKey(key)) {
+            if (!this.grid.rowEditable) {
+                console.warn('The grid must be in row edit mode to perform row adding!');
+                return;
+            }
+
+            if (event.shiftKey && row.treeRow !== undefined) {
+                row.beginAddChild();
+            } else if (!event.shiftKey) {
+                row.beginAddRow();
+            }
+        } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             row.rowID === undefined ? row.toggle() :
                 this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
@@ -606,5 +628,9 @@ export class IgxGridNavigationService {
 
     private isToggleKey(key: string): boolean {
         return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
+    }
+
+    private isAddKey(key: string): boolean {
+        return key === '+';
     }
 }

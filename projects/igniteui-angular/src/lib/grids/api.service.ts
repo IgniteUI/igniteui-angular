@@ -69,16 +69,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return data[index];
     }
 
-    // TODO: Refactor
-    public escape_editMode() {
-        this.grid.crudService.end();
-    }
-
-    // TODO: Refactor
-    public get_cell_inEditMode(): IgxCell {
-        return this.grid.crudService.cell;
-    }
-
     public get_row_index_in_data(rowID: any, dataCollection?: any[]): number {
         const grid = this.grid as IgxGridBaseDirective;
         if (!grid) {
@@ -130,10 +120,11 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const cell = this.grid.crudService.cell;
         if (cell) {
             const args = this.update_cell(cell, cell.editValue);
+            this.grid.crudService.cellEditingBlocked = args.cancel;
             if (args.cancel) {
-                return;
+                return args.cancel;
             }
-            this.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
     }
 
@@ -141,7 +132,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const cell = this.grid.crudService.cell;
         if (cell) {
             this.update_add_cell(cell, cell.editValue);
-            this.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
     }
 
@@ -149,15 +140,17 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         cell.editValue = value;
 
         const args = cell.createEditEventArgs();
-        this.grid.onCellEdit.emit(args);
-
-        if (args.cancel) {
-            return args;
-        }
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
+
+        this.grid.cellEdit.emit(args);
+        this.grid.crudService.cellEditingBlocked = args.cancel;
+        if (args.cancel) {
+            return args;
+        }
+
         const data = cell.rowData;
         mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
@@ -168,16 +161,17 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     update_cell(cell: IgxCell, value: any) {
         cell.editValue = value;
         const args = cell.createEditEventArgs();
-        this.grid.onCellEdit.emit(args);
-        // TODO Implement cellEditExit event end emit if isEqual(args.oldValue, args.newValue)
-        // TODO do not emit onCellEdit & cellEditDone if isEqual(args.oldValue, args.newValue)
-        if (args.cancel) {
-            return args;
-        }
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
         }
+
+        this.grid.cellEdit.emit(args);
+        this.grid.crudService.cellEditingBlocked = args.cancel;
+        if (args.cancel) {
+            return args;
+        }
+
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
@@ -199,7 +193,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         this.grid.cellEditDone.emit(doneArgs);
-
         return args;
     }
 
@@ -256,7 +249,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        grid.onRowEdit.emit(args);
+        grid.rowEdit.emit(args);
 
         if (args.cancel) {
             return args;
@@ -329,7 +322,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        grid.endEdit(false);
+        this.grid.endEdit(false);
 
         if (grid.paging) {
             grid.page = 0;
@@ -486,7 +479,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
-    public addRowToData(rowData: any) {
+    public addRowToData(rowData: any, parentRowID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;

@@ -354,6 +354,12 @@ export class AppComponent implements OnInit {
             name: 'Overlay'
         },
         {
+            link: '/overlay-presets',
+            icon: 'flip_to_front',
+            name: 'Overlay Settings Presets'
+        },
+
+        {
             link: '/overlay-animation',
             icon: 'flip_to_front',
             name: 'Overlay Animation'
@@ -430,6 +436,11 @@ export class AppComponent implements OnInit {
             name: 'Hierarchical Grid Updating'
         },
         {
+            link: '/hierarchicalGridAddRow',
+            icon: 'view_column',
+            name: 'HierarchicalGrid Add Row'
+        },
+        {
             link: '/treeGrid',
             icon: 'view_column',
             name: 'Tree Grid'
@@ -443,6 +454,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridLoadOnDemand',
             icon: 'view_column',
             name: 'Tree Grid Load On Demand'
+        },
+        {
+            link: '/treeGridAddRow',
+            icon: 'view_column',
+            name: 'TreeGrid Add Row'
         },
         {
             link: '/dateRange',

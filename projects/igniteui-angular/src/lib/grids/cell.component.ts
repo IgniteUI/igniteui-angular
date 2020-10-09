@@ -51,6 +51,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected _lastSearchInfo: ISearchInfo;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid__td--new')
+    get isEmptyAddRowCell() {
+        return this.row.addRow && (this.value === undefined || this.value === null);
+    }
+
+    /**
      * Gets the column of the cell.
      * ```typescript
      *  let cellColumn = this.cell.column;
@@ -482,7 +491,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public set editValue(value) {
-        if (this.crudService.inEditMode) {
+        if (this.crudService.cellInEditMode) {
             this.crudService.cell.editValue = value;
         }
     }
@@ -496,7 +505,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public get editValue() {
-        if (this.crudService.inEditMode) {
+        if (this.crudService.cellInEditMode) {
             return this.crudService.cell.editValue;
         }
     }
@@ -658,16 +667,26 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 if (this.grid.sortingExpressions.length && this.grid.sortingExpressions.indexOf(editableCell.column.field)) {
                     this.grid.cdr.detectChanges();
                 }
+
+                if (this.crudService.cellEditingBlocked) {
+                    return true;
+                }
+
+                crud.exitCellEdit();
             }
-            crud.end();
             this.grid.tbody.nativeElement.focus({ preventScroll: true });
             this.grid.notifyChanges();
-            crud.begin(this);
-            return;
+            crud.enterEditMode(this);
+            return false;
         }
 
         if (editableCell && crud.sameRow(this.cellID.rowID)) {
-            this.gridAPI.submit_value();
+            if (this.row.addRow) {
+                this.gridAPI.submit_add_value();
+                this.row.rowData = editableCell.rowData;
+            } else {
+                this.gridAPI.submit_value();
+            }
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.endEdit(true);
         }
@@ -713,9 +732,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.editable && value) {
             this.gridAPI.submit_value();
-            this.crudService.begin(this);
+            this.crudService.enterEditMode(this);
         } else {
-            this.gridAPI.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
         this.grid.notifyChanges();
     }
@@ -738,7 +757,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (args.cancel) {
                 return;
             }
-            this.gridAPI.escape_editMode();
+            this.grid.crudService.exitCellEdit();
         }
         this.cdr.markForCheck();
     }
@@ -759,7 +778,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
-            this.gridAPI.submit_value();
+            // Ensure RMB Click on edited cell does not end cell editing
+            if (!this.selected) {
+                this.gridAPI.submit_value();
+            }
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
@@ -793,7 +815,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
         }
-        this._updateCRUDStatus();
     }
 
     /**
@@ -807,10 +828,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             (event as HammerInput).preventDefault();
         }
         if (this.grid.rowEditable && this.row.addRow) {
-            this.crudService.begin(this);
+            this.crudService.enterEditMode(this);
         }
-        if (this.editable && !this.editMode && !this.row.deleted) {
-            this.crudService.begin(this);
+        if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.rowEditingBlocked) {
+            this.crudService.enterEditMode(this);
         }
 
         this.grid.onDoubleClick.emit({
@@ -849,19 +870,28 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-        this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
-
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
             this._updateCRUDStatus();
+
+            const activeElement = this.selectionService.activeElement;
+            const row = activeElement ? this.gridAPI.get_row_by_index(activeElement.row) : null;
+            if ((this.crudService.rowEditingBlocked && row && this.row.rowID !== row.rowID) ||
+                (this.crudService.cell && this.crudService.cellEditingBlocked)) {
+                return;
+            }
+
             this.selectionService.activeElement = node;
         } else {
             this.selectionService.activeElement = null;
-            if (this.crudService.inEditMode && !this.editMode) {
+            if (this.crudService.cellInEditMode && !this.editMode) {
                 this.gridAPI.submit_value();
             }
         }
+
+        this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
+
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
             this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
