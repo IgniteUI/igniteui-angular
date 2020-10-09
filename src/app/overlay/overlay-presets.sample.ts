@@ -33,12 +33,12 @@ export class OverlayPresetsSampleComponent implements OnInit {
     private yAddition = 0;
     items = [];
     itemsCount = 10;
-    relStrategies = ['Auto', 'Connected', 'Elastic'];
+    relStrategies = [RelativePositionStrategy.Auto, RelativePositionStrategy.Connected, RelativePositionStrategy.Elastic];
     absStrategies = ['Global', 'Container'];
     positionStrategy = 'Global';
     absPosition: AbsolutePosition = AbsolutePosition.Center;
     absPositions = [AbsolutePosition.Center, AbsolutePosition.Top, AbsolutePosition.Bottom];
-    relPosition: RelativePosition = RelativePosition.Below;
+    relPosition: RelativePosition;
     relPositions = [
         RelativePosition.Above,
         RelativePosition.Below,
@@ -60,16 +60,18 @@ export class OverlayPresetsSampleComponent implements OnInit {
 
     onChange(ev) {
         switch (this.positionStrategy) {
-            case 'Auto':
-            case 'Connected':
-            case 'Elastic':
+            case RelativePositionStrategy.Auto:
+            case RelativePositionStrategy.Connected:
+            case RelativePositionStrategy.Elastic:
                 this.absPosition = null;
+                this.relPosition = this.relPosition || RelativePosition.Default;
                 this._overlaySettings = IgxOverlayService.createRelativeOverlaySettings(
                     this.button.nativeElement,
-                    RelativePositionStrategy[this.positionStrategy],
-                    this.relPosition);
+                    this.relPosition,
+                    this.positionStrategy);
                 break;
             case 'Global':
+                this.relPosition = null;
                 this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
                 break;
             case 'Container':
