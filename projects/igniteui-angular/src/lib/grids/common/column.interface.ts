@@ -2,6 +2,7 @@ import { TemplateRef } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
 import { ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IColumnPipeArguments } from '../columns/interfaces';
 
 /**
  * @hidden
@@ -44,5 +45,6 @@ export interface ColumnType {
     topLevelParent?: ColumnType;
     parent?: ColumnType;
     hasLastPinnedChildColumn: boolean;
+    formatOptions: IColumnPipeArguments;
     getGridTemplate(isRow: boolean, isIE: boolean): string;
 }
