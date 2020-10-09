@@ -973,6 +973,35 @@ describe('igxOverlay', () => {
             expect(element.style.width).toBe('200px');
             expect(element.style.height).toBe('100px');
         });
+
+        it('should close overlay on outside click when target is point, #8297', fakeAsync(() => {
+            const fix = TestBed.createComponent(EmptyPageComponent);
+            const button = fix.componentInstance.buttonElement;
+            const overlay = fix.componentInstance.overlay;
+            fix.detectChanges();
+
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new ConnectedPositioningStrategy()
+            };
+
+            overlaySettings.positionStrategy.settings.target = new Point(10, 10);
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+            fix.detectChanges();
+
+            let overlayDiv: Element = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeDefined();
+
+            document.body.click();
+            tick();
+            fix.detectChanges();
+
+            overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeUndefined();
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
