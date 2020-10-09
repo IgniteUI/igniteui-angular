@@ -29,13 +29,15 @@ import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-r
 import {
     BottomNavRoutingView1Component,
     BottomNavRoutingView2Component,
-    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
+    BottomNavRoutingView3Component
+} from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 import {
     TabsRoutingView1Component,
     TabsRoutingView2Component,
-    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
+    TabsRoutingView3Component
+} from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
@@ -76,6 +78,7 @@ import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-gr
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
 
 const appRoutes = [
     {
@@ -199,10 +202,13 @@ const appRoutes = [
         path: 'snackbar',
         component: SnackbarSampleComponent
     },
-
     {
         path: 'colors',
         component: ColorsSampleComponent
+    },
+    {
+        path: 'animations',
+        component: AnimationsSampleComponent
     },
     {
         path: 'shadows',

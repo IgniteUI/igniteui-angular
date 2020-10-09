@@ -108,6 +108,7 @@ import {
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
 
 const appRoutes = [
     {
@@ -282,6 +283,10 @@ const appRoutes = [
     {
         path: 'colors',
         component: ColorsSampleComponent
+    },
+    {
+        path: 'animations',
+        component: AnimationsSampleComponent
     },
     {
         path: 'shadows',
