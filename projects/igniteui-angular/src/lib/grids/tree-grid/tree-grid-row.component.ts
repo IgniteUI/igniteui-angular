@@ -50,7 +50,12 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      * @hidden
      */
     public get isRoot(): boolean {
-        return this.treeRow.level === 0;
+        let treeRec = this.treeRow;
+        const isPinnedArea = this.pinned && !this.disabled;
+        if (isPinnedArea) {
+            treeRec = this.grid.unpinnedRecords.find(x => x.data === this.rowData);
+        }
+        return treeRec.level === 0;
     }
 
     /**

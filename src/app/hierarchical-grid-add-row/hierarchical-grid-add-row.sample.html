@@ -3,7 +3,8 @@
 [primaryKey]="'ID'"
 [rowEditable]="true">
 <igx-action-strip #actionstrip>
-    <igx-grid-editing-actions [asMenuItems]='true' [addRow]="true"></igx-grid-editing-actions>
+    <igx-grid-pinning-actions></igx-grid-pinning-actions>
+    <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
 </igx-action-strip>
 <igx-row-island #island [key]="'childData'" [autoGenerate]="true"
     [allowFiltering]='true' [rowEditable]="true" [primaryKey]="'ID'">

@@ -18,6 +18,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { TransactionType } from '../../services/public_api';
+import { IgxGridRowComponent } from './grid-row.component';
 
 
 describe('IgxGrid - Row Adding #grid', () => {
@@ -27,7 +28,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         let gridContent: DebugElement;
         let actionStrip: IgxActionStripComponent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll( async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent,
@@ -146,6 +147,51 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
 
+        it('Should allow adding row from pinned row.', () => {
+            let row = grid.getRowByIndex(0);
+            row.pin();
+            fixture.detectChanges();
+            expect(grid.pinnedRecords.length).toBe(1);
+
+            row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            // add row should be pinned
+            const addRow = grid.getRowByIndex(1) as IgxGridRowComponent;
+            expect(addRow.addRow).toBe(true);
+            expect(grid.pinnedRows[1]).toBe(addRow);
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // added record should be pinned.
+            expect(grid.pinnedRecords.length).toBe(2);
+            expect(grid.pinnedRecords[1]).toBe(grid.data[grid.data.length - 1]);
+
+        });
+        it('Should allow adding row from ghost row.', () => {
+            const row = grid.getRowByIndex(0);
+            row.pin();
+            fixture.detectChanges();
+            expect(grid.pinnedRecords.length).toBe(1);
+
+            const ghostRow = grid.getRowByIndex(1);
+            ghostRow.beginAddRow();
+            fixture.detectChanges();
+
+            // add row should be unpinned
+            const addRow = grid.getRowByIndex(2);
+            expect(addRow.addRow).toBe(true);
+            expect(grid.pinnedRows.length).toBe(1);
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            // added record should be unpinned.
+            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.unpinnedRecords[grid.unpinnedRecords.length - 1]).toBe(grid.data[grid.data.length - 1]);
+        });
         it('should navigate to added row on snackbar button click.', async() => {
             const rows = grid.rowList.toArray();
             const dataCount = grid.data.length;

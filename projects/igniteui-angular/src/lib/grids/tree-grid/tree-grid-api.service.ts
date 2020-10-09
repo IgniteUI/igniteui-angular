@@ -265,10 +265,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 }
             }
         } else {
-            if (this.grid.primaryKey && this.grid.foreignKey) {
-                const rowID = data[this.grid.foreignKey];
-                this.grid.summaryService.clearSummaryCache({rowID: rowID});
-            }
             super.addRowToData(data);
         }
     }
