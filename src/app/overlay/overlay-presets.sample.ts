@@ -2,16 +2,7 @@ import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@an
 import {
     IgxDropDownComponent,
     OverlaySettings,
-    AutoPositionStrategy,
-    GlobalPositionStrategy,
-    ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy,
-    BlockScrollStrategy,
-    CloseScrollStrategy,
-    NoOpScrollStrategy,
-    ElasticPositionStrategy,
     IgxDragDirective,
-    ContainerPositionStrategy,
     IgxOverlayService
 } from 'igniteui-angular';
 import { RelativePositionStrategy, AbsolutePosition, RelativePosition } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
@@ -47,7 +38,6 @@ export class OverlayPresetsSampleComponent implements OnInit {
         RelativePosition.Default];
 
     constructor(
-        private cdr: ChangeDetectorRef
     ) {
         for (let item = 0; item < this.itemsCount; item++) {
             this.items.push(`Item ${item}`);
@@ -58,7 +48,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
         this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
     }
 
-    onChange(ev) {
+    onChange() {
         switch (this.positionStrategy) {
             case RelativePositionStrategy.Auto:
             case RelativePositionStrategy.Connected:
