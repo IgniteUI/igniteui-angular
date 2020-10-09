@@ -85,7 +85,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        elevation: $elevations,
+        elevations: $elevations,
 
         background-color: $background-color,
         title-text-color: $title-text-color,
@@ -308,7 +308,7 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        box-shadow: igx-elevation(map-get($theme, 'elevation'), 8);
+        box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
     }
 
     %igx-grid-toolbar__dd-list-items {
