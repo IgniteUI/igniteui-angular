@@ -60,7 +60,8 @@
                 [hideOutsideDays]="hideOutsideDays"
                 [showWeekNumbers]="showWeekNumbers"
                 (onViewChanging)="viewChanging($event)"
-                (onDateSelection)="childClicked($event)">
+                (onDateSelection)="childClicked($event)"
+                (monthsViewBlur)="resetActiveDate()">
         </igx-days-view>
     </div>
 </div>
