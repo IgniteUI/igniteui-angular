@@ -413,7 +413,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         const iconName = icon.getAttribute('name');
         const btnText = button.innerText.toLowerCase();
         expect(btnText.includes('0')).toBe(true);
-        expect(iconName === 'unpin').toBe(true);
+        expect(iconName === 'unpin-left').toBe(true);
     });
 
     it('toggleColumnPinningUI() method opens and closes the ColumnPinning dropdown.', () => {

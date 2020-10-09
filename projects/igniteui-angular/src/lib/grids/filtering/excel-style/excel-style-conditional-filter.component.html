@@ -19,7 +19,7 @@
             *ngFor="let condition of conditions"
             [value]="condition">
                 <div class="igx-grid__filtering-dropdown-items">
-                    <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+                    <igx-icon fontSet="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
                     <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
                 </div>
             </igx-drop-down-item>

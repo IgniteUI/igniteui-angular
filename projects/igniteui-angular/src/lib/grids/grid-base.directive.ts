@@ -27,7 +27,8 @@ import {
     DoCheck,
     Directive,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    HostListener
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -151,6 +152,7 @@ import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-d
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
+import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -1555,6 +1557,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
+    @ContentChild(IgxActionStripComponent)
+    public actionStrip: IgxActionStripComponent;
+
     /**
      * @hidden @internal
      */
@@ -2746,6 +2751,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = false;
 
         this.hideOverlays();
+        this.actionStrip?.hide();
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
             event: event,
@@ -3197,6 +3203,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+        if (this.actionStrip) {
+            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
     }
 
     /**
@@ -3248,6 +3257,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseleave', ['$event'])
+    public hideActionStrip(event: MouseEvent) {
+        this.actionStrip?.hide();
     }
 
     /**
@@ -4078,7 +4096,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
             this.cdr.detectChanges();
-            const row = this.getRowByIndex(this.addRowParent.index + 1);
+            const newRowIndex = this.addRowParent.index + 1;
+            // ensure adding row is in view.
+            const shouldScroll = this.navigation.shouldPerformVerticalScroll(newRowIndex, -1);
+            if (shouldScroll) {
+                this.navigateTo(newRowIndex, -1);
+            }
+            const row = this.getRowByIndex(newRowIndex);
             const cell = row.cells.find(c => c.editable);
             cell.setEditMode(true);
             cell.activate();
