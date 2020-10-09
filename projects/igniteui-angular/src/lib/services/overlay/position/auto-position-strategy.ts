@@ -1,4 +1,5 @@
-import { VerticalAlignment, HorizontalAlignment, ConnectedFit } from './../utilities';
+import { oppositeAnimationResolver } from '../../../core/utils';
+import { ConnectedFit, HorizontalAlignment, VerticalAlignment } from './../utilities';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
 /**
@@ -10,9 +11,12 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
     /** @inheritdoc */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const transformString: string[] = [];
+        let flipped = false;
         if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
+                this.flipAnimation();
+                flipped = true;
             } else {
                 const horizontalPush = this.horizontalPush(connectedFit);
                 transformString.push(`translateX(${horizontalPush}px)`);
@@ -22,6 +26,9 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
+                if (!flipped) {
+                    this.flipAnimation();
+                }
             } else {
                 const verticalPush = this.verticalPush(connectedFit);
                 transformString.push(`translateY(${verticalPush}px)`);
@@ -148,6 +155,18 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             return - Math.min(bottomExtend, topExtend);
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * Changes open and close animation with opposite animation if one exists
+     */
+    private flipAnimation() {
+        if (this.settings.openAnimation) {
+            this.settings.openAnimation = oppositeAnimationResolver(this.settings.openAnimation);
+        }
+        if (this.settings.closeAnimation) {
+            this.settings.closeAnimation = oppositeAnimationResolver(this.settings.closeAnimation);
         }
     }
 }
