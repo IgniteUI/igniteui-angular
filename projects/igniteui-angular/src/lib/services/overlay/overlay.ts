@@ -150,8 +150,8 @@ export class IgxOverlayService implements OnDestroy {
      */
     public static createRelativeOverlaySettings(
         target: Point | HTMLElement,
-        strategy?: RelativePositionStrategy,
-        position?: RelativePosition):
+        position?: RelativePosition,
+        strategy?: RelativePositionStrategy):
         OverlaySettings {
         const positionSettings = this.createRelativePositionSettings(position);
         const overlaySettings: OverlaySettings = {
