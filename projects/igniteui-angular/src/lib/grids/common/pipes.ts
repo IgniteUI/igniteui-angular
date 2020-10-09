@@ -370,9 +370,9 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any, pipeTrigger: number) {
+    transform(collection: any, isPinned = false, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode) {
+        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode || isPinned !== grid.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);
@@ -383,7 +383,11 @@ export class IgxGridAddRowPipe implements PipeTransform {
             addRow: true
         };
         copy.splice(parentIndex + 1, 0, rec);
-        grid.unpinnedRecords = copy;
+        if (isPinned) {
+            grid.pinnedRecords = copy;
+        } else {
+            grid.unpinnedRecords = copy;
+        }
         return copy;
     }
 }

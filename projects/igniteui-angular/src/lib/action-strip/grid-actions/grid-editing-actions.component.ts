@@ -104,7 +104,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         if (!grid.rowEditable) {
-            console.warn('The grid must be in row edit mode to perform row adding!');
+            console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
         grid.beginAddRowByIndex(context.rowID, context.index, asChild);
