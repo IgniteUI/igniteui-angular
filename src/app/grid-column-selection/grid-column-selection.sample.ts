@@ -50,8 +50,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: true,
-        excludePositionTarget: true
+        closeOnOutsideClick: true
     };
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
@@ -120,6 +119,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
 
     public toggleColumnSelection() {
         this._overlaySettings.target = this.columnSelectionButton.nativeElement;
+        this._overlaySettings.excludeFromOutsideClick = [this.columnSelectionButton.nativeElement];
         this._overlaySettings.outlet = this.grid1.outlet;
         this.columnSelectionDropdown.toggle(this._overlaySettings);
     }

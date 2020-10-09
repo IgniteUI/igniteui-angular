@@ -27,7 +27,8 @@ import {
     DoCheck,
     Directive,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    HostListener
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -151,6 +152,7 @@ import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-d
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
+import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -1186,31 +1188,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     /**
-     * Emitted when editing and **not** submitting the value.
-     * @remarks
-     * (e.g. `Esc` key was pressed)
-     * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
-     */
-    @Output()
-    public onCellEditCancel = new EventEmitter<IGridEditEventArgs>();
-
-    /**
      * Emitted when cell enters edit mode.
      * @remarks
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emitted when cell exits edit mode.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (cellEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when cell has been edited.
@@ -1219,12 +1218,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEdit = new EventEmitter<IGridEditEventArgs>();
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after cell has been edited and editing has been committed.
@@ -1244,12 +1243,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when exiting edit mode for a row.
@@ -1261,12 +1260,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEdit = new EventEmitter<IGridEditEventArgs>();
+    public rowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.
@@ -1290,15 +1289,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emits when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
-     * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditCancel = new EventEmitter<IGridEditEventArgs>();
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a column is initialized.
@@ -1558,6 +1556,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
+
+    @ContentChild(IgxActionStripComponent)
+    public actionStrip: IgxActionStripComponent;
 
     /**
      * @hidden @internal
@@ -2750,6 +2751,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = false;
 
         this.hideOverlays();
+        this.actionStrip?.hide();
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
             event: event,
@@ -2960,10 +2962,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
-                this.navigation.activeNode.row >= 0 && this.navigation.activeNode.row < this.dataView.length)
+            if (!this.crudService.cell &&
+                !!this.navigation.activeNode &&
+                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
+                        this.navigation.activeNode.row < this.dataView.length)
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
@@ -3198,6 +3203,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+        if (this.actionStrip) {
+            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
     }
 
     /**
@@ -3249,6 +3257,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseleave', ['$event'])
+    public hideActionStrip(event: MouseEvent) {
+        this.actionStrip?.hide();
     }
 
     /**
@@ -4090,6 +4107,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (isInPinnedArea) {
             this.calculateGridHeight();
         }
+        const newRowIndex = this.addRowParent.index + 1;
+        // ensure adding row is in view.
+        const shouldScroll = this.navigation.shouldPerformVerticalScroll(newRowIndex, -1);
+        if (shouldScroll) {
+            this.navigateTo(newRowIndex, -1);
+        }
         const row = this.getRowByIndex(index + 1);
         const cell = row.cells.find(c => c.editable);
         if (cell) {
@@ -4193,7 +4216,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (args.cancel) {
                         return;
                     }
-                    this.gridAPI.escape_editMode();
+                    this.crudService.exitCellEdit();
                 }
                 this.cdr.detectChanges();
             }
@@ -4219,7 +4242,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.gridAPI.escape_editMode();
+                this.crudService.exitCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
@@ -4263,6 +4286,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
+
+
         if (expression instanceof Array) {
             this.gridAPI.sort_multiple(expression);
         } else {
@@ -5857,7 +5882,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event, ie11 = false) {
-        if (!this.clipboardOptions.enabled || this.crudService.inEditMode) {
+        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode) {
             return;
         }
 
@@ -6494,20 +6519,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
         row.newData = this.transactions.getAggregatedValue(row.id, true);
-
-        let args = row.createEditEventArgs();
+        let rowEditArgs = row.createEditEventArgs();
 
         if (!commit) {
-            this.onRowEditCancel.emit(args);
             this.transactions.endPending(false);
         } else {
-            args = this.gridAPI.update_row(row, row.newData);
+            rowEditArgs = this.gridAPI.update_row(row, row.newData);
+            if (rowEditArgs?.cancel) {
+                return true;
+            }
         }
-        if (args.cancel) {
-            this.transactions.startPending();
-            return;
-        }
+
         this.crudService.endRowEdit();
+
+        const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue);
+        this.rowEditExit.emit(nonCancelableArgs);
         this.closeRowEditingOverlay();
     }
 
@@ -6534,7 +6560,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-
+        let canceled = false;
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
@@ -6542,13 +6568,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.endAdd(commit, event);
             return;
         }
-        commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
 
-        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
-            return;
+        if (commit) {
+            canceled = this.gridAPI.submit_value();
+            if (canceled) {
+                return true;
+            }
+        } else {
+            this.crudService.exitCellEdit();
         }
 
-        this.endRowTransaction(commit, row);
+        canceled = this.crudService.exitRowEdit(commit);
+        this.crudService.rowEditingBlocked = canceled;
+        if (canceled) {
+            return true;
+        }
 
         const activeCell = this.selectionService.activeElement;
         if (event && activeCell) {
@@ -6560,6 +6594,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
         }
+
+        return false;
     }
 
     public endAdd(commit = true, event?: Event) {
@@ -6587,7 +6623,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             this.addRowParent = null;
         } else {
-            this.gridAPI.escape_editMode();
+            this.crudService.exitCellEdit();
             this.cancelAddMode = true;
         }
         this.crudService.endRowEdit();
@@ -6604,7 +6640,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public endRowEdit(commit = true, event?: Event) {
-        this.endEdit(commit, event);
+        const canceled = this.endEdit(commit, event);
+
+        if (canceled) {
+            return true;
+        }
+
         const activeCell = this.navigation.activeNode;
         if (activeCell && activeCell.row !== -1) {
             this.tbody.nativeElement.focus();

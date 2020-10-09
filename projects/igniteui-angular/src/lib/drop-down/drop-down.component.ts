@@ -356,6 +356,21 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.virtDir.getScroll().scrollTop = targetScroll;
     }
 
+    protected focusItem(value: boolean) {
+        if (value || this._focusedItem) {
+            this._focusedItem.focused = value;
+        }
+    }
+
+    protected updateItemFocus() {
+        if (this.selectedItem) {
+            this.focusedItem = this.selectedItem;
+            this.focusItem(true);
+        } else if (this.allowItemsFocus) {
+            this.navigateFirst();
+        }
+    }
+
     /**
      * @hidden @internal
      */
@@ -383,12 +398,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public onToggleOpened() {
-        if (this.selectedItem) {
-            this.focusedItem = this.selectedItem;
-            this._focusedItem.focused = true;
-        } else if (this.allowItemsFocus) {
-            this.navigateFirst();
-        }
+        this.updateItemFocus();
         this.onOpened.emit();
     }
 
@@ -406,9 +416,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public onToggleClosed() {
-        if (this._focusedItem) {
-            this._focusedItem.focused = false;
-        }
+        this.focusItem(false);
         this.onClosed.emit();
     }
 

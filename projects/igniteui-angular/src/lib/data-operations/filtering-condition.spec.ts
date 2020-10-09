@@ -155,7 +155,7 @@ class CustomFilter extends IgxFilteringOperand {
                 return value === searchVal;
             },
             isUnary: false,
-            iconName: 'starts_with'
+            iconName: 'starts-with'
         });
     }
 }

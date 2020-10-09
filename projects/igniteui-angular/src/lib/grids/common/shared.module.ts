@@ -21,7 +21,6 @@ import { IgxProgressBarModule } from '../../progressbar/progressbar.component';
 import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxGridStateModule } from '../state.directive';
-import { IgxGridIconService } from './grid-icon.service';
 import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
 
 
@@ -75,9 +74,6 @@ import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
         IgxProgressBarModule,
         IgxSelectModule,
         IgxSnackbarModule
-    ],
-    providers: [
-        IgxGridIconService
     ]
 })
 export class IgxGridSharedModules {}
