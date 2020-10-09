@@ -81,7 +81,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return this.grid.isRecordPinned(this.rowData);
     }
 
-    @HostBinding('class.igx-grid__tr--new')
     @Input()
     public get addRow(): any {
         return this._addRow;
@@ -89,6 +88,15 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     public set addRow(v: any) {
         this._addRow = v;
+    }
+
+    @HostBinding('style.min-height.px')
+    get rowHeight() {
+        return this.addRow ?  this.grid.rowHeight || 32 : null;
+    }
+
+    get cellHeight() {
+        return this.addRow ? null : this.grid.rowHeight || 32;
     }
 
     /**
@@ -478,6 +486,12 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return this.pinned && this.disabled && visibleColumnIndex === 0;
     }
 
+    public animationEndHandler() {
+        const cell = this.cells.find(c => c.editable);
+        cell.setEditMode(true);
+        cell.activate();
+    }
+
     /**
      * @hidden
      */
@@ -489,8 +503,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
         const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
+        const addClass = this.addRow ? 'igx-grid__tr--add' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
-         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
+         ${deletedClass} ${mrlClass} ${dragClass} ${addClass}`.trim();
     }
 
     /**

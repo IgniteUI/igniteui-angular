@@ -1194,6 +1194,16 @@
         }
     }
 
+    @keyframes scale {
+        from {
+            transform: scaleY(0);
+        }
+    }
+
+    %igx-grid__tr--add {
+        animation: scale .2s ease-in-out;
+    }
+
     %grid-row--edit-mrl {
         &:first-of-type::after {
             top: 0;
