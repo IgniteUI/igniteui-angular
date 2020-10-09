@@ -6,6 +6,12 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGridActions`
     - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes:
+        - You can close the Excel Style Filtering menu by pressing `Ctrl + Shift + L`.
+        - You can apply the filter by pressing `Enter`.
+        - When searching items in the Excel Style Filtering menu, only the rows that match your search term will be filtered in.
+        - By checking the `Add current selection to filter` option, the new search results will be added to the previously filtered items.
 - `IgxInputGroup`
     - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property.
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
@@ -76,6 +82,19 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
+    - Added `createAbsoluteOverlaySettings` and `createRelativeOverlaySettings` methods which create non-modal `OverlaySettings` based on predefined `PositionSettings`. The methods are exposed off the `IgxOverlayService`.
+        - `createAbsoluteOverlaySettings` creates non-modal `OverlaySettings` with `GlobalPositionStrategy` or `ContainerPositionStrategy` if an outlet is provided. Accepts `AbsolutePosition` enumeration, which could be `Center`, `Top` and `Bottom`. Default is `Center`.
+        ```typescript
+            const globalOverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Top);
+        ```
+        - `createRelativeOverlaySettings` creates `OverlaySettings` with `AutoPositionStrategy`, `ConnectedPositioningStrategy` or `ElasticPositionStrategy`. Accepts target, strategy and position. The `target` is the attaching point or element for the component to show. The position strategy is a `RelativePositionStrategy` enumeration, which defaults to `Auto`. The position is a `RelativePosition` enumeration. Possible values are `Above`, `Below`, `Before`, `After` and `Default`. The default option is `Default`, which positions the element below the target, left aligned.
+        ```typescript
+            const targetElement = this.button.nativeElement;
+            const connectedOverlaySettings = IgxOverlayService.createRelativeOverlaySettings(
+                    targetElement,
+                    RelativePositionStrategy.Connected,
+                    RelativePosition.Above);
+        ```
 - `IgxToast`
     - The component now utilizes the `IgxOverlayService` to position itself in the DOM.
     - An additional input property `outlet` has been added to allow users to specify custom Overlay Outlets using the `IgxOverlayOutletDirective`;
