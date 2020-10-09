@@ -99,6 +99,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(row.inEditMode).toBeTrue();
 
             grid.endEdit();
+            fixture.detectChanges();
             actionStrip.menu.open();
             fixture.detectChanges();
             const deleteMenuItem = actionStrip.menu.items[1];
