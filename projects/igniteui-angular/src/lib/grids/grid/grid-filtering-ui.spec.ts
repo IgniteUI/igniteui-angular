@@ -4355,7 +4355,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
             expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
         }));
 
         it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
@@ -4369,7 +4371,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
             expect(listItems.length).toBe(5, 'incorrect rendered list items count');
+            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
+            expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
+            expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
         }));
     });
 
