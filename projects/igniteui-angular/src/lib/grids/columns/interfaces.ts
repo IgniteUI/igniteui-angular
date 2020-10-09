@@ -14,7 +14,7 @@ export interface MRLResizeColumnInfo {
     spanUsed: number;
 }
 
-export interface IColumnPipeArguments {
+export interface IColumnPipeArgs {
     /** The date/time components that a date column will display, using predefined options or a custom format string. */
     format?: string;
     /** A timezone offset (such as '+0430'), or a standard UTC/GMT or continental US timezone abbreviation. */

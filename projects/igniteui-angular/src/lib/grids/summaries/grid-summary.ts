@@ -1,5 +1,5 @@
 import { DecimalPipe, DatePipe } from '@angular/common';
-import { IColumnPipeArguments } from '../columns/interfaces';
+import { IColumnPipeArgs } from '../columns/interfaces';
 
 export interface ISummaryExpression {
     fieldName: string;
@@ -153,7 +153,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en',
-        formatOptions: IColumnPipeArguments = {}):
+        formatOptions: IColumnPipeArgs = {}):
     IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
@@ -243,7 +243,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en',
-        formatOptions: IColumnPipeArguments = {}): IgxSummaryResult[] {
+        formatOptions: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DatePipe(locale);
         result.push({

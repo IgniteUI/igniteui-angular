@@ -43,7 +43,7 @@ import {
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArguments } from './interfaces';
+import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
 
@@ -1190,13 +1190,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return this._visibleWhenCollapsed;
     }
 
-    private _formatOptions: IColumnPipeArguments = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
+    private _formatOptions: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
     /**
      * @remarks
      * Provide parameters for DatePipe and DecimalPipe to customize the display format for date and numeric columns.
-     * Accepts an `IColumnPipeArguments` object with any of the `format`, `timezone` and `digitsInfo` properties.
+     * Accepts an `IColumnPipeArgs` object with any of the `format`, `timezone` and `digitsInfo` properties.
      * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
-     * @param IColumnPipeArguments object.
+     * @param IColumnPipeArgs object.
      *
      * @memberof IgxColumnComponent
      */
@@ -1205,7 +1205,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * Sets the formatOptions.
      * @example
      * ```typescript
-     * const formatOptions: IColumnPipeArguments = {
+     * const formatOptions: IColumnPipeArgs = {
      *      format: 'longDate',
      *      timezone: 'UTC'
      * }
@@ -1215,14 +1215,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * <igx-column dataType="number" formatOptions="{ digitsInfo: '1.1-2' }"></igx-column>
      * ```
      */
-    set formatOptions(value: IColumnPipeArguments) {
+    set formatOptions(value: IColumnPipeArgs) {
         this._formatOptions = Object.assign(this._formatOptions, value);
         this.grid.summaryService.clearSummaryCache();
         (this.grid as any)._pipeTrigger++;
         this.grid.summaryService.retriggerRootPipe++;
         this.grid.notifyChanges(true);
     }
-    get formatOptions(): IColumnPipeArguments {
+    get formatOptions(): IColumnPipeArgs {
         return this._formatOptions;
     }
 
