@@ -46,8 +46,8 @@
         <button igxButton="outlined" [displayDensity]="grid.displayDensity" #columnPinningButton name="btnColumnPinning" igxRipple
             (click)="toggleColumnPinningUI()">
             <div  class="igx-grid-toolbar__button-space">
-                <igx-icon *ngIf="pinnedColumnsCount > 0" fontSet="pinning-icons" name="pin"></igx-icon>
-                <igx-icon *ngIf="pinnedColumnsCount === 0" fontSet="pinning-icons" name="unpin"></igx-icon>
+                <igx-icon *ngIf="pinnedColumnsCount > 0" fontSet="imx-icons" name="pin-left"></igx-icon>
+                <igx-icon *ngIf="pinnedColumnsCount === 0" fontSet="imx-icons" name="unpin-left"></igx-icon>
                 <span>{{ pinnedColumnsCount }}</span>
                 <span>{{ grid.pinnedColumnsText }}</span>
                 <span></span>

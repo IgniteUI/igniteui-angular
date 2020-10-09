@@ -6,6 +6,8 @@ import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarc
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
+import { IgxActionStripComponent } from '../action-strip/public_api';
+
 
 @Component({
     template: `
@@ -207,3 +209,29 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true" [rowEditable]='true'>
+        <igx-action-strip #actionStrip1>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
+            <igx-grid-editing-actions></igx-grid-editing-actions>
+        </igx-action-strip>
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <igx-action-strip #actionStrip2>
+                <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                <igx-grid-editing-actions [asMenuItems]='true'></igx-grid-editing-actions>
+            </igx-action-strip>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridActionStripComponent extends IgxHierarchicalGridTestBaseComponent {
+    @ViewChild('actionStrip1', { read: IgxActionStripComponent, static: true })
+    public actionStripRoot: IgxActionStripComponent;
+
+    @ViewChild('actionStrip2', { read: IgxActionStripComponent, static: true })
+    public actionStripChild: IgxActionStripComponent;
+}
