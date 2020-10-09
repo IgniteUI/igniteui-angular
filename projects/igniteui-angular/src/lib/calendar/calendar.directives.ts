@@ -58,6 +58,12 @@ export class IgxCalendarYearDirective {
         return this.date.getFullYear() === this.value.getFullYear();
     }
 
+    public get nativeElement() {
+        return this.elementRef.nativeElement;
+    }
+
+    constructor(public elementRef: ElementRef) {}
+
     @HostListener('click')
     public onClick() {
         this.onYearSelection.emit(this.value);
