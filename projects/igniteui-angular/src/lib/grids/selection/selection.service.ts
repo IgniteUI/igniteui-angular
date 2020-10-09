@@ -292,25 +292,27 @@ export class IgxGridCRUDService {
     beginAddRow(cell) {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
+        cell.enterAddMode = true;
+        this.cell = newCell;
+        if (!this.sameRow(newCell.id.rowID)) {
+            this.row = this.createRow(this.cell);
+            this.row.isAddRow = true;
+            const rowArgs = this.row.createEditEventArgs(false);
+            this.grid.rowEditEnter.emit(rowArgs);
+            if (rowArgs.cancel) {
+                this.endEditMode();
+                this.grid.endAddRow();
+                return;
+            }
+            this.grid.openRowOverlay(this.row.id);
+        }
         const args = newCell.createEditEventArgs(false);
         this.grid.cellEditEnter.emit(args);
         if (args.cancel) {
-            this.endCellEdit();
+            this.endEditMode();
             this.grid.endAddRow();
             return;
         }
-        cell.enterAddMode = true;
-        this.cell = newCell;
-        this.row = this.createRow(this.cell);
-        this.row.isAddRow = true;
-        const rowArgs = this.row.createEditEventArgs(false);
-        this.grid.rowEditEnter.emit(rowArgs);
-        if (rowArgs.cancel) {
-            this.endRowEdit();
-            this.grid.endAddRow();
-            return;
-        }
-        this.grid.openRowOverlay(this.row.id);
     }
 
     public beginCellEdit(newCell) {

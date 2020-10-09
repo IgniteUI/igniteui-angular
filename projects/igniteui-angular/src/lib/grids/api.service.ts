@@ -134,8 +134,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             const args = this.update_add_cell(cell, cell.editValue);
             if (args.cancel) {
                 this.grid.endAddRow();
+                return args.cancel;
             }
-            this.grid.crudService.exitCellEdit();
+            return this.grid.crudService.exitCellEdit();
         }
     }
 
@@ -156,6 +157,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const data = cell.rowData;
         mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
+        this.grid.crudService.row.data = data;
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);

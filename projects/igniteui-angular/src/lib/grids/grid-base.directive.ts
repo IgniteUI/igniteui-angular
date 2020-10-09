@@ -6530,8 +6530,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!row && !cell) { return; }
 
         if (row?.isAddRow) {
-            this.endAdd(commit, event);
-            return;
+            canceled = this.endAdd(commit, event);
+            return canceled;
         }
 
         if (commit) {
@@ -6567,6 +6567,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const row = this.crudService.row;
         const cell = this.crudService.cell;
         const cachedRowData = {...row.data};
+        let cancelable = false;
         if (!row && !cell) {
             return;
         }
@@ -6579,9 +6580,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const showIndex = isInView ? -1 : dataIndex;
                 this.showSnackbarFor(showIndex);
             });
-            this.gridAPI.submit_add_value();
-            this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
+            cancelable = this.gridAPI.submit_add_value();
+            if (!cancelable) {
+                const args = row.createEditEventArgs();
+                this.rowEdit.emit(args);
+                if (args.cancel) {
+                    return args.cancel;
+                }
+                this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
+                const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+                this.rowEditDone.emit(doneArgs);
+            }
             this.addRowParent = null;
+            this.cancelAddMode = cancelable;
         } else {
             this.crudService.exitCellEdit();
             this.cancelAddMode = true;
@@ -6592,9 +6603,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
             this.onRowAdded.emit(row.data);
-            const doneArgs = row.createDoneEditEventArgs(cachedRowData);
-            this.rowEditDone.emit(doneArgs);
         }
+        const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
+        this.rowEditExit.emit(nonCancelableArgs);
+        return this.cancelAddMode;
     }
 
     /**
