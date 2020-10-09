@@ -73,6 +73,7 @@ import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-edit
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
 
 const appRoutes = [
     {
@@ -196,10 +197,13 @@ const appRoutes = [
         path: 'snackbar',
         component: SnackbarSampleComponent
     },
-
     {
         path: 'colors',
         component: ColorsSampleComponent
+    },
+    {
+        path: 'animations',
+        component: AnimationsSampleComponent
     },
     {
         path: 'shadows',

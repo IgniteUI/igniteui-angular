@@ -127,6 +127,7 @@ import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sampl
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -217,6 +218,7 @@ const components = [
     TreeGridLoadOnDemandSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
+    AnimationsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
     RadioSampleComponent,

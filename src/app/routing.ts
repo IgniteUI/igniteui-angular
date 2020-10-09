@@ -103,6 +103,7 @@ import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sampl
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
 
 const appRoutes = [
     {
@@ -277,6 +278,10 @@ const appRoutes = [
     {
         path: 'colors',
         component: ColorsSampleComponent
+    },
+    {
+        path: 'animations',
+        component: AnimationsSampleComponent
     },
     {
         path: 'shadows',
