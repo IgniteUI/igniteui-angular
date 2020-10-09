@@ -8,7 +8,7 @@
     >
 </ng-template>
 <ng-template #defaultCell>
-    <div
+    <div *ngIf="column.dataType !== 'boolean'"
         igxTextHighlight
         class="igx-grid__td-text"
         style="pointer-events: none;"
@@ -35,8 +35,6 @@
                 ? (value | igxdecimal: grid.locale)
                 : column.dataType === "date"
                 ? (value | igxdate: grid.locale)
-                : column.dataType === "boolean"
-                ? ""
                 : value
         }}</div>
     <igx-icon
