@@ -804,12 +804,12 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.target as Node;
+                const target = ev.target;
                 const overlayElement = info.elementRef.nativeElement;
                 // check if the click is on the overlay element or on an element from the exclusion list, and if so do not close the overlay
-                const excludeElements: HTMLElement[] = info.settings.excludeFromOutsideClick ?
+                const excludeElements = info.settings.excludeFromOutsideClick ?
                     [...info.settings.excludeFromOutsideClick, overlayElement] : [overlayElement];
-                const isInsideClick: boolean = excludeElements.some(e => e instanceof HTMLElement && e.contains(target as Node));
+                const isInsideClick: boolean = excludeElements.some(e => e.contains(target as Node));
                 if (isInsideClick) {
                     return;
                 //  if the click is outside click, but close animation has started do nothing
