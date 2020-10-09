@@ -70,6 +70,8 @@ All notable changes for each version of this project will be documented in this 
         }
     }
     ```  
+    - A new `formatOptions` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
+    ```typescript
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
