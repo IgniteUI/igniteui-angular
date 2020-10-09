@@ -73,7 +73,8 @@
         "resize-observer-polyfill": "^1.5.1",
         "igniteui-trial-watermark": "^1.0.3",
         "lodash.merge": "^4.6.2",
-        "uuid": "^8.3.0"
+        "uuid": "^8.3.0",
+        "@igniteui/material-icons-extended": "^2.4.0"
     },
     "peerDependencies": {
         "@angular/common": "^10.0.0",

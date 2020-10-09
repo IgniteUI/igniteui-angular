@@ -17,11 +17,9 @@ import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { IgxGridIconService } from '../common/grid-icon.service';
-import { GridIconsFeature } from '../common/enums';
-import { FILTERING_ICONS_FONT_SET, FILTERING_ICONS} from './grid-filtering-icons';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
+import { IgxIconService } from '../../icon/icon.service';
+import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
 /**
  * @hidden
@@ -61,7 +59,7 @@ export class IgxFilteringService implements OnDestroy {
     grid: IgxGridBaseDirective;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
-        private iconService: IgxGridIconService,  private _overlayService: IgxOverlayService) {}
+        private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -275,8 +273,10 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        this.iconService.registerSVGIcons(GridIconsFeature.Filtering, FILTERING_ICONS, FILTERING_ICONS_FONT_SET);
-        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+        const editorIcons = editor as any[];
+        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
 
     /**

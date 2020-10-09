@@ -14,10 +14,9 @@ import {
     IDisplayDensityOptions,
     GridSelectionMode,
     IPinningConfig,
-    GridIconsFeature
+    IgxIconService
 } from 'igniteui-angular';
-import { IgxGridIconService } from 'projects/igniteui-angular/src/lib/grids/common/grid-icon.service';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from 'projects/igniteui-angular/src/lib/grids/pinning/pinning-icons';
+import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
 @Component({
     selector: 'app-grid-row-pinning-sample',
@@ -26,14 +25,14 @@ import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from 'projects/igniteui-angular/
     providers: [
         { provide: IgxGridTransaction, useClass: IgxTransactionService },
         { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable} },
-        IgxGridIconService
+        IgxIconService
     ],
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
 
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
-                private iconService: IgxGridIconService,
+                private iconService: IgxIconService,
                 private excelExportService: IgxExcelExporterService) {
     }
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
@@ -187,7 +186,8 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
 
     togglePinRow(index) {
