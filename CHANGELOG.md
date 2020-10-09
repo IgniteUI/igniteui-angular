@@ -30,7 +30,7 @@ All notable changes for each version of this project will be documented in this 
     - `onOpening` and `onClosing` events are emitting now arguments of `ToggleViewCancelableEventArgs` type.
 - `IgxSelect`
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
-- `IgxDatePicker`	
+- `IgxDatePicker`
     - **Breaking Change** - Deprecated the `label` property.
     - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
 - `igxNavigationDrawer`
@@ -38,7 +38,9 @@ All notable changes for each version of this project will be documented in this 
 - `igxTabs`
     - Added `disableAnimation` property which enables/disables the transition animation of the tabs' content. Set to `false` by default.
 - `IgxExpansionPanel`
-    - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel. 
+    - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel.
+- `IgxCalendarComponent`, `IgxMonthsViewComponent` and `IgxYearsViewComponent`
+    - `tabIndex` property was removed  in order to improve on page navigation and to be compliant with W3 accessability recommendations; Also the date grid in the calendar is now only one tab stop, the same approach is applied and in the `IgxMonthsViewComponent` and `IgxYearsViewComponent`;
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
