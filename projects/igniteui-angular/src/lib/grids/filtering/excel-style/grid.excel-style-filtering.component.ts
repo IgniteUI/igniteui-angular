@@ -615,7 +615,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private generateUniqueValues(columnValues: any[]) {
-        this.uniqueValues = Array.from(new Set(columnValues));
+        if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
+            const filteredUniqueValues = columnValues.map(s => s?.toLowerCase())
+                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
+                new Map);
+
+            this.uniqueValues = Array.from(filteredUniqueValues.values());
+        } else {
+            this.uniqueValues = Array.from(new Set(columnValues));
+        }
     }
 
     private generateFilterValues(isDateColumn: boolean = false) {
@@ -720,13 +728,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         this.uniqueValues.forEach(element => {
             if (element !== undefined && element !== null && element !== '') {
-                if (this.column.dataType === DataType.String &&
-                    this.column.filteringIgnoreCase &&
-                    this.listData.length > 0 &&
-                    this.listData.map(el => el.label.toLowerCase()).indexOf(element.toLowerCase()) !== -1) {
-                        return;
-                    }
-
                 const filterListItem = new FilterListItem();
                 if (this.column.filteringExpressionsTree) {
                     if (shouldUpdateSelection) {
