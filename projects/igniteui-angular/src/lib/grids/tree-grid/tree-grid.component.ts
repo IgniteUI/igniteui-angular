@@ -439,6 +439,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
     }
 
+    protected getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
+    }
+
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -477,6 +481,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public collapseAll() {
         this._expansionDepth = 0;
         this.expansionStates = new Map<any, boolean>();
+    }
+
+    /**
+     * @hidden
+     */
+    public refreshGridState(args?) {
+        super.refreshGridState();
+        if (this.primaryKey && this.foreignKey) {
+            const rowID = args.data[this.foreignKey];
+            this.summaryService.clearSummaryCache({rowID: rowID});
+            this._pipeTrigger++;
+            this.cdr.detectChanges();
+        }
     }
 
     /**
