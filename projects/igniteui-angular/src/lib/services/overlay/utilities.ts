@@ -21,34 +21,31 @@ export enum VerticalAlignment {
 /**
  * Defines the possible values of the overlays' position strategy.
  */
-export const RelativePositionStrategy = mkenum({
-    Connected: 'connected',
-    Auto: 'auto',
-    Elastic: 'elastic'
-});
-export type RelativePositionStrategy = (typeof RelativePositionStrategy)[keyof typeof RelativePositionStrategy];
+export enum RelativePositionStrategy {
+    Connected = 'connected',
+    Auto = 'auto',
+    Elastic = 'elastic'
+}
 
 /**
  * Defines the possible positions for the relative overlay settings presets.
  */
-export const RelativePosition = mkenum({
-    Above: 'above',
-    Below: 'below',
-    Before: 'before',
-    After: 'after',
-    Default: 'default'
-});
-export type RelativePosition = (typeof RelativePosition)[keyof typeof RelativePosition];
+export enum RelativePosition {
+    Above = 'above',
+    Below = 'below',
+    Before = 'before',
+    After = 'after',
+    Default = 'default'
+}
 
 /**
  * Defines the possible positions for the absolute overlay settings presets.
  */
-export const AbsolutePosition = mkenum({
-    Bottom: 'bottom',
-    Top: 'top',
-    Center: 'center'
-});
-export type AbsolutePosition = (typeof AbsolutePosition)[keyof typeof AbsolutePosition];
+export enum AbsolutePosition {
+    Bottom = 'bottom',
+    Top = 'top',
+    Center = 'center'
+}
 
 export class Point {
     constructor(public x: number, public y: number) { }
