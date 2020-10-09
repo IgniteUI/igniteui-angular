@@ -12,7 +12,7 @@ import {
     ViewRef,
     ContentChild,
     Output,
-    EventEmitter
+    EventEmitter,
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -34,6 +34,7 @@ export class FilterListItem {
     public label: any;
     public isSelected: boolean;
     public indeterminate: boolean;
+    public isFiltered: boolean;
     public isSpecial = false;
     public isBlanks = false;
 }
@@ -287,6 +288,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    @Output()
+    public listDataLoaded = new EventEmitter();
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelColumnOperations', { read: TemplateRef, static: true })
     protected defaultExcelColumnOperations: TemplateRef<any>;
 
@@ -536,11 +543,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addBlanksItem(shouldUpdateSelection);
         }
 
-        this.addSelectAllItem();
+        if (this.listData.length > 0) {
+            this.addSelectAllItem();
+        }
 
         if (!(this.cdr as any).destroyed) {
             this.cdr.detectChanges();
         }
+
+        this.listDataLoaded.emit();
     }
 
     private getColumnFilterExpressionsTree() {
@@ -569,15 +580,19 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 if (this.column.filteringExpressionsTree) {
                     if (element === true && this.expressionsList.find(exp => exp.expression.condition.name === 'true' )) {
                         filterListItem.isSelected = true;
+                        filterListItem.isFiltered = true;
                         this.selectAllIndeterminate = true;
                     } else if (element === false && this.expressionsList.find(exp => exp.expression.condition.name === 'false' )) {
                             filterListItem.isSelected = true;
+                            filterListItem.isFiltered = true;
                             this.selectAllIndeterminate = true;
                     } else {
                         filterListItem.isSelected = false;
+                        filterListItem.isFiltered = false;
                     }
                 } else {
                     filterListItem.isSelected = true;
+                    filterListItem.isFiltered = true;
                 }
                 filterListItem.value = element;
                 filterListItem.label = element;
@@ -600,16 +615,20 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     if (shouldUpdateSelection) {
                         if (this.filterValues.has(element)) {
                             filterListItem.isSelected = true;
+                            filterListItem.isFiltered = true;
                         } else {
                             filterListItem.isSelected = false;
+                            filterListItem.isFiltered = false;
                         }
                         this.selectAllIndeterminate = true;
                     } else {
                         filterListItem.isSelected = false;
+                        filterListItem.isFiltered = false;
                         this.selectAllSelected = false;
                     }
                 } else {
                     filterListItem.isSelected = true;
+                    filterListItem.isFiltered = true;
                 }
                 if (this.column.dataType === DataType.Date) {
                     const date = new Date(element);
@@ -650,6 +669,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         selectAll.label = this.grid.resourceStrings.igx_grid_excel_select_all;
         selectAll.indeterminate = this.selectAllIndeterminate;
         selectAll.isSpecial = true;
+        selectAll.isFiltered = this.selectAllSelected;
         this.listData.unshift(selectAll);
     }
 
@@ -659,12 +679,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             if (shouldUpdateSelection) {
                 if (this.filterValues.has(null)) {
                     blanks.isSelected = true;
+                    blanks.isFiltered = true;
                 } else {
                     blanks.isSelected = false;
+                    blanks.isFiltered = false;
                 }
             }
         } else {
             blanks.isSelected = true;
+            blanks.isFiltered = true;
         }
         blanks.value = null;
         blanks.label = this.grid.resourceStrings.igx_grid_excel_blanks;
@@ -716,7 +739,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public onKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE) {
+        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE ||
+            eventArgs.ctrlKey && eventArgs.shiftKey && eventArgs.key.toLowerCase() === 'l') {
             this.closeDropdown();
         }
         eventArgs.stopPropagation();
