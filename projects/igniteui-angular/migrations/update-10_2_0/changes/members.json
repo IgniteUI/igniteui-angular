@@ -38,8 +38,17 @@
             ]
         },
         {
-            "member": "onRowEdit",
-            "replaceWith": "rowEdit",
+            "member": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
             "definedIn": [
                 "IgxGridComponent",
                 "IgxTreeGridComponent",
