@@ -1,0 +1,33 @@
+<div class="sample-wrapper">
+    <article class="sample-column">
+        <h4 class="sample-title">Animations categories</h4>
+        <div>
+            <igx-list (onItemClicked)="categoryItemClicked($event)">
+                <igx-list-item igxRipple *ngFor="let category of animationsCategories">
+                    <p>{{ category }}</p>
+                </igx-list-item>
+            </igx-list>
+        </div>
+    </article>
+    <article class="sample-column">
+        <h4 class="sample-title">Animations</h4>
+        <div>
+            <igx-list (onItemClicked)="playAnimation($event)">
+                <igx-list-item igxRipple *ngFor="let animation of animations">
+                    <p>{{ animation.name }}</p>
+                </igx-list-item>
+            </igx-list>
+        </div>
+    </article>
+    <igx-dialog #dialog>
+        <h4>This is a sample dialog showing the selected animation</h4>
+        <br>
+        <hr>
+        <br>
+        <hr>
+        <br>
+        <hr>
+        <br>
+        <h4>Click outside the dialog to close it</h4>
+    </igx-dialog>
+</div>
