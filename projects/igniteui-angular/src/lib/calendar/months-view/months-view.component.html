@@ -1,6 +1,6 @@
 <div class="igx-calendar__body">
-    <ul class="igx-calendar__body-row--wrap">
-        <li
+    <div role="grid" class="igx-calendar__body-row--wrap">
+        <span role="gridcell"
             [attr.aria-label]="month | date: 'LLLL'"
             [igxCalendarMonth]="month"
             [date]="date"
@@ -8,7 +8,7 @@
             (onMonthSelection)="selectMonth($event)" [index]="i"
             *ngFor="let month of months; index as i; trackBy: monthTracker">
             {{ formattedMonth(month) | titlecase }}
-        </li>
-    </ul>
+        </span>
+    </div>
 </div>
 

@@ -24,7 +24,7 @@
         [attr.aria-selected]="isSelected(day)"
         role="gridcell"
         [attr.aria-disabled]="isDateDisabled(day.date)"
-        [attr.aria-label]="isFirstInRange(day) ? day.date.toDateString() + ', ' + 'Range start' : isLastInRange(day) ? day.date.toDateString() + ', ' +  'Range End'  : day.date.toDateString()"
+        [attr.aria-label]="isFirstInRange(day) ? day.date.toDateString() + ', ' + resourceStrings.igx_calendar_range_start : isLastInRange(day) ? day.date.toDateString() + ', ' +  resourceStrings.igx_calendar_range_end  : day.date.toDateString()"
         [date]="day"
         [selection]="selection"
         [selected]="isSelected(day)"

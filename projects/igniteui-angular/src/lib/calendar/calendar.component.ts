@@ -29,8 +29,6 @@ import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
-import { ICalendarResourceStrings } from '../core/i18n/calendar-resources'
-import { CurrentResourceStrings } from '../core/i18n/resources';
 import { formatDate } from '@angular/common';
 
 let NEXT_ID = 0;
@@ -107,22 +105,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public getNextMonthYer(): String {
         const nextMonthYer = this.calendarModel.getNextMonth(this.viewDate).toString()
         return formatDate(nextMonthYer, 'MMMM yyyy', this.locale);
-    }
-
-    /**
-     * An accessor that sets the resource strings.
-     * By default it uses EN resources.
-     */
-    @Input()
-    set resourceStrings(value: ICalendarResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    /**
-     * An accessor that returns the resource strings.
-     */
-    get resourceStrings(): ICalendarResourceStrings {
-        return this._resourceStrings;
     }
 
     /**
@@ -227,24 +209,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public callback: (next) => void;
-
-    /**
-     * The default aria role attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.role')
-    public role = 'grid';
-
-    /**
-     * The default aria lebelled by attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy = 'calendar';
 
     /**
      * The default css class applied to the component.
@@ -1038,96 +1002,5 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         } else {
             return this.monthViews.toArray()[index];
         }
-    }
-
-    /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
-    private _SelectMonthLabel = null;
-    private _SelectYearLabel = null;
-    private _PreviousMonthLabel = null;
-    private _NextMonthLabel = null;
-
-    /**
-     * An @Input property that renders Select Month button aria label with custom text. By default `SelectMonthAriaLabel` is set to 'Select Month'.
-     * ```html
-     * <igx-calendar SelectMonthAriaLabel='Click to select a month'></igx-time-picker>
-     * ```
-     */
-    @Input()
-    set SelectMonthAriaLabel(value: string) {
-        this._SelectMonthLabel = value;
-    }
-
-    /**
-     * An accessor that returns the aria label of select month button.
-     */
-    get SelectMonthAriaLabel(): string {
-        if (this._SelectMonthLabel === null) {
-            return this.resourceStrings.igx_calendar_select_month;
-        }
-        return this._SelectMonthLabel;
-    }
-
-    /**
-     * An @Input property that renders Select Year button aria label with custom text. By default `SelectYearAriaLabel` is set to 'Select Year'.
-     * ```html
-     * <igx-calendar SelectYearAriaLabel='Click to select a year'></igx-time-picker>
-     * ```
-     */
-    @Input()
-    set SelectYearAriaLabel(value: string) {
-        this._SelectYearLabel = value;
-    }
-
-    /**
-     * An accessor that returns the aria label of select year button.
-     */
-    get SelectYearAriaLabel(): string {
-        if (this._SelectYearLabel === null) {
-            return this.resourceStrings.igx_calendar_select_year;
-        }
-        return this._SelectYearLabel;
-    }
-
-    /**
-     * An @Input property that renders previous month button aria label with custom text. By default `PreviousMonthAriaLabel` is set to 'Previous Month'.
-     * ```html
-     * <igx-calendar PreviousMonthAriaLabel='Click to select previous month'></igx-time-picker>
-     * ```
-     */
-    @Input()
-    set PreviousMonthAriaLabel(value: string) {
-        this._PreviousMonthLabel = value;
-    }
-
-    /**
-     * An accessor that returns the aria label of previous month button.
-     */
-    get PreviousMonthAriaLabel(): string {
-        if (this._PreviousMonthLabel === null) {
-            return this.resourceStrings.igx_calendar_previous_month;
-        }
-        return this._PreviousMonthLabel;
-    }
-
-    /**
-     * An @Input property that renders next month button aria label with custom text. By default `NextMonthAriaLabel` is set to 'Next Month'.
-     * ```html
-     * <igx-calendar NextMonthAriaLabel='Click to select next month'></igx-time-picker>
-     * ```
-     */
-    @Input()
-    set NextMonthAriaLabel(value: string) {
-        this._NextMonthLabel = value;
-    }
-
-    /**
-     * An accessor that returns the aria label of next month button.
-     */
-    get NextMonthAriaLabel(): string {
-        if (this._NextMonthLabel === null) {
-            return this.resourceStrings.igx_calendar_next_month;
-        }
-        return this._NextMonthLabel;
     }
 }

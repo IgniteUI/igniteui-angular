@@ -5,6 +5,9 @@ import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
 import { isDate, mkenum } from '../core/utils';
 import { CalendarView } from './month-picker-base';
+import { CurrentResourceStrings } from '../core/i18n/resources';
+import { ICalendarResourceStrings } from 'igniteui-angular';
+
 
 /**
  * Sets the selection type - single, multi or range.
@@ -32,6 +35,25 @@ export interface IViewDateChangeEventArgs {
     selector: '[igxCalendarBase]',
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
+    /** @hidden @internal */
+    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
+
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    set resourceStrings(value: ICalendarResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    get resourceStrings(): ICalendarResourceStrings {
+        return this._resourceStrings;
+    }
+
     /**
      * Gets the start day of the week.
      * Can return a numeric or an enum representation of the week day.
