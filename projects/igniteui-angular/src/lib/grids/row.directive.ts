@@ -369,6 +369,17 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * @hidden
+     * @internal
+     */
+    @HostListener('mouseover', ['$event'])
+    public showActionStrip(event: MouseEvent) {
+        if (this.grid.actionStrip) {
+            this.grid.actionStrip.show(this);
+        }
+    }
+
+    /**
+     * @hidden
      */
     public onRowSelectorClick(event) {
         event.stopPropagation();
@@ -392,7 +403,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public update(value: any) {
         const crudService = this.crudService;
-        if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
+        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);

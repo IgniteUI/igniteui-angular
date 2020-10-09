@@ -490,10 +490,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     public nextMonth(isKeydownTrigger = false) {
         if (isKeydownTrigger && this.animationAction === 'prev') { return; }
+        this.isKeydownTrigger = isKeydownTrigger;
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
-        this.isKeydownTrigger = isKeydownTrigger;
     }
 
     /**
@@ -556,7 +556,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         requestAnimationFrame(() => {
             if (this.dacadeView) {
                 this.dacadeView.date = args;
-                this.dacadeView.el.nativeElement.focus();
+                this.dacadeView.calendarDir.find(date => date.isCurrentYear).nativeElement.focus();
             }
         });
     }
@@ -571,7 +571,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         requestAnimationFrame(() => {
             if (this.dacadeView) {
                 this.dacadeView.date = args;
-                this.dacadeView.el.nativeElement.focus();
+                this.dacadeView.calendarDir.find(date => date.isCurrentYear).nativeElement.focus();
             }
         });
     }
@@ -732,6 +732,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
              (event.fromState === 'void' && event.toState === ScrollMonth.NONE)) {
             this.viewDateChanged.emit({ previousValue: this.previousViewDate, currentValue: this.viewDate });
         }
+        if (!this.isKeydownTrigger) {
+            this.resetActiveDate();
+        }
 
         if (this.monthScrollDirection !== ScrollMonth.NONE) {
             this.scrollMonth$.next();
@@ -756,7 +759,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             this.callback(this.nextDate);
         }
         this.animationAction = ScrollMonth.NONE;
-        this.resetActiveDate();
     }
 
     /**
