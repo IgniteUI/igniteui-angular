@@ -1217,6 +1217,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     set formatOptions(value: IColumnPipeArguments) {
         this._formatOptions = Object.assign(this._formatOptions, value);
+        this.grid.summaryService.clearSummaryCache();
+        (this.grid as any)._pipeTrigger++;
+        this.grid.summaryService.retriggerRootPipe++;
+        this.grid.notifyChanges(true);
     }
     get formatOptions(): IColumnPipeArguments {
         return this._formatOptions;

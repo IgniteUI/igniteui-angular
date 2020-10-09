@@ -23,11 +23,17 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
-    public formatOptions = {
+    public options = {
         timezone: '+0430',
         format: 'longTime',
         digitsInfo: '1.3-4'
     };
+    public options2 = {
+        timezone: 'UTC',
+        format: 'mediumDate',
+        digitsInfo: '1.0-2'
+    };
+    public formatOptions = this.options;
 
     kk = false;
     pname = 'ProductName';
@@ -61,6 +67,14 @@ export class GridCellEditingComponent {
             Discontinued: false,
             OrderDate: new Date('1905-03-17')
         });
+    }
+
+    public changeFormatOptions() {
+        if (this.formatOptions === this.options) {
+            this.formatOptions = this.options2;
+        } else {
+            this.formatOptions = this.options;
+        }
     }
 
     enDisSummaries() {
