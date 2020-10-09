@@ -276,6 +276,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
+    public hideActionStrip(event: MouseEvent) {
+        if (!this.parent) {
+            // hide child layout actions strips when
+            // moving outside root grid.
+            super.hideActionStrip(event);
+            this.allLayoutList.forEach(ri => {
+                ri.actionStrip?.hide();
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     */
     ngOnInit() {
         if (this._transactions instanceof IgxTransactionService) {
             // transaction service cannot be injected in a derived class in a factory manner
@@ -327,6 +341,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         // this.toolbarCustomContentTemplates = this.parentIsland ?
         //     this.parentIsland.toolbarCustomContentTemplates :
         //     this.toolbarCustomContentTemplates;
+
+        this.actionStrip = this.parentIsland ? this.parentIsland.actionStrip : this.actionStrip;
 
         this.headSelectorsTemplates = this.parentIsland ?
             this.parentIsland.headSelectorsTemplates :

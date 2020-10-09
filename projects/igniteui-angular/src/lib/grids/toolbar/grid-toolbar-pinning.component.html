@@ -2,7 +2,7 @@
     <button #btn igxButton="outlined" name="btnColumnPinning" (click)="toggle(btn, ref)"
         [displayDensity]="grid.displayDensity">
         <div class="igx-grid-toolbar__button-space">
-            <igx-icon fontSet="pinning-icons" [name]="!grid.pinnedColumnsCount ? 'unpin' : 'pin'"></igx-icon>
+            <igx-icon fontSet="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
             <span>{{ grid.pinnedColumnsCount }}</span>
             <span>{{ grid.pinnedColumnsText }}</span>
         </div>

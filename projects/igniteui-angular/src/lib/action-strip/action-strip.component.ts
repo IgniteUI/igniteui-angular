@@ -148,6 +148,13 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public actionButtons: QueryList<IgxGridActionsBaseDirective>;
 
     /**
+     * Getter for menu overlay settings
+     * @hidden
+     * @internal
+     */
+    public menuOverlaySettings: OverlaySettings  = { scrollStrategy: new CloseScrollStrategy() };
+
+    /**
      * Menu Items list.
      * @hidden
      * @internal
@@ -241,15 +248,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         if (this.context && this.context.element) {
             this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
-    }
-
-    /**
-     * Getter for menu overlay settings
-     * @hidden
-     * @internal
-     */
-    get menuOverlaySettings (): OverlaySettings {
-        return { scrollStrategy: new CloseScrollStrategy() };
     }
 
     /**

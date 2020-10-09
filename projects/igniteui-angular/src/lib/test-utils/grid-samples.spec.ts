@@ -1601,12 +1601,12 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     }
 
     public get cellInEditMode() {
-        return this.gridAPI.get_cell_inEditMode();
+        return this.grid.crudService.cell;
     }
 
     public getCurrentEditCell(): IgxGridCellComponent {
         const grid = this.grid as any;
-        const currentCell = grid.gridAPI.get_cell_inEditMode();
+        const currentCell = grid.crudService.cell;
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
     }
 

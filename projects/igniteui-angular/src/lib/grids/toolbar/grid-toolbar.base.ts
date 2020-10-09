@@ -44,7 +44,6 @@ function _makeOverlaySettings(): OverlaySettings {
         positionStrategy: new ConnectedPositioningStrategy(positionSettings),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: true,
-        excludePositionTarget: true
+        closeOnOutsideClick: true
     };
 }

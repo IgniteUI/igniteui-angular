@@ -8,9 +8,8 @@ import {
     ContentChild
 } from '@angular/core';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
-import { IgxGridIconService } from '../common/grid-icon.service';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS } from '../pinning/pinning-icons';
-import { GridIconsFeature } from '../common/enums';
+import { IgxIconService } from '../../icon/public_api';
+import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 import { IgxGridToolbarTitleDirective, IgxGridToolbarActionsDirective } from './common';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -103,35 +102,11 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         private api: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        private iconService: IgxGridIconService,
+        private iconService: IgxIconService,
         private element: ElementRef<HTMLElement>
     ) {
         super(_displayDensityOptions);
-        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
-
-
-    /**
-     * @hidden @internal
-     */
-    // public onClosingColumnHiding(args) {
-    //     const activeElem = document.activeElement;
-
-    //     if (!args.event && activeElem !== this.grid.nativeElement &&
-    //         !this.columnHidingButton.nativeElement.contains(activeElem)) {
-    //         args.cancel = true;
-    //     }
-    // }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public onClosingColumnPinning(args) {
-    //     const activeElem = document.activeElement;
-
-    //     if (!args.event && activeElem !== this.grid.nativeElement &&
-    //         !this.columnPinningButton.nativeElement.contains(activeElem)) {
-    //         args.cancel = true;
-    //     }
-    // }
 }
