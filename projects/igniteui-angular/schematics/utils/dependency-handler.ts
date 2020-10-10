@@ -22,22 +22,24 @@ const schematicsPackage = '@igniteui/angular-schematics';
  * unnecessary packages to the consuming project's deps
  */
 export const DEPENDENCIES_MAP: PackageEntry[] = [
-    // dependencies
-    { name: 'hammerjs', target: PackageTarget.REGULAR },
-    { name: 'jszip', target: PackageTarget.REGULAR },
-    { name: 'tslib', target: PackageTarget.NONE },
-    { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
-    { name: '@types/hammerjs', target: PackageTarget.DEV },
-    { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
-    { name: 'lodash.merge', target: PackageTarget.NONE },
-    // peerDependencies
-    { name: '@angular/forms', target: PackageTarget.NONE },
-    { name: '@angular/common', target: PackageTarget.NONE },
-    { name: '@angular/core', target: PackageTarget.NONE },
-    { name: '@angular/animations', target: PackageTarget.NONE },
-    { name: 'web-animations-js', target: PackageTarget.REGULAR },
-    // igxDevDependencies
-    { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
+        // dependencies
+        { name: 'hammerjs', target: PackageTarget.REGULAR },
+        { name: 'jszip', target: PackageTarget.REGULAR },
+        { name: 'tslib', target: PackageTarget.NONE },
+        { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
+        { name: '@types/hammerjs', target: PackageTarget.DEV },
+        { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
+        { name: 'lodash.merge', target: PackageTarget.NONE },
+        { name: 'uuid', target: PackageTarget.NONE },
+        { name: 'web-animations-js', target: PackageTarget.REGULAR },
+        { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
+        // peerDependencies
+        { name: '@angular/forms', target: PackageTarget.NONE },
+        { name: '@angular/common', target: PackageTarget.NONE },
+        { name: '@angular/core', target: PackageTarget.NONE },
+        { name: '@angular/animations', target: PackageTarget.NONE },
+        // igxDevDependencies
+        { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
 
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {

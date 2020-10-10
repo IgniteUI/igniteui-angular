@@ -28,7 +28,7 @@
     <h5>Grid Pinning Action</h5>
     <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'"
         [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity"
-        (mouseleave)="onMouseLeave(actionstrip1)" (mouseover)="onMouseOver($event, grid1, actionstrip1)">
+      >
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
             [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
         </igx-column>
@@ -47,7 +47,7 @@
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
             [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
             <ng-template igxCell let-cell="cell" let-val>
-                <div class="cell-template" (mouseover)="actionstrip2.show(cell.row)">
+                <div class="cell-template">
                     <span>{{val}}</span>
                 </div>
             </ng-template>
@@ -64,8 +64,7 @@
     <h5>Actions in menu</h5>
     <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
         [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity"
-        (mouseleave)="onMouseLeave(actionstrip3, $event)"
-        (mouseover)="onMouseOver($event, grid3, actionstrip3)">
+       >
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
             [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
         </igx-column>
