@@ -23,7 +23,7 @@ import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
-import { CancelableEventArgs, CancelableBrowserEventArgs, isIE, IBaseEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -81,7 +81,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -374,8 +374,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public onToggleOpening(e: CancelableEventArgs) {
-        this.onOpening.emit(e);
+    public onToggleOpening(e: CancelableBrowserEventArgs & IBaseEventArgs) {
+        // do not mutate passed event args
+        const eventArgs: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, e, { owner: this });
+        this.onOpening.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
         if (e.cancel) {
             return;
         }
@@ -405,8 +408,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public onToggleClosing(e: CancelableBrowserEventArgs) {
-        this.onClosing.emit(e);
+    public onToggleClosing(e: CancelableBrowserEventArgs & IBaseEventArgs) {
+        const eventArgs: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, e, { owner: this });
+        this.onClosing.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
         if (this.virtDir) {
             this._scrollPosition = this.virtDir.scrollPosition;
         }

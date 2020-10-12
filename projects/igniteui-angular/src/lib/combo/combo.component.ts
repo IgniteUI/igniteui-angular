@@ -453,7 +453,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -513,7 +513,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Gets/gets combo id.
@@ -1145,7 +1145,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const newCollection = [...this.data];
         newCollection.push(addedItem);
         const args: IComboItemAdditionEvent = {
-            oldCollection, addedItem, newCollection
+            oldCollection, addedItem, newCollection, owner: this
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
@@ -1238,8 +1238,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e) => {
-            this.onDataPreLoad.emit(e);
+        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
+            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
+            this.onDataPreLoad.emit(eventArgs);
         });
     }
 
@@ -1489,6 +1490,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             added,
             removed,
             event,
+            owner: this,
             displayText,
             cancel: false
         };
@@ -1549,8 +1551,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      * @internal
      */
-    public handleOpening(event: CancelableEventArgs) {
-        this.onOpening.emit(event);
+    public handleOpening(event: CancelableBrowserEventArgs & IBaseEventArgs) {
+        const eventArgs: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, event, { owner: this });
+        this.onOpening.emit(eventArgs);
+        event.cancel = eventArgs.cancel;
         if (event.cancel) {
             return;
         }
@@ -1576,8 +1580,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public handleClosing(event) {
-        this.onClosing.emit(event);
+    public handleClosing(event: CancelableBrowserEventArgs & IBaseEventArgs) {
+        const eventArgs: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, event, { owner: this });
+        this.onClosing.emit(eventArgs);
+        event.cancel = eventArgs.cancel;
         if (event.cancel) {
             return;
         }

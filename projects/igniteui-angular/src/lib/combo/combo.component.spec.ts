@@ -19,6 +19,7 @@ import { DisplayDensity } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
+import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -282,6 +283,39 @@ describe('igxCombo', () => {
             combo.selectItems([], true);
             expect(combo.selectedItems()).toEqual([]);
         });
+        it('should emit owner on `onOpened` and `onClosed`', () => {
+            combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
+                mockIconService, null, null, mockInjector);
+            spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
+            combo.ngOnInit();
+            spyOn(combo.onOpened, 'emit');
+            spyOn(combo.onClosing, 'emit');
+            const mockObj = {};
+            const inputEvent: CancelableBrowserEventArgs & IBaseEventArgs = {
+                cancel: false,
+                owner: mockObj,
+            };
+            combo.handleOpening(inputEvent);
+            expect(combo.onOpened.emit).toHaveBeenCalledWith(Object.assign({}, inputEvent, { owner: combo }));
+            expect(inputEvent.owner).toEqual(mockObj);
+            combo.handleOpening(inputEvent);
+            expect(combo.onClosing.emit).toHaveBeenCalledWith(Object.assign({}, inputEvent, { owner: combo }));
+            expect(inputEvent.owner).toEqual(mockObj);
+            let sub = combo.onOpened.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
+                e.cancel = true;
+            });
+            combo.handleOpening(inputEvent);
+            expect(inputEvent.cancel).toEqual(true);
+            sub.unsubscribe();
+            inputEvent.cancel = false;
+
+            sub = combo.onClosing.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
+                e.cancel = true;
+            });
+            combo.handleOpening(inputEvent);
+            expect(inputEvent.cancel).toEqual(true);
+            sub.unsubscribe();
+        });
         it('should fire onSelectionChange event on item selection', () => {
             const selectionService = new IgxSelectionAPIService();
             combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
@@ -299,12 +333,13 @@ describe('igxCombo', () => {
 
             combo.selectItems(newSelection);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
                 oldSelection: oldSelection,
                 newSelection: newSelection,
                 added: newSelection,
                 removed: [],
                 event: undefined,
+                owner: combo,
                 displayText: `${newSelection.join(', ')}`,
                 cancel: false
             });
@@ -314,12 +349,13 @@ describe('igxCombo', () => {
             oldSelection = [...newSelection];
             newSelection.push(newItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
                 oldSelection: oldSelection,
                 newSelection: newSelection,
                 removed: [],
                 added: [combo.data[3]],
                 event: undefined,
+                owner: combo,
                 displayText: `${newSelection.join(', ')}`,
                 cancel: false
             });
@@ -328,12 +364,13 @@ describe('igxCombo', () => {
             newSelection = [combo.data[0]];
             combo.selectItems(newSelection, true);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(3);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
                 oldSelection: oldSelection,
                 newSelection: newSelection,
                 removed: oldSelection,
                 added: newSelection,
                 event: undefined,
+                owner: combo,
                 displayText: `${newSelection.join(', ')}`,
                 cancel: false
             });
@@ -344,12 +381,13 @@ describe('igxCombo', () => {
             combo.deselectItems([newItem]);
             expect(combo.selectedItems().length).toEqual(0);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(4);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
                 oldSelection: oldSelection,
                 newSelection: newSelection,
                 removed: [combo.data[0]],
                 added: [],
                 event: undefined,
+                owner: combo,
                 displayText: `${newSelection.join(', ')}`,
                 cancel: false
             });
@@ -372,6 +410,7 @@ describe('igxCombo', () => {
                 added: [combo.data[0][combo.valueKey]],
                 removed: [],
                 event: undefined,
+                owner: combo,
                 displayText: `${combo.data[0][combo.displayKey]}`,
                 cancel: false
             };
@@ -408,6 +447,7 @@ describe('igxCombo', () => {
                 added: newSelection.map(e => e[combo.valueKey]),
                 removed: [],
                 event: undefined,
+                owner: combo,
                 displayText: `${newSelection.map(entry => entry[combo.displayKey]).join(', ')}`,
                 cancel: false
             };
@@ -472,11 +512,12 @@ describe('igxCombo', () => {
             combo.selectAllItems(true);
             expect(combo.selectedItems()).toEqual(data);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
                 oldSelection: [],
                 newSelection: data,
                 added: data,
                 removed: [],
+                owner: combo,
                 event: undefined,
                 displayText: `${combo.data.join(', ')}`,
                 cancel: false
@@ -485,11 +526,12 @@ describe('igxCombo', () => {
             combo.deselectAllItems(true);
             expect(combo.selectedItems()).toEqual([]);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
                 oldSelection: data,
                 newSelection: [],
                 added: [],
                 removed: data,
+                owner: combo,
                 event: undefined,
                 displayText: '',
                 cancel: false
@@ -1879,12 +1921,13 @@ describe('igxCombo', () => {
             expect(selectedItem_1.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(
-                {
+                <IComboSelectionChangeEventArgs>{
                     newSelection: [selectedItem_1.value[combo.valueKey]],
                     oldSelection: [],
                     added: [selectedItem_1.value[combo.valueKey]],
                     removed: [],
                     event: UIInteractions.getMouseEvent('click'),
+                    owner: combo,
                     displayText: selectedItem_1.value[combo.valueKey],
                     cancel: false
                 });
@@ -1896,12 +1939,13 @@ describe('igxCombo', () => {
             expect(selectedItem_2.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(
-                {
+                <IComboSelectionChangeEventArgs>{
                     newSelection: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
                     oldSelection: [selectedItem_1.value[combo.valueKey]],
                     added: [selectedItem_2.value[combo.valueKey]],
                     removed: [],
                     event: UIInteractions.getMouseEvent('click'),
+                    owner: combo,
                     displayText: selectedItem_1.value[combo.valueKey] + ', ' + selectedItem_2.value[combo.valueKey],
                     cancel: false
                 });
@@ -1914,12 +1958,13 @@ describe('igxCombo', () => {
             expect(unselectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED)).toBeFalsy();
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(3);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(
-                {
+                <IComboSelectionChangeEventArgs>{
                     newSelection: [selectedItem_2.value[combo.valueKey]],
                     oldSelection: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
                     added: [],
                     removed: [unselectedItem.value[combo.valueKey]],
                     event: UIInteractions.getMouseEvent('click'),
+                    owner: combo,
                     displayText: selectedItem_2.value[combo.valueKey],
                     cancel: false
                 });
