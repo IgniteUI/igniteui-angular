@@ -1196,25 +1196,21 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
      * Accepts an `IColumnPipeArgs` object with any of the `format`, `timezone` and `digitsInfo` properties.
      * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
-     * @param IColumnPipeArgs object.
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input()
-    /**
-     * Sets the pipeArgs input value.
      * @example
      * ```typescript
      * const pipeArgs: IColumnPipeArgs = {
      *      format: 'longDate',
-     *      timezone: 'UTC'
+     *      timezone: 'UTC',
+     *      { digitsInfo: '1.1-2' }
      * }
      * ```
      * ```html
-     * <igx-column dataType="date" pipeArgs="pipeArgs"></igx-column>
-     * <igx-column dataType="number" pipeArgs="{ digitsInfo: '1.1-2' }"></igx-column>
+     * <igx-column dataType="date" [pipeArgs]="pipeArgs"></igx-column>
+     * <igx-column dataType="number" [pipeArgs]="pipeArgs"></igx-column>
      * ```
+     * @memberof IgxColumnComponent
      */
+    @Input()
     set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
