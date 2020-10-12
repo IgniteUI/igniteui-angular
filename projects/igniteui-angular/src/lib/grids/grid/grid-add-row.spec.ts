@@ -393,7 +393,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
 
-        fit('Should enter add mode but close it when cellEditEnter is canceled', () => {
+        it('Should enter add mode but close it when cellEditEnter is canceled', () => {
             let canceled = true;
             grid.cellEditEnter.pipe(first()).subscribe((evt) => {
                 evt.cancel = canceled;
@@ -402,7 +402,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowList.first.beginAddRow();
             fixture.detectChanges();
 
-            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
             expect(grid.crudService.cellInEditMode).toEqual(false);
 
             grid.endEdit(false);

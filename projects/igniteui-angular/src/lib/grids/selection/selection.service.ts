@@ -309,8 +309,7 @@ export class IgxGridCRUDService {
         const args = newCell.createEditEventArgs(false);
         this.grid.cellEditEnter.emit(args);
         if (args.cancel) {
-            this.endEditMode();
-            this.grid.endAddRow();
+            this.endCellEdit();
             return;
         }
     }
