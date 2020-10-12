@@ -67,6 +67,20 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
     /**
      * @hidden
+     * @internal
+     */
+    @Input()
+    public set activeDate(value: string) {
+        this._activeDate = value;
+        this.activeDateChange.emit(this._activeDate);
+    }
+
+    public get activeDate() {
+        return this._activeDate ? this._activeDate : this.viewDate.toLocaleDateString();
+    }
+
+    /**
+     * @hidden
      */
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
@@ -76,6 +90,18 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @Output()
     public onViewChanging = new EventEmitter<IViewChangingEventArgs>();
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public activeDateChange = new EventEmitter<string>();
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public monthsViewBlur = new EventEmitter<any>();
 
     /**
      * @hidden
@@ -97,6 +123,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     public prevMonthView: IgxDaysViewComponent;
+    public _activeDate;
+    private shouldResetDate = true;
 
     /**
      * The default css class applied to the component.
@@ -105,6 +133,34 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @HostBinding('class.igx-calendar')
     public styleClass = true;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('focusout')
+    public resetActiveMonth() {
+        if (this.shouldResetDate) {
+            const date = this.dates.find(day => day.selected && day.isCurrentMonth)
+            || this.dates.find(day => day.isToday && day.isCurrentMonth) || this.dates.find(d => d.isFocusable);
+            if (date) { this.activeDate = date.date.date.toLocaleDateString(); }
+            this.monthsViewBlur.emit();
+        }
+        this.shouldResetDate = true;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keydown.pagedown')
+    @HostListener('keydown.pageup')
+    @HostListener('keydown.shift.pagedown')
+    @HostListener('keydown.shift.pageup')
+    @HostListener('pointerdown')
+    public pointerDown() {
+        this.shouldResetDate = false;
+    }
 
     /**
      * @hidden
@@ -134,6 +190,14 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         if (!this.changeDaysView && this.dates) {
             this.disableOutOfRangeDates();
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public tabIndex(day: ICalendarDate): number {
+        return this.activeDate && this.activeDate === day.date.toLocaleDateString() && day.isCurrentMonth ? 0 : -1;
     }
 
     /**
@@ -301,7 +365,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public selectDay(event) {
         this.selectDateFromClient(event.date);
         this.onDateSelection.emit(event);
-
         this.onSelection.emit(this.selectedDates);
     }
 
@@ -361,6 +424,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.shouldResetDate = false;
         this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
     }
 
@@ -371,6 +435,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.shouldResetDate = false;
         this.getFirstMonthView().daysNavService.focusHomeDate();
     }
 
@@ -381,6 +446,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.shouldResetDate = false;
         this.getLastMonthView().daysNavService.focusEndDate();
     }
 }

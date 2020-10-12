@@ -2170,9 +2170,9 @@ export class MRLTestComponent {
 @Component({
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
+    [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width">
+        [width]="c.width" [movable]='true' [resizable]='true'>
     </igx-column>
 
     <igx-action-strip #actionStrip>

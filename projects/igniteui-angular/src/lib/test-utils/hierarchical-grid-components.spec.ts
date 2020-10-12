@@ -8,6 +8,7 @@ import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 import { IgxActionStripComponent } from '../action-strip/public_api';
 
+
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
@@ -209,11 +210,10 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
 
-
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
-        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true" [rowEditable]='true'>
         <igx-action-strip #actionStrip1>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions></igx-grid-editing-actions>
