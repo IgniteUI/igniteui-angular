@@ -155,18 +155,14 @@ export class IgxDayItemComponent {
         return this.selection !== CalendarSelection.RANGE;
     }
 
-    @HostBinding('attr.tabindex')
-    public get tabindex(): number {
-        return this.isDisabled || this.isHidden ? -1 : 0;
-    }
-
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }
 
-    @HostListener('click')
-    @HostListener('keydown.enter')
-    public onSelect() {
+    @HostListener('click', ['$event'])
+    @HostListener('keydown.enter', ['$event'])
+    public onSelect(event) {
+        event.stopPropagation();
         this.onDateSelection.emit(this.date);
     }
 }

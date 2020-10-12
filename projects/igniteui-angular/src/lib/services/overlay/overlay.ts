@@ -155,8 +155,8 @@ export class IgxOverlayService implements OnDestroy {
      */
     public static createRelativeOverlaySettings(
         target: Point | HTMLElement,
-        strategy?: RelativePositionStrategy,
-        position?: RelativePosition):
+        position?: RelativePosition,
+        strategy?: RelativePositionStrategy):
         OverlaySettings {
         const positionSettings = this.createRelativePositionSettings(position);
         const overlaySettings: OverlaySettings = {
@@ -810,7 +810,7 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.target as any;
+                const target = ev.target;
                 const overlayElement = info.elementRef.nativeElement;
                 // check if the click is on the overlay element or on an element from the exclusion list, and if so do not close the overlay
                 const excludeElements = info.settings.excludeFromOutsideClick ?
