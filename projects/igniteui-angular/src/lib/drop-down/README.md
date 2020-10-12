@@ -133,9 +133,9 @@ The following outputs are available in the **igx-drop-down** component:
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
 | `onSelection` | false | Emitted when item selection is changing, before the selection completes. | `{ISelectionEventArgs}` |
-| `onOpening` | true | Emitted before the dropdown is opened. |
+| `onOpening` | true | Emitted before the dropdown is opened. | `CancelableBrowserEventArgs & IBaseEventArgs` |
 | `onOpened` | false | Emitted when a dropdown is being opened. |
-| `onClosing` | true | Emitted before the dropdown is closed. |
+| `onClosing` | true | Emitted before the dropdown is closed. | `CancelableBrowserEventArgs & IBaseEventArgs` |
 | `onClosed` | false | Emitted when a dropdown is being closed. |
 
 ***NOTE:*** The using `*igxFor` to virtualize `igx-drop-down-item`s, `onSelection` will emit `newSeleciton` and `oldSelection` as type `{ value: any, index: number }`. 

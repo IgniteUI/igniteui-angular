@@ -336,9 +336,9 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | true        | { searchValue: `string` }               |
 | `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `any[]`, addedItem: `<any>`, newCollection: `any[]` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: `Event` }                        |
-| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: `Event` }                        |
+| `onOpening`   | Emitted before the dropdown is opened                                   | false        | `CancelableBrowserEventArgs & IBaseEventArgs` |
 | `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: `Event` }                        |
-| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: `Event` }                        |
+| `onClosing`   | Emitted before the dropdown is closed                                   | false        | `CancelableBrowserEventArgs & IBaseEventArgs` |
 | `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: `Event` }                        |
 
 ### Methods
