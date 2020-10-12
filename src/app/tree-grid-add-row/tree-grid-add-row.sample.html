@@ -1,5 +1,5 @@
 <div>
-    <igx-tree-grid #grid [allowFiltering]='true' [data]="data" primaryKey="employeeID" foreignKey="PID"
+    <igx-tree-grid [pinning]="pinningConfig" #grid [allowFiltering]='true' [data]="data" primaryKey="employeeID" foreignKey="PID"
     [paging]="false" [width]="'900px'" [height]="'800px'" [rowEditable]="true"
     (mouseleave)="onMouseLeave(actionstrip)"
     (mouseover)="onMouseOver($event, grid, actionstrip)">
@@ -9,6 +9,7 @@
         [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
     </igx-column>
     <igx-action-strip #actionstrip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
         <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-tree-grid>

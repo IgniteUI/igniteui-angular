@@ -54,9 +54,3 @@ export enum GridPagingMode {
     local,
     remote
 }
-
-export enum GridIconsFeature {
-    Filtering,
-    RowPinning,
-    RowPinningActions
-}
