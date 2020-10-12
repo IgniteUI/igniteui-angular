@@ -3,7 +3,10 @@
         <h4 class="sample-title">Animations categories</h4>
         <div>
             <igx-list (onItemClicked)="categoryItemClicked($event)">
-                <igx-list-item igxRipple *ngFor="let category of animationsCategories">
+                <igx-list-item
+                    igxRipple
+                    *ngFor="let category of animationsCategories"
+                >
                     <p>{{ category }}</p>
                 </igx-list-item>
             </igx-list>
@@ -19,15 +22,14 @@
             </igx-list>
         </div>
     </article>
-    <igx-dialog #dialog>
-        <h4>This is a sample dialog showing the selected animation</h4>
-        <br>
-        <hr>
-        <br>
-        <hr>
-        <br>
-        <hr>
-        <br>
-        <h4>Click outside the dialog to close it</h4>
+    <igx-dialog
+        #dialog
+        title="This dialog uses custom animations"
+        message="Click the button or outside to close"
+        class="custom-dialog"
+        rightButtonLabel="Close"
+        (onRightButtonSelect)="dialog.close()"
+    >
     </igx-dialog>
 </div>
+
