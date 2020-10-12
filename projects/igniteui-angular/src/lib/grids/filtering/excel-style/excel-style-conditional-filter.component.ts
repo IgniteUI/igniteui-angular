@@ -57,7 +57,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
             }
         });
 
-        if (this.esf.grid && !this._subMenuOverlaySettings.outlet) {
+        if (this.esf.grid) {
             this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
         }
     }

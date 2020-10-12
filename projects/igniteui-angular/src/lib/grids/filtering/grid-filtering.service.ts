@@ -67,9 +67,8 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public toggleFilterDropdown(element, column, classRef) {
-        this.initFilteringSettings();
-
         if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
+            this.initFilteringSettings();
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
