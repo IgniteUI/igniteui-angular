@@ -424,7 +424,7 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
 
 export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) { return x; }
 
-export function oppositeAnimationResolver(animation: AnimationReferenceMetadata): AnimationReferenceMetadata {
+export function reverseAnimationResolver(animation: AnimationReferenceMetadata): AnimationReferenceMetadata {
     return oppositeAnimation.get(animation) ?? animation;
 }
 
