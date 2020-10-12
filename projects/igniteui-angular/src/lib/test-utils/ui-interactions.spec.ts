@@ -6,8 +6,18 @@ export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
 
-export function waitForActiveNodeChange (grid) {
+export function waitForGridScroll(grid) {
     // wait for grid scroll operation to complete and state to be updated.
+    return new Promise((resolve, reject) => {
+        grid.onScroll.pipe(first()).subscribe(() => {
+            grid.cdr.detectChanges();
+            resolve();
+        });
+    });
+}
+
+export function waitForActiveNodeChange (grid) {
+    // wait for grid activation operation to complete and state to be updated.
     return new Promise((resolve, reject) => {
         grid.activeNodeChange.pipe(first()).subscribe(() => {
             grid.cdr.detectChanges();
@@ -17,7 +27,7 @@ export function waitForActiveNodeChange (grid) {
 }
 
 export function waitForSelectionChange (grid) {
-    // wait for grid scroll operation to complete and state to be updated.
+    // wait for grid selection operation to complete and state to be updated.
     return new Promise((resolve, reject) => {
         grid.onSelection.pipe(first()).subscribe(() => {
             grid.cdr.detectChanges();

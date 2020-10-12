@@ -1,6 +1,6 @@
 import { IgxTreeGridComponent } from './../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxGridComponent, DisplayDensity, ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tree-grid-add-row',
@@ -13,6 +13,7 @@ export class TreeGridAddRowSampleComponent implements OnInit {
 
     data: any[];
     columns: any[];
+    pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
 
     onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {

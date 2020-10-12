@@ -99,7 +99,8 @@
             | visibleColumns:hasVisibleColumns
             | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
+            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true
+            | gridAddRow:true:pipeTrigger as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
                     [style.width.px]='calcWidth'>
@@ -120,7 +121,7 @@
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridAddRow:pipeTrigger"
+        | gridAddRow:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -136,8 +137,8 @@
             </igx-hierarchical-grid-row>
         </ng-template>
 
-        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row #pinnedRow>
+        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [addRow]="isAddRow" #row #pinnedRow>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
@@ -209,11 +210,27 @@
 </ng-template>
 
 <ng-template #emptyFilteredGrid>
-    <span class="igx-grid__tbody-message">{{emptyFilteredGridMessage}}</span>
+    <span class="igx-grid__tbody-message">
+        <span>{{emptyFilteredGridMessage}}</span>
+        <span *ngIf='showAddButton'>
+            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
+        </span>
+    </span>
 </ng-template>
 
 <ng-template #defaultEmptyGrid>
-    <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
+    <span class="igx-grid__tbody-message">
+        <span>{{emptyGridMessage}}</span>
+        <span *ngIf='showAddButton'>
+            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
+        </span>
+    </span>
+</ng-template>
+
+<ng-template #defaultAddRowEmptyTemplate>
+    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1)'>
+        {{resourceStrings.igx_grid_add_row_label}}
+    </button>
 </ng-template>
 
 <ng-template #defaultLoadingGrid>
