@@ -188,6 +188,92 @@ describe('igxOverlay', () => {
         UIInteractions.clearOverlay();
     });
 
+    describe('Pure Unit Test', () => {
+        configureTestSuite();
+        let mockElement: any;
+        let mockElementRef: any;
+        let mockFactoryResolver: any;
+        let mockApplicationRef: any;
+        let mockInjector: any;
+        let mockAnimationBuilder: any;
+        let mockDocument: any;
+        let mockNgZone: any;
+        let mockPlatformUtil: any;
+        let overlay: IgxOverlayService;
+        beforeEach(() => {
+            mockElement = {
+                style: { visibility: '', cursor: '', transitionDuration: '' },
+                classList: { add: () => { }, remove: () => { } },
+                appendChild: () => { },
+                removeChild: () => { },
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                getBoundingClientRect: () => ({ width: 10, height: 10 }),
+                insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
+                contains: () => { }
+            };
+            mockElement.parent = mockElement;
+            mockElement.parentElement = mockElement;
+            mockElementRef = { nativeElement: mockElement };
+            mockFactoryResolver = {
+                resolveComponentFactory: (c: any) => {
+                    return {
+                        create: (i: any) => {
+                            return {
+                                hostView: '',
+                                location: mockElementRef,
+                                changeDetectorRef: { detectChanges: () => { } },
+                                destroy: () => { }
+                            };
+                        }
+                    };
+                }
+            };
+            mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
+            mockInjector = {};
+            mockAnimationBuilder = {};
+            mockDocument = {
+                body: mockElement,
+                defaultView: mockElement,
+                createElement: () => mockElement,
+                appendChild: () => { },
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
+            };
+            mockNgZone = {};
+            mockPlatformUtil = { isIOS: false };
+
+            overlay = new IgxOverlayService(
+                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
+        });
+
+        it('Should set cursor to pointer on iOS', () => {
+            mockPlatformUtil.isIOS = true;
+            mockDocument.body.style.cursor = 'initialCursorValue';
+
+            const mockOverlaySettings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            let id = overlay.attach(mockElementRef, mockOverlaySettings);
+
+            overlay.show(id);
+            expect(mockDocument.body.style.cursor).toEqual('pointer');
+
+            overlay.hide(id);
+            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+
+            mockPlatformUtil.isIOS = false;
+            id = overlay.attach(mockElementRef, mockOverlaySettings);
+
+            overlay.show(id);
+            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+
+            overlay.hide(id);
+            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+        });
+    });
+
     describe('Unit Tests: ', () => {
         configureTestSuite();
         beforeEach(async(() => {
