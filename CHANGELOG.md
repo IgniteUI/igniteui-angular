@@ -7,6 +7,17 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxDatePicker`
     - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - A new `locale` parameter is introduced in the `operate` method exposed by the `IgxNumberSummaryOperand` and `IgxDateSummaryOperand`, which exposes the grid locale. Use this parameter to get localized summary data (if not passed, defaults to `'en'`):
+    ```typescript
+    class MySummary extends IgxDateSummaryOperand {
+        operate(columnData: any[], allData = [], fieldName, locale: string): IgxSummaryResult[] {
+            const result = super.operate(columnData, allData, fieldName, locale);
+            return result;
+        }
+    }
+    ```  
+    - A new `pipeArgs` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
 
 ## 10.1.0
 

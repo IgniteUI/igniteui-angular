@@ -110,7 +110,7 @@
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
                     <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
-                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | date:'mediumDate':undefined:grid.locale) : expressionItem.expression.searchVal }}
+                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | date:getFormat(expressionItem.expression.fieldName):getTimezone(expressionItem.expression.fieldName):grid.locale) : expressionItem.expression.searchVal }}
                     </span>
                 </igx-chip>
                 <div class="igx-filter-tree__expression-actions"
@@ -194,7 +194,7 @@
                                     (click)="openDialog(dropDownTarget.element.nativeElement)"
                                     [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
                                     autocomplete="off"
-                                    [value]="value | date:'mediumDate':undefined:grid.locale"
+                                    [value]="value | date:selectedColumn.pipeArgs.format:selectedColumn.pipeArgs.timezone:grid.locale"
                                     [readonly]="true"
                                     [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
                         </igx-input-group>
