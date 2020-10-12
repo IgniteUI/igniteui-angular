@@ -5,12 +5,12 @@
     <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
 <igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelection]="selectionMode">
-    <igx-column field="OrderDate" [formatOptions]="formatOptions" width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="OrderDate"  width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" editable="true" [resizable]="true" [movable]="true">
                 <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
                 </ng-template> -->
     </igx-column>
-    <igx-column field="OrderDate2"  [formatOptions]="formatOptions" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="OrderDate2" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
@@ -23,7 +23,7 @@
     </igx-column>
 <!--     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
     </igx-column> -->
-    <igx-column field="ReorderLevel" [formatOptions]="formatOptions" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="false" [movable]="true" >
+    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="false" [movable]="true" >
     </igx-column>
     <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
         <ng-template igxCell let-cell="cell">

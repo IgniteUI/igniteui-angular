@@ -1190,10 +1190,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return this._visibleWhenCollapsed;
     }
 
-    private _formatOptions: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
+    private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
     /**
      * @remarks
-     * Provide parameters for DatePipe and DecimalPipe to customize the display format for date and numeric columns.
+     * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
      * Accepts an `IColumnPipeArgs` object with any of the `format`, `timezone` and `digitsInfo` properties.
      * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
      * @param IColumnPipeArgs object.
@@ -1202,28 +1202,28 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @Input()
     /**
-     * Sets the formatOptions.
+     * Sets the pipeArgs input value.
      * @example
      * ```typescript
-     * const formatOptions: IColumnPipeArgs = {
+     * const pipeArgs: IColumnPipeArgs = {
      *      format: 'longDate',
      *      timezone: 'UTC'
      * }
      * ```
      * ```html
-     * <igx-column dataType="date" formatOptions="formatOptions"></igx-column>
-     * <igx-column dataType="number" formatOptions="{ digitsInfo: '1.1-2' }"></igx-column>
+     * <igx-column dataType="date" pipeArgs="pipeArgs"></igx-column>
+     * <igx-column dataType="number" pipeArgs="{ digitsInfo: '1.1-2' }"></igx-column>
      * ```
      */
-    set formatOptions(value: IColumnPipeArgs) {
-        this._formatOptions = Object.assign(this._formatOptions, value);
+    set pipeArgs(value: IColumnPipeArgs) {
+        this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
         (this.grid as any)._pipeTrigger++;
         this.grid.summaryService.retriggerRootPipe++;
         this.grid.notifyChanges(true);
     }
-    get formatOptions(): IColumnPipeArgs {
-        return this._formatOptions;
+    get pipeArgs(): IColumnPipeArgs {
+        return this._columnPipeArgs;
     }
 
     /**

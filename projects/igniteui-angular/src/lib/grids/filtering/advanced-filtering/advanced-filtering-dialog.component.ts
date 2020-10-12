@@ -1042,14 +1042,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public getFormat(field: string) {
-        return this.grid.getColumnByName(field).formatOptions.format;
+        return this.grid.getColumnByName(field).pipeArgs.format;
     }
 
     /**
      * @hidden @internal
      */
     public getTimezone(field: string) {
-        return this.grid.getColumnByName(field).formatOptions.timezone;
+        return this.grid.getColumnByName(field).pipeArgs.timezone;
     }
 
     /**

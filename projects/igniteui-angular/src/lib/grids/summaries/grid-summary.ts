@@ -153,29 +153,29 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en',
-        formatOptions: IColumnPipeArgs = {}):
+        pipeArgs: IColumnPipeArgs = {}):
     IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), formatOptions.digitsInfo)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), pipeArgs.digitsInfo)
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), formatOptions.digitsInfo)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), pipeArgs.digitsInfo)
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), formatOptions.digitsInfo)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), pipeArgs.digitsInfo)
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), formatOptions.digitsInfo)
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), pipeArgs.digitsInfo)
         });
         return result;
     }
@@ -243,18 +243,18 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en',
-        formatOptions: IColumnPipeArgs = {}): IgxSummaryResult[] {
+        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DatePipe(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), formatOptions.format, formatOptions.timezone)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), pipeArgs.format, pipeArgs.timezone)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), formatOptions.format, formatOptions.timezone)
+            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), pipeArgs.format, pipeArgs.timezone)
         });
         return result;
     }
