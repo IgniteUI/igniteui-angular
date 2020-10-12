@@ -48,7 +48,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @memberof IgxMonthsViewComponent
      */
     @Input()
-    public date = new Date();
+    public set date(value) {
+        this._date = value;
+        this.activeMonth = this.date.getMonth();
+    }
+
+    public get date() {
+        return this._date;
+    }
 
     /**
      * Gets the month format option of the months view.
@@ -132,15 +139,6 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @ViewChildren(IgxCalendarMonthDirective, { read: IgxCalendarMonthDirective })
     public monthsRef: QueryList<IgxCalendarMonthDirective>;
 
-
-    /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     /**
      * Returns an array of date objects which are then used to
      * properly render the month names.
@@ -161,6 +159,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         return result;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public activeMonth;
+
+    private _date = new Date();
     /**
      * @hidden
      */
@@ -214,6 +219,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         this.onSelection.emit(event);
 
         this.date = event;
+        this.activeMonth = this.date.getMonth();
         this._onChangeCallback(this.date);
     }
 
@@ -274,7 +280,9 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
             const tolerance = 6;
             if (nodeRect.top !== nextNodeRect.top && (nextNodeRect.left - nodeRect.left) < tolerance) {
-                months[index].nativeElement.focus();
+                const month = months[index];
+                month.nativeElement.focus();
+                this.activeMonth = month.value.getMonth();
                 break;
             }
         }
@@ -300,7 +308,9 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
             const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
             const tolerance = 6;
             if (nextNodeRect.top !== nodeRect.top && (nodeRect.left - nextNodeRect.left) < tolerance ) {
-                months[index].nativeElement.focus();
+                const month = months[index];
+                month.nativeElement.focus();
+                this.activeMonth = month.value.getMonth();
                 break;
             }
         }
@@ -320,7 +330,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const months = this.monthsRef.toArray();
         if (months.indexOf(node) + 1 < months.length) {
             const month = months[months.indexOf(node) + 1];
-
+            this.activeMonth = month.value.getMonth();
             month.nativeElement.focus();
         }
     }
@@ -339,7 +349,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const months = this.monthsRef.toArray();
         if (months.indexOf(node) - 1 >= 0) {
             const month = months[months.indexOf(node) - 1];
-
+            this.activeMonth = month.value.getMonth();
             month.nativeElement.focus();
         }
     }
@@ -353,7 +363,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const month = this.monthsRef.toArray()[0];
-
+        this.activeMonth = month.value.getMonth();
         month.nativeElement.focus();
     }
 
@@ -367,7 +377,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
 
         const months = this.monthsRef.toArray();
         const month = months[months.length - 1];
-
+        this.activeMonth = month.value.getMonth();
         month.nativeElement.focus();
     }
 
@@ -378,8 +388,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     public onKeydownEnter(event) {
         const value = this.monthsRef.find((date) => date.nativeElement === event.target).value;
         this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
-
+        this.activeMonth = this.date.getMonth();
         this.onSelection.emit(this.date);
         this._onChangeCallback(this.date);
+    }
+
+    @HostListener('focusout', ['$event'])
+    public resetActiveMonth(event) {
+        this.activeMonth = this.date.getMonth();
     }
 }

@@ -50,6 +50,7 @@
                 [selection]="selection"
                 [locale]="locale"
                 [value]="value"
+                [(activeDate)]="activeDate"
                 [viewDate]="i | IgxGetViewDate:viewDate"
                 [weekStart]="weekStart"
                 [formatOptions]="formatOptions"
@@ -59,7 +60,8 @@
                 [hideOutsideDays]="hideOutsideDays"
                 [showWeekNumbers]="showWeekNumbers"
                 (onViewChanging)="viewChanging($event)"
-                (onDateSelection)="childClicked($event)">
+                (onDateSelection)="childClicked($event)"
+                (monthsViewBlur)="resetActiveDate()">
         </igx-days-view>
     </div>
 </div>
