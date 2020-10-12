@@ -645,7 +645,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     public getEmptyRecordObjectFor(rec) {
         const row = {...rec};
-        row.data = {... rec.data};
+        const data = rec || {};
+        row.data = {... data};
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
