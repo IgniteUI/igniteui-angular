@@ -283,25 +283,31 @@ describe('igxCombo', () => {
             combo.selectItems([], true);
             expect(combo.selectedItems()).toEqual([]);
         });
-        it('should emit owner on `onOpened` and `onClosed`', () => {
+        it('should emit owner on `onOpening` and `onClosing`', () => {
             combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
                 mockIconService, null, null, mockInjector);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
             combo.ngOnInit();
-            spyOn(combo.onOpened, 'emit');
-            spyOn(combo.onClosing, 'emit');
+            spyOn(combo.onOpening, 'emit').and.callThrough();
+            spyOn(combo.onClosing, 'emit').and.callThrough();
             const mockObj = {};
             const inputEvent: CancelableBrowserEventArgs & IBaseEventArgs = {
                 cancel: false,
                 owner: mockObj,
             };
+            combo.comboInput = <any>{
+                nativeElement: {
+                    focus: () => {}
+                }
+            };
             combo.handleOpening(inputEvent);
-            expect(combo.onOpened.emit).toHaveBeenCalledWith(Object.assign({}, inputEvent, { owner: combo }));
+            const expectedCall: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, inputEvent, { owner: combo });
+            expect(combo.onOpening.emit).toHaveBeenCalledWith(expectedCall);
             expect(inputEvent.owner).toEqual(mockObj);
-            combo.handleOpening(inputEvent);
-            expect(combo.onClosing.emit).toHaveBeenCalledWith(Object.assign({}, inputEvent, { owner: combo }));
+            combo.handleClosing(inputEvent);
+            expect(combo.onClosing.emit).toHaveBeenCalledWith(expectedCall);
             expect(inputEvent.owner).toEqual(mockObj);
-            let sub = combo.onOpened.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
+            let sub = combo.onOpening.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
                 e.cancel = true;
             });
             combo.handleOpening(inputEvent);
@@ -312,7 +318,7 @@ describe('igxCombo', () => {
             sub = combo.onClosing.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
                 e.cancel = true;
             });
-            combo.handleOpening(inputEvent);
+            combo.handleClosing(inputEvent);
             expect(inputEvent.cancel).toEqual(true);
             sub.unsubscribe();
         });
