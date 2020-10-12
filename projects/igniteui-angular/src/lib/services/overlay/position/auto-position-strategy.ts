@@ -1,4 +1,4 @@
-import { oppositeAnimationResolver } from '../../../core/utils';
+import { reverseAnimationResolver } from '../../../core/utils';
 import { ConnectedFit, HorizontalAlignment, VerticalAlignment } from './../utilities';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
@@ -163,10 +163,10 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      */
     private flipAnimation() {
         if (this.settings.openAnimation) {
-            this.settings.openAnimation = oppositeAnimationResolver(this.settings.openAnimation);
+            this.settings.openAnimation = reverseAnimationResolver(this.settings.openAnimation);
         }
         if (this.settings.closeAnimation) {
-            this.settings.closeAnimation = oppositeAnimationResolver(this.settings.closeAnimation);
+            this.settings.closeAnimation = reverseAnimationResolver(this.settings.closeAnimation);
         }
     }
 }
