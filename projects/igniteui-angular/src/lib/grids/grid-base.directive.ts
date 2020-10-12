@@ -6645,6 +6645,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
                 const doneArgs = row.createDoneEditEventArgs(cachedRowData);
                 this.rowEditDone.emit(doneArgs);
+                this.crudService.endRowEdit();
                 if (this.addRowParent.isPinned) {
                   this.pinRow(row.id);
                 }

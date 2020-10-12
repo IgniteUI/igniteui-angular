@@ -326,7 +326,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength + 1);
         });
 
-        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', () => {
+        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', async() => {
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -337,6 +337,8 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
             cancelButtonElement.click();
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             newRow = grid.getRowByIndex(1);
