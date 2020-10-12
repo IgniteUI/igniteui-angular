@@ -942,6 +942,7 @@
         align-items: center;
         height: 100%;
         color: --var($theme, 'content-text-color');
+        flex-direction: column;
     }
 
     %igx-grid__loading {
