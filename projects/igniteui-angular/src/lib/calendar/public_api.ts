@@ -1,4 +1,5 @@
 export * from './calendar';
+export * from './calendar-base';
 export * from './calendar.component';
 export * from './days-view/days-view.component';
 export * from './months-view/months-view.component';
