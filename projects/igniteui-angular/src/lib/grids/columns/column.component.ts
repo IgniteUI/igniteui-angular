@@ -1185,29 +1185,24 @@ export class IgxColumnComponent implements AfterContentInit {
 
     private _pipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
     /**
-     * @remarks
      * Provide parameters for DatePipe and DecimalPipe to customize the display format for date and numeric columns.
      * Accepts an `IColumnPipeArgs` object with any of the `format`, `timezone` and `digitsInfo` properties.
      * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
-     * @param IColumnPipeArgs object.
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input()
-    /**
-     * Sets the _pipeArgs.
      * @example
      * ```typescript
-     * const formatOptions: IColumnPipeArgs = {
+     * const pipeArgs: IColumnPipeArgs = {
      *      format: 'longDate',
-     *      timezone: 'UTC'
+     *      timezone: 'UTC',
+     *      digitsInfo: '1.1-2'
      * }
      * ```
      * ```html
-     * <igx-column dataType="date" pipeArgs="formatOptions"></igx-column>
-     * <igx-column dataType="number" pipeArgs="{ digitsInfo: '1.1-2' }"></igx-column>
+     * <igx-column dataType="date" [pipeArgs]="pipeArgs"></igx-column>
+     * <igx-column dataType="number" [pipeArgs]="pipeArgs"></igx-column>
      * ```
+     * @memberof IgxColumnComponent
      */
+    @Input()
     set pipeArgs(value: IColumnPipeArgs) {
         this._pipeArgs = Object.assign(this._pipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
