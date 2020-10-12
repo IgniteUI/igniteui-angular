@@ -19,7 +19,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 
@@ -393,9 +393,9 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.getRowByIndex(1).addRow).toBeFalse();
         });
 
-        it('Should enter add mode but close it when cellEditEnter is canceled', () => {
+        fit('Should enter add mode but close it when cellEditEnter is canceled', () => {
             let canceled = true;
-            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+            grid.cellEditEnter.pipe(first()).subscribe((evt) => {
                 evt.cancel = canceled;
             });
 
