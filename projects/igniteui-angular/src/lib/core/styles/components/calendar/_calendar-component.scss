@@ -15,8 +15,8 @@
         @extend %cal-header-display !optional;
     }
 
-    @include e(header-is-off-screen) {
-        @extend %calendar__header-is-off-screen !optional;
+    @include e(aria-off-screen) {
+        @extend %calendar__aria-off-screen !optional;
     }
 
     @include e(header-year) {
