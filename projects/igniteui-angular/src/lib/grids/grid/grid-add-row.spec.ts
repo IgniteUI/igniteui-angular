@@ -19,6 +19,8 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 describe('IgxGrid - Row Adding #grid', () => {
@@ -256,11 +258,107 @@ describe('IgxGrid - Row Adding #grid', () => {
              expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
         });
 
+        it('Should generate correct row ID based on the primary column type', () => {
+            const column = grid.columns.find(col => col.field === grid.primaryKey);
+            const type = column.dataType;
+
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+            const cell = newRow.cells.find(c => c.column === column);
+            expect(typeof(cell.value)).toBe(type);
+        });
+    });
+
+    describe('Add row events tests:', () => {
+        const $destroyer = new Subject<boolean>();
+
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        afterEach(fakeAsync(() => {
+            $destroyer.next(true);
+        }));
+
+        it('Should emit all events in the correct order', () => {
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditExit, 'emit').and.callThrough();
+
+            grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditEnter.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEdit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEdit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditDone.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditDone.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditExit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEdit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEdit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditDone.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEditDone.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditExit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEditExit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
+            });
+
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+
+            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'aaa');
+            fixture.detectChanges();
+            grid.endEdit(true);
+            fixture.detectChanges();
+        });
+
         it('Should emit all grid editing events as per row editing specification', () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
             spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-            // spyOn(grid.rowEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
 
             const row = grid.getRowByIndex(0);
             row.beginAddRow();
@@ -280,22 +378,41 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.cellEditDone.emit).toHaveBeenCalled();
-            // Remove comments when editing events merge in master
-            // expect(grid.rowEditDone.emit).toHaveBeenCalled();
+
+            expect(grid.rowEditDone.emit).toHaveBeenCalled();
         });
 
-        it('Should generate correct row ID based on the primary column type', () => {
-            const column = grid.columns.find(col => col.field === grid.primaryKey);
-            const type = column.dataType;
+        it('Should not enter add mode when rowEditEnter is canceled', () => {
+            grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
 
-            const row = grid.getRowByIndex(0);
-            row.beginAddRow();
+            grid.rowList.first.beginAddRow();
             fixture.detectChanges();
 
-            const newRow = grid.getRowByIndex(1);
-            expect(newRow.addRow).toBeTrue();
-            const cell = newRow.cells.find(c => c.column === column);
-            expect(typeof(cell.value)).toBe(type);
+            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+        });
+
+        it('Should enter add mode but close it when cellEditEnter is canceled', () => {
+            let canceled = true;
+            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = canceled;
+            });
+
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+
+            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+
+            grid.endEdit(false);
+            fixture.detectChanges();
+
+            canceled = false;
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
         });
     });
 
