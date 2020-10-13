@@ -56,7 +56,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @internal
      */
     get isRowContext(): boolean {
-        return this.isRow(this.strip.context);
+        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
     }
 
     /**
