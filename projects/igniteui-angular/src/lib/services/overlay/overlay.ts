@@ -30,6 +30,7 @@ import { fromEvent, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 import { showMessage } from '../../core/deprecateDecorators';
+import { PlatformUtil } from '../../core/utils';
 
 let warningShown = false;
 
@@ -44,6 +45,8 @@ export class IgxOverlayService implements OnDestroy {
     private _overlayElement: HTMLElement;
     private _document: Document;
     private destroy$ = new Subject<boolean>();
+    private _cursorStyleIsSet = false;
+    private _cursorOriginalValue: string;
 
     private _defaultSettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
@@ -118,7 +121,8 @@ export class IgxOverlayService implements OnDestroy {
         private _injector: Injector,
         private builder: AnimationBuilder,
         @Inject(DOCUMENT) private document: any,
-        private _zone: NgZone) {
+        private _zone: NgZone,
+        protected platformUtil: PlatformUtil) {
         this._document = <Document>this.document;
     }
 
@@ -660,7 +664,7 @@ export class IgxOverlayService implements OnDestroy {
                     // if we should exclude position target check if the click is over it. If so do not close overlay
                     const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
                     let clickOnPositionTarget = false;
-                    if (positionTarget) {
+                    if (positionTarget && positionTarget.contains) {
                         clickOnPositionTarget = positionTarget.contains(target);
                     }
 
@@ -690,6 +694,15 @@ export class IgxOverlayService implements OnDestroy {
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
                     x.closeAnimationPlayer &&
                     x.closeAnimationPlayer.hasStarted()).length === 1) {
+
+                // click event is not fired on iOS. To make element "clickable" we are
+                // setting the cursor to pointer
+                if (this.platformUtil.isIOS && !this._cursorStyleIsSet) {
+                    this._cursorOriginalValue = this._document.body.style.cursor;
+                    this._document.body.style.cursor = 'pointer';
+                    this._cursorStyleIsSet = true;
+                }
+
                 this._document.addEventListener('click', this.documentClicked, true);
             }
         }
@@ -705,6 +718,11 @@ export class IgxOverlayService implements OnDestroy {
             });
 
             if (shouldRemoveClickEventListener) {
+                if (this._cursorStyleIsSet) {
+                    this._document.body.style.cursor = this._cursorOriginalValue;
+                    this._cursorOriginalValue = '';
+                    this._cursorStyleIsSet = false;
+                }
                 this._document.removeEventListener('click', this.documentClicked, true);
             }
         }
