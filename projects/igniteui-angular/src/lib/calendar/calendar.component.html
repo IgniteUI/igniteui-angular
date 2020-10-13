@@ -52,7 +52,7 @@
             tabindex="0"
             class="igx-calendar-picker__prev"
             role="button"
-            [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate, monthsViewNumber) | date: 'LLLL')"
+            [attr.aria-label]="resourceStrings.igx_calendar_previous_month + ', ' + (getPrevMonth(viewDate) | date: 'LLLL')"
             data-action="prev"
             #prevMonthBtn
             igxCalendarScrollMonth
