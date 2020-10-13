@@ -1,6 +1,10 @@
 import { IgxColumnComponent } from './column.component';
 
 
+/**
+ * @hidden
+ * @internal
+ */
 export interface MRLColumnSizeInfo {
     ref: IgxColumnComponent;
     width: number;
@@ -9,6 +13,10 @@ export interface MRLColumnSizeInfo {
     widthSetByUser: boolean;
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 export interface MRLResizeColumnInfo {
     target: IgxColumnComponent;
     spanUsed: number;
