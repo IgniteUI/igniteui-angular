@@ -514,6 +514,10 @@
         div {
             text-align: center;
         }
+
+        &:focus {
+            outline: none;
+        }
     }
 
     %cal-picker-dates {
