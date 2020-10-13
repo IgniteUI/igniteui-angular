@@ -76,7 +76,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     }
 
     public get activeDate() {
-        return this._activeDate;
+        return this._activeDate ? this._activeDate : this.viewDate.toLocaleDateString();
     }
 
     /**
@@ -100,6 +100,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
+    @Output()
+    public monthsViewBlur = new EventEmitter<any>();
+
+    /**
+     * @hidden
+     */
     @ViewChildren(IgxDayItemComponent, { read: IgxDayItemComponent })
     public dates: QueryList<IgxDayItemComponent>;
 
@@ -118,6 +124,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     public prevMonthView: IgxDaysViewComponent;
     public _activeDate;
+    private shouldResetDate = true;
 
     /**
      * The default css class applied to the component.
@@ -126,6 +133,34 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     @HostBinding('class.igx-calendar')
     public styleClass = true;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('focusout')
+    public resetActiveMonth() {
+        if (this.shouldResetDate) {
+            const date = this.dates.find(day => day.selected && day.isCurrentMonth)
+            || this.dates.find(day => day.isToday && day.isCurrentMonth) || this.dates.find(d => d.isFocusable);
+            if (date) { this.activeDate = date.date.date.toLocaleDateString(); }
+            this.monthsViewBlur.emit();
+        }
+        this.shouldResetDate = true;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keydown.pagedown')
+    @HostListener('keydown.pageup')
+    @HostListener('keydown.shift.pagedown')
+    @HostListener('keydown.shift.pageup')
+    @HostListener('pointerdown')
+    public pointerDown() {
+        this.shouldResetDate = false;
+    }
 
     /**
      * @hidden
@@ -389,6 +424,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.shouldResetDate = false;
         this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
     }
 
@@ -399,6 +435,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.shouldResetDate = false;
         this.getFirstMonthView().daysNavService.focusHomeDate();
     }
 
@@ -409,6 +446,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
+        this.shouldResetDate = false;
         this.getLastMonthView().daysNavService.focusEndDate();
     }
 }

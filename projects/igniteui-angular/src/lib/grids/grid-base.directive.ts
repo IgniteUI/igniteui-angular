@@ -274,6 +274,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public emptyGridTemplate: TemplateRef<any>;
 
     /**
+     * Gets/Sets a custom template for adding row UI when grid is empty.
+     * @example
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [addRowEmptyTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Input()
+    public addRowEmptyTemplate: TemplateRef<any>;
+
+    /**
      * Gets/Sets a custom template when loading.
      * @example
      * ```html
@@ -3927,6 +3937,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    get showAddButton() {
+        return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
+     }
+
+    /**
+     * @hidden
+     * @internal
+     */
     get showDragIcons(): boolean {
         return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
@@ -6565,8 +6583,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!row && !cell) { return; }
 
         if (row?.isAddRow) {
-            this.endAdd(commit, event);
-            return;
+            canceled = this.endAdd(commit, event);
+            return canceled;
         }
 
         if (commit) {
@@ -6601,6 +6619,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endAdd(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
+        const cachedRowData = {...row.data};
+        let cancelable = false;
         if (!row && !cell) {
             return;
         }
@@ -6615,13 +6635,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const showIndex = isInView ? -1 : dataIndex;
                 this.showSnackbarFor(showIndex);
             });
-            this.gridAPI.submit_add_value();
-            this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
-            this.crudService.endRowEdit();
-            if (this.addRowParent.isPinned) {
-                this.pinRow(row.id);
+            cancelable = this.gridAPI.submit_add_value();
+            if (!cancelable) {
+                const args = row.createEditEventArgs();
+                this.rowEdit.emit(args);
+                if (args.cancel) {
+                    return args.cancel;
+                }
+                this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
+                const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+                this.rowEditDone.emit(doneArgs);
+                this.crudService.endRowEdit();
+                if (this.addRowParent.isPinned) {
+                  this.pinRow(row.id);
+                }
             }
             this.addRowParent = null;
+            this.cancelAddMode = cancelable;
         } else {
             this.crudService.exitCellEdit();
             this.cancelAddMode = true;
@@ -6633,6 +6663,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.cdr.detectChanges();
             this.onRowAdded.emit({ data: row.data});
         }
+        const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
+        this.rowEditExit.emit(nonCancelableArgs);
+        return this.cancelAddMode;
     }
 
     /**
@@ -6650,6 +6683,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (activeCell && activeCell.row !== -1) {
             this.tbody.nativeElement.focus();
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public triggerPipes() {
+        this._pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public endAddRow() {
+        this.cancelAddMode = true;
+        this.triggerPipes();
     }
 
     protected findRecordIndexInView(rec) {

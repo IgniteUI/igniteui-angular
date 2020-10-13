@@ -935,19 +935,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
     }
 
-    @HostListener('document:click')
-    public outSideClick() {
-        this.resetActiveDate();
-    }
-
-    @HostListener('keydown.tab', ['$event'])
-    @HostListener('keydown.shift.tab', ['$event'])
-    public onTab(event) {
-        if (event.target.tagName.toLowerCase() === 'igx-day-item') {
-            requestAnimationFrame(() => this.resetActiveDate());
-        }
-    }
-
     /**
      * @hidden
      * @internal
