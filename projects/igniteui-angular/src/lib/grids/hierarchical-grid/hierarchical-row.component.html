@@ -2,10 +2,10 @@
  <ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
 
  <ng-template #addTemp>
-     <div [className]='styleAddClasses' (webkitAnimationEnd)='animationEndHandler()' (transitionend)='animationEndHandler()'>
-         <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
-     </div>
- </ng-template>
+    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='animateAdd' (webkitAnimationEnd)='animationEndHandler()' (transitionend)='animationEndHandler()'>
+        <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
+    </div>
+</ng-template>
  <ng-template #defaultTemp>
 <div (click)="expanderClick($event)" (mousedown)='$event.preventDefault()' [ngClass]="expanderClassResolved" *ngIf="hasChildren" #expander>
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
