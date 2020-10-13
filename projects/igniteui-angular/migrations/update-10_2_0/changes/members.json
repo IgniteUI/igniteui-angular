@@ -54,6 +54,13 @@
                 "IgxTreeGridComponent",
                 "IgxHierarchicalGridComponent"
             ]
+        },
+        {
+            "member": "panel",
+            "replaceWith": "owner",
+            "definedIn": [
+                "IExpansionPanelEventArgs"
+            ]
         }
     ]
 }
