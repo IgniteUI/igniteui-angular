@@ -1,3 +1,12 @@
+
+ <ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
+
+ <ng-template #addTemp>
+     <div [className]='styleAddClasses' (webkitAnimationEnd)='animationEndHandler()' (transitionend)='animationEndHandler()'>
+         <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
+     </div>
+ </ng-template>
+ <ng-template #defaultTemp>
 <div (click)="expanderClick($event)" (mousedown)='$event.preventDefault()' [ngClass]="expanderClassResolved" *ngIf="hasChildren" #expander>
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
@@ -114,4 +123,5 @@
         [cellSelectionMode]="grid.cellSelection"
         [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)">
     </igx-hierarchical-grid-cell>
+</ng-template>
 </ng-template>
