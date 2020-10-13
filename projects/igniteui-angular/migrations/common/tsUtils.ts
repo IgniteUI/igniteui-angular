@@ -236,7 +236,7 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
             .filter(<(a: ts.Statement) => a is ts.ClassDeclaration>(m => m.kind === ts.SyntaxKind.ClassDeclaration))
             .find(m => m.name.getText() === definition.containerName);
         const member: ts.ClassElement = classDeclaration
-            .members
+            ?.members
             .find(m => m.name.getText() === definition.name);
         if (!member || !member.name) { return null; }
         typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
