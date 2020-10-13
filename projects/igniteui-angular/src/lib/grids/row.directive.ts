@@ -9,7 +9,9 @@ import {
     QueryList,
     ViewChild,
     ViewChildren,
-    Directive
+    Directive,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -28,6 +30,16 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     protected _rowData: any;
     protected _addRow: boolean;
+    /**
+     * @hidden
+     */
+    public animateAdd = false;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    onAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
 
     /**
      *  The data passed to the row component.
@@ -175,6 +187,13 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @HostBinding('class')
     get styleClasses(): string {
         return this.resolveClasses();
+    }
+
+    /**
+     * @hidden
+     */
+    get styleAddClasses(): string {
+        return this.addClasses();
     }
 
     /**
@@ -487,9 +506,13 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     public animationEndHandler() {
-        const cell = this.cells.find(c => c.editable);
-        cell.setEditMode(true);
-        cell.activate();
+        this.onAnimationEnd.emit(this);
+    }
+
+
+    protected addClasses(): string {
+        const addClass = this.animateAdd ? 'igx-grid__tr--add-animate' : '';
+        return this.resolveClasses() + ' ' + addClass;
     }
 
     /**
@@ -503,9 +526,8 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
         const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
-        const addClass = this.addRow ? 'igx-grid__tr--add' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
-         ${deletedClass} ${mrlClass} ${dragClass} ${addClass}`.trim();
+         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
     }
 
     /**

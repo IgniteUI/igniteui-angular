@@ -4103,6 +4103,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.navigateTo(newRowIndex, -1);
             }
             const row = this.getRowByIndex(newRowIndex);
+            row.animateAdd = true;
+            row.onAnimationEnd.pipe(first()).subscribe(() => {
+                row.animateAdd = false;
+                const cell = row.cells.find(c => c.editable);
+                cell.setEditMode(true);
+                cell.activate();
+            });
         });
         this._pipeTrigger++;
         this.notifyChanges();

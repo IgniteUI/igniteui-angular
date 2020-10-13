@@ -212,8 +212,8 @@
         @extend %igx-grid__tr--edit !optional;
     }
 
-    @include e(tr, $m: add) {
-        @extend %igx-grid__tr--add !optional;
+    @include e(tr, $m: add-animate) {
+        @extend %igx-grid__tr--add-animate !optional;
     }
 
     @include e(tr, $m: group) {
