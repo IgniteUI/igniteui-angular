@@ -412,6 +412,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const eventArgs: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, e, { owner: this });
         this.onClosing.emit(eventArgs);
         e.cancel = eventArgs.cancel;
+        if (e.cancel) {
+            return;
+        }
         if (this.virtDir) {
             this._scrollPosition = this.virtDir.scrollPosition;
         }

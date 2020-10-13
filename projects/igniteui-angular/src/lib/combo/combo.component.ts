@@ -1555,9 +1555,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const eventArgs: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, event, { owner: this });
         this.onOpening.emit(eventArgs);
         event.cancel = eventArgs.cancel;
-        if (event.cancel) {
-            return;
-        }
     }
 
     /**
