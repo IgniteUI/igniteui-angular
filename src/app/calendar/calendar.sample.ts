@@ -1,7 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView } from 'igniteui-angular';
-import { type } from 'os';
-import { IViewDateChangeEventArgs } from '../../../projects/igniteui-angular/src/lib/calendar/calendar-base';
+import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, IViewDateChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-calendar-sample',
