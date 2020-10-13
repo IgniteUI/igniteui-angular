@@ -193,7 +193,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     get styleAddClasses(): string {
-        return this.addClasses();
+        return this.animateClasses();
     }
 
     /**
@@ -510,9 +510,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
 
-    protected addClasses(): string {
-        const addClass = this.animateAdd ? 'igx-grid__tr--add-animate' : '';
-        return this.resolveClasses() + ' ' + addClass;
+    protected animateClasses(): string {
+        const animateClass = this.animateAdd ? 'igx-grid__tr--add-animate' : '';
+        return `${this.styleClasses} ${animateClass}`;
     }
 
     /**
