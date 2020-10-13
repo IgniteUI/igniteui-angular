@@ -56,6 +56,12 @@ describe('IgxGrid - Row Adding #grid', () => {
             const rows = grid.rowList.toArray();
             rows[0].beginAddRow();
             fixture.detectChanges();
+
+            // transition end needs to be simulated
+            const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--add-animate');
+            const transitionEvent = new TransitionEvent('transitionend');
+            animationElem.dispatchEvent(transitionEvent);
+
             let addRow = grid.getRowByIndex(1);
             expect(addRow.addRow).toBeTrue();
 
@@ -83,6 +89,11 @@ describe('IgxGrid - Row Adding #grid', () => {
             const addRowIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             addRowIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
+
+            // transition end needs to be simulated
+            const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--add-animate');
+            const transitionEvent = new TransitionEvent('transitionend');
+            animationElem.dispatchEvent(transitionEvent);
 
 
             const addRow = grid.getRowByIndex(lastRowIndex + 1);
@@ -138,6 +149,10 @@ describe('IgxGrid - Row Adding #grid', () => {
             const dataCount = grid.data.length;
             rows[0].beginAddRow();
             fixture.detectChanges();
+            // transition end needs to be simulated
+            const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--add-animate');
+            const transitionEvent = new TransitionEvent('transitionend');
+            animationElem.dispatchEvent(transitionEvent);
 
             grid.endEdit(true);
             fixture.detectChanges();
@@ -172,6 +187,11 @@ describe('IgxGrid - Row Adding #grid', () => {
             rows[0].beginAddRow();
             fixture.detectChanges();
 
+            // transition end needs to be simulated
+            const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--add-animate');
+            const transitionEvent = new TransitionEvent('transitionend');
+            animationElem.dispatchEvent(transitionEvent);
+
             grid.endEdit(true);
             fixture.detectChanges();
 
@@ -205,6 +225,10 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             grid.rowList.first.beginAddRow();
             fixture.detectChanges();
+            // transition end needs to be simulated
+            const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--add-animate');
+            const transitionEvent = new TransitionEvent('transitionend');
+            animationElem.dispatchEvent(transitionEvent);
 
             grid.endEdit(true);
             fixture.detectChanges();
