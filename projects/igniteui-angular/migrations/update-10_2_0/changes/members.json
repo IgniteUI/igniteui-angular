@@ -11,6 +11,51 @@
             ]
         },
         {
+            "member": "onRowEditEnter",
+            "replaceWith": "rowEditEnter",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onCellEditEnter",
+            "replaceWith": "cellEditEnter",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onCellEdit",
+            "replaceWith": "cellEdit",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onCellEditCancel",
+            "replaceWith": "cellEditExit",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowEditCancel",
+            "replaceWith": "rowEditExit",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
             "member": "panel",
             "replaceWith": "owner",
             "definedIn": [
