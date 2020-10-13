@@ -1089,6 +1089,10 @@
         margin: 0 !important;
         user-select: none;
         pointer-events: none;
+
+        &:focus {
+            outline: none;
+        }
     }
 }
 

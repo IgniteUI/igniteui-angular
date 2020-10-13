@@ -502,8 +502,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.monthScrollDirection = ScrollMonth.PREV;
         this.animationAction = ScrollMonth.PREV;
         this.previousMonth(isKeydownTrigger);
-
-        this.toLocaleString()
     }
 
     /**
