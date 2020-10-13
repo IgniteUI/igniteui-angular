@@ -6458,7 +6458,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
-        this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
     }
 
@@ -6501,14 +6500,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private configureRowEditingOverlay(rowID: any, useOuter = false) {
-        this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
+        let settings = this.rowEditSettings;
+        const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
+        if (overlay) {
+            settings = overlay.settings;
+        }
+        settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ? this.gridAPI.get_row_by_key(rowID) : this.pinnedRows.find(x => x.rowID === rowID);
         if (!targetRow) {
             return;
         }
-        this.rowEditSettings.target = targetRow.element.nativeElement;
+        settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
