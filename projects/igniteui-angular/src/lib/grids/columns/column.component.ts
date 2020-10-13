@@ -1201,7 +1201,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * const pipeArgs: IColumnPipeArgs = {
      *      format: 'longDate',
      *      timezone: 'UTC',
-     *      { digitsInfo: '1.1-2' }
+     *      digitsInfo: '1.1-2'
      * }
      * ```
      * ```html
