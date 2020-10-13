@@ -133,8 +133,9 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string, locale: string): IgxSummaryResult[] {
-     *     const result = super.operate(columnData, allData, fieldName, locale);
+     *   public operate(data: any[], allData: any[], fieldName: string, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
+     *     pipeArgs.digitsInfo = '1.1-2';
+     *     const result = super.operate(data, allData, fieldName, locale, pipeArgs);
      *     result.push({
      *       key: "avg",
      *       label: "Avg",
@@ -143,7 +144,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *     result.push({
      *       key: 'mdn',
      *       label: 'Median',
-     *       summaryResult: this.findMedian(columnData)
+     *       summaryResult: this.findMedian(data)
      *     });
      *     return result;
      *   }
@@ -222,18 +223,16 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string, locale: string): IgxSummaryResult[] {
-     *     const result = [];
+     *   public operate(data: any[], allData: any[], fieldName: string, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
+     *     pipeArgs = {
+     *        format: 'longDate',
+     *        timezone: 'UTC'
+     *     };
+     *     const result = super.operate(data, allData, fieldName, locale, pipeArgs);
      *     result.push({
-     *       key: "latest",
-     *       label: "Latest Date",
-     *       summaryResult: IgxDateSummaryOperand.latest(data)
-     *     });
-     *     const earliest = new Date(IgxDateSummaryOperand.earliest(summaries))
-     *     result.push({
-     *       key: 'mth',
-     *       label: 'Earliest Month',
-     *       summaryResult: earliest.toLocaleString(locale, { month: 'long' })
+     *       key: "deadline",
+     *       label: "Deadline Date",
+     *       summaryResult: this.calculateDeadline(data);
      *     });
      *     return result;
      *   }
