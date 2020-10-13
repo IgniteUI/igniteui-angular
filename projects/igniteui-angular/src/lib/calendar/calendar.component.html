@@ -5,9 +5,8 @@
 
 <ng-template let-result #defaultMonth let-obj>
         <span class="igx-calendar__aria-off-screen" aria-live="polite">
-             {{monthsViewNumber === 1 ? resourceStrings.igx_selected_month_is : 'first picker starts from' + ' ' + (getViewDate(obj.index) | date: 'LLLL yyyy')}}
+             {{ monthsViewNumber > 1 ? 'first picker' + 'of' + ' ' + monthsViewNumber + ' ' + 'starts from' + ' ' + (getViewDate(obj.index) | date: 'LLLL yyyy') : resourceStrings.igx_selected_month_is + (getViewDate(obj.index) | date: 'LLLL yyyy')}}
         </span>
-
         <span
             tabindex="0"
             role="button"
@@ -48,7 +47,17 @@
 
 <div *ngIf="isDefaultView"  class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
     (swipeleft)="nextMonth()">
-    <section class="igx-calendar-picker" tabindex="0" aria-labelledby="igx-aria-calendar-title">
+    <section class="igx-calendar-picker">
+        <span tabindex="0" class="igx-calendar__aria-off-screen">
+            <ng-container *ngIf="selection === 'multi'">
+                Multi selection
+            </ng-container>
+            <ng-container *ngIf="selection === 'range'">
+                Range selection
+            </ng-container>
+            calendar
+            {{ monthsViewNumber && monthsViewNumber > 1 ?  ('with' + ' ' + monthsViewNumber + ' ' + 'date pickers') : ''}}
+        </span>
         <div
             tabindex="0"
             class="igx-calendar-picker__prev"
@@ -66,9 +75,6 @@
              *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;"
              [style.width.%]="100/monthsViewNumber"
              [attr.data-month]="i | IgxGetViewDate:viewDate:false">
-            <span class="igx-calendar__aria-off-screen" id="igx-aria-calendar-title">
-                {{ selection === 'multi' ? 'Multi' : selection === 'range' ? 'Range' : selection === 'single' ? 'Single' : 'Single' }} selection calendar with {{ monthsViewNumber > 1 ?  monthsViewNumber + 'date pickers' : 'date picker'}}
-            </span>
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: getContext(i)">
             </ng-container>
         </div>
