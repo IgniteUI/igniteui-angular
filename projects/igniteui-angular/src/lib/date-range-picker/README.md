@@ -122,9 +122,9 @@ With projected inputs:
 | Name             | Type                  | Description |
 |:-----------------|:----------------------|:------------|
 | rangeSelected    | IgxDateRangePickerComponent | Emitted when a full range was selected in the `IgxDateRangePickerComponent`. |
-| onOpening        | CancelableBrowserEventArgs & IBaseEventArgs | Emitted when the calendar starts opening, cancelable. |
+| onOpening        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts opening, cancelable. |
 | onOpened         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is opened.                    |
-| onClosing        | CancelableBrowserEventArgs & IBaseEventArgs | Emitted when the calendar starts closing, cancelable. | 
+| onClosing        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts closing, cancelable. | 
 | onClosed         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is closed.                    |
 
 ### Methods
