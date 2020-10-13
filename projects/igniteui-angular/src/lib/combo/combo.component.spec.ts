@@ -19,7 +19,7 @@ import { DisplayDensity } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxIconService } from '../icon/public_api';
-import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -291,7 +291,7 @@ describe('igxCombo', () => {
             spyOn(combo.onOpening, 'emit').and.callThrough();
             spyOn(combo.onClosing, 'emit').and.callThrough();
             const mockObj = {};
-            const inputEvent: CancelableBrowserEventArgs & IBaseEventArgs = {
+            const inputEvent: IBaseCancelableBrowserEventArgs = {
                 cancel: false,
                 owner: mockObj,
             };
@@ -301,13 +301,13 @@ describe('igxCombo', () => {
                 }
             };
             combo.handleOpening(inputEvent);
-            const expectedCall: CancelableBrowserEventArgs & IBaseEventArgs = Object.assign({}, inputEvent, { owner: combo });
+            const expectedCall: IBaseCancelableBrowserEventArgs = Object.assign({}, inputEvent, { owner: combo });
             expect(combo.onOpening.emit).toHaveBeenCalledWith(expectedCall);
             expect(inputEvent.owner).toEqual(mockObj);
             combo.handleClosing(inputEvent);
             expect(combo.onClosing.emit).toHaveBeenCalledWith(expectedCall);
             expect(inputEvent.owner).toEqual(mockObj);
-            let sub = combo.onOpening.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
+            let sub = combo.onOpening.subscribe((e: IBaseCancelableBrowserEventArgs) => {
                 e.cancel = true;
             });
             combo.handleOpening(inputEvent);
@@ -315,7 +315,7 @@ describe('igxCombo', () => {
             sub.unsubscribe();
             inputEvent.cancel = false;
 
-            sub = combo.onClosing.subscribe((e: CancelableBrowserEventArgs & IBaseEventArgs) => {
+            sub = combo.onClosing.subscribe((e: IBaseCancelableBrowserEventArgs) => {
                 e.cancel = true;
             });
             combo.handleClosing(inputEvent);
