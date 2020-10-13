@@ -22,14 +22,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     protected activeViewIdx = 0;
 
     /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
      * @hidden
      */
     @ViewChildren('yearsBtn')

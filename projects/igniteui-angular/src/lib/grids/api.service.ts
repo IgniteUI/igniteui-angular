@@ -13,7 +13,7 @@ import { Transaction, TransactionType, State } from '../services/transaction/tra
 import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
-import { IRowToggleEventArgs } from './common/events';
+import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 import {
     ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
 } from '../core/utils';
@@ -131,12 +131,16 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public submit_add_value() {
         const cell = this.grid.crudService.cell;
         if (cell) {
-            this.update_add_cell(cell, cell.editValue);
-            this.grid.crudService.exitCellEdit();
+            const args = this.update_add_cell(cell, cell.editValue);
+            if (args.cancel) {
+                this.grid.endAddRow();
+                return args.cancel;
+            }
+            return this.grid.crudService.exitCellEdit();
         }
     }
 
-    public update_add_cell(cell: IgxCell, value: any) {
+    public update_add_cell(cell: IgxCell, value: any): IGridEditEventArgs  {
         cell.editValue = value;
 
         const args = cell.createEditEventArgs();
@@ -153,9 +157,11 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const data = cell.rowData;
         mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
+        this.grid.crudService.row.data = data;
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
+        return args;
     }
 
     update_cell(cell: IgxCell, value: any) {

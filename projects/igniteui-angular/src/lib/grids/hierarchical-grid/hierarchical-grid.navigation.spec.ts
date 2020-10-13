@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild, DebugElement} from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions, waitForSelectionChange, waitForGridScroll } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -193,7 +193,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, true);
         fixture.detectChanges();
-        await wait(1000);
+        // wait for parent grid to complete scroll to child cell.
+        await waitForGridScroll(hierarchicalGrid);
         fixture.detectChanges();
 
         const selectedCell = fixture.componentInstance.selectedCell;
@@ -368,7 +369,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         UIInteractions.triggerEventHandlerKeyDown('end', baseHGridContent, false, false, true);
         fixture.detectChanges();
-        await wait(1000);
+        await waitForSelectionChange(hierarchicalGrid);
         fixture.detectChanges();
 
         const lastDataCell = hierarchicalGrid.getCellByKey(19, 'childData2');
