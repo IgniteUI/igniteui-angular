@@ -62,7 +62,7 @@ export class IgxSummaryOperand {
      * ```
      * @memberof IgxSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en'): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US'): IgxSummaryResult[] {
         const pipe = new DecimalPipe(locale);
         return [{
             key: 'count',
@@ -152,7 +152,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en',
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
         pipeArgs: IColumnPipeArgs = { }): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
@@ -235,7 +235,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en',
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
         pipeArgs: IColumnPipeArgs = { }): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DatePipe(locale);

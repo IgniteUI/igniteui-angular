@@ -1207,8 +1207,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._pipeArgs = Object.assign(this._pipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
         (this.grid as any)._pipeTrigger++;
-        this.grid.summaryService.retriggerRootPipe++;
-        this.grid.notifyChanges(true);
+        this.grid.notifyChanges();
     }
     get pipeArgs(): IColumnPipeArgs {
         return this._pipeArgs;

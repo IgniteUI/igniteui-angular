@@ -425,8 +425,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._locale = value;
         this.summaryService.clearSummaryCache();
         this._pipeTrigger++;
-        this.summaryService.retriggerRootPipe++;
-        this.notifyChanges(true);
+        this.notifyChanges();
     }
 
     @Input()
