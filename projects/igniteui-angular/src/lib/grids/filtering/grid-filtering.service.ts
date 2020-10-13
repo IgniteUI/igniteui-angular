@@ -5,7 +5,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -69,6 +69,7 @@ export class IgxFilteringService implements OnDestroy {
 
     public toggleFilterDropdown(element, column, classRef) {
         if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
+            this.initFilteringSettings();
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
@@ -94,7 +95,7 @@ export class IgxFilteringService implements OnDestroy {
             scrollStrategy: new AbsoluteScrollStrategy()
         };
         this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = eventArgs.componentRef.instance as any;
                 if (instance) {
@@ -103,7 +104,7 @@ export class IgxFilteringService implements OnDestroy {
             });
 
         this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
+            first(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe(() => {
                 this._componentOverlayId = null;
                 this.grid.theadRow.nativeElement.focus();
