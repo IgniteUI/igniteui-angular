@@ -25,6 +25,7 @@ import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSe
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
 import { IBaseEventArgs } from '../core/utils';
+import { open } from 'inspector';
 
 let DIALOG_ID = 0;
 /**
@@ -345,10 +346,22 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * }
      * ```
      */
-    @Input()
+
     get isOpen() {
         return !this.toggleRef.collapsed;
     }
+
+
+    /**
+     * 
+     * An @Input property that allows you to open the dialog declaratively.
+     *
+     */
+    @Input()
+    public set opened(value: boolean) {
+        value && this.open(this._overlayDefaultSettings);
+    }
+
 
     @HostBinding('class.igx-dialog--hidden')
     get isCollapsed() {
