@@ -1196,6 +1196,10 @@
         }
     }
 
+    %igx-grid__tr--inner {
+        display: flex;
+    }
+
     %igx-grid__tr--add-animate {
         @include animation(scale-in-ver-center .2s $ease-in-out-quad);
     }

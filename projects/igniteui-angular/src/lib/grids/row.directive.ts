@@ -192,13 +192,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    get styleAddClasses(): string {
-        return this.animateClasses();
-    }
-
-    /**
-     * @hidden
-     */
     @Input()
     @HostBinding('attr.aria-selected')
     get selected(): boolean {
@@ -507,12 +500,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     public animationEndHandler() {
         this.onAnimationEnd.emit(this);
-    }
-
-
-    protected animateClasses(): string {
-        const animateClass = this.animateAdd ? 'igx-grid__tr--add-animate' : '';
-        return `${this.styleClasses} ${animateClass}`;
     }
 
     /**
