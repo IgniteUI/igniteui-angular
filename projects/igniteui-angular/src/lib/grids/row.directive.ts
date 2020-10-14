@@ -106,8 +106,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     get rowHeight() {
         let height = this.grid.rowHeight || 32;
         if (this.grid.hasColumnLayouts) {
-            const rs = this.columns.map(x => x.gridRowSpan);
-            const maxRowSpan = Math.max(... rs);
+            const maxRowSpan = this.grid.multiRowLayoutRowSize;
             height = height * maxRowSpan;
         }
         return this.addRow ?  height : null;
