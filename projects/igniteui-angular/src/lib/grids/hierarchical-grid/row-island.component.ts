@@ -14,6 +14,7 @@ import {
     Input,
     IterableChangeRecord,
     IterableDiffers,
+    LOCALE_ID,
     NgZone,
     OnChanges,
     OnDestroy,
@@ -223,7 +224,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        public rowIslandAPI: IgxRowIslandAPIService) {
+        public rowIslandAPI: IgxRowIslandAPIService,
+        @Inject(LOCALE_ID) localeId: string) {
         super(
             selectionService,
             crudService,
@@ -241,7 +243,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             filteringService,
             overlayService,
             summaryService,
-            _displayDensityOptions
+            _displayDensityOptions,
+            localeId
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
