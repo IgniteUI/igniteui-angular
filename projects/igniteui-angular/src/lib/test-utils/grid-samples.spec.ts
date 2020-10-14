@@ -997,7 +997,7 @@ export class CustomFilter extends IgxFilteringOperand {
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="filterable" [resizable]="resizable" dataType="date">
         </igx-column>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="filterable"
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
@@ -1105,6 +1105,7 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
     private _filteringStrategy = new FilteringStrategy();
     public data = SampleTestData.excelFilteringData();
+    public doneCallbackCounter = 0;
 
     public columnValuesStrategy = (column: IgxColumnComponent,
                                    columnExprTree: IFilteringExpressionsTree,
@@ -1113,6 +1114,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
+            this.doneCallbackCounter++;
         }, 1000);
     }
 }
