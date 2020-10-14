@@ -25,7 +25,6 @@ import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSe
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
 import { IBaseEventArgs } from '../core/utils';
-import { open } from 'inspector';
 
 let DIALOG_ID = 0;
 /**
@@ -378,11 +377,25 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * 
      * An @Input property that allows you to open the dialog declaratively.
+     * 
+     * ```typescript
+     * @ViewChild("MyDialog")
+     * public dialog: IgxDialogComponent; 
+     * ngAfterViewInit() {
+     *     let dialogOpen = this.dialog.opened=true;
+     * }
+     * ```
      *
+     * ```html
+     * <!--set-->
+     * <igx-dialog [opened]='true'></igx-dialog>
+     * ```
      */
     @Input()
     public set opened(value: boolean) {
-        value && this.open(this._overlayDefaultSettings);
+        if(value){
+            this.open(this._overlayDefaultSettings);
+        }
     }
 
 
