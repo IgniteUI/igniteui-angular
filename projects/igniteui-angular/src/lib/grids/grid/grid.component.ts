@@ -494,8 +494,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: true })
-    public groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: false })
+    protected groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
 
     /**
      * @hidden @internal

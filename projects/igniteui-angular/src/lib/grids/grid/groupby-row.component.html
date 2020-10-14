@@ -60,10 +60,10 @@
             <igx-checkbox
                 [tabindex]="-1"
                 [readonly]="true"
-                [checked]="groupByRowCheckboxCheckedState"
+                [checked]="areAllRowsInTheGroupSelected"
                 disableRipple="true"
                 [indeterminate]="groupByRowCheckboxIndeterminateState"
-                [disabled]="selectionMode === 'single'"
+                [disabled]="this.grid.rowSelection === 'single'"
                 [aria-label]="groupByRowSelectorBaseAriaLabel"
                 #groupByRowCheckbox>
             </igx-checkbox>

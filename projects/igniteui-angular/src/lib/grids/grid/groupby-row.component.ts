@@ -19,8 +19,9 @@ import { GridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { GridSelectionMode } from '../common/enums';
 import { IgxGridRowComponent } from './grid-row.component';
+import { IgxGridComponent } from './grid.component';
+import { GridSelectionMode } from '../common/enums';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,12 +78,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden
      */
     @Input()
-    public selectionMode: string;
-
-    /**
-     * @hidden
-     */
-    @Input()
     public hideGroupRowSelectors: boolean;
 
     /**
@@ -130,6 +125,15 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     @ViewChild('groupContent', { static: true })
     public groupContent: ElementRef;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
 
     /**
      * Returns whether the group row is expanded.
@@ -190,7 +194,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     @HostListener('pointerdown')
     public activate() {
-        this.grid.navigation.setActiveNode({ row: this.index }, 'groupRow');
+        this.grid.navigation.setActiveNode({ row: this.index });
     }
 
     /**
@@ -204,15 +208,15 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public onGroupSelectorClick(event) {
-        if (this.selectionMode === GridSelectionMode.single || this.selectionMode === GridSelectionMode.none) { return; }
+        if (!this.grid.isMultiRowSelectionEnabled) { return; }
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
             this.groupRow.records.forEach(row => {
-                this.gridSelection.deselectRow(this.getRowID(row), false);
+                this.gridSelection.deselectRow(this.getRowID(row), event);
             });
         } else {
             this.groupRow.records.forEach(row => {
-                this.gridSelection.selectRowById(this.getRowID(row), false);
+                this.gridSelection.selectRowById(this.getRowID(row), false, event);
             });
         }
     }
@@ -248,8 +252,8 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * this.grid1.rowList.first.grid;
      * ```
      */
-    get grid(): any {
-        return this.gridAPI.grid;
+    get grid(): IgxGridComponent {
+        return this.gridAPI.grid as IgxGridComponent;
     }
 
     /**
@@ -277,16 +281,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public get groupByRowCheckboxCheckedState(): boolean {
-        return this.selectedRowsInTheGroup.length === this.groupRow.records.length ? true : false;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get groupByRowCheckboxIndeterminateState(): boolean {
         if (this.selectedRowsInTheGroup.length > 0) {
-            return this.selectedRowsInTheGroup.length !== this.groupRow.records.length ? true : false;
+            return !this.areAllRowsInTheGroupSelected;
         }
         return false;
     }
@@ -296,8 +293,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     public get groupByRowSelectorBaseAriaLabel(): string {
         const ariaLabel: string = this.areAllRowsInTheGroupSelected ?
-            (this.grid as IgxGridBaseDirective).resourceStrings.igx_grid_groupByArea_deselect_message :
-            (this.grid as IgxGridBaseDirective).resourceStrings.igx_grid_groupByArea_select_message;
+            this.grid.resourceStrings.igx_grid_groupByArea_deselect_message : this.grid.resourceStrings.igx_grid_groupByArea_select_message;
         return ariaLabel.replace('{0}', this.groupRow.expression.fieldName).replace('{1}', this.groupRow.value);
     }
 
@@ -305,12 +301,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     get showRowSelectors(): boolean {
-        return this.selectionMode !== 'none' && !this.hideGroupRowSelectors;
+        return this.grid.rowSelection !== GridSelectionMode.none && !this.hideGroupRowSelectors;
     }
 
-
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
 }
