@@ -4,6 +4,9 @@ import { EventEmitter } from '@angular/core';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { TransactionService, Transaction, State } from '../../services/public_api';
+import { ITreeGridRecord } from '../tree-grid/public_api';
 
 export interface IGridDataBindable {
     data: any[];
@@ -46,6 +49,8 @@ export interface GridType extends IGridDataBindable {
     summariesRowList: any;
     headerContainer: any;
     dataView: any[];
+    transactions: TransactionService<Transaction, State>;
+    defaultSummaryHeight: number;
 
     rowInEditMode: any;
     rowEditTabs: any;
@@ -56,6 +61,8 @@ export interface GridType extends IGridDataBindable {
 
     sortingExpressions: ISortingExpression[];
     sortingExpressionsChange: EventEmitter<ISortingExpression[]>;
+    filteringExpressionsTree: IFilteringExpressionsTree;
+    filteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
     advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     advancedFilteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
 
@@ -66,6 +73,22 @@ export interface GridType extends IGridDataBindable {
     isColumnGrouped(fieldName: string): boolean;
     isDetailRecord(rec: any): boolean;
     isGroupByRecord(rec: any): boolean;
+    notifyChanges(repaint: boolean): void;
+}
+
+/**
+ * An interface describing a Flat Grid type
+ */
+export interface FlatGridType extends GridType {
+    groupingExpressions: IGroupingExpression[];
+    groupingExpressionsChange: EventEmitter<IGroupingExpression[]>;
+}
+
+/**
+ * An interface describing a Tree Grid type
+ */
+export interface TreeGridType extends GridType {
+    records: Map<any, ITreeGridRecord>;
 }
 
 export interface GridSVGIcon {
