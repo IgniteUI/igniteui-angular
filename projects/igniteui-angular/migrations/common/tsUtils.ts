@@ -6,7 +6,8 @@ import { MemberChange } from './schema';
 import { escapeRegExp } from './util';
 import { Logger } from './tsLogger';
 
-export const PACKAGE_NAME = 'igniteui-angular';
+export const IG_PACKAGE_NAME = 'igniteui-angular';
+export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
 
 /** Returns an source file */
 // export function getFileSource(sourceText: string): ts.SourceFile {
@@ -68,7 +69,7 @@ export function getImportModulePositions(sourceText: string, startsWith: string)
 /** Filters out statements to named imports (e.g. `import {x, y}`) from PACKAGE_IMPORT */
 const namedImportFilter = (statement: ts.Statement) => {
     if (statement.kind === ts.SyntaxKind.ImportDeclaration &&
-        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text === PACKAGE_NAME) {
+        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text === IG_PACKAGE_NAME) {
 
         const clause = (statement as ts.ImportDeclaration).importClause;
         return clause && clause.namedBindings && clause.namedBindings.kind === ts.SyntaxKind.NamedImports;
@@ -189,7 +190,7 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
         useSingleInferredProject: true,
         useInferredProjectPerProjectRoot: true,
         /* will load only global plug-ins */
-        globalPlugins: ['@angular/language-service'],
+        globalPlugins: [NG_LANG_SERVICE_PACKAGE_NAME],
         allowLocalPluginLoads: false,
         typingsInstaller: tss.server.nullTypingsInstaller
     });
@@ -204,7 +205,7 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
         ]
     });
     projectService.configurePlugin({
-        pluginName: '@angular/language-service',
+        pluginName: NG_LANG_SERVICE_PACKAGE_NAME,
         configuration: {
             angularOnly: false,
         },
@@ -233,7 +234,7 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
             .getProgram()
             .getSourceFile(definition.fileName)
             .statements
-            .filter(<(a: ts.Statement) => a is ts.ClassDeclaration>(m => m.kind === ts.SyntaxKind.ClassDeclaration))
+            .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
             .find(m => m.name.getText() === definition.containerName);
         const member: ts.ClassElement = classDeclaration
             ?.members
@@ -248,10 +249,10 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
     return null;
 }
 
-export function isMemberIgniteUI(change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number) {
+export function isMemberIgniteUI(change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean {
     const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
     if (!typeDef) { return false; }
-    return typeDef.fileName.includes(PACKAGE_NAME)
+    return typeDef.fileName.includes(IG_PACKAGE_NAME)
         && change.definedIn.indexOf(typeDef.name) !== -1;
 }
 
