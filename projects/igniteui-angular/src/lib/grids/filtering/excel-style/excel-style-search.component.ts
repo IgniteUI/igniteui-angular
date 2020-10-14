@@ -250,9 +250,20 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onInputKeyDown(event): void {
-        if (event.key === KEYS.ENTER) {
-            event.preventDefault();
-            this.applyFilter();
+        switch (event.key) {
+            case KEYS.ENTER:
+                event.preventDefault();
+                this.applyFilter();
+
+                return;
+            case KEYS.ESCAPE || KEYS.ESCAPE_IE:
+                event.stopPropagation();
+
+                this.searchValue ?
+                    this.clearInput() :
+                    this.esf.closeDropdown();
+
+                return;
         }
     }
 
