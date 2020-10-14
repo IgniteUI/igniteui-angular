@@ -1444,7 +1444,7 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100 , dataType: 'number'},
+        { field: 'ID', width: 100 , dataType: 'string'},
         { field: 'CompanyName', width: 300 , dataType: 'string'},
         { field: 'ContactName', width: 200 , dataType: 'string'},
         { field: 'ContactTitle', width: 200 , dataType: 'string'},
@@ -1463,7 +1463,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
-        <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
         <ng-template igxRowSelector let-rowContext>
