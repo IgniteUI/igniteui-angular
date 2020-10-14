@@ -65,7 +65,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public setSelection(args: string) {
-        return this.selectionType = this.calendar.selection = args
+        return this.selectionType = this.calendar.selection = args;
     }
 
     public setMonthsViewNumber(args: HTMLInputElement) {
