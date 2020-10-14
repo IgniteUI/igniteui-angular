@@ -10,7 +10,6 @@ import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnResizeEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
-import { IgxDatePipeComponent } from '../common/pipes';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
@@ -43,7 +42,6 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
@@ -134,13 +132,6 @@ export class IgxFilteringService implements OnDestroy {
         if (this._componentOverlayId) {
             this._overlayService.hide(this._componentOverlayId);
         }
-    }
-
-    public get datePipe(): IgxDatePipeComponent {
-        if (!this._datePipe) {
-            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
-        }
-        return this._datePipe;
     }
 
     /**
@@ -418,7 +409,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal, this.grid.locale);
+            return this.grid.datePipe.transform(expression.searchVal);
         } else {
             return expression.searchVal;
         }

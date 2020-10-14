@@ -63,7 +63,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, CancelableBrowserEventArgs, isIE, isEqual, IBaseEventArgs, mkenum } from '../core/utils';
+import { KEYS, isIE, isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -605,7 +605,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * Emitted when the `IgxDatePickerComponent` is being closed.
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted when selection is made in the calendar.
