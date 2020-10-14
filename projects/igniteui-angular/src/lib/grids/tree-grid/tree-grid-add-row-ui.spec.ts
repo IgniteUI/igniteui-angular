@@ -15,6 +15,12 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
     let actionStrip: IgxActionStripComponent;
+    const endTransition = () => {
+        // transition end needs to be simulated
+        const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
+        const transitionEvent = new TransitionEvent('transitionend');
+        animationElem.dispatchEvent(transitionEvent);
+  };
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -65,6 +71,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const addChildBtn = editActions[1].componentInstance;
             addChildBtn.onActionClick.emit();
             fix.detectChanges();
+            endTransition();
 
             const addRow = treeGrid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
