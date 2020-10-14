@@ -8,6 +8,7 @@ export * from './exporter-common/exporter-options-base';
 export * from './overlay/overlay';
 export * from './overlay/position';
 export {
+    AbsolutePosition, RelativePosition, RelativePositionStrategy,
     HorizontalAlignment, VerticalAlignment, Point,
     OverlayEventArgs, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
     OverlaySettings, PositionSettings
