@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import { execSync } from 'child_process';
 import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
@@ -11,11 +10,13 @@ import {
 } from './schema';
 import {
     getLanguageService, getRenamePositions, findMatches,
-    replaceMatch, createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, supports
+    replaceMatch, createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME
 } from './tsUtils';
-import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
+import {
+    getProjectPaths, getWorkspace, getProjects, escapeRegExp,
+    getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage
+} from './util';
 import { ServerHost } from './ServerHost';
-import { getPropertyFromWorkspace } from '../../schematics/utils/dependency-handler';
 
 export enum InputPropertyType {
     EVAL = 'eval',
@@ -95,19 +96,7 @@ export class UpdateChanges {
     private _packageManager: 'npm' | 'yarn';
     private get packageManager(): 'npm' | 'yarn' {
         if (!this._packageManager) {
-            const hasYarn = supports('yarn');
-            const hasYarnLock = this.host.exists('yarn.lock');
-            const hasNpm = supports('npm');
-            const hasNpmLock = this.host.exists('package-lock.json');
-            if (hasYarn && hasYarnLock && !hasNpmLock) {
-                this._packageManager = 'yarn';
-            } else if (hasNpm && hasNpmLock && !hasYarnLock) {
-                this._packageManager = 'npm';
-            } else if (hasYarn && !hasNpm) {
-                this._packageManager = 'yarn';
-            } else if (hasNpm && !hasYarn) {
-                this._packageManager = 'npm';
-            }
+            this._packageManager = getPackageManager();
         }
 
         return this._packageManager;
@@ -134,10 +123,11 @@ export class UpdateChanges {
 
     /** Apply configured changes to the Host Tree */
     public applyChanges() {
-        const shouldInstallPkg = this.shouldInstallPackage(NG_LANG_SERVICE_PACKAGE_NAME);
+        const shouldInstallPkg = this.membersChanges && this.membersChanges.changes.length
+            && !canResolvePackage(NG_LANG_SERVICE_PACKAGE_NAME);
         if (shouldInstallPkg) {
-            // install package only if it's not found in the .lock file
-            this.tryInstallPackage(NG_LANG_SERVICE_PACKAGE_NAME);
+            this.context.logger.info(`Installing temporary migration dependencies via ${this.packageManager}.`);
+            tryInstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
         }
 
         this.updateTemplateFiles();
@@ -151,7 +141,8 @@ export class UpdateChanges {
         }
 
         if (shouldInstallPkg) {
-            this.tryUninstallPackage(NG_LANG_SERVICE_PACKAGE_NAME);
+            this.context.logger.info(`Cleaning up temporary migration dependencies.`);
+            tryUninstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
         }
     }
 
@@ -533,42 +524,6 @@ export class UpdateChanges {
         const project = this.projectService.findProject(scriptInfo.containingProjects[0].projectName);
         project.addMissingFileRoot(scriptInfo.fileName);
         return project;
-    }
-
-    private shouldInstallPackage(pkg: string): boolean {
-        let lockFileContents;
-        switch (this.packageManager) {
-            case 'npm':
-                lockFileContents = this.host.read('package-lock.json').toString();
-                break;
-            case 'yarn':
-                lockFileContents = this.host.read('yarn.json').toString();
-                break;
-        }
-        if (!lockFileContents) { return false; }
-        const foundProp = getPropertyFromWorkspace(pkg, JSON.parse(lockFileContents));
-        return !foundProp;
-    }
-
-    private tryInstallPackage(pkg: string, silent = true) {
-        try {
-            this.context.logger.info(`Preparing to install ${pkg} via ${this.packageManager}.`);
-            execSync(`${this.packageManager} i ${pkg} ${silent ? '--no-save' : ''}`, { stdio: 'ignore' });
-            this.context.logger.info(`${pkg} installed successfully.`);
-        } catch (e) {
-            this.context.logger.error(`Could not install ${pkg}.`, JSON.parse(e));
-        }
-    }
-
-    private tryUninstallPackage(pkg: string, silent = true) {
-        try {
-            this.context.logger.info(`Preparing to uninstall ${pkg} via ${this.packageManager}`);
-            execSync(`${this.packageManager} uninstall ${pkg} ${silent ? '--no-save' : ''}`, { stdio: 'ignore' });
-            this.context.logger.info(`${pkg} uninstalled successfully.`);
-        } catch (e) {
-            this.context.logger
-                .error(`Could not uninstall ${pkg}, you may want to uninstall it manually.`, JSON.parse(e));
-        }
     }
 }
 

@@ -5,7 +5,6 @@ import { Tree } from '@angular-devkit/schematics';
 import { MemberChange } from './schema';
 import { escapeRegExp } from './util';
 import { Logger } from './tsLogger';
-import { execSync } from 'child_process';
 
 export const IG_PACKAGE_NAME = 'igniteui-angular';
 export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
@@ -131,15 +130,6 @@ export function replaceMatch(content: string, toReplace: string, replaceWith: st
     return content.substring(0, index)
         + replaceWith
         + content.substring(index + toReplace.length, content.length);
-}
-
-export function supports(name: string): boolean {
-    try {
-        execSync(`${name} --version`, { stdio: 'ignore' });
-        return true;
-    } catch {
-        return false;
-    }
 }
 
 //#region Language Service
