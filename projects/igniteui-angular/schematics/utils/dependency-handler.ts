@@ -110,9 +110,9 @@ export function addDependencies(options: Options): Rule {
 }
 
 /**
- * Recursively search for the first property that matches targetProp within the angular.json file.
+ * Recursively search for the first property that matches targetProp within a json file.
  */
-export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): any {
+export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): { key: string, value: any } {
     if (workspace.hasOwnProperty(targetProp)) {
         return { key: targetProp, value: workspace[targetProp] };
     }
@@ -129,7 +129,7 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
             // If the target property is an object, go one level in.
             if (workspace.hasOwnProperty(key)) {
                 const newValue = getPropertyFromWorkspace(targetProp, workspace[key], key);
-                if (newValue !== null) {
+                if (newValue) {
                     return newValue;
                 }
             }
