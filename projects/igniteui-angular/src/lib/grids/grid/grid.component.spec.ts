@@ -22,6 +22,8 @@ import { SortingDirection, ISortingExpression } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
+import { registerLocaleData } from '@angular/common';
+import localeDE from '@angular/common/locales/de';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -1322,6 +1324,171 @@ describe('IgxGrid Component Tests #grid', () => {
                 if (earliest) {
                     earliestValue = earliest.nativeElement.nextSibling.innerText;
                     expect(earliestValue).toBe('May 17, 1990');
+                }
+            });
+        }));
+
+        it('Should properly handle dates in ISO 8601 format', () => {
+            const fixture = TestBed.createComponent(IgxGridFormattingComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.data = fixture.componentInstance.data.map(rec => {
+                const newRec = rec as any as {
+                    ProductID: number,
+                    ProductName: string,
+                    InStock: boolean,
+                    UnitsInStock: number,
+                    OrderDate: string
+                };
+                newRec.OrderDate = rec.OrderDate.toISOString();
+                return newRec;
+            });
+            fixture.detectChanges();
+
+            // verify cells formatting
+            const rows = grid.rowList.toArray();
+            let expectedValue = 'Mar 21, 2005';
+            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Jan 15, 2008';
+            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Nov 20, 2010';
+            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+
+            // verify summaries formatting
+            let avgValue;
+            let earliestValue;
+            const summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
+            summaries.forEach((summary) => {
+                const avgLabel = summary.query(By.css('[title=\'Avg\']'));
+                const earliest = summary.query(By.css('[title=\'Earliest\']'));
+                if (avgLabel) {
+                    avgValue = avgLabel.nativeElement.nextSibling.innerText;
+                    expect(avgValue).toBe('3,900.4');
+                }
+                if (earliest) {
+                    earliestValue = earliest.nativeElement.nextSibling.innerText;
+                    expect(earliestValue).toBe('May 17, 1990');
+                }
+            });
+        });
+
+        it('Should properly handle dates respresented as number of milliseconds', () => {
+            const fixture = TestBed.createComponent(IgxGridFormattingComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.data = fixture.componentInstance.data.map(rec => {
+                const newRec = rec as any as {
+                    ProductID: number,
+                    ProductName: string,
+                    InStock: boolean,
+                    UnitsInStock: number,
+                    OrderDate: number
+                };
+                newRec.OrderDate = rec.OrderDate.getTime();
+                return newRec;
+            });
+            fixture.detectChanges();
+
+            // verify cells formatting
+            const rows = grid.rowList.toArray();
+            let expectedValue = 'Mar 21, 2005';
+            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Jan 15, 2008';
+            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Nov 20, 2010';
+            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+
+            // verify summaries formatting
+            let avgValue;
+            let earliestValue;
+            const summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
+            summaries.forEach((summary) => {
+                const avgLabel = summary.query(By.css('[title=\'Avg\']'));
+                const earliest = summary.query(By.css('[title=\'Earliest\']'));
+                if (avgLabel) {
+                    avgValue = avgLabel.nativeElement.nextSibling.innerText;
+                    expect(avgValue).toBe('3,900.4');
+                }
+                if (earliest) {
+                    earliestValue = earliest.nativeElement.nextSibling.innerText;
+                    expect(earliestValue).toBe('May 17, 1990');
+                }
+            });
+        });
+
+        xit('Should change dates/number display based on locale', fakeAsync(() => {
+            registerLocaleData(localeDE);
+            const fixture = TestBed.createComponent(IgxGridFormattingComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.data = fixture.componentInstance.data.map(rec => {
+                const newRec = rec as any as {
+                    ProductID: number,
+                    ProductName: string,
+                    InStock: boolean,
+                    UnitsInStock: number,
+                    OrderDate: number
+                };
+                newRec.OrderDate = rec.OrderDate.getTime();
+                return newRec;
+            });
+            fixture.detectChanges();
+
+            let rows = grid.rowList.toArray();
+            let expectedValue = 'Mar 21, 2005';
+            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Jan 15, 2008';
+            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = 'Nov 20, 2010';
+            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            // verify summaries formatting
+            let avgValue;
+            let earliestValue;
+            let summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
+            summaries.forEach((summary) => {
+                const avgLabel = summary.query(By.css('[title=\'Avg\']'));
+                const earliest = summary.query(By.css('[title=\'Earliest\']'));
+                if (avgLabel) {
+                    avgValue = avgLabel.nativeElement.nextSibling.innerText;
+                    expect(avgValue).toBe('3,900.4');
+                }
+                if (earliest) {
+                    earliestValue = earliest.nativeElement.nextSibling.innerText;
+                    expect(earliestValue).toBe('May 17, 1990');
+                }
+            });
+
+            grid.locale = 'de-DE';
+            grid.columnList.toArray()[4].pipeArgs = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
+            grid.columnList.toArray()[3].pipeArgs = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
+            tick(300);
+            fixture.detectChanges();
+
+            rows = grid.rowList.toArray();
+            expectedValue = '21. März 2005';
+            expect(rows[0].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '15. Januar 2008';
+            expect(rows[1].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+            expectedValue = '20. November 2010';
+            expect(rows[2].cells.toArray()[4].element.nativeElement.textContent).toBe(expectedValue);
+
+            // verify summaries formatting
+            summaries = fixture.debugElement.queryAll(By.css('.igx-grid-summary'));
+            summaries.forEach((summary) => {
+                const avgLabel = summary.query(By.css('[title=\'Avg\']'));
+                const earliest = summary.query(By.css('[title=\'Earliest\']'));
+                if (avgLabel) {
+                    avgValue = avgLabel.nativeElement.nextSibling.innerText;
+                    expect(avgValue).toBe('3.900,40');
+                }
+                if (earliest) {
+                    earliestValue = earliest.nativeElement.nextSibling.innerText;
+                    expect(earliestValue).toBe('17. Mai 1990');
                 }
             });
         }));

@@ -50,4 +50,51 @@ describe('Update 10.2.0', () => {
     it('should replace selectedRows() with selectedRows in ts files', async () => {
         pending('set up tests for migrations through lang service');
     });
+
+    it('Should remove references to deprecated `pane` property of `IExpansionPanelEventArgs`', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/expansion-test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-expansion-test',
+    templateUrl: './expansion-test.component.html',
+    styleUrls: ['./expansion-test.component.scss']
+})
+export class ExpansionTestComponent {
+
+    @ViewChild(IgxExpansionPanelComponent, { static: true })
+    public panel: IgxExpansionPanelComponent;
+
+    public onPanelOpened(event: IExpansionPanelEventArgs) {
+        console.log(event.panel);
+    }
+}`
+        );
+        const tree = await schematicRunner
+            .runSchematicAsync('migration-17', {}, appTree)
+            .toPromise();
+        const expectedContent =  `import { Component, ViewChild } from '@angular/core';
+import { IExpansionPanelEventArgs, IgxExpansionPanelComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-expansion-test',
+    templateUrl: './expansion-test.component.html',
+    styleUrls: ['./expansion-test.component.scss']
+})
+export class ExpansionTestComponent {
+
+    @ViewChild(IgxExpansionPanelComponent, { static: true })
+    public panel: IgxExpansionPanelComponent;
+
+    public onPanelOpened(event: IExpansionPanelEventArgs) {
+        console.log(event.owner);
+    }
+}`;
+        expect(
+                tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
+            ).toEqual(expectedContent);
+    });
 });
