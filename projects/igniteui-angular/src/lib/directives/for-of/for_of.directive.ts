@@ -251,7 +251,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
 
     public get displayContainer(): HTMLElement | undefined {
-        return this.dc.instance._viewContainer.element.nativeElement;
+        return this.dc?.instance?._viewContainer?.element?.nativeElement;
     }
 
     public get virtualHelper() {
@@ -353,11 +353,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected removeScrollEventListeners() {
         if (this.igxForScrollOrientation === 'horizontal') {
             this._zone.runOutsideAngular(() =>
-                this.scrollComponent.nativeElement.removeEventListener('scroll', this.func)
+                this.scrollComponent?.nativeElement?.removeEventListener('scroll', this.func)
             );
         } else {
             this._zone.runOutsideAngular(() =>
-                this.scrollComponent.nativeElement.removeEventListener('scroll', this.verticalScrollHandler)
+                this.scrollComponent?.nativeElement?.removeEventListener('scroll', this.verticalScrollHandler)
             );
         }
     }
@@ -698,7 +698,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public getScroll() {
-        return this.scrollComponent.nativeElement;
+        return this.scrollComponent?.nativeElement;
     }
     /**
      * Returns the size of the element at the specified index.
