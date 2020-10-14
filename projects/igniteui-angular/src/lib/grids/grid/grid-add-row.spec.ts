@@ -32,8 +32,8 @@ describe('IgxGrid - Row Adding #grid', () => {
     const endTransition = () => {
           // transition end needs to be simulated
           const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--inner');
-          const transitionEvent = new TransitionEvent('transitionend');
-          animationElem.dispatchEvent(transitionEvent);
+          const endEvent = new AnimationEvent('animationend');
+          animationElem.dispatchEvent(endEvent);
     };
     configureTestSuite();
     beforeAll( async(() => {

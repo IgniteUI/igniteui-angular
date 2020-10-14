@@ -18,8 +18,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     const endTransition = () => {
         // transition end needs to be simulated
         const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
-        const transitionEvent = new TransitionEvent('transitionend');
-        animationElem.dispatchEvent(transitionEvent);
+        const endEvent = new AnimationEvent('animationend');
+        animationElem.dispatchEvent(endEvent);
   };
     beforeAll(async(() => {
         TestBed.configureTestingModule({
