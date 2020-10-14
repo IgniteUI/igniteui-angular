@@ -19,9 +19,9 @@
             formatter
                 ? (value | columnFormatter: formatter)
                 : column.dataType === 'number'
-                ? (value | igxdecimal: grid.locale)
+                ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
                 : column.dataType === 'date'
-                ? (value | igxdate: grid.locale)
+                ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
                 : value
         "
         [row]="rowData"
@@ -32,9 +32,9 @@
             formatter
                 ? (value | columnFormatter: formatter)
                 : column.dataType === "number"
-                ? (value | igxdecimal: grid.locale)
+                ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
                 : column.dataType === "date"
-                ? (value | igxdate: grid.locale)
+                ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
                 : column.dataType === "boolean"
                 ? ""
                 : value
@@ -50,7 +50,7 @@
     [cssClass]="highlightClass"
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"
-    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
+    [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ? (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : value"
     [row]="rowData"
     [column]="this.column.field"
     [containerClass]="'igx-grid__td-text'"
