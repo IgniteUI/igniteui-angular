@@ -104,7 +104,13 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     @HostBinding('style.min-height.px')
     get rowHeight() {
-        return this.addRow ?  this.grid.rowHeight || 32 : null;
+        let height = this.grid.rowHeight || 32;
+        if (this.grid.hasColumnLayouts) {
+            const rs = this.columns.map(x => x.gridRowSpan);
+            const maxRowSpan = Math.max(... rs);
+            height = height * maxRowSpan;
+        }
+        return this.addRow ?  height : null;
     }
 
     get cellHeight() {
