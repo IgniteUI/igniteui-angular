@@ -356,8 +356,8 @@ class AgeSummary extends IgxNumberSummaryOperand {
             if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
                 const summaryResult = obj.summaryResult;
                 // apply formatting to float numbers
-                if (Number(summaryResult) === summaryResult) {
-                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                if (!Number.isInteger(parseFloat(summaryResult))) {
+                    obj.summaryResult = parseFloat(summaryResult).toLocaleString('en-us', { maximumFractionDigits: 2 });
                 }
                 return obj;
             }
