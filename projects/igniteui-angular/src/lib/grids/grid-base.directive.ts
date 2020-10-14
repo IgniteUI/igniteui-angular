@@ -3385,10 +3385,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
-            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
-            const vertScrDC = this.verticalScrollContainer.displayContainer;
-            vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
+            this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
+            const vertScrDC = this.verticalScrollContainer?.displayContainer;
+            vertScrDC?.removeEventListener('scroll', this.preventContainerScroll);
         });
     }
 
