@@ -378,22 +378,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    public getPrevMonth(date): Date {
-        return this.calendarModel.getPrevMonth(date)
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public getNextMonth(date, viewIndex): Date {
-        return this.calendarModel.getDateByView(date, 'Month', viewIndex)
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     public activeDate = new Date().toLocaleDateString();
 
     /**
@@ -985,5 +969,21 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         } else {
             return this.monthViews.toArray()[index];
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getPrevMonth(date): Date {
+        return this.calendarModel.getPrevMonth(date);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getNextMonth(date, viewIndex): Date {
+        return this.calendarModel.getDateByView(date, 'Month', viewIndex);
     }
 }
