@@ -943,7 +943,7 @@
         height: 100%;
         color: --var($theme, 'content-text-color');
         flex-direction: column;
-        padding: 24px;
+        padding: rem(24px);
     }
 
     %igx-grid__loading {
@@ -2759,5 +2759,4 @@
         }
     }
 }
-
 
