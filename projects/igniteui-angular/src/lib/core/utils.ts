@@ -305,6 +305,10 @@ export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
+export interface IBaseCancelableBrowserEventArgs extends CancelableBrowserEventArgs, IBaseEventArgs {}
+
+export interface IBaseCancelableEventArgs extends CancelableEventArgs, IBaseEventArgs {}
+
 export const HORIZONTAL_NAV_KEYS = new Set(['arrowleft', 'left', 'arrowright', 'right', 'home', 'end']);
 
 export const NAVIGATION_KEYS = new Set([

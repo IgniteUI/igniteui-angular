@@ -20,7 +20,8 @@ import {
     Optional,
     OnDestroy,
     DoCheck,
-    IterableChangeRecord
+    IterableChangeRecord,
+    LOCALE_ID
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridTransaction, IgxGridBaseDirective } from '../grid-base.directive';
@@ -218,7 +219,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        public rowIslandAPI: IgxRowIslandAPIService) {
+        public rowIslandAPI: IgxRowIslandAPIService,
+        @Inject(LOCALE_ID) localeId: string) {
         super(
             selectionService,
             crudService,
@@ -236,7 +238,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             filteringService,
             overlayService,
             summaryService,
-            _displayDensityOptions
+            _displayDensityOptions,
+            localeId
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
