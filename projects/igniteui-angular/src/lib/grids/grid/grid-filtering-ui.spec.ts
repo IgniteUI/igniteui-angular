@@ -4431,7 +4431,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
