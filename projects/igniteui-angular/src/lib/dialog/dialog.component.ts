@@ -375,12 +375,10 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
 
     /**
-     * 
      * An @Input property that allows you to open the dialog declaratively.
-     * 
      * ```typescript
      * @ViewChild("MyDialog")
-     * public dialog: IgxDialogComponent; 
+     * public dialog: IgxDialogComponent;
      * ngAfterViewInit() {
      *     let dialogOpen = this.dialog.opened=true;
      * }
@@ -393,7 +391,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Input()
     public set opened(value: boolean) {
-        if(value){
+        if (value) {
             this.open(this._overlayDefaultSettings);
         }
     }
