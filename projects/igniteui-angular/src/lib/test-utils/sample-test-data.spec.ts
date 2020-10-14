@@ -1515,7 +1515,7 @@ export class SampleTestData {
             ProductName: 'Some other item with Script',
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
             Released: null,
-            AnotherField: 'a'
+            AnotherField: 'Custom'
         },
         {
             Downloads: 0,
@@ -1523,7 +1523,7 @@ export class SampleTestData {
             ProductName: null,
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1),
             Released: true,
-            AnotherField: 'a'
+            AnotherField: 'custoM'
         },
         {
             Downloads: 1000,
