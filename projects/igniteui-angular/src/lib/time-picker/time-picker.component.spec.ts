@@ -12,8 +12,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxHourItemDirective, IgxMinuteItemDirective, IgxSecondsItemDirective, IgxAmPmItemDirective } from './time-picker.directives';
+import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
@@ -2186,7 +2185,7 @@ describe('IgxTimePicker', () => {
             toggleRef = {
                 onOpened: new EventEmitter<any>(),
                 onClosed: new EventEmitter<any>(),
-                onClosing: new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>(),
+                onClosing: new EventEmitter<IBaseCancelableBrowserEventArgs>(),
                 element
             };
             injector = { get: () => ngModel };

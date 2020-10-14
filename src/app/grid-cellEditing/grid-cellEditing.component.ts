@@ -1,8 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeFr);
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode
+    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -20,11 +23,23 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
+    public options = {
+        timezone: '+0430',
+        format: 'longTime',
+        digitsInfo: '1.3-4'
+    };
+    public options2 = {
+        timezone: 'UTC',
+        format: 'mediumDate',
+        digitsInfo: '1.0-2'
+    };
+    public formatOptions = this.options;
 
     kk = false;
     pname = 'ProductName';
     private subscribtion;
     public selectionMode;
+    public earliest = EarliestSummary;
 
     constructor() {
         const date = new Date();
@@ -52,6 +67,14 @@ export class GridCellEditingComponent {
             Discontinued: false,
             OrderDate: new Date('1905-03-17')
         });
+    }
+
+    public changeFormatOptions() {
+        if (this.formatOptions === this.options) {
+            this.formatOptions = this.options2;
+        } else {
+            this.formatOptions = this.options;
+        }
     }
 
     enDisSummaries() {
@@ -186,3 +209,21 @@ export class GridCellEditingComponent {
         }
     }
 }
+
+class EarliestSummary extends IgxDateSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'earliest') {
+                const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;
+                obj.summaryResult = date ? new Intl.DateTimeFormat('en-US').format(date) : undefined;
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
