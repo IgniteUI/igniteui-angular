@@ -64,9 +64,9 @@ export function supports(name: string): boolean {
     }
 }
 
-export function getPackageManager() {
+export function getPackageManager(host: Tree) {
     const hasYarn = supports('yarn');
-    const hasYarnLock = this.host.exists('yarn.lock');
+    const hasYarnLock = host.exists('yarn.lock');
     if (hasYarn && hasYarnLock) {
         return 'yarn';
     }
@@ -78,7 +78,7 @@ export function canResolvePackage(pkg: string): boolean {
     try {
         modulePath = require.resolve(pkg);
     } finally {
-        return !modulePath;
+        return !!modulePath;
     }
 }
 

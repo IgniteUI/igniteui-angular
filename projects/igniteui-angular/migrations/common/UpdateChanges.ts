@@ -96,7 +96,7 @@ export class UpdateChanges {
     private _packageManager: 'npm' | 'yarn';
     private get packageManager(): 'npm' | 'yarn' {
         if (!this._packageManager) {
-            this._packageManager = getPackageManager();
+            this._packageManager = getPackageManager(this.host);
         }
 
         return this._packageManager;
