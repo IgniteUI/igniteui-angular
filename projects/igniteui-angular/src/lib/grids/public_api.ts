@@ -1,6 +1,7 @@
 export * from './api.service';
 export * from './cell.component';
 export * from './columns/column.component';
+export * from './columns/interfaces';
 export * from './common/events';
 export * from './row.directive';
 export * from './grid-base.directive';
