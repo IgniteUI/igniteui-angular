@@ -1106,6 +1106,7 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
     private _filteringStrategy = new FilteringStrategy();
     public data = SampleTestData.excelFilteringData();
+    public doneCallbackCounter = 0;
 
     public columnValuesStrategy = (column: IgxColumnComponent,
                                    columnExprTree: IFilteringExpressionsTree,
@@ -1114,6 +1115,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
+            this.doneCallbackCounter++;
         }, 1000);
     }
 }
@@ -1438,12 +1440,12 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`, ``,
+    template: GridTemplateStrings.declareGrid(`id="testGridSum" [height]="height" [width]="width"`, ``,
                 ColumnDefinitions.generatedWithDataType)
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100 , dataType: 'number'},
+        { field: 'ID', width: 100 , dataType: 'string'},
         { field: 'CompanyName', width: 300 , dataType: 'string'},
         { field: 'ContactName', width: 200 , dataType: 'string'},
         { field: 'ContactTitle', width: 200 , dataType: 'string'},
@@ -1462,7 +1464,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
-        <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
         <ng-template igxRowSelector let-rowContext>

@@ -1,18 +1,21 @@
-import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
-import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
-
 import * as fs from 'fs';
 import * as path from 'path';
+import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
+import { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
     SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
 } from './schema';
 import {
     getLanguageService, getRenamePositions, findMatches,
-    replaceMatch, createProjectService, isMemberIgniteUI
+    replaceMatch, createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME
 } from './tsUtils';
-import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
+import {
+    getProjectPaths, getWorkspace, getProjects, escapeRegExp,
+    getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage
+} from './util';
 import { ServerHost } from './ServerHost';
 
 export enum InputPropertyType {
@@ -82,12 +85,21 @@ export class UpdateChanges {
         return this._sassFiles;
     }
 
-    private _service: tss.LanguageService;
-    public get service(): tss.LanguageService {
+    private _service: ts.LanguageService;
+    public get service(): ts.LanguageService {
         if (!this._service) {
             this._service = getLanguageService(this.tsFiles, this.host);
         }
         return this._service;
+    }
+
+    private _packageManager: 'npm' | 'yarn';
+    private get packageManager(): 'npm' | 'yarn' {
+        if (!this._packageManager) {
+            this._packageManager = getPackageManager(this.host);
+        }
+
+        return this._packageManager;
     }
 
     /**
@@ -111,15 +123,26 @@ export class UpdateChanges {
 
     /** Apply configured changes to the Host Tree */
     public applyChanges() {
+        const shouldInstallPkg = this.membersChanges && this.membersChanges.changes.length
+            && !canResolvePackage(NG_LANG_SERVICE_PACKAGE_NAME);
+        if (shouldInstallPkg) {
+            this.context.logger.info(`Installing temporary migration dependencies via ${this.packageManager}.`);
+            tryInstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
+        }
+
         this.updateTemplateFiles();
         this.updateTsFiles();
         this.updateMembers();
-
         /** Sass files */
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
             for (const entryPath of this.sassFiles) {
                 this.updateThemeProps(entryPath);
             }
+        }
+
+        if (shouldInstallPkg) {
+            this.context.logger.info(`Cleaning up temporary migration dependencies.`);
+            tryUninstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
         }
     }
 

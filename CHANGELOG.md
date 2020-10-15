@@ -48,7 +48,7 @@ All notable changes for each version of this project will be documented in this 
     - `cellEditExit` is a new event that fires when cell exits edit mode
     - `rowEditExit` is a new event that fires when row exits edit mode
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
-    - Added ability to spawn row adding UI through exoposed methods. Note that rowEditing should be enabled.
+    - Added ability to spawn row adding UI through exposed methods. Note that rowEditing should be enabled.
         - `beginAddRow` method which starts the adding row UI.
         - `beginAddChild` method which starts the adding child UI.
         ```typescript
@@ -63,6 +63,22 @@ All notable changes for each version of this project will be documented in this 
             </igx-action-strip>
         </igx-tree-grid>
         ```
+    - A new `locale` and `pipeArgs` parameters are introduced in the `operate` method exposed by the `IgxNumberSummaryOperand` and `IgxDateSummaryOperand`, which exposes the grid locale. Use the `locale` parameter to get localized summary data (as per the grid locale. If not passed, `locale` defaults to `'en-US'`). Use the `pipeArgs` parameter only if you want to customize the format of the date and numeric values that will be returned.
+    ```typescript
+    class MySummary extends IgxDateSummaryOperand {
+        operate(columnData: any[], allData = [], fieldName, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
+            const pipeArgs: IColumnPipeArgs = {
+                format: 'longDate',
+                timezone: 'UTC',
+                digitsInfo: '1.1-2'
+            }
+            const result = super.operate(columnData, allData, fieldName, locale, pipeArgs);
+            return result;
+        }
+    }
+    ```  
+    - A new `pipeArgs` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
+    ```typescript
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
