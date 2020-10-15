@@ -772,6 +772,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public viewRendered(event) {
         if (event.fromState !== 'void') {
             this.activeViewChanged.emit(this.activeView);
+            if (this.activeView === 0) { this.resetActiveDate(); }
         }
     }
 
