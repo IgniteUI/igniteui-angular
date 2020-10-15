@@ -30,7 +30,7 @@ All notable changes for each version of this project will be documented in this 
     - `onOpening` and `onClosing` events are emitting now arguments of `ToggleViewCancelableEventArgs` type.
 - `IgxSelect`
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
-- `IgxDatePicker`	
+- `IgxDatePicker`
     - **Breaking Change** - Deprecated the `label` property.
     - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
 - `igxNavigationDrawer`
@@ -38,7 +38,9 @@ All notable changes for each version of this project will be documented in this 
 - `igxTabs`
     - Added `disableAnimation` property which enables/disables the transition animation of the tabs' content. Set to `false` by default.
 - `IgxExpansionPanel`
-    - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel. 
+    - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel.
+- `IgxCalendarComponent`, `IgxMonthsViewComponent` and `IgxYearsViewComponent`
+    - `tabIndex` property was removed  in order to improve on page navigation and to be compliant with W3 accessability recommendations; Also the date grid in the calendar is now only one tab stop, the same approach is applied and in the `IgxMonthsViewComponent` and `IgxYearsViewComponent`;
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -46,7 +48,7 @@ All notable changes for each version of this project will be documented in this 
     - `cellEditExit` is a new event that fires when cell exits edit mode
     - `rowEditExit` is a new event that fires when row exits edit mode
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
-    - Added ability to spawn row adding UI through exoposed methods. Note that rowEditing should be enabled.
+    - Added ability to spawn row adding UI through exposed methods. Note that rowEditing should be enabled.
         - `beginAddRow` method which starts the adding row UI.
         - `beginAddChild` method which starts the adding child UI.
         ```typescript
@@ -61,6 +63,22 @@ All notable changes for each version of this project will be documented in this 
             </igx-action-strip>
         </igx-tree-grid>
         ```
+    - A new `locale` and `pipeArgs` parameters are introduced in the `operate` method exposed by the `IgxNumberSummaryOperand` and `IgxDateSummaryOperand`, which exposes the grid locale. Use the `locale` parameter to get localized summary data (as per the grid locale. If not passed, `locale` defaults to `'en-US'`). Use the `pipeArgs` parameter only if you want to customize the format of the date and numeric values that will be returned.
+    ```typescript
+    class MySummary extends IgxDateSummaryOperand {
+        operate(columnData: any[], allData = [], fieldName, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
+            const pipeArgs: IColumnPipeArgs = {
+                format: 'longDate',
+                timezone: 'UTC',
+                digitsInfo: '1.1-2'
+            }
+            const result = super.operate(columnData, allData, fieldName, locale, pipeArgs);
+            return result;
+        }
+    }
+    ```  
+    - A new `pipeArgs` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
+    ```typescript
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
@@ -73,6 +91,19 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
+    - Added `createAbsoluteOverlaySettings` and `createRelativeOverlaySettings` methods which create non-modal `OverlaySettings` based on predefined `PositionSettings`. The methods are exposed off the `IgxOverlayService`.
+        - `createAbsoluteOverlaySettings` creates non-modal `OverlaySettings` with `GlobalPositionStrategy` or `ContainerPositionStrategy` if an outlet is provided. Accepts `AbsolutePosition` enumeration, which could be `Center`, `Top` and `Bottom`. Default is `Center`.
+        ```typescript
+            const globalOverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Top);
+        ```
+        - `createRelativeOverlaySettings` creates `OverlaySettings` with `AutoPositionStrategy`, `ConnectedPositioningStrategy` or `ElasticPositionStrategy`. Accepts target, strategy and position. The `target` is the attaching point or element for the component to show. The position strategy is a `RelativePositionStrategy` enumeration, which defaults to `Auto`. The position is a `RelativePosition` enumeration. Possible values are `Above`, `Below`, `Before`, `After` and `Default`. The default option is `Default`, which positions the element below the target, left aligned.
+        ```typescript
+            const targetElement = this.button.nativeElement;
+            const connectedOverlaySettings = IgxOverlayService.createRelativeOverlaySettings(
+                    targetElement,
+                    RelativePositionStrategy.Connected,
+                    RelativePosition.Above);
+        ```
 - `IgxToast`
     - The component now utilizes the `IgxOverlayService` to position itself in the DOM.
     - An additional input property `outlet` has been added to allow users to specify custom Overlay Outlets using the `IgxOverlayOutletDirective`;

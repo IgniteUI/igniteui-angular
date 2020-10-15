@@ -1,7 +1,8 @@
-import { Component, Output, EventEmitter, Input, HostBinding, HostListener, ElementRef, Injectable} from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostBinding, HostListener, ElementRef, Injectable, ViewChildren, QueryList} from '@angular/core';
 import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { IgxCalendarYearDirective } from '../calendar.directives';
 
 let NEXT_ID = 0;
 
@@ -135,12 +136,11 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     public styleClass = true;
 
     /**
-     * The default `tabindex` attribute for the component.
-     *
      * @hidden
+     * @internal
      */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    @ViewChildren(IgxCalendarYearDirective, { read: IgxCalendarYearDirective })
+    public calendarDir: QueryList<IgxCalendarYearDirective>;
 
     /**
      * Returns an array of date objects which are then used to properly
@@ -276,6 +276,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         this.generateYearRange(1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
     }
 
     /**
@@ -287,6 +288,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         this.generateYearRange(-1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
     }
 
     /**

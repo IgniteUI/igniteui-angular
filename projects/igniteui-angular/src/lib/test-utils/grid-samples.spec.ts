@@ -1438,12 +1438,12 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`, ``,
+    template: GridTemplateStrings.declareGrid(`id="testGridSum" [height]="height" [width]="width"`, ``,
                 ColumnDefinitions.generatedWithDataType)
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100 , dataType: 'number'},
+        { field: 'ID', width: 100 , dataType: 'string'},
         { field: 'CompanyName', width: 300 , dataType: 'string'},
         { field: 'ContactName', width: 200 , dataType: 'string'},
         { field: 'ContactTitle', width: 200 , dataType: 'string'},
@@ -1462,7 +1462,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
-        <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
         <ng-template igxRowSelector let-rowContext>
@@ -2168,9 +2168,9 @@ export class MRLTestComponent {
 @Component({
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
+    [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width">
+        [width]="c.width" [movable]='true' [resizable]='true'>
     </igx-column>
 
     <igx-action-strip #actionStrip>

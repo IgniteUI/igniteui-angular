@@ -10,18 +10,15 @@ import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnResizeEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
-import { IgxDatePipeComponent } from '../common/pipes';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { IgxGridIconService } from '../common/grid-icon.service';
-import { GridIconsFeature } from '../common/enums';
-import { FILTERING_ICONS_FONT_SET, FILTERING_ICONS} from './grid-filtering-icons';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
+import { IgxIconService } from '../../icon/icon.service';
+import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
 /**
  * @hidden
@@ -45,7 +42,6 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
@@ -61,7 +57,7 @@ export class IgxFilteringService implements OnDestroy {
     grid: IgxGridBaseDirective;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
-        private iconService: IgxGridIconService,  private _overlayService: IgxOverlayService) {}
+        private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -134,13 +130,6 @@ export class IgxFilteringService implements OnDestroy {
         if (this._componentOverlayId) {
             this._overlayService.hide(this._componentOverlayId);
         }
-    }
-
-    public get datePipe(): IgxDatePipeComponent {
-        if (!this._datePipe) {
-            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
-        }
-        return this._datePipe;
     }
 
     /**
@@ -275,8 +264,10 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        this.iconService.registerSVGIcons(GridIconsFeature.Filtering, FILTERING_ICONS, FILTERING_ICONS_FONT_SET);
-        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+        const editorIcons = editor as any[];
+        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
 
     /**
@@ -416,7 +407,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal, this.grid.locale);
+            return this.grid.datePipe.transform(expression.searchVal);
         } else {
             return expression.searchVal;
         }

@@ -554,6 +554,45 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [march2020, april2020, may2020]);
         }));
 
+        it('Verify tabindex is correct when navigating with arrow keys', fakeAsync(() => {
+            calendar.hideOutsideDays = true;
+            fixture.detectChanges();
+
+            let dates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            UIInteractions.simulateClickEvent(dates[0]);
+            fixture.detectChanges();
+            tick();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', dates[0]);
+            fixture.detectChanges();
+            tick();
+            dates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            expect(document.activeElement).toEqual(dates[7]);
+            expect(dates[7].tabIndex).toBe(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', dates[7]);
+            fixture.detectChanges();
+            tick();
+            dates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            expect(document.activeElement).toEqual(dates[0]);
+            expect(dates[0].tabIndex).toBe(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', dates[0]);
+            fixture.detectChanges();
+            tick();
+            dates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            expect(document.activeElement).toEqual(dates[1]);
+            expect(dates[1].tabIndex).toBe(0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', dates[1]);
+            fixture.detectChanges();
+            tick();
+            dates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            expect(document.activeElement).toEqual(dates[0]);
+            expect(dates[0].tabIndex).toBe(0);
+        }));
+
+
         it('Verify navigation with pageUp', fakeAsync(() => {
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(monthDates[16]);
@@ -694,17 +733,19 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             inactiveDates = HelperTestFunctions.getMonthViewInactiveDates(fixture, 0);
             inactiveDates.forEach(date => {
-                expect(date.tabIndex).toEqual(0);
+                expect(date.tabIndex).toEqual(-1);
             });
 
             monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             for (let index = 6; index < 14; index++) {
-                expect(monthDates[index].tabIndex).toEqual(0);
+                expect(monthDates[index].tabIndex).toEqual(-1);
 
             }
+
+            expect(monthDates[0].tabIndex).toEqual(0);
         }));
 
-        it('Verify navigation with Home and End keys', fakeAsync(() => {
+        it('Verify navigation with Home and End keys and check the tabindex', fakeAsync(() => {
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(monthDates[16]);
             fixture.detectChanges();
@@ -716,6 +757,8 @@ describe('Multi-View Calendar - ', () => {
 
             monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[0]);
+            expect(monthDates[0].tabIndex).toEqual(0);
+
 
             UIInteractions.triggerKeyDownEvtUponElem('End', monthDates[0], true);
             fixture.detectChanges();
@@ -723,6 +766,8 @@ describe('Multi-View Calendar - ', () => {
 
             monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
             expect(document.activeElement).toEqual(monthDates[monthDates.length - 1]);
+            expect(monthDates[monthDates.length - 1].tabIndex).toEqual(0);
+
         }));
 
         it('Verify navigation with Home and End keys when there are disabled dates', fakeAsync(() => {

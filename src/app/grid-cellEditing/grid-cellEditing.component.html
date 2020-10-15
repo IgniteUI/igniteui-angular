@@ -4,7 +4,17 @@
 <div class="density-chooser" style="margin-bottom: 16px">
     <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
-<igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelection]="selectionMode">
+<igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelection]="selectionMode">
+    <igx-column field="OrderDate"  width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" editable="true" [resizable]="true" [movable]="true">
+                <!-- <ng-template igxCell let-cell="cell" let-val>
+                    {{val | date}}
+                </ng-template> -->
+    </igx-column>
+    <igx-column field="OrderDate2" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
+        <!-- <ng-template igxCell let-cell="cell" let-val>
+            {{val | date:'mediumDate':undefined:grid1.locale }}
+        </ng-template> -->
+</igx-column>
     <igx-column [pinned]="true" [editable]="false">
         <ng-template igxCell let-cell="cell" let-val >
             <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
@@ -25,8 +35,6 @@
             <input name="units" [(ngModel)]="cell.value" style="color: black"/>
         </ng-template>
     </igx-column>
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true" editable="true" [resizable]="true" [hidden]="orderDateHidden" [movable]="true">
-    </igx-column>
     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
     </igx-column>
 </igx-grid>
@@ -38,6 +46,7 @@
 <button (click)="updateSpecificRow()">Update Row by ID</button>
 <button (click)="enDisSummaries()">Enable/DisableSummaries</button>
 <button (click)="kk = !kk">groupable</button>
+<button (click)="changeFormatOptions()">Change formatting</button>
 <input type="text" [(ngModel)]="pname" >
 
 <h3>Grid without PK</h3>

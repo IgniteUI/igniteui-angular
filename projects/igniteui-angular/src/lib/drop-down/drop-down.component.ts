@@ -23,7 +23,7 @@ import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
-import { CancelableEventArgs, CancelableBrowserEventArgs, isIE, IBaseEventArgs } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -81,7 +81,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -101,7 +101,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -356,11 +356,29 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.virtDir.getScroll().scrollTop = targetScroll;
     }
 
+    protected focusItem(value: boolean) {
+        if (value || this._focusedItem) {
+            this._focusedItem.focused = value;
+        }
+    }
+
+    protected updateItemFocus() {
+        if (this.selectedItem) {
+            this.focusedItem = this.selectedItem;
+            this.focusItem(true);
+        } else if (this.allowItemsFocus) {
+            this.navigateFirst();
+        }
+    }
+
     /**
      * @hidden @internal
      */
-    public onToggleOpening(e: CancelableEventArgs) {
-        this.onOpening.emit(e);
+    public onToggleOpening(e: IBaseCancelableBrowserEventArgs) {
+        // do not mutate passed event args
+        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, e, { owner: this });
+        this.onOpening.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
         if (e.cancel) {
             return;
         }
@@ -383,20 +401,20 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public onToggleOpened() {
-        if (this.selectedItem) {
-            this.focusedItem = this.selectedItem;
-            this._focusedItem.focused = true;
-        } else if (this.allowItemsFocus) {
-            this.navigateFirst();
-        }
+        this.updateItemFocus();
         this.onOpened.emit();
     }
 
     /**
      * @hidden @internal
      */
-    public onToggleClosing(e: CancelableBrowserEventArgs) {
-        this.onClosing.emit(e);
+    public onToggleClosing(e: IBaseCancelableBrowserEventArgs) {
+        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, e, { owner: this });
+        this.onClosing.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
+        if (e.cancel) {
+            return;
+        }
         if (this.virtDir) {
             this._scrollPosition = this.virtDir.scrollPosition;
         }
@@ -406,9 +424,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     public onToggleClosed() {
-        if (this._focusedItem) {
-            this._focusedItem.focused = false;
-        }
+        this.focusItem(false);
         this.onClosed.emit();
     }
 

@@ -16,7 +16,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -39,6 +39,7 @@ import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { caseSensitive } from '@igniteui/material-icons-extended';
 
 /**
  * @hidden
@@ -66,15 +67,6 @@ const ItemHeights = {
  */
 const itemsInContainer = 10;
 
-const caseSensitiveIcon = {
-    name: 'case-sensitive',
-    value: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <defs><style>.a{fill:none;}</style></defs>
-    <path class="a" d="M0,0H24V24H0Z"/>
-    <path d="M8.514,6l4.744,12H11.473l-1.327-3.613H5.01L3.65,18H2L6.727,6Zm1.122,6.935L7.612,7.423H7.578L5.52,12.935ZM22,17.782A2.063,2.063,0,0,1,20.962,18a1.263,1.263,0,0,1-.892-.306,1.309,1.309,0,0,1-.332-1,3.458,3.458,0,0,1-1.386,1,4.92,4.92,0,0,1-2.84.174,2.683,2.683,0,0,1-.927-.414,2,2,0,0,1-.621-.737,2.424,2.424,0,0,1-.229-1.1,2.445,2.445,0,0,1,.255-1.191,2.19,2.19,0,0,1,.671-.754,3.141,3.141,0,0,1,.953-.438q.535-.149,1.1-.248c.4-.077.773-.136,1.13-.174a6.606,6.606,0,0,0,.945-.165,1.606,1.606,0,0,0,.646-.315.759.759,0,0,0,.238-.6,1.374,1.374,0,0,0-.179-.745,1.222,1.222,0,0,0-.459-.431,1.932,1.932,0,0,0-.629-.2,4.893,4.893,0,0,0-.689-.05,3.137,3.137,0,0,0-1.53.339,1.43,1.43,0,0,0-.664,1.283H14.075a2.965,2.965,0,0,1,.34-1.34,2.544,2.544,0,0,1,.816-.886A3.466,3.466,0,0,1,16.4,9.211a6.335,6.335,0,0,1,1.4-.149,8.63,8.63,0,0,1,1.182.082,3.188,3.188,0,0,1,1.063.339,2.008,2.008,0,0,1,.765.719,2.242,2.242,0,0,1,.289,1.205V15.8a3.167,3.167,0,0,0,.06.727q.06.231.4.231A1.471,1.471,0,0,0,22,16.676Zm-2.347-4.4a1.829,1.829,0,0,1-.714.289q-.443.091-.927.15c-.323.038-.65.082-.978.132a3.71,3.71,0,0,0-.885.24,1.6,1.6,0,0,0-.637.472,1.293,1.293,0,0,0-.247.836,1.117,1.117,0,0,0,.145.588,1.2,1.2,0,0,0,.374.389,1.62,1.62,0,0,0,.536.215,3.056,3.056,0,0,0,.646.065,3.53,3.53,0,0,0,1.224-.189,2.625,2.625,0,0,0,.834-.48,1.906,1.906,0,0,0,.476-.63,1.553,1.553,0,0,0,.153-.637Z"/>
-  </svg>`
-};
-
 export enum IgxComboState {
     /**
      * Combo with initial state.
@@ -97,7 +89,7 @@ export interface IComboFilteringOptions {
 }
 
 /** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IComboSelectionChangeEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
     oldSelection: any[];
     /** An array containing the values that will be selected after this event */
@@ -113,7 +105,7 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
 }
 
 /** Event emitted when the igx-combo's search input changes */
-export interface IComboSearchInputEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IComboSearchInputEventArgs extends IBaseCancelableEventArgs {
     /** The text that has been typed into the search input */
     searchText: string;
 }
@@ -185,13 +177,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _remoteSelection = {};
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
-    private _overlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy(),
-        modal: false,
-        closeOnOutsideClick: true,
-        excludePositionTarget: true
-    };
+    private _overlaySettings: OverlaySettings;
     private _value = '';
     private _valid = IgxComboState.INITIAL;
     constructor(
@@ -467,7 +453,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -487,7 +473,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -527,7 +513,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Gets/gets combo id.
@@ -1159,7 +1145,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const newCollection = [...this.data];
         newCollection.push(addedItem);
         const args: IComboItemAdditionEvent = {
-            oldCollection, addedItem, newCollection
+            oldCollection, addedItem, newCollection, owner: this
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
@@ -1228,9 +1214,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnInit() {
         this.ngControl = this._injector.get<NgControl>(NgControl, null);
-        this._overlaySettings.target = this.elementRef.nativeElement;
+        const targetElement = this.elementRef.nativeElement;
+        this._overlaySettings = {
+            target: targetElement,
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            positionStrategy: new AutoPositionStrategy(),
+            modal: false,
+            closeOnOutsideClick: true,
+            excludeFromOutsideClick: [targetElement as HTMLElement]
+        };
         this.selection.set(this.id, new Set());
-        this._iconService.addSvgIconFromText(caseSensitiveIcon.name, caseSensitiveIcon.value, 'case-sensitive');
+        this._iconService.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
     }
 
     /**
@@ -1244,8 +1238,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e) => {
-            this.onDataPreLoad.emit(e);
+        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
+            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
+            this.onDataPreLoad.emit(eventArgs);
         });
     }
 
@@ -1495,6 +1490,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             added,
             removed,
             event,
+            owner: this,
             displayText,
             cancel: false
         };
@@ -1555,11 +1551,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      * @internal
      */
-    public handleOpening(event: CancelableEventArgs) {
-        this.onOpening.emit(event);
-        if (event.cancel) {
-            return;
-        }
+    public handleOpening(event: IBaseCancelableBrowserEventArgs) {
+        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, event, { owner: this });
+        this.onOpening.emit(eventArgs);
+        event.cancel = eventArgs.cancel;
     }
 
     /**
@@ -1582,8 +1577,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public handleClosing(event) {
-        this.onClosing.emit(event);
+    public handleClosing(event: IBaseCancelableBrowserEventArgs) {
+        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, event, { owner: this });
+        this.onClosing.emit(eventArgs);
+        event.cancel = eventArgs.cancel;
         if (event.cancel) {
             return;
         }
