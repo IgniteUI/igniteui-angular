@@ -23,9 +23,9 @@ export class Logger implements ts.server.Logger {
     }
 
     public msg(s: string, type: ts.server.Msg = ts.server.Msg.Err) {
+        if (!this.traceToConsole) { return; }
         if (type === ts.server.Msg.Info) {
-            // TODO: Info ignored for now, hook into context in the future
-            // console.log(s);
+            console.log(s);
         }
         if (type === ts.server.Msg.Err) {
             console.error(s);
