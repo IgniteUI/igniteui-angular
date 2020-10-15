@@ -1040,13 +1040,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: map-get($grid-cell-padding, 'comfortable');
-        padding-#{$right}: 0;
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-comfortable});
         background: inherit;
         z-index: 4;
         cursor: move;
+        order: -1;
 
         %igx-icon-display {
             width: $drag-icon-size;
@@ -1071,11 +1070,6 @@
 
     %igx-grid__drag-indicator--header {
         border-#{$right}: $grid-header-border;
-    }
-
-    %igx-grid__hierarchical-expander + %igx-grid__drag-indicator {
-        padding-#{$left}: 0;
-        min-width: $drag-icon-size;
     }
 
     %igx-grid__drag-indicator--off {
