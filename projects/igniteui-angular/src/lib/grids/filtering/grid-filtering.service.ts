@@ -3,14 +3,13 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnResizeEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
-import { IgxDatePipeComponent } from '../common/pipes';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
@@ -45,7 +44,6 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
@@ -70,6 +68,7 @@ export class IgxFilteringService implements OnDestroy {
 
     public toggleFilterDropdown(element, column, classRef) {
         if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
+            this.initFilteringSettings();
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
@@ -102,7 +101,7 @@ export class IgxFilteringService implements OnDestroy {
             scrollStrategy: new AbsoluteScrollStrategy()
         };
         this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -115,7 +114,7 @@ export class IgxFilteringService implements OnDestroy {
             });
 
         this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
+            first(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -134,13 +133,6 @@ export class IgxFilteringService implements OnDestroy {
         if (this._componentOverlayId) {
             this._overlayService.hide(this._componentOverlayId);
         }
-    }
-
-    public get datePipe(): IgxDatePipeComponent {
-        if (!this._datePipe) {
-            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
-        }
-        return this._datePipe;
     }
 
     /**
@@ -416,7 +408,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal, this.grid.locale);
+            return this.grid.datePipe.transform(expression.searchVal);
         } else {
             return expression.searchVal;
         }

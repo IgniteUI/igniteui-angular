@@ -42,7 +42,10 @@ import {
     IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
-import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
+
+const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEFAULT_DIGITS_INFO = '1.0-3';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1179,6 +1182,37 @@ export class IgxColumnComponent implements AfterContentInit {
     get visibleWhenCollapsed(): boolean {
         return this._visibleWhenCollapsed;
     }
+
+    private _pipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
+    /**
+     * Provide parameters for DatePipe and DecimalPipe to customize the display format for date and numeric columns.
+     * Accepts an `IColumnPipeArgs` object with any of the `format`, `timezone` and `digitsInfo` properties.
+     * For more details see https://angular.io/api/common/DatePipe and https://angular.io/api/common/DecimalPipe
+     * @example
+     * ```typescript
+     * const pipeArgs: IColumnPipeArgs = {
+     *      format: 'longDate',
+     *      timezone: 'UTC',
+     *      digitsInfo: '1.1-2'
+     * }
+     * ```
+     * ```html
+     * <igx-column dataType="date" [pipeArgs]="pipeArgs"></igx-column>
+     * <igx-column dataType="number" [pipeArgs]="pipeArgs"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    set pipeArgs(value: IColumnPipeArgs) {
+        this._pipeArgs = Object.assign(this._pipeArgs, value);
+        this.grid.summaryService.clearSummaryCache();
+        (this.grid as any)._pipeTrigger++;
+        this.grid.notifyChanges();
+    }
+    get pipeArgs(): IColumnPipeArgs {
+        return this._pipeArgs;
+    }
+
 
     /**
      * @hidden
