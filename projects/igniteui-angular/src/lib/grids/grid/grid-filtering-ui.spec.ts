@@ -4588,7 +4588,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(gridCellValues).toEqual(listItems);
         }));
 
-        fit('Should clear input if there is text and \'Escape\' is pressed.', fakeAsync(() => {
+        it('Should clear input if there is text and \'Escape\' is pressed.', fakeAsync(() => {
             // Open excel style filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -4612,12 +4612,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Press Escape again and verify that ESF menu is still visible and the input is empty
             inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
-            tick(100);
             fix.detectChanges();
+            flush();
 
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).not.toBeNull();
-            //expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
+            expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
         }));
 });
 

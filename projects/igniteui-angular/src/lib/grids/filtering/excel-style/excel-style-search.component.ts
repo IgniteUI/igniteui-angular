@@ -257,11 +257,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
                 return;
             case KEYS.ESCAPE || KEYS.ESCAPE_IE:
-                event.stopPropagation();
-
-                this.searchValue ?
-                    this.clearInput() :
-                    this.esf.closeDropdown();
+                if (this.searchValue) {
+                    event.stopPropagation();
+                    this.clearInput();
+                }
 
                 return;
         }
