@@ -1106,6 +1106,7 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
     private _filteringStrategy = new FilteringStrategy();
     public data = SampleTestData.excelFilteringData();
+    public doneCallbackCounter = 0;
 
     public columnValuesStrategy = (column: IgxColumnComponent,
                                    columnExprTree: IFilteringExpressionsTree,
@@ -1114,6 +1115,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
+            this.doneCallbackCounter++;
         }, 1000);
     }
 }
