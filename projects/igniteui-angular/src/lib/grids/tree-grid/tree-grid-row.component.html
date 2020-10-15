@@ -1,3 +1,11 @@
+<ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
+
+<ng-template #addTemp>
+    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='animateAdd' (animationend)='animationEndHandler()'>
+        <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
+    </div>
+</ng-template>
+<ng-template #defaultTemp>
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()">
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
@@ -28,7 +36,7 @@
             [column]="col"
             [formatter]="col.formatter"
             [row]="this"
-            [style.min-height.px]="grid.rowHeight || 32"
+            [style.min-height.px]="cellHeight"
             [rowData]="rowData"
             [style.min-width]="col.width"
             [style.max-width]="col.width"
@@ -60,7 +68,7 @@
             [column]="col"
             [formatter]="col.formatter"
             [row]="this"
-            [style.min-height.px]="grid.rowHeight || 32"
+            [style.min-height.px]="cellHeight"
             [rowData]="rowData"
             [style.min-width]="col.width"
             [style.max-width]="col.width"
@@ -113,7 +121,7 @@
                 [row]="this"
                 [firstPinned]="col.isFirstPinned"
                 [lastPinned]="col.isLastPinned"
-                [style.min-height.px]="grid.rowHeight || 32"
+                [style.min-height.px]="cellHeight"
                 [rowData]="rowData"
                 [style.min-width]="col.width"
                 [style.max-width]="col.width"
@@ -146,7 +154,7 @@
                 [formatter]="col.formatter"
                 [row]="this"
                 [lastPinned]="col.isLastPinned"
-                [style.min-height.px]="grid.rowHeight || 32"
+                [style.min-height.px]="cellHeight"
                 [rowData]="rowData"
                 [style.min-width]="col.width"
                 [style.max-width]="col.width"
@@ -166,4 +174,5 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
+</ng-template>
 </ng-template>
