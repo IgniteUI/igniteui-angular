@@ -80,6 +80,18 @@ describe('Dialog', () => {
         expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
     });
 
+    it('Should open dialog when opened property is set to true', () => {
+        const fixture = TestBed.createComponent(AlertComponent);
+        const dialog = fixture.componentInstance.dialog;
+        const expectedMessage = 'message';
+
+        dialog.opened = true;
+        fixture.detectChanges();
+
+        const messageDebugElement = fixture.debugElement.query(By.css('.igx-dialog__window-content'));
+        expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
+    });
+
     it('Should set custom modal message.', () => {
         const fixture = TestBed.createComponent(CustomDialogComponent);
         const dialog = fixture.componentInstance.dialog;
