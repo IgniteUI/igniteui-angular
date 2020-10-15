@@ -639,10 +639,6 @@
         @extend %igx-grid__hierarchical-expander--push !optional;
     }
 
-    @include e(hierarchical-expander, $m: no-border) {
-        @extend %igx-grid__hierarchical-expander--no-border !optional;
-    }
-
     @include e(hierarchical-indent, $m: scroll) {
         @extend %igx-grid__hierarchical-indent--scroll !optional;
     }

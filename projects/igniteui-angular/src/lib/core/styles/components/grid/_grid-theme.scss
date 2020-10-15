@@ -1040,6 +1040,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: map-get($grid-cell-padding, 'comfortable');
+        flex: 1 0 auto;
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-comfortable});
         background: inherit;
@@ -1054,18 +1056,16 @@
         }
     }
 
-    %igx-grid__drag-indicator--cosy{
+    %igx-grid__drag-indicator--cosy {
         padding: map-get($grid-cell-padding, 'cosy');
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-cosy});
-        padding-#{$right}: 0;
     }
 
     %igx-grid__drag-indicator--compact {
         padding: map-get($grid-cell-padding, 'compact');
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-compact});
-        padding-#{$right}: 0;
     }
 
     %igx-grid__drag-indicator--header {
@@ -2615,7 +2615,8 @@
         cursor: pointer;
         z-index: 3;
         color: --var($theme, 'expand-icon-color');
-        border-#{$right}: 1px solid transparent;
+        border-#{$right}: 1px solid --var($theme, 'header-border-color');
+        order: 2;
 
         &:focus {
             outline: none;
@@ -2689,7 +2690,6 @@
         }
     }
 
-    %igx-grid__hierarchical-expander--no-border,
     %igx-grid__header-indentation--no-border {
         border-#{$right}: 1px solid transparent;
     }
