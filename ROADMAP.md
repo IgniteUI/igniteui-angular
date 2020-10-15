@@ -4,34 +4,33 @@
 
 ## Milestone 13 (Due by October, 2020)
 
-1. Move PositionSettings to OverlaySettings [#7807](https://github.com/IgniteUI/igniteui-angular/issues/7807)
-2. Native add row [#5946](https://github.com/IgniteUI/igniteui-angular/issues/5946)
-3. Accept ISO 8601 Date-only string as input for IgxDateTimeEditorDirective [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
-4. Enhance hGrid multi-cell selection behavior [#5714](https://github.com/IgniteUI/igniteui-angular/issues/5714)
-5. Calendar ARIA [#6272](https://github.com/IgniteUI/igniteui-angular/issues/6272)
-6. Grid Accessibility Issues [#6341](https://github.com/IgniteUI/igniteui-angular/issues/6341)
-7. Implement cellEditExit and rowEditExit event [#7931](https://github.com/IgniteUI/igniteui-angular/issues/7931)
-8. Calendar keyboard navigation accessibility [#6275](https://github.com/IgniteUI/igniteui-angular/issues/6275)
-9. Column Moving using API [#6334](https://github.com/IgniteUI/igniteui-angular/issues/6334)
-10. Expose an event that indicates that the Grid is fully loaded [#7924](https://github.com/IgniteUI/igniteui-angular/issues/7924)
-11. View week numbers in datepicker and calendar [#6172](https://github.com/IgniteUI/igniteui-angular/issues/6172)
-12. Expose the functionality of private getRowData via a public method [#7930](https://github.com/IgniteUI/igniteui-angular/issues/7930)
-13. Expose templates for all ESF UI parts [#7221](https://github.com/IgniteUI/igniteui-angular/issues/7221)
-14. [igx-tab] [igx-nav-drawer] Add animations option [#7157](https://github.com/IgniteUI/igniteui-angular/issues/7157)
-15. Choose label -text for igxTimePicker [#6905](https://github.com/IgniteUI/igniteui-angular/issues/6905)
-16. Implement factory functions for creating OverlaySettings [#7941](https://github.com/IgniteUI/igniteui-angular/issues/7941)
-17. igx-grid: Set grouped column width in percentage [#4155](https://github.com/IgniteUI/igniteui-angular/issues/4155)
-18. IgxGrid: Excel Style Filter "Apply" on "Enter" [#5812](https://github.com/IgniteUI/igniteui-angular/issues/5812)
-19. Grid export visualization [#7738](https://github.com/IgniteUI/igniteui-angular/issues/7738)
-20. Allow setting of the name of the worksheet in exported workbook in IgxExcelExporter [#7396](https://github.com/IgniteUI/igniteui-angular/issues/7396)
-21. Enhance behavior of the Select All checkbox in Excel Style Filtering [#6617](https://github.com/IgniteUI/igniteui-angular/issues/6617)
-22. Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
+1. **[DONE]** Move PositionSettings to OverlaySettings [#7807](https://github.com/IgniteUI/igniteui-angular/issues/7807)
+2. **[DONE]** Native add row [#5946](https://github.com/IgniteUI/igniteui-angular/issues/5946)
+3. **[DONE]** Enhance hGrid multi-cell selection behavior [#5714](https://github.com/IgniteUI/igniteui-angular/issues/5714)
+4. **[DONE]** Grid Accessibility Issues [#6341](https://github.com/IgniteUI/igniteui-angular/issues/6341)
+5. **[DONE]** Implement cellEditExit and rowEditExit event [#7931](https://github.com/IgniteUI/igniteui-angular/issues/7931)
+6. **[DONE]** Calendar keyboard navigation accessibility [#6275](https://github.com/IgniteUI/igniteui-angular/issues/6275)
+7. **[DONE]** Column Moving using API [#6334](https://github.com/IgniteUI/igniteui-angular/issues/6334)
+8. **[DONE]** View week numbers in datepicker and calendar [#6172](https://github.com/IgniteUI/igniteui-angular/issues/6172)
+9. **[DONE]** Expose the functionality of private getRowData via a public method [#7930](https://github.com/IgniteUI/igniteui-angular/issues/7930)
+10. **[DONE]** [igx-tab] [igx-nav-drawer] Add animations option [#7157](https://github.com/IgniteUI/igniteui-angular/issues/7157)
+11. **[DONE]** Choose label -text for igxTimePicker [#6905](https://github.com/IgniteUI/igniteui-angular/issues/6905)
+12. **[DONE]** Implement factory functions for creating OverlaySettings [#7941](https://github.com/IgniteUI/igniteui-angular/issues/7941)
+13. **[DONE]** IgxGrid: Excel Style Filter "Search" as in Excel [#5813](https://github.com/IgniteUI/igniteui-angular/issues/5813)
+14. **[DONE]** IgxGrid: Excel Style Filter "Apply" on "Enter" [#5812](https://github.com/IgniteUI/igniteui-angular/issues/5812)
+15. **[DONE]** Grid export visualization [#7738](https://github.com/IgniteUI/igniteui-angular/issues/7738)
+16. **[DONE]** Allow setting of the name of the worksheet in exported workbook in IgxExcelExporter [#7396](https://github.com/IgniteUI/igniteui-angular/issues/7396)
+17. **[DONE]** Enhance behavior of the Select All checkbox in Excel Style Filtering [#6617](https://github.com/IgniteUI/igniteui-angular/issues/6617)
 
 ## Going down the road
 
 1. Tile Manager
 2. Visual Cell merging
 3. RTL Support across Ignite UI for Angular components
+4. Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
+5. Accept ISO 8601 Date-only string as input for IgxDateTimeEditorDirective [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
+6. Calendar ARIA [#6272](https://github.com/IgniteUI/igniteui-angular/issues/6272)
+7. Expose an event that indicates that the Grid is fully loaded [#7924](https://github.com/IgniteUI/igniteui-angular/issues/7924)
 # Previous Milestones 
 
 ## Milestone 12 (Due by August 17th, 2020)
