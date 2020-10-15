@@ -357,7 +357,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * @ViewChild("MyDialog")
      * public dialog: IgxDialogComponent;
      * ngAfterViewInit() {
-     *     let dialogOpen = this.dialog.opened=true;
+     *     this.dialog.opened=true;
      * }
      * ```
      *
