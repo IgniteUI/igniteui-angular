@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, DecimalPipe, DatePipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -26,8 +26,7 @@ import {
     Optional,
     DoCheck,
     Directive,
-    OnChanges,
-    SimpleChanges
+    LOCALE_ID
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -140,7 +139,6 @@ import {
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
-import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
@@ -158,6 +156,7 @@ const FILTER_ROW_HEIGHT = 50;
 // More accurate calculation is not possible, cause row editing overlay is still not shown and we don't know its height,
 // but in the same time we need to set row editing overlay outlet before opening the overlay itself.
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
+const DEFAULT_DATE_FORMAT = 'mediumDate';
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -180,7 +179,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
-    private _locale = null;
+    private _locale: string;
     public _destroyed = false;
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
@@ -201,6 +200,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
+
+    /**
+     * @hidden @internal
+     */
+    public decimalPipe: DecimalPipe;
+    /**
+     * @hidden @internal
+     */
+    public datePipe: DatePipe;
 
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
@@ -410,15 +418,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     get locale(): string {
-        if (this._locale) {
-            return this._locale;
-        } else {
-            return 'en';
-        }
+        return this._locale;
     }
 
-    set locale(value) {
+    set locale(value: string) {
         this._locale = value;
+        this.summaryService.clearSummaryCache();
+        this._pipeTrigger++;
+        this.notifyChanges();
     }
 
     @Input()
@@ -2900,8 +2907,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) private localeId: string) {
         super(_displayDensityOptions);
+        this.locale = this.locale || this.localeId;
+        this.datePipe = new DatePipe(this.locale);
+        this.decimalPipe = new DecimalPipe(this.locale);
         this.cdr.detach();
     }
 
@@ -3288,10 +3299,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
-            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
-            const vertScrDC = this.verticalScrollContainer.displayContainer;
-            vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
+            this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
+            const vertScrDC = this.verticalScrollContainer?.displayContainer;
+            vertScrDC?.removeEventListener('scroll', this.preventContainerScroll);
         });
     }
 
@@ -6197,13 +6208,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
 
-        const numberPipe = new IgxDecimalPipeComponent(this.locale);
-        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
-                    c.dataType === 'number' ? numberPipe.transform(resolveNestedPath(dataRow, c.field), this.locale) :
-                        c.dataType === 'date' ? datePipe.transform(resolveNestedPath(dataRow, c.field), this.locale)
+                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field)) :
+                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field), DEFAULT_DATE_FORMAT)
                             : resolveNestedPath(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
