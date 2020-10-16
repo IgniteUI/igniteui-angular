@@ -48,7 +48,7 @@ import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { KEYS, IBaseEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -459,7 +459,7 @@ export class IgxTimePickerComponent implements
      * Emitted when a timePicker is being closed.
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * @hidden

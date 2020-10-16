@@ -19,6 +19,8 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { TransactionType } from '../../services/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
+import { takeUntil, first } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 describe('IgxGrid - Row Adding #grid', () => {
@@ -27,6 +29,12 @@ describe('IgxGrid - Row Adding #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         let actionStrip: IgxActionStripComponent;
+    const endTransition = () => {
+          // transition end needs to be simulated
+          const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--inner');
+          const endEvent = new AnimationEvent('animationend');
+          animationElem.dispatchEvent(endEvent);
+    };
     configureTestSuite();
     beforeAll( async(() => {
         TestBed.configureTestingModule({
@@ -67,6 +75,9 @@ describe('IgxGrid - Row Adding #grid', () => {
             const rows = grid.rowList.toArray();
             rows[0].beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
+
             let addRow = grid.getRowByIndex(1);
             expect(addRow.addRow).toBeTrue();
 
@@ -95,6 +106,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             addRowIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
+            endTransition();
 
             const addRow = grid.getRowByIndex(lastRowIndex + 1);
             expect(addRow.addRow).toBeTrue();
@@ -157,6 +169,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             row.beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
+
             // add row should be pinned
             const addRow = grid.getRowByIndex(1) as IgxGridRowComponent;
             expect(addRow.addRow).toBe(true);
@@ -180,6 +194,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             ghostRow.beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
+
             // add row should be unpinned
             const addRow = grid.getRowByIndex(2);
             expect(addRow.addRow).toBe(true);
@@ -197,6 +213,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const dataCount = grid.data.length;
             rows[0].beginAddRow();
             fixture.detectChanges();
+            endTransition();
 
             grid.endEdit(true);
             fixture.detectChanges();
@@ -231,6 +248,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             rows[0].beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
+
             grid.endEdit(true);
             fixture.detectChanges();
 
@@ -256,15 +275,115 @@ describe('IgxGrid - Row Adding #grid', () => {
              expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
         });
 
-        it('Should emit all grid editing events as per row editing specification', () => {
-            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-            spyOn(grid.cellEditDone, 'emit').and.callThrough();
-            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
-            // spyOn(grid.rowEditDone, 'emit').and.callThrough();
+        it('Should generate correct row ID based on the primary column type', () => {
+            const column = grid.columns.find(col => col.field === grid.primaryKey);
+            const type = column.dataType;
 
             const row = grid.getRowByIndex(0);
             row.beginAddRow();
             fixture.detectChanges();
+
+            const newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+            const cell = newRow.cells.find(c => c.column === column);
+            expect(typeof(cell.value)).toBe(type);
+        });
+    });
+
+    describe('Add row events tests:', () => {
+        const $destroyer = new Subject<boolean>();
+
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxAddRowComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fixture);
+        }));
+
+        afterEach(fakeAsync(() => {
+            $destroyer.next(true);
+        }));
+
+        it('Should emit all events in the correct order', () => {
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEdit, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.cellEditExit, 'emit').and.callThrough();
+            spyOn(grid.rowEdit, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditExit, 'emit').and.callThrough();
+
+            grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditEnter.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditEnter.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEdit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEdit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditDone.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditDone.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditExit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.cellEditExit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEdit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEdit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.cellEditExit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditDone.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEditDone.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditExit.emit).not.toHaveBeenCalled();
+            });
+
+            grid.rowEditExit.pipe(takeUntil($destroyer)).subscribe(() => {
+                expect(grid.rowEditDone.emit).toHaveBeenCalledTimes(1);
+                expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
+            });
+
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
+
+            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, 'aaa');
+            fixture.detectChanges();
+            grid.endEdit(true);
+            fixture.detectChanges();
+        });
+
+        it('Should emit all grid editing events as per row editing specification', () => {
+            spyOn(grid.cellEditEnter, 'emit').and.callThrough();
+            spyOn(grid.cellEditDone, 'emit').and.callThrough();
+            spyOn(grid.rowEditEnter, 'emit').and.callThrough();
+            spyOn(grid.rowEditDone, 'emit').and.callThrough();
+
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
 
             const newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
@@ -280,22 +399,42 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.cellEditDone.emit).toHaveBeenCalled();
-            // Remove comments when editing events merge in master
-            // expect(grid.rowEditDone.emit).toHaveBeenCalled();
+
+            expect(grid.rowEditDone.emit).toHaveBeenCalled();
         });
 
-        it('Should generate correct row ID based on the primary column type', () => {
-            const column = grid.columns.find(col => col.field === grid.primaryKey);
-            const type = column.dataType;
+        it('Should not enter add mode when rowEditEnter is canceled', () => {
+            grid.rowEditEnter.pipe(takeUntil($destroyer)).subscribe((evt) => {
+                evt.cancel = true;
+            });
 
-            const row = grid.getRowByIndex(0);
-            row.beginAddRow();
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+            endTransition();
+
+            expect(grid.getRowByIndex(1).addRow).toBeFalse();
+        });
+
+        it('Should enter add mode but close it when cellEditEnter is canceled', () => {
+            let canceled = true;
+            grid.cellEditEnter.pipe(first()).subscribe((evt) => {
+                evt.cancel = canceled;
+            });
+
+            grid.rowList.first.beginAddRow();
             fixture.detectChanges();
 
-            const newRow = grid.getRowByIndex(1);
-            expect(newRow.addRow).toBeTrue();
-            const cell = newRow.cells.find(c => c.column === column);
-            expect(typeof(cell.value)).toBe(type);
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
+            expect(grid.crudService.cellInEditMode).toEqual(false);
+
+            grid.endEdit(false);
+            fixture.detectChanges();
+
+            canceled = false;
+            grid.rowList.first.beginAddRow();
+            fixture.detectChanges();
+
+            expect(grid.getRowByIndex(1).addRow).toBeTrue();
         });
     });
 
@@ -314,6 +453,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             row.beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
+
             let newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
 
@@ -326,17 +467,21 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength + 1);
         });
 
-        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', () => {
+        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', async() => {
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             let newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
 
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
             cancelButtonElement.click();
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             newRow = grid.getRowByIndex(1);
@@ -349,6 +494,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             let newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
@@ -366,6 +513,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             let newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
@@ -396,6 +545,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+            endTransition();
 
             GridFunctions.navigateToLastPage(grid.nativeElement);
             fixture.detectChanges();
@@ -413,6 +563,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             const select = GridFunctions.getGridPageSelectElement(fixture);
             select.click();
@@ -441,6 +593,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             row.beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
+
             grid.filter('CompanyName', 'al', IgxStringFilteringOperand.instance().condition('contains'), true);
             fixture.detectChanges();
 
@@ -456,6 +610,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.getRowByIndex(0);
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             const newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
@@ -477,6 +633,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             row.beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
             const newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
 
@@ -528,6 +685,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.getRowByIndex(0);
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             const newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeTrue();
@@ -613,6 +772,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             let row = grid.getRowByIndex(1);
             row.beginAddRow();
             fixture.detectChanges();
+            endTransition();
 
             const cell =  grid.getCellByColumn(2, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
@@ -650,6 +810,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid.rowList.first.beginAddRow();
             fixture.detectChanges();
 
+            endTransition();
+
             grid.endEdit(true);
             fixture.detectChanges();
 
@@ -672,6 +834,9 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
+
             expect(grid.getRowByIndex(1).addRow).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
@@ -689,6 +854,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+            endTransition();
 
             expect(grid.getRowByIndex(1).addRow).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
@@ -702,6 +868,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             row.beginAddRow();
             fixture.detectChanges();
+            endTransition();
             grid.unpinColumn('CompanyName');
             fixture.detectChanges();
 
@@ -719,6 +886,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             expect(grid.getRowByIndex(1).addRow).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
@@ -745,6 +914,9 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
+
             expect(grid.getRowByIndex(1).addRow).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
@@ -770,6 +942,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+            endTransition();
 
             grid.endEdit(true);
             fixture.detectChanges();
@@ -783,6 +956,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             const row = grid.rowList.first;
             row.beginAddRow();
             fixture.detectChanges();
+
+            endTransition();
 
             grid.endEdit(true);
             fixture.detectChanges();

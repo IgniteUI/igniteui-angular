@@ -16,7 +16,6 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DebugElement } from '@angular/core';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();

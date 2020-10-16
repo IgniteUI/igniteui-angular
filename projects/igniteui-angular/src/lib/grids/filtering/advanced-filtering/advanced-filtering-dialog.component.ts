@@ -1041,6 +1041,20 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public getFormat(field: string) {
+        return this.grid.getColumnByName(field).pipeArgs.format;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getTimezone(field: string) {
+        return this.grid.getColumnByName(field).pipeArgs.timezone;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public setAddButtonFocus() {
         if (this.addRootAndGroupButton) {
             this.addRootAndGroupButton.nativeElement.focus();

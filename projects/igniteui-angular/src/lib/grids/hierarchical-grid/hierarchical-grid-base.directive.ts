@@ -12,7 +12,8 @@ import {
     TemplateRef,
     Directive,
     Output,
-    EventEmitter
+    EventEmitter,
+    LOCALE_ID
 } from '@angular/core';
 import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -135,7 +136,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) localeId: string) {
         super(
             selectionService,
             crudService,
@@ -153,7 +155,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             filteringService,
             overlayService,
             summaryService,
-            _displayDensityOptions);
+            _displayDensityOptions,
+            localeId);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 

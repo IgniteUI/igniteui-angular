@@ -11,6 +11,12 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let actionStrip: IgxActionStripComponent;
+    const endTransition = () => {
+        // transition end needs to be simulated
+        const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--inner');
+        const endEvent = new AnimationEvent('animationend');
+        animationElem.dispatchEvent(endEvent);
+  };
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -49,6 +55,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
 
             row.beginAddRow();
             fixture.detectChanges();
+            endTransition();
             expect(row.expanded).toBeFalse();
             expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
             hierarchicalGrid.endEdit(true);
