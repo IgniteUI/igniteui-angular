@@ -23,7 +23,7 @@
 </div>
 
 <div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
-    (swipeleft)="nextMonth()">
+    (swipeleft)="nextMonth()" (pointerdown)="suppressBlur()">
     <div class="igx-calendar-picker">
         <div tabindex="0" class="igx-calendar-picker__prev" #prevMonthBtn
             igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll"  [ngStyle]="{
