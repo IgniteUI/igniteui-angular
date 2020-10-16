@@ -3149,7 +3149,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public generateRowID(): string | number {
         const primaryColumn = this.columnList.find(col => col.field === this.primaryKey);
-        const idType = primaryColumn ? primaryColumn.dataType : this.data.length ? typeof (this.data[0][this.primaryKey]) : 'string';
+        const idType = this.data.length ? typeof (this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
         return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
     }
 
