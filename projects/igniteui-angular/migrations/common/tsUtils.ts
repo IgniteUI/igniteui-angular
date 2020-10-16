@@ -64,7 +64,7 @@ export function getImportModulePositions(sourceText: string, startsWith: string)
 /** Filters out statements to named imports (e.g. `import {x, y}`) from PACKAGE_IMPORT */
 const namedImportFilter = (statement: ts.Statement) => {
     if (statement.kind === ts.SyntaxKind.ImportDeclaration &&
-        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text === PACKAGE_IMPORT) {
+        ((statement as ts.ImportDeclaration).moduleSpecifier as ts.StringLiteral).text.endsWith(PACKAGE_IMPORT)) {
 
         const clause = (statement as ts.ImportDeclaration).importClause;
         return clause && clause.namedBindings && clause.namedBindings.kind === ts.SyntaxKind.NamedImports;
