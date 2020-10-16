@@ -4444,6 +4444,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
+
+        it('Done callback should be executed only once per column', fakeAsync(() => {
+            const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(1000);
+            fix.detectChanges();
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            expect(compInstance.doneCallbackCounter).toBe(1, 'Incorrect done callback execution count');
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(1000);
+            fix.detectChanges();
+            expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
     });
 
     describe(null, () => {
