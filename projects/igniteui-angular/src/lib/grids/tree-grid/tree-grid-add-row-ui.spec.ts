@@ -92,5 +92,23 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const addRow = treeGrid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
         });
+
+        it('should allow adding sibling to child row via the API.', () => {
+            const row = treeGrid.rowList.toArray()[2] as IgxTreeGridRowComponent;
+            // adds row as sibling
+            row.beginAddRow();
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+
+            // check row is added as sibling
+            expect(treeGrid.rowList.length).toBe(9);
+            const addedRow = treeGrid.rowList.toArray()[4] as IgxTreeGridRowComponent;
+            expect(addedRow.rowData.ID).toBe(-2);
+            // should have same parent record.
+            expect(addedRow.treeRow.parent).toBe(row.treeRow.parent);
+        });
     });
 });
