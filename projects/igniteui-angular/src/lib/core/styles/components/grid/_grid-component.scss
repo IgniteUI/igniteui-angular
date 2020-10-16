@@ -212,6 +212,14 @@
         @extend %igx-grid__tr--edit !optional;
     }
 
+    @include e(tr, $m: add-animate) {
+        @extend %igx-grid__tr--add-animate !optional;
+    }
+
+    @include e(tr, $m: inner) {
+        @extend %igx-grid__tr--inner !optional;
+    }
+
     @include e(tr, $m: group) {
         @extend %grid-row--group !optional;
     }
