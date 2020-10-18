@@ -6659,7 +6659,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (args.cancel) {
                     return args.cancel;
                 }
-                this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
+                const parentId = this._getParentRecordId();
+                this.gridAPI.addRowToData(row.data, parentId);
                 const doneArgs = row.createDoneEditEventArgs(cachedRowData);
                 this.rowEditDone.emit(doneArgs);
                 this.crudService.endRowEdit();
@@ -6683,6 +6684,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
         this.rowEditExit.emit(nonCancelableArgs);
         return this.cancelAddMode;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getParentRecordId() {
+        return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
     }
 
     /**
