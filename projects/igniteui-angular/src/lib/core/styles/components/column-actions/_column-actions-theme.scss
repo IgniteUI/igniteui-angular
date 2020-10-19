@@ -87,8 +87,6 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires rem
 /// @requires --var
 @mixin igx-column-actions($theme) {
