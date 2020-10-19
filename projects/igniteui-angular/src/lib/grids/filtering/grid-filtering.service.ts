@@ -3,7 +3,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -65,7 +65,8 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public toggleFilterDropdown(element, column, classRef) {
-        if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
+        if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
+            this.initFilteringSettings();
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
@@ -97,8 +98,9 @@ export class IgxFilteringService implements OnDestroy {
             positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
+
         this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -111,7 +113,7 @@ export class IgxFilteringService implements OnDestroy {
             });
 
         this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -354,7 +356,7 @@ export class IgxFilteringService implements OnDestroy {
             }
 
             if ((currExpressionUI.beforeOperator === undefined || currExpressionUI.beforeOperator === null ||
-                 currExpressionUI.beforeOperator === FilteringLogic.Or) &&
+                currExpressionUI.beforeOperator === FilteringLogic.Or) &&
                 currExpressionUI.afterOperator === FilteringLogic.And) {
 
                 currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
@@ -481,8 +483,8 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
-                                    operator: FilteringLogic,
-                                    expressionsUIs: ExpressionUI[]): void {
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
             return;
         }

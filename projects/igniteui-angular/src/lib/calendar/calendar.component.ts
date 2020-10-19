@@ -419,7 +419,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     private _monthsViewNumber = 1;
-
     /**
      * @hidden
      * @internal
@@ -481,6 +480,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.isKeydownTrigger = isKeydownTrigger;
     }
 
+    public suppressBlur() {
+        this.monthViews?.forEach(d => d.shouldResetDate = false);
+        if (this.daysView) { this.daysView.shouldResetDate = false; }
+    }
+
     /**
      * Change to next month
      *
@@ -539,6 +543,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             this.prevMonthBtn.nativeElement.focus();
         } else if (this.monthScrollDirection === ScrollMonth.NEXT) {
             this.nextMonthBtn.nativeElement.focus();
+        }
+        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+            this.resetActiveDate();
         }
 
         this.monthScrollDirection = ScrollMonth.NONE;
@@ -765,6 +772,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public viewRendered(event) {
         if (event.fromState !== 'void') {
             this.activeViewChanged.emit(this.activeView);
+            if (this.activeView === 0) { this.resetActiveDate(); }
         }
     }
 
