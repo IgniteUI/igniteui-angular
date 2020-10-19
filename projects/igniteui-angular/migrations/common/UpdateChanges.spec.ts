@@ -390,7 +390,7 @@ describe('UpdateChanges', () => {
         });
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
-        const fileContent =
+        let fileContent =
 `import { Size, Type as someThg } from "igniteui-angular";
 import { IgxService, IgxDiffService as eDiffService, Calendar as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
@@ -411,7 +411,7 @@ export class Test {
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
+        let expectedFileContent =
 `import { IgxSize, IgxType as someThg } from "igniteui-angular";
 import { IgxService1, IgxNewDiffService as eDiffService, CalendarActual as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
@@ -423,8 +423,15 @@ export class Test {
     cal: Calendar;
 
     constructor (public router: Router, private _iconService: IgxService1) {}
-}`
-        );
+}`;
+        expect(appTree.readContent('test.component.ts')).toEqual(expectedFileContent);
+
+        // with ig feed package:
+        fileContent = fileContent.replace(/igniteui-angular/g, '@infragistics/igniteui-angular');
+        expectedFileContent = expectedFileContent.replace(/igniteui-angular/g, '@infragistics/igniteui-angular');
+        appTree.overwrite('test.component.ts', fileContent);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.ts')).toEqual(expectedFileContent);
     });
 
     it('should move property value between element tags', done => {

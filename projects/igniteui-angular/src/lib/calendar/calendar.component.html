@@ -46,7 +46,7 @@
 </header>
 
 <div *ngIf="isDefaultView"  class="igx-calendar__body" [@animateView]="activeView" (@animateView.done)="viewRendered($event)" (swiperight)="previousMonth()"
-    (swipeleft)="nextMonth()">
+    (swipeleft)="nextMonth()" (pointerdown)="suppressBlur()">
     <section class="igx-calendar-picker">
         <span tabindex="0" class="igx-calendar__aria-off-screen">
             <ng-container *ngIf="selection === 'multi'">
