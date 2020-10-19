@@ -5446,8 +5446,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected reinitPinStates() {
-        this.columnList.filter(c => this._pinnedColumns.indexOf(c) < 0 || this._unpinnedColumns.indexOf(c) < 0)
-            .forEach(col => col.pinned ? this._pinnedColumns.push(col) : this._unpinnedColumns.push(col));
+        this.columnList.filter(c => !c.columnGroup && !c.parent && (this._pinnedColumns.indexOf(c) < 0
+        || this._unpinnedColumns.indexOf(c) < 0))
+        .forEach(col => col.pinned ? this._pinnedColumns.push(col) : this._unpinnedColumns.push(col));
+
         this._pinnedColumns = this.columnList
             .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
