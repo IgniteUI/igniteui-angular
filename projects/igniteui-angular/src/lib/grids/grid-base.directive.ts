@@ -3162,7 +3162,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public generateRowID(): string | number {
         const primaryColumn = this.columnList.find(col => col.field === this.primaryKey);
-        const idType = primaryColumn ? primaryColumn.dataType : this.data.length ? typeof (this.data[0][this.primaryKey]) : 'string';
+        const idType = this.data.length ? typeof (this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
         return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
     }
 
@@ -4161,11 +4161,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.navigateTo(newRowIndex, -1);
         }
         const row = this.getRowByIndex(index + 1);
-        const cell = row.cells.find(c => c.editable);
-        if (cell) {
-            cell.setEditMode(true);
-            cell.activate();
-        }
+        row.animateAdd = true;
+        row.onAnimationEnd.pipe(first()).subscribe(() => {
+            row.animateAdd = false;
+            const cell = row.cells.find(c => c.editable);
+            if (cell) {
+                cell.setEditMode(true);
+                cell.activate();
+            }
+        });
     }
 
     /**
@@ -6670,7 +6674,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (args.cancel) {
                     return args.cancel;
                 }
-                this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
+                const parentId = this._getParentRecordId();
+                this.gridAPI.addRowToData(row.data, parentId);
                 const doneArgs = row.createDoneEditEventArgs(cachedRowData);
                 this.rowEditDone.emit(doneArgs);
                 this.crudService.endRowEdit();
@@ -6694,6 +6699,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
         this.rowEditExit.emit(nonCancelableArgs);
         return this.cancelAddMode;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getParentRecordId() {
+        return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
     }
 
     /**
