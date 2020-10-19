@@ -119,12 +119,12 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     public nextMonthView: IgxDaysViewComponent;
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public prevMonthView: IgxDaysViewComponent;
-    public _activeDate;
-    private shouldResetDate = true;
+    /** @hidden */
+    public shouldResetDate = true;
+    private _activeDate;
+
 
     /**
      * The default css class applied to the component.
