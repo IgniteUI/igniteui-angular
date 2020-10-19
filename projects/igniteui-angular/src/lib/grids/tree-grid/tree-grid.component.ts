@@ -526,9 +526,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     protected _getParentRecordId() {
         if (this.addRowParent.asChild) {
             return super._getParentRecordId();
-        } else {
+        } else if (this.addRowParent.rowID) {
             const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
-            return spawnedForRecord.parent?.rowID;
+            return spawnedForRecord?.parent?.rowID;
         }
     }
 
