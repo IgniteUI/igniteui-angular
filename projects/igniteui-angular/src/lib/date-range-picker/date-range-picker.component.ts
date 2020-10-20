@@ -17,7 +17,7 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IToggleView } from '../core/navigation';
-import { CancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
@@ -279,7 +279,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted when the `IgxDateRangeComponent` is opened.
@@ -301,7 +301,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted when the `IgxDateRangeComponent` is closed.
@@ -658,9 +658,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    public handleOpening(event: CancelableBrowserEventArgs & IBaseEventArgs): void {
-        this.onOpening.emit(event);
-        this._collapsed = false;
+    public handleOpening(event: IBaseCancelableBrowserEventArgs): void {
+        const args = { owner: this, cancel: event.cancel, event: event.event };
+        this.onOpening.emit(args);
+        event.cancel = args.cancel;
+        if (!args.cancel) {
+            this._collapsed = false;
+        }
     }
 
     /** @hidden @internal */
@@ -670,12 +674,17 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    public handleClosing(event: CancelableBrowserEventArgs & IBaseEventArgs): void {
+    public handleClosing(event: IBaseCancelableBrowserEventArgs): void {
         if (this.value && !this.value.start && !this.value.end) {
             this.value = null;
         }
 
-        this.onClosing.emit(event);
+        const args = { owner: this, cancel: event.cancel, event: event.event };
+        this.onClosing.emit(args);
+        event.cancel = args.cancel;
+        if (args.cancel) {
+            return;
+        }
 
         if (this.mode === InteractionMode.DropDown && event.event && !this.element.nativeElement.contains(event.event.target)) {
             // outside click

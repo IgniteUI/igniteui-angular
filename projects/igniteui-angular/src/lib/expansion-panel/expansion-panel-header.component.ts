@@ -9,11 +9,13 @@ import {
     EventEmitter,
     Output,
     ContentChild,
-    Inject
+    Inject,
+    ViewChild
 } from '@angular/core';
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
-import { IExpansionPanelEventArgs, IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansion-panel.common';
+import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs  } from './expansion-panel.common';
 import { mkenum } from '../core/utils';
+import { IgxIconComponent } from '../icon/public_api';
 
 /**
  * @hidden
@@ -41,6 +43,23 @@ export class IgxExpansionPanelHeaderComponent {
      * @memberof IgxExpansionPanelComponent
      */
     public id = '';
+
+    /** @hidden @internal */
+    @ContentChild(IgxExpansionPanelIconDirective, { read: ElementRef })
+    private customIconRef: ElementRef;
+
+    /** @hidden @internal */
+    @ViewChild(IgxIconComponent, { read: ElementRef })
+    public defaultIconRef: ElementRef;
+
+    /**
+     * Returns a reference to the `igx-expansion-panel-icon` element;
+     * If `iconPosition` is `NONE` - return null;
+     */
+    public get iconRef(): ElementRef {
+        const renderedTemplate = this.customIconRef  ?? this.defaultIconRef;
+        return this.iconPosition !== ICON_POSITION.NONE ? renderedTemplate : null;
+    }
 
     /**
      * @hidden
@@ -120,7 +139,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * Emitted whenever a user interacts with the header host
      * ```typescript
-     *  handleInteraction(event: IExpansionPanelEventArgs) {
+     *  handleInteraction(event: IExpansionPanelCancelableEventArgs) {
      *  ...
      * }
      * ```
@@ -131,7 +150,7 @@ export class IgxExpansionPanelHeaderComponent {
      * ```
      */
     @Output()
-    public onInteraction = new EventEmitter<IExpansionPanelEventArgs>();
+    public onInteraction = new EventEmitter<IExpansionPanelCancelableEventArgs >();
 
     /**
      * @hidden
@@ -185,7 +204,11 @@ export class IgxExpansionPanelHeaderComponent {
             evt.stopPropagation();
             return;
          }
-         this.onInteraction.emit({ event: evt, panel: this.panel });
+         const eventArgs: IExpansionPanelCancelableEventArgs  = { event: evt, panel: this.panel, owner: this.panel, cancel: false };
+         this.onInteraction.emit(eventArgs);
+         if (eventArgs.cancel === true) {
+             return;
+         }
          this.panel.toggle(evt);
          evt.preventDefault();
      }
@@ -194,8 +217,12 @@ export class IgxExpansionPanelHeaderComponent {
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public openPanel(event: KeyboardEvent) {
         if (event.altKey) {
+            const eventArgs: IExpansionPanelCancelableEventArgs  = { event, panel: this.panel, owner: this.panel, cancel: false };
+            this.onInteraction.emit(eventArgs);
+            if (eventArgs.cancel === true) {
+                return;
+            }
             this.panel.expand(event);
-            this.onInteraction.emit({ event: event, panel: this.panel });
         }
      }
 
@@ -203,8 +230,12 @@ export class IgxExpansionPanelHeaderComponent {
      @HostListener('keydown.Alt.ArrowUp', ['$event'])
      public closePanel(event: KeyboardEvent) {
         if (event.altKey) {
+            const eventArgs: IExpansionPanelCancelableEventArgs  = { event, panel: this.panel, owner: this.panel, cancel: false };
+            this.onInteraction.emit(eventArgs);
+            if (eventArgs.cancel === true) {
+                return;
+            }
             this.panel.collapse(event);
-            this.onInteraction.emit({ event: event, panel: this.panel });
         }
      }
 

@@ -9,7 +9,9 @@ import {
     QueryList,
     ViewChild,
     ViewChildren,
-    Directive
+    Directive,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -28,6 +30,16 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     protected _rowData: any;
     protected _addRow: boolean;
+    /**
+     * @hidden
+     */
+    public animateAdd = false;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    onAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
 
     /**
      *  The data passed to the row component.
@@ -80,6 +92,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
     }
+
     @Input()
     public get addRow(): any {
         return this._addRow;
@@ -87,6 +100,20 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     public set addRow(v: any) {
         this._addRow = v;
+    }
+
+    @HostBinding('style.min-height.px')
+    get rowHeight() {
+        let height = this.grid.rowHeight || 32;
+        if (this.grid.hasColumnLayouts) {
+            const maxRowSpan = this.grid.multiRowLayoutRowSize;
+            height = height * maxRowSpan;
+        }
+        return this.addRow ?  height : null;
+    }
+
+    get cellHeight() {
+        return this.addRow ? null : this.grid.rowHeight || 32;
     }
 
     /**
@@ -367,6 +394,17 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * @hidden
+     * @internal
+     */
+    @HostListener('mouseover', ['$event'])
+    public showActionStrip(event: MouseEvent) {
+        if (this.grid.actionStrip) {
+            this.grid.actionStrip.show(this);
+        }
+    }
+
+    /**
+     * @hidden
      */
     public onRowSelectorClick(event) {
         event.stopPropagation();
@@ -390,7 +428,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public update(value: any) {
         const crudService = this.crudService;
-        if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
+        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
@@ -463,6 +501,10 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public shouldDisplayPinnedChip(visibleColumnIndex: number): boolean {
         return this.pinned && this.disabled && visibleColumnIndex === 0;
+    }
+
+    public animationEndHandler() {
+        this.onAnimationEnd.emit(this);
     }
 
     /**

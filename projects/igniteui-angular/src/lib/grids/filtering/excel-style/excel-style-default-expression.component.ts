@@ -43,8 +43,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public dropDownOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnOutsideClick: true,
-        excludePositionTarget: true
+        closeOnOutsideClick: true
     };
 
     @Input()
@@ -118,6 +117,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.dropDownOverlaySettings.outlet = this.overlayOutlet;
         this.dropDownOverlaySettings.target = this.dropdownConditions.inputGroup.element.nativeElement;
+        this.dropDownOverlaySettings.excludeFromOutsideClick = [this.dropdownConditions.inputGroup.element.nativeElement as HTMLElement];
         this.dropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy();
     }
 

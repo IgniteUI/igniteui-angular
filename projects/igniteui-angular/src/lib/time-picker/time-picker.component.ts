@@ -48,7 +48,7 @@ import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { KEYS, IBaseEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -459,7 +459,7 @@ export class IgxTimePickerComponent implements
      * Emitted when a timePicker is being closed.
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * @hidden
@@ -1958,7 +1958,7 @@ export class IgxTimePickerComponent implements
             // TODO: refactoring - this.value should be null #6585
             this.value?.setHours(0, 0, 0);
 
-            if (oldVal.getTime() !== this.value.getTime()) {
+            if (oldVal.getTime() !== this.value?.getTime() || this.isReset()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
@@ -2001,7 +2001,7 @@ export class IgxTimePickerComponent implements
             // TODO: refactoring - this.value should be null #6585
             this.value?.setHours(0, 0, 0);
             this.displayValue = inputMask;
-            if (oldVal.getTime() !== this.value?.getTime()) {
+            if (oldVal.getTime() !== this.value?.getTime() || this.isReset()) {
                 // TODO: Do not emit event when the editor is empty #6482
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
@@ -2153,6 +2153,14 @@ export class IgxTimePickerComponent implements
         } else {
             input.valid = IgxInputState.INITIAL;
         }
+    }
+
+    // Workaround method for #8135
+    // TODO: It must be removed in #6482
+    private isReset(): boolean {
+        return this.value?.getHours() === 0
+            && this.value?.getMinutes() === 0
+            && this.value?.getSeconds() === 0;
     }
 }
 

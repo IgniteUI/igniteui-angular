@@ -188,6 +188,92 @@ describe('igxOverlay', () => {
         UIInteractions.clearOverlay();
     });
 
+    describe('Pure Unit Test', () => {
+        configureTestSuite();
+        let mockElement: any;
+        let mockElementRef: any;
+        let mockFactoryResolver: any;
+        let mockApplicationRef: any;
+        let mockInjector: any;
+        let mockAnimationBuilder: any;
+        let mockDocument: any;
+        let mockNgZone: any;
+        let mockPlatformUtil: any;
+        let overlay: IgxOverlayService;
+        beforeEach(() => {
+            mockElement = {
+                style: { visibility: '', cursor: '', transitionDuration: '' },
+                classList: { add: () => { }, remove: () => { } },
+                appendChild: () => { },
+                removeChild: () => { },
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                getBoundingClientRect: () => ({ width: 10, height: 10 }),
+                insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
+                contains: () => { }
+            };
+            mockElement.parent = mockElement;
+            mockElement.parentElement = mockElement;
+            mockElementRef = { nativeElement: mockElement };
+            mockFactoryResolver = {
+                resolveComponentFactory: (c: any) => {
+                    return {
+                        create: (i: any) => {
+                            return {
+                                hostView: '',
+                                location: mockElementRef,
+                                changeDetectorRef: { detectChanges: () => { } },
+                                destroy: () => { }
+                            };
+                        }
+                    };
+                }
+            };
+            mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
+            mockInjector = {};
+            mockAnimationBuilder = {};
+            mockDocument = {
+                body: mockElement,
+                defaultView: mockElement,
+                createElement: () => mockElement,
+                appendChild: () => { },
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
+            };
+            mockNgZone = {};
+            mockPlatformUtil = { isIOS: false };
+
+            overlay = new IgxOverlayService(
+                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
+        });
+
+        it('Should set cursor to pointer on iOS', () => {
+            mockPlatformUtil.isIOS = true;
+            mockDocument.body.style.cursor = 'initialCursorValue';
+
+            const mockOverlaySettings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            let id = overlay.attach(mockElementRef, mockOverlaySettings);
+
+            overlay.show(id);
+            expect(mockDocument.body.style.cursor).toEqual('pointer');
+
+            overlay.hide(id);
+            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+
+            mockPlatformUtil.isIOS = false;
+            id = overlay.attach(mockElementRef, mockOverlaySettings);
+
+            overlay.show(id);
+            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+
+            overlay.hide(id);
+            expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+        });
+    });
+
     describe('Unit Tests: ', () => {
         configureTestSuite();
         beforeEach(async(() => {
@@ -882,6 +968,35 @@ describe('igxOverlay', () => {
             expect(element.style.width).toBe('200px');
             expect(element.style.height).toBe('100px');
         });
+
+        it('should close overlay on outside click when target is point, #8297', fakeAsync(() => {
+            const fix = TestBed.createComponent(EmptyPageComponent);
+            const button = fix.componentInstance.buttonElement;
+            const overlay = fix.componentInstance.overlay;
+            fix.detectChanges();
+
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new ConnectedPositioningStrategy()
+            };
+
+            overlaySettings.target = new Point(10, 10);
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+            fix.detectChanges();
+
+            let overlayDiv: Element = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeDefined();
+
+            document.body.click();
+            tick();
+            fix.detectChanges();
+
+            overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeUndefined();
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
@@ -3614,6 +3729,55 @@ describe('igxOverlay', () => {
                 });
         }));
 
+        it('Should remain opened when click is on an element contained in the excludeFromOutsideClick collection', fakeAsync(async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const overlay = fixture.componentInstance.overlay;
+            const divElement = fixture.componentInstance.divElement.nativeElement as HTMLElement;
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new GlobalPositionStrategy(),
+                excludeFromOutsideClick: [divElement]
+            };
+
+            spyOn(overlay, 'show').and.callThrough();
+            spyOn(overlay.onClosing, 'emit');
+            spyOn(overlay.onClosed, 'emit');
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+            expect(overlay.show).toHaveBeenCalledTimes(1);
+
+            divElement.click();
+            tick();
+
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
+            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(0);
+
+            overlay.hideAll();
+            tick();
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+
+            overlaySettings.excludeFromOutsideClick = [];
+            tick();
+            const callId = overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+
+            expect(overlay.show).toHaveBeenCalledTimes(2);
+            divElement.click();
+            tick();
+
+            expect(overlay.onClosing.emit).toHaveBeenCalledTimes(2);
+            expect(overlay.onClosed.emit).toHaveBeenCalledTimes(2);
+            expect(overlay.onClosing.emit)
+                .toHaveBeenCalledWith({
+                    id: callId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
+                    event: new MouseEvent('click')
+                });
+        }));
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {

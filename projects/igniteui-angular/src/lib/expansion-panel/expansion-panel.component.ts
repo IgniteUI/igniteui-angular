@@ -119,10 +119,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     /**
      * Emitted when the expansion panel finishes collapsing
      * ```typescript
-     *  handleCollapsed(event: {
-     *  panel: IgxExpansionPanelComponent,
-     *  event: Event
-     * })
+     *  handleCollapsed(event: IExpansionPanelEventArgs)
      * ```
      * ```html
      *  <igx-expansion-panel (onCollapsed)="handleCollapsed($event)">
@@ -136,10 +133,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     /**
      * Emitted when the expansion panel finishes expanding
      * ```typescript
-     *  handleExpanded(event: {
-     *  panel: IgxExpansionPanelComponent,
-     *  event: Event
-     * })
+     *  handleExpanded(event: IExpansionPanelEventArgs)
      * ```
      * ```html
      *  <igx-expansion-panel (onExpanded)="handleExpanded($event)">
@@ -229,7 +223,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         }
         this.playCloseAnimation(
             () => {
-                this.onCollapsed.emit({ event: evt, panel: this });
+                this.onCollapsed.emit({ event: evt, panel: this, owner: this });
                 this.collapsed = true;
             }
         );
@@ -253,7 +247,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         this.cdr.detectChanges();
         this.playOpenAnimation(
             () => {
-                this.onExpanded.emit({ event: evt, panel: this });
+                this.onExpanded.emit({ event: evt, panel: this, owner: this });
             }
         );
     }

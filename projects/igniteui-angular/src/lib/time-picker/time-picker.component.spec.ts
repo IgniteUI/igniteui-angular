@@ -12,8 +12,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxHourItemDirective, IgxMinuteItemDirective, IgxSecondsItemDirective, IgxAmPmItemDirective } from './time-picker.directives';
+import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
@@ -1416,6 +1415,15 @@ describe('IgxTimePicker', () => {
             expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
         }));
 
+        it('should trigger onValueChanged if 00:00 is cleared from the input', () => {
+            fixture.componentInstance.date = new Date(2018, 10, 27, 0, 0, 0, 0);
+            fixture.detectChanges();
+            spyOn(timePicker.onValueChanged, 'emit');
+            timePicker.clear();
+            fixture.detectChanges();
+            expect(timePicker.onValueChanged.emit).toHaveBeenCalledTimes(1);
+        });
+
         it('should scroll on dropdown opened and accept value when focus lost', fakeAsync(() => {
             fixture.detectChanges();
 
@@ -2177,7 +2185,7 @@ describe('IgxTimePicker', () => {
             toggleRef = {
                 onOpened: new EventEmitter<any>(),
                 onClosed: new EventEmitter<any>(),
-                onClosing: new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>(),
+                onClosing: new EventEmitter<IBaseCancelableBrowserEventArgs>(),
                 element
             };
             injector = { get: () => ngModel };

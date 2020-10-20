@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -26,8 +26,10 @@ import {
     Optional,
     DoCheck,
     Directive,
+    LOCALE_ID,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    HostListener
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
@@ -140,7 +142,6 @@ import {
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
-import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
@@ -151,6 +152,7 @@ import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-d
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
+import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -189,7 +191,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
-    private _locale = null;
+    private _locale: string;
     public _destroyed = false;
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
@@ -210,6 +212,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
+
+    /**
+     * @hidden @internal
+     */
+    public decimalPipe: DecimalPipe;
+    /**
+     * @hidden @internal
+     */
+    public datePipe: DatePipe;
 
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
@@ -270,6 +281,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public emptyGridTemplate: TemplateRef<any>;
+
+    /**
+     * Gets/Sets a custom template for adding row UI when grid is empty.
+     * @example
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [addRowEmptyTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Input()
+    public addRowEmptyTemplate: TemplateRef<any>;
 
     /**
      * Gets/Sets a custom template when loading.
@@ -424,15 +445,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     get locale(): string {
-        if (this._locale) {
-            return this._locale;
-        } else {
-            return 'en';
-        }
+        return this._locale;
     }
 
-    set locale(value) {
+    set locale(value: string) {
         this._locale = value;
+        this.summaryService.clearSummaryCache();
+        this._pipeTrigger++;
+        this.notifyChanges();
     }
 
     @Input()
@@ -1186,31 +1206,28 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     /**
-     * Emitted when editing and **not** submitting the value.
-     * @remarks
-     * (e.g. `Esc` key was pressed)
-     * This event is cancelable.
-     * @example
-     * ```html
-     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
-     * </igx-grid>
-     * ```
-     */
-    @Output()
-    public onCellEditCancel = new EventEmitter<IGridEditEventArgs>();
-
-    /**
      * Emitted when cell enters edit mode.
      * @remarks
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public cellEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * Emitted when cell exits edit mode.
+     * @example
+     * ```html
+     * <igx-grid #grid3 (cellEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'">
+     * </igx-grid>
+     * ```
+     */
+    @Output()
+    public cellEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when cell has been edited.
@@ -1219,12 +1236,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
+     * <igx-grid #grid3 (cellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onCellEdit = new EventEmitter<IGridEditEventArgs>();
+    public cellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after cell has been edited and editing has been committed.
@@ -1244,12 +1261,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
+    public rowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when exiting edit mode for a row.
@@ -1261,12 +1278,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEdit = new EventEmitter<IGridEditEventArgs>();
+    public rowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.
@@ -1290,15 +1307,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emits when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
-     * This event is cancelable.
      * @example
      * ```html
-     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
+     * <igx-grid #grid3 (rowEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
      */
     @Output()
-    public onRowEditCancel = new EventEmitter<IGridEditEventArgs>();
+    public rowEditExit = new EventEmitter<IGridEditDoneEventArgs>();
 
     /**
      * Emitted when a column is initialized.
@@ -1558,6 +1574,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
+
+    @ContentChild(IgxActionStripComponent)
+    public actionStrip: IgxActionStripComponent;
 
     /**
      * @hidden @internal
@@ -2750,6 +2769,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.disableTransitions = false;
 
         this.hideOverlays();
+        this.actionStrip?.hide();
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
             event: event,
@@ -2943,8 +2963,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) private localeId: string) {
         super(_displayDensityOptions);
+        this.locale = this.locale || this.localeId;
+        this.datePipe = new DatePipe(this.locale);
+        this.decimalPipe = new DecimalPipe(this.locale);
         this.cdr.detach();
     }
 
@@ -2960,10 +2984,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
-                this.navigation.activeNode.row >= 0 && this.navigation.activeNode.row < this.dataView.length)
+            if (!this.crudService.cell &&
+                !!this.navigation.activeNode &&
+                ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
+                        this.navigation.activeNode.row < this.dataView.length)
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) {
+                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
@@ -3122,7 +3149,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public generateRowID(): string | number {
         const primaryColumn = this.columnList.find(col => col.field === this.primaryKey);
-        const idType = primaryColumn ? primaryColumn.dataType : this.data.length ? typeof (this.data[0][this.primaryKey]) : 'string';
+        const idType = this.data.length ? typeof (this.data[0][this.primaryKey]) : primaryColumn ? primaryColumn.dataType : 'string';
         return idType === 'string' ? uuidv4() : FAKE_ROW_ID--;
     }
 
@@ -3198,6 +3225,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+        if (this.actionStrip) {
+            this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
     }
 
     /**
@@ -3249,6 +3279,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseleave', ['$event'])
+    public hideActionStrip(event: MouseEvent) {
+        this.actionStrip?.hide();
     }
 
     /**
@@ -3346,10 +3385,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
-            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
-            const vertScrDC = this.verticalScrollContainer.displayContainer;
-            vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
+            this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
+            const vertScrDC = this.verticalScrollContainer?.displayContainer;
+            vertScrDC?.removeEventListener('scroll', this.preventContainerScroll);
         });
     }
 
@@ -3910,6 +3949,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    get showAddButton() {
+        return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
+     }
+
+    /**
+     * @hidden
+     * @internal
+     */
     get showDragIcons(): boolean {
         return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
@@ -4065,8 +4112,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean) {
+        if (!this.rowEditable) {
+            console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
+            return;
+        }
         this.endEdit(true);
         this.cancelAddMode = false;
+        const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
+        const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
+        const unpinIndex = this.getUnpinnedIndexById(rowID);
 
         if (this.expansionStates.get(rowID)) {
             this.collapseRow(rowID);
@@ -4074,18 +4128,31 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.addRowParent = {
             rowID: rowID,
-            index: index,
-            asChild: asChild
+            index: isInPinnedArea ? pinIndex : unpinIndex,
+            asChild: asChild,
+            isPinned: isInPinnedArea
         };
-        this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
-            this.cdr.detectChanges();
-            const row = this.getRowByIndex(this.addRowParent.index + 1);
-            const cell = row.cells.find(c => c.editable);
-            cell.setEditMode(true);
-            cell.activate();
-        });
         this._pipeTrigger++;
-        this.notifyChanges();
+        this.cdr.detectChanges();
+        if (isInPinnedArea) {
+            this.calculateGridHeight();
+        }
+        const newRowIndex = this.addRowParent.index + 1;
+        // ensure adding row is in view.
+        const shouldScroll = this.navigation.shouldPerformVerticalScroll(newRowIndex, -1);
+        if (shouldScroll) {
+            this.navigateTo(newRowIndex, -1);
+        }
+        const row = this.getRowByIndex(index + 1);
+        row.animateAdd = true;
+        row.onAnimationEnd.pipe(first()).subscribe(() => {
+            row.animateAdd = false;
+            const cell = row.cells.find(c => c.editable);
+            if (cell) {
+                cell.setEditMode(true);
+                cell.activate();
+            }
+        });
     }
 
     /**
@@ -4183,7 +4250,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (args.cancel) {
                         return;
                     }
-                    this.gridAPI.escape_editMode();
+                    this.crudService.exitCellEdit();
                 }
                 this.cdr.detectChanges();
             }
@@ -4209,7 +4276,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.gridAPI.escape_editMode();
+                this.crudService.exitCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
@@ -4253,6 +4320,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
+
+
         if (expression instanceof Array) {
             this.gridAPI.sort_multiple(expression);
         } else {
@@ -4379,6 +4448,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.endEdit(true);
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
+        this.cdr.detectChanges();
     }
 
     // TODO: We have return values here. Move them to event args ??
@@ -5846,7 +5916,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event, ie11 = false) {
-        if (!this.clipboardOptions.enabled || this.crudService.inEditMode) {
+        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode) {
             return;
         }
 
@@ -6309,14 +6379,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const searchText = caseSensitive ? this.lastSearchInfo.searchText : this.lastSearchInfo.searchText.toLowerCase();
         const data = this.filteredSortedData;
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
-
-        const numberPipe = new IgxDecimalPipeComponent(this.locale);
-        const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
-                    c.dataType === 'number' ? numberPipe.transform(resolveNestedPath(dataRow, c.field), this.locale) :
-                        c.dataType === 'date' ? datePipe.transform(resolveNestedPath(dataRow, c.field), this.locale)
+                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field)) :
+                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field))
                             : resolveNestedPath(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
@@ -6404,7 +6471,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
-        this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
     }
 
@@ -6447,14 +6513,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private configureRowEditingOverlay(rowID: any, useOuter = false) {
-        this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
+        let settings = this.rowEditSettings;
+        const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
+        if (overlay) {
+            settings = overlay.settings;
+        }
+        settings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         const pinned = this._pinnedRecordIDs.indexOf(rowID) !== -1;
         const targetRow = !pinned ? this.gridAPI.get_row_by_key(rowID) : this.pinnedRows.find(x => x.rowID === rowID);
         if (!targetRow) {
             return;
         }
-        this.rowEditSettings.target = targetRow.element.nativeElement;
+        settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
@@ -6483,20 +6554,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
         row.newData = this.transactions.getAggregatedValue(row.id, true);
-
-        let args = row.createEditEventArgs();
+        let rowEditArgs = row.createEditEventArgs();
 
         if (!commit) {
-            this.onRowEditCancel.emit(args);
             this.transactions.endPending(false);
         } else {
-            args = this.gridAPI.update_row(row, row.newData);
+            rowEditArgs = this.gridAPI.update_row(row, row.newData);
+            if (rowEditArgs?.cancel) {
+                return true;
+            }
         }
-        if (args.cancel) {
-            this.transactions.startPending();
-            return;
-        }
+
         this.crudService.endRowEdit();
+
+        const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue);
+        this.rowEditExit.emit(nonCancelableArgs);
         this.closeRowEditingOverlay();
     }
 
@@ -6523,21 +6595,29 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-
+        let canceled = false;
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) { return; }
 
         if (row?.isAddRow) {
-            this.endAdd(commit, event);
-            return;
-        }
-        commit ? this.gridAPI.submit_value() : this.gridAPI.escape_editMode();
-
-        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
-            return;
+            canceled = this.endAdd(commit, event);
+            return canceled;
         }
 
-        this.endRowTransaction(commit, row);
+        if (commit) {
+            canceled = this.gridAPI.submit_value();
+            if (canceled) {
+                return true;
+            }
+        } else {
+            this.crudService.exitCellEdit();
+        }
+
+        canceled = this.crudService.exitRowEdit(commit);
+        this.crudService.rowEditingBlocked = canceled;
+        if (canceled) {
+            return true;
+        }
 
         const activeCell = this.selectionService.activeElement;
         if (event && activeCell) {
@@ -6549,29 +6629,49 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             });
         }
+
+        return false;
     }
 
     public endAdd(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
+        const cachedRowData = {...row.data};
+        let cancelable = false;
         if (!row && !cell) {
             return;
         }
         if (commit) {
-            this.onRowAdded.pipe(first()).subscribe(rowData => {
+            this.onRowAdded.pipe(first()).subscribe((args: IRowDataEventArgs) => {
+                const rowData = args.data;
+                const pinnedIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowData[this.primaryKey]);
                 // A check whether the row is in the current view
-                const viewIndex = this.findRecordIndexInView(rowData);
+                const viewIndex = pinnedIndex !== -1 ? pinnedIndex : this.findRecordIndexInView(rowData);
                 const dataIndex = this.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
                 const isInView = viewIndex !== -1 && !this.navigation.shouldPerformVerticalScroll(viewIndex, 0);
                 const showIndex = isInView ? -1 : dataIndex;
                 this.showSnackbarFor(showIndex);
             });
-            this.gridAPI.submit_add_value();
-            this.gridAPI.addRowToData(row.data, this.addRowParent.asChild ? this.addRowParent.rowID : undefined);
-            this.crudService.endRowEdit();
+            cancelable = this.gridAPI.submit_add_value();
+            if (!cancelable) {
+                const args = row.createEditEventArgs();
+                this.rowEdit.emit(args);
+                if (args.cancel) {
+                    return args.cancel;
+                }
+                const parentId = this._getParentRecordId();
+                this.gridAPI.addRowToData(row.data, parentId);
+                const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+                this.rowEditDone.emit(doneArgs);
+                this.crudService.endRowEdit();
+                if (this.addRowParent.isPinned) {
+                  this.pinRow(row.id);
+                }
+            }
             this.addRowParent = null;
+            this.cancelAddMode = cancelable;
         } else {
-            this.gridAPI.escape_editMode();
+            this.crudService.exitCellEdit();
             this.cancelAddMode = true;
         }
         this.crudService.endRowEdit();
@@ -6579,8 +6679,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pipeTrigger++;
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
-            this.onRowAdded.emit(row.data);
+            this.onRowAdded.emit({ data: row.data});
         }
+        const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
+        this.rowEditExit.emit(nonCancelableArgs);
+        return this.cancelAddMode;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getParentRecordId() {
+        return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
     }
 
     /**
@@ -6588,15 +6699,40 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public endRowEdit(commit = true, event?: Event) {
-        this.endEdit(commit, event);
+        const canceled = this.endEdit(commit, event);
+
+        if (canceled) {
+            return true;
+        }
+
         const activeCell = this.navigation.activeNode;
         if (activeCell && activeCell.row !== -1) {
             this.tbody.nativeElement.focus();
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public triggerPipes() {
+        this._pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public endAddRow() {
+        this.cancelAddMode = true;
+        this.triggerPipes();
+    }
+
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
+    }
+
+    protected getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x[this.primaryKey] === id);
     }
 
     /**

@@ -998,7 +998,7 @@ export class CustomFilter extends IgxFilteringOperand {
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="filterable" [resizable]="resizable" dataType="date">
         </igx-column>
-        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="filterable"
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
@@ -1106,6 +1106,7 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
     private _filteringStrategy = new FilteringStrategy();
     public data = SampleTestData.excelFilteringData();
+    public doneCallbackCounter = 0;
 
     public columnValuesStrategy = (column: IgxColumnComponent,
                                    columnExprTree: IFilteringExpressionsTree,
@@ -1114,6 +1115,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
+            this.doneCallbackCounter++;
         }, 1000);
     }
 }
@@ -1438,12 +1440,12 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`, ``,
+    template: GridTemplateStrings.declareGrid(`id="testGridSum" [height]="height" [width]="width"`, ``,
                 ColumnDefinitions.generatedWithDataType)
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100 , dataType: 'number'},
+        { field: 'ID', width: 100 , dataType: 'string'},
         { field: 'CompanyName', width: 300 , dataType: 'string'},
         { field: 'ContactName', width: 200 , dataType: 'string'},
         { field: 'ContactTitle', width: 200 , dataType: 'string'},
@@ -1462,7 +1464,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
-        <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
         <ng-template igxRowSelector let-rowContext>
@@ -1599,12 +1601,12 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     }
 
     public get cellInEditMode() {
-        return this.gridAPI.get_cell_inEditMode();
+        return this.grid.crudService.cell;
     }
 
     public getCurrentEditCell(): IgxGridCellComponent {
         const grid = this.grid as any;
-        const currentCell = grid.gridAPI.get_cell_inEditMode();
+        const currentCell = grid.crudService.cell;
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
     }
 
@@ -2168,9 +2170,9 @@ export class MRLTestComponent {
 @Component({
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
-    [rowEditable]="true" [primaryKey]="'ID'">
+    [rowEditable]="true" [primaryKey]="'ID'" [allowFiltering]="true">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-        [width]="c.width">
+        [width]="c.width" [movable]='true' [resizable]='true'>
     </igx-column>
 
     <igx-action-strip #actionStrip>
