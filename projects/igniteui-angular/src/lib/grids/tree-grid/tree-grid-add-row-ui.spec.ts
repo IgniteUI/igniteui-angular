@@ -15,6 +15,12 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
     let actionStrip: IgxActionStripComponent;
+    const endTransition = () => {
+        // transition end needs to be simulated
+        const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
+        const endEvent = new AnimationEvent('animationend');
+        animationElem.dispatchEvent(endEvent);
+  };
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -65,6 +71,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const addChildBtn = editActions[1].componentInstance;
             addChildBtn.onActionClick.emit();
             fix.detectChanges();
+            endTransition();
 
             const addRow = treeGrid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
@@ -84,6 +91,41 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             const addRow = treeGrid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
+        });
+
+        it('should allow adding sibling to child row via the API.', () => {
+            const row = treeGrid.rowList.toArray()[2] as IgxTreeGridRowComponent;
+            // adds row as sibling
+            row.beginAddRow();
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+
+            // check row is added as sibling
+            expect(treeGrid.rowList.length).toBe(9);
+            const addedRow = treeGrid.rowList.toArray()[4] as IgxTreeGridRowComponent;
+            expect(addedRow.rowData.Name).toBe(undefined);
+            // should have same parent record.
+            expect(addedRow.treeRow.parent).toBe(row.treeRow.parent);
+        });
+
+        it('should allow adding row to empty grid', () => {
+            treeGrid.data = [];
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(0);
+
+            // begin add row for empty grid
+            treeGrid.beginAddRowByIndex(null, -1);
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(1);
         });
     });
 });

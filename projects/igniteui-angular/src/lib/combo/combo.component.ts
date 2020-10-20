@@ -16,7 +16,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -89,7 +89,7 @@ export interface IComboFilteringOptions {
 }
 
 /** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IComboSelectionChangeEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
     oldSelection: any[];
     /** An array containing the values that will be selected after this event */
@@ -105,7 +105,7 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
 }
 
 /** Event emitted when the igx-combo's search input changes */
-export interface IComboSearchInputEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface IComboSearchInputEventArgs extends IBaseCancelableEventArgs {
     /** The text that has been typed into the search input */
     searchText: string;
 }
@@ -453,7 +453,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
+    public onOpening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -473,7 +473,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+    public onClosing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -513,7 +513,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<any>();
+    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Gets/gets combo id.
@@ -1145,7 +1145,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const newCollection = [...this.data];
         newCollection.push(addedItem);
         const args: IComboItemAdditionEvent = {
-            oldCollection, addedItem, newCollection
+            oldCollection, addedItem, newCollection, owner: this
         };
         this.onAddition.emit(args);
         this.data.push(addedItem);
@@ -1238,8 +1238,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e) => {
-            this.onDataPreLoad.emit(e);
+        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
+            const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
+            this.onDataPreLoad.emit(eventArgs);
         });
     }
 
@@ -1489,6 +1490,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             added,
             removed,
             event,
+            owner: this,
             displayText,
             cancel: false
         };
@@ -1549,11 +1551,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      * @internal
      */
-    public handleOpening(event: CancelableEventArgs) {
-        this.onOpening.emit(event);
-        if (event.cancel) {
-            return;
-        }
+    public handleOpening(event: IBaseCancelableBrowserEventArgs) {
+        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, event, { owner: this });
+        this.onOpening.emit(eventArgs);
+        event.cancel = eventArgs.cancel;
     }
 
     /**
@@ -1576,8 +1577,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public handleClosing(event) {
-        this.onClosing.emit(event);
+    public handleClosing(event: IBaseCancelableBrowserEventArgs) {
+        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, event, { owner: this });
+        this.onClosing.emit(eventArgs);
+        event.cancel = eventArgs.cancel;
         if (event.cancel) {
             return;
         }

@@ -25,7 +25,6 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
-import { IgxDecimalPipeComponent, IgxDatePipeComponent } from '../../common/pipes';
 
 /**
  * @hidden
@@ -501,7 +500,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private generateUniqueValues(columnValues: any[]) {
-        this.uniqueValues = Array.from(new Set(columnValues));
+        if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
+            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
+                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
+                new Map);
+
+            this.uniqueValues = Array.from(filteredUniqueValues.values());
+        } else {
+            this.uniqueValues = Array.from(new Set(columnValues));
+        }
     }
 
     private generateFilterValues(isDateColumn: boolean = false) {
@@ -609,9 +616,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
 
-        const numberPipe = new IgxDecimalPipeComponent(this.column.grid.locale);
-        const datePipe = new IgxDatePipeComponent(this.column.grid.locale);
-
         this.uniqueValues.forEach(element => {
             if (element !== undefined && element !== null && element !== '') {
                 const filterListItem = new FilterListItem();
@@ -641,14 +645,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
                     filterListItem.label = this.column.formatter ?
                         this.column.formatter(date) :
-                        datePipe.transform(date, this.column.grid.locale);
+                        this.grid.datePipe.transform(date);
 
                 } else if (this.column.dataType === DataType.Number) {
                     filterListItem.value = element;
 
                     filterListItem.label = this.column.formatter ?
                         this.column.formatter(element) :
-                        numberPipe.transform(element, this.column.grid.locale);
+                        this.grid.decimalPipe.transform(element);
 
                 } else {
                     filterListItem.value = element;

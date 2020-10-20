@@ -15,10 +15,13 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { IAnimationParams, slideInTop, slideOutBottom, slideOutTop, slideInBottom, fadeIn, fadeOut,
+import {
+    IAnimationParams, slideInTop, slideOutBottom, slideOutTop, slideInBottom, fadeIn, fadeOut,
     scaleInVerTop, scaleOutVerTop, scaleOutVerBottom, scaleInVerBottom, scaleInHorRight, scaleOutHorRight,
-    scaleOutHorLeft, scaleInHorLeft } from '../../animations/main';
+    scaleOutHorLeft, scaleInHorLeft
+} from '../../animations/main';
 import { showMessage } from '../../core/deprecateDecorators';
+import { PlatformUtil } from '../../core/utils';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
@@ -51,6 +54,8 @@ export class IgxOverlayService implements OnDestroy {
     private _document: Document;
     private _keyPressEventListener: Subscription;
     private destroy$ = new Subject<boolean>();
+    private _cursorStyleIsSet = false;
+    private _cursorOriginalValue: string;
 
     private _defaultSettings: OverlaySettings = {
         excludeFromOutsideClick: [],
@@ -150,8 +155,8 @@ export class IgxOverlayService implements OnDestroy {
      */
     public static createRelativeOverlaySettings(
         target: Point | HTMLElement,
-        strategy?: RelativePositionStrategy,
-        position?: RelativePosition):
+        position?: RelativePosition,
+        strategy?: RelativePositionStrategy):
         OverlaySettings {
         const positionSettings = this.createRelativePositionSettings(position);
         const overlaySettings: OverlaySettings = {
@@ -271,7 +276,8 @@ export class IgxOverlayService implements OnDestroy {
         private _injector: Injector,
         private builder: AnimationBuilder,
         @Inject(DOCUMENT) private document: any,
-        private _zone: NgZone) {
+        private _zone: NgZone,
+        protected platformUtil: PlatformUtil) {
         this._document = <Document>this.document;
     }
 
@@ -804,7 +810,7 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.target as any;
+                const target = ev.target;
                 const overlayElement = info.elementRef.nativeElement;
                 // check if the click is on the overlay element or on an element from the exclusion list, and if so do not close the overlay
                 const excludeElements = info.settings.excludeFromOutsideClick ?
@@ -812,7 +818,7 @@ export class IgxOverlayService implements OnDestroy {
                 const isInsideClick: boolean = excludeElements.some(e => e.contains(target as Node));
                 if (isInsideClick) {
                     return;
-                //  if the click is outside click, but close animation has started do nothing
+                    //  if the click is outside click, but close animation has started do nothing
                 } else if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {
                     this._hide(info.id, ev);
                 }
@@ -832,6 +838,15 @@ export class IgxOverlayService implements OnDestroy {
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal &&
                     x.closeAnimationPlayer &&
                     x.closeAnimationPlayer.hasStarted()).length === 1) {
+
+                // click event is not fired on iOS. To make element "clickable" we are
+                // setting the cursor to pointer
+                if (this.platformUtil.isIOS && !this._cursorStyleIsSet) {
+                    this._cursorOriginalValue = this._document.body.style.cursor;
+                    this._document.body.style.cursor = 'pointer';
+                    this._cursorStyleIsSet = true;
+                }
+
                 this._document.addEventListener('click', this.documentClicked, true);
             }
         }
@@ -847,6 +862,11 @@ export class IgxOverlayService implements OnDestroy {
             });
 
             if (shouldRemoveClickEventListener) {
+                if (this._cursorStyleIsSet) {
+                    this._document.body.style.cursor = this._cursorOriginalValue;
+                    this._cursorOriginalValue = '';
+                    this._cursorStyleIsSet = false;
+                }
                 this._document.removeEventListener('click', this.documentClicked, true);
             }
         }
