@@ -10,7 +10,6 @@ import {
     IgxIconService, DisplayDensityToken, DisplayDensity,
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxButtonGroupModule, IgxActionStripModule, GridBaseAPIService
 } from 'igniteui-angular';
-import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
 import { routing } from './routing';
@@ -274,7 +273,6 @@ const components = [
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
-        IgxColumnHidingModule,
         IgxDragDropModule,
         IgxDateRangePickerModule,
         IgxDividerModule,

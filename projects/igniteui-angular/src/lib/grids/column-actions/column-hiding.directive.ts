@@ -2,6 +2,12 @@ import { Directive, Inject } from '@angular/core';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnActionsComponent } from './column-actions.component';
+import { IBaseEventArgs } from '../../core/utils';
+
+export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
+    column: any;
+    newValue: boolean;
+}
 
 @Directive({
     selector: '[igxColumnHiding]'

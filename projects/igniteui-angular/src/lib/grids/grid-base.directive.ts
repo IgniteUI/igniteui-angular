@@ -56,7 +56,7 @@ import {
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.directive';
+import { IColumnVisibilityChangedEventArgs } from './column-actions/column-hiding.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
