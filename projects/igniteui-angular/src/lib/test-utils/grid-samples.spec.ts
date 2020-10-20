@@ -137,7 +137,7 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 })
 export class GridAddColumnComponent extends BasicGridComponent implements OnInit {
     public columns: Array<any>;
-    data = SampleTestData.contactInfoDataFull()
+    data = SampleTestData.contactInfoDataFull();
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 150, movable: true, type: 'string', pinned: true },
