@@ -152,11 +152,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.searchValue) {
-                this.clearInput();
-            }
-
-            this.filterListData();
+            this.searchValue ?
+                this.clearInput() :
+                this.filterListData();
         });
     }
 
