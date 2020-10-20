@@ -122,6 +122,33 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `
+        <igx-grid #grid1 [data]="data" [columnPinning]='true' [width]="'900px'" [height]="'600px'">
+            <igx-column *ngFor="let c of columns" [field]="c.field"
+                [header]="c.field"
+                [movable]="c.movable"
+                [width]="c.width"
+                [editable]="true"
+                [pinned]="c.pinned"
+                [dataType]="c.type">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GridAddColumnComponent extends BasicGridComponent implements OnInit {
+    public columns: Array<any>;
+    data = SampleTestData.contactInfoDataFull()
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'ID', width: 150, movable: true, type: 'string', pinned: true },
+            { field: 'CompanyName', width: 150, movable: true, type: 'string'},
+            { field: 'ContactName', width: 150, movable: true, type: 'string' },
+            { field: 'ContactTitle', width: 150, movable: true, type: 'string' },
+            { field: 'Address', width: 150, movable: true, type: 'string' }];
+    }
+}
+
+@Component({
     template: GridTemplateStrings.declareGrid('', '',
                 ColumnDefinitions.idNameFormatter)
 })
