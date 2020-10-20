@@ -110,5 +110,22 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             // should have same parent record.
             expect(addedRow.treeRow.parent).toBe(row.treeRow.parent);
         });
+
+        it('should allow adding row to empty grid', () => {
+            treeGrid.data = [];
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(0);
+
+            // begin add row for empty grid
+            treeGrid.beginAddRowByIndex(null, -1);
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(1);
+        });
     });
 });
