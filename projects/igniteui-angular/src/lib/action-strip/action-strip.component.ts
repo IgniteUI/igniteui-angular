@@ -112,7 +112,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     get hostClasses(): string {
         const classes = [this.getComponentDensityClass('igx-action-strip')];
         // The custom classes should be at the end.
-        if (!classes.includes('igx-action-strip')) {
+        if (classes.indexOf('igx-action-strip') === -1) {
             classes.push('igx-action-strip');
         }
         classes.push(this.hostClass);
