@@ -58,6 +58,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
+
+
     @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
@@ -325,6 +327,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private _closeOnOutsideSelect = false;
     private _closeOnEscape = true;
     private _isModal = true;
+    private _isOpen = false;
     protected destroy$ = new Subject<boolean>();
 
     /**
@@ -359,40 +362,34 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     /**
-     * Returns whether the dialog is visible to the end user.
+     * State of the dialog.
+     *
      * ```typescript
-     * @ViewChild("MyDialog")
-     * public dialog: IgxDialogComponent;
-     * ngAfterViewInit() {
-     *     let dialogOpen = this.dialog.isOpen;
-     * }
-     * ```
-     */
-
-    get isOpen() {
-        return !this.toggleRef.collapsed;
-    }
-
-
-    /**
-     * An @Input property that allows you to open the dialog declaratively.
-     * ```typescript
-     * @ViewChild("MyDialog")
-     * public dialog: IgxDialogComponent;
-     * ngAfterViewInit() {
-     *     let dialogOpen = this.dialog.opened=true;
-     * }
+     * // get
+     * let dialogIsOpen = this.dialog.isOpen;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-dialog [opened]='true'></igx-dialog>
+     * <igx-dialog [isOpen]='false'></igx-dialog>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <!--set-->
+     * <igx-dialog [(isOpen)]='model.isOpen'></igx-dialog>
      * ```
      */
     @Input()
-    public set opened(value: boolean) {
-        if (value) {
-            this.open(this._overlayDefaultSettings);
+    public get isOpen() {
+        return this._isOpen;
+    }
+    public set isOpen(value: boolean) {
+        this._isOpen = value;
+        if (this._isOpen) {
+            this.open();
+        } else {
+            this.close();
         }
     }
 
@@ -474,6 +471,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         this.toggleRef.open(overlaySettings);
+        this._isOpen = true;
         this.onOpen.emit({ dialog: this, event: null });
         if (!this.leftButtonLabel && !this.rightButtonLabel) {
             this.toggleRef.element.focus();
@@ -491,6 +489,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public close() {
         // `onClose` will emit from `toggleRef.onClosing` subscription
         this.toggleRef.close();
+        this._isOpen = false;
     }
 
 
