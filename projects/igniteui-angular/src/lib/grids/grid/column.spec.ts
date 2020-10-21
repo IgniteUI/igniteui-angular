@@ -5,7 +5,8 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent, GridAddColumnComponent } from '../../test-utils/grid-samples.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent,
+    DynamicColumnsComponent, GridAddColumnComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
