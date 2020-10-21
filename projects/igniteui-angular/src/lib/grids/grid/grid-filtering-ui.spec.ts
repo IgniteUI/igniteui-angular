@@ -4381,7 +4381,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should clear search criteria when selecting clear column filters option.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
-            let checkboxes: any = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            let checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
 
             tick(100);
             fix.detectChanges();
@@ -4417,8 +4417,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
             expect(inputNativeElement.value).toBe('', 'search criteria is not cleared');
 
-            checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
-            expect(checkboxes.every(ch => ch.checked)).toBeTrue();
+            checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+
+            const listItemsCheckboxes = checkboxes.slice(1, checkboxes.length);
+
+            for (const checkbox of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkbox.parentElement);
+            }
         }));
     });
 
