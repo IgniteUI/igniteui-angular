@@ -519,6 +519,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.notifyChanges();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getParentRecordId() {
+        if (this.addRowParent.asChild) {
+            return super._getParentRecordId();
+        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
+            const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
+            return spawnedForRecord?.parent?.rowID;
+        }
+    }
+
     /** @hidden */
     public deleteRowById(rowId: any) {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
