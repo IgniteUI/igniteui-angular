@@ -4933,13 +4933,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             let added = false;
             let removed = false;
 
-            this.initColumns(this.columnList);
-
-
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                 this.onColumnInit.emit(record.item);
                 added = true;
+                record.item.pinned ? this._pinnedColumns.push(record.item) : this._unpinnedColumns.push(record.item);
             });
+
+            this.initColumns(this.columnList);
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
