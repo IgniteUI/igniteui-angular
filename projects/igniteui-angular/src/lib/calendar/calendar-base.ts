@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { isDate, mkenum } from '../core/utils';
 import { CalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { ICalendarResourceStrings } from 'igniteui-angular';
+import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 
 
 /**
