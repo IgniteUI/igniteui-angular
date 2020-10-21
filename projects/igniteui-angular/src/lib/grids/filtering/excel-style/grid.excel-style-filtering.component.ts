@@ -501,7 +501,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     private generateUniqueValues(columnValues: any[]) {
         if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
-            const filteredUniqueValues = columnValues.map(s => s?.toLowerCase())
+            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
                 .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
                 new Map);
 
