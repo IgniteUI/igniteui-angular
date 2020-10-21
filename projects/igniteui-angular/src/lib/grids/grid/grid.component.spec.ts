@@ -483,6 +483,26 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
 
+        fit('should render loading indicator when loading is enabled and the grid has empty filtering pre-applied', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.filter('index', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
+            grid.isLoading = true;
+            fixture.detectChanges();
+            tick(16);
+
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
+
+            expect(loadingIndicator).not.toBeNull();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+        }));
+
         it('should allow applying custom loading indicator', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
             fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemaplate;

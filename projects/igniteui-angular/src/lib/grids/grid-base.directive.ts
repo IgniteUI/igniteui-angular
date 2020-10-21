@@ -6770,6 +6770,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public get template(): TemplateRef<any> {
+        const hasZeroResultFilter = this.filteredData && this.filteredData.length === 0;
+        const hasNoData = !this.data || this.dataLength === 0;
+
+        if (this.isLoading && (hasZeroResultFilter || hasNoData)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
+        }
+
+        if (hasZeroResultFilter) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (hasNoData) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
     public hasHorizontalScroll() {
         return this.totalWidth - this.unpinnedWidth > 0;
     }
