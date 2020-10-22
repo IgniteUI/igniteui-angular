@@ -24,6 +24,8 @@ import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
@@ -346,7 +348,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
@@ -398,7 +400,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns[0].field);
@@ -485,7 +487,14 @@ describe('IgxGrid Component Tests #grid', () => {
         it('should render loading indicator when loading is enabled and the grid has empty filtering pre-applied', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
-            grid.filter('index', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
+            grid.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            grid.filteringExpressionsTree.filteringOperands = [
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                    fieldName: 'index',
+                    searchVal: 0
+                }
+            ];
             grid.isLoading = true;
             fixture.detectChanges();
             tick(16);
