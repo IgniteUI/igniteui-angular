@@ -26,7 +26,8 @@ describe('Dialog', () => {
                 CustomTemplates1DialogComponent,
                 CustomTemplates2DialogComponent,
                 DialogSampleComponent,
-                PositionSettingsDialogComponent
+                PositionSettingsDialogComponent,
+                DialogTwoWayDataBindingComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
@@ -80,17 +81,42 @@ describe('Dialog', () => {
         expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
     });
 
-    it('Should open dialog when isOpened property is set to true', () => {
+    it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
         const expectedMessage = 'message';
 
         dialog.isOpen = true;
+        tick();
         fixture.detectChanges();
 
         const messageDebugElement = fixture.debugElement.query(By.css('.igx-dialog__window-content'));
         expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
-    });
+
+        dialog.close();
+        tick();
+        fixture.detectChanges();
+        expect(dialog.isOpen).toEqual(false);
+    }));
+
+    it('Should open and close dialog with isOpen two way data binding', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DialogTwoWayDataBindingComponent);
+        const dialog = fixture.componentInstance.dialog;
+        fixture.detectChanges();
+
+        fixture.componentInstance.myDialog = true;
+
+        fixture.detectChanges();
+        tick();
+        expect(dialog.isOpen).toEqual(true);
+
+
+        fixture.componentInstance.myDialog = false;
+
+        fixture.detectChanges();
+        tick();
+        expect(dialog.isOpen).toEqual(false);
+    }));
 
     it('Should set custom modal message.', () => {
         const fixture = TestBed.createComponent(CustomDialogComponent);
@@ -449,6 +475,28 @@ class AlertComponent {
 class DialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
 }
+
+@Component({
+    template: `<div #wrapper>
+                            <igx-dialog #dialog title="dialog" message="message"
+                                [(isOpen)]="myDialog"
+                                leftButtonLabel="left button"
+                                leftButtonType="raised"
+                                leftButtonColor="black"
+                                leftButtonBackgroundColor="darkblue"
+                                leftButtonRipple="pink"
+                                rightButtonLabel="right button"
+                                rightButtonType="raised"
+                                rightButtonColor="orange"
+                                rightButtonBackgroundColor="lightblue"
+                                rightButtonRipple="white">
+                            </igx-dialog>
+                        </div>` })
+class DialogTwoWayDataBindingComponent {
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    public myDialog = false;
+}
+
 @Component({
     template: `<div #wrapper>
                             <igx-dialog #dialog

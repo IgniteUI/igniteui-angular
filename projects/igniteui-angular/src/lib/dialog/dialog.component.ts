@@ -318,6 +318,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     @Output()
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
+    /**
+     * @hidden
+     */
+    @Output() public isOpenChange = new EventEmitter<boolean>();
+
     private _positionSettings: PositionSettings = {
         openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
         closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
@@ -392,12 +397,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
             this.close();
         }
     }
-
-    /**
-     * @hidden
-     */
-    @Output() public isOpenChange = new EventEmitter<boolean>();
-
 
     @HostBinding('class.igx-dialog--hidden')
     get isCollapsed() {
