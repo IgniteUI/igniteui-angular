@@ -4468,6 +4468,17 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
+
+        it('Done callback should be executed only once per column', fakeAsync(() => {
+            const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+
+            expect(() => {
+                GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+                tick(2000);
+            }).not.toThrowError(/\'dataType\' of null/);
+        }));
     });
 
     describe(null, () => {
