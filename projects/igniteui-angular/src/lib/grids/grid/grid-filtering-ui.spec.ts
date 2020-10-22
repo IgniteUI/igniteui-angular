@@ -4213,6 +4213,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should correctly update all items based on \'SelectAll\' checkbox.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
 
             const visibleListItems = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             const dataListItems = visibleListItems.slice(1, visibleListItems.length);
@@ -4245,6 +4246,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should correctly update all \'SelectAll\' checkbox when not a single item is checked.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
+            flush();
 
             const visibleListItems = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             expect(visibleListItems.length).toBe(4);
@@ -4382,8 +4384,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             let checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
-
-            tick(100);
             fix.detectChanges();
 
             checkboxes[0].click();
@@ -4395,12 +4395,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickApplyExcelStyleFiltering(fix);
-            tick(100);
+            tick();
             fix.detectChanges();
-
             expect(grid.filteredData.length).toEqual(1);
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
 
             let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'Net', fix);
@@ -4409,18 +4409,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(2, 'incorrect rendered list items count');
 
             GridFunctions.clickClearFilterInExcelStyleFiltering(fix);
-            fix.detectChanges();
             flush();
-
             expect(grid.filteredData).toBeNull();
 
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
             expect(inputNativeElement.value).toBe('', 'search criteria is not cleared');
 
             checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
-
             const listItemsCheckboxes = checkboxes.slice(1, checkboxes.length);
-
             for (const checkbox of listItemsCheckboxes) {
                 ControlsFunction.verifyCheckboxState(checkbox.parentElement);
             }
