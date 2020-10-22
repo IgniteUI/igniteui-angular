@@ -4818,7 +4818,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
 
-        it('Done callback should be executed only once per column', fakeAsync(() => {
+        it('Should not execute done callback for null column', fakeAsync(() => {
             const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             fix.detectChanges();
