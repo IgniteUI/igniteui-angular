@@ -322,6 +322,7 @@ describe('Dialog', () => {
         dialog.open();
         tick(100);
         fix.detectChanges();
+        tick(100);
 
         // Verify dialog is opened and its default right button is focused
         const dialogDOM = fix.debugElement.query(By.css('.igx-dialog'));

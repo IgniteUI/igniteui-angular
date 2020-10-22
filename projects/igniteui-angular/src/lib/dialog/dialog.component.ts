@@ -327,7 +327,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private _closeOnOutsideSelect = false;
     private _closeOnEscape = true;
     private _isModal = true;
-    private _isOpen = false;
     protected destroy$ = new Subject<boolean>();
 
     /**
@@ -382,16 +381,22 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Input()
     public get isOpen() {
-        return this._isOpen;
+        return !this.toggleRef.collapsed;
     }
     public set isOpen(value: boolean) {
-        this._isOpen = value;
-        if (this._isOpen) {
+
+        this.isOpenChange.emit(value);
+        if (value) {
             this.open();
         } else {
             this.close();
         }
     }
+
+    /**
+     * @hidden
+     */
+    @Output() public isOpenChange = new EventEmitter<boolean>();
 
 
     @HostBinding('class.igx-dialog--hidden')
@@ -471,7 +476,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         this.toggleRef.open(overlaySettings);
-        this._isOpen = true;
         this.onOpen.emit({ dialog: this, event: null });
         if (!this.leftButtonLabel && !this.rightButtonLabel) {
             this.toggleRef.element.focus();
@@ -489,7 +493,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public close() {
         // `onClose` will emit from `toggleRef.onClosing` subscription
         this.toggleRef.close();
-        this._isOpen = false;
     }
 
 
