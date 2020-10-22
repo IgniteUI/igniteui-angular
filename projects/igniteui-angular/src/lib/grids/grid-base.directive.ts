@@ -6417,20 +6417,31 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get template(): TemplateRef<any> {
-        const hasZeroResultFilter = this.filteredData && this.filteredData.length === 0;
-        const hasNoData = !this.data || this.dataLength === 0;
-
-        if (this.isLoading && (hasZeroResultFilter || hasNoData)) {
+        if (this.isLoading && (this.hasZeroResultFilter || this.hasNoData)) {
             return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
 
-        if (hasZeroResultFilter) {
+        if (this.hasZeroResultFilter) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (hasNoData) {
+        if (this.hasNoData) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private get hasZeroResultFilter(): boolean {
+        return this.filteredData && this.filteredData.length === 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private get hasNoData(): boolean {
+        return !this.data || this.dataLength === 0;
     }
 
     /**
@@ -6471,7 +6482,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     get shouldOverlayLoading(): boolean {
-        return this.isLoading && this.data && this.data.length > 0;
+        return this.isLoading && !this.hasNoData && !this.hasZeroResultFilter;
     }
 
     /**
