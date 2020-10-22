@@ -22,7 +22,7 @@ import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 export class IgxActionStripMenuItemDirective {
     constructor(
         public templateRef: TemplateRef<any>
-    ) { }
+    ) { } //
 }
 
 /**
