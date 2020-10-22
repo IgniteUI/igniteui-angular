@@ -224,7 +224,7 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.grid.dataView.length && this.activeNode &&
+        if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
             (!header && !this.grid.hasSummarizedColumns))) { return; }
 

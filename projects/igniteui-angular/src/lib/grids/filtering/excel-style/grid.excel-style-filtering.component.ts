@@ -500,7 +500,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private generateUniqueValues(columnValues: any[]) {
-        this.uniqueValues = Array.from(new Set(columnValues));
+        if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
+            const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
+                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
+                new Map);
+
+            this.uniqueValues = Array.from(filteredUniqueValues.values());
+        } else {
+            this.uniqueValues = Array.from(new Set(columnValues));
+        }
     }
 
     private generateFilterValues(isDateColumn: boolean = false) {

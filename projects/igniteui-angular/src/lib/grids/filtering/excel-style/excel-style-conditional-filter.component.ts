@@ -53,10 +53,14 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     constructor(public esf: IgxGridExcelStyleFilteringComponent) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
-                this._subMenuOverlaySettings.outlet = (this.esf.grid as any).outlet;
+                this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
             }
         });
-     }
+
+        if (this.esf.grid) {
+            this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
+        }
+    }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -147,7 +151,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         const exprTree = this.esf.column.filteringExpressionsTree;
         return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
             !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
-            (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
+                (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
     }
 
     /**
