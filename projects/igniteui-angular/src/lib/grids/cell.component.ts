@@ -801,6 +801,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
         if (dragMode) {
             this.grid.cdr.detectChanges();
+            if (isIE()) { this.grid.tbody.nativeElement.focus({ preventScroll: true }); }
         }
     }
 
@@ -814,6 +815,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.grid.navigation.activeNode.gridID !== this.gridID))) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
+            if (isIE()) { this.grid.tbody.nativeElement.focus({ preventScroll: true }); }
         }
     }
 

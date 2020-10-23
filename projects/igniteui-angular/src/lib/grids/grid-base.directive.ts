@@ -2984,6 +2984,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            if (this.selectionService.dragMode && isIE()) { return; }
             if (!this.crudService.cell &&
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
@@ -5903,20 +5904,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    copyHandlerIE() {
-        if (isIE()) {
-            this.copyHandler(null, true);
-        }
-    }
-
-    /**
      * @hidden
      * @internal
      */
-    public copyHandler(event, ie11 = false) {
-        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode) {
+    public copyHandler(event) {
+        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
             return;
         }
 
@@ -5935,7 +5927,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result = result.substring(result.indexOf('\n') + 1);
         }
 
-        if (ie11) {
+        if (isIE()) {
             (window as any).clipboardData.setData('Text', result);
             return;
         }
