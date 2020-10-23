@@ -4574,6 +4574,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Should reset esf menu with templates on column change', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            flush();
 
             let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 20, fix);
@@ -4582,6 +4583,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(2, 'incorrect rendered list items count');
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
 
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
             expect(inputNativeElement.value).toBe('', 'input value didn\'t reset');
