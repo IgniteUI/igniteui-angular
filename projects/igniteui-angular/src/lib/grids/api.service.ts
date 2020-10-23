@@ -471,7 +471,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public get_all_data(includeTransactions = false): any[] {
         const grid = this.grid;
-        let data = grid.data ? grid.data : [];
+        let data = grid && grid.data ? grid.data : [];
         data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
         return data;
     }
