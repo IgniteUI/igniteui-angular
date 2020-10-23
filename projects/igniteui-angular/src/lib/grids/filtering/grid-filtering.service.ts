@@ -407,7 +407,8 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.grid.datePipe.transform(expression.searchVal);
+            const pipeArgs = this.grid.getColumnByName(expression.fieldName).pipeArgs;
+            return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, pipeArgs.timezone, this.grid.locale);
         } else {
             return expression.searchVal;
         }

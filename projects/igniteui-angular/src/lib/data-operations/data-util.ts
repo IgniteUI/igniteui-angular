@@ -31,25 +31,27 @@ export type DataType = (typeof DataType)[keyof typeof DataType];
  * @hidden
  */
 export class DataUtil {
-    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting()): T[] {
-        return sorting.sort(data, expressions);
+    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(),
+        grid: any = null): T[] {
+        return sorting.sort(data, expressions, grid);
     }
 
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy = new IgxDataRecordSorting(),
-        parent?: ITreeGridRecord): ITreeGridRecord[] {
+        parent?: ITreeGridRecord,
+        tgrid?: any): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
             if (rec.children) {
-                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec);
+                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec, tgrid);
             }
             res.push(rec);
         });
 
-        res = DataUtil.sort(res, expressions, sorting);
+        res = DataUtil.sort(res, expressions, sorting, tgrid);
 
         return res;
     }
@@ -105,11 +107,11 @@ export class DataUtil {
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
 
-    public static filter<T>(data: T[], state: IFilteringState): T[] {
+    public static filter<T>(data: T[], state: IFilteringState, grid?: any): T[] {
         if (!state.strategy) {
             state.strategy = new FilteringStrategy();
         }
-        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree);
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
     }
 
     public static correctPagingState(state: IPagingState, length: number) {
