@@ -132,6 +132,7 @@ import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualiz
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-directive';
+import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -240,6 +241,7 @@ const components = [
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
     GridFilteringComponent,
+    GridFormattingComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
     AboutComponent,

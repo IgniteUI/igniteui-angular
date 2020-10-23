@@ -282,7 +282,7 @@ export abstract class IgxBaseExporter {
                 data = this.flatRecords;
             } else {
                 filteringState.strategy = grid.filterStrategy;
-                data = DataUtil.filter(data, filteringState);
+                data = DataUtil.filter(data, filteringState, grid);
             }
         }
 
@@ -297,7 +297,7 @@ export abstract class IgxBaseExporter {
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
-                data = DataUtil.sort(data, grid.sortingExpressions, grid.sortStrategy);
+                data = DataUtil.sort(data, grid.sortingExpressions, grid.sortStrategy, grid);
             }
         }
 

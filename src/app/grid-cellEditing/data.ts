@@ -57,7 +57,7 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: true,
-    OrderDate: new Date('2011-11-11')
+    OrderDate: undefined
 }, {
     ProductID: 6,
     ProductName: 'Grandmas Boysenberry Spread',
@@ -69,7 +69,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 25,
     Discontinued: false,
-    OrderDate: new Date('2017-12-17')
+    OrderDate: new Date('2017-12-17'),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 7,
     ProductName: 'Uncle Bobs Organic Dried Pears',
@@ -81,7 +82,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 10,
     Discontinued: false,
-    OrderDate: new Date('2016-07-17')
+    OrderDate: new Date('2016-07-17'),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 8,
     ProductName: 'Northwoods Cranberry Sauce',
@@ -93,7 +95,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date('2025-01-17')
+    OrderDate: new Date('2025-01-17'),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 9,
     ProductName: 'Mishi Kobe Niku',
@@ -237,7 +240,7 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date('2005-03-17')
+    OrderDate: null
 }
 ];
 

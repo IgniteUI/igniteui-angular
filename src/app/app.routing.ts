@@ -76,6 +76,7 @@ import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-gr
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
+import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 
 const appRoutes = [
     {
@@ -368,6 +369,10 @@ const appRoutes = [
     {
         path: 'grid-nested-props',
         component: GridNestedPropsSampleComponent
+    },
+    {
+        path: 'gridFormatting',
+        component: GridFormattingComponent
     }
 ];
 
