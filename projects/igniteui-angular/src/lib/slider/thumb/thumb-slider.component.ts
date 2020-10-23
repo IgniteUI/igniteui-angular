@@ -109,10 +109,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this.isActive && this._isPressed;
     }
 
-    public get pressed() {
-        return this._isPressed;
-    }
-
     public get nativeElement() {
         return this._elementRef.nativeElement;
     }
