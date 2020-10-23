@@ -4814,7 +4814,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 20, fix);
 
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
-            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             flush();
