@@ -89,9 +89,7 @@ describe('Dialog', () => {
         dialog.isOpen = true;
         tick();
         fixture.detectChanges();
-
-        const messageDebugElement = fixture.debugElement.query(By.css('.igx-dialog__window-content'));
-        expect(messageDebugElement.nativeElement.textContent.trim()).toEqual(expectedMessage);
+        expect(dialog.isOpen).toEqual(true);
 
         dialog.close();
         tick();
