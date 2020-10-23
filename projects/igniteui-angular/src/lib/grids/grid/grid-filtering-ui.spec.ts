@@ -4571,6 +4571,21 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
         });
+
+        it('Should reset esf menu with templates on column change', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 20, fix);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            expect(inputNativeElement.value).toBe('', 'input value didn\'t reset');
+        }));
     });
 
     describe('Load values on demand', () => {
