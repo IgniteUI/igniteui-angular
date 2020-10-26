@@ -8,6 +8,7 @@ import { RemoteService } from '../shared/remote.service';
 import { data } from '../grid-cellEditing/data';
 import { Observable } from 'rxjs';
 import { GridESFLoadOnDemandService } from '../grid-esf-load-on-demand/grid-esf-load-on-demand.service';
+import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders';
 
@@ -21,10 +22,14 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
     public gridLocal: IgxGridComponent;
     @ViewChild('grid2', { read: IgxGridComponent, static: true })
     public gridRemote: IgxGridComponent;
+    @ViewChild('treeGrid', { read: IgxGridComponent, static: true })
+    public treeGrid: IgxGridComponent;
 
     private _filteringStrategy = new FilteringStrategy();
     public localData: any[];
     public remoteData: Observable<any[]>;
+    public treeData: any[];
+    public treeGridColumns: any[];
 
     public options = {
         timezone: '+0430',
@@ -46,6 +51,31 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
         this.remoteData = this.remoteService.remoteData;
+        this.treeGridColumns = [
+            { field: 'ID', width: 150, resizable: true, movable: true, pinned: true },
+            { field: 'CompanyName', width: 150, resizable: true, movable: true },
+            { field: 'ContactName', width: 150, resizable: true, movable: true },
+            { field: 'OrderDate', dataType: 'date', width: 150, groupable: true, movable: true },
+            { field: 'ContactTitle', width: 150, resizable: true, movable: true },
+            { field: 'Address', width: 150, resizable: true, movable: true },
+            { field: 'City', width: 150, resizable: true, movable: true },
+            { field: 'Region', width: 150, resizable: true, movable: true },
+            { field: 'PostalCode', width: 150, resizable: true, movable: true },
+            { field: 'Phone', width: 150, resizable: true, movable: true },
+            { field: 'Fax', width: 150, resizable: true, movable: true }
+        ];
+        this.treeData = HIERARCHICAL_SAMPLE_DATA.slice(0).map((el, index) => {
+            const obj = el as any;
+            obj.OrderDate = new Date(2020, index, index).toISOString();
+            let child = obj;
+            while (child.ChildCompanies) {
+                child.ChildCompanies.forEach((elem, ind) => {
+                    elem.OrderDate = new Date(2020, index + ind, index + ind).toISOString();
+                });
+                child = child.ChildCompanies;
+            }
+            return obj;
+        });
     }
 
     public ngAfterViewInit() {

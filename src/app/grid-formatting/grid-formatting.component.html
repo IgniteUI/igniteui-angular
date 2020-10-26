@@ -56,3 +56,18 @@
         <igx-column field="Freight" width="200px" [sortable]="true" [filterable]="true" [dataType]="'string'" [hasSummary]="false">
         </igx-column>
     </igx-grid>
+
+    <h3>Tree Grid</h3>
+    <igx-tree-grid #treeGrid
+        [data]="treeData"
+        childDataKey="ChildCompanies"
+        primaryKey="ID" expansionDepth="1"
+        [width]="'900px'" [height]="'500px'"
+        [allowFiltering]="true"
+        [filterMode]="'excelStyleFilter'">
+        <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [pipeArgs]="formatOptions"
+            [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [dataType]="c.dataType"
+            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
+            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+        </igx-column>
+    </igx-tree-grid>
