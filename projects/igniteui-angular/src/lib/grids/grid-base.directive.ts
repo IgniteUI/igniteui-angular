@@ -2966,7 +2966,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) private localeId: string) {
         super(_displayDensityOptions);
-        // TODO
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
         this.decimalPipe = new DecimalPipe(this.locale);

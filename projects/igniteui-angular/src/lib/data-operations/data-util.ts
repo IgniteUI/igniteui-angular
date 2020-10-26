@@ -15,6 +15,7 @@ import { ITreeGridRecord } from '../grids/tree-grid/public_api';
 import { cloneValue, mergeObjects, mkenum } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 import { getHierarchy, isHierarchyMatch } from './operations';
+import { GridType } from '../grids/common/grid.interface';
 
 /**
  * @hidden
@@ -32,7 +33,7 @@ export type DataType = (typeof DataType)[keyof typeof DataType];
  */
 export class DataUtil {
     public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting(),
-        grid: any = null): T[] {
+        grid?: GridType): T[] {
         return sorting.sort(data, expressions, grid);
     }
 
@@ -40,18 +41,18 @@ export class DataUtil {
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy = new IgxDataRecordSorting(),
         parent?: ITreeGridRecord,
-        tgrid?: any): ITreeGridRecord[] {
+        grid?: GridType): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
             if (rec.children) {
-                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec, tgrid);
+                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec, grid);
             }
             res.push(rec);
         });
 
-        res = DataUtil.sort(res, expressions, sorting, tgrid);
+        res = DataUtil.sort(res, expressions, sorting, grid);
 
         return res;
     }
@@ -68,7 +69,7 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grid: any = null,
+    public static group<T>(data: T[], state: IGroupingState, grid: GridType = null,
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
@@ -107,7 +108,7 @@ export class DataUtil {
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
 
-    public static filter<T>(data: T[], state: IFilteringState, grid?: any): T[] {
+    public static filter<T>(data: T[], state: IFilteringState, grid?: GridType): T[] {
         if (!state.strategy) {
             state.strategy = new FilteringStrategy();
         }

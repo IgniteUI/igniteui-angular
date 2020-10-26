@@ -1,9 +1,11 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
+import { GridType } from '../grids/common/grid.interface';
 
 export interface IFilteringStrategy {
-    filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree, grid?: any): any[];
+    filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
+        grid?: GridType): any[];
 }
 
 export class NoopFilteringStrategy implements IFilteringStrategy {
@@ -24,15 +26,15 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree): any[];
 
-    protected abstract getFieldValue(rec: object, fieldName: string, grid?: any): any;
+    protected abstract getFieldValue(rec: object, fieldName: string, grid?: GridType): any;
 
-    public findMatchByExpression(rec: object, expr: IFilteringExpression, grid?: any): boolean {
+    public findMatchByExpression(rec: object, expr: IFilteringExpression, grid?: GridType): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, grid);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
-    public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: any): boolean {
+    public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
                 const expressionsTree = expressions as IFilteringExpressionsTree;
@@ -79,7 +81,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
     }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
-        grid?: any): T[] {
+        grid?: GridType): T[] {
         let i;
         let rec;
         const len = data.length;
@@ -96,7 +98,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: object, fieldName: string, grid?: any): any {
+    protected getFieldValue(rec: object, fieldName: string, grid?: GridType): any {
         let value = resolveNestedPath(rec, fieldName);
         if (grid && grid.getColumnByName(fieldName)?.dataType === 'date') {
             value = value ? parseDate(value) : value;
