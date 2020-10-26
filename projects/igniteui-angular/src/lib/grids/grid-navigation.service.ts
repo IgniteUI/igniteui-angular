@@ -183,7 +183,7 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.grid.dataView.length && this.activeNode &&
+        if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
         this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
                 level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
