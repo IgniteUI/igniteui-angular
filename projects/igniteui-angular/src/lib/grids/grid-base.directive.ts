@@ -6489,6 +6489,37 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public get template(): TemplateRef<any> {
+        if (this.isLoading && (this.hasZeroResultFilter || this.hasNoData)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
+        }
+
+        if (this.hasZeroResultFilter) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.hasNoData) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private get hasZeroResultFilter(): boolean {
+        return this.filteredData && this.filteredData.length === 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private get hasNoData(): boolean {
+        return !this.data || this.dataLength === 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public hasHorizontalScroll() {
         return this.totalWidth - this.unpinnedWidth > 0;
     }
@@ -6524,7 +6555,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     get shouldOverlayLoading(): boolean {
-        return this.isLoading && this.data && this.data.length > 0;
+        return this.isLoading && !this.hasNoData && !this.hasZeroResultFilter;
     }
 
     /**
