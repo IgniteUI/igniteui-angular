@@ -4587,6 +4587,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+
+            // Verify ESF is visible.
+            expect(excelMenu).not.toBeNull();
+
             // Type string in search box.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4609,9 +4614,42 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 .sort();
 
             // Verify that excel style filtering dialog is closed and data is filtered.
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).toBeNull();
             expect(gridCellValues.length).toEqual(4);
             expect(gridCellValues).toEqual(listItems);
+        }));
+
+        it('Should clear input if there is text and \'Escape\' is pressed.', fakeAsync(() => {
+            // Open excel style filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+
+            // Verify ESF is visible.
+            expect(excelMenu).not.toBeNull();
+
+             // Verify that the dialog is closed on pressing Escape.
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).toBeNull();
+
+            // Open excel style filtering dialog again and type in the input.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2', fix);
+
+            // Press Escape again and verify that ESF menu is still visible and the input is empty
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            fix.detectChanges();
+            flush();
+
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).not.toBeNull();
+            expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
         }));
 });
 
