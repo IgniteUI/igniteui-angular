@@ -120,6 +120,15 @@ export class IgxBadgeComponent {
     public role = 'status';
 
     /**
+     * The default css class applied to the badge component.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-badge__circle')
+    public styleClass = true;
+
+    /**
      * Sets/gets the the css class to use on the badge.
      *
      * @example
@@ -153,6 +162,7 @@ export class IgxBadgeComponent {
      * @hidden
      * @internal
      */
+    @HostBinding('attr.aria-roledescription')
     get roleDescription() {
         // tslint:disable-next-line:prefer-conditional-expression
         if (this.icon) {
@@ -169,7 +179,8 @@ export class IgxBadgeComponent {
      * @hidden
      * @internal
      */
-    public setClasses() {
+    @HostBinding('class')
+    get setClasses() {
         let classes = {};
 
         switch (IgxBadgeType[this.type.toUpperCase()]) {
