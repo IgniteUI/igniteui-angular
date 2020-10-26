@@ -109,6 +109,21 @@
             </igx-input-group>
             <br />
 
+            <!-- text field prefix/suffix -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Important Documents</label>
+                <input
+                    igxInput
+                    name="testFile"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    type="file"
+                    multiple
+                />
+                <igx-hint>Upload a file to begin...</igx-hint>
+            </igx-input-group>
+
+            <br />
             <!-- textarea -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Textarea</label>

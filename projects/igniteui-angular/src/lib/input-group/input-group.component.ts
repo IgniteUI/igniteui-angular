@@ -11,7 +11,8 @@ import {
     QueryList,
     Inject,
     Optional,
-    AfterContentInit
+    AfterContentInit,
+    Renderer2,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -19,6 +20,8 @@ import {
     IgxInputState,
 } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import {
@@ -48,7 +51,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [
-        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }
+        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterContentInit {
@@ -236,7 +239,8 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         @Inject(IGX_INPUT_GROUP_TYPE)
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
-        private document: any
+        private document: any,
+        private renderer: Renderer2
     ) {
         super(_displayDensityOptions);
     }
@@ -272,6 +276,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                 .getPropertyValue('--igx-input-group-variant')
                 .trim();
             this._variant = variant as IgxInputGroupTheme;
+        }
+
+        if (this.isFileType) {
+            this.renderer.setAttribute(this.input.nativeElement, 'hidden', 'true');
         }
     }
     /**
@@ -332,6 +340,39 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
         return this.type === 'box' && this._variant === 'material';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public uploadButtonHandler() {
+        this.input.nativeElement.click();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public clearValueHandler() {
+        this.input.clear();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-input-group--file')
+    public get isFileType() {
+        return this.input.type === 'file';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get fileNames() {
+        return this.input.fileNames;
     }
 
     /**
@@ -435,7 +476,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         IgxLabelDirective,
         IgxPrefixModule,
         IgxSuffixModule,
+        IgxButtonModule,
+        IgxIconModule
     ],
-    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule],
+    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule, IgxButtonModule, IgxIconModule],
 })
+
 export class IgxInputGroupModule {}

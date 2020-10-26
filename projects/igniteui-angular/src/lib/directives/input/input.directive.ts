@@ -9,18 +9,31 @@ import {
     Input,
     OnDestroy,
     Optional,
-    Self
+    Self,
 } from '@angular/core';
-import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
+import {
+    AbstractControl,
+    FormControlName,
+    NgControl,
+    NgModel,
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
 
-const nativeValidationAttributes = ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step'];
+const nativeValidationAttributes = [
+    'required',
+    'pattern',
+    'minlength',
+    'maxlength',
+    'min',
+    'max',
+    'step',
+];
 
 export enum IgxInputState {
     INITIAL,
     VALID,
-    INVALID
+    INVALID,
 }
 
 /**
@@ -46,7 +59,7 @@ export enum IgxInputState {
  */
 @Directive({
     selector: '[igxInput]',
-    exportAs: 'igxInput'
+    exportAs: 'igxInput',
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
@@ -84,13 +97,20 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
+    private _filePlaceholder = 'No file chosen';
+    private _fileNames = this._filePlaceholder;
+
 
     constructor(
         public inputGroup: IgxInputGroupBase,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
-        @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName,
+        @Optional()
+        @Self()
+        @Inject(FormControlName)
+        protected formControl: FormControlName,
         protected element: ElementRef<HTMLInputElement>,
-        protected cdr: ChangeDetectorRef) { }
+        protected cdr: ChangeDetectorRef
+    ) {}
 
     private get ngControl(): NgControl {
         return this.ngModel ? this.ngModel : this.formControl;
@@ -106,7 +126,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     @Input()
-    set value(value: any) {
+    public set value(value: any) {
         this.nativeElement.value = value ?? '';
         this.updateValidityState();
     }
@@ -120,7 +140,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * let inputValue = this.igxInput.value;
      * ```
      */
-    get value() {
+    public get value() {
         return this.nativeElement.value;
     }
     /**
@@ -209,21 +229,78 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @hidden
      * @internal
      */
+    @HostListener('change', ['$event'])
+    public change(event: Event) {
+        if (this.type === 'file') {
+            const fileList: FileList | null = (event.target as HTMLInputElement)
+                .files;
+            const fileArray: File[] = [];
+
+            if (fileList) {
+                for (const file of Array.from(fileList)) {
+                    fileArray.push(file);
+                }
+            }
+
+            this._fileNames = (fileArray || []).map((f: File) => f.name).join(', ');
+
+            if (!this._fileNames) {
+                this._fileNames = this._filePlaceholder;
+            }
+
+            if (this.required && fileList?.length > 0) {
+                this._valid = IgxInputState.INITIAL;
+            }
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get fileNames() {
+        return this._fileNames;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public clear() {
+        this.nativeElement.value = null;
+        this._fileNames = this._filePlaceholder;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public ngAfterViewInit() {
-        this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
-        this.inputGroup.disabled = this.inputGroup.disabled || this.nativeElement.hasAttribute('disabled');
-        this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
+        this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute(
+            'placeholder'
+        );
+        this.inputGroup.disabled =
+            this.inputGroup.disabled ||
+            this.nativeElement.hasAttribute('disabled');
+        this.inputGroup.isRequired = this.nativeElement.hasAttribute(
+            'required'
+        );
 
         // Make sure we do not invalidate the input on init
         if (!this.ngControl) {
             this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
-        if (!this.inputGroup.isRequired && this.ngControl && this.ngControl.control.validator) {
-            const validation = this.ngControl.control.validator({} as AbstractControl);
+        if (
+            !this.inputGroup.isRequired &&
+            this.ngControl &&
+            this.ngControl.control.validator
+        ) {
+            const validation = this.ngControl.control.validator(
+                {} as AbstractControl
+            );
             this.inputGroup.isRequired = validation && validation.required;
         }
-
 
         const elTag = this.nativeElement.tagName.toLowerCase();
         if (elTag === 'textarea') {
@@ -233,7 +310,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
 
         if (this.ngControl) {
-            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(
+                this.onStatusChanged.bind(this)
+            );
         }
 
         this.cdr.detectChanges();
@@ -400,5 +479,15 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                             this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
                             IgxInputState.INVALID;
         }
+    }
+
+    /**
+     * Returns the input type.
+     *
+     * @hidden
+     * @internal
+     */
+    public get type() {
+        return this.nativeElement.type;
     }
 }
