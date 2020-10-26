@@ -3,6 +3,18 @@ import * as path from 'path';
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
 import { WorkspaceSchema, WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
 import { execSync } from 'child_process';
+import {
+    Attribute,
+    Comment,
+    Element,
+    Expansion,
+    ExpansionCase,
+    getHtmlTagDefinition,
+    HtmlParser,
+    Node,
+    Text,
+    Visitor
+} from '@angular/compiler';
 
 const configPaths = ['/.angular.json', '/angular.json'];
 
@@ -115,4 +127,126 @@ export function tryUninstallPackage(context: SchematicContext, packageManager: s
         context.logger
             .warn(`Could not uninstall ${pkg}, you may want to uninstall it manually.`, JSON.parse(e));
     }
+}
+
+interface TagOffset {
+    start: number;
+    end: number;
+}
+
+export interface SourceOffset {
+    startTag: TagOffset;
+    endTag: TagOffset;
+    file: {
+        content: string;
+        url: string;
+    };
+}
+
+export type FileChange = [number, string, number];
+
+/**
+ * Parses an Angular template file/content and returns an array of the root nodes of the file.
+ *
+ * @param host
+ * @param filePath
+ * @param encoding
+ */
+export function parseFile(host: Tree, filePath: string, encoding = 'utf8') {
+    return new HtmlParser().parse(host.read(filePath).toString(encoding), filePath).rootNodes;
+}
+
+export function findElementNodes(root: Node[], tag: string | string[]): Node[] {
+    const tags = new Set(Array.isArray(tag) ? tag : [tag]);
+    return flatten(Array.isArray(root) ? root : [root])
+        .filter((node: Element) => tags.has(node.name));
+}
+
+export function getSourceOffset(element: Element): SourceOffset {
+    const { startSourceSpan, endSourceSpan } = element;
+    return {
+        startTag: { start: startSourceSpan.start.offset, end: startSourceSpan.end.offset },
+        endTag: { start: endSourceSpan.start.offset, end: endSourceSpan.end.offset },
+        file: {
+            content: startSourceSpan.start.file.content,
+            url: startSourceSpan.start.file.url
+        }
+    };
+}
+
+export function generateFileChange(start: TagOffset, content: string): FileChange {
+    return [start.end, content, content.length];
+}
+
+function isElement(node: Node | Element): node is Element {
+    return (node as Element).children !== undefined;
+}
+
+/**
+ * Given an array of `Node` objects, flattens the ast tree to a single array.
+ * De facto only `Element` type objects have children.
+ *
+ * @param list
+ */
+export function flatten(list: Node[]) {
+    let node: Node;
+    let r: Node[] = [];
+
+    for (let i = 0; i < list.length; i++) {
+        node = list[i];
+        r.push(node);
+
+        if (isElement(node)) {
+            r = r.concat(flatten(node.children));
+        }
+    }
+    return r;
+}
+
+/**
+ * https://github.com/angular/angular/blob/master/packages/compiler/test/ml_parser/util/util.ts
+ *
+ * May be useful for validating the output of our own migrations,
+ */
+class SerializerVisitor implements Visitor {
+
+    visitElement(element: Element, context: any): any {
+        if (getHtmlTagDefinition(element.name).isVoid) {
+            return `<${element.name}${this._visitAll(element.attrs, ' ')}/>`;
+        }
+
+        return `<${element.name}${this._visitAll(element.attrs, ' ')}>${this._visitAll(element.children)}</${element.name}>`;
+    }
+
+    visitAttribute(attribute: Attribute, context: any): any {
+        return `${attribute.name}="${attribute.value}"`;
+    }
+
+    visitText(text: Text, context: any): any {
+        return text.value;
+    }
+
+    visitComment(comment: Comment, context: any): any {
+        return `<!--${comment.value}-->`;
+    }
+
+    visitExpansion(expansion: Expansion, context: any): any {
+        return `{${expansion.switchValue}, ${expansion.type},${this._visitAll(expansion.cases)}}`;
+    }
+
+    visitExpansionCase(expansionCase: ExpansionCase, context: any): any {
+        return ` ${expansionCase.value} {${this._visitAll(expansionCase.expression)}}`;
+    }
+
+    private _visitAll(nodes: Node[], join: string = ''): string {
+        if (nodes.length === 0) {
+            return '';
+        }
+        return join + nodes.map(a => a.visit(this, null)).join(join);
+    }
+}
+
+
+export function serializeNodes(nodes: Node[]): string[] {
+    return nodes.map(node => node.visit(new SerializerVisitor(), null));
 }

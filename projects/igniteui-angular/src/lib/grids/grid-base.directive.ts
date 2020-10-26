@@ -150,6 +150,7 @@ import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/gri
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let FAKE_ROW_ID = -1;
 
@@ -577,6 +578,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the column hiding UI is enabled.
+     *
+     * @deprecated
+     *
      * @remarks
      * By default it is disabled (false). In order for the UI to work, you need to enable the toolbar as shown in the example below.
      * @example
@@ -584,18 +588,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [data]="Data" [autoGenerate]="true" [showToolbar]="true" [columnHiding]="true"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`columnHiding` is deprecated.')
     @Input()
     get columnHiding() {
         return this._columnHiding;
     }
 
     set columnHiding(value) {
-        if (this._columnHiding !== value) {
-            this._columnHiding = value;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._columnHiding = value;
     }
 
     /**
@@ -878,11 +878,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the title to be displayed in the built-in column hiding UI.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`columnHidingTitle` is deprecated')
     @Input()
     public columnHidingTitle = '';
 
@@ -910,32 +914,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [columnPinning]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`columnPinning` is deprecated')
     @Input()
     get columnPinning() {
         return this._columnPinning;
     }
     set columnPinning(value) {
-        if (this._columnPinning !== value) {
-            this._columnPinning = value;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._columnPinning = value;
     }
 
     /**
      * Gets/Sets the title to be displayed in the UI of the column pinning.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [columnPinning]="'true" [columnPinningTitle]="'Column Hiding'" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`columnPinningTitle` is deprecated')
     @Input()
     public columnPinningTitle = '';
 
@@ -1737,24 +1743,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
-     * Returns the template which will be used by the toolbar to show custom content.
-     * @example
-     * ```typescript
-     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
-     * ```
-     */
-    // public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
-    //     return this.toolbarCustomContentTemplates.first;
-    // }
-
-    // /**
-    //  * @hidden
-    //  * @internal
-    //  */
-    // @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
-    // public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
-
-    /**
      * @hidden
      * @internal
      */
@@ -2181,6 +2169,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the text to be displayed inside the toggle button.
+     *
+     * @deprecated
+     *
      * @remarks
      * Used for the built-in column hiding UI of the`IgxColumnComponent`.
      * @example
@@ -2188,7 +2179,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`hiddenColumnsText` is deprecated')
     @Input()
     get hiddenColumnsText() {
         return this._hiddenColumnsText;
@@ -2201,6 +2192,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the text to be displayed inside the toggle button.
+     *
+     * @deprecated
+     *
      * @remarks
      * Used for the built-in column pinning UI of the`IgxColumnComponent`.
      * @example
@@ -2208,7 +2202,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`pinnedColumnsText` is deprecated')
     @Input()
     get pinnedColumnsText() {
         return this._pinnedColumnsText;
@@ -2247,168 +2241,143 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._currentRowState;
     }
 
-    // /**
-    //  * Provides access to the `IgxToolbarComponent`.
-    //  * @example
-    //  * ```typescript
-    //  * const gridToolbar = this.grid.toolbar;
-    //  * ```
-    //  */
-    // @ViewChild('toolbar', { read: IgxGridToolbarComponent })
-    // public toolbar: IgxGridToolbarComponent = null;
-
-    // @ViewChild('toolbar', { read: ElementRef })
-    // private toolbarHtml: ElementRef = null;
+    /** @hidden @internal */
     @ContentChildren(IgxGridToolbarComponent)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
 
     /**
      * Gets/Sets whether the toolbar is shown.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`showToolbar` is deprecated')
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;
     }
     public set showToolbar(newValue: boolean) {
-        if (this._showToolbar !== newValue) {
-            this._showToolbar = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._showToolbar = newValue;
     }
 
     /**
      * Gets/Sets the toolbar's title.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`toolbarTitle` is deprecated')
     @Input()
     public get toolbarTitle(): string {
         return this._toolbarTitle;
     }
 
     public set toolbarTitle(newValue: string) {
-        if (this._toolbarTitle !== newValue) {
-            this._toolbarTitle = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._toolbarTitle = newValue;
     }
 
     /**
      * Gets/Sets whether exporting to MS Excel is enabled or disabled.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportExcel]="true"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`exportExcel` is deprecated')
     @Input()
     public get exportExcel(): boolean {
         return this.getExportExcel();
     }
 
     public set exportExcel(newValue: boolean) {
-        if (this._exportExcel !== newValue) {
-            this._exportExcel = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._exportExcel = newValue;
     }
 
     /**
      * Gets/Sets whether the option for exporting to CSV is enabled or disabled.
+     *
+     * @deprecated
+     *
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportCsv]="true"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`exportCsv` is deprecated')
     @Input()
     public get exportCsv(): boolean {
         return this.getExportCsv();
     }
     public set exportCsv(newValue: boolean) {
-        if (this._exportCsv !== newValue) {
-            this._exportCsv = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._exportCsv = newValue;
     }
 
     /**
      * Gets/Sets the textual content for the main export button.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`exportText` is deprecated')
     @Input()
     public get exportText(): string {
         return this._exportText;
     }
 
     public set exportText(newValue: string) {
-        if (this._exportText !== newValue) {
-            this._exportText = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._exportText = newValue;
     }
 
     /**
      * Gets/Sets the textual content for the MS Excel export button.
+     *
+     * @deprecated
+     *
      * ```html
      * <igx-grid [exportExcelText]="'My Excel Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`exportExcelText` is deprecated')
     @Input()
     public get exportExcelText(): string {
         return this._exportExcelText;
     }
     public set exportExcelText(newValue: string) {
-        if (this._exportExcelText !== newValue) {
-            this._exportExcelText = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._exportExcelText = newValue;
     }
 
     /**
      * Gets/Sets the textual content for the CSV export button.
+     *
+     * @deprecated
+     *
      * @example
      * ```html
      * <igx-grid [exportCsvText]="'My Csv Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportExcel]="true"></igx-grid>
      * ```
      */
-    @WatchChanges()
+    @DeprecateProperty('`exportCsvText` is deprecated')
     @Input()
     public get exportCsvText(): string {
         return this._exportCsvText;
     }
     public set exportCsvText(newValue: string) {
-        if (this._exportCsvText !== newValue) {
-            this._exportCsvText = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
-        }
+        this._exportCsvText = newValue;
     }
 
     /**
