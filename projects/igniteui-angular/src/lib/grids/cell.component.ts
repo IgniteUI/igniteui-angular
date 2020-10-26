@@ -191,11 +191,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
         }
-        if (this.grid.rowEditable && this.row.addRow) {
-            return this.addRowCellTemplate;
-        }
         if (this.cellTemplate) {
             return this.cellTemplate;
+        }
+        if (this.grid.rowEditable && this.row.addRow) {
+            return this.addRowCellTemplate;
         }
         return this.defaultCellTemplate;
     }

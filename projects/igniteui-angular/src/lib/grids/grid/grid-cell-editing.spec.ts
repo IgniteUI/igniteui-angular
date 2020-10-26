@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs, IGridEditDoneEventArgs } from './public_api';
@@ -756,20 +756,23 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
 
-        it(`Should be able to cancel 'cellEdit' event`, () => {
-            spyOn(grid.cellEdit, 'emit').and.callThrough();
+        it(`Should be able to cancel 'cellEdit' event`, fakeAsync(() => {
+            const emitSpy = spyOn(grid.cellEdit, 'emit').and.callThrough();
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
-            let cell = grid.getCellByColumn(0, 'fullName');
+            const cell = grid.getCellByColumn(0, 'fullName');
             let cellArgs: IGridEditEventArgs;
             const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
+            tick(16); // trigger igxFocus rAF
+            const editInput = fixture.debugElement.query(By.css('igx-grid-cell input')).nativeElement;
 
             expect(cell.editMode).toBe(true);
-            let cellValue = cell.value;
+            expect(document.activeElement).toBe(editInput);
+            const cellValue = cell.value;
             const newValue = 'new value';
             cell.editValue = newValue;
 
@@ -790,29 +793,39 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
+            emitSpy.calls.reset();
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
             expect(cell.value).toBe(cellValue);
-            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
+            expect(document.activeElement).toBe(editInput);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
-            cell = grid.getCellByColumn(0, 'age');
-            cellValue = cell.value;
-            expect(cell.editMode).toBe(false);
+            const nextCell = grid.getCellByColumn(0, 'age');
+            expect(nextCell.editMode).toBe(false);
 
             // activate the new cell
-            cell.activate(null);
+            emitSpy.calls.reset();
+            nextCell.activate(null);
             fixture.detectChanges();
-            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(3);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
-            expect(cell.editMode).toBe(false);
-
-            cell = grid.getCellByColumn(0, 'fullName');
+            expect(nextCell.editMode).toBe(false);
             expect(cell.editMode).toBe(true);
-        });
+            expect(document.activeElement).toBe(editInput);
+
+            emitSpy.calls.reset();
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+            expect(document.activeElement).toBe(editInput);
+            expect(grid.cellEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
+        }));
 
         it(`Should be able to update other cell in 'cellEdit' event`, () => {
             grid.primaryKey = 'personNumber';
@@ -1031,7 +1044,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.crudService.cellInEditMode).toEqual(true);
         });
 
-        it('When cellEdit is canceled the new value of the cell should never be commited nor the editing should be closed', () => {
+        it('When cellEdit is canceled the new value of the cell should never be committed nor the editing should be closed', () => {
             const cell = grid.getCellByColumn(0, 'fullName');
             grid.cellEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
                 evt.cancel = true;

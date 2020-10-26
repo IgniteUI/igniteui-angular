@@ -1,3 +1,12 @@
+
+ <ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
+
+<ng-template #addTemp>
+    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='animateAdd' (animationend)='animationEndHandler()'>
+        <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
+    </div>
+</ng-template>
+<ng-template #defaultTemp>
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
 </ng-container>
@@ -52,6 +61,7 @@
         <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
     </ng-container>
 </ng-container>
+</ng-template>
 
 <ng-template #mrlPinnedTemplate let-pinnedColumns>
     <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
@@ -102,7 +112,7 @@
         [row]="this"
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [firstPinned]="col.columnLayoutChild ? null : col.isFirstPinned"
-        [style.min-height.px]="grid.rowHeight || 32"
+        [style.min-height.px]="cellHeight"
         [rowData]="rowData"
         [style.min-width]="col.width"
         [style.max-width]="col.width"
@@ -136,7 +146,7 @@
         [formatter]="col.formatter"
         [row]="this"
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
-        [style.min-height.px]="grid.rowHeight || 32"
+        [style.min-height.px]="cellHeight"
         [rowData]="rowData"
         [style.min-width]="col.width"
         [style.max-width]="col.width"
@@ -177,7 +187,7 @@
         [firstPinned]="col.columnLayoutChild ? null : col.isFirstPinned"
         [formatter]="col.formatter"
         [row]="this"
-        [style.min-height.px]="grid.rowHeight || 32"
+        [style.min-height.px]="cellHeight"
         [rowData]="rowData"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData | dataMapper:col.field:grid.pipeTrigger"
@@ -213,7 +223,7 @@
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [formatter]="col.formatter"
         [row]="this"
-        [style.min-height.px]="grid.rowHeight || 32"
+        [style.min-height.px]="cellHeight"
         [rowData]="rowData"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData | dataMapper:col.field:grid.pipeTrigger"

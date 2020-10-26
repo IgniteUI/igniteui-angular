@@ -4384,10 +4384,42 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
 
-        it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
-             // Open excel style filtering dialog.
-             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', fakeAsync(() => {
+            const column = grid.getColumnByName('AnotherField');
+            expect(column.filteringIgnoreCase).toBeTrue();
 
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
+        }));
+
+        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
+            const column = grid.getColumnByName('AnotherField');
+            column.filteringIgnoreCase = false;
+            expect(column.filteringIgnoreCase).toBeFalse();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
+            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
+            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
+            expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
+            expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
+        }));
+
+        it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
+            // Open excel style filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
              // Type string in search box.
              const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
              const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4555,6 +4587,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+
+            // Verify ESF is visible.
+            expect(excelMenu).not.toBeNull();
+
             // Type string in search box.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4577,9 +4614,42 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 .sort();
 
             // Verify that excel style filtering dialog is closed and data is filtered.
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).toBeNull();
             expect(gridCellValues.length).toEqual(4);
             expect(gridCellValues).toEqual(listItems);
+        }));
+
+        it('Should clear input if there is text and \'Escape\' is pressed.', fakeAsync(() => {
+            // Open excel style filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+
+            // Verify ESF is visible.
+            expect(excelMenu).not.toBeNull();
+
+             // Verify that the dialog is closed on pressing Escape.
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).toBeNull();
+
+            // Open excel style filtering dialog again and type in the input.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2', fix);
+
+            // Press Escape again and verify that ESF menu is still visible and the input is empty
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            fix.detectChanges();
+            flush();
+
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).not.toBeNull();
+            expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
         }));
 });
 
@@ -4758,6 +4828,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify items in search have loaded and that the loading indicator is not visible.
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Done callback should be executed only once per column', fakeAsync(() => {
+            const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(1000);
+            fix.detectChanges();
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            expect(compInstance.doneCallbackCounter).toBe(1, 'Incorrect done callback execution count');
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(1000);
+            fix.detectChanges();
+            expect(compInstance.doneCallbackCounter).toBe(2, 'Incorrect done callback execution count');
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
