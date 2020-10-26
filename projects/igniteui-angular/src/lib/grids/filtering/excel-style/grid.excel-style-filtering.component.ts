@@ -469,8 +469,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
             const columnValues = (this.column.dataType === DataType.Date) ?
-                // TODO
-                colVals.map(val => val ? val.toDateString() : val) : colVals;
+                colVals.map(value => {
+                    const label = this.getFilterItemLabel(value);
+                    return { label, value };
+                }) : colVals;
 
             this.renderValues(columnValues);
             this.loadingEnd.emit();
