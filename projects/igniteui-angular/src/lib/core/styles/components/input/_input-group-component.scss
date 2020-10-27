@@ -58,6 +58,10 @@
         }
     }
 
+    @include e(clear-icon) {
+        @extend %form-group-clear-icon !optional;
+    }
+
     @include e(upload-button) {
         @extend %form-group-upload-button !optional;
     }

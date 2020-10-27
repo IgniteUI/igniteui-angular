@@ -1035,6 +1035,27 @@
         margin-bottom: rem(10px);
     }
 
+    %form-group-clear-icon {
+        &:focus {
+            border-radius: 4px;
+            background-color: igx-color($palette, 'primary', 500);
+            color: igx-contrast-color($palette, 'primary', 500);
+
+            @if $variant == 'material' {
+                background-color: igx-color($palette, 'secondary', 500);
+                color: igx-contrast-color($palette, 'secondary', 500);
+            }
+
+            @if $variant == 'fluent' {
+                border-radius: 0;
+            }
+
+            @if $variant == 'bootstrap' {
+                border-radius: 0;
+            }
+        }
+    }
+
     %chrome-autofill-fix {
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
