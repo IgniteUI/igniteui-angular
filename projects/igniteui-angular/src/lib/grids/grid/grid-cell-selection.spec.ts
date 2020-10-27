@@ -1295,6 +1295,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
+            await wait(50);
+            fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 4, 4, 2, 5);
