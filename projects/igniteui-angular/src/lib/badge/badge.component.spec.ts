@@ -32,8 +32,8 @@ describe('Badge', () => {
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
 
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle--error'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--error'))).toBeTruthy();
 
         expect(badge.value).toMatch('22');
         expect(badge.type).toMatch('error');
@@ -63,9 +63,9 @@ describe('Badge', () => {
         expect(badge.value).toMatch('');
         expect(badge.icon).toBeFalsy();
 
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle--default'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle--icon'))).toBeFalsy();
+        expect(fixture.debugElement.query(By.css('.igx-badge'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--default'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--icon'))).toBeFalsy();
     });
 
     it('Initializes badge with icon', () => {
@@ -77,8 +77,8 @@ describe('Badge', () => {
         expect(badge.type === IgxBadgeType.INFO).toBeTruthy();
         expect(badge.value === '').toBeTruthy();
 
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('.igx-badge__circle--info'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge'))).toBeTruthy();
+        expect(fixture.debugElement.query(By.css('.igx-badge--info'))).toBeTruthy();
     });
 
     it('Initializes badge with icon ARIA', () => {
@@ -89,7 +89,7 @@ describe('Badge', () => {
         const expectedDescription = `${badge.type} type badge with icon type ${badge.icon}`;
         expect(badge.roleDescription).toMatch(expectedDescription);
 
-        const container = fixture.nativeElement.querySelectorAll('.igx-badge__circle--default')[0];
+        const container = fixture.nativeElement.querySelectorAll('.igx-badge--default')[0];
         expect(container.getAttribute('aria-roledescription')).toMatch(expectedDescription);
     });
 });
