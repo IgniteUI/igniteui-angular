@@ -998,6 +998,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     public clearFilter() {
         this.filteringService.clearFilter(this.column.field);
+        this.excelStyleSearch.clearInput();
         this.selectAllFilterItems();
     }
 
