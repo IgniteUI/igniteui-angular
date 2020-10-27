@@ -2,7 +2,23 @@
 
 # Current Milestone
 
-## Milestone 13 (Due by October, 2020)
+## Milestone 14 (Due by November, 2020)
+
+1. Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
+2. Expose an event that indicates that the Grid is fully loaded [#7924](https://github.com/IgniteUI/igniteui-angular/issues/7924)
+3. Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
+4. Option to select columns instead of hide columns [#6858](https://github.com/IgniteUI/igniteui-angular/issues/6858)
+5. Calendar ARIA [#6272](https://github.com/IgniteUI/igniteui-angular/issues/6272)
+6. IgxInput directive to style file type input [#6544](https://github.com/IgniteUI/igniteui-angular/issues/6544)
+
+## Going down the road
+
+1. Tile Manager
+2. Visual Cell merging
+3. RTL Support across Ignite UI for Angular components
+# Previous Milestones
+
+## Milestone 13 (Released October 20th, 2020)
 
 1. Move PositionSettings to OverlaySettings [#7807](https://github.com/IgniteUI/igniteui-angular/issues/7807)
 2. Native add row [#5946](https://github.com/IgniteUI/igniteui-angular/issues/5946)
@@ -27,14 +43,7 @@
 21. Enhance behavior of the Select All checkbox in Excel Style Filtering [#6617](https://github.com/IgniteUI/igniteui-angular/issues/6617)
 22. Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
 
-## Going down the road
-
-1. Tile Manager
-2. Visual Cell merging
-3. RTL Support across Ignite UI for Angular components
-# Previous Milestones 
-
-## Milestone 12 (Due by August 17th, 2020)
+## Milestone 12 (Released August 17th, 2020)
 
 1. **[DONE]** igx-grid improve IGridEditEventArgs [#4965](https://github.com/IgniteUI/igniteui-angular/issues/4965)
 2. **[DONE]** igxCombo has to include caseSensitive property in filter search [#7282](https://github.com/IgniteUI/igniteui-angular/issues/7282)
