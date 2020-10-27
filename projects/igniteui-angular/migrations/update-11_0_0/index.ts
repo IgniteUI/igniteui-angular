@@ -40,7 +40,7 @@ export default function (): Rule {
         for (let [path, change] of changes.entries()) {
 
             let buffer = host.read(path).toString();
-            change = change.sort((c, c1) => c[0] - c1[0]).reverse();
+            change = change.sort((c, c1) => c.position - c1.position).reverse();
 
             for (const { position, text } of change) {
                 buffer = `${buffer.substring(0, position)}${text}${buffer.substring(position)}`;
