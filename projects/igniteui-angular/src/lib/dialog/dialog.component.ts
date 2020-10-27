@@ -58,6 +58,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
+
+    
     @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
@@ -316,6 +318,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     @Output()
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
+    /**
+     * @hidden
+     */
+    @Output() public isOpenChange = new EventEmitter<boolean>();
+
     private _positionSettings: PositionSettings = {
         openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
         closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
@@ -359,43 +366,37 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     /**
-     * Returns whether the dialog is visible to the end user.
+     * State of the dialog.
+     *
      * ```typescript
-     * @ViewChild("MyDialog")
-     * public dialog: IgxDialogComponent;
-     * ngAfterViewInit() {
-     *     let dialogOpen = this.dialog.isOpen;
-     * }
-     * ```
-     */
-
-    get isOpen() {
-        return !this.toggleRef.collapsed;
-    }
-
-
-    /**
-     * An @Input property that allows you to open the dialog declaratively.
-     * ```typescript
-     * @ViewChild("MyDialog")
-     * public dialog: IgxDialogComponent;
-     * ngAfterViewInit() {
-     *     this.dialog.opened=true;
-     * }
+     * * // get
+     * let dialogIsOpen = this.dialog.isOpen;
      * ```
      *
      * ```html
      * <!--set-->
-     * <igx-dialog [opened]='true'></igx-dialog>
+     * <igx-dialog [isOpen]='false'></igx-dialog>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <!--set-->
+     * <igx-dialog [(isOpen)]='model.isOpen'></igx-dialog>
      * ```
      */
-    @Input()
-    public set opened(value: boolean) {
+
+    public get isOpen() {
+        return !this.toggleRef.collapsed;
+    }
+    public set isOpen(value: boolean) {
+
+        this.isOpenChange.emit(value);
         if (value) {
-            this.open(this._overlayDefaultSettings);
+            this.open();
+        } else {
+            this.close();
         }
     }
-
 
     @HostBinding('class.igx-dialog--hidden')
     get isCollapsed() {
