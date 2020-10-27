@@ -1042,8 +1042,8 @@
             color: igx-contrast-color($palette, 'primary', 500);
 
             @if $variant == 'material' {
-                background-color: igx-color($palette, 'secondary', 500);
-                color: igx-contrast-color($palette, 'secondary', 500);
+                background-color: transparent;
+                color: igx-color($palette, 'secondary', 500);
             }
 
             @if $variant == 'fluent' {
