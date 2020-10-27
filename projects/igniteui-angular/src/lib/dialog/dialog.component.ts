@@ -369,7 +369,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * State of the dialog.
      *
      * ```typescript
-     * * // get
+     *  // get
      * let dialogIsOpen = this.dialog.isOpen;
      * ```
      *
