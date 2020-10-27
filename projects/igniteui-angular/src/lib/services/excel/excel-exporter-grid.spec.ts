@@ -9,7 +9,10 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent, GridIDNameJobTitleHireDataPerformanceComponent } from '../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent,
+         GridIDNameJobTitleComponent,
+         ProductsComponent,
+         GridIDNameJobTitleHireDataPerformanceComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
