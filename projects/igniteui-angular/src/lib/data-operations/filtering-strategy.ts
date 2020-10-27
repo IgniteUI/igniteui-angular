@@ -4,7 +4,7 @@ import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
 export interface IFilteringStrategy {
-    filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree, 
+    filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridType): any[];
 }
 
