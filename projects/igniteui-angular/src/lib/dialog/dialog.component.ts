@@ -59,7 +59,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
 
-    
+
     @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
@@ -384,7 +384,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * <igx-dialog [(isOpen)]='model.isOpen'></igx-dialog>
      * ```
      */
-
+    @Input()
     public get isOpen() {
         return !this.toggleRef.collapsed;
     }
