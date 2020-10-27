@@ -701,6 +701,13 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 }
 
 @Component({
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHoursHireDatePerformance)
+})
+export class GridIDNameJobTitleHireDataPerformanceComponent extends BasicGridComponent {
+    data = SampleTestData.personJobHoursDataPerformance();
+}
+
+@Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
                 `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
