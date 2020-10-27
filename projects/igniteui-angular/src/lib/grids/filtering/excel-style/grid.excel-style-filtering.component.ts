@@ -155,7 +155,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 requestAnimationFrame(() => {
                     this.isColumnPinnable = this.column.pinnable;
                     if (!(this.cdr as ViewRef).destroyed) {
-                       this.cdr.detectChanges();
+                        this.cdr.detectChanges();
                     }
                 });
             });
@@ -528,20 +528,20 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private areExpressionsSelectable () {
         if (this.expressionsList.length === 1 &&
             (this.expressionsList[0].expression.condition.name === 'equals' ||
-             this.expressionsList[0].expression.condition.name === 'true' ||
-             this.expressionsList[0].expression.condition.name === 'false' ||
-             this.expressionsList[0].expression.condition.name === 'empty' ||
-             this.expressionsList[0].expression.condition.name === 'in')) {
+                this.expressionsList[0].expression.condition.name === 'true' ||
+                this.expressionsList[0].expression.condition.name === 'false' ||
+                this.expressionsList[0].expression.condition.name === 'empty' ||
+                this.expressionsList[0].expression.condition.name === 'in')) {
             return true;
         }
 
         const selectableExpressionsCount = this.expressionsList.filter(exp =>
             (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
             (exp.expression.condition.name === 'equals' ||
-             exp.expression.condition.name === 'true' ||
-             exp.expression.condition.name === 'false' ||
-             exp.expression.condition.name === 'empty' ||
-             exp.expression.condition.name === 'in')).length;
+                exp.expression.condition.name === 'true' ||
+                exp.expression.condition.name === 'false' ||
+                exp.expression.condition.name === 'empty' ||
+                exp.expression.condition.name === 'in')).length;
 
         return selectableExpressionsCount === this.expressionsList.length;
     }
@@ -581,7 +581,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.excelStyleSearch.isLoading = true;
         const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
 
+        const prevColumn = this.column;
         this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+            if (!this.column || this.column !== prevColumn) {
+                return;
+            }
+
             const columnValues = (this.column.dataType === DataType.Date) ?
                 colVals.map(val => val ? val.toDateString() : val) : colVals;
 
@@ -618,7 +623,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
             const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
                 .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
-                new Map);
+                    new Map);
 
             this.uniqueValues = Array.from(filteredUniqueValues.values());
         } else {

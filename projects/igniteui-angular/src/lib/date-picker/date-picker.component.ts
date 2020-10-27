@@ -392,7 +392,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         private _cdr: ChangeDetectorRef,
         private _moduleRef: NgModuleRef<any>,
         private _injector: Injector,
-        private _renderer: Renderer2) { }
+        private _renderer: Renderer2) {
+    }
+
 
     /**
      * Gets the input group template.
@@ -792,7 +794,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return this._inputGroup || this._inputGroupUserTemplate || null;
     }
 
-     /** @hidden @internal */
+    /** @hidden @internal */
     public get inputDirective(): IgxInputDirective {
         return this._inputDirective || this._inputDirectiveUserTemplates.first || null;
     }
@@ -885,7 +887,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this._inputDirectiveUserTemplates.changes.subscribe(() => {
             this.attachTemplateBlur();
-         });
+        });
         this.attachTemplateBlur();
     }
 
@@ -901,8 +903,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                     this.rawDateString = (res.target as HTMLInputElement).value;
                     this.onBlur(res, false);
                 });
-                // TODO: Refactor custom template handling.
-                // Revise blur handling when custom template is passed
+            // TODO: Refactor custom template handling.
+            // Revise blur handling when custom template is passed
         }
     }
 
@@ -1141,6 +1143,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /** @hidden @internal */
     public onInput(event) {
+        /**
+         * Fix for #8165 until refactoring (#6483).
+         * The IgxDateTimeEditor will be used to handle all inputs, i.e. this handler will be removed.
+         * It extends the IgxMaskDirective which contains logic that handles this issue.
+         */
+        if (isIE() && !this._isInEditMode && !this.inputGroup.isFocused) { return; }
         const targetValue = event.target.value;
         const cursorPosition = this._getCursorPosition();
         const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, targetValue);
