@@ -120,15 +120,6 @@ export class IgxBadgeComponent {
     public role = 'status';
 
     /**
-     * The default css class applied to the badge component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-badge__circle')
-    public styleClass = true;
-
-    /**
      * Sets/gets the the css class to use on the badge.
      *
      * @example
@@ -173,46 +164,30 @@ export class IgxBadgeComponent {
         return this.type + ' badge type without value';
     }
 
-    /**
-     * Method which makes the name of the class more descriptive.
-     * This helps the styling of the badges.
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class')
-    get setClasses() {
-        let classes = {};
-
-        switch (IgxBadgeType[this.type.toUpperCase()]) {
-            case IgxBadgeType.INFO:
-                classes = {
-                    [`${this.cssClass}__circle--info`]: true
-                };
-                break;
-            case IgxBadgeType.SUCCESS:
-                classes = {
-                    [`${this.cssClass}__circle--success`]: true
-                };
-                break;
-            case IgxBadgeType.WARNING:
-                classes = {
-                    [`${this.cssClass}__circle--warning`]: true
-                };
-                break;
-            case IgxBadgeType.ERROR:
-                classes = {
-                    [`${this.cssClass}__circle--error`]: true
-                };
-                break;
-            default:
-                classes = {
-                    [`${this.cssClass}__circle--default`]: true
-                };
-        }
-
-        return classes;
+    @HostBinding('class.igx-badge--default')
+    get defaultCSS(): boolean {
+        return true;
     }
 
+    @HostBinding('class.igx-badge--info')
+    get infoClass(): boolean {
+        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.INFO);
+    }
+
+    @HostBinding('class.igx-badge--success')
+    get successClass(): boolean {
+        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.SUCCESS);
+    }
+
+    @HostBinding('class.igx-badge--warning')
+    get warningClass(): boolean {
+        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.WARNING);
+    }
+
+    @HostBinding('class.igx-badge--error')
+    get errorClass(): boolean {
+        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.ERROR);
+    }
 }
 
 /**

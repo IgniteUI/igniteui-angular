@@ -125,6 +125,13 @@
         color: --var($theme, 'text-color');
         line-height: 1;
 
+        border-radius: --var($theme, 'border-radius');
+        box-shadow: --var($theme, 'shadow');
+        border-width: --var($theme, 'border-width');
+        border-color: --var($theme, 'border-color');
+        border-style: $border-type;
+        overflow: hidden;
+
         igx-icon {
             display: inline-flex;
             justify-content: center;
@@ -142,20 +149,11 @@
         padding: $badge-value-padding;
     }
 
-    %igx-badge--circle {
-        border-radius: --var($theme, 'border-radius');
-        box-shadow: --var($theme, 'shadow');
-        border-width: --var($theme, 'border-width');
-        border-color: --var($theme, 'border-color');
-        border-style: $border-type;
-        overflow: hidden;
-    }
-
     %igx-badge--default {
         background: --var($theme, 'background-color');
     }
 
-    %igx-circle--success {
+    %igx-badge--success {
         background: igx-color($palette, 'success');
     }
 
@@ -163,11 +161,11 @@
         background: igx-color($palette, 'info');
     }
 
-    %igx-circle--warn {
+    %igx-badge--warn {
         background: igx-color($palette, 'warn');
     }
 
-    %igx-circle--error {
+    %igx-badge--error {
         background: igx-color($palette, 'error');
     }
 
