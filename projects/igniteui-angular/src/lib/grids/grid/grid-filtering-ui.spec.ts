@@ -4587,6 +4587,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+
+            // Verify ESF is visible.
+            expect(excelMenu).not.toBeNull();
+
             // Type string in search box.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
@@ -4609,11 +4614,86 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 .sort();
 
             // Verify that excel style filtering dialog is closed and data is filtered.
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).toBeNull();
             expect(gridCellValues.length).toEqual(4);
             expect(gridCellValues).toEqual(listItems);
         }));
-});
+
+        it('Should clear input if there is text and \'Escape\' is pressed.', fakeAsync(() => {
+            // Open excel style filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+
+            // Verify ESF is visible.
+            expect(excelMenu).not.toBeNull();
+
+             // Verify that the dialog is closed on pressing Escape.
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).toBeNull();
+
+            // Open excel style filtering dialog again and type in the input.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2', fix);
+
+            // Press Escape again and verify that ESF menu is still visible and the input is empty
+            inputNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            fix.detectChanges();
+            flush();
+
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(excelMenu).not.toBeNull();
+            expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
+        }));
+
+        it('Should clear search criteria when selecting clear column filters option.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            let checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            fix.detectChanges();
+
+            checkboxes[0].click();
+            tick();
+            fix.detectChanges();
+
+            checkboxes[2].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick();
+            fix.detectChanges();
+            expect(grid.filteredData.length).toEqual(1);
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'Net', fix);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            GridFunctions.clickClearFilterInExcelStyleFiltering(fix);
+            flush();
+            expect(grid.filteredData).toBeNull();
+
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            expect(inputNativeElement.value).toBe('', 'search criteria is not cleared');
+
+            checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            const listItemsCheckboxes = checkboxes.slice(1, checkboxes.length);
+            for (const checkbox of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkbox.parentElement);
+            }
+        }));
+    });
 
     describe('Templates: ', () => {
         let fix, grid;
@@ -4763,6 +4843,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
         });
+
+        it('Should reset esf menu with templates on column change', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            flush();
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 20, fix);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
+
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            expect(inputNativeElement.value).toBe('', 'input value didn\'t reset');
+        }));
     });
 
     describe('Load values on demand', () => {
@@ -4816,6 +4913,17 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(9, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Should not execute done callback for null column', fakeAsync(() => {
+            const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+
+            expect(() => {
+                GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+                tick(2000);
+            }).not.toThrowError(/\'dataType\' of null/);
         }));
     });
 
