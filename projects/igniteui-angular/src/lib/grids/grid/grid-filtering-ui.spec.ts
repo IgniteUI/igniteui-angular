@@ -4369,6 +4369,49 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
             expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
         }));
+
+        it('Should clear search criteria when selecting clear column filters option.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            let checkboxes: any = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+
+            tick(100);
+            fix.detectChanges();
+
+            checkboxes[0].click();
+            tick();
+            fix.detectChanges();
+
+            checkboxes[2].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.filteredData.length).toEqual(1);
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'Net', fix);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+
+            GridFunctions.clickClearFilterInExcelStyleFiltering(fix);
+            fix.detectChanges();
+            flush();
+
+            expect(grid.filteredData).toBeNull();
+
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            expect(inputNativeElement.value).toBe('', 'search criteria is not cleared');
+
+            checkboxes = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix));
+            expect(checkboxes.every(ch => ch.checked)).toBeTrue();
+        }));
     });
 
     describe(null, () => {
@@ -4467,6 +4510,17 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Should not execute done callback for null column', fakeAsync(() => {
+            const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+
+            expect(() => {
+                GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+                tick(2000);
+            }).not.toThrowError(/\'dataType\' of null/);
         }));
     });
 
@@ -4616,7 +4670,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
         });
-
     });
 });
 
