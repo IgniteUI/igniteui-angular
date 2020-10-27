@@ -17,6 +17,7 @@
 /// @prop {Color} context-menu-color [null] - Sets the text color for context menus.
 /// @prop {Color} dock-background [null] - Sets the background color of the dock manager.
 /// @prop {Color} dock-text [null] - Sets the text color of the dock manager.
+/// @prop {Color} drop-shadow-background [igx-color: 'primary', rgba: .2] - Sets the drop-shadow background color.
 /// @prop {Color} floating-pane-border-color [igx-color: 'surface'] - Sets the border color for floating panes.
 /// @prop {Color} flyout-shadow-color [rgba(0, 0, 0, .08)] - Sets the flyout shadow color.
 /// @prop {Color} joystick-background [null] - Sets the background color of the joystick.
@@ -62,6 +63,10 @@ $_light-dock-manager: (
     context-menu-color: null,
     dock-background: null,
     dock-text: null,
+    drop-shadow-background: (
+        igx-color: ('primary', 500),
+        rgba: .2
+    ),
     floating-pane-border-color: (
         igx-color: 'surface',
     ),
