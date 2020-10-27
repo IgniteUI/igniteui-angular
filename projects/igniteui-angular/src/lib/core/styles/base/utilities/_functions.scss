@@ -477,17 +477,32 @@
 }
 
 @function igx-generate-series-colors($palette) {
+    @if global-variable-exists('_igx-enhanced-accessibility') {
+        @return (
+            rgb(157, 231, 114),
+            rgb(139, 91, 177),
+            rgb(109, 177, 255),
+            rgb(154, 242, 228),
+            rgb(238, 88, 121),
+            rgb(115, 86, 86),
+            rgb(247, 210, 98),
+            rgb(168, 168, 183),
+            rgb(224, 81, 169),
+            rgb(248, 161, 95),
+        );
+    }
+
     @return (
-        igx-color($palette, 'primary'),
-        igx-color($palette, 'secondary'),
-        rgb(249, 98, 50),
-        rgb(60, 189, 201),
-        rgb(220, 63, 118),
-        rgb(255, 152, 0),
-        rgb(78, 98, 207),
-        rgb(84, 194, 90),
-        rgb(121, 85, 72),
-        rgb(154, 154, 154)
+        rgb(157, 231, 114),
+        rgb(139, 91, 177),
+        rgb(109, 177, 255),
+        rgb(154, 242, 228),
+        rgb(238, 88, 121),
+        rgb(115, 86, 86),
+        rgb(247, 210, 98),
+        rgb(168, 168, 183),
+        rgb(224, 81, 169),
+        rgb(248, 161, 95),
     );
 }
 
