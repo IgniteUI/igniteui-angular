@@ -217,18 +217,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this.inputGroup.isFocused = false;
         this.updateValidityState();
     }
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     @HostListener('input')
     public onInput() {
         this.checkNativeValidity();
     }
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     @HostListener('change', ['$event'])
     public change(event: Event) {
         if (this.type === 'file') {
@@ -254,27 +248,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     public get fileNames() {
         return this._fileNames;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     public clear() {
         this.nativeElement.value = null;
         this._fileNames = this._filePlaceholder;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     public ngAfterViewInit() {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute(
             'placeholder'
@@ -317,10 +302,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         this.cdr.detectChanges();
     }
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     public ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
@@ -348,10 +330,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public get nativeElement() {
         return this.element.nativeElement;
     }
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     protected onStatusChanged() {
         // Enable/Disable control based on ngControl #7086
         if (this.disabled !== this.ngControl.disabled) {

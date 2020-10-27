@@ -22,8 +22,13 @@
 
 <ng-template #uploadButton>
     <igx-prefix *ngIf="isFileType">
-        <button igxButton="raised" (click)="uploadButtonHandler()" [displayDensity]="displayDensity"
-            [disabled]="disabled" [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }">
+        <button
+            igxButton="raised"
+            (click)="uploadButtonHandler()"
+            [displayDensity]="displayDensity"
+            [disabled]="disabled"
+            [ngClass]="{ 'igx-input-group__upload-button': isTypeLine }"
+        >
             Upload File
         </button>
     </igx-prefix>
@@ -37,11 +42,13 @@
 
 <ng-template #clear>
     <igx-suffix
-    class="igx-input-group__clear-icon"
-    *ngIf="isFileType && isFilled"
-    (click)="clearValueHandler()"
-    (keydown.Enter)="clearValueHandler()"
-    title="clear files" tabindex="0">
+        class="igx-input-group__clear-icon"
+        *ngIf="isFileType && isFilled"
+        (click)="clearValueHandler()"
+        (keydown.Enter)="clearValueHandler()"
+        title="clear files"
+        tabindex="0"
+    >
         <igx-icon>clear</igx-icon>
     </igx-suffix>
 </ng-template>
