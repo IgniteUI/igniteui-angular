@@ -477,18 +477,20 @@
 }
 
 @function igx-generate-series-colors($palette) {
-    @if global-variable-exists('_igx-enhanced-accessibility') {
+    $color-blind: if(global-variable-exists('_igx-enhanced-accessibility'), $_igx-enhanced-accessibility, false);
+
+    @if $color-blind {
         @return (
-            rgb(157, 231, 114),
-            rgb(139, 91, 177),
-            rgb(109, 177, 255),
-            rgb(154, 242, 228),
-            rgb(238, 88, 121),
+            rgb(86, 180, 233),
+            rgb(0, 158, 115),
+            rgb(240, 228, 68),
+            rgb(213, 94, 0),
+            rgb(214, 0, 254),
+            rgb(0, 73, 159),
+            rgb(230, 159, 0),
+            rgb(0, 0, 0),
+            rgb(132, 240, 223),
             rgb(115, 86, 86),
-            rgb(247, 210, 98),
-            rgb(168, 168, 183),
-            rgb(224, 81, 169),
-            rgb(248, 161, 95),
         );
     }
 
