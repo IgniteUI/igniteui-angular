@@ -141,9 +141,13 @@ export interface SourceOffset {
         content: string;
         url: string;
     };
+    node?: Element;
 }
 
-export type FileChange = [number, string, number];
+export interface FileChange {
+    position: number;
+    text: string;
+}
 
 /**
  * Parses an Angular template file/content and returns an array of the root nodes of the file.
@@ -162,6 +166,16 @@ export function findElementNodes(root: Node[], tag: string | string[]): Node[] {
         .filter((node: Element) => tags.has(node.name));
 }
 
+export function hasAttribute(root: Element, attribute: string | string[]) {
+    const attrs = Array.isArray(attribute) ? attribute : [attribute];
+    return !!root.attrs.find(a => attrs.includes(a.name));
+}
+
+export function getAttribute(root: Element, attribute: string | string[]) {
+    const attrs = Array.isArray(attribute) ? attribute : [attribute];
+    return root.attrs.filter(a => attrs.includes(a.name));
+}
+
 export function getSourceOffset(element: Element): SourceOffset {
     const { startSourceSpan, endSourceSpan } = element;
     return {
@@ -170,12 +184,13 @@ export function getSourceOffset(element: Element): SourceOffset {
         file: {
             content: startSourceSpan.start.file.content,
             url: startSourceSpan.start.file.url
-        }
+        },
+        node: element
     };
 }
 
 export function generateFileChange(start: TagOffset, content: string): FileChange {
-    return [start.end, content, content.length];
+    return { position: start.end, text: content };
 }
 
 function isElement(node: Node | Element): node is Element {

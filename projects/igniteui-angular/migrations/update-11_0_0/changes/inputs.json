@@ -4,9 +4,6 @@
         {
             "name": "showToolbar",
             "remove": "true",
-            "conditions": [
-                "migrate_toolbar"
-            ],
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -15,9 +12,6 @@
         {
             "name": "showToolbar",
             "remove": "true",
-            "conditions": [
-                "migrate_toolbar"
-            ],
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -26,9 +20,6 @@
         {
             "name": "showToolbar",
             "remove": "true",
-            "conditions": [
-                "migrate_toolbar"
-            ],
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
