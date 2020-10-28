@@ -248,10 +248,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
      * @remarks
-     * By default it is 2000ms.
+     * By default it is 6000ms.
      */
     @Input()
-    public snackbarDisplayTime = 2000;
+    public snackbarDisplayTime = 6000;
 
     /**
      * Gets/Sets whether to autogenerate the columns.
