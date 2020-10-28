@@ -45,12 +45,10 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: object, fieldName: string, grid: GridType): any {
+    protected getFieldValue(rec: object, fieldName: string, isDate: boolean = false): any {
         const hierarchicalRecord = <ITreeGridRecord>rec;
         let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-        if (grid && grid.getColumnByName(fieldName)?.dataType === 'date') {
-            value = parseDate(value);
-        }
+        value = value && isDate ? parseDate(value) : value;
         return value;
     }
 }

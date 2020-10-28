@@ -2,6 +2,7 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
+import { DataType } from './data-util';
 
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
@@ -26,11 +27,11 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree): any[];
 
-    protected abstract getFieldValue(rec: object, fieldName: string, grid?: GridType): any;
+    protected abstract getFieldValue(rec: object, fieldName: string, isDate?: boolean): any;
 
-    public findMatchByExpression(rec: object, expr: IFilteringExpression, grid?: GridType): boolean {
+    public findMatchByExpression(rec: object, expr: IFilteringExpression, isDate?: boolean): boolean {
         const cond = expr.condition;
-        const val = this.getFieldValue(rec, expr.fieldName, grid);
+        const val = this.getFieldValue(rec, expr.fieldName, isDate);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
@@ -63,7 +64,9 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 return true;
             } else {
                 const expression = expressions as IFilteringExpression;
-                return this.findMatchByExpression(rec, expression, grid);
+                const isDate = grid && grid.getColumnByName(expression.fieldName) ?
+                    grid.getColumnByName(expression.fieldName).dataType === DataType.Date : false;
+                return this.findMatchByExpression(rec, expression, isDate);
             }
         }
 
@@ -98,11 +101,9 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: object, fieldName: string, grid?: GridType): any {
+    protected getFieldValue(rec: object, fieldName: string, isDate: boolean = false): any {
         let value = resolveNestedPath(rec, fieldName);
-        if (grid && grid.getColumnByName(fieldName)?.dataType === 'date') {
-            value = value ? parseDate(value) : value;
-        }
+        value = value && isDate ? parseDate(value) : value;
         return value;
     }
 }

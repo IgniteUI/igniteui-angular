@@ -7,14 +7,15 @@ import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
+import { DataType } from './data-util';
 
 export interface ISortingStrategy {
     sort: (data: any[],
            fieldName: string,
            dir: SortingDirection,
            ignoreCase: boolean,
-           valueResolver: (obj: any, key: string, grid?: GridType) => any,
-           grid?: GridType) => any[];
+           valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+           isDate?: boolean) => any[];
 }
 
 export class DefaultSortingStrategy implements ISortingStrategy {
@@ -30,12 +31,12 @@ export class DefaultSortingStrategy implements ISortingStrategy {
                 fieldName: string,
                 dir: SortingDirection,
                 ignoreCase: boolean,
-                valueResolver: (obj: any, key: string, grid?: GridType) => any,
-                grid?: GridType) {
+                valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+                isDate?: boolean) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => {
-            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, grid);
+            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate);
         };
         return this.arraySort(data, cmpFunc);
     }
@@ -59,10 +60,10 @@ export class DefaultSortingStrategy implements ISortingStrategy {
                              key: string,
                              reverse: number,
                              ignoreCase: boolean,
-                             valueResolver: (obj: any, key: string, grid?: GridType) => any,
-                             grid?: GridType) {
-        let a = valueResolver(obj1, key, grid);
-        let b = valueResolver(obj2, key, grid);
+                             valueResolver: (obj: any, key: string, isDate?: boolean) => any,
+                             isDate: boolean = false) {
+        let a = valueResolver(obj1, key, isDate);
+        let b = valueResolver(obj2, key, isDate);
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
@@ -101,18 +102,18 @@ export class IgxSorting implements IGridSortingStrategy {
     private groupedRecordsByExpression(data: any[],
             index: number,
             expression: IGroupingExpression,
-            grid?: GridType): any[] {
+            isDate: boolean = false): any[] {
         let i;
         let groupval;
         const res = [];
         const key = expression.fieldName;
         const len = data.length;
         res.push(data[index]);
-        groupval = this.getFieldValue(data[index], key, grid);
+        groupval = this.getFieldValue(data[index], key, isDate);
         index++;
         const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (i = index; i < len; i++) {
-            if (comparer(this.getFieldValue(data[i], key, grid), groupval) === 0) {
+            if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
                 res.push(data[i]);
             } else {
                 break;
@@ -123,7 +124,7 @@ export class IgxSorting implements IGridSortingStrategy {
     private sortDataRecursive<T>(data: T[],
                                  expressions: ISortingExpression[],
                                  expressionIndex: number = 0,
-                                 grid?: GridType): T[] {
+                                 grid: GridType): T[] {
         let i;
         let j;
         let expr: ISortingExpression;
@@ -139,13 +140,15 @@ export class IgxSorting implements IGridSortingStrategy {
         if (!expr.strategy) {
             expr.strategy = DefaultSortingStrategy.instance();
         }
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, grid);
+        const isDate = grid && grid.getColumnByName(expr.fieldName) ?
+            grid.getColumnByName(expr.fieldName).dataType === DataType.Date : false;
+        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate);
         if (expressionIndex === exprsLen - 1) {
             return data;
         }
         // in case of multiple sorting
         for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, grid);
+            gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
             gbDataLen = gbData.length;
             if (gbDataLen > 1) {
                 gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
@@ -165,13 +168,14 @@ export class IgxSorting implements IGridSortingStrategy {
         let i = 0;
         let result = [];
         while (i < data.length) {
-            const group = this.groupedRecordsByExpression(data, i, expressions[level], grid);
             const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
+            const isDate = column?.dataType === DataType.Date;
+            const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate);
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
                 level,
                 records: cloneArray(group),
-                value: this.getFieldValue(group[0], expressions[level].fieldName, grid),
+                value: this.getFieldValue(group[0], expressions[level].fieldName, isDate),
                 groupParent: parent,
                 groups: [],
                 height: grid ? grid.renderedRowHeight : null,
@@ -211,22 +215,14 @@ export class IgxSorting implements IGridSortingStrategy {
         }
         return result;
     }
-    protected getFieldValue(obj: any, key: string, grid?: GridType): any {
-        let value = resolveNestedPath(obj, key);
-        if (grid && grid.getColumnByName(key)?.dataType === 'date') {
-            value = parseDate(value);
-        }
-        return value;
+    protected getFieldValue(obj: any, key: string, isDate: boolean = false): any {
+        return isDate ? parseDate(resolveNestedPath(obj, key)) : resolveNestedPath(obj, key);
     }
 }
 
 export class IgxDataRecordSorting extends IgxSorting {
 
-    protected getFieldValue(obj: any, key: string, grid?: GridType): any {
-        let value = resolveNestedPath(obj.data, key);
-        if (grid && grid.getColumnByName(key)?.dataType === 'date') {
-            value = parseDate(value);
-        }
-        return value;
+    protected getFieldValue(obj: any, key: string, isDate: boolean = false): any {
+        return isDate ? parseDate(resolveNestedPath(obj.data, key)) : resolveNestedPath(obj.data, key);
     }
 }
