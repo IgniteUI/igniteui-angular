@@ -1,7 +1,7 @@
 import { Element } from '@angular/compiler';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { FileChange, findElementNodes, generateFileChange, getAttribute, getSourceOffset, hasAttribute, parseFile } from '../common/util';
+import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile, serializeNodes } from '../common/util';
 
 const version = '11.0.0';
 
@@ -17,10 +17,37 @@ export default function (): Rule {
         const prop = ['[showToolbar]', 'showToolbar'];
         const changes = new Map<string, FileChange[]>();
 
+        const applyChanges = () => {
+            for (const [path, change] of changes.entries()) {
+                let buffer = host.read(path).toString();
+
+                change.sort((c, c1) => c.position - c1.position)
+                    .reverse()
+                    .forEach(c => buffer = c.apply(buffer));
+
+                host.overwrite(path, buffer);
+            }
+        };
+
+        const addChange = (path: string, change: FileChange) => {
+            changes.has(path) ? changes.get(path).push(change) : changes.set(path, [change]);
+        };
+
 
         const makeNgIf = (name: string, value: string) => {
             return name.startsWith('[') && value !== 'true';
         };
+
+        const moveTemplateIfAny = (grid: Element) => {
+            const ngTemplates = findElementNodes([grid], ['ng-template']);
+            const toolbarTemplate = ngTemplates.filter(template => hasAttribute(template as Element, 'igxToolbarCustomContent'))[0];
+            if (toolbarTemplate) {
+                return `\n${serializeNodes((toolbarTemplate as Element).children).join('')}\n`;
+            }
+            return '';
+        };
+
+        // General migration
 
         // Prepare the file changes
         for (const path of update.templateFiles) {
@@ -30,24 +57,29 @@ export default function (): Rule {
                 .forEach(offset => {
                     const { startTag, file, node } = offset;
                     const { name, value } = getAttribute(node, prop)[0];
-                    const text = `\n<igx-grid-toolbar ${makeNgIf(name, value) ? `*ngIf="${value}"` : ''}></igx-grid-toolbar>\n`;
-                    const change = generateFileChange(startTag, text);
-                    changes.has(file.url) ? changes.get(file.url).push(change) : changes.set(file.url, [change]);
+                    const text = `\n<igx-grid-toolbar${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node)}</igx-grid-toolbar>\n`;
+                    addChange(file.url, new FileChange(startTag.end, text));
                 });
         }
 
-        // Apply them
-        for (let [path, change] of changes.entries()) {
+        applyChanges();
+        changes.clear();
 
-            let buffer = host.read(path).toString();
-            change = change.sort((c, c1) => c.position - c1.position).reverse();
-
-            for (const { position, text } of change) {
-                buffer = `${buffer.substring(0, position)}${text}${buffer.substring(position)}`;
-            }
-
-            host.overwrite(path, buffer);
+        // Remove toolbar templates after migration
+        for (const path of update.templateFiles) {
+            findElementNodes(parseFile(host, path), TAGS)
+                .filter(grid => hasAttribute(grid as Element, prop))
+                .map(grid => findElementNodes([grid], ['ng-template']))
+                .reduce((prev, curr) => prev.concat(curr), [])
+                .filter(template => hasAttribute(template as Element, 'igxToolbarCustomContent'))
+                .forEach(node => {
+                    const { startTag, endTag, file } = getSourceOffset(node as Element);
+                    const replaceText = file.content.substring(startTag.start, endTag.end);
+                    addChange(file.url, new FileChange(startTag.start, '', replaceText, 'replace'));
+                });
         }
+
+        applyChanges();
 
         // Remove the input properties
         update.applyChanges();

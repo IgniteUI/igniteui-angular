@@ -15,6 +15,7 @@ import {
     Text,
     Visitor
 } from '@angular/compiler';
+import { replaceMatch } from './tsUtils';
 
 const configPaths = ['/.angular.json', '/angular.json'];
 
@@ -144,9 +145,22 @@ export interface SourceOffset {
     node?: Element;
 }
 
-export interface FileChange {
-    position: number;
-    text: string;
+
+export class FileChange {
+
+    constructor(
+        public position = 0,
+        public text = '',
+        public replaceText = '',
+        public type: 'insert' | 'replace' = 'insert'
+        ) {}
+
+    apply(content: string) {
+        if (this.type === 'insert') {
+            return `${content.substring(0, this.position)}${this.text}${content.substring(this.position)}`;
+        }
+        return replaceMatch(content, this.replaceText, this.text, this.position);
+    }
 }
 
 /**
@@ -189,9 +203,6 @@ export function getSourceOffset(element: Element): SourceOffset {
     };
 }
 
-export function generateFileChange(start: TagOffset, content: string): FileChange {
-    return { position: start.end, text: content };
-}
 
 function isElement(node: Node | Element): node is Element {
     return (node as Element).children !== undefined;
