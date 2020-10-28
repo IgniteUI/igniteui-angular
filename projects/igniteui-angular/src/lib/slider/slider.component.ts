@@ -118,11 +118,11 @@ export class IgxSliderComponent implements
     @ViewChildren(IgxThumbLabelComponent)
     private labelRefs: QueryList<IgxThumbLabelComponent> = new QueryList<IgxThumbLabelComponent>();
 
-    public get thumbFrom(): IgxSliderThumbComponent {
+    private get thumbFrom(): IgxSliderThumbComponent {
         return this.thumbs.find(thumb => thumb.type === SliderHandle.FROM);
     }
 
-    public get thumbTo(): IgxSliderThumbComponent {
+    private get thumbTo(): IgxSliderThumbComponent {
         return this.thumbs.find(thumb => thumb.type === SliderHandle.TO);
     }
 
