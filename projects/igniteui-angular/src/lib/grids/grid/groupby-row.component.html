@@ -1,7 +1,12 @@
 <ng-container #defaultGroupRow>
 
+    <div class="igx-grid__drag-indicator">
+        <igx-icon [style.visibility]="'hidden'">drag_indicator</igx-icon>
+    </div>
+
     <ng-container *ngIf="showRowSelectors">
-        <div class="igx-grid__cbx-selection" style="background: none;" (pointerdown)="$event.preventDefault()" (click)="onGroupSelectorClick($event)">
+        <div class="igx-grid__cbx-selection" style="background: none;" (pointerdown)="$event.preventDefault()"
+            (click)="onGroupSelectorClick($event)">
             <ng-template #groupByRowSelector *ngTemplateOutlet="
                 this.grid.groupByRowSelectorTemplate ? this.grid.groupByRowSelectorTemplate : groupByRowSelectorBaseTemplate;
                 context: { $implicit: {
@@ -9,7 +14,7 @@
                     totalCount: this.groupRow.records.length,
                     groupRow: this.groupRow }}">
             </ng-template>
-         </div>
+        </div>
     </ng-container>
 
     <div (click)="toggle()" class="igx-grid__grouping-indicator">
@@ -18,7 +23,8 @@
     </div>
 
     <div class="igx-grid__group-content" #groupContent>
-        <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+        <ng-container
+            *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
         </ng-container>
     </div>
 
@@ -35,12 +41,12 @@
         <div class="igx-group-label">
             <igx-icon fontSet="material" class="igx-group-label__icon">group_work</igx-icon>
             <span class="igx-group-label__column-name">
-            {{ groupRow.column && groupRow.column.header ?
+                {{ groupRow.column && groupRow.column.header ?
                 groupRow.column.header :
                 (groupRow.expression ? groupRow.expression.fieldName : '') }}:
             </span>
 
-            <ng-container *ngIf="dataType === 'boolean' || dataType === 'string'; else default" >
+            <ng-container *ngIf="dataType === 'boolean' || dataType === 'string'; else default">
                 <span class="igx-group-label__text">{{ groupRow.value }}</span>
             </ng-container>
             <ng-template #default>
@@ -52,23 +58,17 @@
                 </ng-container>
             </ng-template>
 
-            <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'></igx-badge>
+            <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'>
+            </igx-badge>
         </div>
     </ng-template>
     <ng-template #groupByRowSelectorBaseTemplate let-context>
         <div class="igx-grid__cbx-padding">
-            <igx-checkbox
-                [tabindex]="-1"
-                [readonly]="true"
-                [checked]="areAllRowsInTheGroupSelected"
-                disableRipple="true"
-                [indeterminate]="groupByRowCheckboxIndeterminateState"
-                [disabled]="this.grid.rowSelection === 'single'"
-                [aria-label]="groupByRowSelectorBaseAriaLabel"
+            <igx-checkbox [tabindex]="-1" [readonly]="true" [checked]="areAllRowsInTheGroupSelected"
+                disableRipple="true" [indeterminate]="groupByRowCheckboxIndeterminateState"
+                [disabled]="this.grid.rowSelection === 'single'" [aria-label]="groupByRowSelectorBaseAriaLabel"
                 #groupByRowCheckbox>
             </igx-checkbox>
         </div>
     </ng-template>
 </ng-container>
-
-

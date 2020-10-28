@@ -1,27 +1,35 @@
 <div class="wrapper">
-    <igx-switch [(ngModel)]="hideGroupedColumns" (change)="toggleGroupedVisibility($event)">Toggle Hiding Of Grouped Columns</igx-switch>
+    <igx-switch [(ngModel)]="hideGroupedColumns" (change)="toggleGroupedVisibility($event)">Toggle Hiding Of Grouped
+        Columns</igx-switch>
     <br />
     <igx-switch (change)="toggleSummaryPosition($event)">Toggle Summary Position</igx-switch>
     <br />
-    <button igxButton="raised" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse"> {{ grid1.showSummaryOnCollapse }}</button> - Show summary on collapse
+    <button igxButton="raised" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse">
+        {{ grid1.showSummaryOnCollapse }}</button> - Show summary on collapse
     <br />
-    <button igxButton="raised" (click)="grid1.hideRowSelectors ? grid1.hideRowSelectors = false : grid1.hideRowSelectors = true">
+    <button igxButton="raised"
+        (click)="grid1.hideRowSelectors ? grid1.hideRowSelectors = false : grid1.hideRowSelectors = true">
         {{ grid1.hideRowSelectors ? 'Show' : 'Hide' }} row selectors
     </button>
     <div class="separator"></div>
-    <button igxButton="raised" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
-    <igx-drop-down #dropDownRowSelection (onSelection)="onRowSelection($event)"  displayDensity="comfortable">
+    <button igxButton="raised" [igxToggleAction]="dropDownRowSelection"
+        [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection:
+        {{grid1.rowSelection}}</button>
+    <igx-drop-down #dropDownRowSelection (onSelection)="onRowSelection($event)" displayDensity="comfortable">
         <igx-drop-down-item *ngFor="let item of selectionModes">
-                {{ item }}
+            {{ item }}
         </igx-drop-down-item>
     </igx-drop-down>
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)" style="display: block; width: 500px"></igx-buttongroup>
+        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)"
+            style="display: block; width: 500px"></igx-buttongroup>
     </div>
-    <igx-grid #grid1 [data]="data" [allowFiltering]="true" [cellSelection]="'single'" [width]="'1200px'" [hideGroupedColumns]="hideGroupedColumns"
-    [height]="'700px'" [(groupingExpansionState)]='expState' [summaryCalculationMode]="summaryMode" [summaryPosition]='position'>
+    <igx-grid #grid1 [data]="data" [allowFiltering]="true" [cellSelection]="'single'" [width]="'1200px'"
+        [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState'
+        [summaryCalculationMode]="summaryMode" [summaryPosition]='position' [rowDraggable]="true" rowDraggable="true">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned' [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
+            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'
+            [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
         <!--<ng-template igxGroupByRow let-groupRow>
             <span>Total items with value:"{{ groupRow.value }}" are {{ groupRow.records.length }}</span>
@@ -46,7 +54,8 @@
     <br />
     <button igxButton="raised" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
     <button igxButton="raised" (click)="ungroupMultiple()">Ungroup "Address", "Country"</button>
-    <button igxButton="raised" (click)="groupUngroupMultiple()">Ungroup "CompanyName", group "ContactTitle", "Address"</button>
+    <button igxButton="raised" (click)="groupUngroupMultiple()">Ungroup "CompanyName", group "ContactTitle",
+        "Address"</button>
     <br />
     <button igxButton="raised" (click)="toggleDensity()">Toggle density</button>
     <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>
