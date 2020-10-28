@@ -1295,6 +1295,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
+            await wait(50);
+            fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 4, 4, 2, 5);
@@ -1332,6 +1334,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
+            await wait();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1339,7 +1342,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
