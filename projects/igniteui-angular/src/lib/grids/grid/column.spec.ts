@@ -190,9 +190,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(cityCol).not.toBeDefined();
 
          // add to pinned area
-         fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string', pinned: true });
-         fix.detectChanges();
-
+        fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string', pinned: true });
         fix.detectChanges();
 
         cityCol = grid.getColumnByName('City');
