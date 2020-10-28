@@ -87,6 +87,13 @@ export class IgxGridNavigationService {
                 event.preventDefault();
                 key === 'pagedown' ? this.grid.verticalScrollContainer.scrollNextPage() :
                     this.grid.verticalScrollContainer.scrollPrevPage();
+                const editCell = this.grid.crudService.cell;
+                this.grid.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
+                            this.grid.tbody.nativeElement.focus({preventScroll: true});
+                        }
+                    });
                 break;
             case 'tab':
                 this.handleEditing(shift, event);
