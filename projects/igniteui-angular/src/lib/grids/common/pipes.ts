@@ -284,7 +284,7 @@ export class IgxStringReplacePipe implements PipeTransform {
 @Pipe({ name: 'transactionState' })
 export class IgxGridTransactionStatePipe implements PipeTransform {
 
-    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any) {
+    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
             if (rowCurrentState) {
