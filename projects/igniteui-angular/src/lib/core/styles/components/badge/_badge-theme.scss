@@ -124,7 +124,7 @@
         font-weight: $badge-font-weight;
         color: --var($theme, 'text-color');
         line-height: 1;
-
+        background: --var($theme, 'background-color');
         border-radius: --var($theme, 'border-radius');
         box-shadow: --var($theme, 'shadow');
         border-width: --var($theme, 'border-width');
@@ -147,10 +147,6 @@
     %igx-badge-value {
         white-space: nowrap;
         padding: $badge-value-padding;
-    }
-
-    %igx-badge--default {
-        background: --var($theme, 'background-color');
     }
 
     %igx-badge--success {

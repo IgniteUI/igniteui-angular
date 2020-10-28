@@ -64,7 +64,6 @@ describe('Badge', () => {
         expect(badge.icon).toBeFalsy();
 
         expect(fixture.debugElement.query(By.css('.igx-badge'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('.igx-badge--default'))).toBeTruthy();
         expect(fixture.debugElement.query(By.css('.igx-badge--icon'))).toBeFalsy();
     });
 
@@ -89,7 +88,7 @@ describe('Badge', () => {
         const expectedDescription = `${badge.type} type badge with icon type ${badge.icon}`;
         expect(badge.roleDescription).toMatch(expectedDescription);
 
-        const container = fixture.nativeElement.querySelectorAll('.igx-badge--default')[0];
+        const container = fixture.nativeElement.querySelectorAll('.igx-badge')[0];
         expect(container.getAttribute('aria-roledescription')).toMatch(expectedDescription);
     });
 });

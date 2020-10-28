@@ -164,29 +164,24 @@ export class IgxBadgeComponent {
         return this.type + ' badge type without value';
     }
 
-    @HostBinding('class.igx-badge--default')
-    get defaultCSS(): boolean {
-        return true;
-    }
-
     @HostBinding('class.igx-badge--info')
-    get infoClass(): boolean {
-        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.INFO);
+    public get infoClass() {
+        return this.type === IgxBadgeType.INFO;
     }
 
     @HostBinding('class.igx-badge--success')
-    get successClass(): boolean {
-        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.SUCCESS);
+    public get successClass() {
+        return this.type === IgxBadgeType.SUCCESS;
     }
 
     @HostBinding('class.igx-badge--warning')
-    get warningClass(): boolean {
-        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.WARNING);
+    public get warningClass() {
+        return this.type === IgxBadgeType.WARNING;
     }
 
     @HostBinding('class.igx-badge--error')
-    get errorClass(): boolean {
-        return (IgxBadgeType[this.type.toUpperCase()] === IgxBadgeType.ERROR);
+    public get errorClass() {
+        return this.type === IgxBadgeType.ERROR;
     }
 }
 
