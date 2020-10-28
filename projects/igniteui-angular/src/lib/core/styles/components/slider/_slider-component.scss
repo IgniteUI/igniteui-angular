@@ -116,10 +116,6 @@
         }
     }
 
-    @include e(label, $m: pressed) {
-        @extend %igx-thumb-label--pressed !optional;
-    }
-
     @include e(track-steps) {
         @extend %igx-slider-track-steps !optional;
     }
