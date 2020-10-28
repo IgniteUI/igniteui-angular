@@ -187,7 +187,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
-        if (this.editMode || this.addMode) {
+        if (this.editMode) {
             const inlineEditorTemplate = this.column.inlineEditorTemplate;
             return inlineEditorTemplate ? inlineEditorTemplate : this.inlineEditorTemplate;
         }
@@ -365,12 +365,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     @HostBinding('class.igx-grid__td--editing')
     editMode = false;
-
-    /**
-     * Returns whether the cell is in add mode
-     */
-    @Input()
-    addMode = false;
 
     /**
      * Sets/get the `role` property of the cell.
