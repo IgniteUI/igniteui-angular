@@ -5210,7 +5210,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column pipeArgs', fakeAsync(() => {
-            const labels = ['Select All', '(Blanks)', '27 septembre 2020', '26 octobre 2020', '27 octobre 2020', '28 octobre 2020', '11 novembre 2020', '27 novembre 2020'];
             const downloads = ['Select All', '(Blanks)', '0,00', '20,00', '100,00', '127,00', '254,00', '702,00', '1 000,00'];
             registerLocaleData(localeFR);
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
@@ -5218,16 +5217,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
                 return newRec;
             });
+            const dates = fix.componentInstance.data.filter(el => el.ReleaseDate).map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
             const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
-            grid.getColumnByName('ReleaseDate').pipeArgs = {
-                format: 'longDate',
-                digitsInfo: '1.0-2'
-            };
-            grid.getColumnByName('Downloads').pipeArgs = {
+            const datePipe = new DatePipe(grid.locale);
+            const formatOptions = {
                 format: 'longDate',
                 digitsInfo: '1.2-2'
             };
+            grid.getColumnByName('ReleaseDate').pipeArgs = formatOptions;
+            grid.getColumnByName('Downloads').pipeArgs = formatOptions;
             fix.detectChanges();
 
             // Open excel style custom filtering dialog and wait a bit.
@@ -5239,9 +5238,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
-            listItems.forEach((item, ind) => {
-                expect(item.innerText).toBe(labels[ind]);
-            });
+            for (let i = 2; i < listItems.length; i++) {
+                const label = datePipe.transform(dates[i - 2], formatOptions.format);
+                expect(listItems[i].innerText).toBe(label);
+            }
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
@@ -5261,7 +5261,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter', fakeAsync(() => {
-            const labels = ['Select All', 'No value!', '27 septembre 2020', '26 octobre 2020', '27 octobre 2020', '28 octobre 2020', '11 novembre 2020', '27 novembre 2020'];
             registerLocaleData(localeFR);
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
@@ -5270,12 +5269,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
             const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
+            const datePipe = new DatePipe(grid.locale);
             grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
                 const pipe = new DatePipe('fr-FR');
                 const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longDate') : 'No value!';
                 return val;
             });
 
+            const dates = fix.componentInstance.data.map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
             fix.detectChanges();
 
             // Open excel style custom filtering dialog and wait a bit.
@@ -5287,9 +5288,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
-            listItems.forEach((item, ind) => {
-                expect(item.innerText).toBe(labels[ind]);
-            });
+            expect(listItems[1].innerText).toBe('No value!');
+            for (let i = 2; i < listItems.length; i++) {
+                const date = dates[i];
+                const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
+                expect(listItems[i].innerText).toBe(label);
+            }
 
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
