@@ -937,7 +937,7 @@ export class VirtualGridComponent extends BasicGridComponent {
  @Component({
     template: GridTemplateStrings.declareGrid(
         ` [primaryKey]="'ID'"`,
-        '', ColumnDefinitions.idNameJobHireDate)
+        '', ColumnDefinitions.idNameJobHireWithTypes)
 })
 export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
     data = SampleTestData.personJobDataFull();
@@ -1009,6 +1009,37 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     public filterable = true;
 
     public data = SampleTestData.excelFilteringData();
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridDatesFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData().map(rec => {
+        const newRec = Object.assign({}, rec) as any;
+        newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
+        return newRec;
+    });
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
