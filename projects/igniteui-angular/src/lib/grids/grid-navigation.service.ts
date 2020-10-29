@@ -170,6 +170,7 @@ export class IgxGridNavigationService {
 
     headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        console.log(key);
         if (!HEADER_KEYS.has(key)) { return; }
         event.preventDefault();
 
@@ -542,7 +543,7 @@ export class IgxGridNavigationService {
         if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
             this.handleColumnSelection(column, event);
         }
-        if (alt && key === 'l' && this.grid.allowAdvancedFiltering) {
+        if (alt && key === 'l' || key === '¬' && this.grid.allowAdvancedFiltering) {
             this.grid.openAdvancedFilteringDialog();
         }
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
