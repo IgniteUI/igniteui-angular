@@ -170,7 +170,6 @@ export class IgxGridNavigationService {
 
     headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        console.log(key);
         if (!HEADER_KEYS.has(key)) { return; }
         event.preventDefault();
 
