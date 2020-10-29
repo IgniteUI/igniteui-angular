@@ -127,7 +127,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get valuesLoadingTemplate() {
-        if (this.esf.grid.excelStyleLoadingValuesTemplateDirective) {
+        if (this.esf.grid?.excelStyleLoadingValuesTemplateDirective) {
             return this.esf.grid.excelStyleLoadingValuesTemplateDirective.template;
         } else {
             return this.defaultExcelStyleLoadingValuesTemplate;
