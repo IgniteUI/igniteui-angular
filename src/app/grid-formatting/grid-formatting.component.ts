@@ -3,11 +3,11 @@ import { registerLocaleData, DatePipe } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
-import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent, IFilteringExpressionsTree, FilteringStrategy } from 'igniteui-angular';
+import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent,
+    IFilteringExpressionsTree, FilteringStrategy } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { data } from '../grid-cellEditing/data';
 import { Observable } from 'rxjs';
-import { GridESFLoadOnDemandService } from '../grid-esf-load-on-demand/grid-esf-load-on-demand.service';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 const ORDERS_URl = 'https://services.odata.org/V4/Northwind/Northwind.svc/Orders';
@@ -113,19 +113,10 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
         done: (colVals: any[]) => void) {
         setTimeout(() => {
             let columnValues = [];
-            if (column.field === 'RequiredDate') {
-                columnValues = this.gridRemote.data.map(rec => rec[column.field]);
-                done(columnValues);
-                return;
-            }
-            if (column.field === 'OrderDate2') {
-                columnValues = this.gridLocal.data.map(rec => rec[column.field]);
-                done(columnValues);
-                return;
-            }
-            const filteredData = this._filteringStrategy.filter(this.gridRemote.data, columnExprTree);
-            columnValues = filteredData.map(record => record[column.field]);
+            const filtered = CustomFilteringStrategy.instance().filter(column.grid.data, columnExprTree,  null, column.grid);
+            columnValues = filtered.map(record => record[column.field]);
             done(columnValues);
+            return;
         }, 1000);
     }
 }
@@ -144,6 +135,13 @@ class EarliestSummary extends IgxDateSummaryOperand {
             }
         });
         return result;
+    }
+}
+
+class CustomFilteringStrategy extends FilteringStrategy {
+    public filter(dataa, expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree, grid): any[] {
+        const res = super.filter(dataa, expressionsTree, advancedExpressionsTree, grid);
+        return res;
     }
 }
 

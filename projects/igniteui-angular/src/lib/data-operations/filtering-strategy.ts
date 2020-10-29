@@ -2,7 +2,8 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
-import { DataType } from './data-util';
+
+const DateType = 'date';
 
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
@@ -25,7 +26,7 @@ export class NoopFilteringStrategy implements IFilteringStrategy {
 
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree?: IFilteringExpressionsTree): any[];
+        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
 
     protected abstract getFieldValue(rec: object, fieldName: string, isDate?: boolean): any;
 
@@ -65,7 +66,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             } else {
                 const expression = expressions as IFilteringExpression;
                 const isDate = grid && grid.getColumnByName(expression.fieldName) ?
-                    grid.getColumnByName(expression.fieldName).dataType === DataType.Date : false;
+                    grid.getColumnByName(expression.fieldName).dataType === DateType : false;
                 return this.findMatchByExpression(rec, expression, isDate);
             }
         }
@@ -83,8 +84,8 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return this._instace || (this._instace = new this());
     }
 
-    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
-        grid?: GridType): T[] {
+    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree: IFilteringExpressionsTree,
+        grid: GridType): T[] {
         let i;
         let rec;
         const len = data.length;

@@ -7,7 +7,8 @@ import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByResult } from './grouping-result.interface';
 import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
-import { DataType } from './data-util';
+
+const DATE_TYPE = 'date';
 
 export interface ISortingStrategy {
     sort: (data: any[],
@@ -141,7 +142,7 @@ export class IgxSorting implements IGridSortingStrategy {
             expr.strategy = DefaultSortingStrategy.instance();
         }
         const isDate = grid && grid.getColumnByName(expr.fieldName) ?
-            grid.getColumnByName(expr.fieldName).dataType === DataType.Date : false;
+            grid.getColumnByName(expr.fieldName).dataType === DATE_TYPE : false;
         data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate);
         if (expressionIndex === exprsLen - 1) {
             return data;
@@ -169,7 +170,7 @@ export class IgxSorting implements IGridSortingStrategy {
         let result = [];
         while (i < data.length) {
             const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
-            const isDate = column?.dataType === DataType.Date;
+            const isDate = column?.dataType === DATE_TYPE;
             const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate);
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
