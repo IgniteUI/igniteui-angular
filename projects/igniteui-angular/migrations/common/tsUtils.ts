@@ -223,23 +223,27 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
 export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
     if (!definition) { return null; }
+    // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
     if (definition.kind.toString() === 'reference') {
-        // template variable in an internal/external template
         return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
     }
     let typeDefs = langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
+    // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
     if (!typeDefs) {
-        // ts property referred in an internal/external template
-        const classDeclaration = langServ
-            .getProgram()
-            .getSourceFile(definition.fileName)
+        const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
+        // if the language service cannot resolve the source, this means its not a .ts file
+        if (!sourceFile) { return null; }
+
+        const classDeclaration = sourceFile
             .statements
             .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
             .find(m => m.name.getText() === definition.containerName);
-        const member: ts.ClassElement = classDeclaration
-            ?.members
-            .find(m => m.name.getText() === definition.name);
-        if (!member || !member.name) { return null; }
+        // there must be at least one class declaration in the .ts file and the property must belong to it
+        if (!classDeclaration) { return null; }
+
+        const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
+        if (!member?.name) { return null; }
+
         typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
     }
     if (typeDefs?.length) {
