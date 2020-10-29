@@ -410,7 +410,7 @@ export class IgxFilteringService implements OnDestroy {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
             const pipeArgs = this.grid.getColumnByName(expression.fieldName).pipeArgs;
-            return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, pipeArgs.timezone, this.grid.locale);
+            return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);
         } else {
             return expression.searchVal;
         }
