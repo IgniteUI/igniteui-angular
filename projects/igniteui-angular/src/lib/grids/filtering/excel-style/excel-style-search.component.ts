@@ -152,7 +152,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.filterListData();
+            this.searchValue ?
+                this.clearInput() :
+                this.filterListData();
         });
     }
 
@@ -250,9 +252,19 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onInputKeyDown(event): void {
-        if (event.key === KEYS.ENTER) {
-            event.preventDefault();
-            this.applyFilter();
+        switch (event.key) {
+            case KEYS.ENTER:
+                event.preventDefault();
+                this.applyFilter();
+
+                return;
+            case KEYS.ESCAPE || KEYS.ESCAPE_IE:
+                if (this.searchValue) {
+                    event.stopPropagation();
+                    this.clearInput();
+                }
+
+                return;
         }
     }
 
