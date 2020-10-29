@@ -178,11 +178,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public snackbarDisplayTime = 2000;
-
-    /**
-     * @hidden @internal
-     */
     public get scrollSize() {
         return this.verticalScrollContainer.getScrollNativeSize();
     }
@@ -249,6 +244,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     get resourceStrings(): IGridResourceStrings {
         return this._resourceStrings;
     }
+
+    /**
+     * Gets/Sets the display time for the row adding snackbar notification.
+     * @remarks
+     * By default it is 6000ms.
+     */
+    @Input()
+    public snackbarDisplayTime = 6000;
 
     /**
      * Gets/Sets whether to autogenerate the columns.
