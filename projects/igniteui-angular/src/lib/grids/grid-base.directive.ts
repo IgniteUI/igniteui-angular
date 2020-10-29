@@ -2928,6 +2928,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            if (this.selectionService.dragMode && isIE()) { return; }
             if (!this.crudService.cell && !!this.navigation.activeNode && (event.target === this.tbody.nativeElement &&
                 this.navigation.activeNode.row >= 0 &&  this.navigation.activeNode.row < this.dataView.length)
                 || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
@@ -5740,20 +5741,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    copyHandlerIE() {
-        if (isIE()) {
-            this.copyHandler(null, true);
-        }
-    }
-
-    /**
      * @hidden
      * @internal
      */
-    public copyHandler(event, ie11 = false) {
-        if (!this.clipboardOptions.enabled || this.crudService.inEditMode) {
+    public copyHandler(event) {
+        if (!this.clipboardOptions.enabled || this.crudService.inEditMode || (!isIE() && event.type === 'keydown')) {
             return;
         }
 
@@ -5772,7 +5764,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result = result.substring(result.indexOf('\n') + 1);
         }
 
-        if (ie11) {
+        if (isIE()) {
             (window as any).clipboardData.setData('Text', result);
             return;
         }
