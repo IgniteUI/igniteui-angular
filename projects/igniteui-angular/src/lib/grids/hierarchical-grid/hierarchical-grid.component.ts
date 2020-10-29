@@ -337,11 +337,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
 
-        // TODO: Clean up
-        // this.toolbarCustomContentTemplates = this.parentIsland ?
-        //     this.parentIsland.toolbarCustomContentTemplates :
-        //     this.toolbarCustomContentTemplates;
-
         this.actionStrip = this.parentIsland ? this.parentIsland.actionStrip : this.actionStrip;
 
         this.headSelectorsTemplates = this.parentIsland ?

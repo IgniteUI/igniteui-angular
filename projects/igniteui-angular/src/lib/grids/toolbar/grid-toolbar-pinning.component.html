@@ -7,7 +7,7 @@
             <span>{{ grid.pinnedColumnsText }}</span>
         </div>
     </button>
-    <igx-column-actions igxColumnPinning igxToggle #ref="toggle" [columns]="grid.columns" [title]="title"
-        [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
+    <igx-column-actions igxColumnPinning igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
+        [title]="title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
     </igx-column-actions>
 </ng-container>

@@ -1,5 +1,5 @@
 import { Directive, Host } from '@angular/core';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { IgxToggleDirective, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
 import {
     AbsoluteScrollStrategy,
     ConnectedPositioningStrategy,
@@ -30,6 +30,11 @@ export abstract class BaseToolbarDirective {
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective): void {
         toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet }});
     }
+
+    /** @hidden @internal */
+    public focusSearch(columnActions: HTMLElement) {
+        columnActions.querySelector('input')?.focus();
+    }
 }
 
 
@@ -44,6 +49,7 @@ function _makeOverlaySettings(): OverlaySettings {
         positionStrategy: new ConnectedPositioningStrategy(positionSettings),
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
+        closeOnEscape: true,
         closeOnOutsideClick: true
     };
 }
