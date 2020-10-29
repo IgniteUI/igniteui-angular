@@ -1123,7 +1123,7 @@ export class CustomFilterStrategy extends FilteringStrategy {
     }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[]  {
-        return super.filter(data, expressionsTree);
+        return super.filter(data, expressionsTree, null, null);
     }
 
     public getFieldValue(rec: object, fieldName: string): any {
@@ -1170,7 +1170,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
                                    columnExprTree: IFilteringExpressionsTree,
                                    done: (uniqueValues: any[]) => void) => {
         setTimeout(() => {
-            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
+            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree, null, null);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
             this.doneCallbackCounter++;
