@@ -1,0 +1,35 @@
+<div class="sample-wrapper">
+    <article class="sample-column">
+        <h4 class="sample-title">Animations categories</h4>
+        <div>
+            <igx-list (onItemClicked)="categoryItemClicked($event)">
+                <igx-list-item
+                    igxRipple
+                    *ngFor="let category of animationsCategories"
+                >
+                    <p>{{ category }}</p>
+                </igx-list-item>
+            </igx-list>
+        </div>
+    </article>
+    <article class="sample-column">
+        <h4 class="sample-title">Animations</h4>
+        <div>
+            <igx-list (onItemClicked)="playAnimation($event)">
+                <igx-list-item igxRipple *ngFor="let animation of animations">
+                    <p>{{ animation.name }}</p>
+                </igx-list-item>
+            </igx-list>
+        </div>
+    </article>
+    <igx-dialog
+        #dialog
+        title="This dialog uses custom animations"
+        message="Click the button or outside to close"
+        class="custom-dialog"
+        rightButtonLabel="Close"
+        (onRightButtonSelect)="dialog.close()"
+    >
+    </igx-dialog>
+</div>
+
