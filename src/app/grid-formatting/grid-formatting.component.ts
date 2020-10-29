@@ -113,7 +113,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
         done: (colVals: any[]) => void) {
         setTimeout(() => {
             let columnValues = [];
-            const filtered = CustomFilteringStrategy.instance().filter(column.grid.data, columnExprTree,  null, column.grid);
+            const filtered = CustomFilteringStrategy.instance().filter(column.grid.data, columnExprTree, null, column.grid);
             columnValues = filtered.map(record => record[column.field]);
             done(columnValues);
             return;
