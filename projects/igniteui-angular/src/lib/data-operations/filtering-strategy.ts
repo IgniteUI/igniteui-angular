@@ -30,7 +30,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
     protected abstract getFieldValue(rec: object, fieldName: string, isDate: boolean): any;
 
-    public findMatchByExpression(rec: object, expr: IFilteringExpression, isDate: boolean): boolean {
+    public findMatchByExpression(rec: object, expr: IFilteringExpression, isDate?: boolean): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
