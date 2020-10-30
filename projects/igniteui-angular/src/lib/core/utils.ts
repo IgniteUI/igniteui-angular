@@ -110,16 +110,12 @@ export function cloneValue(value: any): any {
  * @hidden
  */
 export function parseDate(value: any): Date | null {
-    if (typeof value === 'number') {
-        return new Date(value);
-    }
-
     // if value is Invalid Date return null
     if (isDate(value)) {
         return !isNaN(value.getTime()) ? value : null;
     }
 
-    return value ? new Date(Date.parse(value)) : null;
+    return new Date(value) || null;
 }
 
 /**
