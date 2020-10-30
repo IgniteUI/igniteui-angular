@@ -4651,7 +4651,49 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(excelMenu).not.toBeNull();
             expect(inputNativeElement.value).toBe('', 'input isn\'t cleared correctly');
         }));
-});
+
+        it('Should clear search criteria when selecting clear column filters option.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+
+            let checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            fix.detectChanges();
+
+            checkboxes[0].click();
+            tick();
+            fix.detectChanges();
+
+            checkboxes[2].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            tick();
+            fix.detectChanges();
+            expect(grid.filteredData.length).toEqual(1);
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'Net', fix);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            GridFunctions.clickClearFilterInExcelStyleFiltering(fix);
+            flush();
+            expect(grid.filteredData).toBeNull();
+
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            expect(inputNativeElement.value).toBe('', 'search criteria is not cleared');
+
+            checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            const listItemsCheckboxes = checkboxes.slice(1, checkboxes.length);
+            for (const checkbox of listItemsCheckboxes) {
+                ControlsFunction.verifyCheckboxState(checkbox.parentElement);
+            }
+        }));
+    });
 
     describe('Templates: ', () => {
         let fix, grid;
@@ -4801,6 +4843,37 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
         });
+
+        it('Should reset esf menu with templates on column change', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            flush();
+
+            let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 20, fix);
+
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
+
+            inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
+            expect(inputNativeElement.value).toBe('', 'input value didn\'t reset');
+        }));
+
+        it('Should reset blank items on column change.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
+
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems[1].innerText).toBe('(Blanks)');
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            flush();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems[1].innerText).not.toBe('(Blanks)');
+        }));
     });
 
     describe('Load values on demand', () => {
