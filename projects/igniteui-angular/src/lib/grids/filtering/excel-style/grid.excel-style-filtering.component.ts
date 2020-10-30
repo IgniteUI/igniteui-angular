@@ -619,6 +619,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     private addItems(shouldUpdateSelection: boolean) {
         this.selectAllSelected = true;
+        this.containsNullOrEmpty = false;
         this.selectAllIndeterminate = false;
 
         this.uniqueValues.forEach(element => {
