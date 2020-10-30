@@ -136,6 +136,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) {
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.displayedListData = [];
             this.isLoading = true;
         });
         esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
