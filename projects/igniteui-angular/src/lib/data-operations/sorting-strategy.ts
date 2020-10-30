@@ -97,7 +97,7 @@ export class NoopSortingStrategy implements IGridSortingStrategy {
 
 export class IgxSorting implements IGridSortingStrategy {
     public sort(data: any[], expressions: ISortingExpression[], grid?: GridType): any[] {
-        return this.sortDataRecursive(data, expressions, grid);
+        return this.sortDataRecursive(data, expressions, 0, grid);
     }
 
     private groupedRecordsByExpression(data: any[],
@@ -152,7 +152,7 @@ export class IgxSorting implements IGridSortingStrategy {
             gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
             gbDataLen = gbData.length;
             if (gbDataLen > 1) {
-                gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, isDate);
+                gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
             }
             for (j = 0; j < gbDataLen; j++) {
                 data[i + j] = gbData[j];

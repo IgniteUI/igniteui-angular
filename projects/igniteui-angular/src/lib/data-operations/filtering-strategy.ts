@@ -67,7 +67,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 const expression = expressions as IFilteringExpression;
                 const isDate = grid && grid.getColumnByName(expression.fieldName) ?
                     grid.getColumnByName(expression.fieldName).dataType === DateType : false;
-                return this.findMatchByExpression(rec, expression, grid);
+                return this.findMatchByExpression(rec, expression, isDate);
             }
         }
 
