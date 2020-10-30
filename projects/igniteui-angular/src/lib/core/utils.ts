@@ -114,8 +114,7 @@ export function parseDate(value: any): Date | null {
     if (isDate(value)) {
         return !isNaN(value.getTime()) ? value : null;
     }
-
-    return new Date(value) || null;
+    return value ? new Date(value) : null;
 }
 
 /**
