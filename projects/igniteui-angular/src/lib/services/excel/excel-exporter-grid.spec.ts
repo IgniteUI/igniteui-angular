@@ -9,7 +9,10 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent } from '../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent,
+         GridIDNameJobTitleComponent,
+         ProductsComponent,
+         GridIDNameJobTitleHireDataPerformanceComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -37,7 +40,8 @@ describe('Excel Exporter', () => {
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                GridWithEmtpyColumnsComponent
+                GridWithEmtpyColumnsComponent,
+                GridIDNameJobTitleHireDataPerformanceComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -500,6 +504,16 @@ describe('Excel Exporter', () => {
             // Export and verify
             await exportAndVerify(grid, options, actualData.gridWithAdvancedFilters);
         });
+        });
+
+        it('Should export arrays as strings.', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleHireDataPerformanceComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.personJobHoursDataPerformance);
     });
 
     describe('', () => {
