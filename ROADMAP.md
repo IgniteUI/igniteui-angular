@@ -17,6 +17,8 @@
 2. Visual Cell merging
 3. RTL Support across Ignite UI for Angular components
 
+## Milestone 13 (Released October 20th, 2020)
+
 1. **[DONE]** Move PositionSettings to OverlaySettings [#7807](https://github.com/IgniteUI/igniteui-angular/issues/7807)
 2. **[DONE]** Native add row [#5946](https://github.com/IgniteUI/igniteui-angular/issues/5946)
 3. **[DONE]** Enhance hGrid multi-cell selection behavior [#5714](https://github.com/IgniteUI/igniteui-angular/issues/5714)
