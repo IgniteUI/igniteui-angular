@@ -1,14 +1,23 @@
-<h3>
-    Grid with local data</h3>
+
+<h3>Grid with local data</h3>
 <button (click)="changeFormatOptions()">Change formatting</button>
 <button (click)="addFormatter()">Use formatter function for OrderDate col</button>
-<igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="localData" [primaryKey]="'ProductID'" [allowFiltering]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy" displayDensity="compact" width="900px" height="550px" [paging]="true">
+<igx-grid #grid1
+    [filterMode]="'excelStyleFilter'"
+    locale="fr-FR"
+    [data]="localData"
+    [primaryKey]="'ProductID'"
+    [allowFiltering]="true"
+    [uniqueColumnValuesStrategy]="columnValuesStrategy"
+    displayDensity="compact"
+    width="900px" height="550px"
+    [paging]="true">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date}}
         </ng-template> -->
     </igx-column>
-    <igx-column field="OrderDate2" [pipeArgs]="formatOptions" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [sortable]="true">
+    <igx-column field="OrderDate2" [pipeArgs]="formatOptions" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [sortable]="true" >
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
@@ -27,7 +36,15 @@
 <h3>Grid with remote data</h3>
 <button (click)="changeFormatOptions()">Change formatting</button>
 <button (click)="addFormatter()">Use formatter function for OrderDate col</button>
-<igx-grid #grid2 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="remoteData | async" [primaryKey]="'OrderID'" [allowFiltering]="true" [uniqueColumnValuesStrategy]="columnValuesStrategy" displayDensity="compact" width="900px" height="550px">
+<igx-grid #grid2
+    [filterMode]="'excelStyleFilter'"
+    locale="fr-FR"
+    [data]="remoteData | async"
+    [primaryKey]="'OrderID'"
+    [allowFiltering]="true"
+    [uniqueColumnValuesStrategy]="columnValuesStrategy"
+    displayDensity="compact"
+    width="900px" height="550px">
 
     <igx-column field="OrderID" width="200px" [dataType]="'number'" filterable="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
     </igx-column>
@@ -41,8 +58,16 @@
 </igx-grid>
 
 <h3>Tree Grid</h3>
-<igx-tree-grid #treeGrid [data]="treeData" childDataKey="ChildCompanies" primaryKey="ID" expansionDepth="1" [width]="'900px'" [height]="'500px'" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
-    <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [pipeArgs]="formatOptions" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [dataType]="c.dataType" [sortable]="true"
-        [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+<igx-tree-grid #treeGrid
+    [data]="treeData"
+    childDataKey="ChildCompanies"
+    primaryKey="ID" expansionDepth="1"
+    [width]="'900px'" [height]="'500px'"
+    [allowFiltering]="true"
+    [filterMode]="'excelStyleFilter'">
+    <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [pipeArgs]="formatOptions"
+        [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [dataType]="c.dataType"
+        [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
+        [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
     </igx-column>
 </igx-tree-grid>
