@@ -1,9 +1,30 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { AnimationReferenceMetadata } from '@angular/animations';
 import { isPlatformBrowser } from '@angular/common';
-import { Observable } from 'rxjs';
-import ResizeObserver from 'resize-observer-polyfill';
-import { setImmediate } from './setImmediate';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import merge from 'lodash.merge';
+import ResizeObserver from 'resize-observer-polyfill';
+import { Observable } from 'rxjs';
+import {
+    blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
+    flipVerBck, flipVerFwd, growVerIn, growVerOut, heartbeat, pulsateBck, pulsateFwd, rotateInBl,
+    rotateInBottom, rotateInBr, rotateInCenter, rotateInDiagonal1, rotateInDiagonal2, rotateInHor,
+    rotateInLeft, rotateInRight, rotateInTl, rotateInTop, rotateInTr, rotateInVer, rotateOutBl,
+    rotateOutBottom, rotateOutBr, rotateOutCenter, rotateOutDiagonal1, rotateOutDiagonal2,
+    rotateOutHor, rotateOutLeft, rotateOutRight, rotateOutTl, rotateOutTop, rotateOutTr,
+    rotateOutVer, scaleInBl, scaleInBottom, scaleInBr, scaleInCenter, scaleInHorCenter,
+    scaleInHorLeft, scaleInHorRight, scaleInLeft, scaleInRight, scaleInTl, scaleInTop, scaleInTr,
+    scaleInVerBottom, scaleInVerCenter, scaleInVerTop, scaleOutBl, scaleOutBottom, scaleOutBr,
+    scaleOutCenter, scaleOutHorCenter, scaleOutHorLeft, scaleOutHorRight, scaleOutLeft,
+    scaleOutRight, scaleOutTl, scaleOutTop, scaleOutTr, scaleOutVerBottom, scaleOutVerCenter,
+    scaleOutVerTop, shakeBl, shakeBottom, shakeBr, shakeCenter, shakeHor, shakeLeft, shakeRight,
+    shakeTl, shakeTop, shakeTr, shakeVer, slideInBl, slideInBottom, slideInBr, slideInLeft,
+    slideInRight, slideInTl, slideInTop, slideInTr, slideOutBl, slideOutBottom, slideOutBr,
+    slideOutLeft, slideOutRight, slideOutTl, slideOutTop, slideOutTr, swingInBottomBck,
+    swingInBottomFwd, swingInLeftBck, swingInLeftFwd, swingInRightBck, swingInRightFwd,
+    swingInTopBck, swingInTopFwd, swingOutBottomBck, swingOutBottomFwd, swingOutLeftBck,
+    swingOutLefttFwd, swingOutRightBck, swingOutRightFwd, swingOutTopBck, swingOutTopFwd
+} from '../animations/main';
+import { setImmediate } from './setImmediate';
 
 /**
  * @hidden
@@ -328,7 +349,7 @@ export const NAVIGATION_KEYS = new Set([
 ]);
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup', '+']);
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup', '+', 'add']);
 export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc' , 'l']);
 
 /**
@@ -399,7 +420,6 @@ export function resolveNestedPath(obj: any, path: string) {
     return current;
 }
 
-
 /**
  *
  * Given a property access path in the format `x.y.z` and a value
@@ -455,3 +475,244 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
 }
 
 export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) { return x; }
+
+export function reverseAnimationResolver(animation: AnimationReferenceMetadata): AnimationReferenceMetadata {
+    return oppositeAnimation.get(animation) ?? animation;
+}
+
+export function isHorizontalAnimation(animation: AnimationReferenceMetadata): boolean {
+    return horizontalAnimations.includes(animation);
+}
+
+export function isVerticalAnimation(animation: AnimationReferenceMetadata): boolean {
+    return verticalAnimations.includes(animation);
+}
+
+const oppositeAnimation: Map<AnimationReferenceMetadata, AnimationReferenceMetadata> = new Map([
+    [fadeIn, fadeIn],
+    [fadeOut, fadeOut],
+    [flipTop, flipBottom],
+    [flipBottom, flipTop],
+    [flipRight, flipLeft],
+    [flipLeft, flipRight],
+    [flipHorFwd, flipHorBck],
+    [flipHorBck, flipHorFwd],
+    [flipVerFwd, flipVerBck],
+    [flipVerBck, flipVerFwd],
+    [growVerIn, growVerIn],
+    [growVerOut, growVerOut],
+    [heartbeat, heartbeat],
+    [pulsateFwd, pulsateBck],
+    [pulsateBck, pulsateFwd],
+    [blink, blink],
+    [shakeHor, shakeHor],
+    [shakeVer, shakeVer],
+    [shakeTop, shakeTop],
+    [shakeBottom, shakeBottom],
+    [shakeRight, shakeRight],
+    [shakeLeft, shakeLeft],
+    [shakeCenter, shakeCenter],
+    [shakeTr, shakeTr],
+    [shakeBr, shakeBr],
+    [shakeBl, shakeBl],
+    [shakeTl, shakeTl],
+    [rotateInCenter, rotateInCenter],
+    [rotateOutCenter, rotateOutCenter],
+    [rotateInTop, rotateInBottom],
+    [rotateOutTop, rotateOutBottom],
+    [rotateInRight, rotateInLeft],
+    [rotateOutRight, rotateOutLeft],
+    [rotateInLeft, rotateInRight],
+    [rotateOutLeft, rotateOutRight],
+    [rotateInBottom, rotateInTop],
+    [rotateOutBottom, rotateOutTop],
+    [rotateInTr, rotateInBl],
+    [rotateOutTr, rotateOutBl],
+    [rotateInBr, rotateInTl],
+    [rotateOutBr, rotateOutTl],
+    [rotateInBl, rotateInTr],
+    [rotateOutBl, rotateOutTr],
+    [rotateInTl, rotateInBr],
+    [rotateOutTl, rotateOutBr],
+    [rotateInDiagonal1, rotateInDiagonal1],
+    [rotateOutDiagonal1, rotateOutDiagonal1],
+    [rotateInDiagonal2, rotateInDiagonal2],
+    [rotateOutDiagonal2, rotateOutDiagonal2],
+    [rotateInHor, rotateInHor],
+    [rotateOutHor, rotateOutHor],
+    [rotateInVer, rotateInVer],
+    [rotateOutVer, rotateOutVer],
+    [scaleInTop, scaleInBottom],
+    [scaleOutTop, scaleOutBottom],
+    [scaleInRight, scaleInLeft],
+    [scaleOutRight, scaleOutLeft],
+    [scaleInBottom, scaleInTop],
+    [scaleOutBottom, scaleOutTop],
+    [scaleInLeft, scaleInRight],
+    [scaleOutLeft, scaleOutRight],
+    [scaleInCenter, scaleInCenter],
+    [scaleOutCenter, scaleOutCenter],
+    [scaleInTr, scaleInBl],
+    [scaleOutTr, scaleOutBl],
+    [scaleInBr, scaleInTl],
+    [scaleOutBr, scaleOutTl],
+    [scaleInBl, scaleInTr],
+    [scaleOutBl, scaleOutTr],
+    [scaleInTl, scaleInBr],
+    [scaleOutTl, scaleOutBr],
+    [scaleInVerTop, scaleInVerBottom],
+    [scaleOutVerTop, scaleOutVerBottom],
+    [scaleInVerBottom, scaleInVerTop],
+    [scaleOutVerBottom, scaleOutVerTop],
+    [scaleInVerCenter, scaleInVerCenter],
+    [scaleOutVerCenter, scaleOutVerCenter],
+    [scaleInHorCenter, scaleInHorCenter],
+    [scaleOutHorCenter, scaleOutHorCenter],
+    [scaleInHorLeft, scaleInHorRight],
+    [scaleOutHorLeft, scaleOutHorRight],
+    [scaleInHorRight, scaleInHorLeft],
+    [scaleOutHorRight, scaleOutHorLeft],
+    [slideInTop, slideInBottom],
+    [slideOutTop, slideOutBottom],
+    [slideInRight, slideInLeft],
+    [slideOutRight, slideOutLeft],
+    [slideInBottom, slideInTop],
+    [slideOutBottom, slideOutTop],
+    [slideInLeft, slideInRight],
+    [slideOutLeft, slideOutRight],
+    [slideInTr, slideInBl],
+    [slideOutTr, slideOutBl],
+    [slideInBr, slideInTl],
+    [slideOutBr, slideOutTl],
+    [slideInBl, slideInTr],
+    [slideOutBl, slideOutTr],
+    [slideInTl, slideInBr],
+    [slideOutTl, slideOutBr],
+    [swingInTopFwd, swingInBottomFwd],
+    [swingOutTopFwd, swingOutBottomFwd],
+    [swingInRightFwd, swingInLeftFwd],
+    [swingOutRightFwd, swingOutLefttFwd],
+    [swingInLeftFwd, swingInRightFwd],
+    [swingOutLefttFwd, swingOutRightFwd],
+    [swingInBottomFwd, swingInTopFwd],
+    [swingOutBottomFwd, swingOutTopFwd],
+    [swingInTopBck, swingInBottomBck],
+    [swingOutTopBck, swingOutBottomBck],
+    [swingInRightBck, swingInLeftBck],
+    [swingOutRightBck, swingOutLeftBck],
+    [swingInBottomBck, swingInTopBck],
+    [swingOutBottomBck, swingOutTopBck],
+    [swingInLeftBck, swingInRightBck],
+    [swingOutLeftBck, swingOutRightBck],
+]);
+
+const horizontalAnimations: AnimationReferenceMetadata[] = [
+    flipRight,
+    flipLeft,
+    flipVerFwd,
+    flipVerBck,
+    rotateInRight,
+    rotateOutRight,
+    rotateInLeft,
+    rotateOutLeft,
+    rotateInTr,
+    rotateOutTr,
+    rotateInBr,
+    rotateOutBr,
+    rotateInBl,
+    rotateOutBl,
+    rotateInTl,
+    rotateOutTl,
+    scaleInRight,
+    scaleOutRight,
+    scaleInLeft,
+    scaleOutLeft,
+    scaleInTr,
+    scaleOutTr,
+    scaleInBr,
+    scaleOutBr,
+    scaleInBl,
+    scaleOutBl,
+    scaleInTl,
+    scaleOutTl,
+    scaleInHorLeft,
+    scaleOutHorLeft,
+    scaleInHorRight,
+    scaleOutHorRight,
+    slideInRight,
+    slideOutRight,
+    slideInLeft,
+    slideOutLeft,
+    slideInTr,
+    slideOutTr,
+    slideInBr,
+    slideOutBr,
+    slideInBl,
+    slideOutBl,
+    slideInTl,
+    slideOutTl,
+    swingInRightFwd,
+    swingOutRightFwd,
+    swingInLeftFwd,
+    swingOutLefttFwd,
+    swingInRightBck,
+    swingOutRightBck,
+    swingInLeftBck,
+    swingOutLeftBck,
+];
+const verticalAnimations: AnimationReferenceMetadata[] = [
+    flipTop,
+    flipBottom,
+    flipHorFwd,
+    flipHorBck,
+    growVerIn,
+    growVerOut,
+    rotateInTop,
+    rotateOutTop,
+    rotateInBottom,
+    rotateOutBottom,
+    rotateInTr,
+    rotateOutTr,
+    rotateInBr,
+    rotateOutBr,
+    rotateInBl,
+    rotateOutBl,
+    rotateInTl,
+    rotateOutTl,
+    scaleInTop,
+    scaleOutTop,
+    scaleInBottom,
+    scaleOutBottom,
+    scaleInTr,
+    scaleOutTr,
+    scaleInBr,
+    scaleOutBr,
+    scaleInBl,
+    scaleOutBl,
+    scaleInTl,
+    scaleOutTl,
+    scaleInVerTop,
+    scaleOutVerTop,
+    scaleInVerBottom,
+    scaleOutVerBottom,
+    slideInTop,
+    slideOutTop,
+    slideInBottom,
+    slideOutBottom,
+    slideInTr,
+    slideOutTr,
+    slideInBr,
+    slideOutBr,
+    slideInBl,
+    slideOutBl,
+    slideInTl,
+    slideOutTl,
+    swingInTopFwd,
+    swingOutTopFwd,
+    swingInBottomFwd,
+    swingOutBottomFwd,
+    swingInTopBck,
+    swingOutTopBck,
+    swingInBottomBck,
+    swingOutBottomBck,
+];

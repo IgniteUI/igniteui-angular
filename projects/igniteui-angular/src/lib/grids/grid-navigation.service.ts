@@ -52,7 +52,6 @@ export class IgxGridNavigationService {
             !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
-        const alt = event.altKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
         const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
@@ -90,6 +89,13 @@ export class IgxGridNavigationService {
                 event.preventDefault();
                 key === 'pagedown' ? this.grid.verticalScrollContainer.scrollNextPage() :
                     this.grid.verticalScrollContainer.scrollPrevPage();
+                const editCell = this.grid.crudService.cell;
+                this.grid.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
+                            this.grid.tbody.nativeElement.focus({preventScroll: true});
+                        }
+                    });
                 break;
             case 'tab':
                 this.handleEditing(shift, event);
@@ -233,7 +239,7 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.grid.dataView.length && this.activeNode &&
+        if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
                 (!header && !this.grid.hasSummarizedColumns))) { return; }
 
@@ -649,6 +655,6 @@ export class IgxGridNavigationService {
     }
 
     private isAddKey(key: string): boolean {
-        return key === '+';
+        return key === '+' || key === 'add'; // add is for IE and Edge
     }
 }
