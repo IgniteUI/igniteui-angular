@@ -173,6 +173,30 @@ export class SampleTestData {
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
     ])
 
+     /* Data fields: ID: number, Name: string, JobTitle: string, WokingHours: number, HireDate: string, Performance: array;
+        3 items, sorted by ID. */
+     public static personJobHoursDataPerformance = () => ([
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", WorkingHours: 4, HireDate: "2017-06-19T11:43:07.714Z", Performance: [
+            {Points: 3, Week: 1},
+            {Points: 6, Week: 2},
+            {Points: 1, Week: 3},
+            {Points: 12, Week: 4},
+        ] },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", WorkingHours: 6, HireDate: "2015-12-18T11:23:17.714Z", Performance: [
+            {Points: 8, Week: 1},
+            {Points: 7, Week: 2},
+            {Points: 4, Week: 3},
+            {Points: 9, Week: 4},
+        ] },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", WorkingHours: 8, HireDate: "2005-11-18T11:23:17.714Z", Performance: [
+            {Points: 1, Week: 1},
+            {Points: 3, Week: 2},
+            {Points: 14, Week: 3},
+            {Points: 29, Week: 4},
+        ] },
+    ])
+
+
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
     public static personJobData = () => ([
         { ID: 1, Name: "Casey Houston", JobTitle: "Vice President" },
