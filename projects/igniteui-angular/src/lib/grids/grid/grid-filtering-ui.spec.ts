@@ -5098,6 +5098,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
             expect(inputNativeElement.value).toBe('', 'input value didn\'t reset');
         }));
+
+        it('Should reset blank items on column change.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            flush();
+
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems[1].innerText).toBe('(Blanks)');
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            flush();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems[1].innerText).not.toBe('(Blanks)');
+        }));
     });
 
     describe('Load values on demand', () => {
