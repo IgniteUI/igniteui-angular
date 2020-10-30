@@ -11,11 +11,15 @@ export abstract class IgxColumnActionsBaseDirective {
         array: IgxColumnComponent[]
     ) => boolean;
 
-    /** @hidden @internal */
-    public checkAllLabel: string;
+    /**
+     * @hidden @internal
+     */
+    public abstract get checkAllLabel(): string;
 
-    /** @hidden @internal */
-    public uncheckAllLabel: string;
+    /**
+     * @hidden @internal
+     */
+    public abstract get uncheckAllLabel(): string;
 
     /** @hidden @internal */
     public abstract columnChecked(column: IgxColumnComponent): boolean;

@@ -18,13 +18,16 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkAllLabel = this.columnActions.grid?.resourceStrings.igx_grid_pinning_check_all_label ?? 'Pin All';
+    public get checkAllLabel(): string {
+        return this.columnActions.grid?.resourceStrings.igx_grid_pinning_check_all_label ?? 'Pin All';
+    }
 
     /**
      * @hidden @internal
      */
-    public uncheckAllLabel = this.columnActions.grid?.resourceStrings.igx_grid_pinning_uncheck_all_label ?? 'Unpin All';
-
+    public get uncheckAllLabel(): string {
+        return this.columnActions.grid?.resourceStrings.igx_grid_pinning_uncheck_all_label ?? 'Unpin All';
+    }
     /**
      * @hidden @internal
      */

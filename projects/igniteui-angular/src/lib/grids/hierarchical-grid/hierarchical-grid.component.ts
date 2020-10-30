@@ -491,23 +491,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public get template(): TemplateRef<any> {
-        if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
-        }
-
-        if (this.isLoading && (!this.data || this.dataLength === 0)) {
-            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
-        }
-
-        if (this.dataLength === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
-    }
-
-    /**
-     * @hidden
-     */
     public isRowHighlighted(rowData) {
         return this.highlightedRowID === rowData.rowID;
     }

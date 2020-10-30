@@ -18,12 +18,16 @@ export class IgxColumnGroupingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkAllLabel = 'Group By All';
+    public get checkAllLabel(): string {
+        return 'Group By All';
+    }
 
     /**
      * @hidden @internal
      */
-    public uncheckAllLabel = 'Ungroup All';
+    public get uncheckAllLabel(): string {
+        return 'Ungroup All';
+    }
 
     public get allUnchecked() { return false; }
     public get allChecked() { return false; }
