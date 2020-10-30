@@ -517,6 +517,11 @@ export class AppComponent implements OnInit {
 
     styleLinks = [
         {
+            link: '/animations',
+            icon: 'color_lens',
+            name: 'Animations'
+        },
+        {
             link: '/colors',
             icon: 'color_lens',
             name: 'Colors'
