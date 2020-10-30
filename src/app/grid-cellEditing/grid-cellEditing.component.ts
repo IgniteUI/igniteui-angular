@@ -1,31 +1,32 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { data, dataWithoutPK, DATA, LOCATIONS } from './data';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, IgxDialogComponent, IgxToastComponent, IgxNumberSummaryOperand
+    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult,
+    IgxDialogComponent, IgxToastComponent, IgxNumberSummaryOperand
 } from 'igniteui-angular';
 import { Product } from './product';
 
 class NumberSummary {
-    public operate(data: any[]): IgxSummaryResult[] {
+    public operate(_data: any[]): IgxSummaryResult[] {
         const result = [];
         result.push({
-            key: "max",
-            label: "Max",
-            summaryResult: IgxNumberSummaryOperand.max(data)
+            key: 'max',
+            label: 'Max',
+            summaryResult: IgxNumberSummaryOperand.max(_data)
         });
         result.push({
-            key: "sum",
-            label: "Sum",
-            summaryResult: IgxNumberSummaryOperand.sum(data)
+            key: 'sum',
+            label: 'Sum',
+            summaryResult: IgxNumberSummaryOperand.sum(_data)
         });
         result.push({
-            key: "avg",
-            label: "Avg",
-            summaryResult: IgxNumberSummaryOperand.average(data)
+            key: 'avg',
+            label: 'Avg',
+            summaryResult: IgxNumberSummaryOperand.average(_data)
         });
         return result;
     }
@@ -34,78 +35,20 @@ class NumberSummary {
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
 })
-export class GridCellEditingComponent {
-    @ViewChild("grid12", { read: IgxGridComponent, static: true })
+export class GridCellEditingComponent implements OnInit, AfterViewInit {
+    @ViewChild('grid12', { read: IgxGridComponent, static: true })
     public grid12: IgxGridComponent;
-    @ViewChild("dialogAdd", { read: IgxDialogComponent, static: true })
+    @ViewChild('dialogAdd', { read: IgxDialogComponent, static: true })
     public dialog: IgxDialogComponent;
-    @ViewChild("toast", { read: IgxToastComponent, static: false })
+    @ViewChild('toast', { read: IgxToastComponent, static: false })
     public toast: IgxToastComponent;
     public data1;
     public locations;
     public product;
     public customOverlaySettings;
     public id;
-    public position = "middle";
+    public position = 'middle';
     public numSummary = NumberSummary;
-
-    public ngOnInit() {
-        this.data1 = DATA.map((e) => {
-            const index = Math.floor(Math.random() * LOCATIONS.length);
-            const count = Math.floor(Math.random() * 3) + 1;
-            e.Locations = [...LOCATIONS].splice(index, count);
-            return e;
-        });
-        this.id = this.data.length;
-        this.product = new Product(this.id);
-        this.locations = LOCATIONS;
-    }
-
-    public ngAfterViewInit() {
-        this.customOverlaySettings = {
-            outlet: this.grid12.outlet
-        };
-    }
-
-    public cellEditEvent(event) {
-        debugger;
-        console.log(event);
-    }
-
-    public removeRow(rowIndex) {
-        const row = this.grid12.getRowByIndex(rowIndex);
-        row.delete();
-    }
-
-    public addRow1() {
-        const id = this.product.ProductID;
-        this.grid12.addRow(this.product);
-        this.grid12.cdr.detectChanges();
-        this.cancel();
-        this.grid12.page = this.grid12.totalPages - 1;
-        this.grid12.cdr.detectChanges();
-        let row;
-        requestAnimationFrame(() => {
-            const index = this.grid12.filteredSortedData ? this.grid12.filteredSortedData.map(rec => rec['ProductID']).indexOf(id) :
-                (row = this.grid12.getRowByKey(id) ? row.index : undefined);
-            this.grid12.navigateTo(index, -1);
-        });
-    }
-
-    public cancel() {
-        this.dialog.close();
-        this.id++;
-        this.product = new Product(this.id);
-    }
-
-    public parseArray(arr: { shop: string, lastInventory: string }[]): string {
-        return (arr || []).map((e) => e.shop).join(", ");
-    }
-
-    public show(args) {
-        const message = `The product: {name: ${args.data.ProductName}, ID ${args.data.ProductID} } has been removed!`;
-        this.toast.show(message);
-    }
 
     orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
@@ -145,6 +88,67 @@ export class GridCellEditingComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.multiple;
+    }
+
+    public ngOnInit() {
+        this.data1 = DATA.map((e) => {
+            const index = Math.floor(Math.random() * LOCATIONS.length);
+            const count = Math.floor(Math.random() * 3) + 1;
+            e.Locations = [...LOCATIONS].splice(index, count);
+            return e;
+        });
+        this.id = this.data.length;
+        this.product = new Product(this.id);
+        this.locations = LOCATIONS;
+    }
+
+    public ngAfterViewInit() {
+        this.customOverlaySettings = {
+            outlet: this.grid12.outlet
+        };
+    }
+
+    public onCellEditExit(event) {
+        console.log(event);
+    }
+
+    public cellEditEvent(event) {
+        console.log(event);
+    }
+
+    public removeRow(rowIndex) {
+        const row = this.grid12.getRowByIndex(rowIndex);
+        row.delete();
+    }
+
+    public addRow1() {
+        const id = this.product.ProductID;
+        this.grid12.addRow(this.product);
+        this.grid12.cdr.detectChanges();
+        this.cancel();
+        this.grid12.page = this.grid12.totalPages - 1;
+        this.grid12.cdr.detectChanges();
+        let row;
+        requestAnimationFrame(() => {
+            const index = this.grid12.filteredSortedData ? this.grid12.filteredSortedData.map(rec => rec['ProductID']).indexOf(id) :
+                (row = this.grid12.getRowByKey(id) ? row.index : undefined);
+            this.grid12.navigateTo(index, -1);
+        });
+    }
+
+    public cancel() {
+        this.dialog.close();
+        this.id++;
+        this.product = new Product(this.id);
+    }
+
+    public parseArray(arr: { shop: string, lastInventory: string }[]): string {
+        return (arr || []).map((e) => e.shop).join(', ');
+    }
+
+    public show(args) {
+        const message = `The product: {name: ${args.data.ProductName}, ID ${args.data.ProductID} } has been removed!`;
+        this.toast.show(message);
     }
 
     public addRow() {

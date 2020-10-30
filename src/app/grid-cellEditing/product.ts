@@ -68,8 +68,8 @@ export class Product {
         this.discontinued = false;
         this.orderDate = new Date();
         this.productID = id;
-        this.productName = "";
-        this.quantityPerUnit = "";
+        this.productName = '';
+        this.quantityPerUnit = '';
         this.reorderLevel = 0;
         this.unitPrice = 0;
         this.unitsInStock = 0;

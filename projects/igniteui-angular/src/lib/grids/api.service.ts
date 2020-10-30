@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, isEqual, reverseMapper, mergeObjects, cloneValue } from '../core/utils';
+import { cloneArray, isEqual, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -165,22 +165,11 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     update_cell(cell: IgxCell, value: any) {
-        let oldValue = null;
-        let newValue = null;
-        if (Array.isArray(cell.value) || Array.isArray(value) || Object.keys(cell.value).length >= 0 || Object.keys(value).length >= 0) {
-            oldValue = cloneValue(cell.value);
-            newValue = cloneValue(value);
-        }
         cell.editValue = value;
         const args = cell.createEditEventArgs();
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
-        }
-
-        if (oldValue || newValue) {
-            args.newValue = cell.editValue = newValue;
-            args.oldValue = cell.value = oldValue;
         }
 
         this.grid.cellEdit.emit(args);
@@ -272,7 +261,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        const cachedRowData = cloneValue(args.oldValue);
+        const cachedRowData = { ...args.oldValue };
         if (rowInEditMode) {
             const hasChanges = grid.transactions.getState(args.rowID, true);
             grid.transactions.endPending(false);

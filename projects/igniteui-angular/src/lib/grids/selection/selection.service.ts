@@ -59,7 +59,7 @@ export class IgxRow {
     createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id,
-            rowData:  this.data,
+            rowData: this.data,
             oldValue: this.data,
             cancel: false,
             owner: this.grid,
@@ -73,7 +73,7 @@ export class IgxRow {
 
     createDoneEditEventArgs(cachedRowData: any): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
-        this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
+            this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
@@ -113,7 +113,7 @@ export class IgxCell {
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
-            rowData:  this.rowData,
+            rowData: this.rowData,
             oldValue: this.value,
             cancel: false,
             column: this.column,
@@ -127,7 +127,7 @@ export class IgxCell {
 
     createDoneEditEventArgs(value: any): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
-        this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
+            this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
@@ -224,7 +224,7 @@ export class IgxGridCRUDService {
             }
             /** Changing the reference with the new editable cell */
             const newCell = this.createCell(cell);
-            if (this.rowEditing)  {
+            if (this.rowEditing) {
                 const canceled = this.beginRowEdit(newCell);
                 if (!canceled) {
                     this.beginCellEdit(newCell);
@@ -263,7 +263,6 @@ export class IgxGridCRUDService {
                 this.endEditMode();
                 return true;
             }
-
             this.row.transactionState = this.grid.transactions.getAggregatedValue(this.row.id, true);
             this.grid.transactions.startPending();
             this.grid.openRowOverlay(this.row.id);
@@ -650,7 +649,7 @@ export class IgxGridSelectionService {
         }
 
         this.pointerState.ctrl ? this.selectRange(node, this.pointerState, this.temp) :
-        this.dragSelect(node, this.pointerState);
+            this.dragSelect(node, this.pointerState);
         return true;
     }
 
@@ -869,7 +868,7 @@ export class IgxGridSelectionService {
 
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
-        let  allData;
+        let allData;
         if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
             allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
         } else {
@@ -904,7 +903,7 @@ export class IgxGridSelectionService {
     /** Select the specified column and emit event. */
     selectColumn(field: string, clearPrevSelection?, selectColumnsRange?, event?): void {
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
-        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange  ) {
+        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange) {
             this.columnsState.field = field;
             this.columnsState.range = [];
 
