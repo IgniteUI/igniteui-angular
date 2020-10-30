@@ -14,8 +14,9 @@
 ## Going down the road
 
 1. Tile Manager
-2. Visual Cell merging
-3. RTL Support across Ignite UI for Angular components
+2. Visual Cell merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
+3. RTL Support across Ignite UI for Angular components [#5905](https://github.com/IgniteUI/igniteui-angular/issues/5905)
+4. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/pull/8479/files)
 
 ## Milestone 13 (Released October 20th, 2020)
 
