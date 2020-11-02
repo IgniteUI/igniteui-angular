@@ -79,6 +79,7 @@ import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
 
 const appRoutes = [
     {
@@ -202,10 +203,13 @@ const appRoutes = [
         path: 'snackbar',
         component: SnackbarSampleComponent
     },
-
     {
         path: 'colors',
         component: ColorsSampleComponent
+    },
+    {
+        path: 'animations',
+        component: AnimationsSampleComponent
     },
     {
         path: 'shadows',

@@ -122,6 +122,33 @@ export class ExportTestDataService {
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
     ];
+
+    private _personJobHoursDataPerformance = [
+        { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', WorkingHours: 4, HireDate: '2017-06-19T11:43:07.714Z', Performance:
+            [
+                {Points: 3, Week: 1},
+                {Points: 6, Week: 2},
+                {Points: 1, Week: 3},
+                {Points: 12, Week: 4},
+            ]
+        },
+        { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', WorkingHours: 6, HireDate: '2015-12-18T11:23:17.714Z', Performance:
+            [
+                {Points: 8, Week: 1},
+                {Points: 7, Week: 2},
+                {Points: 4, Week: 3},
+                {Points: 9, Week: 4},
+            ]
+        },
+        { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', WorkingHours: 8, HireDate: '2005-11-18T11:23:17.714Z', Performance:
+            [
+                {Points: 1, Week: 1},
+                {Points: 3, Week: 2},
+                {Points: 14, Week: 3},
+                {Points: 29, Week: 4},
+            ]
+        }
+    ];
     constructor() { }
 
     get differentTypesData() {
@@ -161,6 +188,10 @@ export class ExportTestDataService {
 
     get simpleGridDataFull() {
         return this._simpleGridDataFull;
+    }
+
+    get personJobHoursDataPerformance() {
+        return this._personJobHoursDataPerformance;
     }
 
     public getContactsFunkyData(delimiter) {
@@ -954,6 +985,22 @@ export class FileContentData {
         <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
         <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols>
         <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>6</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>7</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>8</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>8</v></c></row><row r="5"><c r="A5" s="1"><v>10</v></c><c r="B5" t="s"><v>9</v></c><c r="C5" t="s"><v>10</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
+    get personJobHoursDataPerformance() {
+        this._sharedStringsData =
+        `count="18" uniqueCount="15"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>WorkingHours</t></si><si><t>HireDate</t></si><si><t>Performance</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>2017-06-19T11:43:07.714Z</t></si><si><t>[object Object],[object Object],[object Object],[object Object]</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>2015-12-18T11:23:17.714Z</t></si><si><t>Tanya Bennett</t></si><si><t>2005-11-18T11:23:17.714Z</t></si>`;
+
+        this._tableData = `ref="A1:F4" totalsRowShown="0">
+        <autoFilter ref="A1:F4"/><tableColumns count="6"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/><tableColumn id="3" name="JobTitle"/><tableColumn id="4" name="WorkingHours"/><tableColumn id="5" name="HireDate"/><tableColumn id="6" name="Performance"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:F4"/>
+        <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+        <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+        <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/><col min="6" max="6" width="50" customWidth="1"/></cols>
+        <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c><c r="F1" t="s"><v>5</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>6</v></c><c r="C2" t="s"><v>7</v></c><c r="D2" s="1"><v>4</v></c><c r="E2" t="s"><v>8</v></c><c r="F2" t="s"><v>9</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>10</v></c><c r="C3" t="s"><v>11</v></c><c r="D3" s="1"><v>6</v></c><c r="E3" t="s"><v>12</v></c><c r="F3" t="s"><v>9</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>13</v></c><c r="C4" t="s"><v>11</v></c><c r="D4" s="1"><v>8</v></c><c r="E4" t="s"><v>14</v></c><c r="F4" t="s"><v>9</v></c></row></sheetData>`;
 
         return this.createData();
     }
