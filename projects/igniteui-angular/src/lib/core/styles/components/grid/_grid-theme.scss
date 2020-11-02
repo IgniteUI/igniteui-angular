@@ -1939,6 +1939,11 @@
         outline-style: none;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         min-height: map-get($grid-header-height, 'comfortable');
+
+        %igx-grid__drag-indicator {
+            cursor: default;
+            flex-grow: 0;
+        }
     }
 
     %igx-grid__group-row--active {
@@ -1947,6 +1952,13 @@
 
         %igx-grid__grouping-indicator {
             color: --var($theme, 'expand-icon-color');
+        }
+
+        %igx-grid__drag-indicator {
+            border: 1px solid --var($theme, 'cell-active-border-color');
+            border-left-width: 0;
+            border-right-width: 0;
+            box-shadow: inset 1px 0 0 0 --var($theme, 'cell-active-border-color');
         }
 
         &:hover {
