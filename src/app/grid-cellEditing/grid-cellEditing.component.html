@@ -1,7 +1,10 @@
 <div class="grid__wrapper">
     <div class="sample__header">
         <igx-grid igxPreventDocumentScroll #grid12 [data]="data1" [autoGenerate]="false" displayDensity="cosy" width="100%" height="600px"
-            [paging]="true" [primaryKey]="'ProductID'"  [showToolbar]="true" [perPage]="10" [allowFiltering]="true" (onRowDeleted)="show($event)" (cellEditDone)="cellEditEvent($event)" [rowEditable]="true" (cellEditExit)="onCellEditExit($event)">
+            [paging]="true" [primaryKey]="'ProductID'"  [showToolbar]="true" [perPage]="10" [allowFiltering]="true" (onRowDeleted)="show($event)" [rowEditable]="true"
+            (rowEditEnter)="onRowEditEnter($event)" (cellEditEnter)="onCellEditEnter($event)" (cellEdit)="onCellEdit($event)"
+            (cellEditDone)="onCellEditDone($event)" (cellEditExit)="onCellEditExit($event)" (rowEdit)="onRowEdit($event)"
+            (rowEditDone)="onRowEditDone($event)" (rowEditExit)="onRowEditExit($event)">
             <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
             </igx-column>
             <igx-column field="UnitsInStock" header="Units In Stock" dataType="number" [sortable]="true" [hasSummary]="true" [summaries]="numSummary" [editable]="true" [resizable]="true">

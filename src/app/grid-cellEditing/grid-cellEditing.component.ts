@@ -108,11 +108,43 @@ export class GridCellEditingComponent implements OnInit, AfterViewInit {
         };
     }
 
-    public onCellEditExit(event) {
+    public onRowEditEnter(event) {
+        console.log('on row edit enter:');
         console.log(event);
     }
 
-    public cellEditEvent(event) {
+    public onCellEditEnter(event) {
+        console.log('on cell edit enter:');
+        console.log(event);
+    }
+
+    public onCellEdit(event) {
+        console.log('on cell edit:');
+        console.log(event);
+    }
+
+    public onCellEditDone(event) {
+        console.log('on cell edit done:');
+        console.log(event);
+    }
+
+    public onCellEditExit(event) {
+        console.log('on cell edit exit:');
+        console.log(event);
+    }
+
+    public onRowEdit(event) {
+        console.log('on row edit:');
+        console.log(event);
+    }
+
+    public onRowEditDone(event) {
+        console.log('on row edit done:');
+        console.log(event);
+    }
+
+    public onRowEditExit(event) {
+        console.log('on row edit exit:');
         console.log(event);
     }
 
