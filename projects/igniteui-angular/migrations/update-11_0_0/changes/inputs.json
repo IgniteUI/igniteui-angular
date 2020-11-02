@@ -24,6 +24,14 @@
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
             }
+        },
+        {
+            "name": "showToolbar",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
         }
     ]
 }

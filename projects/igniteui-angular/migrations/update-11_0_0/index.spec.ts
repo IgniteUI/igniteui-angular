@@ -23,6 +23,7 @@ describe('Update to 11.0.0', () => {
         },
     };
     const migrationName = 'migration-18';
+    const stripWhitespaceRe = /\s/g;
 
     const makeTemplate = (name: string) => `/testSrc/appPrefix/component/${name}.component.html`;
     const basicTemplate = `<igx-grid showToolbar="true">Look, some content</igx-grid>`;
@@ -38,6 +39,30 @@ describe('Update to 11.0.0', () => {
     </ng-template>
 </igx-grid>
 `;
+    const hierachicalBase = `
+<igx-hierarchical-grid [showToolbar]="showParentToolbar">
+    <igx-column></igx-column>
+    <igx-row-island [showToolbar]="showChildToolbar">
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>
+    `;
+
+    const hierachicalBaseTemplate = `
+<igx-hierarchical-grid [showToolbar]="showParentToolbar">
+    <igx-column></igx-column>
+    <igx-row-island [showToolbar]="showChildToolbar">
+        <igx-column></igx-column>
+        <ng-template igxToolbarCustomContent let-sampleGrid="grid">
+            <div></div>
+            <button></button>
+        </ng-template>
+        <ng-template igxOtherGridDirective>
+            Bla Bla Bla
+        </ng-template>
+    </igx-row-island>
+</igx-hierarchical-grid>
+    `;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -73,7 +98,7 @@ describe('Update to 11.0.0', () => {
             .runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
         expect(
-            tree.readContent(makeTemplate('toolbar')).replace(/\s/g, '')
+            tree.readContent(makeTemplate('toolbar')).replace(stripWhitespaceRe, '')
         ).toEqual(`
 <igx-grid>
     <igx-grid-toolbar>
@@ -84,7 +109,54 @@ describe('Update to 11.0.0', () => {
         Bla Bla Bla
     </ng-template>
 </igx-grid>
-`.replace(/\s/g, '')
+`.replace(stripWhitespaceRe, '')
+        );
+    });
+
+    it('should correctly migrate hierarchical grid toolbar(s)', async () => {
+        appTree.create(makeTemplate('toolbar'), hierachicalBase);
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent(makeTemplate('toolbar')).replace(stripWhitespaceRe, '')
+        ).toEqual(`
+<igx-hierarchical-grid>
+    <igx-grid-toolbar *ngIf="showParentToolbar"></igx-grid-toolbar>
+    <igx-column></igx-column>
+    <igx-row-island>
+        <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid" *ngIf="showChildToolbar"></igx-grid-toolbar>
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>
+        `.replace(stripWhitespaceRe, ''));
+    });
+
+    it('should correctly migrate hierarchical grid toolbar(s) and template directives', async () => {
+        appTree.create(makeTemplate('toolbar'), hierachicalBaseTemplate);
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent(makeTemplate('toolbar')).replace(stripWhitespaceRe, '')
+        ).toEqual(`
+<igx-hierarchical-grid>
+    <igx-grid-toolbar *ngIf="showParentToolbar"></igx-grid-toolbar>
+    <igx-column></igx-column>
+    <igx-row-island>
+        <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid" *ngIf="showChildToolbar">
+            <div></div>
+            <button></button>
+        </igx-grid-toolbar>
+        <igx-column></igx-column>
+        <ng-template igxOtherGridDirective>
+            Bla Bla Bla
+        </ng-template>
+    </igx-row-island>
+</igx-hierarchical-grid>
+        `.replace(stripWhitespaceRe, '')
         );
     });
 });

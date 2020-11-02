@@ -47,6 +47,39 @@ export default function (): Rule {
             return '';
         };
 
+        // Row island migration
+        for (const path of update.templateFiles) {
+            findElementNodes(parseFile(host, path), 'igx-row-island')
+                .filter(island => hasAttribute(island as Element, prop))
+                .map(island => getSourceOffset(island as Element))
+                .forEach(offset => {
+                    const { startTag, file, node } = offset;
+                    const { name, value } = getAttribute(node, prop)[0];
+                    const text = `\n<igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid"${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node)}</igx-grid-toolbar>\n`;
+                    addChange(file.url, new FileChange(startTag.end, text));
+                });
+        }
+
+        applyChanges();
+        changes.clear();
+
+        // Clear row island templates
+        for (const path of update.templateFiles) {
+            findElementNodes(parseFile(host, path), 'igx-row-island')
+                .filter(grid => hasAttribute(grid as Element, prop))
+                .map(grid => findElementNodes([grid], ['ng-template']))
+                .reduce((prev, curr) => prev.concat(curr), [])
+                .filter(template => hasAttribute(template as Element, 'igxToolbarCustomContent'))
+                .forEach(node => {
+                    const { startTag, endTag, file } = getSourceOffset(node as Element);
+                    const replaceText = file.content.substring(startTag.start, endTag.end);
+                    addChange(file.url, new FileChange(startTag.start, '', replaceText, 'replace'));
+                });
+        }
+
+        applyChanges();
+        changes.clear();
+
         // General migration
 
         // Prepare the file changes
