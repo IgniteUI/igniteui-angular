@@ -304,7 +304,7 @@
     %igx-radio--focused {
         @if $variant == 'fluent' {
             position: relative;
-            $focus-outline-offset-top: rem(3px);
+            $focus-outline-offset-top: rem(2px);
             $focus-outline-offset-left: rem(2px);
             &:after {
                 content: '';
