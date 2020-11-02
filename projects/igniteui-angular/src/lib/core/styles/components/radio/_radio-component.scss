@@ -57,6 +57,8 @@
     }
 
     @include m(focused) {
+        @extend %igx-radio--focused !optional;
+
         @include e(ripple) {
             @extend %radio-ripple--focused !optional;
         }
