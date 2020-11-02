@@ -53,6 +53,8 @@
     }
 
     @include m(focused) {
+        @extend  %igx-switch--focused !optional;
+
         @include e(ripple) {
             @extend %switch-ripple--focused !optional;
         }
