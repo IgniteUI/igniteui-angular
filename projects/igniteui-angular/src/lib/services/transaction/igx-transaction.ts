@@ -101,7 +101,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         }
 
         const pendingChange = super.getAggregatedValue(id, false);
-        const change = state ? state.value : {};
+        const change = state && state.value;
         let aggregatedValue = this.mergeValues(change, pendingChange);
         if (mergeChanges) {
             const originalValue = state ? state.recordRef : pendingState.recordRef;
