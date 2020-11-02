@@ -295,7 +295,7 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY);
                 expect(calendar.selection).toEqual('single');
 
-                const date = new Date(2020, 8, 28)
+                const date = new Date(2020, 8, 28);
                 calendar.value = date;
                 fixture.detectChanges();
                 expect(

@@ -160,7 +160,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             return;
         }
         if (!this.selectedDatesWithoutFocus) {
-            const date = value[0] ? this.getDateOnly(new Date(Math.min.apply(null, value))).setDate(1) : this.getDateOnly(value as Date).setDate(1);
+            const valueDate = value[0] ? Math.min.apply(null, value) : value;
+            const date = this.getDateOnly(new Date(valueDate)).setDate(1);
             this.viewDate = new Date(date);
         }
         this.selectDate(value);
