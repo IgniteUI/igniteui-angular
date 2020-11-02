@@ -76,6 +76,15 @@ export class ColumnDefinitions {
         <igx-column field="HireDate" pinned="true"></igx-column>
     `;
 
+    public static idNameJobHoursHireDatePerformance = `
+        <igx-column field="ID"></igx-column>
+        <igx-column field="Name"></igx-column>
+        <igx-column field="JobTitle"></igx-column>
+        <igx-column field="WorkingHours"></igx-column>
+        <igx-column field="HireDate"></igx-column>
+        <igx-column field="Performance"></igx-column>
+    `;
+
     public static nameJobTitleId = `
         <igx-column field="Name"></igx-column>
         <igx-column field="JobTitle"></igx-column>
