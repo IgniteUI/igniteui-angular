@@ -40,6 +40,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     public ngOnDestroy() {
         this.destroyed = true;
+        this._observer.disconnect();
     }
 
     public set size(value) {
