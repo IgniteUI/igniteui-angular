@@ -69,4 +69,14 @@ export class IgxGridActionButtonComponent {
     public handleClick(event) {
        this.onActionClick.emit(event);
     }
+
+    /**
+     * @hidden @internal
+     */
+    public preventEvent(event) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    }
 }

@@ -1,4 +1,6 @@
-import { VerticalAlignment, HorizontalAlignment, ConnectedFit } from './../utilities';
+import { AnimationReferenceMetadata } from '@angular/animations';
+import { isHorizontalAnimation, isVerticalAnimation, reverseAnimationResolver } from '../../../core/utils';
+import { ConnectedFit, HorizontalAlignment, VerticalAlignment } from './../utilities';
 import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
 /**
@@ -13,6 +15,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
+                this.flipAnimation(FlipDirection.horizontal);
             } else {
                 const horizontalPush = this.horizontalPush(connectedFit);
                 transformString.push(`translateX(${horizontalPush}px)`);
@@ -22,6 +25,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
+                this.flipAnimation(FlipDirection.vertical);
             } else {
                 const verticalPush = this.verticalPush(connectedFit);
                 transformString.push(`translateY(${verticalPush}px)`);
@@ -150,4 +154,45 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             return 0;
         }
     }
+
+    /**
+     * Changes open and close animation with reverse animation if one exists
+     * @param flipDirection direction for which to change the animations
+     */
+    private flipAnimation(flipDirection: FlipDirection): void {
+        if (this.settings.openAnimation) {
+            this.settings.openAnimation = this.updateAnimation(this.settings.openAnimation, flipDirection);
+        }
+        if (this.settings.closeAnimation) {
+            this.settings.closeAnimation = this.updateAnimation(this.settings.closeAnimation, flipDirection);
+        }
+    }
+
+    /**
+     * Tries to find the reverse animation according to provided direction
+     * @param animation animation to update
+     * @param direction required animation direction
+     * @returns reverse animation in given direction if one exists
+     */
+    private updateAnimation(animation: AnimationReferenceMetadata, direction: FlipDirection): AnimationReferenceMetadata {
+        switch (direction) {
+            case FlipDirection.horizontal:
+                if (isHorizontalAnimation(animation)) {
+                    return reverseAnimationResolver(animation);
+                }
+                break;
+            case FlipDirection.vertical:
+                if (isVerticalAnimation(animation)) {
+                    return reverseAnimationResolver(animation);
+                }
+                break;
+        }
+
+        return animation;
+    }
+}
+
+enum FlipDirection {
+    horizontal,
+    vertical
 }

@@ -113,7 +113,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     get cellHeight() {
-        return this.addRow ? null : this.grid.rowHeight || 32;
+        return this.addRow && !this.inEditMode ? null : this.grid.rowHeight || 32;
     }
 
     /**
@@ -396,7 +396,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      * @internal
      */
-    @HostListener('mouseover', ['$event'])
+    @HostListener('mouseenter', ['$event'])
     public showActionStrip(event: MouseEvent) {
         if (this.grid.actionStrip) {
             this.grid.actionStrip.show(this);
