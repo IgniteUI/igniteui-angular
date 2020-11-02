@@ -47,9 +47,7 @@ export class WorksheetDataDictionary {
 
     public saveValue(value: any, column: number, isHeader: boolean): number {
         if (this._columnTypeInfo[column] === undefined && isHeader === false) {
-            this._columnTypeInfo[column] = typeof value === 'string' ||
-                                            typeof value === 'boolean' ||
-                                            value instanceof Date;
+            this._columnTypeInfo[column] = typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value);
         }
 
         let sanitizedValue = '';
