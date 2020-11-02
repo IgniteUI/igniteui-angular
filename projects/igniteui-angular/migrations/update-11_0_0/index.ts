@@ -38,6 +38,17 @@ export default function (): Rule {
             return name.startsWith('[') && value !== 'true';
         };
 
+        // Try to preserve the template context variable binding
+        const getTemplateBinding = (node: Element) => {
+            const template = findElementNodes([node], ['ng-template'])
+                .filter(tmpl => hasAttribute(tmpl as Element, 'igxToolbarCustomContent'))[0];
+            if (template) {
+                return (template as Element).attrs.find(attr => attr.name.startsWith('let'))
+                    .name.split('-')[1];
+            }
+            return 'childGrid';
+        };
+
         const moveTemplateIfAny = (grid: Element) => {
             const ngTemplates = findElementNodes([grid], ['ng-template']);
             const toolbarTemplate = ngTemplates.filter(template => hasAttribute(template as Element, 'igxToolbarCustomContent'))[0];
@@ -54,8 +65,9 @@ export default function (): Rule {
                 .map(island => getSourceOffset(island as Element))
                 .forEach(offset => {
                     const { startTag, file, node } = offset;
+                    const binding = getTemplateBinding(node);
                     const { name, value } = getAttribute(node, prop)[0];
-                    const text = `\n<igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid"${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node)}</igx-grid-toolbar>\n`;
+                    const text = `\n<igx-grid-toolbar [grid]="${binding}" *igxGridToolbar="let ${binding}"${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node)}</igx-grid-toolbar>\n`;
                     addChange(file.url, new FileChange(startTag.end, text));
                 });
         }

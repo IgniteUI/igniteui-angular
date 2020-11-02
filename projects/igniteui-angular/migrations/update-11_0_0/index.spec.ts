@@ -146,7 +146,7 @@ describe('Update to 11.0.0', () => {
     <igx-grid-toolbar *ngIf="showParentToolbar"></igx-grid-toolbar>
     <igx-column></igx-column>
     <igx-row-island>
-        <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid" *ngIf="showChildToolbar">
+        <igx-grid-toolbar [grid]="sampleGrid" *igxGridToolbar="let sampleGrid" *ngIf="showChildToolbar">
             <div igxLabel></div>
             <button></button>
         </igx-grid-toolbar>
