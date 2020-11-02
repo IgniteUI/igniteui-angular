@@ -1,47 +1,61 @@
 <div class="grid__wrapper">
     <div class="sample__header">
-        <igx-grid igxPreventDocumentScroll #grid12 [data]="data1" [autoGenerate]="false" displayDensity="cosy" width="100%" height="600px"
-            [paging]="true" [primaryKey]="'ProductID'"  [showToolbar]="true" [perPage]="10" [allowFiltering]="true" (onRowDeleted)="show($event)" [rowEditable]="true"
-            (rowEditEnter)="onRowEditEnter($event)" (cellEditEnter)="onCellEditEnter($event)" (cellEdit)="onCellEdit($event)"
-            (cellEditDone)="onCellEditDone($event)" (cellEditExit)="onCellEditExit($event)" (rowEdit)="onRowEdit($event)"
-            (rowEditDone)="onRowEditDone($event)" (rowEditExit)="onRowEditExit($event)">
-            <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
-            </igx-column>
-            <igx-column field="UnitsInStock" header="Units In Stock" dataType="number" [sortable]="true" [hasSummary]="true" [summaries]="numSummary" [editable]="true" [resizable]="true">
-            </igx-column>
-            <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [sortable]="true" [hasSummary]="true" [editable]="true" [resizable]="true">
-                <ng-template igxCell let-cell="cell" let-val>
-                    {{val | date:'dd/MM/yyyy'}}
-                </ng-template>
-            </igx-column>
-            <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [sortable]="true" [hasSummary]="true" [editable]="true">
-            </igx-column>
-            <igx-column field="ReorderLevel" header="Reorder Level" dataType="number"  [summaries]="numSummary" [sortable]="true" [hasSummary]="true" [editable]="true" [filterable]="false">
-                <ng-template igxCellEditor let-cell="cell">
-                    <input type="number" [(ngModel)]="cell.editValue" class="reorderLevelInput" />
-                </ng-template>
-            </igx-column>
-            <igx-column field="Locations" header="Available At" [editable]="true" [filterable]="false" width="220px">
-                <ng-template igxCell let-cell="cell">
-                    {{ parseArray(cell.value) }}
-                </ng-template>
-                <ng-template igxCellEditor let-cell="cell" let-value>
-                    <igx-combo type="line" [data]="locations" [(ngModel)]="cell.editValue" [displayKey]="'shop'" width="220px" [igxFocus]="true" [overlaySettings]="customOverlaySettings"></igx-combo>
-                </ng-template>
-            </igx-column>
-            <igx-column width="100px" [filterable]="false">
-                <ng-template igxCell let-cell="cell">
-                    <button igxButton="icon" (click)="removeRow(cell.cellID.rowIndex)">
-                        <igx-icon>delete</igx-icon>
+        <!-- <app-grid-with-transactions> -->
+            <igx-grid igxPreventDocumentScroll #grid12 [data]="data1" [autoGenerate]="false" displayDensity="cosy"
+                width="100%" height="600px" [paging]="true" [primaryKey]="'ProductID'" [showToolbar]="true"
+                [perPage]="10" [allowFiltering]="true" (onRowDeleted)="show($event)" [rowEditable]="true"
+                (rowEditEnter)="onRowEditEnter($event)" (cellEditEnter)="onCellEditEnter($event)"
+                (cellEdit)="onCellEdit($event)" (cellEditDone)="onCellEditDone($event)"
+                (cellEditExit)="onCellEditExit($event)" (rowEdit)="onRowEdit($event)"
+                (rowEditDone)="onRowEditDone($event)" (rowEditExit)="onRowEditExit($event)">
+                <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true"
+                    [hasSummary]="true" [editable]="true" [resizable]="true">
+                </igx-column>
+                <igx-column field="UnitsInStock" header="Units In Stock" dataType="number" [sortable]="true"
+                    [hasSummary]="true" [summaries]="numSummary" [editable]="true" [resizable]="true">
+                </igx-column>
+                <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [sortable]="true"
+                    [hasSummary]="true" [editable]="true" [resizable]="true">
+                    <ng-template igxCell let-cell="cell" let-val>
+                        {{val | date:'dd/MM/yyyy'}}
+                    </ng-template>
+                </igx-column>
+                <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [sortable]="true"
+                    [hasSummary]="true" [editable]="true">
+                </igx-column>
+                <igx-column field="ReorderLevel" header="Reorder Level" dataType="number" [summaries]="numSummary"
+                    [sortable]="true" [hasSummary]="true" [editable]="true" [filterable]="false">
+                    <ng-template igxCellEditor let-cell="cell">
+                        <input type="number" [(ngModel)]="cell.editValue" class="reorderLevelInput" />
+                    </ng-template>
+                </igx-column>
+                <igx-column field="Locations" header="Available At" [editable]="true" [filterable]="false"
+                    width="220px">
+                    <ng-template igxCell let-cell="cell">
+                        {{ parseArray(cell.value) }}
+                    </ng-template>
+                    <ng-template igxCellEditor let-cell="cell" let-value>
+                        <igx-combo type="line" [data]="locations" [(ngModel)]="cell.editValue" [displayKey]="'shop'"
+                            width="220px" [igxFocus]="true" [overlaySettings]="customOverlaySettings"></igx-combo>
+                    </ng-template>
+                </igx-column>
+                <igx-column width="100px" [filterable]="false">
+                    <ng-template igxCell let-cell="cell">
+                        <button igxButton="icon" (click)="removeRow(cell.cellID.rowIndex)">
+                            <igx-icon>delete</igx-icon>
+                        </button>
+                    </ng-template>
+                </igx-column>
+                <ng-template igxToolbarCustomContent let-igxGrid="grid1">
+                    <button igxButton="flat" (click)="dialogAdd.open()" class="addProdBtn">
+                        <igx-icon>add</igx-icon> Add Product
                     </button>
                 </ng-template>
-            </igx-column>
-            <ng-template igxToolbarCustomContent let-igxGrid="grid1">
-                <button igxButton="flat" (click)="dialogAdd.open()" class="addProdBtn"><igx-icon>add</igx-icon> Add Product</button>
-            </ng-template>
-        </igx-grid>
+            </igx-grid>
+        <!-- </app-grid-with-transactions> -->
         <igx-toast #toast [autoHide]="true" [position]="position"></igx-toast>
-        <igx-dialog #dialogAdd title="New Product" [rightButtonLabel]="'Add'" [leftButtonLabel]="'Cancel'" (onLeftButtonSelect)="cancel()" (onRightButtonSelect)="addRow1()">
+        <igx-dialog #dialogAdd title="New Product" [rightButtonLabel]="'Add'" [leftButtonLabel]="'Cancel'"
+            (onLeftButtonSelect)="cancel()" (onRightButtonSelect)="addRow1()">
             <div class="dialogNewRecord">
                 <igx-input-group>
                     <label igxLabel for="productName">Product Name</label>
@@ -51,7 +65,8 @@
                     <label igxLabel for="unitsInStock">Units In Stock</label>
                     <input igxInput id="unitsInStock" type="number" [(ngModel)]="product.UnitsInStock" />
                 </igx-input-group>
-                <igx-combo id="availableAt" [displayKey]="'shop'" [placeholder]="'Available @'" [data]="locations" [(ngModel)]="product.Locations" [itemsMaxHeight]="200"></igx-combo>
+                <igx-combo id="availableAt" [displayKey]="'shop'" [placeholder]="'Available @'" [data]="locations"
+                    [(ngModel)]="product.Locations" [itemsMaxHeight]="200"></igx-combo>
                 <igx-date-picker id="orderDate" label="Order Date" [(ngModel)]="product.OrderDate"></igx-date-picker>
                 <igx-checkbox id="discontinued" [(ngModel)]="product.Discontinued">Discontinued</igx-checkbox>
                 <igx-input-group>
@@ -67,40 +82,49 @@
 <h3>Grid with primary key ProductID</h3>
 
 <div class="density-chooser" style="margin-bottom: 16px">
-    <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+    <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"
+        style="display: block; width: 500px"></igx-buttongroup>
 </div>
-<igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelection]="selectionMode">
-    <igx-column field="OrderDate"  width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" editable="true" [resizable]="true" [movable]="true">
-                <!-- <ng-template igxCell let-cell="cell" let-val>
+<igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'"
+    [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [paging]="true"
+    [rowSelection]="selectionMode">
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true"
+        [summaries]="earliest" editable="true" [resizable]="true" [movable]="true">
+        <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
                 </ng-template> -->
     </igx-column>
-    <igx-column field="OrderDate2" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="OrderDate2" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true"
+        editable="true" [resizable]="true" [movable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
-</igx-column>
+    </igx-column>
     <igx-column [pinned]="true" [editable]="false">
-        <ng-template igxCell let-cell="cell" let-val >
+        <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
             <button (click)="updateRow(cell.cellID.rowID)">Update</button>
         </ng-template>
     </igx-column>
-<!--     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
+    <!--     <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
     </igx-column> -->
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="false" [movable]="true" >
+    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true"
+        [dataType]="'number'" [hasSummary]="false" [movable]="true">
     </igx-column>
-    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true"
+        [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
         <ng-template igxCell let-cell="cell">
             <button> {{cell.value}}</button>
         </ng-template>
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true" [sortable]="true" [hasSummary]="false" [movable]="true">
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true"
+        [sortable]="true" [hasSummary]="false" [movable]="true">
         <ng-template igxCellEditor let-cell="cell">
-            <input name="units" [(ngModel)]="cell.value" style="color: black"/>
+            <input name="units" [(ngModel)]="cell.value" style="color: black" />
         </ng-template>
     </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="true"
+        editable="true" [resizable]="true" [movable]="true">
     </igx-column>
 </igx-grid>
 <input id="updBtn" type="button" (click)="updRecord()" value="Update cell/record">
@@ -112,30 +136,37 @@
 <button (click)="enDisSummaries()">Enable/DisableSummaries</button>
 <button (click)="kk = !kk">groupable</button>
 <button (click)="changeFormatOptions()">Change formatting</button>
-<input type="text" [(ngModel)]="pname" >
+<input type="text" [(ngModel)]="pname">
 
 <h3>Grid without PK</h3>
-<igx-grid #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [paging]="true" [rowSelection]="selectionMode">
+<igx-grid #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [paging]="true"
+    [rowSelection]="selectionMode">
     <igx-column [pinned]="true">
-        <ng-template igxCell let-cell="cell" let-val >
+        <ng-template igxCell let-cell="cell" let-val>
             <button (click)="deleteRowbyIndex(cell.cellID.rowIndex)">Delete</button>
             <button (click)="updateRowbyIndex(cell.cellID.rowIndex)">Update</button>
         </ng-template>
     </igx-column>
-    <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true" [editable]="true">
+    <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'" [hasSummary]="true"
+        [editable]="true">
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="true" [movable]="true">
+    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true"
+        [dataType]="'number'" [hasSummary]="true" [movable]="true">
     </igx-column>
-    <igx-column field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'"
+        editable="true" [resizable]="true" [movable]="true">
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true" [sortable]="true" [hasSummary]="true" [movable]="true">
+    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true"
+        [sortable]="true" [hasSummary]="true" [movable]="true">
         <ng-template igxCellEditor let-cell="cell">
-            <input name="units" [(ngModel)]="cell.value" style="color: black"/>
+            <input name="units" [(ngModel)]="cell.value" style="color: black" />
         </ng-template>
     </igx-column>
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [sortable]="true" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [sortable]="true"
+        [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
     </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [filterable]="true" [dataType]="'boolean'" width="200px" [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="Discontinued" header="Discontinued" [filterable]="true" [dataType]="'boolean'" width="200px"
+        [hasSummary]="true" editable="true" [resizable]="true" [movable]="true">
     </igx-column>
 </igx-grid>
 <button (click)="moveColumns()">Move OrderDate and ProductName</button>

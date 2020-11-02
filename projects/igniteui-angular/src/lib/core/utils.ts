@@ -3,7 +3,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
 import { setImmediate } from './setImmediate';
-import { merge } from 'lodash';
 
 /**
  * @hidden
@@ -48,10 +47,6 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @hidden
  */
 export function mergeObjects(obj1: {}, obj2: {}): any {
-    if (obj1 === null || obj1 === undefined) {
-        return merge(obj1, obj2);
-    }
-
     return Object.assign(obj1, obj2);
 }
 
