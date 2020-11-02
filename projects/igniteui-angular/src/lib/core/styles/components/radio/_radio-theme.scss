@@ -18,6 +18,7 @@
 /// @param {Color} $hover-color [null] - The border and dot colors on hover.
 /// @param {Color} $fill-color-hover [null] - The checked border and dot colors on hover.
 /// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
+/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -315,6 +316,7 @@
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
             }
         }
+
         @if $variant == 'bootstrap' {
             %radio-composite {
                 border-radius: $border-radius;

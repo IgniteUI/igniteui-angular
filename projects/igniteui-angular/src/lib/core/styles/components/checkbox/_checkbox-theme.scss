@@ -19,6 +19,7 @@
 /// @param {Color} $disabled-color-label [null] - The disabled label color.
 /// @param {border-radius} $border-radius [null] - The border radius used for checkbox component.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for checkbox ripple.
+/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
 /// Set to light when the surrounding area is dark.
 ///
 /// @requires $default-palette
@@ -41,7 +42,8 @@
     $tick-color: null,
     $disabled-color: null,
     $disabled-color-label: null,
-    $border-radius-ripple: null
+    $border-radius-ripple: null,
+    $focus-outline-color: null
 ) {
     $name: 'igx-checkbox';
     $checkbox-schema: ();
@@ -72,7 +74,8 @@
         disabled-color: $disabled-color,
         disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
-        border-radius-ripple: $border-radius-ripple
+        border-radius-ripple: $border-radius-ripple,
+        focus-outline-color: $focus-outline-color
     ));
 }
 
@@ -329,6 +332,30 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+    }
+
+    %igx-checkbox--focused {
+        @if $variant == 'fluent' {
+            position: relative;
+            $focus-outline-offset-top: rem(3px);
+            $focus-outline-offset-left: rem(2px);
+            &:after {
+                content: '';
+                position: absolute;
+                top: -$focus-outline-offset-top;
+                left: -$focus-outline-offset-left;
+                box-shadow: 0 0 0 1px --var($theme, 'focus-outline-color');
+                width: calc(100% + (#{$focus-outline-offset-left} * 2));
+                height: calc(100% + (#{$focus-outline-offset-top} * 2));
+            }
+        }
+
+        @if $variant == 'bootstrap' {
+            %cbx-composite {
+                border-radius: --var($theme, 'border-radius');
+                box-shadow: 0 0 0 2px --var($theme, 'focus-outline-color');
+            }
+        }
     }
 
     %cbx-ripple--focused {
