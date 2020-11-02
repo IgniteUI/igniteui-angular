@@ -288,6 +288,27 @@ describe('IgxGrid - Row Adding #grid', () => {
             const cell = newRow.cells.find(c => c.column === column);
             expect(typeof(cell.value)).toBe(type);
         });
+
+        it('should allow setting a different display time for snackbar', async() => {
+            grid.snackbarDisplayTime = 50;
+            fixture.detectChanges();
+
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.addRowSnackbar.isVisible).toBe(true);
+            // should hide after 50ms
+            await wait(51);
+            fixture.detectChanges();
+
+            expect(grid.addRowSnackbar.isVisible).toBe(false);
+        });
     });
 
     describe('Add row events tests:', () => {

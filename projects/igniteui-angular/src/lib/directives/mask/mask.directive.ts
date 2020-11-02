@@ -154,7 +154,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     public ngOnInit(): void {
         if (!this.nativeElement.placeholder) {
-          this.renderer.setAttribute(this.nativeElement, 'placeholder', this.maskOptions.format);
+            this.renderer.setAttribute(this.nativeElement, 'placeholder', this.maskOptions.format);
         }
     }
 
@@ -188,7 +188,15 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('input')
     public onInputChanged(): void {
-        if (isIE() && this._stopPropagation) {
+        /**
+         * '!this._focused' is a fix for #8165
+         * On page load IE triggers input events before focus events and
+         * it does so for every single input on the page.
+         * The mask needs to be prevented from doing anything while this is happening because
+         * the end user will be unable to blur the input.
+         * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
+         */
+        if (isIE() && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
         }

@@ -526,9 +526,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     protected _getParentRecordId() {
         if (this.addRowParent.asChild) {
             return super._getParentRecordId();
-        } else {
+        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
             const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
-            return spawnedForRecord.parent?.rowID;
+            return spawnedForRecord?.parent?.rowID;
         }
     }
 
@@ -637,23 +637,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.unpinnedDataView.forEach(process);
         source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
-    }
-
-    /**
-     * @hidden
-     */
-    public get template(): TemplateRef<any> {
-        if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
-        }
-
-        if (this.isLoading && (!this.data || this.dataLength === 0)) {
-            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
-        }
-
-        if (this.dataLength === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
     }
 
     public getEmptyRecordObjectFor(rec) {
