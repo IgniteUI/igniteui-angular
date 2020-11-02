@@ -37,6 +37,7 @@
     $empty-color: null,
     $fill-color: null,
     $fill-hover-border-color:null,
+    $focus-outline-color: null,
     $disabled-color: null,
     $hover-color: null,
     $fill-color-hover: null,
@@ -61,7 +62,8 @@
         fill-hover-border-color: $fill-hover-border-color,
         disabled-color: $disabled-color,
         hover-color: $hover-color,
-        fill-color-hover: $fill-color-hover
+        fill-color-hover: $fill-color-hover,
+        focus-outline-color: $focus-outline-color
     ));
 }
 
@@ -295,6 +297,29 @@
 
         @if $bootstrap-theme {
             display: none;
+        }
+    }
+
+    %igx-radio--focused {
+        @if $variant == 'fluent' {
+            position: relative;
+            $focus-outline-offset-top: rem(3px);
+            $focus-outline-offset-left: rem(2px);
+            &:after {
+                content: '';
+                position: absolute;
+                top: -$focus-outline-offset-top;
+                left: -$focus-outline-offset-left;
+                box-shadow: 0 0 0 1px --var($theme, 'focus-outline-color');
+                width: calc(100% + (#{$focus-outline-offset-left} * 2));
+                height: calc(100% + (#{$focus-outline-offset-top} * 2));
+            }
+        }
+        @if $variant == 'bootstrap' {
+            %radio-composite {
+                border-radius: $border-radius;
+                box-shadow: 0 0 0 2px --var($theme, 'focus-outline-color');
+            }
         }
     }
 
