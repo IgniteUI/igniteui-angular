@@ -47,7 +47,8 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @hidden
  */
 export function mergeObjects(obj1: {}, obj2: {}): any {
-    return Object.assign(obj1, obj2);
+    const firstObj = obj1 === null || obj1 === undefined ? {} : obj1;
+    return Object.assign(firstObj, obj2);
 }
 
 /**

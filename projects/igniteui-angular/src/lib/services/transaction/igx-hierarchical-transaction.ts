@@ -13,7 +13,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
-            const value = mergeChanges ? this.mergeValues(state.recordRef || {}, state.value) : cloneValue(state.value);
+            const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : cloneValue(state.value);
             this.clearArraysFromObject(value);
             result.push({ id: key, path: state.path, newValue: value, type: state.type } as T);
         });

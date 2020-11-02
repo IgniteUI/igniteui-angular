@@ -68,7 +68,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
-            const value = mergeChanges ? this.mergeValues(state.recordRef || {}, state.value) : state.value;
+            const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
             result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
@@ -102,10 +102,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
         const pendingChange = super.getAggregatedValue(id, false);
         const change = state ? state.value : {};
-        let aggregatedValue = this.mergeValues(change || {}, pendingChange);
+        let aggregatedValue = this.mergeValues(change, pendingChange);
         if (mergeChanges) {
             const originalValue = state ? state.recordRef : pendingState.recordRef;
-            aggregatedValue = this.mergeValues(originalValue || {}, aggregatedValue);
+            aggregatedValue = this.mergeValues(originalValue, aggregatedValue);
         }
         return aggregatedValue;
     }
@@ -269,7 +269,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                 case TransactionType.UPDATE:
                     if (isObject(state.value)) {
                         if (state.type === TransactionType.ADD) {
-                            state.value = this.mergeValues(state.value || {}, transaction.newValue);
+                            state.value = this.mergeValues(state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
                             mergeObjects(state.value, transaction.newValue);
