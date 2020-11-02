@@ -1,7 +1,7 @@
 <ng-template #title>
     <ng-content select="[igxGridToolbarTitle],igx-grid-toolbar-title"></ng-content>
 </ng-template>
-<igx-grid-toolbar-title *ngIf="!hasTitle">Toolbar</igx-grid-toolbar-title>
+<igx-grid-toolbar-title *ngIf="!hasTitle">{{ grid.toolbarTitle }}</igx-grid-toolbar-title>
 <ng-container *ngTemplateOutlet="title"></ng-container>
 
 <div class="igx-grid-toolbar__custom-content">
@@ -13,9 +13,9 @@
 </ng-template>
 <igx-grid-toolbar-actions *ngIf="!hasActions">
     <igx-grid-toolbar-advanced-filtering *ngIf="grid.allowAdvancedFiltering"></igx-grid-toolbar-advanced-filtering>
-    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-    <igx-grid-toolbar-exporter (exportStarted)="showProgress = true" (exportEnded)="showProgress = false">
+    <igx-grid-toolbar-hiding *ngIf="grid.columnHiding"></igx-grid-toolbar-hiding>
+    <igx-grid-toolbar-pinning *ngIf="grid.columnPinning"></igx-grid-toolbar-pinning>
+    <igx-grid-toolbar-exporter *ngIf="grid.exportExcel || grid.exportCsv" (exportStarted)="showProgress = true" (exportEnded)="showProgress = false">
     </igx-grid-toolbar-exporter>
 </igx-grid-toolbar-actions>
 <ng-container *ngTemplateOutlet="actions"></ng-container>

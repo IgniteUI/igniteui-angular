@@ -8,6 +8,6 @@
         </div>
     </button>
     <igx-column-actions igxColumnHiding igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
-        [title]="title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
+        [title]="grid.columnHidingTitle || title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
     </igx-column-actions>
 </ng-container>

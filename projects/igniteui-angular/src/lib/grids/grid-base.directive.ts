@@ -599,6 +599,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     set columnHiding(value) {
         this._columnHiding = value;
+        this.notifyChanges();
     }
 
     /**
@@ -932,6 +933,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     set columnPinning(value) {
         this._columnPinning = value;
+        this.notifyChanges();
     }
 
     /**
@@ -2190,6 +2192,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     set hiddenColumnsText(value) {
         this._hiddenColumnsText = value;
+        this.notifyChanges();
 
     }
 
@@ -2212,6 +2215,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     set pinnedColumnsText(value) {
         this._pinnedColumnsText = value;
+        this.notifyChanges();
     }
 
     /**
@@ -2231,9 +2235,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _exportExcel = false;
     private _exportCsv = false;
     private _toolbarTitle: string = null;
-    private _exportText: string = null;
-    private _exportExcelText: string = null;
-    private _exportCsvText: string = null;
+    private _exportText = 'Export';
+    private _exportExcelText = 'Export to Excel';
+    private _exportCsvText = 'Export to CSV';
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
@@ -2286,6 +2290,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set toolbarTitle(newValue: string) {
         this._toolbarTitle = newValue;
+        this.notifyChanges();
     }
 
     /**
@@ -2306,6 +2311,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set exportExcel(newValue: boolean) {
         this._exportExcel = newValue;
+        this.notifyChanges();
     }
 
     /**
@@ -2324,6 +2330,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     public set exportCsv(newValue: boolean) {
         this._exportCsv = newValue;
+        this.notifyChanges();
     }
 
     /**
@@ -2344,6 +2351,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set exportText(newValue: string) {
         this._exportText = newValue;
+        this.notifyChanges();
     }
 
     /**
@@ -2362,6 +2370,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     public set exportExcelText(newValue: string) {
         this._exportExcelText = newValue;
+        this.notifyChanges();
     }
 
     /**
@@ -2381,6 +2390,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     public set exportCsvText(newValue: string) {
         this._exportCsvText = newValue;
+        this.notifyChanges();
     }
 
     /**
@@ -4678,7 +4688,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns if the `IgxGridComponent` has fiterable columns.
+     * Returns if the `IgxGridComponent` has filterable columns.
      * @example
      * ```typescript
      * const filterableGrid = this.grid.hasFilterableColumns;

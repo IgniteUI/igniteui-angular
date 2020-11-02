@@ -8,6 +8,6 @@
         </div>
     </button>
     <igx-column-actions igxColumnPinning igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
-        [title]="title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
+        [title]="grid.columnPinningTitle || title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
     </igx-column-actions>
 </ng-container>

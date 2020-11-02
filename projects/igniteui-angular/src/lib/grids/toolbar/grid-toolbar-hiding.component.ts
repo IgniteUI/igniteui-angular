@@ -24,7 +24,7 @@ export class IgxGridToolbarHidingComponent extends BaseToolbarDirective {
      * Title text for the column action component
      */
     @Input()
-    title = 'Hidden Columns';
+    title = 'Visible Columns';
 
     /**
      * The placeholder text for the search input.
