@@ -1,10 +1,5 @@
 import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform } from '@angular/core';
-import {
-    async,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxMaskModule, IgxMaskDirective } from './mask.directive';
@@ -15,7 +10,7 @@ import { Replaced } from './mask-parsing.service';
 
 describe('igxMask', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AlphanumSpaceMaskComponent,

@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
@@ -22,7 +22,7 @@ describe('General igxDrag/igxDrop', () => {
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestDragDropComponent
@@ -1337,7 +1337,7 @@ describe('General igxDrag/igxDrop', () => {
 
 describe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestDragDropLinkedSingleComponent,

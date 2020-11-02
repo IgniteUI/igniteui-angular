@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, async, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -26,7 +26,7 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
@@ -51,12 +51,12 @@ describe('Column Pinning UI #grid', () => {
             columnChooserElement = GridFunctions.getColumnPinningElement(fix);
         }));
 
-        it('title is initially empty.', async(() => {
+        it('title is initially empty.', waitForAsync(() => {
             const title = GridFunctions.getColumnChooserTitle(columnChooserElement);
             expect(title).toBe(null);
         }));
 
-        it('title can be successfully changed.', async(() => {
+        it('title can be successfully changed.', waitForAsync(() => {
             columnChooser.title = 'Pin/Unpin Columns';
             fix.detectChanges();
 
@@ -151,7 +151,7 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(column, false, 0);
         });
 
-        it('onColumnPinning event is fired on toggling checkboxes.', async(() => {
+        it('onColumnPinning event is fired on toggling checkboxes.', waitForAsync(() => {
             spyOn(grid.onColumnPinning, 'emit').and.callThrough();
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
@@ -193,7 +193,7 @@ describe('Column Pinning UI #grid', () => {
                 { column: grid.getColumnByName('ProductName'), insertAtIndex: 0, isPinned: true });
         }));
 
-        it('onColumnPinning event should fire when pinning and unpining using api', async(() => {
+        it('onColumnPinning event should fire when pinning and unpining using api', waitForAsync(() => {
             spyOn(grid.onColumnPinning, 'emit').and.callThrough();
 
             grid.columns[0].pin();

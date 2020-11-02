@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, Type, DebugElement, NgZone } from '@angular/core';
-import { async, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './public_api';
@@ -22,7 +22,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
@@ -2563,7 +2563,7 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent

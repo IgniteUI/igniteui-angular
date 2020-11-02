@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -16,7 +16,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     let fixture;
     let grid: IgxGridComponent;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
 
         TestBed.configureTestingModule({
             declarations: [

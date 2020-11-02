@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './public_api';
 import {
@@ -23,7 +23,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
@@ -1135,7 +1135,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridRowEditingComponent
@@ -1381,7 +1381,7 @@ describe('Custom expand/collapse template #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridCustomExpandersTemplateComponent

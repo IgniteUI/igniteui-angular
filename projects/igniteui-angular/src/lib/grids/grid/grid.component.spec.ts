@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, Injectable,
     OnInit, ViewChild, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,7 +37,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent,
@@ -596,7 +596,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - virtualization tests', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent
@@ -661,7 +661,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - default rendering for rows and columns', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
@@ -1663,7 +1663,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - API methods', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent
@@ -1874,7 +1874,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         let fix;
 
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridInsideIgxTabsComponent
@@ -1994,7 +1994,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - footer section', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomFooterComponent
@@ -2021,7 +2021,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - with custom pagination template', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomPaginationTemplateComponent
@@ -2054,7 +2054,7 @@ describe('IgxGrid Component Tests #grid', () => {
         let observer: MutationObserver;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridPerformanceComponent

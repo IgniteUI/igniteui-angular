@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -29,7 +29,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
@@ -712,7 +712,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
     }));
 
-    it('should allow grouping of already sorted column', async(() => {
+    it('should allow grouping of already sorted column', waitForAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
