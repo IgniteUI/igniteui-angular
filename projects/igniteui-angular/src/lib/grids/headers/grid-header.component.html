@@ -2,6 +2,10 @@
     <span [title]="columnTitle">{{ column.header || column.field }}</span>
 </ng-template>
 
+<ng-template #defaultESFHeaderIconTemplate>
+    <igx-icon>more_vert</igx-icon>
+</ng-template>
+
 <span class="igx-grid__th-title">
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
     </ng-container>
@@ -16,8 +20,13 @@
         {{sortingIcon}}
     </igx-icon>
 
-    <igx-icon [ngClass]="filterIconClassName" [attr.draggable]="false" (click)="onFilteringIconClick($event)"
-        *ngIf="grid.allowFiltering == true && column.filterable && grid.filterMode == 'excelStyleFilter'">
-        more_vert
-    </igx-icon>
+    <div *ngIf="grid.allowFiltering == true && column.filterable && grid.filterMode == 'excelStyleFilter'"
+         (click)="onFilteringIconClick($event)"
+         (pointerdown)="$event.stopPropagation()"
+         [ngClass]="filterIconClassName">
+
+        <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
+        </ng-container>
+    </div>
+
 </div>

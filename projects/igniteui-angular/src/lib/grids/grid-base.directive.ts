@@ -103,7 +103,7 @@ import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective
+    IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective, IgxExcelStyleHeaderIconDirective
 } from './grid/grid.directives';
 import {
     GridKeydownTargetType,
@@ -230,6 +230,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
+
+     /**
+      * @hidden @internal
+      */
+    @ViewChild('defaultESFHeaderIcon', { read: TemplateRef, static: true })
+    protected defaultESFHeaderIconTemplate: TemplateRef<any>;
 
     /**
      * Gets/Sets the resource strings.
@@ -1993,6 +1999,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
     public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering a row expand indicator.
+     */
+    @ContentChild(IgxExcelStyleHeaderIconDirective, { read: TemplateRef })
+    public excelStyleHeaderIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
