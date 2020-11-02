@@ -11,6 +11,9 @@
         (click)="grid1.hideRowSelectors ? grid1.hideRowSelectors = false : grid1.hideRowSelectors = true">
         {{ grid1.hideRowSelectors ? 'Show' : 'Hide' }} row selectors
     </button>
+    <button igxButton="raised" (click)="grid1.rowDraggable ? grid1.rowDraggable = false : grid1.rowDraggable = true">
+        {{ grid1.rowDragging ? 'Enable' : 'Disable' }} row dragging
+    </button>
     <div class="separator"></div>
     <button igxButton="raised" [igxToggleAction]="dropDownRowSelection"
         [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection:
@@ -26,7 +29,7 @@
     </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [cellSelection]="'single'" [width]="'1200px'"
         [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState'
-        [summaryCalculationMode]="summaryMode" [summaryPosition]='position' [rowDraggable]="true" rowDraggable="true">
+        [summaryCalculationMode]="summaryMode" [summaryPosition]='position' [rowDraggable]="true">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'
             [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>

@@ -81,6 +81,12 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     public hideGroupRowSelectors: boolean;
 
     /**
+     * @hidden
+     */
+    @Input()
+    public rowDraggable: boolean;
+
+    /**
      * Returns whether the row is focused.
      * ```
      * let gridRowFocused = this.grid1.rowList.first.focused;
