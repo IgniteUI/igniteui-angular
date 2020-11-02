@@ -245,7 +245,7 @@ class SerializerVisitor implements Visitor {
     }
 
     visitAttribute(attribute: Attribute, context: any): any {
-        return `${attribute.name}="${attribute.value}"`;
+        return attribute.value === '' ? `${attribute.name}` : `${attribute.name}="${attribute.value}"`;
     }
 
     visitText(text: Text, context: any): any {

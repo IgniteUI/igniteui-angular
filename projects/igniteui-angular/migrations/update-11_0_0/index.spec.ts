@@ -54,7 +54,7 @@ describe('Update to 11.0.0', () => {
     <igx-row-island [showToolbar]="showChildToolbar">
         <igx-column></igx-column>
         <ng-template igxToolbarCustomContent let-sampleGrid="grid">
-            <div></div>
+            <div igxLabel></div>
             <button></button>
         </ng-template>
         <ng-template igxOtherGridDirective>
@@ -147,7 +147,7 @@ describe('Update to 11.0.0', () => {
     <igx-column></igx-column>
     <igx-row-island>
         <igx-grid-toolbar [grid]="childGrid" *igxGridToolbar="let childGrid" *ngIf="showChildToolbar">
-            <div></div>
+            <div igxLabel></div>
             <button></button>
         </igx-grid-toolbar>
         <igx-column></igx-column>
