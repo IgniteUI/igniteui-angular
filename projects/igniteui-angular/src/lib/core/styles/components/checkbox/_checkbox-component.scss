@@ -57,6 +57,8 @@
     }
 
     @include m(focused) {
+        @extend  %igx-checkbox--focused !optional;
+
         @include e(ripple) {
             @extend %cbx-ripple--focused !optional;
         }
