@@ -16,12 +16,12 @@ export abstract class IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkAllLabel: string;
+    public abstract get checkAllLabel(): string;
 
     /**
      * @hidden @internal
      */
-    public uncheckAllLabel: string;
+    public abstract get uncheckAllLabel(): string;
 
     /**
      * @hidden @internal
