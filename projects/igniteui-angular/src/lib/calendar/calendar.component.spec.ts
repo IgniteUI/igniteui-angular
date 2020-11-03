@@ -172,7 +172,8 @@ describe('IgxCalendar - ', () => {
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
+                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
+                IgxCalendarValueComponent],
                 imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
             }).compileComponents();
         }));
@@ -290,18 +291,23 @@ describe('IgxCalendar - ', () => {
             });
 
             it('Should show right month when value is set', () => {
+                fixture = TestBed.createComponent(IgxCalendarValueComponent);
+                fixture.detectChanges();
+                calendar = fixture.componentInstance.calendar;
+
                 expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY);
                 expect(calendar.selection).toEqual('single');
+                expect(calendar.viewDate.getMonth()).toEqual(calendar.value.getMonth());
 
                 const date = new Date(2020, 8, 28);
-                calendar.value = date;
+                calendar.viewDate = date;
                 fixture.detectChanges();
-                expect(
-                    (fixture.componentInstance.model as Date).toDateString()
-                ).toMatch(date.toDateString());
-                expect((calendar.value as Date).toDateString()).toMatch(
-                    date.toDateString()
-                );
+
+                expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
+
+                calendar.value = new Date(2020, 9, 15);
+                fixture.detectChanges();
+
                 expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
             });
 
@@ -1945,6 +1951,16 @@ export class IgxCalendarDisabledSpecialDatesComponent {
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }];
     public disabledDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }];
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+}
+
+@Component({
+    template: `
+        <igx-calendar [value]="value"></igx-calendar>
+    `
+})
+export class IgxCalendarValueComponent {
+    public value = new Date(2020, 7, 13);
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
