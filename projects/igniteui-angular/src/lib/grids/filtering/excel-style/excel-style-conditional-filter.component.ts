@@ -6,11 +6,13 @@ import {
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
-import { IFilteringOperation } from '../../../data-operations/filtering-condition';
+import { IFilteringOperation, IgxBooleanFilteringOperand, IgxDateFilteringOperand,
+    IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
-import { HorizontalAlignment, VerticalAlignment, OverlaySettings, AutoPositionStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
+import { HorizontalAlignment, VerticalAlignment, OverlaySettings,
+     AutoPositionStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
 
@@ -158,15 +160,21 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      * @hidden @internal
      */
     get subMenuText() {
+        const customFilterText = this.esf.grid.resourceStrings.igx_grid_excel_custom_filter;
+
         switch (this.esf.column.dataType) {
             case DataType.Boolean:
-                return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
+                return this.esf.column.filters instanceof IgxBooleanFilteringOperand ?
+                    this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter : customFilterText;
             case DataType.Number:
-                return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
+                return this.esf.column.filters instanceof IgxNumberFilteringOperand ?
+                    this.esf.grid.resourceStrings.igx_grid_excel_number_filter : customFilterText;
             case DataType.Date:
-                return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
+                return this.esf.column.filters instanceof IgxDateFilteringOperand ?
+                    this.esf.grid.resourceStrings.igx_grid_excel_date_filter : customFilterText;
             default:
-                return this.esf.grid.resourceStrings.igx_grid_excel_text_filter;
+                return this.esf.column.filters instanceof IgxStringFilteringOperand ?
+                    this.esf.grid.resourceStrings.igx_grid_excel_text_filter : customFilterText;
         }
     }
 
