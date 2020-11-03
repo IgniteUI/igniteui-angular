@@ -1,12 +1,16 @@
 import {
     Component,
-    HostBinding,
-    Input,
-    Optional,
-    Inject,
+    ContentChild,
     ElementRef,
-    ContentChild
+    HostBinding,
+    Inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional
 } from '@angular/core';
+import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IgxIconService } from '../../icon/public_api';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
@@ -14,6 +18,7 @@ import { IgxGridToolbarTitleDirective, IgxGridToolbarActionsDirective } from './
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
+
 
  /**
   * Provides a context-aware container component for UI operations for the grid components.
@@ -25,7 +30,7 @@ import { GridType } from '../common/grid.interface';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent extends DisplayDensityBase {
+export class IgxGridToolbarComponent extends DisplayDensityBase implements OnInit, OnDestroy {
 
     /**
      * When enabled, shows the indeterminate progress bar.
@@ -100,11 +105,10 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     /** @hidden @internal */
     @HostBinding('style.max-width.px')
     @HostBinding('style.flex-basis.px')
-    get width() {
-        return this.grid.outerWidth;
-    }
+    width = null;
 
     protected _grid: IgxGridBaseDirective;
+    protected sub: Subscription;
 
     constructor(
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
@@ -115,5 +119,16 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         super(_displayDensityOptions);
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
+    }
+
+    /** @hidden @internal */
+    ngOnInit() {
+        this.grid.rendered$.pipe(first()).subscribe(() => this.width = this.grid.outerWidth);
+        this.sub = this.grid.resizeNotify.subscribe(() => this.width = this.grid.outerWidth);
+    }
+
+    /** @hidden @internal */
+    ngOnDestroy() {
+        this.sub?.unsubscribe();
     }
 }

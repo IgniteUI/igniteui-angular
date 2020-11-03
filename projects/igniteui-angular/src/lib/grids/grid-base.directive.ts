@@ -2582,6 +2582,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public rendered$ = this.rendered.asObservable().pipe(shareReplay(1));
 
+    /** @hidden @internal */
+    public resizeNotify = new Subject();
+
     abstract data: any[];
     abstract filteredData: any[];
 
@@ -2687,9 +2690,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _filterMode: FilterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver = new ResizeObserver(() => { });
-
-    protected resizeNotify = new Subject();
-
 
     private columnListDiffer;
     private rowListDiffer;
