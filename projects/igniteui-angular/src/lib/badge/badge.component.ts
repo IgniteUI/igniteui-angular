@@ -153,6 +153,7 @@ export class IgxBadgeComponent {
      * @hidden
      * @internal
      */
+    @HostBinding('attr.aria-roledescription')
     get roleDescription() {
         // tslint:disable-next-line:prefer-conditional-expression
         if (this.icon) {
@@ -163,45 +164,25 @@ export class IgxBadgeComponent {
         return this.type + ' badge type without value';
     }
 
-    /**
-     * Method which makes the name of the class more descriptive.
-     * This helps the styling of the badges.
-     * @hidden
-     * @internal
-     */
-    public setClasses() {
-        let classes = {};
-
-        switch (IgxBadgeType[this.type.toUpperCase()]) {
-            case IgxBadgeType.INFO:
-                classes = {
-                    [`${this.cssClass}__circle--info`]: true
-                };
-                break;
-            case IgxBadgeType.SUCCESS:
-                classes = {
-                    [`${this.cssClass}__circle--success`]: true
-                };
-                break;
-            case IgxBadgeType.WARNING:
-                classes = {
-                    [`${this.cssClass}__circle--warning`]: true
-                };
-                break;
-            case IgxBadgeType.ERROR:
-                classes = {
-                    [`${this.cssClass}__circle--error`]: true
-                };
-                break;
-            default:
-                classes = {
-                    [`${this.cssClass}__circle--default`]: true
-                };
-        }
-
-        return classes;
+    @HostBinding('class.igx-badge--info')
+    public get infoClass() {
+        return this.type === IgxBadgeType.INFO;
     }
 
+    @HostBinding('class.igx-badge--success')
+    public get successClass() {
+        return this.type === IgxBadgeType.SUCCESS;
+    }
+
+    @HostBinding('class.igx-badge--warning')
+    public get warningClass() {
+        return this.type === IgxBadgeType.WARNING;
+    }
+
+    @HostBinding('class.igx-badge--error')
+    public get errorClass() {
+        return this.type === IgxBadgeType.ERROR;
+    }
 }
 
 /**
