@@ -289,6 +289,22 @@ describe('IgxCalendar - ', () => {
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
             });
 
+            it('Should show right month when value is set', () => {
+                expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY);
+                expect(calendar.selection).toEqual('single');
+
+                const date = new Date(2020, 8, 28);
+                calendar.value = date;
+                fixture.detectChanges();
+                expect(
+                    (fixture.componentInstance.model as Date).toDateString()
+                ).toMatch(date.toDateString());
+                expect((calendar.value as Date).toDateString()).toMatch(
+                    date.toDateString()
+                );
+                expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
+            });
+
             it('Should properly set locale', () => {
                 fixture.componentInstance.viewDate = new Date(2018, 8, 17);
                 fixture.componentInstance.model = new Date();
