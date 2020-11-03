@@ -327,6 +327,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             waitForAsync(async () => {
                 // enable toolbar for hiding
                 fixture.componentInstance.showToolbar = true;
+                grid.columnHiding = true;
                 fixture.detectChanges();
                 await fixture.whenStable();
                 fixture.detectChanges();
@@ -351,6 +352,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it(`UI - toggling column checkbox checked state successfully changes the column's hidden state. `, waitForAsync(async () => {
             // enable toolbar for hiding
             fixture.componentInstance.showToolbar = true;
+            grid.columnHiding = true;
             fixture.detectChanges();
             await fixture.whenStable();
             fixture.detectChanges();
@@ -643,6 +645,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         it('UI - pinned columns count and drop-down items text in pinning toolbar should be correct when group is pinned. ',
             waitForAsync(async () => {
                 // enable toolbar for pinning
+                grid.columnPinning = true;
                 fixture.componentInstance.showToolbar = true;
                 fixture.detectChanges();
                 await fixture.whenStable();
@@ -710,6 +713,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             ];
             fixture.componentInstance.showToolbar = true;
             fixture.componentInstance.colGroups = uniqueGroups;
+            grid.columnPinning = true;
             grid.columnWidth = '200px';
             fixture.componentInstance.grid.width = '1000px';
             fixture.detectChanges();

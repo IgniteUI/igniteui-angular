@@ -70,7 +70,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         it('default toolbar title is rendered', () => {
             const titleEl = $(TOOLBAR_TITLE_TAG);
             expect(titleEl).toBeInstanceOf(HTMLElement);
-            expect(titleEl.textContent).toMatch('Toolbar');
+            expect(titleEl.textContent).toMatch('');
         });
 
         it('toolbar title can be set through content projection', () => {
