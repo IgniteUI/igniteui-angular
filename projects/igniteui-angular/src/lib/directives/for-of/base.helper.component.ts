@@ -7,10 +7,13 @@ import {
     OnDestroy,
     Directive,
     AfterViewInit,
-    Inject
+    Inject,
+    NgZone
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import ResizeObserver from 'resize-observer-polyfill';
+import { Subject } from 'rxjs';
+import { throttleTime, takeUntil, debounceTime } from 'rxjs/operators';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
@@ -26,19 +29,32 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     private _scrollNativeSize: number;
     private _observer: ResizeObserver;
     private _detached = false;
+    protected resizeNotify = new Subject();
+    protected destroy$ = new Subject<any>();
+
 
     ngAfterViewInit() {
         this._afterViewInit = true;
+        const destructor = takeUntil<any>(this.destroy$);
+        this.resizeNotify.pipe(destructor,
+        debounceTime(40, undefined))
+        .subscribe((event) => {
+            this._zone.runTask(() => {
+                this.handleMutations(event);
+            });
+        });
     }
 
     @HostListener('scroll', ['$event'])
     onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
     }
-    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef, @Inject(DOCUMENT) public document) {
+    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef, protected _zone: NgZone, @Inject(DOCUMENT) public document) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
-        this._observer = new ResizeObserver((event) => this.handleMutations(event));
-        this._observer.observe(this.nativeElement);
+        this._zone.runOutsideAngular(() => {
+            this._observer = new ResizeObserver((event) => this.resizeNotify.next(event));
+            this._observer.observe(this.nativeElement);
+        });
      }
 
     get nativeElement() {
@@ -47,6 +63,8 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     public ngOnDestroy() {
         this.destroyed = true;
+        this.destroy$.next(true);
+        this.destroy$.complete();
         this._observer.disconnect();
     }
 
