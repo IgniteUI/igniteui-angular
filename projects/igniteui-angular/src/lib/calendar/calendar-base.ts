@@ -156,6 +156,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      */
     public set value(value: Date | Date[]) {
         if (!value || !!value && (value as Date[]).length === 0) {
+            this.selectedDatesWithoutFocus = new Date();
             return;
         }
         if (!this.selectedDatesWithoutFocus) {
