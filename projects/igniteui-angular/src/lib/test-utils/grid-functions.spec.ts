@@ -66,6 +66,7 @@ const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
+const FILTER_ICON_CLASS = '.igx-excel-filter__icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -1867,6 +1868,10 @@ export class GridFunctions {
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
         return header.query(By.css(SORT_ICON_CLASS));
+    }
+
+    public static getHeaderFilterIcon(header: DebugElement): DebugElement {
+        return header.query(By.css(FILTER_ICON_CLASS));
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
