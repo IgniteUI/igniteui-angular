@@ -4,12 +4,12 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnActionsComponent } from './column-actions.component';
 
 @Directive({
-    selector: '[igxColumnPinning]'
+    selector: '[igxColumnPinning]',
 })
 export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
-
     constructor(
-        @Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent
+        @Inject(IgxColumnActionsComponent)
+        protected columnActions: IgxColumnActionsComponent
     ) {
         super();
         columnActions.actionsDirective = this;
@@ -19,33 +19,41 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public get checkAllLabel(): string {
-        return this.columnActions.grid?.resourceStrings.igx_grid_pinning_check_all_label ?? 'Pin All';
+        return (
+            this.columnActions.grid?.resourceStrings
+                .igx_grid_pinning_check_all_label ?? 'Pin All'
+        );
     }
 
     /**
      * @hidden @internal
      */
     public get uncheckAllLabel(): string {
-        return this.columnActions.grid?.resourceStrings.igx_grid_pinning_uncheck_all_label ?? 'Unpin All';
+        return (
+            this.columnActions.grid?.resourceStrings
+                .igx_grid_pinning_uncheck_all_label ?? 'Unpin All'
+        );
     }
     /**
      * @hidden @internal
      */
     public checkAll() {
-        this.columnActions.filteredColumns.forEach(c => c.pinned = true);
+        this.columnActions.filteredColumns.forEach((c) => (c.pinned = true));
     }
 
     /**
      * @hidden @internal
      */
     public uncheckAll() {
-        this.columnActions.filteredColumns.forEach(c => c.pinned = false);
+        this.columnActions.filteredColumns
+            .reverse()
+            .forEach((c) => (c.pinned = false));
     }
 
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = c => !c.disablePinning && !c.level;
+    public actionEnabledColumnsFilter = (c) => !c.disablePinning && !c.level;
 
     /**
      * @hidden @internal
