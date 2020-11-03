@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - **Breaking Change** - Added a new directive for re-templating the header filter icon - `IgxExcelStyleHeaderIconDirective`.
+    - Added a new directive for re-templating the Excel style filtering header icon - `IgxExcelStyleHeaderIconDirective`.
 
 ## 10.2.0
 
