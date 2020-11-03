@@ -12,3 +12,9 @@
     height: 88px;
     align-items: center;
 }
+
+.badge-theme {
+    min-width: 15px;
+    width: 15px;
+    height: 15px;
+}
