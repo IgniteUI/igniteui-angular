@@ -1,4 +1,5 @@
-import { Directive, Host } from '@angular/core';
+import { Directive, Host, Input } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { IgxToggleDirective, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
 import {
     AbsoluteScrollStrategy,
@@ -8,6 +9,7 @@ import {
     PositionSettings,
     VerticalAlignment
 } from '../../services/public_api';
+import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 
@@ -19,6 +21,12 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 export abstract class BaseToolbarDirective {
 
     /**
+     * Sets the height of the column list in the dropdown.
+     */
+    @Input()
+    columnListHeight: string;
+
+    /**
      * Returns the grid containing this component.
      */
     public get grid() {
@@ -27,7 +35,9 @@ export abstract class BaseToolbarDirective {
 
     constructor(@Host() protected toolbar: IgxGridToolbarComponent) { }
 
-    public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective): void {
+    public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
+        const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
+        toggleRef.onOpening.pipe(first()).subscribe(setHeight);
         toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet }});
     }
 

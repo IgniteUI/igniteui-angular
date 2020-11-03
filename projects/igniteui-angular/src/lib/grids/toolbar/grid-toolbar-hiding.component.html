@@ -1,5 +1,5 @@
 <ng-container *ngIf="grid.rendered$ | async">
-    <button #btn igxButton="outlined" name="btnColumnHiding" (click)="toggle(btn, ref)"
+    <button #btn igxButton="outlined" name="btnColumnHiding" (click)="toggle(btn, ref, actions)"
         [displayDensity]="grid.displayDensity">
         <div class="igx-grid-toolbar__button-space">
             <igx-icon>{{ !grid.hiddenColumnsCount ? 'visibility' : 'visibility_off' }}</igx-icon>
@@ -7,7 +7,7 @@
             <span>{{ grid.hiddenColumnsText }}</span>
         </div>
     </button>
-    <igx-column-actions igxColumnHiding igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
-        [title]="grid.columnHidingTitle || title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
+    <igx-column-actions #actions igxColumnHiding igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
+        [title]="grid.columnHidingTitle || title" [filterColumnsPrompt]="prompt">
     </igx-column-actions>
 </ng-container>

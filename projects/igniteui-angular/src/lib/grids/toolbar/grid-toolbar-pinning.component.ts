@@ -31,9 +31,4 @@ export class IgxGridToolbarPinningComponent extends BaseToolbarDirective {
     @Input()
     prompt = 'Search columns...';
 
-    /**
-     * Sets the height of the column list in the dropdown.
-     */
-    @Input()
-    columnListHeight = '100%';
 }

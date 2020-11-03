@@ -1,5 +1,5 @@
 <ng-container *ngIf="grid.rendered$ | async">
-    <button #btn igxButton="outlined" name="btnColumnPinning" (click)="toggle(btn, ref)"
+    <button #btn igxButton="outlined" name="btnColumnPinning" (click)="toggle(btn, ref, actions)"
         [displayDensity]="grid.displayDensity">
         <div class="igx-grid-toolbar__button-space">
             <igx-icon fontSet="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
@@ -7,7 +7,7 @@
             <span>{{ grid.pinnedColumnsText }}</span>
         </div>
     </button>
-    <igx-column-actions igxColumnPinning igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
-        [title]="grid.columnPinningTitle || title" [filterColumnsPrompt]="prompt" [columnsAreaMaxHeight]="columnListHeight">
+    <igx-column-actions #actions igxColumnPinning igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle" [grid]="grid"
+        [title]="grid.columnPinningTitle || title" [filterColumnsPrompt]="prompt">
     </igx-column-actions>
 </ng-container>
