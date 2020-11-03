@@ -13,6 +13,8 @@ import {
     ContentChild,
     Output,
     EventEmitter,
+    Optional,
+    Host,
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -25,6 +27,7 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
+import { GridBaseAPIService } from '../../api.service';
 
 /**
  * @hidden
@@ -322,17 +325,20 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     get grid(): IgxGridBaseDirective {
-        return this.column?.grid;
+        return this.gridAPI?.grid ?? this.column?.grid;
     }
 
     /**
      * @hidden @internal
      */
     get displayDensity() {
-        return this.column?.grid.displayDensity;
+        return this.grid?.displayDensity;
     }
 
-    constructor(private cdr: ChangeDetectorRef, public element: ElementRef) {}
+    constructor(
+        private cdr: ChangeDetectorRef,
+        public element: ElementRef,
+        @Host() @Optional() private gridAPI?: GridBaseAPIService<IgxGridBaseDirective>) {}
 
     /**
      * @hidden @internal
