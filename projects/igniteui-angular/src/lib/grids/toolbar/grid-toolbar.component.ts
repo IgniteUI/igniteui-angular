@@ -97,6 +97,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     @HostBinding('class.igx-grid-toolbar--compact')
     get compactStyle() { return this.displayDensity === 'compact'; }
 
+    /** @hidden @internal */
+    @HostBinding('style.max-width.px')
+    @HostBinding('style.flex-basis.px')
+    get width() {
+        return this.grid.outerWidth;
+    }
+
     protected _grid: IgxGridBaseDirective;
 
     constructor(
