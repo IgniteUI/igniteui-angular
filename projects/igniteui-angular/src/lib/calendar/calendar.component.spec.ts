@@ -253,8 +253,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(defaultViews));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
 
@@ -268,8 +268,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('September');
 
@@ -284,8 +284,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
             });
@@ -327,8 +327,8 @@ describe('IgxCalendar - ', () => {
                 fixture.detectChanges();
 
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Sun');
@@ -341,8 +341,8 @@ describe('IgxCalendar - ', () => {
                 bodyWeekday = dom.query(By.css(HelperTestFunctions.WEEKSTART_LABEL_CSSCLASS));
                 expect(calendar.locale).toEqual(locale);
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('lun.,');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('17 sept.');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('sam.,');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('1 sept.');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('sept.');
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
