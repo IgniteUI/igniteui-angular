@@ -172,7 +172,8 @@ describe('IgxCalendar - ', () => {
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
+                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
+                IgxCalendarValueComponent],
                 imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
             }).compileComponents();
         }));
@@ -252,8 +253,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(defaultOptions));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(defaultViews));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
 
@@ -267,8 +268,8 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('September');
 
@@ -283,10 +284,31 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
                 expect(calendar.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
+            });
+
+            it('Should show right month when value is set', () => {
+                fixture = TestBed.createComponent(IgxCalendarValueComponent);
+                fixture.detectChanges();
+                calendar = fixture.componentInstance.calendar;
+
+                expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY);
+                expect(calendar.selection).toEqual('single');
+                expect(calendar.viewDate.getMonth()).toEqual(calendar.value.getMonth());
+
+                const date = new Date(2020, 8, 28);
+                calendar.viewDate = date;
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
+
+                calendar.value = new Date(2020, 9, 15);
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
             });
 
             it('Should properly set locale', () => {
@@ -305,8 +327,8 @@ describe('IgxCalendar - ', () => {
                 fixture.detectChanges();
 
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Sat');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Sun');
@@ -319,8 +341,8 @@ describe('IgxCalendar - ', () => {
                 bodyWeekday = dom.query(By.css(HelperTestFunctions.WEEKSTART_LABEL_CSSCLASS));
                 expect(calendar.locale).toEqual(locale);
                 expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
-                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('lun.,');
-                expect(headerDate.nativeElement.textContent.trim()).toMatch('17 sept.');
+                expect(headerWeekday.nativeElement.textContent.trim()).toMatch('sam.,');
+                expect(headerDate.nativeElement.textContent.trim()).toMatch('1 sept.');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('sept.');
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
@@ -1929,6 +1951,16 @@ export class IgxCalendarDisabledSpecialDatesComponent {
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }];
     public disabledDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }];
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+}
+
+@Component({
+    template: `
+        <igx-calendar [value]="value"></igx-calendar>
+    `
+})
+export class IgxCalendarValueComponent {
+    public value = new Date(2020, 7, 13);
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
