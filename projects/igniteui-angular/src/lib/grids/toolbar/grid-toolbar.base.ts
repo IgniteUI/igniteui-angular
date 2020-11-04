@@ -1,6 +1,6 @@
 import { Directive, Host, Input } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IgxToggleDirective, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import {
     AbsoluteScrollStrategy,
     ConnectedPositioningStrategy,
@@ -36,8 +36,10 @@ export abstract class BaseToolbarDirective {
     constructor(@Host() protected toolbar: IgxGridToolbarComponent) { }
 
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
-        const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
-        toggleRef.onOpening.pipe(first()).subscribe(setHeight);
+        if (actions) {
+            const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
+            toggleRef.onOpening.pipe(first()).subscribe(setHeight);
+        }
         toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet }});
     }
 
