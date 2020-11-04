@@ -350,6 +350,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
+        this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
         this.hasChildrenKey = this.parentIsland ?
          this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
          this.rootGrid.hasChildrenKey;

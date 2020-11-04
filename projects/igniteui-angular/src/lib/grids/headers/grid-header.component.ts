@@ -94,7 +94,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     /**
      * @hidden
      */
-    public get iconTemplate() {
+    public get esfIconTemplate() {
         return this.grid.excelStyleHeaderIconTemplate || this.defaultESFHeaderIconTemplate;
     }
 
