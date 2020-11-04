@@ -9,7 +9,12 @@
 3. Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
 4. Option to select columns instead of hide columns [#6858](https://github.com/IgniteUI/igniteui-angular/issues/6858)
 5. Calendar ARIA [#6272](https://github.com/IgniteUI/igniteui-angular/issues/6272)
-6. IgxInput directive to style file type input [#6544](https://github.com/IgniteUI/igniteui-angular/issues/6544)
+6. Make the ESF header icon templatable [#7878](https://github.com/IgniteUI/igniteui-angular/issues/7878)
+7. A small badge option [#8188](https://github.com/IgniteUI/igniteui-angular/issues/8188)
+8. Improve the chart color palette generation [#8447](https://github.com/IgniteUI/igniteui-angular/issues/8447)
+9. Allow tooltip positioning in relation to target element [#7775](https://github.com/IgniteUI/igniteui-angular/issues/7775)
+10. Auto position strategy use wrong animation when flipped [#8238](https://github.com/IgniteUI/igniteui-angular/issues/8238)
+11. Option to select columns instead of hide columns [#6858](https://github.com/IgniteUI/igniteui-angular/issues/6858)
 
 ## Going down the road
 
@@ -17,6 +22,7 @@
 2. Visual Cell merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
 3. RTL Support across Ignite UI for Angular components [#5905](https://github.com/IgniteUI/igniteui-angular/issues/5905)
 4. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/pull/8479/files)
+5. IgxInput directive to style file type input [#6544](https://github.com/IgniteUI/igniteui-angular/issues/6544)
 
 ## Milestone 13 (Released October 20th, 2020)
 
