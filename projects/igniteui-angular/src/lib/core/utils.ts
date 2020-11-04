@@ -123,8 +123,36 @@ export function isObject(value: any): boolean {
  * @returns true if provided variable is Date
  * @hidden
  */
-export function isDate(value: any) {
-    return Object.prototype.toString.call(value) === '[object Date]';
+export function isDate(value: any): boolean {
+    return value instanceof Date;
+}
+
+/**
+ * Parse provided input to Date.
+ * @param value input to parse
+ * @returns Date if parse succeed or null
+ * @hidden
+ */
+export function parseDate(value: any): Date | null {
+    // if value is Invalid Date return null
+    if (isDate(value)) {
+        return !isNaN(value.getTime()) ? value : null;
+    }
+    return value ? new Date(value) : null;
+}
+
+/**
+ * Returns an array with unique dates only.
+ * @param columnValues collection of date values (might be numbers or ISO 8601 strings)
+ * @returns collection of unique dates.
+ * @hidden
+ */
+export function uniqueDates(columnValues: any[]) {
+    return columnValues.reduce((a, c) => {
+        if (!a.cache[c.label]) { a.result.push(c); }
+        a.cache[c.label] = true;
+        return a;
+    }, { result: [], cache: {} }).result;
 }
 
 /**
@@ -353,7 +381,8 @@ export const NAVIGATION_KEYS = new Set([
 ]);
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup', '+', 'add']);
+export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), ...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
 export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc', 'l',
     /** This symbol corresponds to the Alt + L combination under MAC. */
     '¬']);
