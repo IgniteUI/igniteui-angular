@@ -354,9 +354,9 @@ export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
-export interface IBaseCancelableBrowserEventArgs extends CancelableBrowserEventArgs, IBaseEventArgs {}
+export interface IBaseCancelableBrowserEventArgs extends CancelableBrowserEventArgs, IBaseEventArgs { }
 
-export interface IBaseCancelableEventArgs extends CancelableEventArgs, IBaseEventArgs {}
+export interface IBaseCancelableEventArgs extends CancelableEventArgs, IBaseEventArgs { }
 
 export const HORIZONTAL_NAV_KEYS = new Set(['arrowleft', 'left', 'arrowright', 'right', 'home', 'end']);
 
@@ -377,7 +377,8 @@ export const NAVIGATION_KEYS = new Set([
 ]);
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup', '+', 'add']);
+export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), ...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
 export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc' , 'l',
     /** This symbol corresponds to the Alt + L combination under MAC. */
     '¬']);
@@ -492,7 +493,7 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
     let i = 0;
     const chunk = () => {
         const end = Math.min(i + chunkSize, count);
-        for ( ; i < end; ++i) {
+        for (; i < end; ++i) {
             callback(i);
         }
         if (i < count) {
