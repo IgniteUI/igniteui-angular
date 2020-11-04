@@ -894,7 +894,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @DeprecateProperty('`columnHidingTitle` is deprecated')
     @Input()
-    public columnHidingTitle = '';
+    public columnHidingTitle: string;
 
     /**
      * Gets/Sets the initial pinning configuration.
@@ -950,7 +950,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @DeprecateProperty('`columnPinningTitle` is deprecated')
     @Input()
-    public columnPinningTitle = '';
+    public columnPinningTitle: string;
 
     /**
      * Gets/Sets if the filtering is enabled.
@@ -2237,9 +2237,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _exportExcel = false;
     private _exportCsv = false;
     private _toolbarTitle: string = null;
-    private _exportText = 'Export';
-    private _exportExcelText = 'Export to Excel';
-    private _exportCsvText = 'Export to CSV';
+    private _exportText: string;
+    private _exportExcelText: string;
+    private _exportCsvText: string;
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;

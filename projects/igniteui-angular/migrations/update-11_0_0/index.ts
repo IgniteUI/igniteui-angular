@@ -43,7 +43,7 @@ export default function (): Rule {
             const template = findElementNodes([node], ['ng-template'])
                 .filter(tmpl => hasAttribute(tmpl as Element, 'igxToolbarCustomContent'))[0];
             if (template) {
-                return (template as Element).attrs.find(attr => attr.name.startsWith('let'))
+                return (template as Element).attrs.find(attr => attr.name.startsWith('let') && attr.value.startsWith('grid'))
                     .name.split('-')[1];
             }
             return 'childGrid';

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 
 /**
@@ -17,18 +17,4 @@ import { BaseToolbarDirective } from './grid-toolbar.base';
     selector: 'igx-grid-toolbar-pinning',
     templateUrl: './grid-toolbar-pinning.component.html'
 })
-export class IgxGridToolbarPinningComponent extends BaseToolbarDirective {
-
-    /**
-     * Title text for the column action component
-     */
-    @Input()
-    title = 'Pinned Columns';
-
-    /**
-     * The placeholder text for the search input.
-     */
-    @Input()
-    prompt = 'Search columns...';
-
-}
+export class IgxGridToolbarPinningComponent extends BaseToolbarDirective { }

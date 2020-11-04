@@ -24,7 +24,19 @@ export abstract class BaseToolbarDirective {
      * Sets the height of the column list in the dropdown.
      */
     @Input()
-    columnListHeight: string;
+    public columnListHeight: string;
+
+    /**
+     * Title text for the column action component
+     */
+    @Input()
+    public title: string;
+
+    /**
+     * The placeholder text for the search input.
+     */
+    @Input()
+    public prompt: string;
 
     /**
      * Returns the grid containing this component.

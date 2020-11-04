@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 
 
@@ -18,17 +18,4 @@ import { BaseToolbarDirective } from './grid-toolbar.base';
     selector: 'igx-grid-toolbar-hiding',
     templateUrl: './grid-toolbar-hiding.component.html'
 })
-export class IgxGridToolbarHidingComponent extends BaseToolbarDirective {
-
-    /**
-     * Title text for the column action component
-     */
-    @Input()
-    title = 'Visible Columns';
-
-    /**
-     * The placeholder text for the search input.
-     */
-    @Input()
-    prompt = 'Search columns...';
-}
+export class IgxGridToolbarHidingComponent extends BaseToolbarDirective { }
