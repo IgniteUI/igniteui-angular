@@ -104,6 +104,34 @@ export function cloneValue(value: any): any {
 }
 
 /**
+ * Parse provided input to Date.
+ * @param value input to parse
+ * @returns Date if parse succeed or null
+ * @hidden
+ */
+export function parseDate(value: any): Date | null {
+    // if value is Invalid Date return null
+    if (isDate(value)) {
+        return !isNaN(value.getTime()) ? value : null;
+    }
+    return value ? new Date(value) : null;
+}
+
+/**
+ * Returns an array with unique dates only.
+ * @param columnValues collection of date values (might be numbers or ISO 8601 strings)
+ * @returns collection of unique dates.
+ * @hidden
+ */
+export function uniqueDates(columnValues: any[]) {
+    return columnValues.reduce((a, c) => {
+        if (!a.cache[c.label]) { a.result.push(c); }
+        a.cache[c.label] = true;
+        return a;
+      }, {result: [], cache: {}}).result;
+}
+
+/**
  * Checks if provided variable is Object
  * @param value Value to check
  * @returns true if provided variable is Object
@@ -119,8 +147,8 @@ export function isObject(value: any): boolean {
  * @returns true if provided variable is Date
  * @hidden
  */
-export function isDate(value: any) {
-    return Object.prototype.toString.call(value) === '[object Date]';
+export function isDate(value: any): boolean {
+    return value instanceof Date;
 }
 
 /**
