@@ -4931,6 +4931,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 ControlsFunction.verifyCheckboxState(checkbox.parentElement);
             }
         }));
+
+        it('Should display \'Custom filter...\' when custom filters per column is provided', fakeAsync(() => {
+            grid.width = '700px';
+            grid.getColumnByName('Downloads').filters = IgxStringFilteringOperand.instance();
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(100);
+            fix.detectChanges();
+
+            const cascadeButton = GridFunctions.getExcelFilterCascadeButton(fix);
+            const cascadeButtonText = cascadeButton.getElementsByTagName('span')[0].textContent;
+            expect(cascadeButtonText).toBe('Custom filter...');
+            debugger;
+            // Verify that custom filter dropdown (the submenu) is not visible.
+            let subMenu = fix.nativeElement.querySelector('.igx-drop-down__list-scroll');
+            expect(subMenu).not.toBeNull();
+
+            cascadeButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick(100);
+            fix.detectChanges();
+
+            checkUIForType('string', fix.debugElement, true);
+        }));
     });
 
     describe('Templates: ', () => {
@@ -5628,7 +5652,7 @@ function isExcelSearchScrollBarVisible(fix) {
     return searchScrollbar.offsetHeight < searchScrollbar.children[0].offsetHeight;
 }
 
-function checkUIForType(type: string, elem: DebugElement) {
+function checkUIForType(type: string, elem: DebugElement, isESF: boolean = false) {
     let expectedConditions;
     let expectedInputType;
     const isReadOnly = type === 'bool' ? true : false;
@@ -5650,23 +5674,31 @@ function checkUIForType(type: string, elem: DebugElement) {
             expectedInputType = 'text';
             break;
     }
-    GridFunctions.openFilterDD(elem);
+
+    if (!isESF) {
+        GridFunctions.openFilterDD(elem);
+    }
     const ddList = elem.query(By.css('div.igx-drop-down__list-scroll'));
-    const ddItems = ddList.nativeElement.children;
+    const ddItems = !isESF ? ddList.nativeElement.children : ddList.nativeElement.children[0].children;
+
+
     // check drop-down conditions
     for (let i = 0; i < expectedConditions.length; i++) {
         const txt = expectedConditions[i].name.split(/(?=[A-Z])/).join(' ').toLowerCase();
         expect(txt).toEqual(ddItems[i].textContent.toLowerCase());
     }
-    // check input is correct type
-    const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
-    if (expectedInputType !== 'datePicker') {
-        const input = filterUIRow.query(By.css('.igx-input-group__input'));
-        expect(input.nativeElement.type).toBe(expectedInputType);
-        expect(input.nativeElement.attributes.hasOwnProperty('readonly')).toBe(isReadOnly);
-    } else {
-        const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
-        expect(datePicker).not.toBe(null);
+
+    if (!isESF) {
+        // check input is correct type
+        const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
+        if (expectedInputType !== 'datePicker') {
+            const input = filterUIRow.query(By.css('.igx-input-group__input'));
+            expect(input.nativeElement.type).toBe(expectedInputType);
+            expect(input.nativeElement.attributes.hasOwnProperty('readonly')).toBe(isReadOnly);
+        } else {
+            const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
+            expect(datePicker).not.toBe(null);
+        }
     }
 }
 
