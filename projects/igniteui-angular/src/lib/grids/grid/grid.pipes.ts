@@ -37,7 +37,7 @@ export class IgxGridSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = collection;
         } else {
-            result = DataUtil.sort(cloneArray(collection), expressions, sorting);
+            result = DataUtil.sort(cloneArray(collection), expressions, sorting, grid);
         }
         grid.setFilteredSortedData(result, pinned);
 
@@ -147,7 +147,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
             return collection;
         }
 
-        const result = DataUtil.filter(cloneArray(collection), state);
+        const result = DataUtil.filter(cloneArray(collection), state, grid);
         grid.setFilteredData(result, pinned);
         return result;
     }
