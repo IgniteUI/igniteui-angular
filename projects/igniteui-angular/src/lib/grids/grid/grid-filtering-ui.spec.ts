@@ -4932,7 +4932,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
         }));
 
-        it('Should display \'Custom filter...\' when custom filters per column is provided', fakeAsync(() => {
+        it('Should display \'Custom filter...\' when custom filters property per column is provided', fakeAsync(() => {
             grid.width = '700px';
             grid.getColumnByName('Downloads').filters = IgxStringFilteringOperand.instance();
             fix.detectChanges();
@@ -4944,9 +4944,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cascadeButton = GridFunctions.getExcelFilterCascadeButton(fix);
             const cascadeButtonText = cascadeButton.getElementsByTagName('span')[0].textContent;
             expect(cascadeButtonText).toBe('Custom filter...');
-            debugger;
-            // Verify that custom filter dropdown (the submenu) is not visible.
-            let subMenu = fix.nativeElement.querySelector('.igx-drop-down__list-scroll');
+
+            const subMenu = fix.nativeElement.querySelector('.igx-drop-down__list-scroll');
             expect(subMenu).not.toBeNull();
 
             cascadeButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
