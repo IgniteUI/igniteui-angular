@@ -62,6 +62,13 @@ export class ColumnDefinitions {
         <igx-column field="HireDate"></igx-column>
     `;
 
+    public static idNameJobHireWithTypes = `
+        <igx-column field="ID" dataType="number"></igx-column>
+        <igx-column field="Name" dataType="string"></igx-column>
+        <igx-column field="JobTitle" dataType="string"></igx-column>
+        <igx-column field="HireDate" dataType="date"></igx-column>
+    `;
+
     public static idNameJobHireSortable = `
         <igx-column field="ID" sortable="true"></igx-column>
         <igx-column field="Name" sortable="true"></igx-column>
