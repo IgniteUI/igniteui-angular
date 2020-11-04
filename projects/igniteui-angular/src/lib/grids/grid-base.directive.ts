@@ -27,8 +27,6 @@ import {
     DoCheck,
     Directive,
     LOCALE_ID,
-    OnChanges,
-    SimpleChanges,
     HostListener
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -458,10 +456,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     set locale(value: string) {
-        this._locale = value;
-        this.summaryService.clearSummaryCache();
-        this._pipeTrigger++;
-        this.notifyChanges();
+        if (value !== this._locale) {
+            this._locale = value;
+            this.summaryService.clearSummaryCache();
+            this._pipeTrigger++;
+            this.notifyChanges();
+        }
     }
 
     @Input()
@@ -6388,9 +6388,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const columnItems = this.visibleColumns.filter((c) => !c.columnGroup).sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
         data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
+                const pipeArgs = this.getColumnByName(c.field).pipeArgs;
                 const value = c.formatter ? c.formatter(resolveNestedPath(dataRow, c.field)) :
-                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field)) :
-                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field))
+                    c.dataType === 'number' ? this.decimalPipe.transform(resolveNestedPath(dataRow, c.field),
+                        pipeArgs.digitsInfo, this.locale) :
+                        c.dataType === 'date' ? this.datePipe.transform(resolveNestedPath(dataRow, c.field),
+                            pipeArgs.format, pipeArgs.timezone, this.locale)
                             : resolveNestedPath(dataRow, c.field);
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
