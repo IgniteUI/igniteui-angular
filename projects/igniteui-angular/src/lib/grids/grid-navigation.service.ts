@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
-import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS, isEdge } from '../core/utils';
+import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS, ROW_ADD_KEYS, isEdge } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
@@ -93,7 +93,7 @@ export class IgxGridNavigationService {
                 this.grid.verticalScrollContainer.onChunkLoad
                     .pipe(first()).subscribe(() => {
                         if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
-                            this.grid.tbody.nativeElement.focus({preventScroll: true});
+                            this.grid.tbody.nativeElement.focus({ preventScroll: true });
                         }
                     });
                 break;
@@ -655,6 +655,6 @@ export class IgxGridNavigationService {
     }
 
     private isAddKey(key: string): boolean {
-        return key === '+' || key === 'add'; // add is for IE and Edge
+        return ROW_ADD_KEYS.has(key);
     }
 }
