@@ -7,7 +7,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
+import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
@@ -21,7 +21,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
-                SortByParityComponent
+                SortByParityComponent,
+                GridWithPrimaryKeyComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -72,6 +73,36 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).not.toEqual('ALex');
 
+        });
+
+        it('Should sort grid ascending by date column', () => {
+            fixture = TestBed.createComponent(GridWithPrimaryKeyComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            const currentColumn = 'HireDate';
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual('2005-10-14T11:23:17.714Z');
+            expect(grid.getCellByColumn(1, currentColumn).value).toEqual('2005-11-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(2, currentColumn).value).toEqual('2005-11-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(3, currentColumn).value).toEqual('2007-12-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(4, currentColumn).value).toEqual('2008-12-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(5, currentColumn).value).toEqual('2011-11-28T11:23:17.714Z');
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual('2017-06-19T11:43:07.714Z');
+
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(9, currentColumn).value).toEqual('2005-10-14T11:23:17.714Z');
+            expect(grid.getCellByColumn(8, currentColumn).value).toEqual('2005-11-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(7, currentColumn).value).toEqual('2005-11-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(6, currentColumn).value).toEqual('2007-12-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(5, currentColumn).value).toEqual('2008-12-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(4, currentColumn).value).toEqual('2011-11-28T11:23:17.714Z');
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual('2017-06-19T11:43:07.714Z');
         });
 
         it('Should not sort grid when trying to sort by invalid column', () => {
@@ -373,4 +404,3 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         });
     });
 });
-

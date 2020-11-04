@@ -360,6 +360,250 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
+    it('should correctly filter by \'date\' filtering conditions when dates are ISO 8601 strings', fakeAsync(() => {
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.today;
+
+        grid.data =  grid.data.map(rec => {
+            const newRec = Object.assign({}, rec) as any;
+            newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : rec.ReleaseDate;
+            return newRec;
+        });
+
+        // Fill expected results based on the current date
+        const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
+
+        // After filter
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
+            IgxDateFilteringOperand.instance().condition('after'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // Before filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
+            IgxDateFilteringOperand.instance().condition('before'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+
+        // DoesNotEqual filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+            IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+
+        // Equals filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+            IgxDateFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // LastMonth filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('lastMonth'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[0]);
+
+        // NextMonth filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('nextMonth'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[1]);
+
+        // ThisYear filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('thisYear'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[2]);
+
+        // LastYear filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('lastYear'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[4]);
+
+        // NextYear filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('nextYear'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[3]);
+
+        // Null filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('null'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // NotNull filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('notNull'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+
+        // Empty filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('empty'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // NotEmpty filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('notEmpty'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(6);
+
+        // Today filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('today'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Yesterday filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+    }));
+
+    it('should correctly filter by \'date\' filtering conditions when dates are miliseconds numbers', fakeAsync(() => {
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.today;
+
+        grid.data =  grid.data.map(rec => {
+            const newRec = Object.assign({}, rec) as any;
+            newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : rec.ReleaseDate;
+            return newRec;
+        });
+
+        // Fill expected results based on the current date
+        const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
+
+        // After filter
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
+            IgxDateFilteringOperand.instance().condition('after'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // Before filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
+            IgxDateFilteringOperand.instance().condition('before'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+
+        // DoesNotEqual filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+            IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+
+        // Equals filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
+            IgxDateFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // LastMonth filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('lastMonth'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[0]);
+
+        // NextMonth filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('nextMonth'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[1]);
+
+        // ThisYear filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('thisYear'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[2]);
+
+        // LastYear filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('lastYear'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[4]);
+
+        // NextYear filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('nextYear'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(expectedResults[3]);
+
+        // Null filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('null'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // NotNull filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('notNull'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+
+        // Empty filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('empty'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // NotEmpty filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('notEmpty'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(6);
+
+        // Today filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('today'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Yesterday filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+    }));
+
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
