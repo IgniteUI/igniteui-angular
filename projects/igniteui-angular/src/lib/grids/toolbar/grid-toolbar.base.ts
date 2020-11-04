@@ -40,7 +40,8 @@ export abstract class BaseToolbarDirective {
             const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
             toggleRef.onOpening.pipe(first()).subscribe(setHeight);
         }
-        toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet }});
+        toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet,
+            excludeFromOutsideClick: [anchorElement] }});
     }
 
     /** @hidden @internal */
