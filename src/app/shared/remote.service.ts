@@ -45,6 +45,19 @@ export class RemoteService {
         });
     }
 
+    getOrdersData(url: string, data?: any, cb?: (any) => void) {
+        return this.http.get(url).pipe(
+            map(response => response),
+        )
+        .subscribe(d => {
+            this._remoteData.next(d['value']);
+            this._totalCount.next(d['@odata.count']);
+            if (cb) {
+                cb(d);
+            }
+        });
+    }
+
     buildUrl(dataState: any) {
         return this.urlBuilder(dataState);
     }
