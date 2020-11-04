@@ -306,7 +306,8 @@
             position: relative;
             $focus-outline-offset-top: rem(2px);
             $focus-outline-offset-left: rem(2px);
-            &:after {
+
+            &::after {
                 content: '';
                 position: absolute;
                 top: -$focus-outline-offset-top;
