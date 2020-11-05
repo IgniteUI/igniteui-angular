@@ -6,7 +6,7 @@ import {
 } from 'igniteui-angular';
 
 @Component({
-    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }],
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.css'],
     templateUrl: 'grid-groupby.sample.html'
@@ -20,24 +20,25 @@ export class GridGroupBySampleComponent implements OnInit {
     public groupingExpressions: Array<ISortingExpression>;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
-    public selectionMode;
+    public selectionModes: any[];
     public position = GridSummaryPosition.top;
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) { }
     public ngOnInit(): void {
         this.columns = [
             { dataType: 'string', field: 'ID', width: 100, hidden: true },
-            { dataType: 'string', field: 'CompanyName', width: 300, groupable: true  },
+            { dataType: 'string', field: 'CompanyName', width: 300, groupable: true },
             { dataType: 'number', field: 'Salary', width: 200, pinned: true },
             { dataType: 'string', field: 'ContactTitle', width: 200, pinned: true, groupable: true },
-            { dataType: 'string', field: 'Address', width: 300, groupable: true  },
+            { dataType: 'string', field: 'Address', width: 300, groupable: true },
             { dataType: 'string', field: 'Country', width: 150, groupable: true },
             { dataType: 'string', field: 'City', width: 150, groupable: true },
             { dataType: 'string', field: 'Region', width: 150, groupable: true },
-            { dataType: 'string', field: 'PostalCode', width: 150, groupable: true  },
-            { dataType: 'string', field: 'Phone', width: 150, groupable: true  },
-            { dataType: 'string', field: 'Fax', width: 150, groupable: true  }
+            { dataType: 'string', field: 'PostalCode', width: 150, groupable: true },
+            { dataType: 'string', field: 'Phone', width: 150, groupable: true },
+            { dataType: 'string', field: 'Fax', width: 150, groupable: true }
         ];
-        this.selectionMode = GridSelectionMode.multiple;
+        this.selectionModes = ['multiple', 'single', 'none'];
+        this.grid1.rowSelection = this.selectionModes[0];
         this.hideGroupedColumns = true;
         this.summaryModes = [
             { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
@@ -95,7 +96,7 @@ export class GridGroupBySampleComponent implements OnInit {
         }
         this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
     }
-    toggleGroupedVisibility(event){
+    toggleGroupedVisibility(event) {
         this.grid1.hideGroupedColumns = !event.checked;
     }
 
@@ -103,11 +104,14 @@ export class GridGroupBySampleComponent implements OnInit {
         this.position = this.position === GridSummaryPosition.top ? GridSummaryPosition.bottom : GridSummaryPosition.top;
     }
     toggleDensity() {
-        switch (this.displayDensityOptions.displayDensity ) {
+        switch (this.displayDensityOptions.displayDensity) {
             case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
             case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
             case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
         }
+    }
+    onRowSelection(event) {
+        this.grid1.rowSelection = event.newSelection.element.nativeElement.textContent.trim();
     }
     getRowsList() {
         console.log(this.grid1.rowList);
@@ -118,19 +122,19 @@ export class GridGroupBySampleComponent implements OnInit {
         console.log(JSON.stringify(this.groupingExpressions));
     }
 
-    onGroupingDoneHandler(event){
+    onGroupingDoneHandler(event) {
         console.log("onGroupingDone: ");
         console.log(event);
     }
     getData(item) {
-    console.log(item);
+        console.log(item);
     }
 
     groupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
+            { fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
         ];
         this.grid1.groupBy(expr);
     }
@@ -141,8 +145,8 @@ export class GridGroupBySampleComponent implements OnInit {
 
     groupUngroupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            { fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
         ];
         this.grid1.groupingExpressions = expr;
     }
