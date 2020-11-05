@@ -12,6 +12,7 @@ export class GridAddRowSampleComponent implements OnInit {
     public result: string;
 
     data: any[];
+    dataFull: any[];
     columns: any[];
     onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
@@ -35,7 +36,7 @@ export class GridAddRowSampleComponent implements OnInit {
             { field: 'ContactTitle', width: '300px', pinned: false }
         ];
 
-        this.data = [
+        this.dataFull = [
             // tslint:disable:max-line-length
             { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative'},
             { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados', 'ContactName': 'Ana Trujillo', 'ContactTitle': 'Owner'},
