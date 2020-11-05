@@ -20,6 +20,7 @@ import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
+import { parseDate } from '../core/utils';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -433,6 +434,7 @@ export class GridFunctions {
     }
 
     public static generateICalendarDate(date: Date, year: number, month: number) {
+        date = parseDate(date);
         return {
             date,
             isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
