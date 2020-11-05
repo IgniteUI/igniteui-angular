@@ -361,9 +361,7 @@ export class FileContentData {
     }
 
     get noHeadersDateTimeContent() {
-        this._sharedStringsData = `count="5" uniqueCount="5"><si><t>Column 1</t></si><si><t>${new Date('2018').toString()}</t>` +
-            `</si><si><t>${new Date(2018, 3, 23).toString()}</t></si><si>` +
-            `<t>${new Date(30).toString()}</t></si><si><t>${new Date('2018/03/23').toString()}</t></si>`;
+        this._sharedStringsData = `count="1" uniqueCount="1"><si><t>Column 1</t></si>`;
 
         this._tableData = `ref="A1:A5" totalsRowShown="0"><autoFilter ref="A1:A5"/><tableColumns count="1">` +
             `<tableColumn id="1" name="Column1"/></tableColumns>`;
@@ -371,8 +369,8 @@ export class FileContentData {
         this._worksheetData = `<dimension ref="A1:A5"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
             `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
             `"50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
-            `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
-            `</c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row></sheetData>`;
+            `<c r="A2" t="d" s="2"><v>2018-01-01T02:00:00</v></c></row><row r="3"><c r="A3" t="d" s="2"><v>2018-04-23T00:00:00</v></c></row><row r="4"><c r="A4" t="d" s="2"><v>1970-01-01T03:00:00</v>` +
+            `</c></row><row r="5"><c r="A5" t="d" s="2"><v>2018-03-23T00:00:00</v></c></row></sheetData>`;
 
         return this.createData();
     }

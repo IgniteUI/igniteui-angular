@@ -52,7 +52,7 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.dateArray(), options);
 
         wrapper.verifyStructure();
-        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyTemplateFilesContent('', true);
         await wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
     });
 

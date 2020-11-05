@@ -268,15 +268,19 @@ export class WorksheetFile implements IExcelFile {
         } else {
             const savedValue = dictionary.saveValue(cellValue, column, false);
             const isSavedAsString = savedValue !== -1;
-            const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
+
+            const isSavedAsDate = !isSavedAsString &&
+                !isNaN(Date.parse(cellValue)) &&
+                (cellValue instanceof Date || typeof cellValue === 'string');
 
             let value = isSavedAsString ? savedValue : cellValue;
 
             if (isSavedAsDate) {
+                if (typeof value === 'string') { value = new Date(value); }
+
                 const timeZoneOffset = value.getTimezoneOffset() * 60000;
                 const isoString = (new Date(value - timeZoneOffset)).toISOString();
                 value = isoString.substring(0, isoString.indexOf('.'));
-
             }
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
