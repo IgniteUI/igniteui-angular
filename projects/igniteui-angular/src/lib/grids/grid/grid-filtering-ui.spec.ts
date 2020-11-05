@@ -23,7 +23,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, DatePipe } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
@@ -41,10 +41,12 @@ import {
     IgxGridFilteringESFLoadOnDemandComponent,
     CustomFilteringStrategyComponent,
     IgxGridExternalESFComponent,
-    IgxGridExternalESFTemplateComponent
+    IgxGridExternalESFTemplateComponent,
+    IgxGridDatesFilteringComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import localeFR from '@angular/common/locales/fr';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -58,7 +60,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
                 IgxGridFilteringMCHComponent,
-                IgxGridFilteringTemplateComponent
+                IgxGridFilteringTemplateComponent,
+                IgxGridDatesFilteringComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -67,7 +70,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             ]
         }).compileComponents();
     }));
-
 
     describe(null, () => {
         let fix: ComponentFixture<any>;
@@ -2585,6 +2587,82 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
         }));
     });
+
+    describe(null, () => {
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.today;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridDatesFilteringComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        // UI tests date column // date values are ISO 8601 strings
+        it('UI - should correctly filter ISO 8601 date column', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const reset = filterUIRow.queryAll(By.css('button'))[0];
+            const close = filterUIRow.queryAll(By.css('button'))[1];
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
+
+            // Today condition
+            GridFunctions.openFilterDDAndSelectCondition(fix, 4);
+
+            expect(grid.rowList.length).toEqual(1);
+            verifyFilterRowUI(input, close, reset, false);
+            verifyFilterUIPosition(filterUIRow, grid);
+
+            expect(grid.rowList.length).toEqual(1);
+
+            // This Month condition
+            GridFunctions.openFilterDDAndSelectCondition(fix, 6);
+            verifyFilterRowUI(input, close, reset, false);
+            expect(grid.rowList.length).toEqual(expectedResults[5]);
+
+            // Last Month condition
+            GridFunctions.openFilterDDAndSelectCondition(fix, 7);
+            verifyFilterRowUI(input, close, reset, false);
+            expect(grid.rowList.length).toEqual(expectedResults[0]);
+
+            // Empty condition
+            GridFunctions.openFilterDDAndSelectCondition(fix, 12);
+            verifyFilterRowUI(input, close, reset, false);
+            expect(grid.rowList.length).toEqual(2);
+        }));
+
+        it('UI - should correctly filter ISO 8601 date column by \'equals\' filtering conditions', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+            GridFunctions.openFilterDDAndSelectCondition(fix, 0);
+
+            input.triggerEventHandler('click', null);
+            tick();
+            fix.detectChanges();
+
+            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
+            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
+
+            const currentDay = calendar.querySelector('.igx-calendar__date--current');
+
+            currentDay.dispatchEvent(new Event('click'));
+
+            flush();
+            fix.detectChanges();
+            input.triggerEventHandler('change', null);
+            tick();
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toEqual(1);
+        }));
+    });
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
@@ -4196,6 +4274,90 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
+        it('Should filter grid with ISO 8601 dates through custom date filter dialog', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
+                return newRec;
+            });
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const datePickerInput = datePicker.querySelector('input');
+
+            // Click date picker input to open calendar.
+            datePickerInput.dispatchEvent(new MouseEvent('click'));
+            tick(100);
+            fix.detectChanges();
+
+            // Click today item.
+            const calendar = document.querySelector('igx-calendar');
+            const todayItem = calendar.querySelector('.igx-calendar__date--current');
+            (todayItem as HTMLElement).click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            // Verify the results are with 'today' date.
+            const cellValue = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            expect(new Date(cellValue.innerText).toDateString()).toMatch(new Date().toDateString());
+            expect(grid.filteredData.length).toEqual(1);
+        }));
+
+        it('Should filter grid with miliseconds dates through custom date filter dialog', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
+                return newRec;
+            });
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const datePickerInput = datePicker.querySelector('input');
+
+            // Click date picker input to open calendar.
+            datePickerInput.dispatchEvent(new MouseEvent('click'));
+            tick(100);
+            fix.detectChanges();
+
+            // Click today item.
+            const calendar = document.querySelector('igx-calendar');
+            const todayItem = calendar.querySelector('.igx-calendar__date--current');
+            (todayItem as HTMLElement).click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            // Verify the results are with 'today' date.
+            const cellValue = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            expect(new Date(cellValue.innerText).toDateString()).toMatch(new Date().toDateString());
+            expect(grid.filteredData.length).toEqual(1);
+        }));
+
         it('Should correctly update \'SelectAll\' based on checkboxes.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
@@ -4354,6 +4516,82 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     }));
 
         it('Should filter date by input string', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, todayDate, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBeGreaterThan(2);
+            for (let i = 2; i < listItems.length; i++) {
+                expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
+            }
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+        }));
+
+        it('Should filter ISO 8601 date by input string', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
+                return newRec;
+            });
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, todayDate, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBeGreaterThan(2);
+            for (let i = 2; i < listItems.length; i++) {
+                expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
+            }
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+        }));
+
+        it('Should filter miliseconds date by input string', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
+                return newRec;
+            });
+            fix.detectChanges();
+
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(100);
             fix.detectChanges();
@@ -4874,6 +5112,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems[1].innerText).not.toBe('(Blanks)');
         }));
+
+        it('Should use custom excel style filter icon instead of default one.', fakeAsync(() => {
+            const header = GridFunctions.getColumnHeader('AnotherField', fix);
+            fix.detectChanges();
+            const icon = GridFunctions.getHeaderFilterIcon(header);
+            fix.detectChanges();
+            expect(icon).not.toBeNull();
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('filter_alt');
+        }));
     });
 
     describe('Load values on demand', () => {
@@ -4902,6 +5149,176 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify unique date values are loaded correctly in ESF search component.', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(400);
+            fix.detectChanges();
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify unique ISO 8601 date values are loaded correctly in ESF search component.', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
+                return newRec;
+            });
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(400);
+            fix.detectChanges();
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify unique miliseconds date values are loaded correctly in ESF search component.', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
+                return newRec;
+            });
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(400);
+            fix.detectChanges();
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify date values are displayed in correct format according to column pipeArgs', fakeAsync(() => {
+            const downloads = ['Select All', '(Blanks)', '0,00', '20,00', '100,00', '127,00', '254,00', '702,00', '1 000,00'];
+            registerLocaleData(localeFR);
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
+                return newRec;
+            });
+            const dates = fix.componentInstance.data.filter(el => el.ReleaseDate).map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
+            const grid = fix.componentInstance.grid;
+            grid.locale = 'fr-FR';
+            const datePipe = new DatePipe(grid.locale);
+            const formatOptions = {
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
+            grid.getColumnByName('ReleaseDate').pipeArgs = formatOptions;
+            grid.getColumnByName('Downloads').pipeArgs = formatOptions;
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(1050);
+            fix.detectChanges();
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+
+            for (let i = 2; i < listItems.length; i++) {
+                const label = datePipe.transform(dates[i - 2], formatOptions.format);
+                expect(listItems[i].innerText).toBe(label);
+            }
+
+            const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+            tick(1050);
+            fix.detectChanges();
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+
+            listItems.forEach((item, ind) => {
+                expect(item.innerText).toBe(downloads[ind]);
+            });
+        }));
+
+        it('Verify date values are displayed in correct format according to column formatter', fakeAsync(() => {
+            registerLocaleData(localeFR);
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
+                return newRec;
+            });
+            const grid = fix.componentInstance.grid;
+            grid.locale = 'fr-FR';
+            const datePipe = new DatePipe(grid.locale);
+            grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
+                const pipe = new DatePipe('fr-FR');
+                const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longDate') : 'No value!';
+                return val;
+            });
+
+            const dates = fix.componentInstance.data.map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(1050);
+            fix.detectChanges();
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+
+            expect(listItems[1].innerText).toBe('No value!');
+            for (let i = 2; i < listItems.length; i++) {
+                const date = dates[i];
+                const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
+                expect(listItems[i].innerText).toBe(label);
+            }
+
+            const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
 
