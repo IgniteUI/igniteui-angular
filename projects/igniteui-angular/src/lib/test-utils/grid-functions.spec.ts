@@ -20,6 +20,7 @@ import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
+import { parseDate } from '../core/utils';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -66,6 +67,7 @@ const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
+const FILTER_ICON_CLASS = '.igx-excel-filter__icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -128,7 +130,7 @@ export class GridFunctions {
     }
 
     public static getGridScroll(fix): DebugElement {
-    return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
+        return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -299,7 +301,7 @@ export class GridFunctions {
 
     public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
         const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
-                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+            Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
 
@@ -433,6 +435,7 @@ export class GridFunctions {
     }
 
     public static generateICalendarDate(date: Date, year: number, month: number) {
+        date = parseDate(date);
         return {
             date,
             isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
@@ -1869,6 +1872,10 @@ export class GridFunctions {
         return header.query(By.css(SORT_ICON_CLASS));
     }
 
+    public static getHeaderFilterIcon(header: DebugElement): DebugElement {
+        return header.query(By.css(FILTER_ICON_CLASS));
+    }
+
     public static clickHeaderSortIcon(header: DebugElement) {
         const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         sortIcon.triggerEventHandler('click', new Event('click'));
@@ -2020,12 +2027,12 @@ export class GridFunctions {
     }
 
     public static getHeaderResizeArea(header: DebugElement): DebugElement {
-         return  header.parent.query(By.css(RESIZE_AREA_CLASS));
+        return header.parent.query(By.css(RESIZE_AREA_CLASS));
     }
 
     public static getResizer(fix): DebugElement {
-        return  fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
-   }
+        return fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
@@ -2254,6 +2261,13 @@ export class GridSelectionFunctions {
         return fix.nativeElement.querySelectorAll(HEADER_ROW_CSS_CLASS);
     }
 
+    public static verifyGroupByRowCheckboxState(groupByRow, checked = false, indeterminate = false, disabled = false) {
+        const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(groupByRow.element.nativeElement);
+        expect(groupByRowCheckboxElement.checked).toBe(checked);
+        expect(groupByRowCheckboxElement.indeterminate).toBe(indeterminate);
+        expect(groupByRowCheckboxElement.disabled).toBe(disabled);
+    }
+
     public static verifyHeaderRowCheckboxState(parent, checked = false, indeterminate = false) {
         const header = GridSelectionFunctions.getHeaderRow(parent);
         const headerCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(header);
@@ -2261,9 +2275,14 @@ export class GridSelectionFunctions {
         expect(headerCheckboxElement.indeterminate).toBe(indeterminate);
     }
 
-    public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
+    public static verifySelectionCheckBoxesAlignment(grid) {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
-        const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
+        const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.dataRowList.first.nativeElement);
+        if (grid.groupingExpressions && grid.groupingExpressions.length > 0) {
+            const groupByRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.groupsRowList.first.nativeElement);
+            expect(groupByRowDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
+            expect(groupByRowDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+        }
         const hScrollbar = grid.headerContainer.getScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);

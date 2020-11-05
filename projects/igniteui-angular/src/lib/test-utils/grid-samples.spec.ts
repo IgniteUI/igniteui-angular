@@ -971,7 +971,7 @@ export class VirtualGridComponent extends BasicGridComponent {
  @Component({
     template: GridTemplateStrings.declareGrid(
         ` [primaryKey]="'ID'"`,
-        '', ColumnDefinitions.idNameJobHireDate)
+        '', ColumnDefinitions.idNameJobHireWithTypes)
 })
 export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
     data = SampleTestData.personJobDataFull();
@@ -1050,6 +1050,37 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridDatesFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData().map(rec => {
+        const newRec = Object.assign({}, rec) as any;
+        newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
+        return newRec;
+    });
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
     template: `
     <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
     </igx-grid-excel-style-filtering>
@@ -1099,7 +1130,7 @@ export class CustomFilterStrategy extends FilteringStrategy {
     }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[]  {
-        return super.filter(data, expressionsTree);
+        return super.filter(data, expressionsTree, null, null);
     }
 
     public getFieldValue(rec: object, fieldName: string): any {
@@ -1146,7 +1177,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
                                    columnExprTree: IFilteringExpressionsTree,
                                    done: (uniqueValues: any[]) => void) => {
         setTimeout(() => {
-            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
+            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree, null, null);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
             this.doneCallbackCounter++;
@@ -1200,6 +1231,10 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
+
+        <ng-template igxExcelStyleHeaderIcon>
+            <igx-icon>filter_alt</igx-icon>
+        </ng-template>
 
         <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
