@@ -52,7 +52,7 @@ export class WorksheetDataDictionary {
         }
 
         let sanitizedValue = '';
-        const isDate = value instanceof Date || (this._columnTypeInfo[column] && !isNaN(Date.parse(value)));
+        const isDate = value instanceof Date;
         const isSavedAsString = (this._columnTypeInfo[column] || isHeader) && !isDate;
 
         if (isSavedAsString) {
