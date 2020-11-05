@@ -1,5 +1,6 @@
 import { Component, Input, TemplateRef, HostBinding, ElementRef } from '@angular/core';
 import { SliderHandle } from '../slider.common';
+import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 
 @Component({
     selector: 'igx-thumb-label',
@@ -26,6 +27,10 @@ export class IgxThumbLabelComponent {
     @Input()
     public deactiveState: boolean;
 
+    @Input()
+    public thumb: IgxSliderThumbComponent;
+
+
     @HostBinding('class.igx-slider__label-from')
     public get thumbFromClass() {
         return this.type === SliderHandle.FROM;
@@ -44,6 +49,11 @@ export class IgxThumbLabelComponent {
     @HostBinding('class.igx-slider__label-to--active')
     public get thumbToActiveClass() {
         return this.type === SliderHandle.TO && this.active;
+    }
+
+    @HostBinding('class.igx-slider__label--pressed')
+    public get labelPressedClass() {
+        return this.thumb?.thumbPressedClass;
     }
 
     constructor(private _elementRef: ElementRef) { }

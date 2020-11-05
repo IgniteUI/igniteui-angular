@@ -254,6 +254,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Performance'
         },
         {
+            link: '/gridFormatting',
+            icon: 'view_column',
+            name: 'Grid Formatting'
+        },
+        {
             link: '/gridRemoteVirtualization',
             icon: 'view_column',
             name: 'Grid Remote Virtualization'
@@ -516,6 +521,11 @@ export class AppComponent implements OnInit {
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     styleLinks = [
+        {
+            link: '/animations',
+            icon: 'color_lens',
+            name: 'Animations'
+        },
         {
             link: '/colors',
             icon: 'color_lens',
