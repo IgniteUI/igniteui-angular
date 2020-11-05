@@ -237,7 +237,7 @@ export abstract class IgxBaseExporter {
 
                     if (e.dataType === 'date' && rawValue !== undefined && rawValue !== null) {
                         rawValue = new Date(rawValue);
-                    } else if (e.dataType === 'string' && rawValue !== undefined && rawValue !== null) {
+                    } else if (e.dataType === 'string' && isNaN(Number(rawValue)) && rawValue !== undefined && rawValue !== null) {
                         rawValue = rawValue.toString();
                     }
 
