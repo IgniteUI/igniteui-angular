@@ -23,7 +23,7 @@ describe('Unit testing FilteringStrategy', () => {
                 searchVal: 1
             }
         ];
-        const res = fs.filter(data, expressionTree);
+        const res = fs.filter(data, expressionTree, null, null);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([2, 3, 4]);
     });
@@ -65,7 +65,7 @@ describe('Unit testing FilteringStrategy', () => {
                 searchVal: 'ROW'
             }
         ];
-        const res = filterstr.filter(data, expressionTree);
+        const res = filterstr.filter(data, expressionTree, null, null);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([0]);
     });
