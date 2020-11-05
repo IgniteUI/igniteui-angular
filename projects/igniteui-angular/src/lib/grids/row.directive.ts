@@ -21,7 +21,7 @@ import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
-import { cloneValue } from '../core/utils';
+import mergeWith from 'lodash.mergewith';
 
 @Directive({
     selector: '[igxRowBaseComponent]'
@@ -52,7 +52,14 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return Object.assign(cloneValue(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false));
+            // return Object.assign(cloneValue(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false));
+            // return merge({...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
+            return mergeWith({ ...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false),
+                (objValue, srcValue) => {
+                    if (Array.isArray(srcValue)) {
+                        return objValue = srcValue;
+                    }
+                });
         }
         return this._rowData;
     }

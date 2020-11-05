@@ -68,7 +68,7 @@ export function mergeObjects(obj1: {}, obj2: {}): any {
     // }
     // return merge(obj1, obj2);
 
-    return mergeWith(obj1, obj2, (objValue, srcValue, key) => {
+    return mergeWith(obj1, obj2, (objValue, srcValue) => {
         if (Array.isArray(srcValue)) {
             return objValue = srcValue;
         }
