@@ -1,0 +1,227 @@
+:host ::ng-deep {
+    .fin-dark-theme {
+        .finjs-slider,
+        .sample-toolbar {
+            color: rgba(255, 255, 255, 0.87);
+        }
+    }
+    .finjs-icons {
+        display: flex;
+        align-items: center;
+        igx-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            margin-left: 4px;
+        }
+    }
+    .igx-grid__grouparea {
+        max-height: 100%;
+        height: auto;
+    }
+    .changePos,
+    .changeNeg,
+    .strongPositive,
+    .strongNegative {
+        color: #fff !important;
+        .igx-grid__td-text {
+            padding: 2px 5px;
+        }
+    }
+    .positive {
+        color: #4eb862 !important;
+    }
+    .positive.strongPositive {
+        .igx-grid__td-text {
+            color: rgba(78, 184, 98, 0.8) !important;
+        }
+    }
+    .negative {
+        color: #d31642 !important;
+    }
+    .negative.strongNegative {
+        .igx-grid__td-text {
+            color: rgba(255, 19, 74, 0.8) !important;
+        }
+    }
+    // NORMAL
+    // positive
+    .changePos {
+        .igx-grid__td-text {
+            background: #335e3b;
+        }
+    }
+    .changePos1 {
+        background: #335e3b;
+        color: #fff;
+    }
+    .changePos2 {
+        .igx-grid__td-text {
+            border-right: 4px solid #335e3b;
+            padding-right: 4px;
+        }
+    }
+    // negative
+    .changeNeg {
+        .igx-grid__td-text {
+            background: #7a1c32;
+        }
+    }
+    .changeNeg1 {
+        color: #fff;
+        background: #7a1c32;
+    }
+    .changeNeg2 {
+        .igx-grid__td-text {
+            border-right: 4px solid #7a1c32;
+            padding-right: 4px;
+        }
+    }
+    // selected
+    .igx-grid__td--selected.changePos1,
+    .igx-grid__td--selected.changePos2,
+    .igx-grid__td--selected.changePos {
+        background-color: #335e3b !important;
+        .finjs-icons,
+        .igx-grid__td-text {
+            color: #fff;
+        }
+    }
+    .igx-grid__td--selected.changeNeg1,
+    .igx-grid__td--selected.changeNeg2,
+    .igx-grid__td--selected.changeNeg {
+        background-color: #7a1c32 !important;
+        .finjs-icons,
+        .igx-grid__td-text {
+            color: #fff;
+        }
+    }
+    // STRONG
+    // positive
+    .strongPositive {
+        .igx-grid__td-text {
+            background: #459a55;
+        }
+    }
+    .strongPositive1 {
+        background: #459a55;
+        color: #fff;
+    }
+    .strongPositive2 {
+        .igx-grid__td-text {
+            border-right: 4px solid #459a55;
+            padding-right: 4px;
+        }
+    }
+    // negative
+    .strongNegative {
+        .igx-grid__td-text {
+            background: #d31642;
+            color: #fff;
+        }
+    }
+    .strongNegative1 {
+        background: #d31642;
+        color: #fff;
+    }
+    .strongNegative2 {
+        .igx-grid__td-text {
+            border-right: 4px solid #d31642;
+            padding-right: 4px;
+        }
+    }
+    // selected
+    .igx-grid__td--selected.strongPositive1,
+    .igx-grid__td--selected.strongPositive2,
+    .igx-grid__td--selected.strongPositive {
+        background-color: #459a55 !important;
+        .finjs-icons,
+        .igx-grid__td-text {
+            color: #fff;
+        }
+    }
+    .igx-grid__td--selected.strongNegative1,
+    .igx-grid__td--selected.strongNegative2,
+    .igx-grid__td--selected.strongNegative {
+        background-color: #d31642 !important;
+        .finjs-icons,
+        .igx-grid__td-text {
+            color: #fff;
+        }
+    }
+    .controls-holder {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+        padding-bottom: 15px;
+    }
+    .switches {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1 0 0%;
+        padding-right: 20px;
+        font-size: 0.9rem;
+    }
+    .control-item {
+        padding-right: 20px;
+        label {
+            color: var(--igx-surface-500-contrast);
+        }
+    }
+    .igx-slider,
+    .igx-slider--disabled {
+        height: 24px;
+    }
+    .finjs-slider {
+        width: 40%;
+        min-width: 145px;
+    }
+    .finjs-play-controls {
+        width: 45%;
+        min-width: 620px;
+        margin-top: 10px;
+    }
+    .sample-toolbar {
+        height: 20px;
+        font-size: 0.8rem;
+        line-height: 20px;
+        /* position: absolute; */
+        /* bottom: 10px; */
+        /* left: 10px; */
+        margin-top: 11px;
+    }
+    .igx-grid__outlet span,
+    .igx-excel-filter span,
+    .igx-excel-filter header,
+    .igx-excel-filter input {
+        font-size: 0.8125rem;
+    }
+    .igx-button--icon {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+.grid__wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+igx-grid {
+    flex: 1 0 0%;
+}
+
+.controls-wrapper {
+    display: flex;
+    justify-content: center;
+    position: relative;
+}

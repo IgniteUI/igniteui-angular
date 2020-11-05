@@ -137,6 +137,7 @@ import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
+import { GridFinJSComponent } from './grid-finjs/grid-finjs.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -250,6 +251,7 @@ const components = [
     GridEsfLoadOnDemandComponent,
     GridFilteringComponent,
     GridFormattingComponent,
+    GridFinJSComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
     AboutComponent,

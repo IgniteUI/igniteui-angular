@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { FinancialData } from './financialData';
 
 @Injectable()
 export class LocalService {
@@ -21,5 +21,10 @@ export class LocalService {
             this.dataStore = data['value'];
             this._records.next(this.dataStore);
         });
+    }
+
+    getFinancialData(count: number = 10) {
+        const financialData: FinancialData = new FinancialData();
+        this._records.next(financialData.generateData(count));
     }
 }
