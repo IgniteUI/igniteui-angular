@@ -11,9 +11,9 @@ import {
     NgZone
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import ResizeObserver from 'resize-observer-polyfill';
 import { Subject } from 'rxjs';
-import { throttleTime, takeUntil, debounceTime } from 'rxjs/operators';
+import { takeUntil, throttleTime } from 'rxjs/operators';
+import { resizeObservable, isIE } from '../../core/utils';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
@@ -27,21 +27,17 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     private _afterViewInit = false;
     private _scrollNativeSize: number;
-    private _observer: ResizeObserver;
     private _detached = false;
-    protected resizeNotify = new Subject();
     protected destroy$ = new Subject<any>();
 
 
     ngAfterViewInit() {
         this._afterViewInit = true;
-        const destructor = takeUntil<any>(this.destroy$);
-        this.resizeNotify.pipe(destructor,
-        debounceTime(40, undefined))
-        .subscribe((event) => {
-            this._zone.runTask(() => {
-                this.handleMutations(event);
-            });
+        const delayTime = isIE() ? 40 : 0;
+        this._zone.runOutsideAngular(() => {
+            resizeObservable(this.nativeElement).pipe(
+                throttleTime(delayTime),
+                takeUntil(this.destroy$)).subscribe((event) => this.handleMutations(event));
         });
     }
 
@@ -51,10 +47,6 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     }
     constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef, protected _zone: NgZone, @Inject(DOCUMENT) public document) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
-        this._zone.runOutsideAngular(() => {
-            this._observer = new ResizeObserver((event) => this.resizeNotify.next(event));
-            this._observer.observe(this.nativeElement);
-        });
      }
 
     get nativeElement() {
@@ -65,7 +57,6 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         this.destroyed = true;
         this.destroy$.next(true);
         this.destroy$.complete();
-        this._observer.disconnect();
     }
 
     public set size(value) {
