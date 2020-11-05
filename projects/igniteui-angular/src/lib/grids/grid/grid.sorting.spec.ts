@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';

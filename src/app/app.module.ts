@@ -252,6 +252,7 @@ const components = [
     GridEsfLoadOnDemandComponent,
     GridFormattingComponent,
     GridFilteringComponent,
+    GridFormattingComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
     AboutComponent,

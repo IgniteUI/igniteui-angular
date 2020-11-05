@@ -28,7 +28,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
 
-    protected abstract getFieldValue(rec: object, fieldName: string, isDate: boolean): any;
+    protected abstract getFieldValue(rec: object, fieldName: string, isDate?: boolean): any;
 
     public findMatchByExpression(rec: object, expr: IFilteringExpression, isDate?: boolean): boolean {
         const cond = expr.condition;
