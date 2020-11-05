@@ -28,7 +28,6 @@ export default function(): Rule {
         '$_default-shape-pagination',
         '$_square-shape-pagination'];
 
-        let globalStyleExt: string;
         const gridPaginatorComponentImport = '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
         const gridPaginatorThemeImport = '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-theme';
         const paginatorComponentImport = '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
@@ -40,19 +39,10 @@ export default function(): Rule {
 
         const update = new UpdateChanges(__dirname, host, context);
 
-        if (config.schematics && config.schematics['@schematics/angular:component']) {
-            // updated projects have global prefix rather than per-project:
-            globalStyleExt = config.schematics['@schematics/angular:component'].styleext;
-        }
-
         for (const proj of projects) {
             const dir = host.getDir(proj.sourceRoot);
-            let ext = globalStyleExt || 'scss';
-            if (proj.schematics && proj.schematics['@schematics/angular:component']) {
-                ext = proj.schematics['@schematics/angular:component'].styleext || ext;
-            }
             dir.visit((path, entry) => {
-                if (path.endsWith('.' + ext)) {
+                if (path.endsWith('.scss')) {
                     let content = entry.content.toString();
                     if (content.match(/\bigx-grid-paginator\b/g)) {
                         content = content.replace(/\bigx-grid-paginator\b/g, 'igx-paginator');
