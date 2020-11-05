@@ -117,8 +117,8 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(column, false, 0);
         });
 
-        it('Checks order of columns after unpinning', ()=> {
-            for(let column of grid.columns){
+        it('Checks order of columns after unpinning', () => {
+            for (const column of grid.columns) {
                 column.pin();
             }
             fix.detectChanges();
@@ -128,9 +128,13 @@ describe('Column Pinning UI #grid', () => {
             grid.getColumnByName('ProductName').unpin();
             grid.getColumnByName('Released').unpin();
             fix.detectChanges();
-            grid.unpinnedColumns.forEach( (column, index) => {
-                if(index == grid.unpinnedColumns.length - 1) return;
-                expect(column.index < grid.unpinnedColumns[index + 1].index).toBe(true);
+            grid.unpinnedColumns.forEach((column, index) => {
+                if (index === grid.unpinnedColumns.length - 1) {
+                    return;
+                }
+                expect(
+                    column.index < grid.unpinnedColumns[index + 1].index
+                ).toBe(true);
             });
         });
 
