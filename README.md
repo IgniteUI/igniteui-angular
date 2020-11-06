@@ -10,7 +10,7 @@
 
 You can find source files under the [`src`](https://github.com/IgniteUI/igniteui-angular/tree/master/src) folder, including samples and tests.
 
-#### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid)
+#### [**View running samples here**](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
 #### [**Install our VSCode Toolbox extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-toolbox)
 ![](https://dl.infragistics.com/tools/extensions/angular-toolbox/toolbox.gif)
 #### [**Install our VSCode tooltip extension**](https://marketplace.visualstudio.com/items?itemName=Infragistics.igniteui-angular-tooltips)
@@ -39,7 +39,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 |dialog|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/dialog/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)|ripple|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/ripple/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/ripple)|
 |drop down|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/drop-down/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down)|suffix|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|
 |expansion panel|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/expansion-panel/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel)|text-highlight|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/text-highlight/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/texthighlight)|
-|grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid)|toggle|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)|
+|grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)|toggle|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)|
 |hierarchical grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid)|tooltip|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)|
 |icon|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/icon/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon)|Others|Status|Docs||
 |input group|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/input-group/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)|Animations|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/animations/README.md)||
@@ -50,13 +50,13 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 |navigation drawer|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/navigation-drawer/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)|||||
 |radio|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/radio/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio-button)|||||
 |select|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/select/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select)|||||
-|slider|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/slider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider)|||||
+|slider|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/slider/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/slider/slider)|||||
 |snackbar|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/snackbar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)|||||
 |switch|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/switch/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch)|||||
 |tabs|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|||||
 |time picker|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker)|||||
 |toast|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)|||||
-|tree grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid)|||||
+|tree grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)|||||
 
 #### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
 |Components||
@@ -190,7 +190,7 @@ The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) de
 
 The [Crypto Portfolio App](https://github.com/IgniteUI/crypto-portfolio-app) is a web and mobile application, developed with Ignite UI for Angular components and styled with our one of a kind theming engine.
 
-To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid).
+To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid).
 
 All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started).
 

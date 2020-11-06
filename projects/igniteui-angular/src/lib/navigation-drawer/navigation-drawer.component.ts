@@ -26,7 +26,7 @@ import { PlatformUtil } from '../core/utils';
 let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Navigation Drawer** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
  *
  * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
  *
