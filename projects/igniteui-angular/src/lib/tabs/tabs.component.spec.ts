@@ -1,5 +1,5 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
@@ -35,7 +35,7 @@ describe('IgxTabs', () => {
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         const testRoutes = [
             { path: 'view1', component: TabsRoutingView1Component, canActivate: [TabRoutingTestGuard] },
             { path: 'view2', component: TabsRoutingView2Component, canActivate: [TabRoutingTestGuard] },
@@ -59,7 +59,7 @@ describe('IgxTabs', () => {
         let fixture;
         let tabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTestHtmlAttributesComponent);
             tabs = fixture.componentInstance.tabs;
         }));
@@ -98,7 +98,7 @@ describe('IgxTabs', () => {
         let fixture;
         let tabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTestComponent);
             tabs = fixture.componentInstance.tabs;
         }));
@@ -401,7 +401,7 @@ describe('IgxTabs', () => {
         let fixture;
         let tabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TemplatedTabsTestComponent);
             tabs = fixture.componentInstance.tabs;
         }));
@@ -562,7 +562,7 @@ describe('IgxTabs', () => {
         let tabsComp;
         let theTabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             router = TestBed.inject(Router);
             location = TestBed.inject(Location);
             fixture = TestBed.createComponent(TabsRoutingTestComponent);
@@ -770,7 +770,7 @@ describe('IgxTabs', () => {
         let tabsComp;
         let theTabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             router = TestBed.inject(Router);
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
@@ -802,7 +802,7 @@ describe('IgxTabs', () => {
         let tabsComp;
         let theTabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest2Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();

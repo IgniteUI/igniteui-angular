@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, async, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,7 +15,7 @@ describe('igxGridPinningActions #grid ', () => {
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxActionStripTestingComponent,

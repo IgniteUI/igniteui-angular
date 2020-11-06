@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,7 +21,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestExpandedBaseComponent
@@ -30,7 +30,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
         fix.detectChanges();
         grid = fix.componentInstance.hgrid;

@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
@@ -34,7 +34,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     const FILTERING_ROW_CLASS = 'igx-grid-filtering-row';
     const FILTERING_CELL_CLASS = 'igx-grid-filtering-cell';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,

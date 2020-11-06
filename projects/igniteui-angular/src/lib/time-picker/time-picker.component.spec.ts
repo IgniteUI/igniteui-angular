@@ -1,6 +1,6 @@
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,13 +17,13 @@ import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [IgxTimePickerTestingModule]
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
+    afterEach(waitForAsync(() => {
         UIInteractions.clearOverlay();
     }));
 
@@ -1107,7 +1107,7 @@ describe('IgxTimePicker', () => {
         let dom;
         let input;
         beforeEach(
-            async(() => {
+            waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerDropDownComponent);
                 fixture.detectChanges();
 
@@ -1117,7 +1117,7 @@ describe('IgxTimePicker', () => {
             })
         );
 
-        afterEach(async(() => {
+        afterEach(waitForAsync(() => {
             UIInteractions.clearOverlay();
         }));
 
@@ -1780,7 +1780,7 @@ describe('IgxTimePicker', () => {
         let dom;
 
         beforeEach(
-            async(() => {
+            waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerRetemplatedDropDownComponent);
                 fixture.detectChanges();
 
@@ -1788,7 +1788,7 @@ describe('IgxTimePicker', () => {
             })
         );
 
-        afterEach(async(() => {
+        afterEach(waitForAsync(() => {
             UIInteractions.clearOverlay();
         }));
 
@@ -1843,7 +1843,7 @@ describe('IgxTimePicker', () => {
         let fixture, timePicker, dom, input;
 
         beforeEach(
-            async(() => {
+            waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxTimePickerDropDownSingleHourComponent);
                 fixture.detectChanges();
 
@@ -1853,7 +1853,7 @@ describe('IgxTimePicker', () => {
             })
         );
 
-        afterEach(async(() => {
+        afterEach(waitForAsync(() => {
             UIInteractions.clearOverlay();
         }));
 

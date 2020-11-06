@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -21,7 +21,7 @@ describe('IgxGrid - Cell component #grid', () => {
         let firstCell: IgxGridCellComponent;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
@@ -148,7 +148,7 @@ describe('IgxGrid - Cell component #grid', () => {
         let grid: IgxGridComponent;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VirtualGridComponent
@@ -266,7 +266,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('iOS tests', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
@@ -326,7 +326,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('No column widths', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoColumnWidthGridComponent
@@ -348,7 +348,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     describe('Cells styles', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     ConditionalCellStyleTestComponent

@@ -1,5 +1,5 @@
 import { ViewChild, Component, DebugElement } from '@angular/core';
-import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -26,7 +26,7 @@ describe('Row Pinning #grid', () => {
     let fix;
     let grid: IgxGridComponent;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridRowPinningComponent,

@@ -1,6 +1,4 @@
-import {
-    async
-} from '@angular/core/testing';
+import { waitForAsync } from '@angular/core/testing';
 import { DataGenerator } from './test-util/data-generator';
 
 import { DefaultSortingStrategy } from './sorting-strategy';
@@ -29,7 +27,7 @@ import { group } from '@angular/animations';
 function testSort() {
     let data: any[] = [];
     let dataGenerator: DataGenerator;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
     }));
@@ -98,7 +96,7 @@ function testGroupBy() {
     let dataGenerator: DataGenerator;
     let expr: ISortingExpression;
     let state: IGroupingState;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
         expr = {

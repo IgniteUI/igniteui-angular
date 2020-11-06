@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
@@ -54,7 +54,7 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -2667,7 +2667,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -5512,7 +5512,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomFilteringStrategyComponent

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
@@ -20,7 +20,7 @@ const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
 
 describe('IgxInputGroup', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InputGroupComponent,

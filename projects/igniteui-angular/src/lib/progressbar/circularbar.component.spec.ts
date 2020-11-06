@@ -1,10 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxCircularProgressBarComponent, IgxProgressBarModule } from './progressbar.component';
 import { Common } from './common.spec';
@@ -19,7 +14,7 @@ const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 describe('IgCircularBar', () => {
     configureTestSuite();
     const tickTime = 2000;
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitCircularProgressBarComponent,
