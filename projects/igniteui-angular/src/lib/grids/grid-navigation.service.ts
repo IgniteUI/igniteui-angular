@@ -9,6 +9,7 @@ import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/e
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IActiveNodeChangeEventArgs } from './common/events';
+import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -151,9 +152,17 @@ export class IgxGridNavigationService {
             case 'spacebar':
             case 'space':
                 const rowObj = this.grid.getRowByIndex(this.activeNode.row);
-                if (this.grid.isRowSelectable && this.isDataRow(rowIndex)) {
-                    rowObj && rowObj.selected ? this.grid.selectionService.deselectRow(rowObj.rowID, event) :
-                        this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                if (this.grid.isRowSelectable && rowObj) {
+                    if (this.isDataRow(rowIndex)) {
+                        if (rowObj.selected) {
+                            this.grid.selectionService.deselectRow(rowObj.rowID, event);
+                        } else {
+                            this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                        }
+                    }
+                    if (this.isGroupRow(rowIndex)) {
+                        (<any>rowObj as IgxGridGroupByRowComponent).onGroupSelectorClick(event);
+                    }
                 }
                 break;
             default:
@@ -401,6 +410,12 @@ export class IgxGridNavigationService {
         const curRow = this.grid.dataView[rowIndex];
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
+    }
+
+    public isGroupRow(rowIndex: number): boolean {
+        if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) { return false; }
+        const curRow = this.grid.dataView[rowIndex];
+        return curRow && this.grid.isGroupByRecord(curRow);
     }
 
     public setActiveNode(activeNode: IActiveNode) {
