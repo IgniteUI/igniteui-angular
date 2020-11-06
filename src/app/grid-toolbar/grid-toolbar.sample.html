@@ -2,49 +2,30 @@
     <article class="grid-sample">
         <h4 class="sample-title">Toolbar</h4>
 
-        <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px" (onColumnInit)="initColumns($event)"
-
-            [showToolbar]="true"
-            toolbarTitle="Grid Toolbar"
-            [allowFiltering]="true"
-
-            [columnHiding] = "true"
-            hiddenColumnsText = "Hidden"
-            columnHidingTitle = "Column Hiding"
-
-            [exportExcel]="true"
-            [exportCsv]="true"
-            exportText="Export"
-            exportExcelText="Export to Excel"
-            exportCsvText="Export to CSV"
-        >
+        <igx-grid #grid1 displayDensity="compact" [data]="data" [allowAdvancedFiltering]="true" [autoGenerate]="true" height="500px" width="900px" (onColumnInit)="initColumns($event)" [allowFiltering]="true">
+            <igx-grid-toolbar *ngIf="showToolbar" [showProgress]="showProgress" [displayDensity]="grid1.displayDensity">
+                <img *ngIf="customContent" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQjLxyJgjnweUFqmVzds_myRIKFmNBxLs-E0A&usqp=CAU" alt="">
+                <igx-grid-toolbar-title>{{ title }}</igx-grid-toolbar-title>
+                <igx-grid-toolbar-actions>
+                   <igx-grid-toolbar-pinning *ngIf="pinningEnabled"></igx-grid-toolbar-pinning>
+                   <igx-grid-toolbar-hiding *ngIf="hidingEnabled"></igx-grid-toolbar-hiding>
+                    <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
+                    <igx-grid-toolbar-exporter [exportCSV]="csv" [exportExcel]="excel">
+                        <span excelText>Transform to Excel 👌</span>
+                        <span csvText>Transform to CSV 👍</span>
+                    </igx-grid-toolbar-exporter>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
         </igx-grid>
 
-        <!-- igx-grid
-            displayDensity="cosy"
-            displayDensity="compact"
-            (onToolbarExporting)="toolbarExportClicked($event)"
-        -->
-
-        <br><igx-switch [(ngModel)]="this.igxGrid1.showToolbar">Toolbar</igx-switch>
-        <br><igx-switch [(ngModel)]="this.igxGrid1.columnHiding">Column Hiding</igx-switch>
-        <br><igx-switch [(ngModel)]="this.igxGrid1.columnPinning">Column Pinning</igx-switch>
-        <br><igx-switch [(ngModel)]="this.igxGrid1.exportExcel">Export Excel</igx-switch>
-        <br><igx-switch [(ngModel)]="this.igxGrid1.exportCsv">Export CSV</igx-switch>
-        <br><input type="text" placeholder="" [(ngModel)]="this.igxGrid1.toolbarTitle" />
-        <br><button (click)="grid1.toolbar.toggleColumnHidingUI()">Toggle Column Hiding UI</button>
-        <br><button (click)="grid1.toolbar.toggleColumnPinningUI()">Toggle Column Pinning UI</button>
-
-        <!--
-        <div class="radio-group">
-            <p>Display Density</p>
-            <igx-radio *ngFor="let item of _displayDensity"
-                value="{{item}}"
-                [(ngModel)]="grid1.displayDensity"
-                (change)="grid1.displayDensity = item">{{item}}</igx-radio>
-        </div>
-        -->
-
+        <br><igx-switch [(ngModel)]="showToolbar">Toolbar</igx-switch>
+        <br><igx-switch [(ngModel)]="hidingEnabled">Column Hiding</igx-switch>
+        <br><igx-switch [(ngModel)]="pinningEnabled">Column Pinning</igx-switch>
+        <br><igx-switch [(ngModel)]="excel">Export Excel</igx-switch>
+        <br><igx-switch [(ngModel)]="csv">Export CSV</igx-switch>
+        <br><igx-switch [(ngModel)]="customContent">Content Projection</igx-switch>
+        <br><igx-switch [(ngModel)]="showProgress">Progressbar</igx-switch>
+        <br><input type="text" placeholder="" [(ngModel)]="title" />
     </article>
 </section>
 
