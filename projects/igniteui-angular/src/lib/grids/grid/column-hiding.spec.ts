@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IColumnVisibilityChangedEventArgs } from '../hiding/column-hiding-item.directive';
@@ -29,7 +29,7 @@ describe('Column Hiding UI #grid', () => {
     const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnHidingTestComponent,

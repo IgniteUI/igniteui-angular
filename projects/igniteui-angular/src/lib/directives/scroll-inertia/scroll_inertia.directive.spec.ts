@@ -6,7 +6,7 @@ import {
     ViewChild,
     ElementRef
 } from '@angular/core';
-import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -16,7 +16,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTestScrollInertiaDirective,

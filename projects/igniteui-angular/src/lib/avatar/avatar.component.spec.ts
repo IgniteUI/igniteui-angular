@@ -1,8 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
@@ -23,7 +20,7 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitAvatarComponent,

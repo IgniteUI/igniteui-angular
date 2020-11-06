@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -17,7 +17,7 @@ import { GridSelectionMode } from '../common/enums';
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSelectionKeyComponent,

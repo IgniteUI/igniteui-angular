@@ -37,9 +37,10 @@
     }
 
     %grid-excel-icon {
+        display: flex;
         cursor: pointer;
 
-        &.igx-icon {
+        igx-icon {
             width: rem(15px);
             height: rem(15px);
             font-size: rem(15px);
@@ -47,7 +48,7 @@
     }
 
     %grid-excel-icon--filtered {
-        &.igx-icon {
+        igx-icon {
             color: if(
                 $variant == 'indigo-design',
                 igx-color($palette, 'warn', 500),

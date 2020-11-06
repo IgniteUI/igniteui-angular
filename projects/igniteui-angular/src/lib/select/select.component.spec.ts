@@ -1,6 +1,6 @@
 import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
@@ -83,7 +83,7 @@ describe('igxSelect', () => {
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxSelectSimpleComponent,
@@ -785,7 +785,7 @@ describe('igxSelect', () => {
     });
     describe('Selection tests: ', () => {
         describe('Using simple select component', () => {
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectSimpleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
@@ -1350,7 +1350,7 @@ describe('igxSelect', () => {
         });
 
         describe('Using more complex select component', () => {
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectGroupsComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
@@ -1426,7 +1426,7 @@ describe('igxSelect', () => {
         });
     });
     describe('Grouped items tests: ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxSelectGroupsComponent);
             select = fixture.componentInstance.select;
             fixture.detectChanges();
@@ -1502,7 +1502,7 @@ describe('igxSelect', () => {
         }));
     });
     describe('Key navigation tests: ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             select = fixture.componentInstance.select;
             fixture.detectChanges();
@@ -2199,7 +2199,7 @@ describe('igxSelect', () => {
         };
 
         describe('Ample space to open positioning tests: ', () => {
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
@@ -2302,7 +2302,7 @@ describe('igxSelect', () => {
             }));
         });
         describe('Not enough space above to open positioning tests: ', () => {
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectTopComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
@@ -2350,7 +2350,7 @@ describe('igxSelect', () => {
                 }));
         });
         describe('Not enough space below to open positioning tests: ', () => {
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectBottomComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
@@ -2420,7 +2420,7 @@ describe('igxSelect', () => {
                 });
                 return prefixesWidth;
             };
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectAffixComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();

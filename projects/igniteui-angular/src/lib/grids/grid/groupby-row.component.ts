@@ -8,6 +8,7 @@ import {
     Input,
     ViewChild,
     TemplateRef,
+    OnDestroy
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
@@ -15,6 +16,12 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { GridType } from '../common/grid.interface';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { IgxGridRowComponent } from './grid-row.component';
+import { IgxGridComponent } from './grid.component';
+import { GridSelectionMode } from '../common/enums';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,12 +29,22 @@ import { GridType } from '../common/grid.interface';
     selector: 'igx-grid-groupby-row',
     templateUrl: './groupby-row.component.html'
 })
-export class IgxGridGroupByRowComponent {
+export class IgxGridGroupByRowComponent implements OnDestroy {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        private gridSelection: IgxGridSelectionService,
+        public gridSelection: IgxGridSelectionService,
         public element: ElementRef,
-        public cdr: ChangeDetectorRef) { }
+        public cdr: ChangeDetectorRef,
+        public filteringService: IgxFilteringService) {
+        this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    protected destroy$ = new Subject<any>();
 
     /**
      * @hidden
@@ -56,6 +73,18 @@ export class IgxGridGroupByRowComponent {
      */
     @Input()
     protected isFocused = false;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    public hideGroupRowSelectors: boolean;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    public rowDraggable: boolean;
 
     /**
      * Returns whether the row is focused.
@@ -102,6 +131,15 @@ export class IgxGridGroupByRowComponent {
      */
     @ViewChild('groupContent', { static: true })
     public groupContent: ElementRef;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
 
     /**
      * Returns whether the group row is expanded.
@@ -162,7 +200,31 @@ export class IgxGridGroupByRowComponent {
 
     @HostListener('pointerdown')
     public activate() {
-        this.grid.navigation.setActiveNode({row: this.index}, 'groupRow');
+        this.grid.navigation.setActiveNode({ row: this.index });
+    }
+
+    /**
+     * @hidden @internal
+     */
+    getRowID(rowData): IgxGridRowComponent {
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onGroupSelectorClick(event) {
+        if (!this.grid.isMultiRowSelectionEnabled) { return; }
+        event.stopPropagation();
+        if (this.areAllRowsInTheGroupSelected) {
+            this.groupRow.records.forEach(row => {
+                this.gridSelection.deselectRow(this.getRowID(row), event);
+            });
+        } else {
+            this.groupRow.records.forEach(row => {
+                this.gridSelection.selectRowById(this.getRowID(row), false, event);
+            });
+        }
     }
 
     /**
@@ -196,8 +258,8 @@ export class IgxGridGroupByRowComponent {
      * this.grid1.rowList.first.grid;
      * ```
      */
-    get grid(): any {
-        return this.gridAPI.grid;
+    get grid(): IgxGridComponent {
+        return this.gridAPI.grid as IgxGridComponent;
     }
 
     /**
@@ -207,4 +269,45 @@ export class IgxGridGroupByRowComponent {
         const column = this.groupRow.column;
         return (column && column.dataType) || DataType.String;
     }
+
+    /**
+     * @hidden @internal
+     */
+    public get areAllRowsInTheGroupSelected(): boolean {
+        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(this.getRowID(x)));
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get selectedRowsInTheGroup(): any[] {
+        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(this.getRowID(rowID)) > -1);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupByRowCheckboxIndeterminateState(): boolean {
+        if (this.selectedRowsInTheGroup.length > 0) {
+            return !this.areAllRowsInTheGroupSelected;
+        }
+        return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupByRowSelectorBaseAriaLabel(): string {
+        const ariaLabel: string = this.areAllRowsInTheGroupSelected ?
+            this.grid.resourceStrings.igx_grid_groupByArea_deselect_message : this.grid.resourceStrings.igx_grid_groupByArea_select_message;
+        return ariaLabel.replace('{0}', this.groupRow.expression.fieldName).replace('{1}', this.groupRow.value);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get showRowSelectors(): boolean {
+        return this.grid.rowSelection !== GridSelectionMode.none && !this.hideGroupRowSelectors;
+    }
+
 }

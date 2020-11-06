@@ -16,7 +16,7 @@ import {
     ViewContainerRef,
     DebugElement
 } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
@@ -43,7 +43,7 @@ describe('IgxForOf directive -', () => {
 
     describe('empty virtual component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -65,7 +65,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -175,7 +175,7 @@ describe('IgxForOf directive -', () => {
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -328,7 +328,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -907,7 +907,7 @@ describe('IgxForOf directive -', () => {
 
     describe('variable size component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -953,7 +953,7 @@ describe('IgxForOf directive -', () => {
 
     describe('remote virtual component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -995,7 +995,7 @@ describe('IgxForOf directive -', () => {
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1037,7 +1037,7 @@ describe('IgxForOf directive -', () => {
 
     describe('no width and height component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1061,7 +1061,7 @@ describe('IgxForOf directive -', () => {
 
     describe('even odd first last functions', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1096,7 +1096,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1147,7 +1147,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VerticalVirtualCreateComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VerticalVirtualCreateComponent

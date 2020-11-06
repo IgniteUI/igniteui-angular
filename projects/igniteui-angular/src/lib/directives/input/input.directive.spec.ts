@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, QueryList, DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
@@ -20,7 +20,7 @@ const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InputComponent,

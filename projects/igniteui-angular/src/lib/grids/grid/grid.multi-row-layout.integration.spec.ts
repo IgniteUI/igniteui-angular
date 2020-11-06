@@ -1,5 +1,5 @@
 ﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -18,7 +18,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture;
     let grid: IgxGridComponent;
     let colGroups: Array<any>;
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutPinningTestComponent,
@@ -650,7 +650,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(checkboxes[1].componentInstance.checked).toBeFalsy();
         });
 
-        it('UI - toggling column checkbox checked state successfully changes the column\'s pinned state. ', async(() => {
+        it('UI - toggling column checkbox checked state successfully changes the column\'s pinned state. ', waitForAsync(() => {
             grid.showToolbar = true;
             grid.columnPinning = true;
             const uniqueGroups = [

@@ -1,8 +1,5 @@
 import { Component, forwardRef, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
 
@@ -10,7 +7,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxHighlight', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTextHighlightDirective,

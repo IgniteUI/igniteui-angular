@@ -1,8 +1,5 @@
 ﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/public_api';
@@ -118,7 +115,7 @@ describe('IgxChipsArea ', () => {
     let fix;
     let chipArea;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,

@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, Injectable,
     OnInit, ViewChild, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,7 +37,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent,
@@ -596,7 +596,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - virtualization tests', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent
@@ -661,7 +661,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - default rendering for rows and columns', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
@@ -1663,7 +1663,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - API methods', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent
@@ -1874,7 +1874,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         let fix;
 
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridInsideIgxTabsComponent
@@ -1990,11 +1990,44 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
         });
+
+        it('IgxTabs: should persist scroll position after changing tabs.', async () => {
+            const grid = fix.componentInstance.grid2;
+            fix.detectChanges();
+            const tab = fix.componentInstance.tabs;
+
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+
+            grid.navigateTo(grid.data.length - 1, grid.columns.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            const scrTop = grid.verticalScrollContainer.getScroll().scrollTop;
+            const scrLeft = grid.dataRowList.first.virtDirRow.getScroll().scrollLeft;
+
+            expect(scrTop).not.toBe(0);
+            expect(scrLeft).not.toBe(0);
+
+            tab.tabs.toArray()[0].select();
+            await wait(100);
+            fix.detectChanges();
+
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+
+            // check scrollTop/scrollLeft was persisted.
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(scrTop);
+            expect(grid.dataRowList.first.virtDirRow.getScroll().scrollLeft).toBe(scrLeft);
+        });
     });
 
     describe('IgxGrid - footer section', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomFooterComponent
@@ -2021,7 +2054,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - with custom pagination template', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomPaginationTemplateComponent
@@ -2054,7 +2087,7 @@ describe('IgxGrid Component Tests #grid', () => {
         let observer: MutationObserver;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridPerformanceComponent

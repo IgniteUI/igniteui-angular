@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -27,7 +27,7 @@ describe('CSV Grid Exporter', () => {
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
@@ -40,7 +40,7 @@ describe('CSV Grid Exporter', () => {
             .compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         exporter = new IgxCsvExporterService();
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
@@ -48,7 +48,7 @@ describe('CSV Grid Exporter', () => {
         spyOn(ExportUtilities as any, 'saveBlobToFile');
     }));
 
-    afterEach(async(() => {
+    afterEach(waitForAsync(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
     }));

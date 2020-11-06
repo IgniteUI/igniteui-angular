@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './public_api';
@@ -23,7 +23,7 @@ import { DropPosition } from '../moving/moving.service';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
