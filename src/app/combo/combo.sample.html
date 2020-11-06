@@ -109,11 +109,11 @@
         <div>
             <igx-buttongroup>
                 <button igxButton [disabled]="igxCombo.displayDensity === compact"
-                (click)="setDensity(compact)">Compact</button>
+                (click)="setDensity('compact')">Compact</button>
                 <button igxButton [disabled]="igxCombo.displayDensity === cosy"
-                    (click)="setDensity(cosy)">Cosy</button>
+                    (click)="setDensity('cosy')">Cosy</button>
                 <button igxButton [disabled]="igxCombo.displayDensity === comfortable"
-                    (click)="setDensity(comfortable)">Comfortable</button>
+                    (click)="setDensity('comfortable')">Comfortable</button>
             </igx-buttongroup>
         </div>
         <h4>Item Height</h4>
