@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -30,7 +30,7 @@ describe('Excel Exporter', () => {
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
@@ -44,7 +44,7 @@ describe('Excel Exporter', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
 
@@ -52,13 +52,13 @@ describe('Excel Exporter', () => {
         spyOn(ExportUtilities as any, 'saveBlobToFile');
     }));
 
-    afterEach(async(() => {
+    afterEach(waitForAsync(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
     }));
 
     describe('', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             options = createExportOptions('GridExcelExport', 50);
         }));
 
@@ -527,7 +527,7 @@ describe('Excel Exporter', () => {
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             options = createExportOptions('TreeGridExcelExport', 50);
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();

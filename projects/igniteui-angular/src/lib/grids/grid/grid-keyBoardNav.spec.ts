@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxGridCellComponent,
@@ -30,7 +30,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
@@ -215,7 +215,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VirtualGridComponent
@@ -667,7 +667,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
     describe('Group By navigation ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridGroupByComponent
