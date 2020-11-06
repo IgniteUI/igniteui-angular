@@ -1,5 +1,5 @@
 import { Component, ContentChildren, ViewChild } from '@angular/core';
-import { async, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from '../../list/list-item.component';
 import { IgxListComponent, IgxListModule } from '../../list/list.component';
@@ -9,7 +9,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('Filter', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
             imports: [IgxFilterModule, IgxListModule],

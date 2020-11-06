@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -13,7 +13,7 @@ describe('Multi-View Calendar - ', () => {
     let fixture, calendar;
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
             imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
@@ -21,7 +21,7 @@ describe('Multi-View Calendar - ', () => {
     }));
 
     describe('Base Tests - ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
             fixture.detectChanges();
             calendar = fixture.componentInstance.calendar;

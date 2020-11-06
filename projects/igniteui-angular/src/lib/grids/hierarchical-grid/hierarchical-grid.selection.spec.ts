@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -24,7 +24,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland1;
     let rowIsland2;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -41,7 +41,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     }));
 
     describe('Cell selection', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;

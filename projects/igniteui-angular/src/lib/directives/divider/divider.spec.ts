@@ -1,9 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed,
-    ComponentFixture
-} from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -21,7 +17,7 @@ describe('Divider', () => {
 
     let fixture: ComponentFixture<TestDividerComponent>;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [TestDividerComponent],
             imports: [IgxDividerModule]

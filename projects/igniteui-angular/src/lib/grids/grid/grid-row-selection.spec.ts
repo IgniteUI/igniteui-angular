@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
@@ -28,7 +28,7 @@ const SCROLL_DEBOUNCETIME = 100;
 describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RowSelectionComponent,

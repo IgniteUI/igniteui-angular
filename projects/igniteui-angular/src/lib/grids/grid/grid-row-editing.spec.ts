@@ -1,6 +1,6 @@
 import { IgxRowDirective } from './../row.directive';
 import { DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
@@ -39,7 +39,7 @@ const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowEditingComponent,
