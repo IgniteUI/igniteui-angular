@@ -67,6 +67,15 @@ export class IgxHeaderCollapseIndicatorDirective {
  * @hidden
  */
 @Directive({
+    selector: '[igxExcelStyleHeaderIcon]'
+})
+export class IgxExcelStyleHeaderIconDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
     selector: '[igxGroupAreaDrop]'
 })
 export class IgxGroupAreaDropDirective extends IgxDropDirective {

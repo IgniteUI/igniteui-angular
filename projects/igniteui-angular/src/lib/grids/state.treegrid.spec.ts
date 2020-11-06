@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IGridState, IColumnState, IgxGridStateDirective } from './state.directive';
@@ -20,7 +20,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridTreeDataTestComponent
@@ -29,7 +29,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fix = TestBed.createComponent(IgxTreeGridTreeDataTestComponent);
         fix.detectChanges();
         grid = fix.componentInstance.treeGrid;

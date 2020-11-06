@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
@@ -28,7 +28,7 @@ const SCROLL_DEBOUNCETIME = 100;
 describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RowSelectionComponent,
@@ -58,7 +58,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
         it('Should have checkbox on each row', (async () => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
@@ -68,7 +68,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
@@ -107,19 +107,19 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should have correct checkboxes position when scroll left', (async () => {
             grid.width = '300px';
             fix.detectChanges();
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 1000);
             await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 0);
             await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
         }));
 
         it('Header checkbox should select/deselect all rows', () => {
@@ -491,7 +491,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
             GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement);
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
@@ -669,7 +669,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
             GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(0), false, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
@@ -706,9 +706,9 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
-        it('Should have checkbox on each row and do not have header checkbox',  () => {
+        it('Should have checkbox on each row and do not have header checkbox', () => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
@@ -978,7 +978,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
             GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement);
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(grid);
 
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
@@ -1430,7 +1430,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
         }));
 
-        it('CRUD: Should handle the deselection on a selected row properly',  () => {
+        it('CRUD: Should handle the deselection on a selected row properly', () => {
             let firstRow = grid.getRowByKey(1);
             grid.selectRows([1]);
 
@@ -1474,7 +1474,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
-        it('CRUD: Should handle the adding new row properly',  () => {
+        it('CRUD: Should handle the adding new row properly', () => {
             grid.selectAllRows();
             fix.detectChanges();
 

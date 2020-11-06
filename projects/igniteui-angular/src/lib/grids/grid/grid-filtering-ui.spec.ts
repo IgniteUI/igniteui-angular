@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
@@ -54,7 +54,7 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -2667,7 +2667,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -5112,6 +5112,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems[1].innerText).not.toBe('(Blanks)');
         }));
+
+        it('Should use custom excel style filter icon instead of default one.', fakeAsync(() => {
+            const header = GridFunctions.getColumnHeader('AnotherField', fix);
+            fix.detectChanges();
+            const icon = GridFunctions.getHeaderFilterIcon(header);
+            fix.detectChanges();
+            expect(icon).not.toBeNull();
+            expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('filter_alt');
+        }));
     });
 
     describe('Load values on demand', () => {
@@ -5503,7 +5512,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomFilteringStrategyComponent

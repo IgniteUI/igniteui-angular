@@ -1,6 +1,4 @@
-<igx-grid-toolbar role="toolbar" [style.max-width.px]='outerWidth' [style.flex-basis.px]='outerWidth' *ngIf="showToolbar" [gridID]="id"
-    [displayDensity]="displayDensity" #toolbar>
-</igx-grid-toolbar>
+<ng-content select="igx-grid-toolbar"></ng-content>
 
 <div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell()" (keydown)="navigation.headerNavigation($event)" #theadRow>
@@ -269,4 +267,4 @@
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>

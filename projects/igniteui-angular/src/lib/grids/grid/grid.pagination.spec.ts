@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridModule } from './public_api';
 import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
@@ -34,7 +34,7 @@ function verifyGridPager (fix, rowsCount, firstCellValue, pagerText, buttonsVisi
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 PagingComponent,

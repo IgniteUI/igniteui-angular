@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridModule, IgxGridComponent } from './public_api';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -24,7 +24,7 @@ describe('IgxGrid - search API #grid - ', () => {
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
     let fix, component, grid: IgxGridComponent, fixNativeElement;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 BasicGridSearchComponent,
