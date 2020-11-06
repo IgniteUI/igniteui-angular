@@ -3003,9 +3003,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (!this.crudService.cell &&
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                        this.navigation.activeNode.row < this.dataView.length)
-                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                    this.navigation.activeNode.row < this.dataView.length)
+                    || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
@@ -3967,7 +3967,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     get showAddButton() {
         return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
-     }
+    }
 
     /**
      * @hidden
@@ -6646,7 +6646,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endAdd(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const cachedRowData = {...row.data};
+        const cachedRowData = { ...row.data };
         let cancelable = false;
         if (!row && !cell) {
             return;
@@ -6675,7 +6675,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.rowEditDone.emit(doneArgs);
                 this.crudService.endRowEdit();
                 if (this.addRowParent.isPinned) {
-                  this.pinRow(row.id);
+                    this.pinRow(row.id);
                 }
             }
             this.addRowParent = null;
@@ -6689,7 +6689,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pipeTrigger++;
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
-            this.onRowAdded.emit({ data: row.data});
+            this.onRowAdded.emit({ data: row.data });
         }
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
         this.rowEditExit.emit(nonCancelableArgs);
