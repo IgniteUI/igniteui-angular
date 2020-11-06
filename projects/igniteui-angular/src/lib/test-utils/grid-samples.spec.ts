@@ -1232,6 +1232,10 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
 
+        <ng-template igxExcelStyleHeaderIcon>
+            <igx-icon>filter_alt</igx-icon>
+        </ng-template>
+
         <igx-grid-excel-style-filtering [minHeight]="'0px'" [maxHeight]="'500px'">
             <igx-excel-style-column-operations>
                 <igx-excel-style-moving></igx-excel-style-moving>
