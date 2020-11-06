@@ -21,17 +21,12 @@ const configPaths = ['/.angular.json', '/angular.json'];
 
 export function getProjectPaths(config: WorkspaceSchema, appendPrefix = true): string[] {
     const sourceDirs = [];
-    let globalPrefix;
 
-    if (config.schematics && config.schematics['@schematics/angular:component']) {
-        // updated projects have global prefix rather than per-project:
-        globalPrefix = config.schematics['@schematics/angular:component'].prefix;
-    }
     const projects = getProjects(config);
     for (const proj of projects) {
         let sourcePath = path.join('/', proj.sourceRoot);
-        if (appendPrefix && (proj.prefix || globalPrefix)) {
-            sourcePath = path.join(sourcePath, proj.prefix || globalPrefix);
+        if (appendPrefix && (proj.prefix)) {
+            sourcePath = path.join(sourcePath, proj.prefix);
         }
         sourceDirs.push(normalize(sourcePath));
     }

@@ -1,4 +1,4 @@
-﻿import { waitForAsync, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { waitForAsync, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';

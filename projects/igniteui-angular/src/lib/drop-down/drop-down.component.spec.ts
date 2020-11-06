@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -181,7 +181,7 @@ describe('IgxDropDown ', () => {
     describe('User interaction tests', () => {
         describe('Selection & key navigation', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxDropDownTestComponent
@@ -743,7 +743,7 @@ describe('IgxDropDown ', () => {
         });
         describe('Other', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DoubleIgxDropDownComponent,
@@ -822,7 +822,7 @@ describe('IgxDropDown ', () => {
         let scroll: IgxForOfDirective<any>;
         let button, items;
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VirtualizedDropDownComponent
@@ -938,7 +938,7 @@ describe('IgxDropDown ', () => {
     describe('Rendering', () => {
         describe('Grouped items', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         GroupDropDownComponent
@@ -1007,7 +1007,7 @@ describe('IgxDropDown ', () => {
         });
         describe('Style and display density', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxDropDownTestComponent
@@ -1071,7 +1071,7 @@ describe('IgxDropDown ', () => {
         describe('Input properties', () => {
             const customDDId = 'test-id-list';
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxDropDownTestComponent
@@ -1146,7 +1146,7 @@ describe('IgxDropDown ', () => {
         });
         describe('Anchor element', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxDropDownAnchorTestComponent
