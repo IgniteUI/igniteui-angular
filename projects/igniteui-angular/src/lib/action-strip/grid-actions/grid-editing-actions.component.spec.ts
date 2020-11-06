@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, async, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ describe('igxGridEditingActions #grid ', () => {
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxActionStripTestingComponent,
@@ -139,10 +139,10 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
         }));
-        it('should auto-show on mouse over of row.', () => {
+        it('should auto-show on mouse enter of row.', () => {
             const row = grid.getRowByIndex(0);
             const rowElem = row.nativeElement;
-            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            UIInteractions.simulateMouseEvent('mouseenter', rowElem, 0, 0);
             fixture.detectChanges();
 
             expect(actionStrip.context).toBe(row);
@@ -171,10 +171,10 @@ describe('igxGridEditingActions #grid ', () => {
             hierarchicalGrid = fixture.componentInstance.hgrid;
         }));
 
-        it('should auto-show root actionStrip on mouse over of root row.', () => {
+        it('should auto-show root actionStrip on mouse enter of root row.', () => {
             const row = hierarchicalGrid.getRowByIndex(0);
             const rowElem = row.nativeElement;
-            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            UIInteractions.simulateMouseEvent('mouseenter', rowElem, 0, 0);
             fixture.detectChanges();
 
             expect(actionStripRoot.context).toBe(row);
@@ -182,7 +182,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(actionStripChild.context).toBeUndefined();
         });
 
-        it('should auto-show row island actionStrip on mouse over of child row.', () => {
+        it('should auto-show row island actionStrip on mouse enter of child row.', () => {
             const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             row.toggle();
             fixture.detectChanges();
@@ -191,7 +191,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             const childRow = childGrid.getRowByIndex(0);
             const rowElem = childRow.nativeElement;
-            UIInteractions.simulateMouseEvent('mouseover', rowElem, 0, 0);
+            UIInteractions.simulateMouseEvent('mouseenter', rowElem, 0, 0);
             fixture.detectChanges();
 
             expect(actionStripChild.context).toBe(childRow);

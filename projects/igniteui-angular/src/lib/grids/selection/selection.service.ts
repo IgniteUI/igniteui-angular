@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
+import { Subject } from 'rxjs';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
@@ -59,7 +60,7 @@ export class IgxRow {
     createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id,
-            rowData:  this.data,
+            rowData: this.data,
             oldValue: this.data,
             cancel: false,
             owner: this.grid,
@@ -113,7 +114,7 @@ export class IgxCell {
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
-            rowData:  this.rowData,
+            rowData: this.rowData,
             oldValue: this.value,
             cancel: false,
             column: this.column,
@@ -210,12 +211,12 @@ export class IgxGridCRUDService {
         }
 
         if (this.cellInEditMode) {
+            // TODO: case solely for f2/enter nav that uses enterEditMode as toggle. Refactor.
             const canceled = this.grid.endEdit(true);
-            if (this.grid.rowEditable && canceled) {
-                this._rowEditingBlocked = canceled;
-            }
 
-            this.grid.tbody.nativeElement.focus();
+            if (!canceled || !this.cell) {
+                this.grid.tbody.nativeElement.focus();
+            }
         } else {
 
             if (cell?.row.addRow) {
@@ -355,7 +356,7 @@ export class IgxGridCRUDService {
     }
 
 
-    /** Cleares cell and row editing state and closes row editing template if it is open */
+    /** Clears cell and row editing state and closes row editing template if it is open */
     public endEditMode() {
         this.endCellEdit();
         if (this.grid.rowEditable) {
@@ -364,19 +365,13 @@ export class IgxGridCRUDService {
         }
     }
 
-    /** Returns whether a particular cell is in edit mode */
-    public isCellInEditByPos(rowIndex: number, columnIndex: number): boolean {
+    /** Returns whether the targeted cell is in edit mode */
+    public targetInEdit(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
             return false;
         }
-        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
-    }
-
-    public isInAddMode(rowIndex: number, columnIndex: number): boolean {
-        if (!this.cell) {
-            return false;
-        }
-        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+        const res = this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+        return res;
     }
 }
 
@@ -397,6 +392,11 @@ export class IgxGridSelectionService {
     rowSelection: Set<any> = new Set<any>();
     columnSelection: Set<string> = new Set<string>();
     private allRowsSelected: boolean;
+    /**
+     * @hidden @internal
+     */
+    public selectedRowsChange = new Subject();
+
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -650,7 +650,7 @@ export class IgxGridSelectionService {
         }
 
         this.pointerState.ctrl ? this.selectRange(node, this.pointerState, this.temp) :
-        this.dragSelect(node, this.pointerState);
+            this.dragSelect(node, this.pointerState);
         return true;
     }
 
@@ -753,7 +753,7 @@ export class IgxGridSelectionService {
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
         const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
-
+        this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
 
@@ -765,6 +765,7 @@ export class IgxGridSelectionService {
         const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
             this.getSelectedRows() : [...this.getSelectedRows(), rowID];
         const removed = clearPrevSelection ? this.getSelectedRows() : [];
+        this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, [rowID], removed, event);
     }
 
@@ -773,6 +774,7 @@ export class IgxGridSelectionService {
         if (!this.isRowSelected(rowID)) { return; }
         const newSelection = this.getSelectedRows().filter(r => r !== rowID);
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
+            this.selectedRowsChange.next();
             this.emitRowSelectionEvent(newSelection, [], [rowID], event);
         }
     }
@@ -782,12 +784,14 @@ export class IgxGridSelectionService {
         if (clearPrevSelection) { this.rowSelection.clear(); }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.allRowsSelected = undefined;
+        this.selectedRowsChange.next();
     }
 
     /** Deselect specified rows. No event is emitted. */
     deselectRowsWithNoEvent(rowIDs: any[]): void {
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
         this.allRowsSelected = undefined;
+        this.selectedRowsChange.next();
     }
 
     isRowSelected(rowID): boolean {
@@ -809,7 +813,7 @@ export class IgxGridSelectionService {
 
         const added = this.getRowIDs(rows).filter(rID => !this.isRowSelected(rID));
         const newSelection = this.getSelectedRows().concat(added);
-
+        this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, added, [], event);
     }
 
@@ -865,11 +869,12 @@ export class IgxGridSelectionService {
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
         this.clearHeaderCBState();
+        this.selectedRowsChange.next();
     }
 
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
-        let  allData;
+        let allData;
         if (this.isFilteringApplied() || this.grid.sortingExpressions.length) {
             allData = this.grid.pinnedRecordsCount ? this.grid._filteredSortedUnpinnedData : this.grid.filteredSortedData;
         } else {
@@ -904,7 +909,7 @@ export class IgxGridSelectionService {
     /** Select the specified column and emit event. */
     selectColumn(field: string, clearPrevSelection?, selectColumnsRange?, event?): void {
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
-        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange  ) {
+        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange) {
             this.columnsState.field = field;
             this.columnsState.range = [];
 

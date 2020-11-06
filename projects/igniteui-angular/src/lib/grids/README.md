@@ -311,6 +311,8 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`isExpandedGroup(group: IGroupByRecord )`| Returns if a group is expanded or not.
 |`toggleGroup(group: IGroupByRecord)`| Toggles the expansion state of a group.
 |`toggleAllGroupRows()`| Toggles the expansion state of all group rows recursively.
+|`selectAllRowsInGroup(group: IGroupByRecord, clearPrevSelection?: boolean)`| Select all rows within a group.
+|`deselectAllRowsInGroup(group: IGroupByRecord)`| Deselect all rows within a group.
 |`openAdvancedFilteringDialog()`| Opens the advanced filtering dialog.
 |`closeAdvancedFilteringDialog(applyChanges: boolean)`| Closes the advanced filtering dialog.
 

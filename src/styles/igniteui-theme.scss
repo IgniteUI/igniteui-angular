@@ -18,7 +18,7 @@ body {
 }
 
 @include igx-core($direction: ltr);
-@include igx-theme($palette: $palette, $schema: $schema);
+@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: true);
 @include igx-typography($type-scale: $typography);
 
 @include igx-palette-vars($palette, $contrast: true);

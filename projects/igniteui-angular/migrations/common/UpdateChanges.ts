@@ -147,7 +147,7 @@ export class UpdateChanges {
     }
 
     /** Add condition function. */
-    public addCondition(conditionName: string, callback: (ownerMatch: string) => boolean) {
+    public addCondition(conditionName: string, callback: (ownerMatch: string, path: string) => boolean) {
         this.conditionFunctions.set(conditionName, callback);
     }
 
@@ -266,7 +266,7 @@ export class UpdateChanges {
 
             for (const match of matches) {
                 let replaceStatement = replace;
-                if (!this.areConditionsFulfiled(match, change.conditions)) {
+                if (!this.areConditionsFulfilled(match, change.conditions, entryPath)) {
                     continue;
                 }
 
@@ -403,12 +403,12 @@ export class UpdateChanges {
         }
     }
 
-    private areConditionsFulfiled(match: string, conditions: string[]): boolean {
+    private areConditionsFulfilled(match: string, conditions: string[], entryPath: string): boolean {
         if (conditions) {
             for (const condition of conditions) {
                 if (this.conditionFunctions && this.conditionFunctions.has(condition)) {
                     const callback = this.conditionFunctions.get(condition);
-                    if (callback && !callback(match)) {
+                    if (callback && !callback(match, entryPath)) {
                         return false;
                     }
                 }

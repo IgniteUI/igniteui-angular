@@ -18,13 +18,16 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public checkAllLabel = this.columnActions.grid?.resourceStrings.igx_grid_pinning_check_all_label ?? 'Pin All';
+    public get checkAllLabel(): string {
+        return this.columnActions.grid?.resourceStrings.igx_grid_pinning_check_all_label ?? 'Pin All';
+    }
 
     /**
      * @hidden @internal
      */
-    public uncheckAllLabel = this.columnActions.grid?.resourceStrings.igx_grid_pinning_uncheck_all_label ?? 'Unpin All';
-
+    public get uncheckAllLabel(): string {
+        return this.columnActions.grid?.resourceStrings.igx_grid_pinning_uncheck_all_label ?? 'Unpin All';
+    }
     /**
      * @hidden @internal
      */
@@ -42,7 +45,7 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public actionEnabledColumnsFilter = c => !c.disablePinning && !c.level;
+    public actionEnabledColumnsFilter = (c: IgxColumnComponent) => !c.disablePinning && !c.level;
 
     /**
      * @hidden @internal
@@ -56,5 +59,13 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
      */
     public toggleColumn(column: IgxColumnComponent) {
         column.pinned = !column.pinned;
+    }
+
+    public get allUnchecked() {
+        return !this.columnActions.filteredColumns.some(col => !this.columnChecked(col));
+    }
+
+    public get allChecked() {
+        return !this.columnActions.filteredColumns.some(col => this.columnChecked(col));
     }
 }

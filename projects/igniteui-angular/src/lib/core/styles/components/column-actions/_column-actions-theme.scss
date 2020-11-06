@@ -8,6 +8,7 @@
 /// Column actions Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $title-color [null]- The text color used for the title of the list.
 /// @param {Color} $background-color [null] - The background color of the panel.
 ///
@@ -15,6 +16,8 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
+/// @requires igx-elevation
+/// @requires $elevations
 /// @requires text-contrast
 ///
 /// @example scss Change the title color
@@ -25,6 +28,7 @@
 @function igx-column-actions-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $title-color: null,
     $background-color: null
@@ -47,6 +51,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+        elevations: $elevations,
         title-color: $title-color,
         background-color: $background-color
     ));
@@ -91,6 +96,7 @@
         display: flex;
         flex-flow: column nowrap;
         background: --var($theme, 'background-color');
+        box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);

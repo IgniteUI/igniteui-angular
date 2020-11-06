@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxBannerComponent, IgxBannerModule } from './banner.component';
@@ -29,7 +29,7 @@ describe('igxBanner', () => {
     let bannerRowElement: DebugElement = null;
 
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxBannerEmptyComponent,

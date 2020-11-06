@@ -136,6 +136,8 @@ import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-col
 import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-directive';
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
+import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -228,6 +230,7 @@ const components = [
     TreeGridLoadOnDemandSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
+    AnimationsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
     RadioSampleComponent,
@@ -247,6 +250,7 @@ const components = [
     GridAutoSizeSampleComponent,
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
+    GridFormattingComponent,
     GridFilteringComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,

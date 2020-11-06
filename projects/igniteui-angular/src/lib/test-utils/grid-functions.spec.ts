@@ -20,6 +20,7 @@ import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
+import { parseDate } from '../core/utils';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -66,6 +67,7 @@ const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
+const FILTER_ICON_CLASS = '.igx-excel-filter__icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -78,7 +80,7 @@ const SUMMARY_CELL = 'igx-grid-summary-cell';
 const COLUMN_ACTIONS_INPUT_CLASS = '.igx-column-actions__header-input';
 const COLUMN_ACTIONS_COLUMNS_CLASS = '.igx-column-actions__columns';
 const COLUMN_ACTIONS_COLUMNS_LABEL_CLASS = 'igx-checkbox__label';
-const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
+const GRID_TOOLBAR_TAG = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
 const SORT_INDEX_ATTRIBUTE = 'data-sortIndex';
@@ -128,7 +130,7 @@ export class GridFunctions {
     }
 
     public static getGridScroll(fix): DebugElement {
-    return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
+        return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -299,7 +301,7 @@ export class GridFunctions {
 
     public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
         const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
-                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+            Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
 
@@ -433,6 +435,7 @@ export class GridFunctions {
     }
 
     public static generateICalendarDate(date: Date, year: number, month: number) {
+        date = parseDate(date);
         return {
             date,
             isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
@@ -525,8 +528,8 @@ export class GridFunctions {
     }
 
     /* Toolbar-related members */
-    public static getToolbar(fixture) {
-        return fixture.debugElement.query(By.css(GRID_TOOLBAR_CLASS));
+    public static getToolbar<T>(fixture: ComponentFixture<T>) {
+        return fixture.debugElement.query(By.css(GRID_TOOLBAR_TAG));
     }
 
     public static getOverlay(fixture) {
@@ -534,30 +537,27 @@ export class GridFunctions {
         return div.nativeElement;
     }
 
-    public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
-        const button = GridFunctions.getToolbar(fix).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
+    public static getAdvancedFilteringButton<T>(fix: ComponentFixture<T>) {
+        const button = GridFunctions.getToolbar(fix).query(By.css('igx-grid-toolbar-advanced-filtering > button'));
         return button ? button.nativeElement : undefined;
     }
 
-    public static getColumnHidingButton(fixture) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnColumnHiding');
+    public static getColumnHidingButton<T>(fixture: ComponentFixture<T>) {
+        const button = GridFunctions.getToolbar(fixture).query(By.css('igx-grid-toolbar-hiding > button'));
         return button ? button.nativeElement : undefined;
     }
 
-    public static getColumnPinningButton(fixture) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnColumnPinning');
+    public static getColumnPinningButton<T>(fixture: ComponentFixture<T>) {
+        const button = GridFunctions.getToolbar(fixture).query(By.css('igx-grid-toolbar-pinning > button'));
         return button ? button.nativeElement : undefined;
     }
 
-    public static getExportButton(fixture) {
+    public static getExportButton<T>(fixture: ComponentFixture<T>) {
         const div = GridFunctions.getToolbar(fixture).query(By.css(GRID_TOOLBAR_EXPORT_BUTTON_CLASS));
         return (div) ? div.query(By.css('button')) : null;
     }
 
-    public static getExportOptions(fixture) {
+    public static getExportOptions<T>(fixture: ComponentFixture<T>) {
         const div = GridFunctions.getOverlay(fixture);
         return (div) ? div.querySelectorAll('li') : null;
     }
@@ -1869,6 +1869,10 @@ export class GridFunctions {
         return header.query(By.css(SORT_ICON_CLASS));
     }
 
+    public static getHeaderFilterIcon(header: DebugElement): DebugElement {
+        return header.query(By.css(FILTER_ICON_CLASS));
+    }
+
     public static clickHeaderSortIcon(header: DebugElement) {
         const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         sortIcon.triggerEventHandler('click', new Event('click'));
@@ -2020,12 +2024,12 @@ export class GridFunctions {
     }
 
     public static getHeaderResizeArea(header: DebugElement): DebugElement {
-         return  header.parent.query(By.css(RESIZE_AREA_CLASS));
+        return header.parent.query(By.css(RESIZE_AREA_CLASS));
     }
 
     public static getResizer(fix): DebugElement {
-        return  fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
-   }
+        return fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
@@ -2254,6 +2258,13 @@ export class GridSelectionFunctions {
         return fix.nativeElement.querySelectorAll(HEADER_ROW_CSS_CLASS);
     }
 
+    public static verifyGroupByRowCheckboxState(groupByRow, checked = false, indeterminate = false, disabled = false) {
+        const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(groupByRow.element.nativeElement);
+        expect(groupByRowCheckboxElement.checked).toBe(checked);
+        expect(groupByRowCheckboxElement.indeterminate).toBe(indeterminate);
+        expect(groupByRowCheckboxElement.disabled).toBe(disabled);
+    }
+
     public static verifyHeaderRowCheckboxState(parent, checked = false, indeterminate = false) {
         const header = GridSelectionFunctions.getHeaderRow(parent);
         const headerCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(header);
@@ -2261,9 +2272,14 @@ export class GridSelectionFunctions {
         expect(headerCheckboxElement.indeterminate).toBe(indeterminate);
     }
 
-    public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
+    public static verifySelectionCheckBoxesAlignment(grid) {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
-        const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
+        const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.dataRowList.first.nativeElement);
+        if (grid.groupingExpressions && grid.groupingExpressions.length > 0) {
+            const groupByRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.groupsRowList.first.nativeElement);
+            expect(groupByRowDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
+            expect(groupByRowDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+        }
         const hScrollbar = grid.headerContainer.getScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);

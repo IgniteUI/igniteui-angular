@@ -1,11 +1,11 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent } from '../../test-utils/grid-samples.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent, GridAddColumnComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -18,7 +18,7 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,
@@ -27,7 +27,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent,
-                DynamicColumnsComponent
+                DynamicColumnsComponent,
+                GridAddColumnComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         })
@@ -165,6 +166,34 @@ describe('IgxGrid - Column properties #grid', () => {
 
         expect(grid.columnList.length).toEqual(2);
         expect(grid.columnList.last.field).toMatch('Name');
+    }));
+
+    it('should add new column at the correct visible index', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridAddColumnComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const maxVindex = fix.componentInstance.columns.length - 1;
+
+        // add to unpinned area
+        fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string' });
+        fix.detectChanges();
+
+        let cityCol = grid.getColumnByName('City');
+        expect(cityCol.visibleIndex).toEqual(maxVindex + 1);
+
+        // remove the newly added column
+        fix.componentInstance.columns.pop();
+        fix.detectChanges();
+
+        cityCol = grid.getColumnByName('City');
+        expect(cityCol).not.toBeDefined();
+
+         // add to pinned area
+        fix.componentInstance.columns.push({ field: 'City', width: 150, movable: true, type: 'string', pinned: true });
+        fix.detectChanges();
+
+        cityCol = grid.getColumnByName('City');
+        expect(cityCol.visibleIndex).toEqual( 1);
     }));
 
     it('should apply columnWidth on columns that don\'t have explicit width', () => {

@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './public_api';
@@ -23,7 +23,7 @@ import { DropPosition } from '../moving/moving.service';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
@@ -1295,6 +1295,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
+            await wait(50);
+            fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 4, 4, 2, 5);
@@ -1332,6 +1334,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
+            await wait();
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1339,7 +1342,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);

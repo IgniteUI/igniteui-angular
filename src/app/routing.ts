@@ -112,6 +112,8 @@ import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
+import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
+import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 
 const appRoutes = [
     {
@@ -292,6 +294,10 @@ const appRoutes = [
         component: ColorsSampleComponent
     },
     {
+        path: 'animations',
+        component: AnimationsSampleComponent
+    },
+    {
         path: 'shadows',
         component: ShadowsSampleComponent
     },
@@ -469,6 +475,10 @@ const appRoutes = [
         component: GridVirtualizationScrollSampleComponent
     },
     {
+        path: 'gridFormatting',
+        component: GridFormattingComponent
+    },
+    {
         path: 'treeGrid',
         component: TreeGridSampleComponent
     },
@@ -538,4 +548,4 @@ const appRoutes = [
     }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes);
+export const routing = RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' });

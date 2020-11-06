@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
@@ -15,7 +15,7 @@ const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({
             declarations: [
@@ -43,7 +43,7 @@ describe('Navigation Drawer', () => {
         TestBed.resetTestingModule();
     });
 
-    it('should initialize without DI service', async(() => {
+    it('should initialize without DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponent);
             fixture.detectChanges();
@@ -53,7 +53,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should initialize with DI service', async(() => {
+    it('should initialize with DI service', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
@@ -66,7 +66,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should initialize with pinThreshold disabled', async(() => {
+    it('should initialize with pinThreshold disabled', waitForAsync(() => {
         const template = `<igx-nav-drawer [pinThreshold]="0"></igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponent, { set: { template } });
         TestBed.compileComponents().then(() => {
@@ -80,7 +80,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should properly initialize all elements and properties', async(() => {
+    it('should properly initialize all elements and properties', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
@@ -104,7 +104,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should attach events and register to nav service and detach on destroy', async(() => {
+    it('should attach events and register to nav service and detach on destroy', waitForAsync(() => {
         const template = '<igx-nav-drawer id=\'testNav\'></igx-nav-drawer>';
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
@@ -131,7 +131,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should open and close with API calls', async(() => {
+    it('should open and close with API calls', waitForAsync(() => {
         TestBed.compileComponents().then(() => {
             const fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
@@ -158,7 +158,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('async API calls should emit events', async(() => {
+    it('async API calls should emit events', waitForAsync(() => {
         let fixture: ComponentFixture<TestComponentDIComponent>;
         let drawer;
 
@@ -192,7 +192,7 @@ describe('Navigation Drawer', () => {
             });
     }));
 
-    it('should properly initialize with min template', async(() => {
+    it('should properly initialize with min template', waitForAsync(() => {
         const template = `<igx-nav-drawer>
                             <ng-template igxDrawer></ng-template>
                             <ng-template igxDrawerMini></ng-template>
@@ -216,7 +216,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should update with dynamic min template', async(() => {
+    it('should update with dynamic min template', waitForAsync(() => {
 
         // immediate requestAnimationFrame for testing
         spyOn(window, 'requestAnimationFrame').and.callFake(callback => { callback(0); return 0; });
@@ -253,7 +253,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should set pin, gestures options', async(() => {
+    it('should set pin, gestures options', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false" [enableGestures]="enableGestures">
                             </igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentPin, {
@@ -282,7 +282,7 @@ describe('Navigation Drawer', () => {
         });
     }));
 
-    it('should stay at 100% parent height when pinned', async(() => {
+    it('should stay at 100% parent height when pinned', waitForAsync(() => {
         const template = `<div style="height: 100%">
                             <igx-nav-drawer
                                 [pin]="pin"
@@ -318,7 +318,7 @@ describe('Navigation Drawer', () => {
             });
     }));
 
-    it('should set flex-basis and order when pinned', async(() => {
+    it('should set flex-basis and order when pinned', waitForAsync(() => {
         const template = `<igx-nav-drawer [pin]="pin" pinThreshold="false"></igx-nav-drawer>`;
         TestBed.overrideComponent(TestComponentPin, { set: { template } });
         TestBed.compileComponents()
@@ -422,7 +422,7 @@ describe('Navigation Drawer', () => {
             });
     }, 10000);
 
-    it('should update edge zone with mini width', async(() => {
+    it('should update edge zone with mini width', waitForAsync(() => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth">
                             <ng-template igxDrawer></ng-template>
                             <ng-template igxDrawerMini></ng-template>

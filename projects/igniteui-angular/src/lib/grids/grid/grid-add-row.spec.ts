@@ -1,6 +1,6 @@
 import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -36,7 +36,7 @@ describe('IgxGrid - Row Adding #grid', () => {
           animationElem.dispatchEvent(endEvent);
     };
     configureTestSuite();
-    beforeAll( async(() => {
+    beforeAll( waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent,
@@ -287,6 +287,27 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(newRow.addRow).toBeTrue();
             const cell = newRow.cells.find(c => c.column === column);
             expect(typeof(cell.value)).toBe(type);
+        });
+
+        it('should allow setting a different display time for snackbar', async() => {
+            grid.snackbarDisplayTime = 50;
+            fixture.detectChanges();
+
+            const row = grid.getRowByIndex(0);
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
+
+            grid.endEdit(true);
+            fixture.detectChanges();
+
+            expect(grid.addRowSnackbar.isVisible).toBe(true);
+            // should hide after 50ms
+            await wait(51);
+            fixture.detectChanges();
+
+            expect(grid.addRowSnackbar.isVisible).toBe(false);
         });
     });
 

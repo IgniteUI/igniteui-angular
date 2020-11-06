@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, Injectable,
     OnInit, ViewChild, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,6 +24,8 @@ import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -35,7 +37,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent,
@@ -347,7 +349,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
@@ -399,7 +401,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns[0].field);
@@ -481,6 +483,33 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(colHeaders.length).toBeGreaterThan(0);
             expect(loadingIndicator).toBeNull();
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
+        }));
+
+        it('should render loading indicator when loading is enabled and the grid has empty filtering pre-applied', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+            grid.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            grid.filteringExpressionsTree.filteringOperands = [
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('equals'),
+                    fieldName: 'index',
+                    searchVal: 0
+                }
+            ];
+            grid.isLoading = true;
+            fixture.detectChanges();
+            tick(16);
+
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            const domGrid = fixture.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // make sure default width/height are applied when there is no data
+            expect(domGrid.style.height).toBe('100%');
+            expect(domGrid.style.width).toBe('100%');
+
+            expect(loadingIndicator).not.toBeNull();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
         }));
 
         it('should allow applying custom loading indicator', fakeAsync(() => {
@@ -567,7 +596,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - virtualization tests', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent
@@ -632,7 +661,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - default rendering for rows and columns', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
@@ -1634,7 +1663,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - API methods', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent
@@ -1845,7 +1874,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         let fix;
 
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridInsideIgxTabsComponent
@@ -1961,11 +1990,44 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
         });
+
+        it('IgxTabs: should persist scroll position after changing tabs.', async () => {
+            const grid = fix.componentInstance.grid2;
+            fix.detectChanges();
+            const tab = fix.componentInstance.tabs;
+
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+
+            grid.navigateTo(grid.data.length - 1, grid.columns.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            const scrTop = grid.verticalScrollContainer.getScroll().scrollTop;
+            const scrLeft = grid.dataRowList.first.virtDirRow.getScroll().scrollLeft;
+
+            expect(scrTop).not.toBe(0);
+            expect(scrLeft).not.toBe(0);
+
+            tab.tabs.toArray()[0].select();
+            await wait(100);
+            fix.detectChanges();
+
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+
+            // check scrollTop/scrollLeft was persisted.
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(scrTop);
+            expect(grid.dataRowList.first.virtDirRow.getScroll().scrollLeft).toBe(scrLeft);
+        });
     });
 
     describe('IgxGrid - footer section', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomFooterComponent
@@ -1992,7 +2054,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - with custom pagination template', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomPaginationTemplateComponent
@@ -2025,7 +2087,7 @@ describe('IgxGrid Component Tests #grid', () => {
         let observer: MutationObserver;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridPerformanceComponent

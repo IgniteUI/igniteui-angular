@@ -1,5 +1,5 @@
 
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridModule, IgxTreeGridComponent, IGridEditDoneEventArgs } from './public_api';
 import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
@@ -21,7 +21,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         const endEvent = new AnimationEvent('animationend');
         animationElem.dispatchEvent(endEvent);
   };
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridEditActionsComponent
@@ -91,6 +91,41 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             const addRow = treeGrid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
+        });
+
+        it('should allow adding sibling to child row via the API.', () => {
+            const row = treeGrid.rowList.toArray()[2] as IgxTreeGridRowComponent;
+            // adds row as sibling
+            row.beginAddRow();
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+
+            // check row is added as sibling
+            expect(treeGrid.rowList.length).toBe(9);
+            const addedRow = treeGrid.rowList.toArray()[4] as IgxTreeGridRowComponent;
+            expect(addedRow.rowData.Name).toBe(undefined);
+            // should have same parent record.
+            expect(addedRow.treeRow.parent).toBe(row.treeRow.parent);
+        });
+
+        it('should allow adding row to empty grid', () => {
+            treeGrid.data = [];
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(0);
+
+            // begin add row for empty grid
+            treeGrid.beginAddRowByIndex(null, -1);
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toBe(1);
         });
     });
 });

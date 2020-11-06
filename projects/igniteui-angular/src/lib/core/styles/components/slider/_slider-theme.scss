@@ -440,7 +440,7 @@
         background: --var($theme, 'label-background-color');
         opacity: 0;
         border-color: --var($theme, 'label-background-color') transparent transparent;
-        transition: opacity .1s $ease-out-quad;
+        // transition: opacity .1s $ease-out-quad;
         z-index: -1;
 
         &::after {
@@ -544,7 +544,7 @@
         opacity: 1;
     }
 
-    %igx-thumb--active {
+    %igx-thumb-label--pressed {
         z-index: 1;
     }
 }
