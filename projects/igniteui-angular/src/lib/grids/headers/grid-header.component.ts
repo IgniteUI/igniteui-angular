@@ -8,7 +8,9 @@ import {
     HostListener,
     Input,
     NgZone,
-    OnDestroy
+    OnDestroy,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -33,6 +35,12 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/gr
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     private _destroy$ = new Subject<boolean>();
+
+    /**
+     * @hidden
+     */
+   @ViewChild('defaultESFHeaderIconTemplate', { read: TemplateRef, static: true })
+   protected defaultESFHeaderIconTemplate: TemplateRef<any>;
 
     @Input()
     public column: IgxColumnComponent;
@@ -81,6 +89,13 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
             return (this.grid.maxLevelHeaderDepth + 1 - this.column.level) * this.grid.defaultRowHeight / this.grid._baseFontSize;
         }
         return null;
+    }
+
+    /**
+     * @hidden
+     */
+    public get esfIconTemplate() {
+        return this.grid.excelStyleHeaderIconTemplate || this.defaultESFHeaderIconTemplate;
     }
 
     get ascending() {
