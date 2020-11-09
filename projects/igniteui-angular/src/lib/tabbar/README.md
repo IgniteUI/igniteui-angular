@@ -5,7 +5,7 @@ _Components_
 
 ## Description
 _igx-bottom-nav represents a single content area with multiple panels, each associated with a tab. Tabs are located at the bottom of the component._
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar)
 
 ### More Info
 igx-bottom-nav provides two observable collections (QueryLists): one with panels and one with related tabs.

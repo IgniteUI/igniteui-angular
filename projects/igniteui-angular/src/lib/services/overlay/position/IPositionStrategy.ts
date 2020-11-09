@@ -1,7 +1,7 @@
 import { PositionSettings, Size, Point } from './../utilities';
 
 /**
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-position)
  * Position strategies determine where to display the component in the provided IgxOverlayService.
  */
 export interface IPositionStrategy {
