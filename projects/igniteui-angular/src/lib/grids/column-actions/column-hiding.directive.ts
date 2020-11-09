@@ -51,7 +51,7 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public columnChecked(column: IgxColumnComponent): boolean {
-        return column.hidden;
+        return !column.hidden;
     }
 
     /**
@@ -59,5 +59,13 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      */
     public toggleColumn(column: IgxColumnComponent) {
         column.hidden = !column.hidden;
+    }
+
+    public get allChecked() {
+        return this.columnActions.filteredColumns.every(col => this.columnChecked(col));
+    }
+
+    public get allUnchecked() {
+        return this.columnActions.filteredColumns.every(col => !this.columnChecked(col));
     }
 }

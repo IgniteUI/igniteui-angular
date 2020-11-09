@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync, fakeAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -127,11 +127,11 @@ describe('Grid - nested data source properties', () => {
             }).compileComponents();
         }));
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(NestedPropertiesGridComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-        });
+        }));
 
         it('should support column API with complex field', () => {
             setupData(DATA);

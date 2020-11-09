@@ -1,20 +1,22 @@
 import {
+    AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    ContentChild,
+    ContentChildren,
+    DoCheck,
+    ElementRef,
+    forwardRef,
     HostBinding,
     Input,
-    forwardRef,
+    OnDestroy,
+    OnInit,
+    QueryList,
     TemplateRef,
     ViewChild,
     ViewChildren,
-    QueryList,
-    ContentChildren,
-    ElementRef,
-    AfterViewInit,
-    AfterContentInit,
-    OnInit,
-    OnDestroy,
-    DoCheck
+    ViewContainerRef
 } from '@angular/core';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -22,7 +24,6 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { DisplayDensity } from '../../core/displayDensity';
 import { IgxColumnComponent, } from '../columns/column.component';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -34,6 +35,7 @@ import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
+import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 
 let NEXT_ID = 0;
 
@@ -220,6 +222,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected headerHierarchyExpander: ElementRef;
 
+    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
+    public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+
+    @ViewChild('toolbarOutlet', { read: ViewContainerRef })
+    public toolbarOutlet: ViewContainerRef;
     /**
      * @hidden
      */
@@ -329,10 +336,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
-
-        this.toolbarCustomContentTemplates = this.parentIsland ?
-            this.parentIsland.toolbarCustomContentTemplates :
-            this.toolbarCustomContentTemplates;
 
         this.actionStrip = this.parentIsland ? this.parentIsland.actionStrip : this.actionStrip;
 

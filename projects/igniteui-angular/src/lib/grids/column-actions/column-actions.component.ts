@@ -304,15 +304,14 @@ export class IgxColumnActionsComponent implements DoCheck {
      * @hidden @internal
      */
     public get checkAllDisabled(): boolean {
-        return !this.filteredColumns.some(col => !this.actionsDirective.columnChecked(col));
+        return this.actionsDirective.allUnchecked;
 
     }
     /**
      * @hidden @internal
      */
     public get uncheckAllDisabled(): boolean {
-        return !this.filteredColumns.some(col => this.actionsDirective.columnChecked(col));
-
+        return this.actionsDirective.allChecked;
     }
 
     /**
