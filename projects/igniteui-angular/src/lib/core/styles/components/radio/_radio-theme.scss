@@ -119,7 +119,8 @@
 
     $ripple-display: map-get((
         material: block,
-        fluent: none
+        fluent: none,
+        indigo-design: none,
     ), $variant);
 
     $border-style: solid;
@@ -322,6 +323,21 @@
             %radio-composite {
                 border-radius: $border-radius;
                 box-shadow: 0 0 0 2px --var($theme, 'focus-outline-color');
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            %radio-composite {
+                border-radius: $border-radius;
+                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color');
+            }
+        }
+    }
+
+    %igx-radio--focused-checked {
+        @if $variant == 'indigo-design' {
+            %radio-composite {
+                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color-focused');
             }
         }
     }

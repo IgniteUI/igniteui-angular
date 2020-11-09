@@ -131,6 +131,8 @@ $_bootstrap-checkbox: extend(
 /// @prop {Color} disabled-color-label [igx-color: ('grays', 300)] - The disabled label color.
 /// @prop {Number} border-radius [3px] - The border radius used for checkbox. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} border-radius-ripple [3px] - The border radius used for checkbox ripple. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Map} focus-outline-color [igx-color: ('grays', 300)] - The focus outlined color.
+/// @property {Map} focus-outline-color-focused [igx-color: ('primary', 200)] - The focus outlined color for focused state.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-checkbox
@@ -140,6 +142,14 @@ $_indigo-checkbox: extend(
     $_indigo-shape-checkbox,
     (
         variant: 'indigo-design',
+
+        focus-outline-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-outline-color-focused: (
+            igx-color: ('primary', 200)
+        ),
 
         tick-color: (
             igx-color: 'surface'
