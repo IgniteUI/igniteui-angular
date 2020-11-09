@@ -10,7 +10,7 @@ export class GridESFLoadOnDemandService {
 
     public getColumnData(column: IgxColumnComponent, columnExprTree: IFilteringExpressionsTree, done: (colVals: any[]) => void) {
         setTimeout(() => {
-            const filteredData = this._filteringStrategy.filter(this.getRecordsData(), columnExprTree);
+            const filteredData = this._filteringStrategy.filter(this.getRecordsData(), columnExprTree, null, null);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
         }, 1000);
