@@ -357,6 +357,22 @@
                 box-shadow: 0 0 0 2px --var($theme, 'focus-outline-color');
             }
         }
+
+        @if $variant == 'indigo-design' {
+            %cbx-composite {
+                border-radius: --var($theme, 'border-radius');
+                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color');
+            }
+        }
+    }
+
+    %igx-checkbox--focused-checked {
+        @if $variant == 'indigo-design' {
+            %cbx-composite {
+                border-radius: --var($theme, 'border-radius');
+                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color-focused');
+            }
+        }
     }
 
     %cbx-ripple--focused {

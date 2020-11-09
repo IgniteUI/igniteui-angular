@@ -64,6 +64,10 @@
         }
     }
 
+    @include mx(focused, checked) {
+        @extend  %igx-radio--focused-checked !optional;
+    }
+
     @include m(checked) {
         @include e(composite) {
             @extend %radio-composite--x !optional;

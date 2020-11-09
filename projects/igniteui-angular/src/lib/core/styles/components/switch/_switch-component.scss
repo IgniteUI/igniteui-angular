@@ -60,6 +60,10 @@
         }
     }
 
+    @include mx(focused, checked) {
+        @extend  %igx-switch--focused-checked !optional;
+    }
+
     @include m(checked) {
         @include e(composite) {
             @extend %switch-composite--x !optional;

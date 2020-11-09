@@ -130,12 +130,22 @@ $_bootstrap-radio: extend(
 /// @property {Map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
 /// @property {Map} fill-color-hover [igx-color: ('primary', 500)] - The checked border and dot colors on hover.
 /// @property {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and dot colors.
+/// @property {Map} focus-outline-color [igx-color: ('grays', 300)] - The focus outlined color.
+/// @property {Map} focus-outline-color-focused [igx-color: ('primary', 200)] - The focus outlined color for focused state.
 /// @requires {function} extend
 /// @requires {Map} $_light-radio
 $_indigo-radio: extend(
     $_light-radio,
     (
         variant: 'indigo-design',
+
+        focus-outline-color: (
+                igx-color: ('grays', 300)
+        ),
+
+        focus-outline-color-focused: (
+                igx-color: ('primary', 200)
+        ),
 
         fill-hover-border-color:(
             igx-color: ('primary', 500)
