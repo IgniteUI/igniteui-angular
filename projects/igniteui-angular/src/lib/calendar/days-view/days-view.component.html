@@ -1,8 +1,8 @@
 <div role="row" class="igx-calendar__body-row">
-    <div aria-hidden="true" *ngIf="showWeekNumbers" class="igx-calendar__label igx-calendar__label--week-number">
+    <div role="columnheader" *ngIf="showWeekNumbers" class="igx-calendar__label igx-calendar__label--week-number">
         <span>Wk</span>
     </div>
-    <span role="columnheader"  [attr.aria-label]="dayName" *ngFor="let dayName of generateWeekHeader()" class="igx-calendar__label">
+    <span role="columnheader" [attr.aria-label]="dayName" *ngFor="let dayName of generateWeekHeader()" class="igx-calendar__label">
         {{ dayName | titlecase }}
     </span>
 </div>
