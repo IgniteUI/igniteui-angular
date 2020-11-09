@@ -1766,7 +1766,10 @@ describe('IgxTimePicker', () => {
 
     describe('Hour/minute only mode', () => {
         configureTestSuite();
-        let fixture, timePicker, dom, input;
+        let fixture: ComponentFixture<IgxTimePickerDropDownSingleHourComponent>,
+            timePicker: IgxTimePickerComponent,
+            dom: DebugElement,
+            input: DebugElement;
 
         beforeEach(
             async(() => {
@@ -1840,6 +1843,21 @@ describe('IgxTimePicker', () => {
             expect(fixture.componentInstance.timePicker.onInput).not.toThrow();
             expect(_input.nativeElement.value).toEqual('12 AM');
         }));
+
+        it('Should properly switch between AM/PM when typing', () => {
+            fixture.componentInstance.format = 'hh tt';
+            fixture.componentInstance.customDate = new Date(2018, 10, 27, 17, 45, 0, 0);
+            fixture.detectChanges();
+
+            input.triggerEventHandler('focus', { target: input.nativeElement });
+            UIInteractions.simulateTyping('pm', input, 2, 4);
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toEqual('05 pm');
+
+            input.triggerEventHandler('blur', { target: input.nativeElement });
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toEqual('05 PM');
+        });
 
         it('Should navigate dropdown lists correctly when format contains only hours.', fakeAsync(() => {
             fixture.componentInstance.format = 'hh tt';
