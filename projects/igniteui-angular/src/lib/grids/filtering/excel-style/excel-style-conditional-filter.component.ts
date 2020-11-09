@@ -10,7 +10,12 @@ import { IFilteringOperation } from '../../../data-operations/filtering-conditio
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
-import { HorizontalAlignment, VerticalAlignment, OverlaySettings, AutoPositionStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
+import {
+    HorizontalAlignment,
+    VerticalAlignment,
+    OverlaySettings,
+    AutoPositionStrategy,
+    AbsoluteScrollStrategy } from '../../../services/public_api';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
 
@@ -53,6 +58,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     constructor(public esf: IgxGridExcelStyleFilteringComponent) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
+                this.shouldOpenSubMenu = true;
                 this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
             }
         });
