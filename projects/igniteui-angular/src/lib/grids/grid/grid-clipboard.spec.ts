@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -13,7 +13,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridClipboardComponent

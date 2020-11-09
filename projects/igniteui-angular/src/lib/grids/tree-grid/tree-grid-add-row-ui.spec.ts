@@ -1,5 +1,5 @@
 
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridModule, IgxTreeGridComponent, IGridEditDoneEventArgs } from './public_api';
 import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
@@ -21,7 +21,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         const endEvent = new AnimationEvent('animationend');
         animationElem.dispatchEvent(endEvent);
   };
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridEditActionsComponent

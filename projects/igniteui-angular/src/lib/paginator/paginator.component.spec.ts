@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,7 +9,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultPaginatorComponent
@@ -104,7 +104,7 @@ describe('IgxPaginator with default settings', () => {
 
 describe('IgxPaginator with custom settings', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomizedPaginatorComponent,

@@ -1,10 +1,5 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed,
-    fakeAsync,
-    tick
-} from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective, IgxFocusModule } from './focus.directive';
 
@@ -16,7 +11,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('igxFocus', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SetFocusComponent,

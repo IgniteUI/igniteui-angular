@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './public_api';
@@ -14,7 +14,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSortingComponent

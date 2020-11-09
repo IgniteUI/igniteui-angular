@@ -29,4 +29,6 @@
             <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
+
+    <button igxButton="raised" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
 </div>

@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxGridModule, IgxGridComponent } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
@@ -21,7 +21,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,

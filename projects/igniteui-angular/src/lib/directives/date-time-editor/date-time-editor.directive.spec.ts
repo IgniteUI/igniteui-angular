@@ -2,7 +2,7 @@ import { IgxDateTimeEditorDirective, IgxDateTimeEditorModule } from './date-time
 import { DatePart } from './date-time-editor.common';
 import { DOCUMENT } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -338,7 +338,7 @@ describe('IgxDateTimeEditor', () => {
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
         describe('Key interaction tests', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxDateTimeEditorSampleComponent
@@ -942,7 +942,7 @@ describe('IgxDateTimeEditor', () => {
         describe('Form control tests: ', () => {
             let form: FormGroup;
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxDateTimeEditorFormComponent

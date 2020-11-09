@@ -53,7 +53,7 @@
                 <button igxButton="raised" (click)="clearAdvancedFiltering()">Clear Advanced Filtering</button>
             </div>
 
-            <h3>ESF Templates</h3>
+            <h3 style="margin-top: 150px;">ESF Templates</h3>
             <igx-grid
                 #grid2
                 [data]="data"
@@ -88,6 +88,10 @@
                                                     [maxWidth]="c.maxWidth"
                                                     [dataType]="c.type">
                 </igx-column>
+
+                <ng-template igxExcelStyleHeaderIcon>
+                    <igx-icon>filter_alt</igx-icon>
+                </ng-template>
 
                 <igx-grid-excel-style-filtering [minHeight]="'700px'" [maxHeight]="'none'">
                     <div igxExcelStyleColumnOperations>COLUMN OPERATIONS
