@@ -15,7 +15,8 @@ import {
     VerticalAlignment,
     OverlaySettings,
     AutoPositionStrategy,
-    AbsoluteScrollStrategy } from '../../../services/public_api';
+    AbsoluteScrollStrategy
+} from '../../../services/public_api';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
 
