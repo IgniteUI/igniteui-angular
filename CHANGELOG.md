@@ -3,6 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 ## 11.0.0
 
+### New Features
+- `IgxCalendar`
+    - Is now fully accessible to screen readers.
+
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added a new directive for re-templating the Excel style filtering header icon - `IgxExcelStyleHeaderIconDirective`.
