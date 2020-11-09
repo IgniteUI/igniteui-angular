@@ -223,23 +223,39 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
 export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
     if (!definition) { return null; }
+
+    // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
     if (definition.kind.toString() === 'reference') {
-        // template variable in an internal/external template
         return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
     }
     let typeDefs = langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
+    // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
+    // or is a reference in a decorator
     if (!typeDefs) {
-        // ts property referred in an internal/external template
-        const classDeclaration = langServ
-            .getProgram()
-            .getSourceFile(definition.fileName)
+        /*
+         normally, the tsserver will consider non .ts files as external to the project
+         however, we load .html files which we can handle with the Angular language service
+         here we're only looking for definitions in a .ts source file
+         we call the getSourceFile function which accesses a map of files, previously loaded by the tsserver
+         at this point the map contains all .html files that we've included
+         we have to ignore them, since the language service will attempt to parse them as .ts files
+        */
+        if (!definition.fileName.endsWith('.ts')) { return null; }
+
+        const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
+        if (!sourceFile) { return null; }
+
+        const classDeclaration = sourceFile
             .statements
             .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
             .find(m => m.name.getText() === definition.containerName);
-        const member: ts.ClassElement = classDeclaration
-            ?.members
-            .find(m => m.name.getText() === definition.name);
-        if (!member || !member.name) { return null; }
+
+        // there must be at least one class declaration in the .ts file and the property must belong to it
+        if (!classDeclaration) { return null; }
+
+        const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
+        if (!member?.name) { return null; }
+
         typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
     }
     if (typeDefs?.length) {
