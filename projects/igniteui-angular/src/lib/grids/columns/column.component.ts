@@ -52,7 +52,7 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
 
 /**
  * **Ignite UI for Angular Column** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid#columns-configuration)
  *
  * The Ignite UI Column is used within an `igx-grid` element to define what data the column will show. Features such as sorting,
  * filtering & editing are enabled at the column level.  You can also provide a template containing custom content inside
