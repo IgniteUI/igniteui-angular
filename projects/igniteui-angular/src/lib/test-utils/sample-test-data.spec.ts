@@ -30,6 +30,11 @@ export class SampleTestData {
         new Date("2018/03/23")
     ])
 
+    public static excelDateArray = () => ([
+        new Date(2018, 3, 23),
+        new Date("2018/03/23")
+    ])
+
     public static emptyObjectData = () => ([
         {},
         {},

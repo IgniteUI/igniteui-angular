@@ -234,14 +234,13 @@ export abstract class IgxBaseExporter {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
                     let rawValue = this._isTreeGrid ? resolveNestedPath(rowData.data, e.field) : resolveNestedPath(rowData, e.field);
+                    const shouldApplyFormatter = e.formatter && !e.skipFormatter;
 
-                    if (e.dataType === 'date' && rawValue !== undefined && rawValue !== null) {
+                    if (e.dataType === 'date' && !shouldApplyFormatter && rawValue !== undefined && rawValue !== null) {
                         rawValue = new Date(rawValue);
-                    } else if (e.dataType === 'string' && isNaN(Number(rawValue)) && rawValue !== undefined && rawValue !== null) {
-                        rawValue = rawValue.toString();
                     }
 
-                    a[e.header] = e.formatter && !e.skipFormatter ? e.formatter(rawValue) : rawValue;
+                    a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
