@@ -1659,6 +1659,30 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(cells.length).toBe(30);
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });
+
+        it('should retain column with in % after hiding/showing grid with 100% width', () => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            const grid = fix.componentInstance.grid;
+            fix.detectChanges();
+            grid.width = '100%';
+            fix.detectChanges();
+            grid.columns[0].width = '50%';
+            fix.detectChanges();
+
+            // hide
+            grid.nativeElement.style.display = "none";
+            // simulate resize observer reflow
+            grid.reflow();
+
+            expect(grid.columns[0].width).toBe('50%');
+
+            grid.nativeElement.style.display = "";
+            // simulate resize observer reflow
+            grid.reflow();
+
+            expect(grid.columns[0].width).toBe('50%');
+        });
     });
 
     describe('IgxGrid - API methods', () => {
