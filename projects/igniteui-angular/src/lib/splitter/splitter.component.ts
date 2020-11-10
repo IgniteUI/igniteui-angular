@@ -1,5 +1,6 @@
-import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Output, EventEmitter, Inject, ElementRef } from '@angular/core';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
@@ -40,6 +41,8 @@ export enum SplitterType {
 })
 export class IgxSplitterComponent implements AfterContentInit {
     private _type: SplitterType = SplitterType.Horizontal;
+
+    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) {}
     /**
      * Gets/Sets the splitter orientation.
      * @example
@@ -120,9 +123,11 @@ export class IgxSplitterComponent implements AfterContentInit {
     public ngAfterContentInit(): void {
         this.panes.forEach(pane => pane.owner = this);
         this.assignFlexOrder();
+        this.deriveSize();
         this.panes.changes.subscribe(() => {
             this.panes.forEach(pane => pane.owner = this);
             this.assignFlexOrder();
+            this.deriveSize();
         });
     }
 
@@ -138,15 +143,9 @@ export class IgxSplitterComponent implements AfterContentInit {
 
         const paneRect = this.pane.element.getBoundingClientRect();
         this.initialPaneSize = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
-        if (this.pane.size === 'auto') {
-            this.pane.size = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
-        }
 
         const siblingRect = this.sibling.element.getBoundingClientRect();
         this.initialSiblingSize = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
-        if (this.sibling.size === 'auto') {
-            this.sibling.size = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
-        }
     }
 
     /**
@@ -165,9 +164,45 @@ export class IgxSplitterComponent implements AfterContentInit {
         if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
             return;
         }
+        this.pane.dragSize = paneSize + 'px';
+        this.sibling.dragSize = siblingSize + 'px';
+    }
 
-        this.pane.size = paneSize + 'px';
-        this.sibling.size = siblingSize + 'px';
+    public onMoveEnd(delta: number) {
+        if (this.pane.isPercentageSize) {
+            // handle % resizes
+            const totalSize = this.getTotalSize();
+            const diffPercentage = (delta / totalSize) * 100;
+            this.pane.size = (parseFloat(this.pane.size) - diffPercentage) + '%';
+        } else {
+            // px resize
+            this.pane.size =  (this.initialPaneSize - delta) + 'px';
+        }
+
+        if (this.sibling.isPercentageSize) {
+            // handle % resizes
+            const totalSize = this.getTotalSize();
+            const diffPercentage = (delta / totalSize) * 100;
+            this.sibling.size = (parseFloat(this.sibling.size) + diffPercentage) + '%';
+        } else {
+            // px resize
+            this.sibling.size = (this.initialSiblingSize + delta) + 'px';
+        }
+        this.pane.dragSize = null;
+        this.sibling.dragSize = null;
+    }
+
+    private getTotalSize() {
+        const computed = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+        const totalSize = this.type === SplitterType.Horizontal ? computed.getPropertyValue('width') : computed.getPropertyValue('height');
+        return parseFloat(totalSize);
+    }
+
+    private deriveSize() {
+        const panesWithNoSize = this.panes.filter(x => !x.size || x.size === 'auto');
+        panesWithNoSize.forEach((pane: IgxSplitterPaneComponent) => {
+            pane.size = (100 / panesWithNoSize.length) + '%';
+        });
     }
 
     /**
