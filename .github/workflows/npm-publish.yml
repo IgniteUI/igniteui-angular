@@ -30,18 +30,20 @@ jobs:
       # before deploy equivalent
       - run: npm run build:schematics
       - run: npm run build:migration
-      # move to dist
-      - run: cd dist/igniteui-angular
 
-      # update package versions
+      # Define npm tag
       - run: if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
       - run: echo ${NPM_TAG}
 
       # copy readme
       - run: cp ../../README.md README.md
+        working-directory: dist/igniteui-angular
 
       # Create version and publish it to npmjs
       - run: npm version ${VERSION} --no-git-tag-version --save --verbose
+        working-directory: dist/igniteui-angular
+
       - run: npm publish --tag ${NPM_TAG}
+        working-directory: dist/igniteui-angular
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
