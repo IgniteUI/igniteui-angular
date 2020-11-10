@@ -50,12 +50,14 @@
     <section class="igx-calendar-picker">
         <span tabindex="0" class="igx-calendar__aria-off-screen">
             <ng-container *ngIf="selection === 'multi'">
-                {{ resourceStrings.igx_calendar_multi_selection }}
+                {{ monthsViewNumber && monthsViewNumber > 1 ?  resourceStrings.igx_calendar_multi_selection.replace('{0}', monthsViewNumber.toString()) : resourceStrings.igx_calendar_singular_multi_selection}}
             </ng-container>
             <ng-container *ngIf="selection === 'range'">
-                {{ resourceStrings.igx_calendar_range_selection }}
+                {{ monthsViewNumber && monthsViewNumber > 1 ?  resourceStrings.igx_calendar_range_selection.replace('{0}', monthsViewNumber.toString()) : resourceStrings.igx_calendar_singular_range_selection}}
             </ng-container>
-            {{ monthsViewNumber && monthsViewNumber > 1 ?  resourceStrings.igx_calendar_with_date_pickers.replace('{0}', monthsViewNumber.toString()) : ''}}
+            <ng-container *ngIf="selection === 'single'">
+                {{ monthsViewNumber && monthsViewNumber > 1 ?  resourceStrings.igx_calendar_single_selection.replace('{0}', monthsViewNumber.toString()) : resourceStrings.igx_calendar_singular_single_selection}}
+            </ng-container>
         </span>
         <div
             tabindex="0"
