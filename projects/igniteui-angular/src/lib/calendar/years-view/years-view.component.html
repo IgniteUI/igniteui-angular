@@ -1,7 +1,6 @@
 <div class="igx-calendar__body">
     <div class="igx-calendar__body-column" (wheel)="scroll($event)" (pan)="pan($event)">
         <span
-            [attr.aria-label]="formattedYear(year)"
             [igxCalendarYear]="year"
             [date]="date"
             (onYearSelection)="selectYear($event)"

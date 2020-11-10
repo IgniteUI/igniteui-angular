@@ -4,8 +4,8 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-        <span class="igx-calendar__aria-off-screen" aria-live="polite">
-                {{ monthsViewNumber > 1  ? (resourceStrings.igx_calendar_first_picker_of.replace('{0}', monthsViewNumber.toString())  + ' ' + (getViewDate(obj.index) | date: 'LLLL yyyy')) : resourceStrings.igx_calendar_selected_month_is + (getViewDate(obj.index) | date: 'LLLL yyyy')}}
+        <span *ngIf="monthsViewNumber < 2 || obj.index < 1" class="igx-calendar__aria-off-screen" aria-live="polite">
+            {{ monthsViewNumber > 1 ? (resourceStrings.igx_calendar_first_picker_of.replace('{0}', monthsViewNumber.toString())  + ' ' + (getViewDate(obj.index) | date: 'LLLL yyyy')) : resourceStrings.igx_calendar_selected_month_is + (getViewDate(obj.index) | date: 'LLLL yyyy')}}
         </span>
         <span
             tabindex="0"

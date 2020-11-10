@@ -53,11 +53,6 @@ export class IgxCalendarYearDirective {
         return this.isCurrentYear ? 'spinbutton' : null;
     }
 
-    @HostBinding('attr.arria-hidden')
-    public get aHidden(): boolean {
-        return !this.isCurrentYear;
-    }
-
     @HostBinding('attr.aria-valuenow')
     public get valuenow(): number {
         return this.isCurrentYear ? this.date.getFullYear() : null;
