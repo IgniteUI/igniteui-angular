@@ -5,7 +5,7 @@
 
 <ng-template let-result #defaultMonth let-obj>
         <span class="igx-calendar__aria-off-screen" aria-live="polite">
-             {{ monthsViewNumber > 1 ? resourceStrings.igx_calendar_first_picker_of + ' ' + monthsViewNumber + ' ' + resourceStrings.igx_calendar_starts_from + ' ' + (getViewDate(obj.index) | date: 'LLLL yyyy') : resourceStrings.igx_calendar_selected_month_is + (getViewDate(obj.index) | date: 'LLLL yyyy')}}
+                {{ monthsViewNumber > 1  ? (resourceStrings.igx_calendar_first_picker_of.replace('{0}', monthsViewNumber.toString())  + ' ' + (getViewDate(obj.index) | date: 'LLLL yyyy')) : resourceStrings.igx_calendar_selected_month_is + (getViewDate(obj.index) | date: 'LLLL yyyy')}}
         </span>
         <span
             tabindex="0"
@@ -55,7 +55,7 @@
             <ng-container *ngIf="selection === 'range'">
                 {{ resourceStrings.igx_calendar_range_selection }}
             </ng-container>
-            {{ monthsViewNumber && monthsViewNumber > 1 ?  (resourceStrings.igx_calendar_calendar_with + ' ' + monthsViewNumber + ' ' + resourceStrings.igx_calendar_date_pickers) : ''}}
+            {{ monthsViewNumber && monthsViewNumber > 1 ?  resourceStrings.igx_calendar_with_date_pickers.replace('{0}', monthsViewNumber.toString()) : ''}}
         </span>
         <div
             tabindex="0"
