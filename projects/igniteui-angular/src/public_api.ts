@@ -113,6 +113,7 @@ export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/c
 export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
+export { ICalendarResourceStrings } from './lib/core/i18n/calendar-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
 export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
 export { IListResourceStrings } from './lib/core/i18n/list-resources';
