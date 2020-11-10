@@ -1074,7 +1074,6 @@ describe('IgxDateRangePicker', () => {
                 expect(singleInputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('grid');
                 expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
                 expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
-                expect(calendarElement.nativeElement.getAttribute('role')).toEqual('grid');
                 expect(singleInputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(expectedLabelID);
 
                 dateRange.toggle();
