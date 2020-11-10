@@ -2954,14 +2954,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
-    /**
-     * @hidden
-     */
-    protected forOfDir(): IgxForOfDirective<any> {
-        const forOfDir = this.dataRowList.length > 0 ? this.dataRowList.first.virtDirRow : this.headerContainer;
-        return forOfDir as IgxForOfDirective<any>;
-    }
-
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
@@ -3000,6 +2992,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
+            const horizontal = this.headerContainer.getScroll();
+            const vertical = this.verticalScrollContainer.getScroll();
             if (this.selectionService.dragMode && isIE()) { return; }
             if (!this.crudService.cell &&
                 !!this.navigation.activeNode &&
@@ -3008,7 +3002,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                     || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode) &&
-                this.forOfDir().scrollPosition === 0) {
+                vertical.scrollTop === 0 && horizontal.scrollLeft === 0) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
