@@ -1,7 +1,7 @@
 # IgxToggle Directive
 
 The **IgxToggle** provides a way for user to make a given content togglable.  
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)
 
 #Usage
 ```typescript
@@ -60,7 +60,7 @@ handlers when the toggle is opened and respectively closed.
 
 The **IgxToggleAction** provides a way for user to Open/Close(toggle) every Component/Directive which implements **IToggleView** interface by providing the reference to this particular Component/Directive or ID which is registered into **IgxNavigationService**. It is also applicable upon **IgxToggle**. When applied **IgxToggleAction** will set its host element as the position strategy target.
 
-You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
+You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)
 
 ## Usage
 ```typescript
