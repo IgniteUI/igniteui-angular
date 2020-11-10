@@ -1671,13 +1671,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             // hide
-            grid.nativeElement.style.display = "none";
+            grid.nativeElement.style.display = 'none';
             // simulate resize observer reflow
             grid.reflow();
 
             expect(grid.columns[0].width).toBe('50%');
 
-            grid.nativeElement.style.display = "";
+            grid.nativeElement.style.display = '';
             // simulate resize observer reflow
             grid.reflow();
 
