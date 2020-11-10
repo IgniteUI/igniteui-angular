@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent } from 'rxjs';
+import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -3329,7 +3329,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.addRowSnackbar.hide();
         });
 
-
+        // Keep the stream open for future subscribers
+        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(noop);
         Promise.resolve().then(() => this.rendered.next(true));
     }
 
