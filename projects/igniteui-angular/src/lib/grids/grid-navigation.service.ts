@@ -364,7 +364,7 @@ export class IgxGridNavigationService {
     }
 
     protected findFirstDataRowIndex(): number {
-        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec) && !rec.summaries);
     }
 
     protected findLastDataRowIndex(): number {
