@@ -1,0 +1,48 @@
+name: Npm.js deploy
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: 'https://registry.npmjs.org'
+      - run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+      - run: echo ${VERSION}
+
+      # before install equivalent
+      - run: echo "NG_CLI_ANALYTICS=false" >> $GITHUB_ENV
+      # test, should be removed
+      - run: echo "NODE_OPTIONS='--max_old_space_size=4096'" >> $GITHUB_ENV
+      # - run: npm install -g gulp
+      - run: npm ci
+      # - run: npm install -g istanbul-combine
+
+      # simple script equivalent
+      - run: ng build igniteui-angular --prod
+      - run: npm run build:style
+
+      # before deploy equivalent
+      - run: npm run build:schematics
+      - run: npm run build:migration
+      # move to dist
+      - run: cd dist/igniteui-angular
+
+      # update package versions
+      - run: if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
+      - run: echo ${NPM_TAG}
+
+      # copy readme
+      - run: cp ../../README.md README.md
+
+      # Create version and publish it to npmjs
+      - run: npm version ${VERSION} --no-git-tag-version --save --verbose
+      - run: npm publish --tag ${NPM_TAG}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
