@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { IgxGridSharedModules } from '../common/shared.module';
-import { IgxColumnHidingModule } from '../hiding/hiding.module';
-import { IgxColumnPinningModule } from '../pinning/pinning.module';
 import { IgxColumnActionsModule } from '../column-actions/column-actions.module';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridToolbarAdvancedFilteringComponent } from './grid-toolbar-advanced-filtering.component';
@@ -33,8 +31,6 @@ import {
     ],
     imports: [
         IgxColumnActionsModule,
-        IgxColumnHidingModule,
-        IgxColumnPinningModule,
         IgxGridSharedModules
     ],
     exports: [
