@@ -54,9 +54,27 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     public abstract expandChildren: boolean;
 
+    /**
+     * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
+     * @example
+     * ```html
+     * <igx-hierarchical-grid #grid [data]="localData" [hasChildrenKey]="'hasEmployees'">
+     * </igx-hierarchical-grid>
+     * ```
+     */
     @Input()
     public hasChildrenKey: string;
 
+    /**
+     * Gets/Sets whether the expand/collapse all button in the header should be rendered.
+     * @remark
+     * The default value is false.
+     * @example
+     * ```html
+     * <igx-hierarchical-grid #grid [data]="localData" [showExpandAll]="true">
+     * </igx-hierarchical-grid>
+     * ```
+     */
     @Input()
     public showExpandAll = false;
 
