@@ -25,8 +25,7 @@ jobs:
       # - run: npm install -g istanbul-combine
 
       # simple script equivalent
-      - run: ng build igniteui-angular --prod
-      - run: npm run build:style
+      - run: npm run build:lib
 
       # before deploy equivalent
       - run: npm run build:schematics
