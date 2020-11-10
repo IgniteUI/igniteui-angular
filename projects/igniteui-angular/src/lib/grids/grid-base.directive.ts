@@ -38,7 +38,7 @@ import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxForOfDirective, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
@@ -2954,6 +2954,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
+    /**
+     * @hidden
+     */
+    protected forOfDir(): IgxForOfDirective<any> {
+        const forOfDir = this.dataRowList.length > 0 ? this.dataRowList.first.virtDirRow : this.headerContainer;
+        return forOfDir as IgxForOfDirective<any>;
+    }
 
     constructor(
         public selectionService: IgxGridSelectionService,
@@ -3000,7 +3007,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                     || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode) &&
+                this.forOfDir().scrollPosition === 0) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
