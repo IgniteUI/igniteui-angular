@@ -4949,11 +4949,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const cols = this.hasColumnLayouts ?
             this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
         cols.forEach((item) => {
-            const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
-            if (isWidthInPercent) {
-                item.width = item.calcWidth || MINIMUM_COLUMN_WIDTH + 'px';
-            }
-            colSum += parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
+            colSum += parseInt((item.calcWidth || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
         });
         if (!colSum) {
             return null;
