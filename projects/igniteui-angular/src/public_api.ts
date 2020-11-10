@@ -66,7 +66,6 @@ export * from './lib/combo/public_api';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/public_api';
-export * from './lib/grids/hiding/hiding.module';
 export * from './lib/grids/common/enums';
 export * from './lib/grids/common/events';
 export * from './lib/grids/filtering/excel-style/public_api';

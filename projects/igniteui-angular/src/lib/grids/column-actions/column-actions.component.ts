@@ -289,7 +289,7 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * Sets/Gets the css class selector.
-     * By default the value of the `class` attribute is `"igx-column-hiding"`.
+     * By default the value of the `class` attribute is `"igx-column-actions"`.
      * ```typescript
      * let cssCLass =  this.columnHidingUI.cssClass;
      * ```
