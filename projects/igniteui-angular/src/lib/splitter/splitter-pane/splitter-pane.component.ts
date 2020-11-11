@@ -152,8 +152,9 @@ export class IgxSplitterPaneComponent {
      */
     @HostBinding('style.flex')
     public get flex() {
-        const grow = this.size !== 'auto' ? 0 : 1;
-        const shrink = this.size !== 'auto' ? 0 : 1;
+        const isAuto = this.size === 'auto' && !this.dragSize;
+        const grow = !isAuto ? 0 : 1;
+        const shrink = !isAuto ? 0 : 1;
         const size = this.dragSize || this.size;
         return `${grow} ${shrink} ${size}`;
     }
