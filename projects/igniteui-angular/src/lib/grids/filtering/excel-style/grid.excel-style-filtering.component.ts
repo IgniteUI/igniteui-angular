@@ -451,8 +451,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         for (let index = 0; index < this.uniqueValues.length; index++) {
-            const element = this.uniqueValues[index];
-            const value = this.column.dataType === DataType.Date && element.value ? new Date(element.value).toISOString() : element.value;
+            const value = this.getExpressionValue(this.uniqueValues[index]);
             if (this.filterValues.has(value)) {
                 return true;
             }
@@ -644,8 +643,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     filterListItem.isFiltered = false;
 
                     if (shouldUpdateSelection) {
-                        const value = this.column.dataType === DataType.Date && element.value ?
-                            new Date(element.value).toISOString() : element.value;
+                        const value = this.getExpressionValue(element);
                         if (this.filterValues.has(value)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
@@ -738,6 +736,16 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             element = parseDate(element.value);
         }
         return element;
+    }
+
+    private getExpressionValue(element: any): string {
+        let value;
+        if (this.column.dataType === DataType.Date) {
+            value = element && element.value ? new Date(element.value).toISOString() : element.value;
+        } else {
+            value = element;
+        }
+        return value;
     }
 
     // TODO: sort members by access modifier
