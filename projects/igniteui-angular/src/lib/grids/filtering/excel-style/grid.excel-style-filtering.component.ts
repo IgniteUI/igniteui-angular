@@ -451,7 +451,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         for (let index = 0; index < this.uniqueValues.length; index++) {
-            const value = this.column.dataType === DataType.Date ? this.uniqueValues[index].label : this.uniqueValues[index];
+            const element = this.uniqueValues[index];
+            const value = this.column.dataType === DataType.Date && element.value ? new Date(element.value).toISOString() : element.value;
             if (this.filterValues.has(value)) {
                 return true;
             }
@@ -531,9 +532,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (isDateColumn) {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
                 if (e.expression.condition.name === 'in') {
-                    return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v => this.getFilterItemLabel(v))];
+                    return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
+                        new Date(v).toISOString()) ];
                 }
-                return [ ...arr, ...[e.expression.searchVal ? this.getFilterItemLabel(e.expression.searchVal) : e.expression.searchVal] ];
+                return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal] ];
             }, []));
         } else {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
@@ -642,7 +644,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     filterListItem.isFiltered = false;
 
                     if (shouldUpdateSelection) {
-                        if (this.filterValues.has(element.label || element)) {
+                        const value = this.column.dataType === DataType.Date && element.value ?
+                            new Date(element.value).toISOString() : element.value;
+                        if (this.filterValues.has(value)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
                         }
