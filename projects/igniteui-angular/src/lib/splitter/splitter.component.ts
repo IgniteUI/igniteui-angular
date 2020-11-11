@@ -182,7 +182,6 @@ export class IgxSplitterComponent implements AfterContentInit {
         if (this.sibling.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
-            const diffPercentage = (delta / totalSize) * 100;
             const percentSiblingPaneSize =  (siblingSize / totalSize) * 100;
             this.sibling.size = percentSiblingPaneSize + '%';
         } else {
