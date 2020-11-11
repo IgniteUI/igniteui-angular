@@ -5323,20 +5323,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longDate') : 'No value!';
                 return val;
             });
- 
+
             const dates = fix.componentInstance.data.filter(d => d.ReleaseDate !== null && d.ReleaseDate !== undefined)
                 .map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
             fix.detectChanges();
- 
+
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(1050);
             fix.detectChanges();
- 
+
             // Verify items in search have loaded and that the loading indicator is not visible.
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
- 
+
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkboxElements[2].click();
             tick();
@@ -5344,22 +5344,22 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
- 
+
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(1050);
             fix.detectChanges();
- 
+
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
- 
+
             expect(listItems[1].innerText).toBe('No value!');
             for (let i = 2; i < listItems.length; i++) {
                 const date = dates[i - 2];
                 const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
                 expect(listItems[i].innerText).toBe(label);
             }
- 
+
             const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
