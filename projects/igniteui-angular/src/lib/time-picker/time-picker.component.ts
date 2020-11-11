@@ -51,7 +51,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, IBaseEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
-import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxLabelDirective, IgxLabelModule } from '../directives/label/label.directive';
 
 
 let NEXT_ID = 0;
@@ -2184,6 +2184,7 @@ export class IgxTimePickerComponent implements
         IgxTimePickerComponent,
         IgxTimePickerTemplateDirective,
         IgxTimePickerActionsDirective,
+        IgxLabelModule,
         TimeDisplayFormatPipe,
         TimeInputFormatPipe
     ],
@@ -2193,6 +2194,7 @@ export class IgxTimePickerComponent implements
         IgxIconModule,
         IgxButtonModule,
         IgxMaskModule,
+        IgxLabelModule,
         IgxToggleModule,
         IgxTextSelectionModule
     ],

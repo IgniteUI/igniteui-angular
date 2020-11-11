@@ -18,7 +18,7 @@ import {
     IgxInputDirective,
     IgxInputState,
 } from '../directives/input/input.directive';
-import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxLabelDirective, IgxLabelModule } from '../directives/label/label.directive';
 import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import {
@@ -410,17 +410,16 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     declarations: [
         IgxInputGroupComponent,
         IgxHintDirective,
-        IgxInputDirective,
-        IgxLabelDirective,
+        IgxInputDirective
     ],
     exports: [
         IgxInputGroupComponent,
         IgxHintDirective,
         IgxInputDirective,
-        IgxLabelDirective,
+        IgxLabelModule,
         IgxPrefixModule,
         IgxSuffixModule,
     ],
-    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule],
+    imports: [CommonModule, IgxLabelModule, IgxPrefixModule, IgxSuffixModule],
 })
 export class IgxInputGroupModule {}

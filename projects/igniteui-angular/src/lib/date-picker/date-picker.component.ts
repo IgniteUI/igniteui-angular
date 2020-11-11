@@ -38,6 +38,7 @@ import {
     IgxInputDirective,
     IgxInputGroupComponent,
     IgxInputState,
+    IgxLabelModule,
     IgxLabelDirective
 } from '../input-group/public_api';
 import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
@@ -1422,6 +1423,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         IgxDatePickerComponent,
         IgxDatePickerTemplateDirective,
         IgxDatePickerActionsDirective,
+        IgxLabelModule,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe
     ],
@@ -1431,6 +1433,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         IgxInputGroupModule,
         IgxCalendarModule,
         IgxButtonModule,
+        IgxLabelModule,
         IgxRippleModule,
         IgxMaskModule,
         IgxTextSelectionModule
