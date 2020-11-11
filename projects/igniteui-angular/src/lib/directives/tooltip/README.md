@@ -5,7 +5,7 @@ _Directives_
 
 ## Description
 The **IgxTooltip** directive provides us a way to make a given element a tooltip. Then we can assign it to be a tooltip for another element (for example a button) by using the **IgxTooltipTarget** directive.
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip.html).
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip).
 
 ## Usage
 First we will have to import the IgxTooltipModule.
