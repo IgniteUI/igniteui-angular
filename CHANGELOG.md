@@ -3,9 +3,6 @@
 All notable changes for each version of this project will be documented in this file.
 ## 11.0.0
 
-### New Features
-- `IgxCalendar`
-    - Is now fully accessible to screen readers.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -17,6 +14,14 @@ All notable changes for each version of this project will be documented in this 
         components and the old properties are deprecated.
 
         Refer to the official documentation for more information.
+
+### New Features
+- `IgxCalendar`
+    - Is now fully accessible to screen readers.
+
+### Improvements
+- `IgxOverlay`
+    - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strateгy, where the `IgxOverlay` content is flipped, depending on the available space.
 
 ## 10.2.0
 
