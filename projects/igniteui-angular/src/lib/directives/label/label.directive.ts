@@ -1,4 +1,5 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Directive, HostBinding, Input, NgModule } from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -16,3 +17,10 @@ export class IgxLabelDirective {
     @Input()
     public id = `igx-label-${NEXT_ID++}`;
 }
+
+@NgModule({
+    declarations: [IgxLabelDirective],
+    exports: [IgxLabelDirective],
+    imports: [CommonModule]
+})
+export class IgxLabelModule { }
