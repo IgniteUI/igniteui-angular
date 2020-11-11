@@ -87,7 +87,6 @@ let NEXT_ID = 0;
     templateUrl: 'calendar.component.html'
 })
 export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
-
     /**
      * Sets/gets the `id` of the calendar.
      *
@@ -190,24 +189,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public callback: (next) => void;
-
-    /**
-     * The default aria role attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.role')
-    public role = 'grid';
-
-    /**
-     * The default aria lebelled by attribute for the component.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy = 'calendar';
 
     /**
      * The default css class applied to the component.
@@ -996,5 +977,21 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         } else {
             return this.monthViews.toArray()[index];
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getPrevMonth(date): Date {
+        return this.calendarModel.getPrevMonth(date);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getNextMonth(date, viewIndex): Date {
+        return this.calendarModel.getDateByView(date, 'Month', viewIndex);
     }
 }
