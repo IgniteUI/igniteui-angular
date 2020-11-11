@@ -5325,7 +5325,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             });
  
             const dates = fix.componentInstance.data.filter(d => d.ReleaseDate !== null && d.ReleaseDate !== undefined)
-                        .map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
+                .map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
             fix.detectChanges();
  
             // Open excel style custom filtering dialog and wait a bit.
