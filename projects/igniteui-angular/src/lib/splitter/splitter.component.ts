@@ -123,11 +123,9 @@ export class IgxSplitterComponent implements AfterContentInit {
     public ngAfterContentInit(): void {
         this.panes.forEach(pane => pane.owner = this);
         this.assignFlexOrder();
-        this.deriveSize();
         this.panes.changes.subscribe(() => {
             this.panes.forEach(pane => pane.owner = this);
             this.assignFlexOrder();
-            this.deriveSize();
         });
     }
 
@@ -169,24 +167,27 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     public onMoveEnd(delta: number) {
+        const paneSize = this.initialPaneSize - delta;
+        const siblingSize = this.initialSiblingSize + delta;
         if (this.pane.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
-            const diffPercentage = (delta / totalSize) * 100;
-            this.pane.size = (parseFloat(this.pane.size) - diffPercentage) + '%';
+            const percentPaneSize = (paneSize / totalSize) * 100;
+            this.pane.size = percentPaneSize + '%';
         } else {
             // px resize
-            this.pane.size =  (this.initialPaneSize - delta) + 'px';
+            this.pane.size = paneSize + 'px';
         }
 
         if (this.sibling.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
             const diffPercentage = (delta / totalSize) * 100;
-            this.sibling.size = (parseFloat(this.sibling.size) + diffPercentage) + '%';
+            const percentSiblingPaneSize =  (siblingSize / totalSize) * 100;
+            this.sibling.size = percentSiblingPaneSize + '%';
         } else {
             // px resize
-            this.sibling.size = (this.initialSiblingSize + delta) + 'px';
+            this.sibling.size = siblingSize + 'px';
         }
         this.pane.dragSize = null;
         this.sibling.dragSize = null;
@@ -198,12 +199,6 @@ export class IgxSplitterComponent implements AfterContentInit {
         return parseFloat(totalSize);
     }
 
-    private deriveSize() {
-        const panesWithNoSize = this.panes.filter(x => !x.size || x.size === 'auto');
-        panesWithNoSize.forEach((pane: IgxSplitterPaneComponent) => {
-            pane.size = (100 / panesWithNoSize.length) + '%';
-        });
-    }
 
     /**
      * @hidden @internal
