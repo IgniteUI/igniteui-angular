@@ -15,7 +15,7 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
 import { IgxListComponent } from '../../../list/public_api';
-import { DataType } from 'igniteui-angular';
+import { DataType } from '../../../data-operations/data-util';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
