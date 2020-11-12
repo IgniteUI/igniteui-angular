@@ -69,7 +69,8 @@
     $item-selected-text-color: null,
     $item-selected-background: null,
     $item-selected-border-color: null,
-    $item-selected-hover-background: null
+    $item-selected-hover-background: null,
+    $selected-shadow-color: null
 ) {
     $name: 'igx-button-group';
     $button-group-schema: ();
@@ -89,6 +90,7 @@
     );
 
     $shadow-color: null;
+    $selected-shadow-color: null;
 
     @if map-get($theme, 'variant') == 'bootstrap' {
         $shadow-color: rgba(map-get($theme, 'item-background'), .5);
@@ -160,6 +162,7 @@
         border: $border,
         shadow: $shadow,
         shadow-color: $shadow-color,
+        selected-shadow-color: $selected-shadow-color,
     ));
 }
 
@@ -181,6 +184,7 @@
 
     $variant: map-get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
+    $indigo-theme: $variant == 'indigo-design';
 
     %igx-group-display {
         display: flex;
@@ -255,6 +259,10 @@
             @if $bootstrap-theme {
                 box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
             }
+
+            @if $indigo-theme {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
+            }
         }
     }
 
@@ -290,6 +298,12 @@
         &:focus {
             color: --var($theme, 'item-selected-text-color');
             background: --var($theme, 'item-selected-hover-background');
+        }
+
+        @if $indigo-theme {
+            &:focus {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'selected-shadow-color');
+            }
         }
 
         &%igx-button--disabled {
