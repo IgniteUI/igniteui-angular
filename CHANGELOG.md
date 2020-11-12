@@ -42,7 +42,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCalendarComponent`, `IgxMonthsViewComponent` and `IgxYearsViewComponent`
     - `tabIndex` property was removed  in order to improve on page navigation and to be compliant with W3 accessability recommendations; Also the date grid in the calendar is now only one tab stop, the same approach is applied and in the `IgxMonthsViewComponent` and `IgxYearsViewComponent`;
 - `FilteringStrategy`
-    - **Breaking Change** - `filter` method exposed by the `FilteringStrategy` class now requires 3d `advancedExpressionsTree` and 4th `grid` parameters. If not needed, just pass `null`.
+    - **Breaking Change** - `filter` method exposed by the `FilteringStrategy` class now requires 3rd `advancedExpressionsTree` and 4th `grid` parameters. If not needed, just pass `null`.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
