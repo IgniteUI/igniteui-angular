@@ -15,7 +15,7 @@ All notable changes for each version of this project will be documented in this 
 
         Refer to the official documentation for more information.
 - `FilteringStrategy`
-    - **Breaking Change** - `filter` method exposed by the `FilteringStrategy` class now requires 3d `advancedExpressionsTree` and 4th `grid` parameters. If not needed, just pass `null`.
+    - **Breaking Change** - `filter` method exposed by the `FilteringStrategy` class now requires 3rd `advancedExpressionsTree` and 4th `grid` parameters. If not needed, just pass `null`.
 
 ### New Features
 - `IgxCalendar`
