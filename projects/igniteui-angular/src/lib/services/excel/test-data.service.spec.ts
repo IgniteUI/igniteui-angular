@@ -997,5 +997,21 @@ export class FileContentData {
 
         return this.createData();
     }
+
+    get hireDate() {
+        this._sharedStringsData =
+        `count="1" uniqueCount="1"><si><t>HireDate</t></si>`;
+
+        this._tableData = `ref="A1:A9" totalsRowShown="0">
+        <autoFilter ref="A1:A9"/><tableColumns count="1"><tableColumn id="1" name="HireDate"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:A9"/>
+        <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+        <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+        <cols><col min="1" max="1" width="50" customWidth="1"/></cols>
+        <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="d" s="2"><v>2008-04-20T00:00:00</v></c></row><row r="3"><c r="A3" t="d" s="2"><v>2015-12-08T00:00:00</v></c></row><row r="4"><c r="A4" t="d" s="2"><v>2001-01-19T00:00:00</v></c></row><row r="5"><c r="A5" t="d" s="2"><v>2012-07-30T00:00:00</v></c></row><row r="6"><c r="A6" t="d" s="2"><v>1998-05-01T00:00:00</v></c></row><row r="7"><c r="A7" t="d" s="2"><v>2010-02-05T00:00:00</v></c></row><row r="8"><c r="A8" t="d" s="2"><v>2020-05-17T00:00:00</v></c></row><row r="9"><c r="A9" t="d" s="2"><v>2004-03-13T00:00:00</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
     /* tslint:enable max-line-length */
 }

@@ -201,6 +201,17 @@ export class SampleTestData {
         ] },
     ])
 
+    public static hireDate = () => ([
+        { ID: 1, HireDate: new Date(2008, 3, 20).toISOString() },
+        { ID: 2, HireDate: new Date(2015, 11, 8) },
+        { ID: 3, HireDate: 979855200000 },
+        { ID: 4, HireDate: new Date(2012, 6, 30).toISOString() },
+        { ID: 5, HireDate: 893970000000 },
+        { ID: 6, HireDate: new Date(2010, 1, 5).toISOString() },
+        { ID: 7, HireDate: new Date(2020, 4, 17).toISOString() },
+        { ID: 8, HireDate: 1079128800000 }
+    ])
+
 
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
     public static personJobData = () => ([
