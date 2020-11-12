@@ -2185,7 +2185,8 @@ export class IgxTimePickerComponent implements
         IgxTimePickerTemplateDirective,
         IgxTimePickerActionsDirective,
         TimeDisplayFormatPipe,
-        TimeInputFormatPipe
+        TimeInputFormatPipe,
+        IgxInputGroupModule
     ],
     imports: [
         CommonModule,
