@@ -274,7 +274,8 @@ export class IgxGridNavigationService {
     }
 
     protected forOfDir(): IgxForOfDirective<any> {
-        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.summariesRowList.length ?
+        this.grid.summariesRowList.first.virtDirRow : this.grid.headerContainer;
         return forOfDir as IgxForOfDirective<any>;
     }
 
@@ -385,6 +386,13 @@ export class IgxGridNavigationService {
     }
 
     public performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
+        if (this.grid.rowList < 1 && this.grid.summariesRowList.length < 1 && this.grid.hasColumnGroups) {
+            let column = this.grid.getColumnByVisibleIndex(visibleColumnIndex);
+            while (column.parent) {
+                column = column.parent;
+            }
+            visibleColumnIndex = this.forOfDir().igxForOf.indexOf(column);
+        }
         if (!this.shouldPerformHorizontalScroll(visibleColumnIndex)) { return; }
         this.pendingNavigation = true;
         this.grid.parentVirtDir.onChunkLoad
