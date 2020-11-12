@@ -560,25 +560,32 @@ $_bootstrap-button: extend(
 /// @prop {Color} flat-hover-background [transparent] - The hover background color of a flat button.
 /// @prop {Map} flat-focus-background [transparent] - The focus background color of a flat button.
 /// @prop {Map} flat-focus-text-color [igx-color: ('grays', 900)] - The focus text color of a flat button.
+/// @prop {Map} flat-focus-outline [igx-color: ('primary', 100)] - The focus outline color of an flat button.
+
 ///
 /// @prop {Color} raised-text-color [#fff] - The idle text color of a raised button.
 /// @prop {Map} raised-hover-background [igx-color: ('primary', 600)] - The hover background of a raised button.
 /// @prop {Color} raised-hover-text-color [#fff] - The hover text color of a raised button.
 /// @prop {Map} raised-focus-background [igx-color: ('primary', 400)] -  The focus background color of a raised button.
 /// @prop {Color} raised-focus-text-color [#fff] - The focus text color of a raised button.
+/// @prop {Map} raised-focus-outline [igx-color: ('primary', 200)] - The focus outline color of an raised button.
 ///
+/// @prop {Color} outlined-background [#fff] - The background color of an outlined button
 /// @prop {Map} outlined-outline-color [igx-color: ('grays', 500)] - The border color of an outlined button.
-/// @prop {Map} outlined-hover-background [igx-color: ('grays', 200)] - The hover background color of an outlined button.
+/// @prop {Map} outlined-hover-background [igx-color: ('grays', 100)] - The hover background color of an outlined button.
 /// @prop {Map} outlined-text-color [ igx-color: ('grays', 700)] - The idle text color of an outlined button.
-/// @prop {Color} outlined-hover-text-color [(igx-color: ('grays', 900)] - The hover text color of an outlined button.
-/// @prop {Map} outlined-focus-background [igx-color: ('grays', 200)] - The focus background color of an outlined button.
-/// @prop {Color} outlined-focus-text-color [(igx-color: ('grays', 900))] - The focus text color of an outlined button.
+/// @prop {Map} outlined-hover-text-color [(igx-color: ('grays', 900)] - The hover text color of an outlined button.
+/// @prop {Color} outlined-focus-background [#fff] - The focus background color of an outlined button.
+/// @prop {Map} outlined-focus-outline [igx-color: ('grays', 300)] - The outline color of an outlined button.
+/// @prop {Map} outlined-focus-text-color [(igx-color: ('grays', 900))] - The focus text color of an outlined button.
 ///
 /// @prop {Map} fab-text-color [#fff] - The text color of a floating action button.
 /// @prop {Map} fab-hover-background [igx-color: ('primary', 400)] - The hover background color of a floating action button.
 /// @prop {Color} fab-hover-text-color [#fff] - The hover text color of a floating action button.
 /// @prop {Map} fab-focus-background [igx-color: ('primary', 400)] - The focus background color of floating action button.
 /// @prop {Color} fab-focus-text-color [#fff] - The focus text color of a floating action button.
+/// @prop {Map} fab-focus-outline [igx-color: ('primary', 300)] - The outline color of an fab button.
+
 ///
 /// @prop {Map} icon-color [igx-color: ('grays', 600)] - The icon color of an icon button.
 /// @prop {Map} icon-hover-background [igx-color: ('grays', 300)] - The hover background color of an icon button.
@@ -625,6 +632,10 @@ $_indigo-button: extend(
 
         flat-focus-background: transparent,
 
+        flat-focus-outline: (
+            igx-color: ('primary', 100),
+        ),
+
         raised-text-color: #fff,
 
         raised-hover-text-color: #fff,
@@ -639,6 +650,10 @@ $_indigo-button: extend(
             igx-color: ('primary', 400)
         ),
 
+        raised-focus-outline: (
+            igx-color: ('primary', 200)
+        ),
+
         outlined-outline-color: (
             igx-color: 'grays',
         ),
@@ -651,16 +666,20 @@ $_indigo-button: extend(
             igx-color: ('grays', 900),
         ),
 
+        outlined-background: #fff,
+
         outlined-hover-background: (
-            igx-color: ('grays', 200)
+            igx-color: ('grays', 100)
         ),
 
         outlined-focus-text-color: (
             igx-color: ('grays', 900),
         ),
 
-        outlined-focus-background: (
-            igx-color: ('grays', 200)
+        outlined-focus-background: #fff,
+
+        outlined-focus-outline: (
+            igx-color: ('grays', 300)
         ),
 
         fab-text-color: #fff,
@@ -675,6 +694,10 @@ $_indigo-button: extend(
 
         fab-focus-background: (
             igx-color: ('primary', 400)
+        ),
+
+        fab-focus-outline: (
+            igx-color: ('primary', 300)
         ),
 
         icon-color: (

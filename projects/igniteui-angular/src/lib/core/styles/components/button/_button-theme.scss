@@ -646,6 +646,10 @@
             %igx-icon-display {
                 color: --var($theme, 'flat-focus-icon-color');
             }
+
+            @if $variant = 'indigo-design' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'flat-focus-outline');
+            }
         }
     }
 
@@ -687,6 +691,10 @@
             %igx-icon-display {
                 color: --var($theme, 'outlined-focus-icon-color')
             }
+
+            @if $variant = 'indigo-design' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'outlined-focus-outline');
+            }
         }
     }
 
@@ -719,6 +727,10 @@
 
             %igx-icon-display {
                 color: --var($theme, 'raised-focus-icon-color')
+            }
+
+            @if $variant = 'indigo-design' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'raised-focus-outline');
             }
         }
     }
@@ -763,6 +775,10 @@
             color: --var($theme, 'fab-focus-text-color');
             background: --var($theme, 'fab-focus-background');
             box-shadow: $fab-shadow--focus;
+
+            @if $variant = 'indigo-design' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'flat-focus-outline');
+            }
         }
 
         igx-icon {
