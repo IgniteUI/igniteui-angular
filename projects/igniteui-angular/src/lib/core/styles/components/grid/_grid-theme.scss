@@ -1049,7 +1049,7 @@
         background: inherit;
         z-index: 4;
         cursor: move;
-        border-right: 1px solid transparent;
+        border-#{$right}: 1px solid transparent;
 
         %igx-icon-display {
             width: $drag-icon-size;
