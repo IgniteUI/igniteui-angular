@@ -519,7 +519,7 @@ describe('IgxDatePicker', () => {
         expect(formattedHeaderText).toBe('10/20/19');
 
         const picker = document.getElementsByClassName('igx-calendar-picker');
-        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).textContent.trim();
+        const formattedSubHeaderText = picker[0].querySelector('.igx-calendar-picker__dates').textContent.trim();
 
         expect(formattedSubHeaderText).toBe('2019/Oct');
 
@@ -542,7 +542,7 @@ describe('IgxDatePicker', () => {
         fixture.detectChanges();
 
         const picker = document.getElementsByClassName('igx-calendar-picker');
-        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).textContent.trim();
+        const formattedSubHeaderText = picker[0].querySelector('.igx-calendar-picker__dates').textContent.trim();
         expect(formattedSubHeaderText).toBe('2019/Oct');
 
         const buttons = document.getElementsByClassName('igx-button--flat');

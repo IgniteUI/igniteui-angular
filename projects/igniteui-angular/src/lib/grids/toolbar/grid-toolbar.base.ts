@@ -47,6 +47,7 @@ export abstract class BaseToolbarDirective {
 
     constructor(@Host() protected toolbar: IgxGridToolbarComponent) { }
 
+    /** @hidden @internal */
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
         if (actions) {
             const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;

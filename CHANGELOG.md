@@ -3,9 +3,25 @@
 All notable changes for each version of this project will be documented in this file.
 ## 11.0.0
 
+
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added a new directive for re-templating the Excel style filtering header icon - `IgxExcelStyleHeaderIconDirective`.
+    - **Breaking Change**
+
+        Changed the how the grid toolbar is instantiated in the grids. The
+        toolbar is now templated rather than being activated through a property on the parent grid. The toolbar features are also exposed as templatable
+        components and the old properties are deprecated.
+
+        Refer to the official documentation for more information.
+
+### New Features
+- `IgxCalendar`
+    - Is now fully accessible to screen readers.
+
+### Improvements
+- `IgxOverlay`
+    - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strateгy, where the `IgxOverlay` content is flipped, depending on the available space.
 
 ## 10.2.0
 
@@ -82,7 +98,7 @@ All notable changes for each version of this project will be documented in this 
             return result;
         }
     }
-    ```  
+    ```
     - A new `pipeArgs` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
     ```typescript
 - ` IGX_INPUT_GROUP_TYPE` injection token

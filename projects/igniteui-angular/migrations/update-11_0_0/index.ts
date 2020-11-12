@@ -15,6 +15,7 @@ export default function (): Rule {
 
         const TAGS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid'];
         const prop = ['[showToolbar]', 'showToolbar'];
+        const warnMsg = `\n<!-- Auto migrated template content. Please, check your bindings! -->\n`;
         const changes = new Map<string, FileChange[]>();
 
         const applyChanges = () => {
@@ -53,7 +54,7 @@ export default function (): Rule {
             const ngTemplates = findElementNodes([grid], ['ng-template']);
             const toolbarTemplate = ngTemplates.filter(template => hasAttribute(template as Element, 'igxToolbarCustomContent'))[0];
             if (toolbarTemplate) {
-                return `\n${serializeNodes((toolbarTemplate as Element).children).join('')}\n`;
+                return `${warnMsg}\n${serializeNodes((toolbarTemplate as Element).children).join('')}\n`;
             }
             return '';
         };
