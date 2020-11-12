@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
         components and the old properties are deprecated.
 
         Refer to the official documentation for more information.
+- `FilteringStrategy`
+    - `filter` method exposed by the `FilteringStrategy` class now requires 3d `advancedExpressionsTree` and 4th `grid` parameters. If not needed, just pass `null`.
 
 ### New Features
 - `IgxCalendar`
@@ -21,7 +23,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### Improvements
 - `IgxOverlay`
-    - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strateгy, where the `IgxOverlay` content is flipped, depending on the available space.
+    - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
 
 ## 10.2.0
 
