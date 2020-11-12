@@ -1,4 +1,3 @@
-
 <ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
 <ng-template #defaultExpandedTemplate>
     <igx-icon [isActive]='!added' fontSet="material">expand_more</igx-icon>
@@ -18,18 +17,16 @@
     </div>
 </ng-template>
 <ng-template #defaultTemp>
-    <div (click)="expanderClick($event)" (mousedown)='$event.preventDefault()' [ngClass]="expanderClassResolved" *ngIf="hasChildren" #expander>
-            <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
-            </ng-container>
-    </div>
-
+    <!-- Drag indicator -->
     <ng-container *ngIf="rowDraggable">
         <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()" (pointerdown)="$event.preventDefault()">
-                <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
+            <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
         </div>
     </ng-container>
+
+    <!-- Select Row -->
     <ng-container *ngIf="showRowSelectors">
-        <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
+        <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
             <ng-template *ngTemplateOutlet="
                 this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
                 context: { $implicit: {
@@ -41,6 +38,12 @@
             </ng-template>
         </div>
     </ng-container>
+
+    <!-- Row Expander -->
+    <div  (click)="expanderClick($event)" (mousedown)='$event.preventDefault()' [ngClass]="expanderClassResolved" *ngIf="hasChildren" #expander>
+        <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
+        </ng-container>
+    </div>
 
     <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
         <ng-template *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-template>
