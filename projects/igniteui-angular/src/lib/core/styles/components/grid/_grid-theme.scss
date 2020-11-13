@@ -1049,7 +1049,7 @@
         background: inherit;
         z-index: 4;
         cursor: move;
-        order: -1;
+        border-#{$right}: 1px solid transparent;
 
         %igx-icon-display {
             width: $drag-icon-size;
@@ -1711,9 +1711,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border-#{$right}: --var($theme, 'header-border-width')
-            --var($theme, 'header-border-style')
-            --var($theme, 'header-border-color');
         background: inherit;
         z-index: 4;
     }
@@ -2637,8 +2634,6 @@
         cursor: pointer;
         z-index: 3;
         color: --var($theme, 'expand-icon-color');
-        border-#{$right}: 1px solid --var($theme, 'header-border-color');
-        order: 2;
 
         &:focus {
             outline: none;
@@ -2773,6 +2768,12 @@
                     color: --var($theme, 'sorted-header-icon-color');
                 }
             }
+        }
+    }
+
+    %igx-grid__tr-action {
+        &:last-of-type {
+            border-#{$right}: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
         }
     }
 }
