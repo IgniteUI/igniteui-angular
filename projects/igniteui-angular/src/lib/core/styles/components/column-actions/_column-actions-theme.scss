@@ -57,34 +57,6 @@
     ));
 }
 
-/// Column hiding Theme
-/// The function is deprecated and will be removed in future versions. Use igx-column-actions-theme instead.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Color} $title-color [null]- The text color used for the title of the list.
-/// @param {Color} $background-color [null] - The background color of the panel.
-///
-/// @requires $default-palette
-/// @requires $light-schema
-/// @requires apply-palette
-/// @requires extend
-/// @requires text-contrast
-///
-/// @example scss Change the title color
-///   $column-hiding-theme: igx-column-hiding-theme($title-color: black);
-///   // Pass the theme to the igx-column-hiding component mixin
-///   @include igx-column-hiding($column-hiding-theme);
-////
-@function igx-column-hiding-theme(
-    $palette: $default-palette,
-    $schema: $light-schema,
-
-    $title-color: null,
-    $background-color: null
-) {
-    @return igx-column-actions-theme($palette, $schema, $title-color, $background-color);
-}
-
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
@@ -131,16 +103,6 @@
         justify-content: flex-end;
         padding: rem(8px) rem(16px);
     }
-}
-
-/// A wrapper of the igx-column-actions mixin.
-/// Provides compatibility for applications styling the deprecated IgxColumnHiding and IgxColumnPinning components.
-/// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
-/// @requires rem
-/// @requires --var
-@mixin igx-column-hiding($theme) {
-    @include igx-column-actions($theme);
 }
 
 /// Adds typography styles for the igx-column-actions component.

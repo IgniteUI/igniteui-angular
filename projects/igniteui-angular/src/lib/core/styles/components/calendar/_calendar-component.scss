@@ -15,6 +15,10 @@
         @extend %cal-header-display !optional;
     }
 
+    @include e(aria-off-screen) {
+        @extend %calendar__aria-off-screen !optional;
+    }
+
     @include e(header-year) {
         @extend %cal-header-year !optional;
     }
