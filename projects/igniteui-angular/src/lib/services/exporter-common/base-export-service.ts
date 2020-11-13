@@ -236,7 +236,11 @@ export abstract class IgxBaseExporter {
                     let rawValue = this._isTreeGrid ? resolveNestedPath(rowData.data, e.field) : resolveNestedPath(rowData, e.field);
                     const shouldApplyFormatter = e.formatter && !e.skipFormatter;
 
-                    if (e.dataType === 'date' && !shouldApplyFormatter && rawValue !== undefined && rawValue !== null) {
+                    if (e.dataType === 'date' &&
+                        !(rawValue instanceof Date) &&
+                        !shouldApplyFormatter &&
+                        rawValue !== undefined &&
+                        rawValue !== null) {
                         rawValue = new Date(rawValue);
                     }
 
