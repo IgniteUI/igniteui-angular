@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
@@ -18,7 +18,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let grid;
     let data;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent

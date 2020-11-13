@@ -2,7 +2,7 @@ import { IgxActionStripComponent } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxIconModule } from '../icon/public_api';
-import { TestBed, async, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -45,7 +45,7 @@ describe('igxActionStrip', () => {
 
     describe('Initialization and rendering tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxActionStripTestingComponent
@@ -103,7 +103,7 @@ describe('igxActionStrip', () => {
 
     describe('render content as menu', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxActionStripMenuTestingComponent,

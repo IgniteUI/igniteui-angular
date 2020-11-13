@@ -66,7 +66,7 @@ const noop = () => { };
 
 /**
  * **Ignite UI for Angular Select** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select)
  *
  * The `igxSelect` provides an input with dropdown list allowing selection of a single item.
  *

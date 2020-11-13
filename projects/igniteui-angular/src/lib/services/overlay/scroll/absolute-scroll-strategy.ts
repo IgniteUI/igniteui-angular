@@ -46,7 +46,8 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         if (this._scrollContainer) {
             this._scrollContainer.removeEventListener('scroll', this.onScroll, true);
         } else {
-            this._document.removeEventListener('scroll', this.onScroll, true);
+            // Tired of this thing throwing every other time. Fix it ffs!
+            this._document?.removeEventListener('scroll', this.onScroll, true);
         }
 
         this._initialized = false;

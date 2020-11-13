@@ -1043,12 +1043,13 @@
         align-items: center;
         justify-content: center;
         padding: map-get($grid-cell-padding, 'comfortable');
-        padding-#{$right}: 0;
+        flex: 1 0 auto;
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-comfortable});
         background: inherit;
         z-index: 4;
         cursor: move;
+        border-#{$right}: 1px solid transparent;
 
         %igx-icon-display {
             width: $drag-icon-size;
@@ -1057,27 +1058,20 @@
         }
     }
 
-    %igx-grid__drag-indicator--cosy{
+    %igx-grid__drag-indicator--cosy {
         padding: map-get($grid-cell-padding, 'cosy');
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-cosy});
-        padding-#{$right}: 0;
     }
 
     %igx-grid__drag-indicator--compact {
         padding: map-get($grid-cell-padding, 'compact');
         // Fix for IE 11
         min-width: calc(#{$drag-icon-size} + #{$cell-padding-compact});
-        padding-#{$right}: 0;
     }
 
     %igx-grid__drag-indicator--header {
         border-#{$right}: $grid-header-border;
-    }
-
-    %igx-grid__hierarchical-expander + %igx-grid__drag-indicator {
-        padding-#{$left}: 0;
-        min-width: $drag-icon-size;
     }
 
     %igx-grid__drag-indicator--off {
@@ -1717,9 +1711,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border-#{$right}: --var($theme, 'header-border-width')
-            --var($theme, 'header-border-style')
-            --var($theme, 'header-border-color');
         background: inherit;
         z-index: 4;
     }
@@ -1945,6 +1936,11 @@
         outline-style: none;
         border-bottom: 1px solid --var($theme, 'row-border-color');
         min-height: map-get($grid-header-height, 'comfortable');
+
+        %igx-grid__drag-indicator {
+            cursor: default;
+            flex-grow: 0;
+        }
     }
 
     %igx-grid__group-row--active {
@@ -1953,6 +1949,13 @@
 
         %igx-grid__grouping-indicator {
             color: --var($theme, 'expand-icon-color');
+        }
+
+        %igx-grid__drag-indicator {
+            border: 1px solid --var($theme, 'cell-active-border-color');
+            border-left-width: 0;
+            border-right-width: 0;
+            box-shadow: inset 1px 0 0 0 --var($theme, 'cell-active-border-color');
         }
 
         &:hover {
@@ -2061,15 +2064,15 @@
     }
 
     %igx-grid__row-indentation {
-        background: transparent;
-        z-index: 1;
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-        position: relative;
         padding-#{$left}: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-#{$right}: map-get($grid-grouping-indicator-padding, 'comfortable');
-        border-#{$right}: 1px solid transparent;
+        border-#{$right}: 1px solid --var($theme, 'header-border-color');
+        background: inherit;
+        z-index: 1;
 
         &::after {
             content: '';
@@ -2202,8 +2205,8 @@
         align-items: center;
         z-index: 1;
         cursor: pointer;
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-#{$right}: $grouping-padding-right;
+        margin-#{$left}: #{map-get($grid-grouping-indicator-padding, 'comfortable')};
         min-height: map-get($grid-header-height, 'comfortable');
 
         igx-icon {
@@ -2226,13 +2229,13 @@
     }
 
     %igx-grid__grouping-indicator--cosy {
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'cosy');
         min-height: map-get($grid-header-height, 'cosy');
+        margin-#{$left}: #{map-get($grid-grouping-indicator-padding, 'cosy')};
     }
 
     %igx-grid__grouping-indicator--compact {
-        padding-#{$left}: map-get($grid-grouping-indicator-padding, 'compact');
         min-height: map-get($grid-header-height, 'compact');
+        margin-#{$left}: #{map-get($grid-grouping-indicator-padding, 'compact')};
     }
 
     %igx-grid__header-indentation {
@@ -2284,32 +2287,34 @@
     }
 
     @for $i from 1 through 10 {
-        // COMFORTABLE
         %igx-grid__row-indentation--level-#{$i} {
-            background: inherit;
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
+            %igx-grid__grouping-indicator {
+                padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
+            }
         }
 
-        // COSY
         %igx-grid__row-indentation-cosy--level-#{$i} {
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-cosy--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+            %igx-grid__grouping-indicator {
+                padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+            }
         }
 
-        // COMPACT
         %igx-grid__row-indentation-compact--level-#{$i} {
             padding-#{$left}: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
-            padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+            %igx-grid__grouping-indicator {
+                padding-#{$left}: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+            }
         }
     }
 
@@ -2629,7 +2634,6 @@
         cursor: pointer;
         z-index: 3;
         color: --var($theme, 'expand-icon-color');
-        border-#{$right}: 1px solid transparent;
 
         &:focus {
             outline: none;
@@ -2703,7 +2707,6 @@
         }
     }
 
-    %igx-grid__hierarchical-expander--no-border,
     %igx-grid__header-indentation--no-border {
         border-#{$right}: 1px solid transparent;
     }
@@ -2765,6 +2768,12 @@
                     color: --var($theme, 'sorted-header-icon-color');
                 }
             }
+        }
+    }
+
+    %igx-grid__tr-action {
+        &:last-of-type {
+            border-#{$right}: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
         }
     }
 }

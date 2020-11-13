@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
-import { async, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl, NgModel } from '@angular/forms';
@@ -684,7 +684,7 @@ describe('igxCombo', () => {
     });
     describe('Initialization and rendering tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent
@@ -1008,7 +1008,7 @@ describe('igxCombo', () => {
     describe('Positioning tests: ', () => {
         let containerElement: any;
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboInContainerTestComponent
@@ -1102,7 +1102,7 @@ describe('igxCombo', () => {
     });
     describe('Binding tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent,
@@ -1296,7 +1296,7 @@ describe('igxCombo', () => {
         describe('complex data dropdown: ', () => {
             let dropdown: IgxComboDropDownComponent;
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxComboSampleComponent
@@ -1614,7 +1614,7 @@ describe('igxCombo', () => {
         });
         describe('primitive data dropdown: ', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxComboInContainerTestComponent
@@ -1677,7 +1677,7 @@ describe('igxCombo', () => {
     });
     describe('Virtualization tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent
@@ -1800,7 +1800,7 @@ describe('igxCombo', () => {
     });
     describe('Selection tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent
@@ -1987,7 +1987,7 @@ describe('igxCombo', () => {
     });
     describe('Grouping tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent
@@ -2070,7 +2070,7 @@ describe('igxCombo', () => {
     });
     describe('Filtering tests: ', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent
@@ -2543,7 +2543,7 @@ describe('igxCombo', () => {
     describe('Form control tests: ', () => {
         describe('Reactive form tests: ', () => {
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxComboFormComponent
@@ -2691,7 +2691,7 @@ describe('igxCombo', () => {
         describe('Template form tests: ', () => {
             let inputGroupRequired: DebugElement;
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxComboInTemplatedFormComponent
@@ -2804,7 +2804,7 @@ describe('igxCombo', () => {
     });
     describe('Display density', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxComboSampleComponent

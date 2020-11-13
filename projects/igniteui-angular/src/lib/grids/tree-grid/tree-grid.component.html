@@ -1,6 +1,4 @@
-<igx-grid-toolbar role="toolbar" [style.max-width.px]='outerWidth' [style.flex-basis.px]='outerWidth' *ngIf="showToolbar" [gridID]="id"
-    [displayDensity]="displayDensity" #toolbar>
-</igx-grid-toolbar>
+<ng-content select="igx-grid-toolbar"></ng-content>
 
 <div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell()" (keydown)="navigation.headerNavigation($event)" #theadRow>
@@ -12,7 +10,7 @@
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <ng-container *ngIf="rowDraggable">
-                <div class="igx-grid__drag-indicator" (pointerdown)="$event.preventDefault()" #headerDragContainer>
+                <div class="igx-grid__drag-indicator igx-grid__tr-action" (pointerdown)="$event.preventDefault()" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
                             *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase">
@@ -21,7 +19,7 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }" (pointerdown)="$event.preventDefault()">
                     <ng-template #headSelector
                         *ngTemplateOutlet="
@@ -269,4 +267,4 @@
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
