@@ -40,8 +40,6 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
     return result;
 }
 
-// let asd: string;
-// let prevWasArray: boolean;
 /**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
  * @param obj1 Object to merge into
@@ -50,24 +48,6 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @hidden
  */
 export function mergeObjects(obj1: {}, obj2: {}): any {
-    // if(Object.keys(obj2).length === 1){
-    //     asd = Object.keys(obj2)[0];
-    //     if(Array.isArray(obj1[asd])){
-    //         prevWasArray = true;
-    //         const firstObj = obj1 === null || obj1 === undefined ? {} : obj1;
-    //         return Object.assign(firstObj, obj2);
-    //     } else {
-    //         prevWasArray = false;
-    //     }
-    // } else {
-    //     asd = undefined;
-    // }
-    // if(prevWasArray) {
-    //     const firstObj = obj1 === null || obj1 === undefined ? {} : obj1;
-    //     return Object.assign(firstObj, obj2);
-    // }
-    // return merge(obj1, obj2);
-
     return mergeWith(obj1, obj2, (objValue, srcValue) => {
         if (Array.isArray(srcValue)) {
             return objValue = srcValue;
