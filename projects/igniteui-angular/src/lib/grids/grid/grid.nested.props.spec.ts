@@ -224,7 +224,7 @@ describe('Grid - nested data source properties', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        fit('should support column API with complex field', () => {
+        it('should support column API with complex field', () => {
             setupData(DATA);
 
             const column = grid.getColumnByName('user');
@@ -234,7 +234,7 @@ describe('Grid - nested data source properties', () => {
             expect(grid.getColumnByName('user.name.first')).toBe(column);
         });
 
-        fit('should render the passed properties path', () => {
+        it('should render the passed properties path', () => {
             setupData(DATA);
 
             const column = grid.getColumnByName('user');
@@ -244,7 +244,7 @@ describe('Grid - nested data source properties', () => {
             expect(column.cells.map(cell => cell.value)).toEqual(NAMES);
         });
 
-        fit('should work with sorting', () => {
+        it('should work with sorting', () => {
             setupData(DATA);
 
             const key = 'user.age';
@@ -264,7 +264,7 @@ describe('Grid - nested data source properties', () => {
             expect(first(column.cells.map(cell => cell.value))).toEqual(33);
         });
 
-        fit('should work with filtering', () => {
+        it('should work with filtering', () => {
             setupData(DATA);
 
             const key = 'user.name.first';
@@ -281,7 +281,7 @@ describe('Grid - nested data source properties', () => {
             expect(first(column.cells).value).toEqual('Jane');
         });
 
-        fit('should support copy/paste operations', () => {
+        it('should support copy/paste operations', () => {
             setupData(DATA);
 
             grid.getColumnByName('user').field = 'user.name.first';
@@ -296,7 +296,7 @@ describe('Grid - nested data source properties', () => {
             expect(first(selected)['user.name.first']).toMatch('John');
         });
 
-        fit('should work with editing (cell)', () => {
+        it('should work with editing (cell)', () => {
             const copiedData = cloneArray(DATA, true);
             setupData(copiedData);
 
@@ -312,7 +312,7 @@ describe('Grid - nested data source properties', () => {
             expect(first(copiedData).user.name.first).toMatch('Anonymous');
         });
 
-        fit('should work with editing (row)', () => {
+        it('should work with editing (row)', () => {
             const copiedData = cloneArray(DATA, true);
             setupData(copiedData);
 
@@ -360,7 +360,7 @@ describe('Grid nested data advanced editing', () => {
         gridContent = GridFunctions.getGridContent(fixture);
     }));
 
-    fit('canceling the row editing should revert the uncommitted cell values', () => {
+    it('canceling the row editing should revert the uncommitted cell values', () => {
         const copiedData = cloneArray(DATA, true);
         setupData(copiedData, true);
 
@@ -398,7 +398,7 @@ describe('Grid nested data advanced editing', () => {
         expect(first(copiedData).user.name.last).toMatch('Doe');
     });
 
-    fit('after updating a cell value the value in the previous cell should persist', () => {
+    it('after updating a cell value the value in the previous cell should persist', () => {
         const copiedData = cloneArray(DATA, true);
         setupData(copiedData, true);
 
@@ -419,7 +419,7 @@ describe('Grid nested data advanced editing', () => {
         expect(cell1.value).toBeDefined(true);
     });
 
-    fit('updating values of multiple cells in a row should update the data correctly', () => {
+    it('updating values of multiple cells in a row should update the data correctly', () => {
         const copiedData = cloneArray(DATA, true);
         setupData(copiedData, true);
 
@@ -455,7 +455,7 @@ describe('Grid nested data advanced editing', () => {
         expect(first(copiedData).user.name.last).toMatch('Petrov');
     });
 
-    fit('sorting the grid and modifying a cell within an unsorted column should not change the rows order', async () => {
+    it('sorting the grid and modifying a cell within an unsorted column should not change the rows order', async () => {
         const copiedData = cloneArray(DATA, true);
         setupData(copiedData);
 
@@ -522,7 +522,7 @@ describe('Edit cell with data of type Array', () => {
         gridContent = GridFunctions.getGridContent(fixture);
     }));
 
-    fit('igxGrid should emit the correct args when cell editing is cancelled', async () => {
+    it('igxGrid should emit the correct args when cell editing is cancelled', async () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData);
 
@@ -581,7 +581,7 @@ describe('Edit cell with data of type Array', () => {
         expect(copiedData[2].locations.length).toEqual(3);
     });
 
-    fit('igxGrid should emit the correct args when submitting the changes', async () => {
+    it('igxGrid should emit the correct args when submitting the changes', async () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData);
 
@@ -648,7 +648,7 @@ describe('Edit cell with data of type Array', () => {
         expect(copiedData[2].locations.length).toEqual(1);
     });
 
-    fit('igxGrid should emit the correct args when row editing is cancelled', async () => {
+    it('igxGrid should emit the correct args when row editing is cancelled', async () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData, true);
 
@@ -707,7 +707,7 @@ describe('Edit cell with data of type Array', () => {
         expect(copiedData[2].locations.length).toEqual(3);
     });
 
-    fit('igxGrid should emit the correct args when submitting the row changes', async () => {
+    it('igxGrid should emit the correct args when submitting the row changes', async () => {
         const copiedData = cloneArray(DATA2, true);
         setupData(copiedData, true);
 
