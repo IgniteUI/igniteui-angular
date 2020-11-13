@@ -132,6 +132,7 @@ export abstract class IgxBaseExporter {
 
             const columnInfo = {
                 header: columnHeader,
+                dataType: column.dataType,
                 field: column.field,
                 skip: !exportColumn,
                 formatter: column.formatter,
@@ -232,8 +233,14 @@ export abstract class IgxBaseExporter {
         if (!isSpecialData) {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
-                    const rawValue = this._isTreeGrid ? resolveNestedPath(rowData.data, e.field) : resolveNestedPath(rowData, e.field);
-                    a[e.header] = e.formatter && !e.skipFormatter ? e.formatter(rawValue) : rawValue;
+                    let rawValue = this._isTreeGrid ? resolveNestedPath(rowData.data, e.field) : resolveNestedPath(rowData, e.field);
+                    const shouldApplyFormatter = e.formatter && !e.skipFormatter;
+
+                    if (e.dataType === 'date' && !shouldApplyFormatter && rawValue !== undefined && rawValue !== null) {
+                        rawValue = new Date(rawValue);
+                    }
+
+                    a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
