@@ -1,13 +1,13 @@
 <ng-container #defaultGroupRow>
 
     <ng-container *ngIf="rowDraggable">
-        <div class="igx-grid__drag-indicator">
+        <div class="igx-grid__drag-indicator igx-grid__tr-action">
             <igx-icon [style.visibility]="'hidden'">drag_indicator</igx-icon>
         </div>
     </ng-container>
 
     <ng-container *ngIf="showRowSelectors">
-        <div class="igx-grid__cbx-selection" style="background: none;" (pointerdown)="$event.preventDefault()"
+        <div class="igx-grid__cbx-selection igx-grid__tr-action" style="background: none;" (pointerdown)="$event.preventDefault()"
             (click)="onGroupSelectorClick($event)">
             <ng-template #groupByRowSelector *ngTemplateOutlet="
                 this.grid.groupByRowSelectorTemplate ? this.grid.groupByRowSelectorTemplate : groupByRowSelectorBaseTemplate;

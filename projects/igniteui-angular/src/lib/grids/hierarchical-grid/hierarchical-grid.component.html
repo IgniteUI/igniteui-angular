@@ -11,15 +11,9 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-            <div #headerHierarchyExpander (click)="toggleAll()" (mousedown)='$event.preventDefault()' [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
-                'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
-                'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
-                'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
-            }">
-                <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
-            </div>
+            <!-- Drag indicator -->
             <ng-container *ngIf="rowDraggable">
-                <div class="igx-grid__drag-indicator" [ngClass]="{
+                <div class="igx-grid__drag-indicator igx-grid__tr-action" [ngClass]="{
                         'igx-grid__drag-indicator--header': !isRowSelectable
                     }" (pointerdown)='$event.preventDefault()' #headerDragContainer>
                     <div style="visibility: hidden;">
@@ -29,12 +23,14 @@
                     </div>
                 </div>
             </ng-container>
+
+            <!-- Select All Row -->
             <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                         'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                     }"  (pointerdown)='$event.preventDefault()'>
                     <ng-template #headSelector
-                        *ngTemplateOutlet="
+                                 *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
                         context: { $implicit: {
                                         selectedCount: this.selectionService.filteredSelectedRowIds.length,
@@ -44,27 +40,37 @@
                     </ng-template>
                 </div>
             </ng-container>
+
+            <!-- Expand all -->
+            <div #headerHierarchyExpander (click)="toggleAll()" (mousedown)='$event.preventDefault()' [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header igx-grid__tr-action': hasExpandableChildren,
+                'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
+                'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
+            }">
+                <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
+            </div>
+
             <ng-container *ngIf="pinnedColumns.length > 0 && isPinningToStart">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
                     <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
-                        [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+                                           [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
                 </ng-template>
             </ng-container>
             <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel"
-                [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'
-                [igxForSizePropName]='"calcPixelWidth"' #hContainer>
+                         [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
+                         [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'
+                         [igxForSizePropName]='"calcPixelWidth"' #hContainer>
                 <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
-                    [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+                                       [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
             <ng-container *ngIf="pinnedColumns.length > 0 && !isPinningToStart">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
                     <igx-grid-header-group
-                        [column]="col"
-                        [gridID]="id"
-                        [style.min-width]="getHeaderGroupWidth(col)"
-                        [style.flex-basis]="getHeaderGroupWidth(col)"
-                        [style.left]="col.rightPinnedOffset">
+                            [column]="col"
+                            [gridID]="id"
+                            [style.min-width]="getHeaderGroupWidth(col)"
+                            [style.flex-basis]="getHeaderGroupWidth(col)"
+                            [style.left]="col.rightPinnedOffset">
                     </igx-grid-header-group>
                 </ng-template>
             </ng-container>
@@ -172,7 +178,6 @@
         <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
     </div>
 </div>
-
 
 <div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
  (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
