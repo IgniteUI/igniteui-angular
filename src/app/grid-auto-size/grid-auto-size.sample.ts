@@ -33,10 +33,10 @@ export class GridAutoSizeSampleComponent implements OnInit {
 
         // tslint:disable: max-line-length
         this.columns = [
-            { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
-            { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'ID', width: '25%', resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'CompanyName', width: '25%', resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
+            { field: 'ContactName', width: '25%', resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
+            { field: 'ContactTitle', width: '25%', resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'Address', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'City', width: 150, resizable: true, movable: true, sortable: false, filterable: false, groupable: true, summary: true, type: 'string' },
             { field: 'Region', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string' },
@@ -54,6 +54,11 @@ export class GridAutoSizeSampleComponent implements OnInit {
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }
+
+    checkCols(): void {
+        const columns = this.grid1.columns;
+        columns.forEach(c => console.log(c.width));
+      }
 
 
     setData(count?) {
