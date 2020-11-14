@@ -1625,7 +1625,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboFooterDirective,
         IgxComboAddItemDirective,
         IgxComboToggleIconDirective,
-        IgxComboClearIconDirective],
+        IgxComboClearIconDirective,
+        IgxInputGroupModule],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule]
 })
