@@ -1571,7 +1571,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0) {
+        if (Math.abs(diff) > 0 && this.platformUtil.isBrowser) {
             // TODO: This code can be removed. However tests need to be rewritten in a way that they wait for ResizeObserved to complete.
             // So leaving as is for the moment.
             requestAnimationFrame(() => {

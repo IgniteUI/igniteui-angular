@@ -13,7 +13,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import { resizeObservable, isIE } from '../../core/utils';
+import { resizeObservable, isIE, PlatformUtil } from '../../core/utils';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
@@ -33,6 +33,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         this._afterViewInit = true;
+        if (!this.platformUtil.isBrowser) {
+            return;
+        }
         const delayTime = isIE() ? 40 : 0;
         this._zone.runOutsideAngular(() => {
             resizeObservable(this.nativeElement).pipe(
@@ -45,9 +48,15 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
     }
-    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef, protected _zone: NgZone, @Inject(DOCUMENT) public document) {
+    constructor(
+        public elementRef: ElementRef,
+        public cdr: ChangeDetectorRef,
+        protected _zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        protected platformUtil: PlatformUtil,
+    ) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
-     }
+    }
 
     get nativeElement() {
         return this.elementRef.nativeElement;
