@@ -43,7 +43,8 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor/public_a
         IgxDateRangeEndComponent,
         IgxDateRangeSeparatorDirective,
         IgxDateTimeEditorModule,
-        IgxPickerToggleComponent
+        IgxPickerToggleComponent,
+        IgxInputGroupModule
     ]
 })
 export class IgxDateRangePickerModule { }
