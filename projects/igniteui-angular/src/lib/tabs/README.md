@@ -1,7 +1,7 @@
 # igx-tabs
 
 The **igx-tabs** component allows you to add tabs component with tab items positioned at the top and item content in your application.
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs.html).
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs).
 
 # Usage
 ```html
