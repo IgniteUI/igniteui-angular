@@ -14,7 +14,7 @@
 <div class="igx-column-actions__columns" tabindex="0"
     [style.max-height]="columnsAreaMaxHeight">
     <igx-checkbox
-        *ngFor="let column of columns
+        *ngFor="let column of grid?.columns
             | columnActionEnabled:actionsDirective.actionEnabledColumnsFilter:pipeTrigger
             | filterActionColumns:filterCriteria:pipeTrigger
             | sortActionColumns:columnDisplayOrder:pipeTrigger;"

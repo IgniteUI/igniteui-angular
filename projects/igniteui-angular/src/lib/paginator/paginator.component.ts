@@ -206,7 +206,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     @DeprecateProperty(`'selectLabel' property is deprecated. Use 'resourceStrings' instead.`)
     @Input()
-    public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
+    public selectLabel;
 
     /**
      * @deprecated Use 'resourceStrings' instead.
@@ -216,7 +216,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
     @Input()
-    public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
+    public prepositionPage;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.

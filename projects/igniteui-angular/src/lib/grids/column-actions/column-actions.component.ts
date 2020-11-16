@@ -366,7 +366,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     public ngDoCheck() {
         if (this._differ) {
-            const changes = this._differ.diff(this.columns);
+            const changes = this._differ.diff(this.grid?.columns);
             if (changes) {
                 this._pipeTrigger++;
             }

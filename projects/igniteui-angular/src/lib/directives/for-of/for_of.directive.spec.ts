@@ -25,6 +25,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
+import { PlatformUtil } from '../../core/utils';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -1261,8 +1262,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
         public zone: NgZone,
-        protected syncService: IgxForOfScrollSyncService) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService);
+        protected syncService: IgxForOfScrollSyncService,
+        platformUtil: PlatformUtil) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService, platformUtil, document);
     }
     public scrStepArray = [];
     public scrTopArray = [];
