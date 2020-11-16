@@ -134,6 +134,10 @@
         }
     }
 
+    @include e(tr-action) {
+        @extend %igx-grid__tr-action !optional
+    }
+
     @include e(tr, $m: 'drag') {
         @extend %igx-grid__tr--drag !optional;
     }

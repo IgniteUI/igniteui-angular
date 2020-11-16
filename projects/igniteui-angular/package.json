@@ -84,7 +84,7 @@
         "web-animations-js": "^2.3.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~11.0.700-rc.2"
+        "@igniteui/angular-schematics": "~11.0.700"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
