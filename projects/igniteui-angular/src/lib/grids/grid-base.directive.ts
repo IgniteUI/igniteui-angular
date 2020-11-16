@@ -900,7 +900,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @DeprecateProperty('`columnHidingTitle` is deprecated')
     @Input()
-    public columnHidingTitle: string;
+    public get columnHidingTitle(): string {
+        return this._columnHidingTitle;
+    }
+    public set columnHidingTitle(v: string) {
+        this._columnHidingTitle = v;
+    }
+    private _columnHidingTitle: string;
+
+    /** @hidden @internal */
+    public get columnHidingTitleInternal(): string {
+        return this._columnHidingTitle;
+    }
 
     /**
      * Gets/Sets the initial pinning configuration.
@@ -956,7 +967,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @DeprecateProperty('`columnPinningTitle` is deprecated')
     @Input()
-    public columnPinningTitle: string;
+    public get columnPinningTitle(): string {
+        return this._columnPinningTitle;
+    }
+    public set columnPinningTitle(v: string) {
+        this._columnPinningTitle = v;
+    }
+    private _columnPinningTitle: string;
+
+    /** @hidden @internal */
+    public get columnPinningTitleInternal(): string {
+        return this._columnPinningTitle;
+    }
 
     /**
      * Gets/Sets if the filtering is enabled.
@@ -2198,7 +2220,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
      * ```
      */
-    @DeprecateProperty('`hiddenColumnsText` is deprecated')
+    // @DeprecateProperty('`hiddenColumnsText` is deprecated')
     @Input()
     get hiddenColumnsText() {
         return this._hiddenColumnsText;
@@ -2230,6 +2252,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     set pinnedColumnsText(value) {
         this._pinnedColumnsText = value;
         this.notifyChanges();
+    }
+
+    /** @hidden @internal */
+    get pinnedColumnsTextInternal() {
+        return this._pinnedColumnsText;
     }
 
     /**
