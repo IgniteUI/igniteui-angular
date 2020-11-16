@@ -52,7 +52,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         public elementRef: ElementRef,
         public cdr: ChangeDetectorRef,
         protected _zone: NgZone,
-        @Inject(DOCUMENT) public document,
+        @Inject(DOCUMENT) public document: any,
         protected platformUtil: PlatformUtil,
     ) {
         this._scrollNativeSize = this.calculateScrollNativeSize();

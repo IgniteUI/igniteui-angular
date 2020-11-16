@@ -3663,13 +3663,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public featureColumnsWidth(expander?: ElementRef) {
         if (Number.isNaN(this._headerFeaturesWidth)) {
-            const rowSelectArea = this.headerSelectorContainer ?
+            // TODO: platformUtil.isBrowser check
+            const rowSelectArea = this.headerSelectorContainer?.nativeElement?.getBoundingClientRect ?
                 this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
-            const rowDragArea = this.rowDraggable && this.headerDragContainer ?
+            const rowDragArea = this.rowDraggable && this.headerDragContainer?.nativeElement?.getBoundingClientRect ?
                 this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
-            const groupableArea = this.headerGroupContainer ?
+            const groupableArea = this.headerGroupContainer?.nativeElement?.getBoundingClientRect ?
                 this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
-            const expanderWidth = expander ? expander.nativeElement.getBoundingClientRect().width : 0;
+            const expanderWidth = expander?.nativeElement?.getBoundingClientRect ? expander.nativeElement.getBoundingClientRect().width : 0;
             this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
         }
         return this._headerFeaturesWidth;
