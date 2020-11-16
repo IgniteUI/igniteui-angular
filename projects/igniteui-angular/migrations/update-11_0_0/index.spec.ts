@@ -23,6 +23,7 @@ describe('Update to 11.0.0', () => {
         },
     };
     const migrationName = 'migration-18';
+    const warnMsg = `\n<!-- Auto migrated template content. Please, check your bindings! -->\n`;
     const stripWhitespaceRe = /\s/g;
 
     const makeTemplate = (name: string) => `/testSrc/appPrefix/component/${name}.component.html`;
@@ -102,6 +103,7 @@ describe('Update to 11.0.0', () => {
         ).toEqual(`
 <igx-grid>
     <igx-grid-toolbar>
+        ${warnMsg}
         <div></div>
         <button></button>
     </igx-grid-toolbar>
@@ -147,6 +149,7 @@ describe('Update to 11.0.0', () => {
     <igx-column></igx-column>
     <igx-row-island>
         <igx-grid-toolbar [grid]="sampleGrid" *igxGridToolbar="let sampleGrid" *ngIf="showChildToolbar">
+            ${warnMsg}
             <div igxLabel></div>
             <button></button>
         </igx-grid-toolbar>

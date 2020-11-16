@@ -1,22 +1,30 @@
-<div class="igx-calendar__body-row">
-    <div *ngIf="showWeekNumbers" class="igx-calendar__label igx-calendar__label--week-number">
+<div role="row" class="igx-calendar__body-row">
+    <div role="columnheader" *ngIf="showWeekNumbers" class="igx-calendar__label igx-calendar__label--week-number">
         <span>Wk</span>
     </div>
-    <span *ngFor="let dayName of generateWeekHeader()" class="igx-calendar__label">
+    <span role="columnheader" [attr.aria-label]="dayName" *ngFor="let dayName of generateWeekHeader()" class="igx-calendar__label">
         {{ dayName | titlecase }}
     </span>
 </div>
 
 <div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker"
-    class="igx-calendar__body-row">
-    <div class="igx-calendar__date igx-calendar__date--week-number" *ngIf="showWeekNumbers">
-        <span class="igx-calendar__date-content igx-calendar__date-content--week-number">
+     class="igx-calendar__body-row" role="row">
+
+    <div *ngIf="showWeekNumbers" class="igx-calendar__date igx-calendar__date--week-number">
+
+        <span role="rowheader" class="igx-calendar__date-content igx-calendar__date-content--week-number">
             {{getWeekNumber(week[0].date)}}
         </span>
+
     </div>
+
     <!-- <igx-week-number-item *ngIf="showWeekNumbers">{{getWeekNumber(week[0].date)}}</igx-week-number-item> -->
     <igx-day-item
         *ngFor="let day of week; trackBy: dateTracker"
+        [attr.aria-selected]="isSelected(day)"
+        role="gridcell"
+        [attr.aria-disabled]="isDateDisabled(day.date)"
+        [attr.aria-label]="isFirstInRange(day) ? day.date.toDateString() + ', ' + resourceStrings.igx_calendar_range_start : isLastInRange(day) ? day.date.toDateString() + ', ' +  resourceStrings.igx_calendar_range_end  : day.date.toDateString()"
         [date]="day"
         [selection]="selection"
         [selected]="isSelected(day)"
@@ -33,3 +41,4 @@
         {{ formattedDate(day.date) }}
     </igx-day-item>
 </div>
+
