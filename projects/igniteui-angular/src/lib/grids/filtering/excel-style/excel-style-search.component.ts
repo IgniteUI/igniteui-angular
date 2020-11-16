@@ -15,6 +15,7 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
 import { IgxListComponent } from '../../../list/public_api';
+import { DataType } from '../../../data-operations/data-util';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -85,6 +86,18 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     }
 
     constructor(public cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden @internal
+     */
+     public get type(): string {
+        switch (this.column?.dataType) {
+            case DataType.Number:
+                return 'number';
+            default:
+                return 'text';
+        }
+    }
 
     public ngAfterViewInit() {
         this.refreshSize();
