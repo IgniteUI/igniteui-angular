@@ -8,7 +8,7 @@
         </div>
     </button>
     <igx-column-actions #actions igxColumnHiding igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle"
-        [grid]="grid" [title]="grid.columnHidingTitle || title || grid?.resourceStrings.igx_grid_toolbar_hiding_title"
+        [grid]="grid" [title]="grid.columnHidingTitleInternal || title || grid?.resourceStrings.igx_grid_toolbar_hiding_title"
         [filterColumnsPrompt]="prompt || grid?.resourceStrings.igx_grid_toolbar_actions_filter_prompt">
     </igx-column-actions>
 </ng-container>

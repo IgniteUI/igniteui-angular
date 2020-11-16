@@ -2,7 +2,7 @@ import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Rend
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { IgxColumnComponent } from '../columns/column.component';
-import { KEYS } from '../../core/utils';
+import { KEYS, PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 
 /**
@@ -43,8 +43,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         public renderer: Renderer2,
         public cdr: ChangeDetectorRef,
         private cms: IgxColumnMovingService,
+        _platformUtil: PlatformUtil,
     ) {
-        super(cdr, element, viewContainer, zone, renderer);
+        super(cdr, element, viewContainer, zone, renderer, _platformUtil);
     }
 
     public ngOnDestroy() {
