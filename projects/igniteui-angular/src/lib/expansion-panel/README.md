@@ -3,7 +3,7 @@
 
 **IgxExpansionPanel** is a light and highly templateable component that allows you to dynamically display content.
 
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel)
 
 # Usage
 
