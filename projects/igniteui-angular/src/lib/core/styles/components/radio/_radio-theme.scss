@@ -18,6 +18,7 @@
 /// @param {Color} $hover-color [null] - The border and dot colors on hover.
 /// @param {Color} $fill-color-hover [null] - The checked border and dot colors on hover.
 /// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
+/// @param {Color} $focus-outline-color [null] - TThe focus outlined color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -37,6 +38,7 @@
     $empty-color: null,
     $fill-color: null,
     $fill-hover-border-color:null,
+    $focus-outline-color: null,
     $disabled-color: null,
     $hover-color: null,
     $fill-color-hover: null,
@@ -61,7 +63,8 @@
         fill-hover-border-color: $fill-hover-border-color,
         disabled-color: $disabled-color,
         hover-color: $hover-color,
-        fill-color-hover: $fill-color-hover
+        fill-color-hover: $fill-color-hover,
+        focus-outline-color: $focus-outline-color
     ));
 }
 
@@ -116,7 +119,8 @@
 
     $ripple-display: map-get((
         material: block,
-        fluent: none
+        fluent: none,
+        indigo-design: none,
     ), $variant);
 
     $border-style: solid;
@@ -295,6 +299,46 @@
 
         @if $bootstrap-theme {
             display: none;
+        }
+    }
+
+    %igx-radio--focused {
+        @if $variant == 'fluent' {
+            position: relative;
+            $focus-outline-offset-top: rem(2px);
+            $focus-outline-offset-left: rem(2px);
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: -$focus-outline-offset-top;
+                left: -$focus-outline-offset-left;
+                box-shadow: 0 0 0 1px --var($theme, 'focus-outline-color');
+                width: calc(100% + (#{$focus-outline-offset-left} * 2));
+                height: calc(100% + (#{$focus-outline-offset-top} * 2));
+            }
+        }
+
+        @if $variant == 'bootstrap' {
+            %radio-composite {
+                border-radius: $border-radius;
+                box-shadow: 0 0 0 2px --var($theme, 'focus-outline-color');
+            }
+        }
+
+        @if $variant == 'indigo-design' {
+            %radio-composite {
+                border-radius: $border-radius;
+                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color');
+            }
+        }
+    }
+
+    %igx-radio--focused-checked {
+        @if $variant == 'indigo-design' {
+            %radio-composite {
+                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color-focused');
+            }
         }
     }
 

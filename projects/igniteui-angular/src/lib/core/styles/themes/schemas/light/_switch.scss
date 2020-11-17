@@ -98,6 +98,8 @@ $_light-switch: extend(
 /// @property {Map} thumb-off-color [igx-color: ('grays', 900), hexrgba: #fff] - The color of the thumb when the switch is off.
 /// @property {Map} track-on-color [igx-color: ('secondary', 500)] - The color of the track when the switch is on.
 /// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
+/// @property {Map} focus-outline-color [igx-color: ('grays', 800)] - The focus outlined color.
+
 ///
 /// @property {Number} border-radius-track [10px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 ///
@@ -109,6 +111,10 @@ $_fluent-switch: extend(
     $_fluent-shape-switch,
     (
         variant: 'fluent',
+
+        focus-outline-color: (
+            igx-color: ('grays', 800)
+        ),
 
         border-color: (
             igx-color: ('grays', 500),
@@ -154,6 +160,7 @@ $_fluent-switch: extend(
 /// @property {Map} border-disabled-color [igx-color: ('grays', 300)] - The border color of the disabled switch.
 /// @property {Number} border-radius-track [4px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Number} border-radius-thumb [2px] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Map} focus-outline-color [igx-color: ('primary', 200)] - The focus outlined color.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_fluent-switch
@@ -163,6 +170,10 @@ $_bootstrap-switch: extend(
     $_bootstrap-shape-switch,
     (
         variant: 'bootstrap',
+
+        focus-outline-color: (
+            igx-color: ('primary', 200)
+        ),
 
         track-on-color: (
             igx-color: ('primary', 500),
@@ -192,6 +203,8 @@ $_bootstrap-switch: extend(
 /// @property {Map} label-disabled-color [igx-color: ('grays', 300)] - The color of the switch label when the switch is disabled
 /// @property {Number} border-radius-track [8px] - The border radius used for switch track. Can be a fraction between 0 and 1, pixels, or percent.
 /// @property {Number} border-radius-thumb [1] - The border radius used for switch thumb. Can be a fraction between 0 and 1, pixels, or percent.
+/// @property {Map} focus-outline-color [igx-color: ('grays', 300)] - The focus outlined color.
+/// @property {Map} focus-outline-color-focused [igx-color: ('primary', 200)] - The focus outlined color for focused state.
 ///
 /// @requires {function} extend
 /// @requires $_light-switch
@@ -201,6 +214,14 @@ $_indigo-switch: extend(
     $_indigo-shape-switch,
     (
         variant: 'indigo-design',
+
+        focus-outline-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-outline-color-focused: (
+            igx-color: ('primary', 200)
+        ),
 
         border-color: (
             igx-color: ('grays', 500)
