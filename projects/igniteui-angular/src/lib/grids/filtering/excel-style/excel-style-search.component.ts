@@ -232,6 +232,19 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return itemSize;
     }
 
+     /**
+      * @hidden @internal
+      */
+    public get type(): string {
+        switch (this.esf.column?.dataType) {
+            case DataType.Number:
+                return 'number';
+            default:
+                return 'text';
+        }
+    }
+
+
     /**
      * @hidden @internal
      */
