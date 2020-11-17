@@ -599,7 +599,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
             // IE 11 workarounds
-            if (isIE()) {
+            if (this.platformUtil.isBrowser && isIE()) { // TODO: Move isIE to platformUtil
                 this.compositionStartHandler = () => this.crudService.isInCompositionMode = true;
                 this.compositionEndHandler = () => this.crudService.isInCompositionMode = false;
                 // Hitting Enter with IME submits and exits from edit mode instead of first closing the IME dialog
@@ -622,7 +622,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
-            if (isIE()) {
+            if (this.platformUtil.isBrowser && isIE()) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
             }

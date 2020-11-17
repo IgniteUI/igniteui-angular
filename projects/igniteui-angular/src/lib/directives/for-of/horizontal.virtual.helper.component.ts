@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, Inject, NgZone } from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 import { DOCUMENT } from '@angular/common';
+import { PlatformUtil } from '../../core/utils';
 
 /**
  * @hidden
@@ -15,8 +16,8 @@ export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--horizontal';
 
-    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef, protected _zone: NgZone, @Inject(DOCUMENT) public document) {
-        super(elementRef, cdr, _zone, document);
+    constructor(elementRef: ElementRef, cdr: ChangeDetectorRef, zone: NgZone, @Inject(DOCUMENT) document, platformUtil: PlatformUtil) {
+        super(elementRef, cdr, zone, document, platformUtil);
     }
 
     protected restoreScroll() {

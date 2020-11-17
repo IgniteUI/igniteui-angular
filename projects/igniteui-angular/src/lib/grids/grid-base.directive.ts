@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent } from 'rxjs';
+import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -54,7 +54,7 @@ import {
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.directive';
+import { IColumnVisibilityChangedEventArgs } from './column-actions/column-hiding.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
@@ -900,7 +900,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @DeprecateProperty('`columnHidingTitle` is deprecated')
     @Input()
-    public columnHidingTitle: string;
+    public get columnHidingTitle(): string {
+        return this._columnHidingTitle;
+    }
+    public set columnHidingTitle(v: string) {
+        this._columnHidingTitle = v;
+    }
+    private _columnHidingTitle: string;
+
+    /** @hidden @internal */
+    public get columnHidingTitleInternal(): string {
+        return this._columnHidingTitle;
+    }
 
     /**
      * Gets/Sets the initial pinning configuration.
@@ -956,7 +967,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @DeprecateProperty('`columnPinningTitle` is deprecated')
     @Input()
-    public columnPinningTitle: string;
+    public get columnPinningTitle(): string {
+        return this._columnPinningTitle;
+    }
+    public set columnPinningTitle(v: string) {
+        this._columnPinningTitle = v;
+    }
+    private _columnPinningTitle: string;
+
+    /** @hidden @internal */
+    public get columnPinningTitleInternal(): string {
+        return this._columnPinningTitle;
+    }
 
     /**
      * Gets/Sets if the filtering is enabled.
@@ -2198,7 +2220,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
      * ```
      */
-    @DeprecateProperty('`hiddenColumnsText` is deprecated')
+    // @DeprecateProperty('`hiddenColumnsText` is deprecated')
     @Input()
     get hiddenColumnsText() {
         return this._hiddenColumnsText;
@@ -2230,6 +2252,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     set pinnedColumnsText(value) {
         this._pinnedColumnsText = value;
         this.notifyChanges();
+    }
+
+    /** @hidden @internal */
+    get pinnedColumnsTextInternal() {
+        return this._pinnedColumnsText;
     }
 
     /**
@@ -3329,7 +3356,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.addRowSnackbar.hide();
         });
 
-
+        // Keep the stream open for future subscribers
+        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(noop);
         Promise.resolve().then(() => this.rendered.next(true));
     }
 
@@ -3662,13 +3690,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public featureColumnsWidth(expander?: ElementRef) {
         if (Number.isNaN(this._headerFeaturesWidth)) {
-            const rowSelectArea = this.headerSelectorContainer ?
+            // TODO: platformUtil.isBrowser check
+            const rowSelectArea = this.headerSelectorContainer?.nativeElement?.getBoundingClientRect ?
                 this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
-            const rowDragArea = this.rowDraggable && this.headerDragContainer ?
+            const rowDragArea = this.rowDraggable && this.headerDragContainer?.nativeElement?.getBoundingClientRect ?
                 this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
-            const groupableArea = this.headerGroupContainer ?
+            const groupableArea = this.headerGroupContainer?.nativeElement?.getBoundingClientRect ?
                 this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
-            const expanderWidth = expander ? expander.nativeElement.getBoundingClientRect().width : 0;
+            const expanderWidth = expander?.nativeElement?.getBoundingClientRect ? expander.nativeElement.getBoundingClientRect().width : 0;
             this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
         }
         return this._headerFeaturesWidth;
@@ -5123,11 +5152,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const cols = this.hasColumnLayouts ?
             this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
         cols.forEach((item) => {
-            const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
-            if (isWidthInPercent) {
-                item.width = item.calcWidth || MINIMUM_COLUMN_WIDTH + 'px';
-            }
-            colSum += parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
+            colSum += parseInt((item.calcWidth || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
         });
         if (!colSum) {
             return null;

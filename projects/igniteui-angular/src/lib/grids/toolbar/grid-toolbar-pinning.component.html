@@ -4,11 +4,11 @@
         <div class="igx-grid-toolbar__button-space">
             <igx-icon fontSet="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
             <span>{{ grid.pinnedColumnsCount }}</span>
-            <span>{{ grid.pinnedColumnsText }}</span>
+            <span>{{ grid.pinnedColumnsTextInternal }}</span>
         </div>
     </button>
     <igx-column-actions #actions igxColumnPinning igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle"
-        [grid]="grid" [title]="grid.columnPinningTitle || title || grid?.resourceStrings.igx_grid_toolbar_pinning_title"
+        [grid]="grid" [title]="grid.columnPinningTitleInternal || title || grid?.resourceStrings.igx_grid_toolbar_pinning_title"
         [filterColumnsPrompt]="prompt || grid?.resourceStrings.igx_grid_toolbar_actions_filter_prompt">
     </igx-column-actions>
 </ng-container>

@@ -289,7 +289,7 @@ export class IgxColumnActionsComponent implements DoCheck {
 
     /**
      * Sets/Gets the css class selector.
-     * By default the value of the `class` attribute is `"igx-column-hiding"`.
+     * By default the value of the `class` attribute is `"igx-column-actions"`.
      * ```typescript
      * let cssCLass =  this.columnHidingUI.cssClass;
      * ```
@@ -366,7 +366,7 @@ export class IgxColumnActionsComponent implements DoCheck {
      */
     public ngDoCheck() {
         if (this._differ) {
-            const changes = this._differ.diff(this.columns);
+            const changes = this._differ.diff(this.grid?.columns);
             if (changes) {
                 this._pipeTrigger++;
             }

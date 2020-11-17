@@ -23,8 +23,6 @@ import { IgxColumnMovingModule } from './moving/moving.module';
 import { IgxGridSharedModules } from './common/shared.module';
 import { IgxGridSummaryModule } from './summaries/summary.module';
 import { IgxGridToolbarModule } from './toolbar/toolbar.module';
-import { IgxColumnHidingModule } from './hiding/hiding.module';
-import { IgxColumnPinningModule } from './pinning/pinning.module';
 import { IgxColumnActionsModule } from './column-actions/column-actions.module';
 import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
@@ -55,8 +53,6 @@ import { IgxRowDirective } from './row.directive';
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
-        IgxColumnHidingModule,
-        IgxColumnPinningModule,
         IgxColumnActionsModule,
         IgxGridColumnModule,
         IgxGridHeadersModule,
@@ -79,11 +75,9 @@ import { IgxRowDirective } from './row.directive';
         IgxGridHeadersModule,
         IgxColumnMovingModule,
         IgxGridResizingModule,
-        IgxColumnPinningModule,
         IgxGridSelectionModule,
         IgxGridSummaryModule,
         IgxGridToolbarModule,
-        IgxColumnHidingModule,
         IgxColumnActionsModule,
         IgxGridPipesModule,
         IgxGridFilteringModule,
