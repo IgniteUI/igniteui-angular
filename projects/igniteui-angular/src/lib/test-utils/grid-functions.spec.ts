@@ -2282,8 +2282,8 @@ export class GridSelectionFunctions {
         }
         const hScrollbar = grid.headerContainer.getScroll();
 
-        expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
-        expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+        expect(headerDiv.clientWidth).toEqual(firstRowDiv.clientWidth);
+        expect(headerDiv.clientWidth).toEqual(firstRowDiv.clientWidth);
         if (hScrollbar.scrollWidth) {
             expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth + firstRowDiv.offsetLeft);
         }

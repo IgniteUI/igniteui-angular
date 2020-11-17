@@ -1,4 +1,4 @@
-﻿import { CommonModule, NgForOfContext } from '@angular/common';
+﻿import { CommonModule, DOCUMENT, NgForOfContext } from '@angular/common';
 import {
     ChangeDetectorRef,
     ComponentFactory,
@@ -22,7 +22,8 @@ import {
     TemplateRef,
     TrackByFunction,
     ViewContainerRef,
-    AfterViewInit
+    AfterViewInit,
+    Inject
 } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
@@ -33,7 +34,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.se
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
 /**
@@ -335,7 +336,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
         protected _zone: NgZone,
-        protected syncScrollService: IgxForOfScrollSyncService) { }
+        protected syncScrollService: IgxForOfScrollSyncService,
+        protected platformUtil: PlatformUtil,
+        @Inject(DOCUMENT)
+        protected document: any,
+    ) { }
 
     /**
      * @hidden
@@ -972,7 +977,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Clears focus inside the virtualized container on small scroll swaps.
      */
     protected scrollFocus(node?: HTMLElement): void {
-        const activeElement = document.activeElement as HTMLElement;
+        const activeElement = this.document.activeElement as HTMLElement;
 
         // Remove focus in case the the active element is inside the view container.
         // Otherwise we hit an exception while doing the 'small' scrolls swapping.
@@ -980,7 +985,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         //
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
         // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
-        if (node && node.contains(document.activeElement)) {
+        if (node && node.contains(this.document.activeElement)) {
             activeElement.blur();
         }
     }
@@ -1060,13 +1065,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     protected _calcMaxBrowserHeight(): number {
-        const div = document.createElement('div');
+        if (!this.platformUtil.isBrowser) {
+            return 0;
+        }
+        const div = this.document.createElement('div');
         const style = div.style;
         style.position = 'absolute';
         style.top = '9999999999999999px';
-        document.body.appendChild(div);
+        this.document.body.appendChild(div);
         const size = Math.abs(div.getBoundingClientRect()['top']);
-        document.body.removeChild(div);
+        this.document.body.removeChild(div);
         return size;
     }
 
@@ -1427,9 +1435,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         resolver: ComponentFactoryResolver,
         cdr: ChangeDetectorRef,
         _zone: NgZone,
+        _platformUtil: PlatformUtil,
+        @Inject(DOCUMENT) _document: any,
         protected syncScrollService: IgxForOfScrollSyncService,
         protected syncService: IgxForOfSyncService) {
-        super(_viewContainer, _template, _differs, resolver, cdr, _zone, syncScrollService);
+        super(_viewContainer, _template, _differs, resolver, cdr, _zone, syncScrollService, _platformUtil, _document);
     }
 
     @Input()
@@ -1561,7 +1571,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0) {
+        if (Math.abs(diff) > 0 && this.platformUtil.isBrowser) {
             // TODO: This code can be removed. However tests need to be rewritten in a way that they wait for ResizeObserved to complete.
             // So leaving as is for the moment.
             requestAnimationFrame(() => {

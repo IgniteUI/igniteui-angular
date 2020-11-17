@@ -1348,7 +1348,7 @@ export class IgxTimePickerComponent implements
         }
 
         if (this.showAmPmList) {
-            amPM = sections[sections.length - 1];
+            amPM = sections[sections.length - 1].toUpperCase();
 
             if (((this.showHoursList && date.getHours().toString() !== '12') ||
                 (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
@@ -2185,7 +2185,8 @@ export class IgxTimePickerComponent implements
         IgxTimePickerTemplateDirective,
         IgxTimePickerActionsDirective,
         TimeDisplayFormatPipe,
-        TimeInputFormatPipe
+        TimeInputFormatPipe,
+        IgxInputGroupModule
     ],
     imports: [
         CommonModule,
