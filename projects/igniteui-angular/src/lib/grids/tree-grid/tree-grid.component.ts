@@ -245,6 +245,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public cascadeOnDelete = true;
 
+    /**
+     * An @Input property indicating whether child records should be selected when their parent gets selected.
+     * By default it is set to false.
+     * ```html
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeSelection="true">
+     * </igx-tree-grid>
+     * ```
+     * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public cascadeSelection = false;
+
     private _expansionDepth = Infinity;
 
     /**
@@ -435,7 +447,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this._pipeTrigger++;
     }
 
-   protected findRecordIndexInView(rec) {
+    protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
     }
 
@@ -490,7 +502,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey) {
             const rowID = args.data[this.foreignKey];
-            this.summaryService.clearSummaryCache({rowID: rowID});
+            this.summaryService.clearSummaryCache({ rowID: rowID });
             this._pipeTrigger++;
             this.cdr.detectChanges();
         }
@@ -527,7 +539,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.addRowParent.asChild) {
             return super._getParentRecordId();
         } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
-            const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
+            const spawnedForRecord = this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
             return spawnedForRecord?.parent?.rowID;
         }
     }
@@ -569,7 +581,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         let delayScrolling = false;
         let record: ITreeGridRecord;
 
-        if (typeof(row) !== 'number') {
+        if (typeof (row) !== 'number') {
             const rowData = row;
             const rowID = this._gridAPI.get_row_id(rowData);
             record = this.processedRecords.get(rowID);
@@ -589,11 +601,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
+                    typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
+                typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
@@ -640,9 +652,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     public getEmptyRecordObjectFor(rec) {
-        const row = {...rec};
+        const row = { ...rec };
         const data = rec || {};
-        row.data = {... data};
+        row.data = { ...data };
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
@@ -653,7 +665,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
         let id = this.generateRowID();
         const rootRecPK = this.foreignKey && this.rootRecords && this.rootRecords.length > 0 ?
-         this.rootRecords[0].data[this.foreignKey] : null;
+            this.rootRecords[0].data[this.foreignKey] : null;
         if (id === rootRecPK) {
             // safeguard in case generated id matches the root foreign key.
             id = this.generateRowID();
@@ -670,7 +682,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-   protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
@@ -686,13 +698,35 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      * @internal
      */
-    private deselectChildren(recordID): void {
+    public deselectChildren(recordID): void {
         const selectedChildren = [];
-        const rowToDeselect = (this.getRowByKey(recordID) as IgxTreeGridRowComponent).treeRow;
+        const row = (this.getRowByKey(recordID) as IgxTreeGridRowComponent);
+        const rowToDeselect = row ? row.treeRow : undefined;
         this.selectionService.deselectRow(recordID);
-        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        if (rowToDeselect) {
+            this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        }
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
+        }
+    }
+
+    /**
+     * @description A recursive way to select all deselected children of a given record
+     * @param recordID ID of the record whose children to select
+     * @hidden
+     * @internal
+     */
+    public selectChildren(recordID): void {
+        const selectedChildren = [];
+        const row = (this.getRowByKey(recordID) as IgxTreeGridRowComponent);
+        const rowToSelect = row ? row.treeRow : undefined;
+        this.selectionService.selectRowById(recordID, false);
+        if (rowToSelect) {
+            this._gridAPI.get_deselected_children(rowToSelect, selectedChildren);
+        }
+        if (selectedChildren.length > 0) {
+            selectedChildren.forEach(x => this.selectChildren(x));
         }
     }
 }

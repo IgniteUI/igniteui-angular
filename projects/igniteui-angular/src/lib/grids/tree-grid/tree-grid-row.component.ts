@@ -120,6 +120,33 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
 
     /**
      * @hidden
+     * @internal
+     */
+    get areAllChildrenRowsSelected(): boolean {
+        const rowAndAllChildren = (this.gridAPI as IgxTreeGridAPIService).get_all_children(this._treeRow);
+        return rowAndAllChildren.every(x => this.grid.selectionService.isRowSelected(x.rowID));
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    get checkboxIndeterminateState(): boolean {
+        const rowAndAllChildren = (this.gridAPI as IgxTreeGridAPIService).get_all_children(this._treeRow);
+        let counter = 0;
+        rowAndAllChildren.forEach(x => {
+            if (this.grid.selectionService.isRowSelected(x.rowID)) {
+                counter++;
+            }
+        });
+        if (counter === 0 || counter === rowAndAllChildren.length) {
+            return false;
+        }
+        return true
+    }
+
+    /**
+     * @hidden
      */
     public get showIndicator() {
         return this.grid.loadChildrenOnDemand ?
@@ -159,5 +186,22 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      */
     public beginAddChild() {
         this.grid.beginAddRowByIndex(this.rowID, this.index, true);
+    }
+
+    /**
+     * @hidden
+     */
+    public onRowSelectorClick1(event) {
+        event.stopPropagation();
+        if (this.grid.cascadeSelection && this.grid.rowSelection === 'multiple') {
+            this.selected ? this.grid.deselectChildren(this.rowID) : this.grid.selectChildren(this.rowID);
+        } else {
+            if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+                this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+                return;
+            }
+            this.selected ? this.selectionService.deselectRow(this.rowID, event) :
+                this.selectionService.selectRowById(this.rowID, false, event);
+        }
     }
 }

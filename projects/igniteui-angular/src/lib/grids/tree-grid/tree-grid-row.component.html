@@ -12,7 +12,7 @@
     </div>
 </ng-container>
 <ng-container *ngIf="showRowSelectors">
-    <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
+    <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onRowSelectorClick1($event)" (pointerdown)="$event.preventDefault()">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
             context: { $implicit: { index: viewIndex, rowID: rowID, selected: selected }}">
@@ -94,7 +94,8 @@
         <igx-checkbox
             [tabindex]="-1"
             [readonly]="true"
-            [checked]="selected"
+            [checked]="areAllChildrenRowsSelected"
+            [indeterminate]="checkboxIndeterminateState"
             [disabled]="deleted"
             disableRipple="true"
             [disableTransitions]="grid.disableTransitions"
