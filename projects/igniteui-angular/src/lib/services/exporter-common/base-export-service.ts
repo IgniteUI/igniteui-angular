@@ -242,6 +242,8 @@ export abstract class IgxBaseExporter {
                         rawValue !== undefined &&
                         rawValue !== null) {
                         rawValue = new Date(rawValue);
+                    } else if (e.dataType === 'string' && rawValue instanceof Date) {
+                        rawValue = rawValue.toString();
                     }
 
                     a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
