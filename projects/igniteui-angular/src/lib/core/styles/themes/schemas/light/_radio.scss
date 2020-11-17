@@ -54,6 +54,7 @@ $_light-radio: (
 /// @property {Map} empty-color [igx-color: ('grays', 800)] - The unchecked border color.
 /// @property {Map} fill-color [igx-color: ('secondary', 300)] - The checked border and dot colors.
 /// @property {Map} fill-color-hover [igx-color: ('secondary',3500)] - The checked border and dot colors on hover.
+/// @property {Map} focus-outline-color [igx-color: ('grays', 800)] - The focus outlined color.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-radio
@@ -61,6 +62,10 @@ $_fluent-radio: extend(
     $_light-radio,
     (
         variant: 'fluent',
+
+        focus-outline-color: (
+            igx-color: ('grays', 800)
+        ),
 
         hover-color: (
             igx-color: ('grays', 800)
@@ -90,12 +95,17 @@ $_fluent-radio: extend(
 /// @property {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
 /// @property {Map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
 /// @property {Color} fill-color-hover [#fff] - The checked border and dot colors on hover.
+/// @property {Map} focus-outline-color [igx-color: ('primary', 200)] - The focus outlined color.
 /// @requires {function} extend
 /// @requires {Map} $_light-radio
 $_bootstrap-radio: extend(
     $_light-radio,
     (
         variant: 'bootstrap',
+
+        focus-outline-color: (
+            igx-color: ('primary', 200)
+        ),
 
         fill-hover-border-color: #fff,
 
@@ -120,12 +130,22 @@ $_bootstrap-radio: extend(
 /// @property {Map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
 /// @property {Map} fill-color-hover [igx-color: ('primary', 500)] - The checked border and dot colors on hover.
 /// @property {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and dot colors.
+/// @property {Map} focus-outline-color [igx-color: ('grays', 300)] - The focus outlined color.
+/// @property {Map} focus-outline-color-focused [igx-color: ('primary', 200)] - The focus outlined color for focused state.
 /// @requires {function} extend
 /// @requires {Map} $_light-radio
 $_indigo-radio: extend(
     $_light-radio,
     (
         variant: 'indigo-design',
+
+        focus-outline-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-outline-color-focused: (
+            igx-color: ('primary', 200)
+        ),
 
         fill-hover-border-color:(
             igx-color: ('primary', 500)
