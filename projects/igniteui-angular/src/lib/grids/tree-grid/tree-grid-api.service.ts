@@ -211,7 +211,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public get_all_children(record: ITreeGridRecord, result: any[] = undefined): any[] {
+    public get_all_children(record: ITreeGridRecord, result?: any[]): any[] {
         if (!result) {
             result = [];
         }

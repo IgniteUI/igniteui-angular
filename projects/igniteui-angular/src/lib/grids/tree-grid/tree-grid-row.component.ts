@@ -142,7 +142,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
         if (counter === 0 || counter === rowAndAllChildren.length) {
             return false;
         }
-        return true
+        return true;
     }
 
     /**
