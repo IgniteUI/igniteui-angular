@@ -109,6 +109,7 @@
     $flat-icon-color: null,
     $flat-hover-icon-color: null,
     $flat-focus-icon-color: null,
+    $flat-focus-outline: null,
 
     $outlined-text-color: null,
     $outlined-outline-color: null,
@@ -121,6 +122,7 @@
     $outlined-icon-color: null,
     $outlined-hover-icon-color: null,
     $outlined-focus-icon-color: null,
+    $outlined-focus-outline: null,
 
     $raised-text-color: null,
     $raised-background: null,
@@ -131,6 +133,7 @@
     $raised-icon-color: null,
     $raised-hover-icon-color: null,
     $raised-focus-icon-color: null,
+    $raised-focus-outline: null,
 
     $raised-resting-shadow: null,
     $raised-hover-shadow: null,
@@ -142,6 +145,7 @@
     $fab-hover-text-color: null,
     $fab-focus-background: null,
     $fab-focus-text-color: null,
+    $fab-focus-outline: null,
 
     $fab-resting-shadow: null,
     $fab-hover-shadow: null,
@@ -367,6 +371,7 @@
         flat-icon-color: $flat-icon-color,
         flat-hover-icon-color: $flat-hover-icon-color,
         flat-focus-icon-color: $flat-focus-icon-color,
+        flat-focus-outline: $flat-focus-outline,
 
         outlined-text-color: $outlined-text-color,
         outlined-outline-color: $outlined-outline-color,
@@ -379,6 +384,7 @@
         outlined-icon-color: $outlined-icon-color,
         outlined-hover-icon-color: $outlined-hover-icon-color,
         outlined-focus-icon-color: $outlined-focus-icon-color,
+        outlined-focus-outline: $outlined-focus-outline,
 
         raised-text-color: $raised-text-color,
         raised-background: $raised-background,
@@ -389,6 +395,7 @@
         raised-icon-color: $raised-icon-color,
         raised-hover-icon-color: $raised-hover-icon-color,
         raised-focus-icon-color: $raised-focus-icon-color,
+        raised-focus-outline: $raised-focus-outline,
 
         fab-text-color: $fab-text-color,
         fab-background: $fab-background,
@@ -396,6 +403,7 @@
         fab-hover-text-color: $fab-hover-text-color,
         fab-focus-background: $fab-focus-background,
         fab-focus-text-color: $fab-focus-text-color,
+        fab-focus-outline: $fab-focus-outline,
 
         icon-color: $icon-color,
         icon-background: $icon-background,
@@ -777,7 +785,7 @@
             box-shadow: $fab-shadow--focus;
 
             @if $variant = 'indigo-design' {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'flat-focus-outline');
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'fab-focus-outline');
             }
         }
 
