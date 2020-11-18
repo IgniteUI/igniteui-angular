@@ -90,7 +90,6 @@
     );
 
     $shadow-color: null;
-    $selected-shadow-color: null;
 
     @if map-get($theme, 'variant') == 'bootstrap' {
         $shadow-color: rgba(map-get($theme, 'item-background'), .5);
