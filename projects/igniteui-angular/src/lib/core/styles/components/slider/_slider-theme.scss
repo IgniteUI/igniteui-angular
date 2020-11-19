@@ -404,7 +404,7 @@
             transform: scale(.8);
         }
 
-        @if $variant = 'indigo-design' {
+        @if $variant == 'indigo-design' {
             &:focus %igx-thumb-dot::before {
                 box-shadow: 0 0 0 rem(3px) --var($theme, 'thumb-focus-color');
             }
@@ -415,7 +415,7 @@
         &:hover %igx-thumb-label {
             opacity: 0;
         }
-        @if $variant = 'indigo-design' {
+        @if $variant == 'indigo-design' {
             &:focus %igx-thumb-dot::before {
                 box-shadow: none;
             }

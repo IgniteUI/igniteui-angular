@@ -535,7 +535,7 @@
         outline-style: none;
         box-shadow: $box-shadow;
 
-        @if $variant = 'indigo-design' {
+        @if $variant == 'indigo-design' {
             box-shadow: 0 0 0 rem(3px) --var($theme, 'focus-outline-color');
         }
     }
