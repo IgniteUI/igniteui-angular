@@ -38,6 +38,7 @@
 
     $track-color: null,
     $thumb-color: null,
+    $thumb-focus-color: null,
 
     $label-background-color: null,
     $label-text-color: null,
@@ -89,6 +90,7 @@
         tick-label-color-tall: $tick-label-color-tall,
         tick-color: $tick-color,
         tick-color-tall: $tick-color-tall,
+        thumb-focus-color: $thumb-focus-color,
     ));
 }
 
@@ -401,11 +403,22 @@
             /* 32 / 40 */
             transform: scale(.8);
         }
+
+        @if $variant = 'indigo-design' {
+            &:focus %igx-thumb-dot::before {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'thumb-focus-color');
+            }
+        }
     }
 
     %igx-thumb--disabled {
         &:hover %igx-thumb-label {
             opacity: 0;
+        }
+        @if $variant = 'indigo-design' {
+            &:focus %igx-thumb-dot::before {
+                box-shadow: none;
+            }
         }
     }
 
