@@ -13,7 +13,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import { resizeObservable, isIE } from '../../core/utils';
+import { resizeObservable, isIE, PlatformUtil } from '../../core/utils';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
@@ -33,6 +33,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         this._afterViewInit = true;
+        if (!this.platformUtil.isBrowser) {
+            return;
+        }
         const delayTime = isIE() ? 40 : 0;
         this._zone.runOutsideAngular(() => {
             resizeObservable(this.nativeElement).pipe(
@@ -45,9 +48,15 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
     }
-    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef, protected _zone: NgZone, @Inject(DOCUMENT) public document) {
+    constructor(
+        public elementRef: ElementRef,
+        public cdr: ChangeDetectorRef,
+        protected _zone: NgZone,
+        @Inject(DOCUMENT) public document: any,
+        protected platformUtil: PlatformUtil,
+    ) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
-     }
+    }
 
     get nativeElement() {
         return this.elementRef.nativeElement;
@@ -95,7 +104,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     protected restoreScroll() {}
 
     public calculateScrollNativeSize() {
-        const div = document.createElement('div');
+        const div = this.document.createElement('div');
         const style = div.style;
         style.width = '100px';
         style.height = '100px';
@@ -103,9 +112,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         style.top = '-10000px';
         style.top = '-10000px';
         style.overflow = 'scroll';
-        document.body.appendChild(div);
+        this.document.body.appendChild(div);
         const scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
+        this.document.body.removeChild(div);
         return scrollWidth ? scrollWidth + 1 : 1;
     }
 }
