@@ -1759,6 +1759,38 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(5);
         });
 
+        it('should navigate correctly with Ctrl + ArrowUp/Home when summary position is top', () => {
+            grid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            grid.summaryPosition = 'top';
+            fix.detectChanges();
+
+            fix.detectChanges();
+            let cell = grid.getCellByColumn(6, 'Age');
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.selected).toBe(true);
+            UIInteractions.triggerKeyDownEvtUponElem('Home', cell.nativeElement, true, false, false, true);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(2, 'ID');
+            expect(cell.selected).toBe(true);
+            expect(cell.active).toBe(true);
+
+            cell = grid.getCellByColumn(6, 'Name');
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', cell.nativeElement, true, false, false, true);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(2, 'Name');
+            expect(cell.selected).toBe(true);
+            expect(cell.active).toBe(true);
+        });
+
         it('should be able to enable/disable summaries at runtime', () => {
             grid.getColumnByName('Age').hasSummary = false;
             grid.getColumnByName('ParentID').hasSummary = false;
