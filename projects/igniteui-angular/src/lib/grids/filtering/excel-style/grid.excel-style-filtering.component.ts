@@ -567,6 +567,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addSelectAllItem();
         }
 
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
+
         this.listDataLoaded.emit();
     }
 
