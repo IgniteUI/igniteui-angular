@@ -361,18 +361,16 @@ export class FileContentData {
     }
 
     get noHeadersDateTimeContent() {
-        this._sharedStringsData = `count="5" uniqueCount="5"><si><t>Column 1</t></si><si><t>${new Date('2018').toString()}</t>` +
-            `</si><si><t>${new Date(2018, 3, 23).toString()}</t></si><si>` +
-            `<t>${new Date(30).toString()}</t></si><si><t>${new Date('2018/03/23').toString()}</t></si>`;
+        this._sharedStringsData = `count="1" uniqueCount="1"><si><t>Column 1</t></si>`;
 
-        this._tableData = `ref="A1:A5" totalsRowShown="0"><autoFilter ref="A1:A5"/><tableColumns count="1">` +
+        this._tableData = `ref="A1:A3" totalsRowShown="0"><autoFilter ref="A1:A3"/><tableColumns count="1">` +
             `<tableColumn id="1" name="Column1"/></tableColumns>`;
 
-        this._worksheetData = `<dimension ref="A1:A5"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
+        this._worksheetData = `<dimension ref="A1:A3"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView>` +
             `</sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width=` +
             `"50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2">` +
-            `<c r="A2" t="s"><v>1</v></c></row><row r="3"><c r="A3" t="s"><v>2</v></c></row><row r="4"><c r="A4" t="s"><v>3</v>` +
-            `</c></row><row r="5"><c r="A5" t="s"><v>4</v></c></row></sheetData>`;
+            `<c r="A2" t="d" s="2"><v>2018-04-23T00:00:00</v></c></row><row r="3"><c r="A3" t="d" s="2"><v>2018-03-23T00:00:00</v>` +
+            `</c></row></sheetData>`;
 
         return this.createData();
     }
@@ -996,6 +994,22 @@ export class FileContentData {
         <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
         <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/><col min="6" max="6" width="50" customWidth="1"/></cols>
         <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c><c r="F1" t="s"><v>5</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>6</v></c><c r="C2" t="s"><v>7</v></c><c r="D2" s="1"><v>4</v></c><c r="E2" t="s"><v>8</v></c><c r="F2" t="s"><v>9</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>10</v></c><c r="C3" t="s"><v>11</v></c><c r="D3" s="1"><v>6</v></c><c r="E3" t="s"><v>12</v></c><c r="F3" t="s"><v>9</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>13</v></c><c r="C4" t="s"><v>11</v></c><c r="D4" s="1"><v>8</v></c><c r="E4" t="s"><v>14</v></c><c r="F4" t="s"><v>9</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
+    get hireDate() {
+        this._sharedStringsData =
+        `count="1" uniqueCount="1"><si><t>HireDate</t></si>`;
+
+        this._tableData = `ref="A1:A6" totalsRowShown="0">
+        <autoFilter ref="A1:A6"/><tableColumns count="1"><tableColumn id="1" name="HireDate"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:A6"/>
+        <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+        <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+        <cols><col min="1" max="1" width="50" customWidth="1"/></cols>
+        <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2" t="d" s="2"><v>2008-04-20T00:00:00</v></c></row><row r="3"><c r="A3" t="d" s="2"><v>2015-12-08T00:00:00</v></c></row><row r="4"><c r="A4" t="d" s="2"><v>2012-07-30T00:00:00</v></c></row><row r="5"><c r="A5" t="d" s="2"><v>2010-02-05T00:00:00</v></c></row><row r="6"><c r="A6" t="d" s="2"><v>2020-05-17T00:00:00</v></c></row></sheetData>`;
 
         return this.createData();
     }
