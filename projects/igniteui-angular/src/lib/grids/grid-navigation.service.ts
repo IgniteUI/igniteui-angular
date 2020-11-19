@@ -481,7 +481,6 @@ export class IgxGridNavigationService {
     }
 
 
-
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
         const row = this.grid.summariesRowList.toArray().concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) { return; }
@@ -504,7 +503,7 @@ export class IgxGridNavigationService {
     }
 
     protected findFirstDataRowIndex(): number {
-        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec) && !rec.summaries);
     }
 
     protected findLastDataRowIndex(): number {
