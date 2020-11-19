@@ -255,11 +255,7 @@
         }
 
         &:focus {
-            @if $bootstrap-theme {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
-            }
-
-            @if $indigo-theme {
+            @if $bootstrap-theme or $indigo-theme {
                 box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
             }
         }
