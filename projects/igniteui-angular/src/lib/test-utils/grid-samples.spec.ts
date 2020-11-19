@@ -735,6 +735,13 @@ export class GridIDNameJobTitleHireDataPerformanceComponent extends BasicGridCom
 }
 
 @Component({
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.hireDate)
+})
+export class GridHireDateComponent extends BasicGridComponent {
+    data = SampleTestData.hireDate();
+}
+
+@Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
                 `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
