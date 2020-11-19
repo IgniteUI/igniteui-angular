@@ -6481,7 +6481,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const overlaySettings: OverlaySettings = {
                 outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
-                positionStrategy: new ContainerPositionStrategy()
+                positionStrategy: new ContainerPositionStrategy({
+                    openAnimation: null,
+                    closeAnimation: null
+                }),
             };
             if (!this._loadingId) {
                 this._loadingId = this.overlayService.attach(this.loadingOverlay, overlaySettings);
