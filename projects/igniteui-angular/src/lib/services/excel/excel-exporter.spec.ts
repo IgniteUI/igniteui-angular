@@ -49,10 +49,10 @@ describe('Excel Exporter', () => {
 
     it('should export date time data without headers successfully.', async () => {
         options.columnWidth = 50;
-        const wrapper = await getExportedData(SampleTestData.dateArray(), options);
+        const wrapper = await getExportedData(SampleTestData.excelDateArray(), options);
 
         wrapper.verifyStructure();
-        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyTemplateFilesContent('', true);
         await wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
     });
 
