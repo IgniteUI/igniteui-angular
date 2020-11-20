@@ -266,6 +266,34 @@ describe('IgxSplitter', () => {
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
     });
 
+    it('should allow mixing % and px sizes.', () => {
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        pane1.size = '200px';
+        fixture.detectChanges();
+
+        const pane1_originalSize = pane1.element.offsetWidth;
+        const pane2_originalSize = pane2.element.offsetWidth;
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.moving.emit(-100);
+        fixture.detectChanges();
+
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 100, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 100, 0);
+
+        // on move end convert to % value and apply to size.
+        splitterBarComponent.movingEnd.emit(-100);
+        fixture.detectChanges();
+
+        // fist pane should remain in px
+        expect(pane1.size).toBe('300px');
+        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+
+        expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
+        expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
+    });
+
 });
 
 describe('IgxSplitter pane toggle', () => {
