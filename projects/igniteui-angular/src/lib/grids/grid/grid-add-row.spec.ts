@@ -582,7 +582,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const gridRows = fixture.debugElement.queryAll(By.css(GRID_ROW));
             gridRows.forEach(item => {
                 const displayContainer = item.query(By.css(DISPLAY_CONTAINER));
-                expect(displayContainer.nativeElement.style.left).toBe('-318px');
+                expect(displayContainer.nativeElement.style.left).not.toBe('0px');
             });
         });
     });
