@@ -19,7 +19,8 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
 import { Subject, merge, Observable, timer, pipe } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import { SliderHandle,
+import {
+    SliderHandle,
     IgxThumbFromTemplateDirective,
     IgxThumbToTemplateDirective,
     IRangeSliderValue,
@@ -32,7 +33,7 @@ import { SliderHandle,
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
-import { resizeObservable } from '../core/utils';
+import { isIE, resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
 
 const noop = () => {
@@ -90,7 +91,7 @@ export class IgxSliderComponent implements
     private _primaryTicks = 0;
     private _secondaryTicks = 0;
 
-    private _labels = new Array<number|string|boolean|null|undefined>();
+    private _labels = new Array<number | string | boolean | null | undefined>();
     private _type = IgxSliderType.SLIDER;
 
     private _destroyer$ = new Subject<boolean>();
@@ -291,7 +292,7 @@ export class IgxSliderComponent implements
         return this._labels;
     }
 
-    public set labels(labels: Array<number|string|boolean|null|undefined>) {
+    public set labels(labels: Array<number | string | boolean | null | undefined>) {
         this._labels = labels;
 
         this._pMax = this.valueToFraction(this.upperBound, 0, 1);
@@ -681,7 +682,7 @@ export class IgxSliderComponent implements
      * ```
      */
     public set secondaryTicks(val: number) {
-        if (val < 1 ) {
+        if (val < 1) {
             return;
         }
 
@@ -977,7 +978,7 @@ export class IgxSliderComponent implements
      */
     public ngOnChanges(changes) {
         if (changes.minValue && changes.maxValue &&
-                changes.minValue.currentValue < changes.maxValue.currentValue) {
+            changes.minValue.currentValue < changes.maxValue.currentValue) {
             this._maxValue = changes.maxValue.currentValue;
             this._minValue = changes.minValue.currentValue;
         }
@@ -1026,7 +1027,7 @@ export class IgxSliderComponent implements
         this._ngZone.runOutsideAngular(() => {
             resizeObservable(this._el.nativeElement).pipe(
                 throttleTime(40),
-                takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run( () => {
+                takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run(() => {
                     this.stepDistance = this.calculateStepDistance();
                 }));
         });
@@ -1069,7 +1070,7 @@ export class IgxSliderComponent implements
     }
 
     /** @hidden */
-     public getEditElement() {
+    public getEditElement() {
         return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
@@ -1249,7 +1250,7 @@ export class IgxSliderComponent implements
 
         if (fromOffset === toOffset && toOffset < xPointer) {
             this.thumbTo.nativeElement.focus();
-        } else if (fromOffset === toOffset && toOffset > xPointer ) {
+        } else if (fromOffset === toOffset && toOffset > xPointer) {
             this.thumbFrom.nativeElement.focus();
         } else if (match === fromOffset) {
             this.thumbFrom.nativeElement.focus();
@@ -1271,7 +1272,8 @@ export class IgxSliderComponent implements
                 : null;
         }
 
-        const renderCallbackExecution = !this.continuous ? this.generateTickMarks('white', interval) : null;
+        const renderCallbackExecution = !this.continuous ? this.generateTickMarks(
+            isIE() ? 'white' : 'var(--igx-slider-track-step-color, white)', interval) : null;
         this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 
@@ -1350,7 +1352,7 @@ export class IgxSliderComponent implements
      */
     private normalizeByStep(value: IRangeSliderValue | number) {
         if (this.isRange) {
-            this.value =  {
+            this.value = {
                 lower: (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step),
                 upper: (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step)
             };
@@ -1430,7 +1432,7 @@ export class IgxSliderComponent implements
             value = this.validateInitialValue(value as IRangeSliderValue);
             this.upperValue = (value as IRangeSliderValue).upper;
             this.lowerValue = (value as IRangeSliderValue).lower;
-            res = {lower: this.lowerValue, upper: this.upperValue};
+            res = { lower: this.lowerValue, upper: this.upperValue };
         }
 
         if (triggerChange) {

@@ -8,6 +8,7 @@
 /// Generates a light slider schema.
 /// @type {Map}
 /// @property {Map} track-color [igx-color: ('secondary', 500)] - The color of the track.
+/// @property {Map} track-step-color [igx-color: 'surface'] - The color of the track steps.
 /// @property {Map} track-hover-color [igx-color: ('secondary', 500)] - The color of the track on hover.
 /// @property {Map} thumb-color [igx-color: ('secondary', 500)] - The color of the thumb.
 /// @property {Map} thumb-border-color [igx-color: ('secondary', 500)] - The thumb border color.
@@ -45,6 +46,10 @@ $_light-slider: (
 
     track-color: (
         igx-color: ('secondary', 500)
+    ),
+
+    track-step-color: (
+        igx-color: 'surface'
     ),
 
     thumb-color: (
