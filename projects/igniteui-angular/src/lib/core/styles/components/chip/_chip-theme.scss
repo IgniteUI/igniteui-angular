@@ -559,7 +559,7 @@
         border-color: --var($theme, 'focus-selected-border-color');
         transition: $transition;
 
-        @if $variant = 'indigo-design' {
+        @if $variant == 'indigo-design' {
             box-shadow: 0 0 0 rem(3px) --var($theme, 'focus-selected-outline-color');
         }
     }
