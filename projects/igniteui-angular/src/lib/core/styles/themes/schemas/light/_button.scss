@@ -19,6 +19,13 @@
 /// @prop {Color} flat-icon-color ["'currentColor'"] - The color of a flat button icon.
 /// @prop {Color} flat-hover-icon-color ["'currentColor'"] - The hover color of a flat button icon.
 /// @prop {Color} flat-focus-icon-color ["'currentColor'"] - The focus color of a flat button icon.
+/// @prop {Color} flat-focus-shadow [transparent] - The shadow/outline color of the flat button in its focus state.
+///
+/// @prop {Color} flat-shadow-color [transparent] - The focus outline color of an flat button.
+/// @prop {Color} raised-shadow-color [transparent] - The shadow/outline color of the raised button in its focus state.
+/// @prop {Color} outlined-shadow-color [transparent] - The shadow/outline color of the outlined button in its focus state.
+/// @prop {Color} icon-shadow-color [transparent] - The shadow/outline color of the flat icon in its focus state.
+/// @prop {Color} fab-shadow-color [transparent] - The shadow/outline color of the fab button in its focus state.
 ///
 /// @prop {Color} outlined-background [transparent] - The background color of an outlined button
 /// @prop {Map} outlined-text-color [igx-color: ('secondary', 500)] - The idle text color of an outlined button.
@@ -98,10 +105,11 @@ $_light-button: extend(
         outlined-hover-icon-color: "'currentColor'",
         outlined-focus-icon-color: "'currentColor'",
 
-        flat-focus-outline: transparent,
-        raised-focus-outline: transparent,
-        outlined-focus-outline: transparent,
-        fab-focus-outline: transparent,
+        flat-shadow-color: transparent,
+        raised-shadow-color: transparent,
+        outlined-shadow-color: transparent,
+        icon-shadow-color: transparent,
+        fab-shadow-color: transparent,
 
         flat-hover-background: (
             igx-color: ('secondary', 500),
@@ -443,6 +451,11 @@ $_fluent-button: extend(
 /// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} icon-border-radius [4px] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
 ///
+/// @prop {Color} raised-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the raised button in its focus state.
+/// @prop {Color} outlined-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the outlined button in its focus state.
+/// @prop {Color} icon-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the flat icon in its focus state.
+/// @prop {Color} fab-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the fab button in its focus state.
+///
 /// @requires {function} extend
 /// @requires {Map} $_light-button
 /// @requires {Map} $_bootstrap-shape-button
@@ -453,6 +466,22 @@ $_bootstrap-button: extend(
     $_bootstrap-elevation-button,
     (
         variant: 'bootstrap',
+
+        raised-shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+
+        outlined-shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+
+        icon-shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+
+        fab-shadow-color: (
+            igx-color: ('primary', 200)
+        ),
 
         flat-text-color: (
             igx-color: ('primary', 500)
@@ -565,15 +594,17 @@ $_bootstrap-button: extend(
 /// @prop {Color} flat-hover-background [transparent] - The hover background color of a flat button.
 /// @prop {Map} flat-focus-background [transparent] - The focus background color of a flat button.
 /// @prop {Map} flat-focus-text-color [igx-color: ('grays', 900)] - The focus text color of a flat button.
-/// @prop {Map} flat-focus-outline [igx-color: ('grays', 300)] - The focus outline color of an flat button.
-
+///
+/// @prop {Map} flat-shadow-color [igx-color: ('grays', 300)] - The shadow/outline color of the flat button in its focus state.
+/// @prop {Map} raised-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the raised button in its focus state.
+/// @prop {Map} outlined-shadow-color [igx-color: ('grays', 300)] - The shadow/outline color of the outlined button in its focus state.
+/// @prop {Map} fab-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the fab button in its focus state.
 ///
 /// @prop {Color} raised-text-color [#fff] - The idle text color of a raised button.
 /// @prop {Map} raised-hover-background [igx-color: ('primary', 600)] - The hover background of a raised button.
 /// @prop {Color} raised-hover-text-color [#fff] - The hover text color of a raised button.
 /// @prop {Map} raised-focus-background [igx-color: ('primary', 400)] -  The focus background color of a raised button.
 /// @prop {Color} raised-focus-text-color [#fff] - The focus text color of a raised button.
-/// @prop {Map} raised-focus-outline [igx-color: ('primary', 200)] - The focus outline color of an raised button.
 ///
 /// @prop {Color} outlined-background [#fff] - The background color of an outlined button
 /// @prop {Map} outlined-outline-color [igx-color: ('grays', 500)] - The border color of an outlined button.
@@ -581,7 +612,6 @@ $_bootstrap-button: extend(
 /// @prop {Map} outlined-text-color [ igx-color: ('grays', 700)] - The idle text color of an outlined button.
 /// @prop {Map} outlined-hover-text-color [(igx-color: ('grays', 900)] - The hover text color of an outlined button.
 /// @prop {Color} outlined-focus-background [#fff] - The focus background color of an outlined button.
-/// @prop {Map} outlined-focus-outline [igx-color: ('grays', 300)] - The outline color on focus of an outlined button.
 /// @prop {Map} outlined-focus-text-color [(igx-color: ('grays', 900))] - The focus text color of an outlined button.
 ///
 /// @prop {Map} fab-text-color [#fff] - The text color of a floating action button.
@@ -589,8 +619,6 @@ $_bootstrap-button: extend(
 /// @prop {Color} fab-hover-text-color [#fff] - The hover text color of a floating action button.
 /// @prop {Map} fab-focus-background [igx-color: ('primary', 400)] - The focus background color of floating action button.
 /// @prop {Color} fab-focus-text-color [#fff] - The focus text color of a floating action button.
-/// @prop {Map} fab-focus-outline [igx-color: ('primary', 200)] - The outline color of an fab button.
-
 ///
 /// @prop {Map} icon-color [igx-color: ('grays', 600)] - The icon color of an icon button.
 /// @prop {Map} icon-hover-background [igx-color: ('grays', 300)] - The hover background color of an icon button.
@@ -637,8 +665,20 @@ $_indigo-button: extend(
 
         flat-focus-background: transparent,
 
-        flat-focus-outline: (
+        flat-shadow-color: (
             igx-color: ('grays', 300),
+        ),
+
+        raised-shadow-color: (
+            igx-color: ('primary', 200),
+        ),
+
+        outlined-shadow-color: (
+            igx-color: ('grays', 300),
+        ),
+
+        fab-shadow-color: (
+            igx-color: ('primary', 200),
         ),
 
         raised-text-color: #fff,
@@ -653,10 +693,6 @@ $_indigo-button: extend(
 
         raised-focus-background: (
             igx-color: ('primary', 400)
-        ),
-
-        raised-focus-outline: (
-            igx-color: ('primary', 200)
         ),
 
         outlined-outline-color: (
@@ -683,10 +719,6 @@ $_indigo-button: extend(
 
         outlined-focus-background: transparent,
 
-        outlined-focus-outline: (
-            igx-color: ('grays', 300)
-        ),
-
         fab-text-color: #fff,
 
         fab-hover-text-color: #fff,
@@ -699,10 +731,6 @@ $_indigo-button: extend(
 
         fab-focus-background: (
             igx-color: ('primary', 400)
-        ),
-
-        fab-focus-outline: (
-            igx-color: ('primary', 200)
         ),
 
         icon-color: (
