@@ -269,9 +269,19 @@ export class WorksheetFile implements IExcelFile {
             const savedValue = dictionary.saveValue(cellValue, column, false);
             const isSavedAsString = savedValue !== -1;
 
-            const value = isSavedAsString ? savedValue : cellValue;
-            const type = isSavedAsString ? ` t="s"` : '';
-            const format = isSavedAsString ? '' : ` s="1"`;
+            const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
+
+            let value = isSavedAsString ? savedValue : cellValue;
+
+            if (isSavedAsDate) {
+                const timeZoneOffset = value.getTimezoneOffset() * 60000;
+                const isoString = (new Date(value - timeZoneOffset)).toISOString();
+                value = isoString.substring(0, isoString.indexOf('.'));
+            }
+
+            const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
+
+            const format = isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         }
@@ -284,7 +294,9 @@ export class WorksheetFile implements IExcelFile {
  */
 export class StyleFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
-        folder.file('styles.xml', ExcelStrings.getStyles(worksheetData.dataDictionary && worksheetData.dataDictionary.hasNonStringValues));
+        const hasNumberValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasNumberValues;
+        const hasDateValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasDateValues;
+        folder.file('styles.xml', ExcelStrings.getStyles(hasNumberValues, hasDateValues));
     }
 }
 

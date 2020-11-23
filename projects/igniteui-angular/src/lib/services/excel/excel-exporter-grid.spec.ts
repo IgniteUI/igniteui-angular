@@ -9,7 +9,13 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent } from '../../test-utils/grid-samples.spec';
+import {
+    ReorderedColumnsComponent,
+    GridIDNameJobTitleComponent,
+    ProductsComponent,
+    GridIDNameJobTitleHireDataPerformanceComponent,
+    GridHireDateComponent
+} from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -37,7 +43,9 @@ describe('Excel Exporter', () => {
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                GridWithEmtpyColumnsComponent
+                GridWithEmtpyColumnsComponent,
+                GridIDNameJobTitleHireDataPerformanceComponent,
+                GridHireDateComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -510,6 +518,26 @@ describe('Excel Exporter', () => {
             const worksheetName = 'NewWorksheetName';
 
             await setWorksheetNameAndExport(grid, options, fix, worksheetName);
+        });
+
+        it('Should export arrays as strings.', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleHireDataPerformanceComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.personJobHoursDataPerformance);
+        });
+
+        it('Should export dates correctly.', async () => {
+            const fix = TestBed.createComponent(GridHireDateComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.hireDate);
         });
     });
 

@@ -10,7 +10,13 @@ import { IFilteringOperation } from '../../../data-operations/filtering-conditio
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.component';
-import { HorizontalAlignment, VerticalAlignment, OverlaySettings, AutoPositionStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
+import {
+    HorizontalAlignment,
+    VerticalAlignment,
+    OverlaySettings,
+    AutoPositionStrategy,
+    AbsoluteScrollStrategy
+} from '../../../services/public_api';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
 
@@ -53,10 +59,15 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     constructor(public esf: IgxGridExcelStyleFilteringComponent) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
-                this._subMenuOverlaySettings.outlet = (this.esf.grid as any).outlet;
+                this.shouldOpenSubMenu = true;
+                this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
             }
         });
-     }
+
+        if (this.esf.grid) {
+            this._subMenuOverlaySettings.outlet = this.esf.grid.outlet;
+        }
+    }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -147,7 +158,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         const exprTree = this.esf.column.filteringExpressionsTree;
         return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
             !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
-            (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
+                (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
     }
 
     /**

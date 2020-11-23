@@ -19,7 +19,8 @@ export class WorksheetDataDictionary {
     private _context: any;
 
     private _columnTypeInfo: boolean[];
-    public hasNonStringValues = false;
+    public hasNumberValues = false;
+    public hasDateValues = false;
 
     public stringsCount: number;
 
@@ -47,13 +48,12 @@ export class WorksheetDataDictionary {
 
     public saveValue(value: any, column: number, isHeader: boolean): number {
         if (this._columnTypeInfo[column] === undefined && isHeader === false) {
-            this._columnTypeInfo[column] = typeof value === 'string' ||
-                                            typeof value === 'boolean' ||
-                                            value instanceof Date;
+            this._columnTypeInfo[column] = typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value);
         }
 
         let sanitizedValue = '';
-        const isSavedAsString = this._columnTypeInfo[column] || isHeader;
+        const isDate = value instanceof Date;
+        const isSavedAsString = (this._columnTypeInfo[column] || isHeader) && !isDate;
 
         if (isSavedAsString) {
             sanitizedValue = this.sanitizeValue(value);
@@ -64,8 +64,10 @@ export class WorksheetDataDictionary {
             }
 
             this.stringsCount ++;
+        } else if (isDate) {
+            this.hasDateValues = true;
         } else {
-            this.hasNonStringValues = true;
+            this.hasNumberValues = true;
         }
 
         return isSavedAsString ? this.getSanitizedValue(sanitizedValue) : -1;

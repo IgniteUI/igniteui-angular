@@ -583,6 +583,8 @@
 @mixin igx-grid($theme) {
     @include igx-root-css-vars($theme);
 
+    @include scale-in-ver-center();
+
     $palette: map-get($theme, 'palette');
 
     $variant: map-get($theme, variant);
@@ -1194,6 +1196,14 @@
                 background: --var($theme, 'edit-mode-color') !important;
             }
         }
+    }
+
+    %igx-grid__tr--inner {
+        display: flex;
+    }
+
+    %igx-grid__tr--add-animate {
+        @include animation(scale-in-ver-center .2s $ease-in-out-quad);
     }
 
     %grid-row--edit-mrl {

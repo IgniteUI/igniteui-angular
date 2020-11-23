@@ -127,7 +127,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get valuesLoadingTemplate() {
-        if (this.esf.grid.excelStyleLoadingValuesTemplateDirective) {
+        if (this.esf.grid?.excelStyleLoadingValuesTemplateDirective) {
             return this.esf.grid.excelStyleLoadingValuesTemplateDirective.template;
         } else {
             return this.defaultExcelStyleLoadingValuesTemplate;
@@ -136,6 +136,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) {
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.displayedListData = [];
             this.isLoading = true;
         });
         esf.loadingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -152,7 +153,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.filterListData();
+            this.searchValue ?
+                this.clearInput() :
+                this.filterListData();
+
+            this.cdr.detectChanges();
         });
     }
 
@@ -229,6 +234,19 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return itemSize;
     }
 
+     /**
+      * @hidden @internal
+      */
+    public get type(): string {
+        switch (this.esf.column?.dataType) {
+            case DataType.Number:
+                return 'number';
+            default:
+                return 'text';
+        }
+    }
+
+
     /**
      * @hidden @internal
      */
@@ -250,9 +268,19 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public onInputKeyDown(event): void {
-        if (event.key === KEYS.ENTER) {
-            event.preventDefault();
-            this.applyFilter();
+        switch (event.key) {
+            case KEYS.ENTER:
+                event.preventDefault();
+                this.applyFilter();
+
+                return;
+            case KEYS.ESCAPE || KEYS.ESCAPE_IE:
+                if (this.searchValue) {
+                    event.stopPropagation();
+                    this.clearInput();
+                }
+
+                return;
         }
     }
 
@@ -351,7 +379,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     fieldName: this.esf.column.field,
                     ignoreCase: this.esf.column.filteringIgnoreCase,
                     searchVal: new Set(this.esf.column.dataType === DataType.Date ?
-                        selectedItems.map(d => new Date(d.value.getFullYear(), d.value.getMonth(), d.value.getDate()).toISOString()) :
+                        selectedItems.map(d => d.value.toISOString()) :
                         selectedItems.map(e => e.value))
                 });
 

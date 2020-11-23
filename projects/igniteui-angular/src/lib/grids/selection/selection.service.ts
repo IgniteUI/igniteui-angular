@@ -210,12 +210,12 @@ export class IgxGridCRUDService {
         }
 
         if (this.cellInEditMode) {
+            // TODO: case solely for f2/enter nav that uses enterEditMode as toggle. Refactor.
             const canceled = this.grid.endEdit(true);
-            if (this.grid.rowEditable && canceled) {
-                this._rowEditingBlocked = canceled;
-            }
 
-            this.grid.tbody.nativeElement.focus();
+            if (!canceled || !this.cell) {
+                this.grid.tbody.nativeElement.focus();
+            }
         } else {
 
             if (cell?.row.addRow) {
@@ -355,7 +355,7 @@ export class IgxGridCRUDService {
     }
 
 
-    /** Cleares cell and row editing state and closes row editing template if it is open */
+    /** Clears cell and row editing state and closes row editing template if it is open */
     public endEditMode() {
         this.endCellEdit();
         if (this.grid.rowEditable) {
@@ -364,19 +364,13 @@ export class IgxGridCRUDService {
         }
     }
 
-    /** Returns whether a particular cell is in edit mode */
-    public isCellInEditByPos(rowIndex: number, columnIndex: number): boolean {
+    /** Returns whether the targeted cell is in edit mode */
+    public targetInEdit(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
             return false;
         }
-        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
-    }
-
-    public isInAddMode(rowIndex: number, columnIndex: number): boolean {
-        if (!this.cell) {
-            return false;
-        }
-        return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+        const res = this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+        return res;
     }
 }
 

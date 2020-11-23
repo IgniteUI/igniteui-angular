@@ -43,7 +43,7 @@ import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.direct
 let warningShown = false;
 
 /**
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-main)
  * The overlay service allows users to show components on overlay div above all other elements in the page.
  */
 @Injectable({ providedIn: 'root' })

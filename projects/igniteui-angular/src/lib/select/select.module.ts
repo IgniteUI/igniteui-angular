@@ -31,7 +31,8 @@ import { IgxSelectGroupComponent } from './select-group.component';
         IgxSelectHeaderDirective,
         IgxSelectItemComponent,
         IgxSelectItemNavigationDirective,
-        IgxSelectToggleIconDirective
+        IgxSelectToggleIconDirective,
+        IgxInputGroupModule
     ],
     imports: [
         CommonModule,

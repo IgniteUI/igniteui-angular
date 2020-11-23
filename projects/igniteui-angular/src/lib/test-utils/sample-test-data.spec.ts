@@ -30,6 +30,11 @@ export class SampleTestData {
         new Date("2018/03/23")
     ])
 
+    public static excelDateArray = () => ([
+        new Date(2018, 3, 23),
+        new Date("2018/03/23")
+    ])
+
     public static emptyObjectData = () => ([
         {},
         {},
@@ -172,6 +177,38 @@ export class SampleTestData {
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
     ])
+
+     /* Data fields: ID: number, Name: string, JobTitle: string, WokingHours: number, HireDate: string, Performance: array;
+        3 items, sorted by ID. */
+     public static personJobHoursDataPerformance = () => ([
+        { ID: 1, Name: "Casey Houston", JobTitle: "Vice President", WorkingHours: 4, HireDate: "2017-06-19T11:43:07.714Z", Performance: [
+            {Points: 3, Week: 1},
+            {Points: 6, Week: 2},
+            {Points: 1, Week: 3},
+            {Points: 12, Week: 4},
+        ] },
+        { ID: 2, Name: "Gilberto Todd", JobTitle: "Director", WorkingHours: 6, HireDate: "2015-12-18T11:23:17.714Z", Performance: [
+            {Points: 8, Week: 1},
+            {Points: 7, Week: 2},
+            {Points: 4, Week: 3},
+            {Points: 9, Week: 4},
+        ] },
+        { ID: 3, Name: "Tanya Bennett", JobTitle: "Director", WorkingHours: 8, HireDate: "2005-11-18T11:23:17.714Z", Performance: [
+            {Points: 1, Week: 1},
+            {Points: 3, Week: 2},
+            {Points: 14, Week: 3},
+            {Points: 29, Week: 4},
+        ] },
+    ])
+
+    public static hireDate = () => ([
+        { ID: 1, HireDate: new Date(2008, 3, 20).toISOString() },
+        { ID: 2, HireDate: new Date(2015, 11, 8) },
+        { ID: 3, HireDate: new Date(2012, 6, 30).toISOString() },
+        { ID: 4, HireDate: new Date(2010, 1, 5).toISOString() },
+        { ID: 5, HireDate: new Date(2020, 4, 17).toISOString() },
+    ])
+
 
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
     public static personJobData = () => ([
@@ -1515,7 +1552,7 @@ export class SampleTestData {
             ProductName: 'Some other item with Script',
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
             Released: null,
-            AnotherField: 'a'
+            AnotherField: 'Custom'
         },
         {
             Downloads: 0,
@@ -1523,7 +1560,7 @@ export class SampleTestData {
             ProductName: null,
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1),
             Released: true,
-            AnotherField: 'a'
+            AnotherField: 'custoM'
         },
         {
             Downloads: 1000,
