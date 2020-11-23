@@ -14,9 +14,7 @@
     <ng-content select='igx-card-actions'></ng-content>
 </ng-template>
 
-<ng-template #card>
-    <ng-container *ngTemplateOutlet="cardMedia"></ng-container>
-    <ng-container *ngTemplateOutlet="cardHeader"></ng-container>
-    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
-    <ng-container *ngTemplateOutlet="cardActions"></ng-container>
-</ng-template>
+<ng-container *ngTemplateOutlet="cardMedia"></ng-container>
+<ng-container *ngTemplateOutlet="cardContent"></ng-container>
+<ng-container *ngTemplateOutlet="cardActions"></ng-container>
+<ng-container *ngTemplateOutlet="cardHeader"></ng-container>
