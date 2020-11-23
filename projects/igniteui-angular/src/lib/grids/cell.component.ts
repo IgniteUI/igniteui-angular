@@ -774,7 +774,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.primaryButton = false;
             // Ensure RMB Click on edited cell does not end cell editing
             if (!this.selected) {
-                this.gridAPI.submit_value();
+                this.gridAPI.submit_value(event);
             }
             return;
         }
