@@ -156,6 +156,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             this.searchValue ?
                 this.clearInput() :
                 this.filterListData();
+
+            this.cdr.detectChanges();
         });
     }
 
