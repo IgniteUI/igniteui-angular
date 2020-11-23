@@ -41,7 +41,7 @@ export class MyClass {
 }
 ```
 
-`igx-select` supports prefixes, suffixes, label, hint and placeholder. You can read more about them [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input_group.html) AND [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label_input.html).
+`igx-select` supports prefixes, suffixes, label, hint and placeholder. You can read more about them [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group) AND [*here*](https://www.infragistics.com/products/ignite-ui-angular/angular/components/label-input).
 - The items' list default exapansion panel arrow uses `IgxSuffix` and it can be changed by the user.
 - If more than one `IgxSuffix` is used, the expansion arrow will be displayed always last.
 

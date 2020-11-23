@@ -1,10 +1,10 @@
 <div class="display-density-actions">
     <igx-buttongroup>
         <button igxButton [disabled]="displayDensity === compact"
-        (click)="setDensity(compact)">Compact</button>
-        <button igxButton [disabled]="displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
+        (click)="setDensity('compact')">Compact</button>
+        <button igxButton [disabled]="displayDensity === cosy" (click)="setDensity('cosy')">Cosy</button>
         <button igxButton [disabled]="displayDensity === comfortable"
-            (click)="setDensity(comfortable)">Comfortable</button>
+            (click)="setDensity('comfortable')">Comfortable</button>
     </igx-buttongroup>
 </div>
 

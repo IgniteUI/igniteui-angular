@@ -5,7 +5,7 @@ _Components_
 
 ## Description
 _igx-input-group represents a input field._
-A walkthrough of how to get started can be found [here](https://staging.infragistics.local/products/ignite-ui-angular/angular/components/input_group.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/input-group)
 
 ## Usage
 ```html

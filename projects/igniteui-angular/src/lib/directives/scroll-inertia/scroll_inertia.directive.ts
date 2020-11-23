@@ -68,6 +68,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
             this.parentElement = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            if (!this.parentElement) {
+                return;
+            }
             const targetElem = this.parentElement;
             targetElem.addEventListener('wheel',
                     (evt) => { this.onWheel(evt); });
@@ -482,6 +485,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._zone.runOutsideAngular(() => {
             const targetElem = this.parentElement;
+            if (!targetElem) {
+                return;
+            }
             targetElem.removeEventListener('wheel',
                 (evt) => { this.onWheel(evt); });
             targetElem.removeEventListener('touchstart',

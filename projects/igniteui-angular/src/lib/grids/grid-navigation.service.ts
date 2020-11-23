@@ -9,6 +9,7 @@ import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/e
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IActiveNodeChangeEventArgs } from './common/events';
+import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -151,9 +152,17 @@ export class IgxGridNavigationService {
             case 'spacebar':
             case 'space':
                 const rowObj = this.grid.getRowByIndex(this.activeNode.row);
-                if (this.grid.isRowSelectable && this.isDataRow(rowIndex)) {
-                    rowObj && rowObj.selected ? this.grid.selectionService.deselectRow(rowObj.rowID, event) :
-                        this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                if (this.grid.isRowSelectable && rowObj) {
+                    if (this.isDataRow(rowIndex)) {
+                        if (rowObj.selected) {
+                            this.grid.selectionService.deselectRow(rowObj.rowID, event);
+                        } else {
+                            this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
+                        }
+                    }
+                    if (this.isGroupRow(rowIndex)) {
+                        (<any>rowObj as IgxGridGroupByRowComponent).onGroupSelectorClick(event);
+                    }
                 }
                 break;
             default:
@@ -274,7 +283,8 @@ export class IgxGridNavigationService {
     }
 
     protected forOfDir(): IgxForOfDirective<any> {
-        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.summariesRowList.length ?
+        this.grid.summariesRowList.first.virtDirRow : this.grid.headerContainer;
         return forOfDir as IgxForOfDirective<any>;
     }
 
@@ -385,6 +395,13 @@ export class IgxGridNavigationService {
     }
 
     public performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
+        if (this.grid.rowList < 1 && this.grid.summariesRowList.length < 1 && this.grid.hasColumnGroups) {
+            let column = this.grid.getColumnByVisibleIndex(visibleColumnIndex);
+            while (column.parent) {
+                column = column.parent;
+            }
+            visibleColumnIndex = this.forOfDir().igxForOf.indexOf(column);
+        }
         if (!this.shouldPerformHorizontalScroll(visibleColumnIndex)) { return; }
         this.pendingNavigation = true;
         this.grid.parentVirtDir.onChunkLoad
@@ -401,6 +418,12 @@ export class IgxGridNavigationService {
         const curRow = this.grid.dataView[rowIndex];
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);
+    }
+
+    public isGroupRow(rowIndex: number): boolean {
+        if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) { return false; }
+        const curRow = this.grid.dataView[rowIndex];
+        return curRow && this.grid.isGroupByRecord(curRow);
     }
 
     public setActiveNode(activeNode: IActiveNode) {
@@ -466,7 +489,6 @@ export class IgxGridNavigationService {
     }
 
 
-
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
         const row = this.grid.summariesRowList.toArray().concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) { return; }
@@ -489,7 +511,7 @@ export class IgxGridNavigationService {
     }
 
     protected findFirstDataRowIndex(): number {
-        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec) && !rec.summaries);
     }
 
     protected findLastDataRowIndex(): number {

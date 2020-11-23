@@ -5,21 +5,31 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a dark column actions schema.
+/// Generates a base dark column actions schema.
+/// @type {Map}
+/// @prop {Color} background-color [#222] - The background color of the panel.
+$_base-dark-column-actions: (
+    background-color: #222
+);
+
+/// Generates a dark column actions schema based on a mix of $_light-column-actions and $_base-dark-column-actions.
 /// @type {Map}
 /// @requires extend
 /// @requires $_light-column-actions
+/// @requires $_base-dark-column-actions
 /// @see $default-palette
-$_dark-column-actions: extend($_light-column-actions);
+$_dark-column-actions: extend($_light-column-actions, $_base-dark-column-actions);
 
-/// Generates a dark fluent column actions schema.
+/// Generates a dark fluent column actions schema based on a mix of $_fluent-column-actions and $_base-dark-column-actions.
 /// @type {Map}
 /// @requires extend
 /// @requires $_fluent-column-actions
-$_dark-fluent-column-actions: extend($_fluent-column-actions);
+/// @requires $_base-dark-column-actions
+$_dark-fluent-column-actions: extend($_fluent-column-actions, $_base-dark-column-actions);
 
-/// Generates a dark bootstrap column actions schema.
+/// Generates a dark bootstrap column actions schema based on a mix of $_bootstrap-column-actions and $_base-dark-column-actions.
 /// @type {Map}
 /// @requires extend
 /// @requires $_bootstrap-column-actions
-$_dark-bootstrap-column-actions: extend($_bootstrap-column-actions);
+/// @requires $_base-dark-column-actions
+$_dark-bootstrap-column-actions: extend($_bootstrap-column-actions, $_base-dark-column-actions);

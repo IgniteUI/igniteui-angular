@@ -7,10 +7,11 @@
 /// Generates a light column actions schema.
 /// @type {Map}
 /// @prop {Map} title-color [igx-color: ('primary', 500)]- The text color used for the title of the list.
-/// @prop {Color} background-color [transparent] - The background color of the panel.
+/// @prop {Color} background-color [#fff] - The background color of the panel.
 /// @see $default-palette
 $_light-column-actions: (
-    background-color: transparent,
+    background-color: #fff,
+
     title-color: (
         igx-color: ('primary', 500)
     )
