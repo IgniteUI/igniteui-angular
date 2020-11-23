@@ -28,14 +28,24 @@ $_dark-action-strip: extend(
 /// Generates a dark fluent action strip schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_fluent-action-strip
-$_dark-fluent-action-strip: extend($_fluent-action-strip);
+/// @requires $_dark-action-strip
+$_dark-fluent-action-strip: extend(
+    $_dark-action-strip,
+    (
+        variant: 'fluent'
+    )
+);
 
 /// Generates a dark bootstrap action strip schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_bootstrap-action-strip
-$_dark-bootstrap-action-strip: extend($_bootstrap-action-strip);
+/// @requires $_dark-action-strip
+$_dark-bootstrap-action-strip: extend(
+    $_dark-action-strip,
+    (
+        variant: 'bootstrap'
+    )
+);
 
 /// Generates a dark indigo action strip schema.
 /// @type {Map}

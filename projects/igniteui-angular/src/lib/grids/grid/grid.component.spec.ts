@@ -1659,6 +1659,30 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(cells.length).toBe(30);
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });
+
+        it('should retain column with in % after hiding/showing grid with 100% width', () => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            const grid = fix.componentInstance.grid;
+            fix.detectChanges();
+            grid.width = '100%';
+            fix.detectChanges();
+            grid.columns[0].width = '50%';
+            fix.detectChanges();
+
+            // hide
+            grid.nativeElement.style.display = 'none';
+            // simulate resize observer reflow
+            grid.reflow();
+
+            expect(grid.columns[0].width).toBe('50%');
+
+            grid.nativeElement.style.display = '';
+            // simulate resize observer reflow
+            grid.reflow();
+
+            expect(grid.columns[0].width).toBe('50%');
+        });
     });
 
     describe('IgxGrid - API methods', () => {
@@ -1989,6 +2013,39 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.calcHeight).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
+        });
+
+        it('IgxTabs: should persist scroll position after changing tabs.', async () => {
+            const grid = fix.componentInstance.grid2;
+            fix.detectChanges();
+            const tab = fix.componentInstance.tabs;
+
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+
+            grid.navigateTo(grid.data.length - 1, grid.columns.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            const scrTop = grid.verticalScrollContainer.getScroll().scrollTop;
+            const scrLeft = grid.dataRowList.first.virtDirRow.getScroll().scrollLeft;
+
+            expect(scrTop).not.toBe(0);
+            expect(scrLeft).not.toBe(0);
+
+            tab.tabs.toArray()[0].select();
+            await wait(100);
+            fix.detectChanges();
+
+            tab.tabs.toArray()[1].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+
+            // check scrollTop/scrollLeft was persisted.
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(scrTop);
+            expect(grid.dataRowList.first.virtDirRow.getScroll().scrollLeft).toBe(scrLeft);
         });
     });
 

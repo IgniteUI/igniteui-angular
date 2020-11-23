@@ -30,6 +30,11 @@ export class SampleTestData {
         new Date("2018/03/23")
     ])
 
+    public static excelDateArray = () => ([
+        new Date(2018, 3, 23),
+        new Date("2018/03/23")
+    ])
+
     public static emptyObjectData = () => ([
         {},
         {},
@@ -194,6 +199,14 @@ export class SampleTestData {
             {Points: 14, Week: 3},
             {Points: 29, Week: 4},
         ] },
+    ])
+
+    public static hireDate = () => ([
+        { ID: 1, HireDate: new Date(2008, 3, 20).toISOString() },
+        { ID: 2, HireDate: new Date(2015, 11, 8) },
+        { ID: 3, HireDate: new Date(2012, 6, 30).toISOString() },
+        { ID: 4, HireDate: new Date(2010, 1, 5).toISOString() },
+        { ID: 5, HireDate: new Date(2020, 4, 17).toISOString() },
     ])
 
 
