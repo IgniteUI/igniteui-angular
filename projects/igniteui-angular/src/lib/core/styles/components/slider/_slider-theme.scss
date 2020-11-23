@@ -9,6 +9,7 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $track-color [null] - The color of the track.
+/// @param {Color} $track-step-color [null] - The color of the track steps.
 /// @param {Color} $thumb-color [null] - The color of the thumb.
 /// @param {Color} $label-background-color [null] - The background color of the bubble label.
 /// @param {Color} $label-text-color [null] - The text color of the bubble label.
@@ -37,6 +38,7 @@
     $schema: $light-schema,
 
     $track-color: null,
+    $track-step-color: null,
     $thumb-color: null,
 
     $label-background-color: null,
@@ -74,6 +76,7 @@
         name: $name,
         palette: $palette,
         track-color: $track-color,
+        track-step-color: $track-step-color,
         track-hover-color: $track-hover-color,
         thumb-color: $thumb-color,
         thumb-hover-color: $thumb-hover-color,
@@ -320,6 +323,7 @@
         width: 100%;
         height: rem($slider-track-height);
         background-size: 100% em($slider-track-height);
+        background-color: --var($theme, 'track-step-color');
         opacity: .85;
         transition: opacity .2s $ease-out-quad;
         z-index: 1;
