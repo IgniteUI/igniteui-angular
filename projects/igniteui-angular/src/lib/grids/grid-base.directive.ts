@@ -6583,7 +6583,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     endRowTransaction(commit: boolean, row: IgxRow, event?: Event) {
         row.newData = this.transactions.getAggregatedValue(row.id, true);
-        let rowEditArgs = row.createEditEventArgs();
+        let rowEditArgs = row.createEditEventArgs(true, event);
 
         if (!commit) {
             this.transactions.endPending(false);
@@ -6674,7 +6674,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
             cancelable = this.gridAPI.submit_add_value(event);
             if (!cancelable) {
-                const args = row.createEditEventArgs();
+                const args = row.createEditEventArgs(true, event);
                 this.rowEdit.emit(args);
                 if (args.cancel) {
                     return args.cancel;
