@@ -824,10 +824,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             (event as HammerInput).preventDefault();
         }
         if (this.grid.rowEditable && this.row.addRow) {
-            this.crudService.enterEditMode(this);
+            this.crudService.enterEditMode(this, event as Event);
         }
         if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.rowEditingBlocked) {
-            this.crudService.enterEditMode(this);
+            this.crudService.enterEditMode(this, event as Event);
         }
 
         this.grid.onDoubleClick.emit({
