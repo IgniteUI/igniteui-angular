@@ -236,7 +236,7 @@ export class IgxGridCRUDService {
                 }
 
             } else {
-                this.beginCellEdit(newCell);
+                this.beginCellEdit(newCell, event);
             }
         }
     }
