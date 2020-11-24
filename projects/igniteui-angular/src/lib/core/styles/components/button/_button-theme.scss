@@ -484,7 +484,7 @@
 
     $outlined-button-padding-indigo: (
         comfortable: rem(6px, 16px) rem(14px, 16px),
-        cosy: rem(4px, 16px) rem(10px, 16px),
+        cosy: rem(4px, 16px) rem(1px, 16px),
         compact: rem(2px, 16px) rem(6px, 16px)
     );
 
@@ -497,6 +497,8 @@
 
     $outlined-button-padding: map-get((
         material: $outlined-button-padding-material,
+        fluent: $button-padding-fluent,
+        bootstrap: $button-padding-bootstrap,
         indigo-design: $outlined-button-padding-indigo
     ), $variant);
 
