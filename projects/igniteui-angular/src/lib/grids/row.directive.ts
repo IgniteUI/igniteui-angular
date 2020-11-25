@@ -23,7 +23,8 @@ import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
-import merge from 'lodash.merge';
+import mergeWith from 'lodash.mergewith';
+import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -56,7 +57,12 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return merge({...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
+            return mergeWith(cloneValue(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false),
+                (objValue, srcValue) => {
+                    if (Array.isArray(srcValue)) {
+                        return objValue = srcValue;
+                    }
+                });
         }
         return this._rowData;
     }
@@ -113,7 +119,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             const maxRowSpan = this.grid.multiRowLayoutRowSize;
             height = height * maxRowSpan;
         }
-        return this.addRow ?  height : null;
+        return this.addRow ? height : null;
     }
 
     get cellHeight() {
@@ -174,7 +180,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             return res;
         }
         const cList = this._cells.filter((item) => item.nativeElement.parentElement !== null)
-        .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
+            .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
         res.reset(cList);
         return res;
     }
@@ -213,7 +219,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     set selected(value: boolean) {
         value ? this.selectionService.selectRowsWithNoEvent([this.rowID]) :
-        this.selectionService.deselectRowsWithNoEvent([this.rowID]);
+            this.selectionService.deselectRowsWithNoEvent([this.rowID]);
         this.grid.cdr.markForCheck();
     }
 
@@ -294,7 +300,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             return row.type === TransactionType.ADD;
         }
 
-         return false;
+        return false;
     }
 
     /** @hidden */
@@ -385,7 +391,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef) {}
+        public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
@@ -432,7 +438,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             return;
         }
         this.selected ? this.selectionService.deselectRow(this.rowID, event) :
-        this.selectionService.selectRowById(this.rowID, false, event);
+            this.selectionService.selectRowById(this.rowID, false, event);
     }
 
     /**
