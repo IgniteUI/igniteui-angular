@@ -16,6 +16,17 @@ export class IgxRowSelectorDirective {
  * @internal
  */
 @Directive({
+    selector: '[igxGroupByRowSelector]'
+})
+export class IgxGroupByRowSelectorDirective {
+    constructor(public templateRef: TemplateRef<any>) { }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+@Directive({
     selector: '[igxHeadSelector]'
 })
 export class IgxHeadSelectorDirective {

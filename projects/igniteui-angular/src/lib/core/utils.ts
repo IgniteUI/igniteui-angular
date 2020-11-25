@@ -1,7 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import merge from 'lodash.merge';
+import mergeWith from 'lodash.mergewith';
 import ResizeObserver from 'resize-observer-polyfill';
 import { Observable } from 'rxjs';
 import {
@@ -69,7 +69,11 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @hidden
  */
 export function mergeObjects(obj1: {}, obj2: {}): any {
-    return merge(obj1, obj2);
+    return mergeWith(obj1, obj2, (objValue, srcValue) => {
+        if (Array.isArray(srcValue)) {
+            return objValue = srcValue;
+        }
+    });
 }
 
 /**
@@ -128,7 +132,7 @@ export function uniqueDates(columnValues: any[]) {
         if (!a.cache[c.label]) { a.result.push(c); }
         a.cache[c.label] = true;
         return a;
-      }, {result: [], cache: {}}).result;
+    }, { result: [], cache: {} }).result;
 }
 
 /**
@@ -354,9 +358,9 @@ export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
-export interface IBaseCancelableBrowserEventArgs extends CancelableBrowserEventArgs, IBaseEventArgs {}
+export interface IBaseCancelableBrowserEventArgs extends CancelableBrowserEventArgs, IBaseEventArgs { }
 
-export interface IBaseCancelableEventArgs extends CancelableEventArgs, IBaseEventArgs {}
+export interface IBaseCancelableEventArgs extends CancelableEventArgs, IBaseEventArgs { }
 
 export const HORIZONTAL_NAV_KEYS = new Set(['arrowleft', 'left', 'arrowright', 'right', 'home', 'end']);
 
@@ -377,8 +381,9 @@ export const NAVIGATION_KEYS = new Set([
 ]);
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup', '+', 'add']);
-export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc' , 'l',
+export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), ...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
+export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc', 'l',
     /** This symbol corresponds to the Alt + L combination under MAC. */
     '¬']);
 
@@ -492,7 +497,7 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
     let i = 0;
     const chunk = () => {
         const end = Math.min(i + chunkSize, count);
-        for ( ; i < end; ++i) {
+        for (; i < end; ++i) {
             callback(i);
         }
         if (i < count) {

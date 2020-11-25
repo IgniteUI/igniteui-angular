@@ -16,7 +16,7 @@ import {
     ViewContainerRef,
     DebugElement
 } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
@@ -25,6 +25,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
+import { PlatformUtil } from '../../core/utils';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -43,7 +44,7 @@ describe('IgxForOf directive -', () => {
 
     describe('empty virtual component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -65,7 +66,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -175,7 +176,7 @@ describe('IgxForOf directive -', () => {
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -328,7 +329,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -907,7 +908,7 @@ describe('IgxForOf directive -', () => {
 
     describe('variable size component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -953,7 +954,7 @@ describe('IgxForOf directive -', () => {
 
     describe('remote virtual component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -995,7 +996,7 @@ describe('IgxForOf directive -', () => {
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1037,7 +1038,7 @@ describe('IgxForOf directive -', () => {
 
     describe('no width and height component', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1061,7 +1062,7 @@ describe('IgxForOf directive -', () => {
 
     describe('even odd first last functions', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1096,7 +1097,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1147,7 +1148,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VerticalVirtualCreateComponent>;
 
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VerticalVirtualCreateComponent
@@ -1261,8 +1262,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
         public zone: NgZone,
-        protected syncService: IgxForOfScrollSyncService) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService);
+        protected syncService: IgxForOfScrollSyncService,
+        platformUtil: PlatformUtil) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService, platformUtil, document);
     }
     public scrStepArray = [];
     public scrTopArray = [];

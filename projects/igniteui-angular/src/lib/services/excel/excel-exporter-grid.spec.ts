@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -9,7 +9,13 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent, GridIDNameJobTitleHireDataPerformanceComponent } from '../../test-utils/grid-samples.spec';
+import {
+    ReorderedColumnsComponent,
+    GridIDNameJobTitleComponent,
+    ProductsComponent,
+    GridIDNameJobTitleHireDataPerformanceComponent,
+    GridHireDateComponent
+} from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -30,7 +36,7 @@ describe('Excel Exporter', () => {
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
@@ -38,13 +44,14 @@ describe('Excel Exporter', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
                 GridWithEmtpyColumnsComponent,
-                GridIDNameJobTitleHireDataPerformanceComponent
+                GridIDNameJobTitleHireDataPerformanceComponent,
+                GridHireDateComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
 
@@ -52,13 +59,13 @@ describe('Excel Exporter', () => {
         spyOn(ExportUtilities as any, 'saveBlobToFile');
     }));
 
-    afterEach(async(() => {
+    afterEach(waitForAsync(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
     }));
 
     describe('', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             options = createExportOptions('GridExcelExport', 50);
         }));
 
@@ -522,12 +529,22 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.personJobHoursDataPerformance);
         });
+
+        it('Should export dates correctly.', async () => {
+            const fix = TestBed.createComponent(GridHireDateComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            await exportAndVerify(grid, options, actualData.hireDate);
+        });
     });
 
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             options = createExportOptions('TreeGridExcelExport', 50);
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();

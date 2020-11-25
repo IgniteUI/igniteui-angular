@@ -60,30 +60,4 @@ describe('Update 6.0.2', () => {
             `@import "~igniteui-angular/lib/core/styles/themes/_index.scss";`
         );
     });
-
-    it('should update theme import in sass files', async () => {
-        const config = JSON.parse(JSON.stringify(configJson));
-        config.projects.testProj['schematics'] = {
-            '@schematics/angular:component': {
-                styleext: 'sass'
-            }
-        };
-        appTree.overwrite('/angular.json', JSON.stringify(config));
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.sass',
-            `@import "~igniteui-angular/core/styles/themes/index";`
-        );
-        appTree.create(
-            '/testSrc/testSrc/styles.sass',
-            `@import "~igniteui-angular/core/styles/themes/_index.scss";`
-        );
-        const tree = await schematicRunner.runSchematicAsync('migration-03', {}, appTree)
-            .toPromise();
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.sass')).toEqual(
-            `@import "~igniteui-angular/lib/core/styles/themes/index";`
-        );
-        expect(tree.readContent('/testSrc/testSrc/styles.sass')).toEqual(
-            `@import "~igniteui-angular/lib/core/styles/themes/_index.scss";`
-        );
-    });
 });

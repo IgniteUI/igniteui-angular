@@ -1,5 +1,7 @@
 export interface IGridResourceStrings {
     igx_grid_groupByArea_message?: string;
+    igx_grid_groupByArea_select_message?: string;
+    igx_grid_groupByArea_deselect_message?: string;
     igx_grid_emptyFilteredGrid_message?: string;
     igx_grid_emptyGrid_message?: string;
     igx_grid_filter?: string;
@@ -98,6 +100,16 @@ export interface IGridResourceStrings {
     igx_grid_pinning_check_all_label?: string;
     igx_grid_pinning_uncheck_all_label?: string;
     igx_grid_toolbar_actions_filter_prompt?: string;
+    igx_grid_toolbar_pinning_button_tooltip?: string;
+    igx_grid_toolbar_hiding_button_tooltip?: string;
+    igx_grid_toolbar_pinning_title?: string;
+    igx_grid_toolbar_hiding_title?: string;
+    igx_grid_toolbar_advanced_filtering_button_tooltip?: string;
+    igx_grid_toolbar_advanced_filtering_button_label?: string;
+    igx_grid_toolbar_exporter_button_tooltip?: string;
+    igx_grid_toolbar_exporter_button_label?: string;
+    igx_grid_toolbar_exporter_excel_entry_text?: string;
+    igx_grid_toolbar_exporter_csv_entry_text?: string;
     igx_grid_snackbar_addrow_label?: string;
     igx_grid_snackbar_addrow_actiontext?: string;
     igx_grid_actions_edit_label?: string;
@@ -113,6 +125,8 @@ export interface IGridResourceStrings {
 
 export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_groupByArea_message: 'Drag a column header and drop it here to group by that column.',
+    igx_grid_groupByArea_select_message: 'Select all rows in the group with field name {0} and value {1}.',
+    igx_grid_groupByArea_deselect_message: 'Deselect all rows in the group with field name {0} and value {1}.',
     igx_grid_emptyFilteredGrid_message: 'No records found.',
     igx_grid_emptyGrid_message: 'Grid has no data.',
     igx_grid_filter: 'Filter',
@@ -211,6 +225,16 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_pinning_check_all_label: 'Pin All',
     igx_grid_pinning_uncheck_all_label: 'Unpin All',
     igx_grid_toolbar_actions_filter_prompt: 'Filter columns list ...',
+    igx_grid_toolbar_pinning_button_tooltip: 'Open column pinning dropdown',
+    igx_grid_toolbar_hiding_button_tooltip: 'Open column hiding dropdown',
+    igx_grid_toolbar_pinning_title: 'Pinned columns',
+    igx_grid_toolbar_hiding_title: 'Visible columns',
+    igx_grid_toolbar_advanced_filtering_button_tooltip: 'Open advanced filtering dialog',
+    igx_grid_toolbar_advanced_filtering_button_label: 'Advanced filtering',
+    igx_grid_toolbar_exporter_button_tooltip: 'Open exporter dropdown',
+    igx_grid_toolbar_exporter_button_label: 'Export',
+    igx_grid_toolbar_exporter_excel_entry_text: 'Export to Excel',
+    igx_grid_toolbar_exporter_csv_entry_text: 'Export to CSV',
     igx_grid_snackbar_addrow_label: 'Row added',
     igx_grid_snackbar_addrow_actiontext: 'SHOW',
     igx_grid_actions_edit_label: 'Edit',

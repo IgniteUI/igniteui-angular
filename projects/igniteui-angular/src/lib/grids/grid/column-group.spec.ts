@@ -1,4 +1,4 @@
-import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { DebugElement } from '@angular/core';
@@ -31,7 +31,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
     let fixture, grid: IgxGridComponent, componentInstance;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,

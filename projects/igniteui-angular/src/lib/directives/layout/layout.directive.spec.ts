@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFlexDirective, IgxLayoutDirective, IgxLayoutModule } from './layout.directive';
 
@@ -7,7 +7,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxLayoutDirective', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [TestFlexLayoutComponent],
             imports: [IgxLayoutModule]
