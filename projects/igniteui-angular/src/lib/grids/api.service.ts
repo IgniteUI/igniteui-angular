@@ -22,7 +22,7 @@ import {
  * @hidden
  */
 @Injectable()
-export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
+export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
 
     grid: T;
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
@@ -35,7 +35,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const grid = this.grid;
         let data = grid.filteredData;
         if (data && grid.hasPinnedRecords) {
-           data = grid._filteredUnpinnedData;
+            data = grid._filteredUnpinnedData;
         }
         if (!data) {
             if (grid.transactions.enabled) {
@@ -49,7 +49,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
                     const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
                     const index = tempData.indexOf(rowID);
                     if (index !== -1) {
-                       data.splice(index, 1);
+                        data.splice(index, 1);
                     }
                 });
             } else {
@@ -140,7 +140,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public update_add_cell(cell: IgxCell, value: any): IGridEditEventArgs  {
+    public update_add_cell(cell: IgxCell, value: any): IGridEditEventArgs {
         cell.editValue = value;
 
         const args = cell.createEditEventArgs();
@@ -192,7 +192,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             }
         }
         if (!this.grid.rowEditable || !this.grid.crudService.row ||
-                this.grid.crudService.row.id !== cell.id.rowID || !this.grid.transactions.enabled) {
+            this.grid.crudService.row.id !== cell.id.rowID || !this.grid.transactions.enabled) {
             this.grid.summaryService.clearSummaryCache(args);
             (this.grid as any)._pipeTrigger++;
         }
@@ -210,7 +210,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
      * @param rowCurrentValue Current value of the row as it is with applied previous transactions
      * @param rowNewValue New value of the row
      */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: { [x: string]: any }) {
         if (grid.transactions.enabled) {
             const transaction: Transaction = {
                 id: rowID,
@@ -232,7 +232,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         if (rowInEditMode && row.id === rowInEditMode.id) {
             row.data = { ...row.data, ...rowInEditMode.transactionState };
-        // TODO: Workaround for updating a row in edit mode through the API
+            // TODO: Workaround for updating a row in edit mode through the API
         } else if (this.grid.transactions.enabled) {
             const state = grid.transactions.getState(row.id);
             row.data = state ? Object.assign({}, row.data, state.value) : row.data;
@@ -261,7 +261,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        const cachedRowData = { ... args.oldValue };
+        const cachedRowData = { ...args.oldValue };
         if (rowInEditMode) {
             const hasChanges = grid.transactions.getState(args.rowID, true);
             grid.transactions.endPending(false);
@@ -615,7 +615,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     }
 
     public get_rec_by_id(rowID) {
-        return  this.grid.primaryKey ? this.getRowData(rowID) : rowID;
+        return this.grid.primaryKey ? this.getRowData(rowID) : rowID;
     }
 
     public allow_expansion_state_change(rowID, expanded) {
