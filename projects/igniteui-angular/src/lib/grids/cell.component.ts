@@ -291,7 +291,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.id')
     public get attrCellID() {
-        return `${this.row.gridID}_${this.rowIndex}_${ this.visibleColumnIndex}`;
+        return `${this.row.gridID}_${this.rowIndex}_${this.visibleColumnIndex}`;
     }
 
     @HostBinding('attr.title')
@@ -336,9 +336,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     set cellSelectionMode(value) {
         if (this._cellSelection === value) { return; }
-         this.zone.runOutsideAngular(() => {
+        this.zone.runOutsideAngular(() => {
             value === GridSelectionMode.multiple ?
-            this.addPointerListeners(value) : this.removePointerListeners(this._cellSelection);
+                this.addPointerListeners(value) : this.removePointerListeners(this._cellSelection);
         });
         this._cellSelection = value;
     }
@@ -436,7 +436,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.aria-selected')
     get ariaSelected() {
-        return this.selected || this.column.selected  || this.row.selected;
+        return this.selected || this.column.selected || this.row.selected;
     }
 
     /**
@@ -528,7 +528,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
-    @ViewChild('addRowCell', { read: TemplateRef, static: true})
+    @ViewChild('addRowCell', { read: TemplateRef, static: true })
     protected addRowCellTemplate: TemplateRef<any>;
 
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
@@ -558,7 +558,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 colEnd: this.column.colEnd,
                 columnVisibleIndex: this.visibleColumnIndex
             } : null
-            };
+        };
     }
 
     /** @hidden @internal @deprecated */
@@ -584,7 +584,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.nativeElement.addEventListener('pointerup', this.pointerup);
     }
 
-    private  removePointerListeners(selection) {
+    private removePointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
@@ -609,7 +609,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         });
         if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
-                cssProps: { } /* don't disable user-select, etc */
+                cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
         }
     }
@@ -638,7 +638,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editMode) {
             return;
         }
-
         const crud = this.crudService;
         const editableCell = this.crudService.cell;
         const editMode = !!(crud.row || crud.cell);
@@ -768,7 +767,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (!isLeftClick(event)) {
             event.preventDefault();
-            this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
+            this.grid.navigation.setActiveNode({ rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex });
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
@@ -788,7 +787,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerenter = (event: PointerEvent) => {
-        const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
@@ -804,9 +803,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerup = (event: PointerEvent) => {
-        const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (!isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
-        this.grid.navigation.activeNode.gridID !== this.gridID))) { return; }
+            this.grid.navigation.activeNode.gridID !== this.gridID))) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
             if (isIE()) { this.grid.tbody.nativeElement.focus({ preventScroll: true }); }
