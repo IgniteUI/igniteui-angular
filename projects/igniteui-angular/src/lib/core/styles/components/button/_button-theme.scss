@@ -450,6 +450,12 @@
         compact: rem(3px, 16px) rem(16px, 16px)
     );
 
+    $outlined-button-padding-material: (
+        comfortable: rem(7px, 16px) rem(14px, 16px),
+        cosy: rem(4px, 16px) rem(14px, 16px),
+        compact: rem(1px, 16px) rem(14px, 16px)
+    );
+
     $button-padding-fluent: (
         comfortable: 0 rem(16px, 16px),
         cosy: 0 rem(16px, 16px),
@@ -462,11 +468,24 @@
         compact: rem(4px, 16px) rem(8px, 16px)
     );
 
+    $outlined-button-padding-indigo: (
+        comfortable: rem(6px, 16px) rem(14px, 16px),
+        cosy: rem(4px, 16px) rem(10px, 16px),
+        compact: rem(2px, 16px) rem(6px, 16px)
+    );
+
     $button-padding: map-get((
         material: $button-padding-material,
         fluent: $button-padding-fluent,
         bootstrap: $button-padding-bootstrap,
         indigo-design: $button-padding-bootstrap,
+    ), $variant);
+
+    $outlined-button-padding: map-get((
+        material: $outlined-button-padding-material,
+        fluent: $button-padding-fluent,
+        bootstrap: $button-padding-bootstrap,
+        indigo-design: $outlined-button-padding-indigo
     ), $variant);
 
     $button--size-material: (
@@ -633,6 +652,7 @@
         background: --var($theme, 'outlined-background');
         color: --var($theme, 'outlined-text-color');
         border-radius: --var($theme, 'outlined-border-radius');
+        padding: map-get($outlined-button-padding, 'comfortable');
 
         @if $variant != 'indigo-design' {
             border: $button-border;
@@ -668,6 +688,16 @@
                 color: --var($theme, 'outlined-focus-icon-color')
             }
         }
+    }
+
+    %igx-button--outlined-cosy {
+        padding: map-get($outlined-button-padding, 'cosy');
+        min-height: map-get($button-size, 'cosy');
+    }
+
+    %igx-button--outlined-compact {
+        padding: map-get($outlined-button-padding, 'compact');
+        min-height: map-get($button-size, 'compact');
     }
 
     %igx-button--raised {

@@ -190,7 +190,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     @HostBinding('class.igx-button--cosy')
     public get cssClassCosy(): boolean {
-        return (this._type === 'flat' || this._type === 'raised' || this._type === 'outlined') &&
+        return (this._type === 'flat' || this._type === 'raised') &&
             this.displayDensity === DisplayDensity.cosy;
     }
 
@@ -200,8 +200,26 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     @HostBinding('class.igx-button--compact')
     public get cssClassCompact(): boolean {
-        return (this._type === 'flat' || this._type === 'raised' || this._type === 'outlined') &&
+        return (this._type === 'flat' || this._type === 'raised') &&
             this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--outlined-cosy')
+    public get cssClassCosyOutlined(): boolean {
+        return this._type === 'outlined' && this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--outlined-compact')
+    public get cssClassCompactOutlined(): boolean {
+        return this._type === 'outlined' && this.displayDensity === DisplayDensity.compact;
     }
 
     /**
