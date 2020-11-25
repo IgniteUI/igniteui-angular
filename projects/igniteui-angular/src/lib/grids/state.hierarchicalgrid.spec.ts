@@ -306,7 +306,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const emptyFiltering = '{}';
         const initialState = HelperFunctions.buildStateString(grid, 'advancedFiltering', emptyFiltering, emptyFiltering);
-        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
+        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"less-than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
 
         let gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
@@ -329,7 +329,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         const emptyFiltering = '{}';
         const initialState = HelperFunctions.buildStateString(grid, 'advancedFiltering', emptyFiltering, emptyFiltering);
-        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
+        const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"less-than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
 

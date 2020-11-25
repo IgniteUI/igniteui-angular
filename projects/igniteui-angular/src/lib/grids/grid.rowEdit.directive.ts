@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, Host, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
 
 /** @hidden @internal */
@@ -50,6 +50,11 @@ export class IgxRowEditTabStopDirective {
     public handleEscape(event: KeyboardEvent): void {
         this.grid.endEdit(false, event);
         this.grid.tbody.nativeElement.focus();
+    }
+
+    @HostListener('keydown.Enter', ['$event'])
+    public handleEnter(event: KeyboardEvent): void {
+        event.stopPropagation();
     }
 
     /**

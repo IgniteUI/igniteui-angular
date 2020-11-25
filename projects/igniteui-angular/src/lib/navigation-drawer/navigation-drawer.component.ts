@@ -26,7 +26,7 @@ import { PlatformUtil } from '../core/utils';
 let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Navigation Drawer** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
  *
  * The Ignite UI Navigation Drawer is a collapsible side navigation container commonly used in combination with the Navbar.
  *
@@ -203,6 +203,16 @@ export class IgxNavigationDrawerComponent implements
      * ```
      */
     @Input() public width = '280px';
+
+
+    /**
+     * Enables/disables the animation, when toggling the drawer. Set to `false` by default.
+     * ````html
+     * <igx-nav-drawer [disableAnimation]="true"></igx-nav-drawer>
+     * ````
+     */
+    @HostBinding ('class.igx-nav-drawer--disable-animation')
+    @Input() public disableAnimation = false;
 
     /**
      * Width of the drawer in its mini state. Defaults to 68px.

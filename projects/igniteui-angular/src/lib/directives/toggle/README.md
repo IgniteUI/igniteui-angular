@@ -1,7 +1,7 @@
 # IgxToggle Directive
 
 The **IgxToggle** provides a way for user to make a given content togglable.  
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)
 
 #Usage
 ```typescript
@@ -29,8 +29,8 @@ handlers when the toggle is opened and respectively closed.
 ```html
 <button (click)="toggleRef.toggle()">Toggle</button>
 <div igxToggle #toggleRef="toggle" 
-    (onOpening)="eventHandler()" (onAppended)="eventHandler()" (onOpened)="eventHandler()"
-    (onClosing)="eventHandler()" (onClosed)="eventHandler()" >
+    (onOpening)="eventHandler($event)" (onAppended)="eventHandler($event)" (onOpened)="eventHandler($event)"
+    (onClosing)="eventHandler($event)" (onClosed)="eventHandler($event)" >
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
@@ -40,11 +40,11 @@ handlers when the toggle is opened and respectively closed.
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
-| `onAppended`   | `void` | Emits an event after content is appended to the overlay.         |
-| `onOpening`    | `void` | Emits an event before the toggle container is opened.            |
-| `onOpened`     | `void` | Emits an event after the toggle container is opened.             |
-| `onClosing`    | `void` | Emits an event before the toggle container is closed.            |
-| `onClosed`     | `void` | Emits an event after the toggle container is closed.             |
+| `onAppended`   | `ToggleViewEventArgs`           | Emits an event after content is appended to the overlay.         |
+| `onOpening`    | `ToggleViewCancelableEventArgs` | Emits an event before the toggle container is opened.            |
+| `onOpened`     | `ToggleViewEventArgs`           | Emits an event after the toggle container is opened.             |
+| `onClosing`    | `ToggleViewCancelableEventArgs` | Emits an event before the toggle container is closed.            |
+| `onClosed`     | `ToggleViewEventArgs`           | Emits an event after the toggle container is closed.             |
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
@@ -60,7 +60,7 @@ handlers when the toggle is opened and respectively closed.
 
 The **IgxToggleAction** provides a way for user to Open/Close(toggle) every Component/Directive which implements **IToggleView** interface by providing the reference to this particular Component/Directive or ID which is registered into **IgxNavigationService**. It is also applicable upon **IgxToggle**. When applied **IgxToggleAction** will set its host element as the position strategy target.
 
-You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
+You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle)
 
 ## Usage
 ```typescript

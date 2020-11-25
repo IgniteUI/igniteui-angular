@@ -1,10 +1,9 @@
-import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
+import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { GridType } from './grid.interface';
-import { DatePipe, DecimalPipe } from '@angular/common';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
@@ -163,60 +162,6 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
 
 }
 
-
-/**
- * @hidden
- * @internal
- */
-@Pipe({
-    name: 'igxdate'
-})
-export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
-
-    private readonly DEFAULT_DATE_FORMAT = 'mediumDate';
-
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        if (value && value instanceof Date) {
-            if (locale) {
-                return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
-    }
-}
-
-/**
- * @hidden
- * @internal
- */
-@Pipe({
-    name: 'igxdecimal'
-})
-export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        if (value && typeof value === 'number') {
-            if (locale) {
-                return super.transform(value, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
-    }
-}
-
 /**
  * @hidden
  */
@@ -262,6 +207,9 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
         actionFilter: (value: IgxColumnComponent, index: number, array: IgxColumnComponent[]) => boolean,
         pipeTrigger: number
     ): IgxColumnComponent[] {
+        if (!collection) {
+            return collection;
+        }
         let copy = collection.slice(0);
         if (copy.length && copy[0].grid.hasColumnLayouts) {
             copy = copy.filter(c => c.columnLayout);
@@ -284,6 +232,9 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
     public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
+        if (!collection) {
+            return collection;
+        }
         let copy = collection.slice(0);
         if (filterCriteria && filterCriteria.length > 0) {
             const filterFunc = (c) => {
@@ -333,7 +284,7 @@ export class IgxStringReplacePipe implements PipeTransform {
 @Pipe({ name: 'transactionState' })
 export class IgxGridTransactionStatePipe implements PipeTransform {
 
-    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any) {
+    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
             if (rowCurrentState) {
@@ -364,9 +315,9 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any, pipeTrigger: number) {
+    transform(collection: any, isPinned = false, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode) {
+        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode || isPinned !== grid.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);
@@ -377,7 +328,11 @@ export class IgxGridAddRowPipe implements PipeTransform {
             addRow: true
         };
         copy.splice(parentIndex + 1, 0, rec);
-        grid.unpinnedRecords = copy;
+        if (isPinned) {
+            grid.pinnedRecords = copy;
+        } else {
+            grid.unpinnedRecords = copy;
+        }
         return copy;
     }
 }

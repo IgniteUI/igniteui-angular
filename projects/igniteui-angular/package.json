@@ -72,7 +72,9 @@
         "tslib": "^2.0.0",
         "resize-observer-polyfill": "^1.5.1",
         "igniteui-trial-watermark": "^1.0.3",
-        "lodash.merge": "^4.6.2"
+        "lodash.merge": "^4.6.2",
+        "uuid": "^8.3.0",
+        "@igniteui/material-icons-extended": "^2.4.0"
     },
     "peerDependencies": {
         "@angular/common": "^10.0.0",
@@ -82,7 +84,7 @@
         "web-animations-js": "^2.3.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~10.1.610"
+        "@igniteui/angular-schematics": "~10.2.620"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"

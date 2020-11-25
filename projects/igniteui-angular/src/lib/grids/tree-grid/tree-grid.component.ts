@@ -41,7 +41,7 @@ let NEXT_ID = 0;
 
 /**
  * **Ignite UI for Angular Tree Grid** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
  *
  * The Ignite UI Tree Grid displays and manipulates hierarchical data with consistent schema formatted as a table and
  * provides features such as sorting, filtering, editing, column pinning, paging, column moving and hiding.
@@ -439,6 +439,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
     }
 
+    protected getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
+    }
+
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -480,6 +484,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden
+     */
+    public refreshGridState(args?) {
+        super.refreshGridState();
+        if (this.primaryKey && this.foreignKey) {
+            const rowID = args.data[this.foreignKey];
+            this.summaryService.clearSummaryCache({rowID: rowID});
+            this._pipeTrigger++;
+            this.cdr.detectChanges();
+        }
+    }
+
+    /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
      * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
      * the specified parentRowID. If the parentRowID does not exist, an error would be thrown.
@@ -500,6 +517,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
         this.notifyChanges();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getParentRecordId() {
+        if (this.addRowParent.asChild) {
+            return super._getParentRecordId();
+        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
+            const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
+            return spawnedForRecord?.parent?.rowID;
+        }
     }
 
     /** @hidden */
@@ -609,26 +639,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
-    /**
-     * @hidden
-     */
-    public get template(): TemplateRef<any> {
-        if (this.filteredData && this.filteredData.length === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
-        }
-
-        if (this.isLoading && (!this.data || this.dataLength === 0)) {
-            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
-        }
-
-        if (this.dataLength === 0) {
-            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
-    }
-
     public getEmptyRecordObjectFor(rec) {
         const row = {...rec};
-        row.data = {... rec.data};
+        const data = rec || {};
+        row.data = {... data};
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {

@@ -64,7 +64,7 @@
         id="right" class="igx-grid__scroll-on-drag-right"></span>
 </div>
 
-<div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant" (keydown)="navigation.handleNavigation($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
@@ -81,7 +81,8 @@
             | treeGridNormalizeRecord:pipeTrigger
             | gridRowPinning:id:true:pipeTrigger
             | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-            | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData'>
+            | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger:true
+            | gridAddRow:true:pipeTrigger as pinnedData'>
                 <div #pinContainer *ngIf='pinnedData.length > 0'
                     [ngClass]="{
                         'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
@@ -106,7 +107,7 @@
         | treeGridPaging:page:perPage:id:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:id:pipeTrigger:summaryPipeTrigger
         | gridRowPinning:id:false:pipeTrigger
-        | gridAddRow:pipeTrigger"
+        | gridAddRow:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer>
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
@@ -119,8 +120,8 @@
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [addRow]="isAddRow" #row>
             </igx-tree-grid-row>
         </ng-template>
-        <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row #pinnedRow>
+        <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [addRow]="isAddRow" #row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
@@ -183,11 +184,27 @@
 </ng-template>
 
 <ng-template #emptyFilteredGrid>
-    <span class="igx-grid__tbody-message">{{emptyFilteredGridMessage}}</span>
+    <span class="igx-grid__tbody-message">
+        <span>{{emptyFilteredGridMessage}}</span>
+        <span *ngIf='showAddButton'>
+            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
+        </span>
+    </span>
 </ng-template>
 
 <ng-template #defaultEmptyGrid>
-    <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
+    <span class="igx-grid__tbody-message">
+        <span>{{emptyGridMessage}}</span>
+        <span *ngIf='showAddButton'>
+            <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
+        </span>
+    </span>
+</ng-template>
+
+<ng-template #defaultAddRowEmptyTemplate>
+    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1)'>
+        {{resourceStrings.igx_grid_add_row_label}}
+    </button>
 </ng-template>
 
 <ng-template #defaultLoadingGrid>

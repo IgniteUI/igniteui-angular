@@ -4,26 +4,53 @@ All notable changes for each version of this project will be documented in this 
 ## 10.2.0
 
 ### General
-- `IgxDatePicker`
-    - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
+- `IgxGridActions`
+    - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - The Excel Style Filtering has been reworked to provide filtering experience such as in Excel. This includes the following changes:
+        - You can close the Excel Style Filtering menu by pressing `Ctrl + Shift + L`.
+        - You can apply the filter by pressing `Enter`.
+        - When searching items in the Excel Style Filtering menu, only the rows that match your search term will be filtered in.
+        - By checking the `Add current selection to filter` option, the new search results will be added to the previously filtered items.
 - `IgxInputGroup`
     - **Breaking Change** - Removed `fluent`, `fluent_search`, `bootstrap`, and `indigo` as possible values for the `type` input property.
     - **Behavioral Change** - The styling of the input group is now dictated by the theme being used. The remaining `types` - `line`, `border`, and `box` will only have effect on the styling when used with the `material` theme. The `search` type will affect styling when used with all themes. Changing the theme at runtime will not change the styling of the input group, a page refresh is required.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Rename outputs**
+        `onRowEditEnter` to `rowEditEnter`
+        `onCellEditEnter` to `cellEditEnter`
+        `onCellEdit` to `cellEdit`
+        `onRowEdit` to `rowEdit`
+    - **Breaking Change** - The `onCellEditCancel` event is replaced by the new `cellEditExit` event that emits every time the editable cell exits edit mode.
+    - **Breaking Change** - The `onRowEditCancel` event is replaced by the new `rowEditExit` event that emits every time the editable row exits edit mode.
 - `IgxOverlay`
     - **Breaking Change** - `target` property in `PositionSettings` has been deprecated. You can set the attaching target for the component to show in `OverlaySettings` instead.
+- `IgxToggleDirective`
+    - `onAppended`, `onOpened` and `onClosed` events are emitting now arguments of `ToggleViewEventArgs` type.
+    - `onOpening` and `onClosing` events are emitting now arguments of `ToggleViewCancelableEventArgs` type.
 - `IgxSelect`
     - Added `aria-labelledby` property for the items list container(marked as `role="listbox"`). This will ensure the users of assistive technologies will also know what the list items container is used for, upon opening.
-- `IgxDatePicker`	
+- `IgxDatePicker`
     - **Breaking Change** - Deprecated the `label` property.
-- `igxGridActions`
-    - Added `asMenuItems` Input for grid actions - `igx-grid-editing-actions`, `igx-grid-pinning-actions`. When set to true will render the related action buttons as separate menu items with button and label.
-
+    - Added `aria-labelledby` property for the input field. This will ensure the users of assistive technologies will also know what component is used for, upon input focus.
+- `igxNavigationDrawer`
+    - Added `disableAnimation` property which enables/disables the animation, when toggling the drawer. Set to `false` by default.
+- `igxTabs`
+    - Added `disableAnimation` property which enables/disables the transition animation of the tabs' content. Set to `false` by default.
+- `IgxExpansionPanel`
+    - `IExpansionPanelEventArgs.panel` - Deprecated. Usе `owner` property to get a reference to the panel.
+- `IgxCalendarComponent`, `IgxMonthsViewComponent` and `IgxYearsViewComponent`
+    - `tabIndex` property was removed  in order to improve on page navigation and to be compliant with W3 accessability recommendations; Also the date grid in the calendar is now only one tab stop, the same approach is applied and in the `IgxMonthsViewComponent` and `IgxYearsViewComponent`;
+- `FilteringStrategy`
+    - **Breaking Change** - `filter` method exposed by the `FilteringStrategy` class now requires 3rd `advancedExpressionsTree` and 4th `grid` parameters. If not needed, just pass `null`.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - When triggering an export of the grid via the toolbar and the export takes more than 500 milliseconds, the export button becomes disabled and an indeterminate progress bar is shown at the bottom of the toolbar until the export is finished.
+    - `cellEditExit` is a new event that fires when cell exits edit mode
+    - `rowEditExit` is a new event that fires when row exits edit mode
     - Added *getRowData(rowSelector)* method that returns an object that represents the data that is contained in the specified row component.
-    - Added ability to spawn row adding UI through exoposed methods. Note that rowEditing should be enabled.
+    - Added ability to spawn row adding UI through exposed methods. Note that rowEditing should be enabled.
         - `beginAddRow` method which starts the adding row UI.
         - `beginAddChild` method which starts the adding child UI.
         ```typescript
@@ -38,6 +65,22 @@ All notable changes for each version of this project will be documented in this 
             </igx-action-strip>
         </igx-tree-grid>
         ```
+    - A new `locale` and `pipeArgs` parameters are introduced in the `operate` method exposed by the `IgxNumberSummaryOperand` and `IgxDateSummaryOperand`, which exposes the grid locale. Use the `locale` parameter to get localized summary data (as per the grid locale. If not passed, `locale` defaults to `'en-US'`). Use the `pipeArgs` parameter only if you want to customize the format of the date and numeric values that will be returned.
+    ```typescript
+    class MySummary extends IgxDateSummaryOperand {
+        operate(columnData: any[], allData = [], fieldName, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
+            const pipeArgs: IColumnPipeArgs = {
+                format: 'longDate',
+                timezone: 'UTC',
+                digitsInfo: '1.1-2'
+            }
+            const result = super.operate(columnData, allData, fieldName, locale, pipeArgs);
+            return result;
+        }
+    }
+    ```  
+    - A new `pipeArgs` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
+    ```typescript
 - ` IGX_INPUT_GROUP_TYPE` injection token
     - Allows for setting an input group `type` on a global level, so all input-group instances, including components using such an instance as a template will have their input group type set to the one specified by the token. It can be overridden on a component level by explicitly setting a `type`.
 - ` IgxExcelExporterService`
@@ -50,16 +93,32 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - The `PositionSettings` `target` property has been deprecated and moved to `OverlaySettings`.
     - An optional Point/HTML Element parameter `target` has been added to the `position()` method
+    - Added `createAbsoluteOverlaySettings` and `createRelativeOverlaySettings` methods which create non-modal `OverlaySettings` based on predefined `PositionSettings`. The methods are exposed off the `IgxOverlayService`.
+        - `createAbsoluteOverlaySettings` creates non-modal `OverlaySettings` with `GlobalPositionStrategy` or `ContainerPositionStrategy` if an outlet is provided. Accepts `AbsolutePosition` enumeration, which could be `Center`, `Top` and `Bottom`. Default is `Center`.
+        ```typescript
+            const globalOverlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(AbsolutePosition.Top);
+        ```
+        - `createRelativeOverlaySettings` creates `OverlaySettings` with `AutoPositionStrategy`, `ConnectedPositioningStrategy` or `ElasticPositionStrategy`. Accepts target, strategy and position. The `target` is the attaching point or element for the component to show. The position strategy is a `RelativePositionStrategy` enumeration, which defaults to `Auto`. The position is a `RelativePosition` enumeration. Possible values are `Above`, `Below`, `Before`, `After` and `Default`. The default option is `Default`, which positions the element below the target, left aligned.
+        ```typescript
+            const targetElement = this.button.nativeElement;
+            const connectedOverlaySettings = IgxOverlayService.createRelativeOverlaySettings(
+                    targetElement,
+                    RelativePositionStrategy.Connected,
+                    RelativePosition.Above);
+        ```
 - `IgxToast`
     - The component now utilizes the `IgxOverlayService` to position itself in the DOM.
     - An additional input property `outlet` has been added to allow users to specify custom Overlay Outlets using the `IgxOverlayOutletDirective`;
     - The `position` property now accepts values of type `IgxToastPosition` that work with strict templates.
+- `IgxExpansionPanelHeader`
+    - `onInteraction` is now cancelable
+    - Added `iconRef` property. This can be used to get a reference to the displayed expand/collapsed indicator. Returns `null` if `iconPosition` is set to `NONE`.
 
 ## 10.1.0
 
 ### General
 - `igxCombo`
-    - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
+    - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-position#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
     - Make `onSearchInput` event cancellable. The event args type has been changed to `IComboSearchInputEventArgs`, which have the following properties: `searchText` - holds the text typed into the search input, `owner` - holds a reference to the combo component and `cancel` - indicates whether the event should be canceled.
 - `IgxOverlay`
     - Added new property `closeOnEscape` in `OverlaySettings` that controls whether the overlay should close on escape keypress. By default `closeOnEsc` is set to `false`.
@@ -416,7 +475,7 @@ The following example shows how you can use the Indigo theme:
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
-    - Master-Detail visualization added for `igxGrid`. Users may now define templates that show additional context for rows when expanded. For more information, please take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master_detail.html).
+    - Master-Detail visualization added for `igxGrid`. Users may now define templates that show additional context for rows when expanded. For more information, please take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master-detail).
     - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
         (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
     - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
@@ -1015,7 +1074,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ### Features
 - `igxGrid`
     - **Feature** `igxGridComponent` now supports [Multi Row Layouts](https://github.com/IgniteUI/igniteui-angular/wiki/Grid---Multi-Row-Layout). It is configured with the newly added `IgxColumnLayoutComponent` and the columns in it. `IgxColumnComponent` now expose four new fields to determine the size and the location of the field into the layout:
-        - [`colStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colstart) - column index from which the field is starting. This property is **mandatory**.
+        - [`colStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent#colstart) - column index from which the field is starting. This property is **mandatory**.
          - [`rowStart`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowstart) - row index from which the field is starting. This property is **mandatory**.
          - [`colEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#colend) - column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. This property is **optional**. If not set defaults to `colStart + 1`.
          - [`rowEnd`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/classes/igxcolumncomponent.html#rowend) - row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. This property is **optional**. If not set defaults to `rowStart + 1`.
@@ -1398,9 +1457,9 @@ In order to turn them off, you need to pass an argument and set it to `false`
     </igx-select>
     ```
 
-[documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/select/README.md)
+[documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/select) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/select/README.md)
 
-- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer. More information about the IgxAutocomplete is available in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/autocomplete/README.md).
+- **New directive** `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer. More information about the IgxAutocomplete is available in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/autocomplete/README.md).
 
     ```html
     <input igxInput type="text" [igxAutocomplete]="townsPanel" />
@@ -1688,7 +1747,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ## 7.1.0
 ### Features
 - **New component** `IgxBannerComponent`:
-    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
 - `igxGrid`
     - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
     - Summary results are now calculated and displayed by default for each row group when 'Group By' feature is enabled.
@@ -1772,7 +1831,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - You can now add Ignite UI for Angular to existing Angular CLI projects - simply run `ng add igniteui-angular` in your project.
     This will install the package and all needed dependencies, add Ignite UI CLI so you can even quickly add components.
 - **New component** `IgxBannerComponent`:
-    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
 - `igxNavbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
@@ -2012,7 +2071,7 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
     - New `IgxTreeGridComponent` added.
     - The `igxTreeGrid` is used to display and manipulate hierarchical data with consistent schema, formatted as a table and provides a line of advanced features such as sorting, filtering, editing, column pinning, column moving, column hiding, paging and others.
     - The `igxTreeGrid` provides two ways of defining the relations among our data objects - by using a **child collection** for every data object or by using **primary and foreign keys** for every data object.
-    - For more details on using the `igxTreeGrid`, take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid.html).
+    - For more details on using the `igxTreeGrid`, take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid).
 - `igxGrid`:
     - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` can now be accessed through the `expressions` event property. Two new properties have been added to the event arguments - `groupedColumns` and `ungroupedColumns`. They provide references to arrays of `IgxColumnComponent` that hold the columns which have changed their state because of the **last** grouping/ungrouping operation.
 
@@ -2104,7 +2163,7 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
 - `igxExpansionPanel`:
-    - component added. `igxExpansionPanel` provides a way to display more information after expanding an item, respectively show less after collapsing it. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html).
+    - component added. `igxExpansionPanel` provides a way to display more information after expanding an item, respectively show less after collapsing it. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel).
 - `IgxList`:
     - the control now supports **ng-templates** which are shown "under" a list item when it is left or right panned. The templates are distinguished using the `igxListItemLeftPanning` and `igxListItemRightPanning` directives set on the templates.
     - the IgxList's `onLeftPan` and `onRightPan` events now have an argument of type `IListItemPanningEventArgs` (instead of `IgxListItemComponent`). The event argument has the following fields:
@@ -2305,7 +2364,7 @@ When you focus a specific cell and press one of the following key combinations, 
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
 
-    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo).
 
 **General**
 - Added `jsZip` as a Dependency.
@@ -2351,10 +2410,10 @@ When you focus a specific cell and press one of the following key combinations, 
 - Update npm deploy token #2002
 
 ## 6.1.0
-- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
+- `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-main)
 - Added **igxRadioGroup** directive. It allows better control over its child `igxRadio` components and support template-driven and reactive forms.
 - Added `column moving` feature to `igxGrid`, enabled on a per-column level. **Column moving** allows you to reorder the `igxGrid` columns via standard drag/drop mouse or touch gestures.
-    For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_moving.html).
+    For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-moving).
 - `igx-tab-bar` selector removed from `IgxBottomNavComponent`.
 - `igxGrid` filtering operands
 - `igxGrid`
@@ -2406,10 +2465,10 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         <igx-column [field]="'ReleaseDate'" [groupable]="true"></igx-column>
     </igx-grid>
     ```
-   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_groupby.html).
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/groupby).
 
 - `igxGrid` now supports multi-column headers allowing you to have multiple levels of columns in the header area of the grid.
-    For more information, head over to [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_multi_column_headers.html)
+    For more information, head over to [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/multi-column-headers)
 - `igxGrid` theme now has support for alternating grid row background and text colors.
 - `igxGrid` now has a toolbar (shown using the `showToolbar` property) which contains the following features:
   - title (specified using the `toolbarTitle` property)
@@ -2429,7 +2488,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - update(value: any) method is added. The method takes as a parameter the new value, which is to be set to the specidied row.
     - delete() method is added. The method removes the specified row from the grid's data source.
 
-- `igxCell` default editing template is changed according column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_editing.html)
+- `igxCell` default editing template is changed according column data type. For more information you can read the [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Cell-Editing) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/editing)
 - `igxCombo` component added
 
     ```html
@@ -2451,7 +2510,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
         - Keyboard Navigation
         - Accessibility compliance
 
-    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo.html).
+    For more detailed information see the [official igxCombo documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/combo).
 - `igxDropdown` component added
 
     ```html
@@ -2464,7 +2523,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 
     **igxDropDown** displays a scrollable list of items which may be visually grouped and supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down.
 
-    A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
+    A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down)
 
     igxDropdown features:
 
@@ -2483,7 +2542,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     </igx-chips-area>
     ```
 
-    For more detailed information see the [official igxChip documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip.html).
+    For more detailed information see the [official igxChip documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/chip).
 
 - `igxToggle` changes
     - `onOpening` event added.
@@ -2574,7 +2633,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 ## 5.3.0
 - Added `rowSelectable` property to `igxGrid`
     - Setting `rowSelectable` to `true` enables multiple row selection for the `igx-grid` component. Adds a checkbox column that allows (de)selection of one, multiple or all (via header checkbox) rows.
-    - For more information about the `rowSelectable` property and working with grid row, please read the `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) about selection or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid-selection.html)
+    - For more information about the `rowSelectable` property and working with grid row, please read the `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) about selection or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/selection)
 - Added `onContextMenu` output to `igxGrid` to emit the clicked cell.
 - `igx-datePicker`: Added `onClose` event.
 - `igxTextSelection` directive added
@@ -2595,11 +2654,11 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
    const column = this.grid.getColumnByName(name);
    column.pin();
    ```
-   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_column_pinning.html).
+   For more information, please head over to `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/column-pinning).
 - Added `summaries` feature to `igxGrid`, enabled on a per-column level. **Grid summaries** gives you a predefined set of default summaries, depending on the type of data in the column.
-    For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_summaries.html).
+    For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md) or see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/summaries).
 - Added `columnWidth` option to `igxGrid`. The option sets the default width that will be applied to columns that have no explicit width set. For more detailed information read `igxGrid`'s [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/src/grid/README.md)
-- Added API to `igxGrid` that allows for vertical remote virtualization. For guidance on how to implement such in your application, please refer to the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid_virtualization.html)
+- Added API to `igxGrid` that allows for vertical remote virtualization. For guidance on how to implement such in your application, please refer to the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/virtualization)
 - Added smooth scrolling for the `igxForOf` directive making the scrolling experience both vertically and horizontally much more natural and similar to a native scroll.
 - Added `onCellClick` event.
 - `igxForOf` now requires that its parent container's `overflow` is set to `hidden` and `position` to `relative`. It is recommended that its height is set as well so that the display container of the virtualized content can be positioned with an offset inside without visually affecting other elements on the page.
@@ -2665,7 +2724,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `igxToggle` allows users to implement toggleable components/views (eg. dropdowns), while `igxToggleAction` can control the
       `igxToggle` directive. Refer to the official documentation for more information.
     - `igxToggle` requires `BrowserAnimationsModule` to be imported in your application.
-- [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes.html) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
+- [`Ignite UI for Angular Theming`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes) - comprehensive set of **Sass** functions and mixins will give the ability to easily style your entire application or only certain parts of it.
     - Previously bundled fonts, are now listed as external dependencies. You should supply both the [Material Icons](http://google.github.io/material-design-icons/) and [Titillium Web](https://fonts.google.com/selection?selection.family=Titillium+Web:300,400,600,700) fonts yourself by either hosting or using CDN.
 - `igx-grid` changes
     - The component now uses the new `igxForOf` directive to virtualize its content both vertically and horizontally dramatically improving performance for applications displaying large amounts of data.

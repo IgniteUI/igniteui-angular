@@ -3,7 +3,7 @@
 
 **igxDropDown** displays a scrollable list of items which may be visually grouped and supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down.
 
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down)
 
 # Usage
 ## Drop downs are done by adding **igxDropDownListItems** to **igxDropDown** component
@@ -133,9 +133,9 @@ The following outputs are available in the **igx-drop-down** component:
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
 | `onSelection` | false | Emitted when item selection is changing, before the selection completes. | `{ISelectionEventArgs}` |
-| `onOpening` | true | Emitted before the dropdown is opened. |
+| `onOpening` | true | Emitted before the dropdown is opened. | `IBaseCancelableBrowserEventArgs` |
 | `onOpened` | false | Emitted when a dropdown is being opened. |
-| `onClosing` | true | Emitted before the dropdown is closed. |
+| `onClosing` | true | Emitted before the dropdown is closed. | `IBaseCancelableBrowserEventArgs` |
 | `onClosed` | false | Emitted when a dropdown is being closed. |
 
 ***NOTE:*** The using `*igxFor` to virtualize `igx-drop-down-item`s, `onSelection` will emit `newSeleciton` and `oldSelection` as type `{ value: any, index: number }`. 

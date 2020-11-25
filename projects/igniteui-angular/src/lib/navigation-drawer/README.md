@@ -1,7 +1,7 @@
 # IgxNavigationDrawer Component
 
 The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.  
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
 
 ## Dependencies
 To started with all needed dependencies you can use the `IgxNavigationDrawerModule` and import it in your application's `AppModule`:
@@ -64,6 +64,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to a falsy value to disable this behavior. |
 | `width` | string| Width of the drawer in its open state. Defaults to "280px".|
 | `miniWidth` | string | Width of the drawer in its mini variant. Defaults to "60px". |
+| `disableAnimation` | boolean | Enables/disables the animation, when toggling the drawer. Set to `false` by default.
 
 ### Outputs
 | Name      |  Description |

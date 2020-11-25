@@ -1,7 +1,7 @@
 # igx-tabs
 
 The **igx-tabs** component allows you to add tabs component with tab items positioned at the top and item content in your application.
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs.html).
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs).
 
 # Usage
 ```html
@@ -49,6 +49,7 @@ If the total visible items width exceeds the vew port width, scroll buttons are 
 | `label` | string | Set the tab item text. |
 | `disabled` | boolean | 	Set if the tab is enabled/disabled.	 |
 | `type` | IgxTabsType | 	Set the tab item sizing mode. By default, `contentfit` is set, the tab item width is sized to its content in the range of min/max width. When the sizing type is `fixed` - all tabs have equal size to fit the view port. |
+| `disableAnimation`| boolean | Enables/disables the transition animation of the tabs' content. Set to `false` by default.
 
 ## Events
 

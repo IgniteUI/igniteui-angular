@@ -410,7 +410,7 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRangeInSingleInput();
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: undefined });
+                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
@@ -473,7 +473,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
                     expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ cancel: false });
+                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
@@ -490,7 +490,7 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRangeInSingleInput();
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: undefined });
+                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
@@ -506,7 +506,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
                     expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ cancel: false });
+                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
@@ -522,7 +522,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: undefined });
+                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));

@@ -3,7 +3,7 @@
 
 **IgxExpansionPanel** is a light and highly templateable component that allows you to dynamically display content.
 
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html)
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion-panel)
 
 # Usage
 
@@ -56,8 +56,8 @@ The following outputs are available in the **igx-expansion-panel** component:
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onCollapsed` | `false` | Emitted when the panel is collapsed | `{ event: Event, panel: IgxExpansionPanelComponent }` |
-| `onExpanded` | `false` | Emitted when the panel is expanded | `{ event: Event, panel: IgxExpansionPanelComponent }` |
+| `onCollapsed` | `false` | Emitted when the panel is collapsed | `IExpansionPanelEventArgs` |
+| `onExpanded` | `false` | Emitted when the panel is expanded | `IExpansionPanelEventArgs` |
 
 
 ### Methods
@@ -81,6 +81,7 @@ The following inputs are available in the **igx-expansion-panel-header** compone
 | `role` | `string` | The `role` attribute of the header |
 | `iconPosition` | `string` | The position of the expand/collapse icon of the header |
 | `disabled` | `boolean` | Gets/sets whether the panel header is disabled (blocking user interaction) or not |
+| `iconRef` | `ElementRef` | Gets the reference to the element being used as expand/collapse indicator. If `iconPosition` is `NONE` - return `null` |
 
 
 ### Outputs
@@ -88,7 +89,7 @@ The following outputs are available in the **igx-expansion-panel-header** compon
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onInteraction` | `false` | Emitted when a user interacts with the header host | `{ event: Event, panel: IgxExpansionPanelComponent }` |
+| `onInteraction` | `true` | Emitted when a user interacts with the header host | `IExpansionPanelCancelableEventArgs` |
 
 ## IgxExpansionPanelBodyComponent
 ### Inputs

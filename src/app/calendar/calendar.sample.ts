@@ -1,18 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView } from 'igniteui-angular';
-import { IViewDateChangeEventArgs } from '../../../projects/igniteui-angular/src/lib/calendar/calendar-base';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, IViewDateChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-calendar-sample',
     templateUrl: 'calendar.sample.html',
     styleUrls: ['calendar.sample.scss']
 })
-export class CalendarSampleComponent implements OnInit {
+export class CalendarSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { static: true }) public calendar1: IgxCalendarComponent;
     @ViewChild('alert', { static: true }) public dialog: IgxDialogComponent;
     public range = [];
     public today = new Date();
+    public ppNovember = new Date(this.today.getFullYear(), this.today.getMonth() + 1, 10);
     public rangeDisabled = [
         new Date(this.today.getFullYear(), this.today.getMonth(), 10),
         new Date(this.today.getFullYear(), this.today.getMonth(), 13)
@@ -20,6 +20,12 @@ export class CalendarSampleComponent implements OnInit {
 
     public ngOnInit() {
         this.calendar1.disabledDates = [{ type: DateRangeType.Between, dateRange: this.rangeDisabled }];
+        this.calendar.selectDate([ new Date(this.today.getFullYear(), this.today.getMonth(), 10),
+                        new Date(this.today.getFullYear(), this.today.getMonth(), 17),
+                        new Date(this.today.getFullYear(), this.today.getMonth(), 27)]);
+    }
+
+    public ngAfterViewInit() {
     }
 
     public selectPTOdays(dates: Date[]) {
@@ -66,7 +72,12 @@ export class CalendarSampleComponent implements OnInit {
     }
 
     public select() {
-        this.calendar.selectDate(new Date(this.today.getFullYear(), this.today.getMonth() + 1, 11));
+        if (this.calendar.selection === 'single') {
+            this.calendar.selectDate(new Date(this.today.getFullYear(), this.today.getMonth() + 1, 11));
+        } else {
+            this.calendar.selectDate([new Date(this.today.getFullYear(), this.today.getMonth(), 10),
+                new Date(this.today.getFullYear(), this.today.getMonth(), 13)]);
+        }
     }
 
     public deselect() {

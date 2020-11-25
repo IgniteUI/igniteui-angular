@@ -20,6 +20,7 @@ import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
+import { parseDate } from '../core/utils';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -433,6 +434,7 @@ export class GridFunctions {
     }
 
     public static generateICalendarDate(date: Date, year: number, month: number) {
+        date = parseDate(date);
         return {
             date,
             isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
@@ -794,8 +796,8 @@ export class GridFunctions {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
             const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin"') !== -1);
-            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin"') !== -1);
+            const headerAreaPinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="pin-left"') !== -1);
+            const headerAreaUnpinIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerHTML.indexOf('name="unpin-left"') !== -1);
             pinUnpinIcon = headerAreaPinIcon ? headerAreaPinIcon : headerAreaUnpinIcon;
         } else {
             const pinContainer = GridFunctions.getExcelFilteringPinContainer(fix);

@@ -12,7 +12,8 @@ import {
     TemplateRef,
     Directive,
     Output,
-    EventEmitter
+    EventEmitter,
+    LOCALE_ID
 } from '@angular/core';
 import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -53,9 +54,27 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     public abstract expandChildren: boolean;
 
+    /**
+     * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
+     * @example
+     * ```html
+     * <igx-hierarchical-grid #grid [data]="localData" [hasChildrenKey]="'hasEmployees'">
+     * </igx-hierarchical-grid>
+     * ```
+     */
     @Input()
     public hasChildrenKey: string;
 
+    /**
+     * Gets/Sets whether the expand/collapse all button in the header should be rendered.
+     * @remark
+     * The default value is false.
+     * @example
+     * ```html
+     * <igx-hierarchical-grid #grid [data]="localData" [showExpandAll]="true">
+     * </igx-hierarchical-grid>
+     * ```
+     */
     @Input()
     public showExpandAll = false;
 
@@ -135,7 +154,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) localeId: string) {
         super(
             selectionService,
             crudService,
@@ -153,7 +173,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             filteringService,
             overlayService,
             summaryService,
-            _displayDensityOptions);
+            _displayDensityOptions,
+            localeId);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 

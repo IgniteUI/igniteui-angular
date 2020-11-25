@@ -9,6 +9,7 @@
         (mouseleave)="onMouseLeave(actionstrip)"
         (mouseover)="onMouseOver($event, grid, actionstrip)"
         [rowEditable]="true"
+        [allowFiltering]="true"
     >
         <igx-column
             *ngFor="let c of columns"
@@ -24,7 +25,10 @@
         </igx-column>
 
         <igx-action-strip #actionstrip>
+            <igx-grid-pinning-actions></igx-grid-pinning-actions>
             <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
         </igx-action-strip>
     </igx-grid>
+
+    <button igxButton="raised" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
 </div>

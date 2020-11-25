@@ -7,9 +7,10 @@ export const data = [{
     UnitPrice: '18.0000',
     UnitsInStock: 39,
     UnitsOnOrder: 0,
-    ReorderLevel: 10,
+    ReorderLevel: 10.567,
     Discontinued: false,
-    OrderDate: new Date('2012-02-12')
+    OrderDate: null,
+    OrderDate2: new Date(1991, 2, 12, 18, 40, 50).toISOString()
 }, {
     ProductID: 2,
     ProductName: 'Chang',
@@ -21,7 +22,8 @@ export const data = [{
     UnitsOnOrder: 40,
     ReorderLevel: 25,
     Discontinued: false,
-    OrderDate: new Date('2003-03-17')
+    OrderDate: new Date('2003-03-17').toISOString(),
+    OrderDate2: new Date('2003-03-17').toISOString()
 }, {
     ProductID: 3,
     ProductName: 'Aniseed Syrup',
@@ -33,7 +35,8 @@ export const data = [{
     UnitsOnOrder: 70,
     ReorderLevel: 25,
     Discontinued: false,
-    OrderDate: new Date('2006-03-17')
+    OrderDate: new Date('2006-03-17').toISOString(),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 4,
     ProductName: 'Chef Antons Cajun Seasoning',
@@ -45,7 +48,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date('2020-03-17')
+    OrderDate: new Date('2020-03-17'),
+    OrderDate2: new Date('2020-03-17')
 }, {
     ProductID: 5,
     ProductName: 'Chef Antons Gumbo Mix',
@@ -57,7 +61,7 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: true,
-    OrderDate: new Date('2011-11-11')
+    OrderDate: undefined
 }, {
     ProductID: 6,
     ProductName: 'Grandmas Boysenberry Spread',
@@ -69,7 +73,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 25,
     Discontinued: false,
-    OrderDate: new Date('2017-12-17')
+    OrderDate: new Date('2017-12-17'),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 7,
     ProductName: 'Uncle Bobs Organic Dried Pears',
@@ -81,7 +86,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 10,
     Discontinued: false,
-    OrderDate: new Date('2016-07-17')
+    OrderDate: new Date('2016-07-17'),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 8,
     ProductName: 'Northwoods Cranberry Sauce',
@@ -93,7 +99,8 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date('2025-01-17')
+    OrderDate: new Date('2025-01-17'),
+    OrderDate2: new Date('2006-03-17').toISOString()
 }, {
     ProductID: 9,
     ProductName: 'Mishi Kobe Niku',
@@ -237,7 +244,7 @@ export const data = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date('2005-03-17')
+    OrderDate: null
 }
 ];
 
@@ -481,6 +488,6 @@ export const dataWithoutPK = [{
     UnitsOnOrder: 0,
     ReorderLevel: 0,
     Discontinued: false,
-    OrderDate: new Date('2005-03-17')
+    OrderDate: null
 }
 ];

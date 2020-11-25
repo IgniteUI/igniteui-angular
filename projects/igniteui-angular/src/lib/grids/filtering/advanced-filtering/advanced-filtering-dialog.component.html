@@ -101,14 +101,14 @@
                     >
                     <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.columnHeader || expressionItem.expression.fieldName }}</span>
                     <igx-prefix>
-                        <igx-icon fontSet="filtering-icons" [name]="expressionItem.expression.condition.iconName">
+                        <igx-icon fontSet="imx-icons" [name]="expressionItem.expression.condition.iconName">
                     </igx-icon>
                     </igx-prefix>
                     <span class="igx-filter-tree__expression-condition">
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
                     <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
-                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | igxdate:grid.locale) : expressionItem.expression.searchVal }}
+                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | date:getFormat(expressionItem.expression.fieldName):undefined:grid.locale) : expressionItem.expression.searchVal }}
                     </span>
                 </igx-chip>
                 <div class="igx-filter-tree__expression-actions"
@@ -153,12 +153,12 @@
                             [(ngModel)]="selectedCondition"
                             [disabled]="!selectedColumn">
                     <igx-prefix *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)">
-                        <igx-icon fontSet="filtering-icons" [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
+                        <igx-icon fontSet="imx-icons" [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
                         </igx-icon>
                     </igx-prefix>
                     <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
                         <div class="igx-grid__filtering-dropdown-items">
-                            <igx-icon fontSet="filtering-icons"
+                            <igx-icon fontSet="imx-icons"
                                       [name]="selectedColumn.filters.condition(condition).iconName">
                             </igx-icon>
                             <span class="igx-grid__filtering-dropdown-text">{{getConditionFriendlyName(condition)}}</span>
@@ -191,7 +191,7 @@
                                     (click)="openDialog(dropDownTarget.element.nativeElement)"
                                     [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
                                     autocomplete="off"
-                                    [value]="value | igxdate: grid.locale"
+                                    [value]="value | date:selectedColumn.pipeArgs.format:undefined:grid.locale"
                                     [readonly]="true"
                                     [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
                         </igx-input-group>
@@ -295,7 +295,7 @@
                     [disabled]="!contextualGroup.parent"
                     (click)="ungroup()"
                 >
-                    <igx-icon fontSet="filtering-icons" name="ungroup"></igx-icon>
+                    <igx-icon fontSet="imx-icons" name="ungroup"></igx-icon>
                     <span>{{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}</span>
                 </button>
                 <button

@@ -3,25 +3,22 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnResizeEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
-import { IgxDatePipeComponent } from '../common/pipes';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
 import { fadeIn, fadeOut } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
-import { IgxGridIconService } from '../common/grid-icon.service';
-import { GridIconsFeature } from '../common/enums';
-import { FILTERING_ICONS_FONT_SET, FILTERING_ICONS} from './grid-filtering-icons';
-import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
+import { IgxIconService } from '../../icon/icon.service';
+import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
 /**
  * @hidden
@@ -45,7 +42,6 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
@@ -61,7 +57,7 @@ export class IgxFilteringService implements OnDestroy {
     grid: IgxGridBaseDirective;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
-        private iconService: IgxGridIconService,  private _overlayService: IgxOverlayService) {}
+        private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -69,7 +65,8 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public toggleFilterDropdown(element, column, classRef) {
-        if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
+        if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
+            this.initFilteringSettings();
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
@@ -101,8 +98,9 @@ export class IgxFilteringService implements OnDestroy {
             positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
+
         this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -115,7 +113,7 @@ export class IgxFilteringService implements OnDestroy {
             });
 
         this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
+            first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
                     this.grid.excelStyleFilteringComponent :
@@ -134,13 +132,6 @@ export class IgxFilteringService implements OnDestroy {
         if (this._componentOverlayId) {
             this._overlayService.hide(this._componentOverlayId);
         }
-    }
-
-    public get datePipe(): IgxDatePipeComponent {
-        if (!this._datePipe) {
-            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
-        }
-        return this._datePipe;
     }
 
     /**
@@ -275,8 +266,10 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        this.iconService.registerSVGIcons(GridIconsFeature.Filtering, FILTERING_ICONS, FILTERING_ICONS_FONT_SET);
-        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
+        const editorIcons = editor as any[];
+        editorIcons.forEach(icon => this.iconService.addSvgIconFromText(icon.name, icon.value, 'imx-icons'));
+        this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
+        this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
 
     /**
@@ -363,7 +356,7 @@ export class IgxFilteringService implements OnDestroy {
             }
 
             if ((currExpressionUI.beforeOperator === undefined || currExpressionUI.beforeOperator === null ||
-                 currExpressionUI.beforeOperator === FilteringLogic.Or) &&
+                currExpressionUI.beforeOperator === FilteringLogic.Or) &&
                 currExpressionUI.afterOperator === FilteringLogic.And) {
 
                 currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
@@ -416,7 +409,8 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal, this.grid.locale);
+            const pipeArgs = this.grid.getColumnByName(expression.fieldName).pipeArgs;
+            return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);
         } else {
             return expression.searchVal;
         }
@@ -490,8 +484,8 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
-                                    operator: FilteringLogic,
-                                    expressionsUIs: ExpressionUI[]): void {
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
             return;
         }

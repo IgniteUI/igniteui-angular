@@ -30,12 +30,14 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         { name: '@types/hammerjs', target: PackageTarget.DEV },
         { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
         { name: 'lodash.merge', target: PackageTarget.NONE },
+        { name: 'uuid', target: PackageTarget.NONE },
+        { name: 'web-animations-js', target: PackageTarget.REGULAR },
+        { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
         // peerDependencies
         { name: '@angular/forms', target: PackageTarget.NONE },
         { name: '@angular/common', target: PackageTarget.NONE },
         { name: '@angular/core', target: PackageTarget.NONE },
         { name: '@angular/animations', target: PackageTarget.NONE },
-        { name: 'web-animations-js', target: PackageTarget.REGULAR },
         // igxDevDependencies
         { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
@@ -108,9 +110,9 @@ export function addDependencies(options: Options): Rule {
 }
 
 /**
- * Recursively search for the first property that matches targetProp within the angular.json file.
+ * Recursively search for the first property that matches targetProp within a json file.
  */
-export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): any {
+export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): { key: string, value: any } {
     if (workspace.hasOwnProperty(targetProp)) {
         return { key: targetProp, value: workspace[targetProp] };
     }
@@ -127,7 +129,7 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
             // If the target property is an object, go one level in.
             if (workspace.hasOwnProperty(key)) {
                 const newValue = getPropertyFromWorkspace(targetProp, workspace[key], key);
-                if (newValue !== null) {
+                if (newValue) {
                     return newValue;
                 }
             }

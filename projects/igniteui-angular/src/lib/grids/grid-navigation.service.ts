@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
-import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
+import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS, ROW_ADD_KEYS, isEdge } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
@@ -47,10 +47,10 @@ export class IgxGridNavigationService {
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
+            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
-        const alt = event.altKey;
         if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
         const type = this.isDataRow(this.activeNode.row) ? 'dataCell' :
@@ -88,6 +88,13 @@ export class IgxGridNavigationService {
                 event.preventDefault();
                 key === 'pagedown' ? this.grid.verticalScrollContainer.scrollNextPage() :
                     this.grid.verticalScrollContainer.scrollPrevPage();
+                const editCell = this.grid.crudService.cell;
+                this.grid.verticalScrollContainer.onChunkLoad
+                    .pipe(first()).subscribe(() => {
+                        if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
+                            this.grid.tbody.nativeElement.focus({ preventScroll: true });
+                        }
+                    });
                 break;
             case 'tab':
                 this.handleEditing(shift, event);
@@ -110,13 +117,13 @@ export class IgxGridNavigationService {
                 break;
             case 'arrowup':
             case 'up':
-                if (ctrl && !this.isDataRow(rowIndex)) { break; }
+                if (ctrl && !this.isDataRow(rowIndex) || (this.grid.rowEditable && this.grid.crudService.rowEditingBlocked)) { break; }
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row - 1;
                 break;
             case 'arrowdown':
             case 'down':
-                if (ctrl && !this.isDataRow(rowIndex)) { break; }
+                if ((ctrl && !this.isDataRow(rowIndex)) || (this.grid.rowEditable && this.grid.crudService.rowEditingBlocked)) { break; }
                 colIndex = this.activeNode.column !== undefined ? this.activeNode.column : 0;
                 rowIndex = ctrl ? this.findLastDataRowIndex() : this.activeNode.row + 1;
                 break;
@@ -129,7 +136,16 @@ export class IgxGridNavigationService {
             case 'escape':
             case 'esc':
                 if (!this.isDataRow(rowIndex)) { break; }
-                this.grid.crudService.exitEditMode();
+
+                if (this.grid.crudService.isInCompositionMode) {
+                    return;
+                }
+
+                if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
+                    this.grid.endEdit(false);
+                    if (isEdge()) { this.grid.cdr.detectChanges(); }
+                    this.grid.tbody.nativeElement.focus();
+                }
                 break;
             case ' ':
             case 'spacebar':
@@ -198,7 +214,7 @@ export class IgxGridNavigationService {
             newActiveNode.mchCache.visibleIndex = column.visibleIndex;
         }
 
-        this.setActiveNode({row: this.activeNode.row, column: newActiveNode.column, mchCache: newActiveNode.mchCache});
+        this.setActiveNode({ row: this.activeNode.row, column: newActiveNode.column, mchCache: newActiveNode.mchCache });
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
@@ -214,12 +230,14 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.grid.dataView.length && this.activeNode &&
+        if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
-            (!header && !this.grid.hasSummarizedColumns))) { return; }
+                (!header && !this.grid.hasSummarizedColumns))) { return; }
 
-        this.setActiveNode({ row: header ? -1 : this.grid.dataView.length, column: 0,
-                level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} });
+        this.setActiveNode({
+            row: header ? -1 : this.grid.dataView.length, column: 0,
+            level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0 }
+        });
         this.performHorizontalScrollToCell(0);
     }
 
@@ -256,7 +274,8 @@ export class IgxGridNavigationService {
     }
 
     protected forOfDir(): IgxForOfDirective<any> {
-        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
+        const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.summariesRowList.length ?
+        this.grid.summariesRowList.first.virtDirRow : this.grid.headerContainer;
         return forOfDir as IgxForOfDirective<any>;
     }
 
@@ -311,7 +330,7 @@ export class IgxGridNavigationService {
         if (this.grid.rowInEditMode && !this.grid.rowEditTabs.length) {
             if (shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
                 next.visibleColumnIndex = this.grid.lastEditableColumnIndex;
-            } else if ( !shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
+            } else if (!shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
                 next.visibleColumnIndex = this.grid.firstEditableColumnIndex;
             } else {
                 next.rowIndex = this.activeNode.row;
@@ -344,7 +363,7 @@ export class IgxGridNavigationService {
         // this is workaround: endTopOffset - containerHeight > 5 and should be replaced with: containerHeight < endTopOffset
         // when the page is zoomed the grid does not scroll the row completely in the view
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
-        || containerHeight && endTopOffset - containerHeight > 5;
+            || containerHeight && endTopOffset - containerHeight > 5;
     }
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
@@ -367,6 +386,13 @@ export class IgxGridNavigationService {
     }
 
     public performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
+        if (this.grid.rowList < 1 && this.grid.summariesRowList.length < 1 && this.grid.hasColumnGroups) {
+            let column = this.grid.getColumnByVisibleIndex(visibleColumnIndex);
+            while (column.parent) {
+                column = column.parent;
+            }
+            visibleColumnIndex = this.forOfDir().igxForOf.indexOf(column);
+        }
         if (!this.shouldPerformHorizontalScroll(visibleColumnIndex)) { return; }
         this.pendingNavigation = true;
         this.grid.parentVirtDir.onChunkLoad
@@ -399,8 +425,8 @@ export class IgxGridNavigationService {
         const currRow = this.grid.dataView[activeNode.row];
         const type: GridKeydownTargetType = activeNode.row < 0 ? 'headerCell' :
             this.isDataRow(activeNode.row) ? 'dataCell' :
-            currRow && this.grid.isGroupByRecord(currRow) ? 'groupRow' :
-            currRow && this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'summaryCell';
+                currRow && this.grid.isGroupByRecord(currRow) ? 'groupRow' :
+                    currRow && this.grid.isDetailRecord(currRow) ? 'masterDetailRow' : 'summaryCell';
 
         const args: IActiveNodeChangeEventArgs = {
             row: this.activeNode.row,
@@ -448,7 +474,6 @@ export class IgxGridNavigationService {
     }
 
 
-
     protected emitKeyDown(type: GridKeydownTargetType, rowIndex, event) {
         const row = this.grid.summariesRowList.toArray().concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) { return; }
@@ -471,11 +496,11 @@ export class IgxGridNavigationService {
     }
 
     protected findFirstDataRowIndex(): number {
-        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+        return this.grid.dataView.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec) && !rec.summaries);
     }
 
     protected findLastDataRowIndex(): number {
-        if ((this.grid as any).totalItemCount) { return (this.grid as any).totalItemCount - 1;  }
+        if ((this.grid as any).totalItemCount) { return (this.grid as any).totalItemCount - 1; }
         let i = this.grid.dataView.length;
         while (i--) {
             if (this.isDataRow(i)) {
@@ -500,15 +525,15 @@ export class IgxGridNavigationService {
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;
     }
     protected performHeaderKeyCombination(column, key, shift, ctrl, alt, event) {
-        let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
+        let direction = this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
         if (ctrl && key.includes('up') && column.sortable && !column.columnGroup) {
             direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
-            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+            this.grid.sort({ fieldName: column.field, dir: direction, ignoreCase: false });
             return;
         }
         if (ctrl && key.includes('down') && column.sortable && !column.columnGroup) {
             direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
-            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+            this.grid.sort({ fieldName: column.field, dir: direction, ignoreCase: false });
             return;
         }
         if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
@@ -526,7 +551,7 @@ export class IgxGridNavigationService {
         if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
             this.handleColumnSelection(column, event);
         }
-        if (alt && key === 'l' && this.grid.allowAdvancedFiltering) {
+        if (alt && (key === 'l' || key === '¬') && this.grid.allowAdvancedFiltering) {
             this.grid.openAdvancedFilteringDialog();
         }
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
@@ -548,16 +573,16 @@ export class IgxGridNavigationService {
         };
         const activeCol = this.currentActiveColumn;
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
-                filter(c => c.level <= this.activeNode.level).map(col => col.visibleIndex));
+            filter(c => c.level <= this.activeNode.level).map(col => col.visibleIndex));
         let nextCol = activeCol;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
-            nextCol =  this.getNextColumnMCH(index);
+            nextCol = this.getNextColumnMCH(index);
             newHeaderNode.visibleIndex = nextCol.visibleIndex;
         }
         if ((key.includes('right') || key === 'end') && activeCol.visibleIndex < lastGroupIndex) {
             const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
-            activeCol.visibleIndex + 1;
+                activeCol.visibleIndex + 1;
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
             newHeaderNode.visibleIndex = nextCol.visibleIndex;
         }
@@ -567,8 +592,8 @@ export class IgxGridNavigationService {
         }
         if (!ctrl && key.includes('down') && activeCol.children) {
             nextCol = activeCol.children.find(c => c.visibleIndex === newHeaderNode.visibleIndex) ||
-            activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
-            .filter(col => col.visibleIndex < newHeaderNode.visibleIndex)[0];
+                activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
+                    .filter(col => col.visibleIndex < newHeaderNode.visibleIndex)[0];
             newHeaderNode.level = nextCol.level;
         }
 
@@ -576,7 +601,8 @@ export class IgxGridNavigationService {
             row: this.activeNode.row,
             column: nextCol.visibleIndex,
             level: nextCol.level,
-            mchCache: newHeaderNode});
+            mchCache: newHeaderNode
+        });
         this.performHorizontalScrollToCell(nextCol.visibleIndex);
     }
 
@@ -590,12 +616,12 @@ export class IgxGridNavigationService {
     }
 
     private handleColumnSelection(column, event) {
-        if (!column.selectable || this.grid.columnSelection === GridSelectionMode.none ) { return; }
+        if (!column.selectable || this.grid.columnSelection === GridSelectionMode.none) { return; }
         const clearSelection = this.grid.columnSelection === GridSelectionMode.single;
         const columnsToSelect = !column.children ? [column.field] :
             column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup).map(c => c.field);
         column.selected ? this.grid.selectionService.deselectColumns(columnsToSelect, event) :
-        this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, false, event);
+            this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, false, event);
     }
 
     private getNextColumnMCH(visibleIndex) {
@@ -621,6 +647,6 @@ export class IgxGridNavigationService {
     }
 
     private isAddKey(key: string): boolean {
-        return key === '+';
+        return ROW_ADD_KEYS.has(key);
     }
 }
