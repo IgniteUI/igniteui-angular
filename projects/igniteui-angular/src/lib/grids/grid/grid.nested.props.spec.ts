@@ -545,7 +545,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: initialRowData.locations,
             cancel: false,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: jasmine.anything() as any
         };
 
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -606,7 +607,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: initialRowData.locations,
             cancel: false,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: jasmine.anything() as any
         };
 
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -671,7 +673,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: row.rowData,
             owner: grid,
             isAddRow: row.addRow,
-            cancel: false
+            cancel: false,
+            event: undefined
         };
 
         expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -732,7 +735,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: row.rowData,
             owner: grid,
             isAddRow: row.addRow,
-            cancel: false
+            cancel: false,
+            event: undefined
         };
 
         expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
