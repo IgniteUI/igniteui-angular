@@ -2,11 +2,6 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
     IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective,
-    IgxRowExpandedIndicatorDirective,
-    IgxExcelStyleHeaderIconDirective,
-    IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective,
     IgxGridDetailTemplateDirective
 } from './grid.directives';
 import { IgxGridComponent } from './grid.component';
@@ -32,11 +27,6 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective,
-    IgxRowExpandedIndicatorDirective,
-    IgxExcelStyleHeaderIconDirective,
-    IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
@@ -53,11 +43,6 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective,
-    IgxRowExpandedIndicatorDirective,
-    IgxExcelStyleHeaderIconDirective,
-    IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
