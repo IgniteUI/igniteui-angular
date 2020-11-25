@@ -2084,7 +2084,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild('rowEditingOverlay', { read: IgxToggleDirective })
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
