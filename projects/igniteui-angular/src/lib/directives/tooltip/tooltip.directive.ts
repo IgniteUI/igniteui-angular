@@ -27,7 +27,7 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
 
 /**
  * **Ignite UI for Angular Tooltip Target** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
  *
  * The Ignite UI for Angular Tooltip Target directive is used to mark an HTML element in the markup as one that has a tooltip.
  * The tooltip target is used in combination with the Ignite UI for Angular Tooltip by assigning the exported tooltip reference to the
@@ -411,7 +411,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 let NEXT_ID = 0;
 /**
  * **Ignite UI for Angular Tooltip** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
  *
  * The Ignite UI for Angular Tooltip directive is used to mark an HTML element in the markup as one that should behave as a tooltip.
  * The tooltip is used in combination with the Ignite UI for Angular Tooltip Target by assigning the exported tooltip reference to the

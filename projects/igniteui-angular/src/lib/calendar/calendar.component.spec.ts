@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, tick, fakeAsync, flush } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -172,9 +172,10 @@ describe('IgxCalendar - ', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
+                declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
+                IgxCalendarValueComponent],
                 imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
             }).compileComponents();
         }));
@@ -182,7 +183,7 @@ describe('IgxCalendar - ', () => {
         describe('Rendered Component - ', () => {
             let fixture, calendar, dom;
             beforeEach(
-                async(() => {
+                waitForAsync(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     calendar = fixture.componentInstance.calendar;
@@ -289,6 +290,27 @@ describe('IgxCalendar - ', () => {
                 expect(headerDate.nativeElement.textContent.trim()).toMatch('September 1');
                 expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
                 expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
+            });
+
+            it('Should show right month when value is set', () => {
+                fixture = TestBed.createComponent(IgxCalendarValueComponent);
+                fixture.detectChanges();
+                calendar = fixture.componentInstance.calendar;
+
+                expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY);
+                expect(calendar.selection).toEqual('single');
+                expect(calendar.viewDate.getMonth()).toEqual(calendar.value.getMonth());
+
+                const date = new Date(2020, 8, 28);
+                calendar.viewDate = date;
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
+
+                calendar.value = new Date(2020, 9, 15);
+                fixture.detectChanges();
+
+                expect(calendar.viewDate.getMonth()).toEqual(date.getMonth());
             });
 
             it('Should properly set locale', () => {
@@ -1198,7 +1220,7 @@ describe('IgxCalendar - ', () => {
         describe('Disabled special dates - ', () => {
             let fixture, calendar;
 
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
                 fixture.detectChanges();
                 calendar = fixture.componentInstance.calendar;
@@ -1273,7 +1295,7 @@ describe('IgxCalendar - ', () => {
         describe('Select and deselect dates - ', () => {
             let fixture, calendar, ci;
             beforeEach(
-                async(() => {
+                waitForAsync(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     ci = fixture.componentInstance;
@@ -1592,7 +1614,7 @@ describe('IgxCalendar - ', () => {
         describe('Advanced KB Navigation - ', () => {
             let fixture, calendar, dom;
 
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
                 calendar = fixture.componentInstance.calendar;
@@ -1915,7 +1937,7 @@ describe('IgxCalendar - ', () => {
         describe('Continuous month increment/decrement - ', () => {
             let fixture, dom, calendar, prevMonthBtn, nextMonthBtn;
 
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
                 dom = fixture.debugElement;
@@ -1995,6 +2017,16 @@ export class IgxCalendarDisabledSpecialDatesComponent {
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }];
     public disabledDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }];
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+}
+
+@Component({
+    template: `
+        <igx-calendar [value]="value"></igx-calendar>
+    `
+})
+export class IgxCalendarValueComponent {
+    public value = new Date(2020, 7, 13);
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 

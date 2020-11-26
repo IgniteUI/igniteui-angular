@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxNavbarComponent, IgxNavbarModule, IgxNavbarTitleDirective, IgxNavbarActionDirective } from './navbar.component';
 import { IgxIconModule } from '../icon/public_api';
@@ -11,7 +11,7 @@ const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 NavbarIntializeTestComponent,

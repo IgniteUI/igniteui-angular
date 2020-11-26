@@ -1,5 +1,5 @@
 
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
@@ -13,7 +13,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     let fix;
     let grid;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent

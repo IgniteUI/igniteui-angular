@@ -1,6 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding,
+    forwardRef, OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -26,6 +27,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
+import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 
 let NEXT_ID = 0;
 
@@ -478,6 +480,24 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     protected summaryTemplate: TemplateRef<any>;
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get groupByRowSelectorTemplate(): TemplateRef<IgxGroupByRowSelectorDirective> {
+        if (this.groupByRowSelectorsTemplates && this.groupByRowSelectorsTemplates.first) {
+            return this.groupByRowSelectorsTemplates.first.templateRef;
+        }
+        return null;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: false })
+    protected groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
+
+    /**
      * @hidden @internal
      */
     public getDetailsContext(rowData, index) {
@@ -501,7 +521,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public detailsViewFocused(container, rowIndex) {
-        this.navigation.setActiveNode({row: rowIndex});
+        this.navigation.setActiveNode({ row: rowIndex });
     }
 
     /**
@@ -519,8 +539,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             return this.defaultGroupTemplate;
         } else if (this.isSummaryRow(rowData)) {
             return this.summaryTemplate;
-        }  else if (this.hasDetails && this.isDetailRecord(rowData)) {
-                return this.detailTemplateContainer;
+        } else if (this.hasDetails && this.isDetailRecord(rowData)) {
+            return this.detailTemplateContainer;
         } else {
             return this.recordTemplate;
         }
@@ -629,7 +649,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public preventHeaderScroll(args) {
         if (args.target.scrollLeft !== 0) {
-            (this.navigation as any).forOfDir().getScroll().scrollLeft =  args.target.scrollLeft;
+            (this.navigation as any).forOfDir().getScroll().scrollLeft = args.target.scrollLeft;
             args.target.scrollLeft = 0;
         }
     }
@@ -659,6 +679,34 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public toggleGroup(groupRow: IGroupByRecord) {
         this._toggleGroup(groupRow);
+        this.notifyChanges();
+    }
+
+    /**
+     * Select all rows within a group.
+     * @param groupRow: The group record which rows would be selected.
+     * @param clearCurrentSelection if true clears the current selection
+     * @example
+     * ```typescript
+     * this.grid.selectRowsInGroup(this.groupRow, true);
+     * ```
+     */
+    public selectRowsInGroup(groupRow: IGroupByRecord, clearPrevSelection?: boolean) {
+        this._gridAPI.groupBy_select_all_rows_in_group(groupRow, clearPrevSelection);
+        this.notifyChanges();
+    }
+
+    /**
+     * Deselect all rows within a group.
+     * @param groupRow The group record which rows would be deselected.
+     * @example
+     * ```typescript
+     * public groupRow: IGroupByRecord;
+     * this.grid.deselectRowsInGroup(this.groupRow);
+     * ```
+     */
+    public deselectRowsInGroup(groupRow: IGroupByRecord) {
+        this._gridAPI.groupBy_deselect_all_rows_in_group(groupRow);
         this.notifyChanges();
     }
 
@@ -914,7 +962,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
-            && typeof(row) !== 'number') {
+            && typeof (row) !== 'number') {
             const rowIndex = this.groupingResult.indexOf(row);
             const groupByRecord = this.groupingMetadata[rowIndex];
             if (groupByRecord) {

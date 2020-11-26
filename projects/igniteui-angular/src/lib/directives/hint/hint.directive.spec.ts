@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupModule } from '../../input-group/input-group.component';
 
@@ -10,7 +10,7 @@ describe('IgxHint', () => {
     const HINT_START_CSS_CLASS = 'igx-input-group__hint-item--start';
     const HINT_END_CSS_CLASS = 'igx-input-group__hint-item--end';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 HintComponent,

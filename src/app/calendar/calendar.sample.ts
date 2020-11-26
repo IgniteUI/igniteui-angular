@@ -17,6 +17,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
         new Date(this.today.getFullYear(), this.today.getMonth(), 10),
         new Date(this.today.getFullYear(), this.today.getMonth(), 13)
     ];
+    public selectionType = 'single';
 
     public ngOnInit() {
         this.calendar1.disabledDates = [{ type: DateRangeType.Between, dateRange: this.rangeDisabled }];
@@ -64,7 +65,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public setSelection(args: string) {
-        this.calendar.selection = args;
+        return this.selectionType = this.calendar.selection = args;
     }
 
     public setMonthsViewNumber(args: HTMLInputElement) {

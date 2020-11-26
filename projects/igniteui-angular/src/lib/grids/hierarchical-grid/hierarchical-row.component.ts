@@ -22,13 +22,14 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
 export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
 
     protected expanderClass = 'igx-grid__hierarchical-expander';
+    protected rolActionClass = 'igx-grid__tr-action';
 
     /**
      * @hidden
      */
     public get expanderClassResolved() {
         return {
-            [this.expanderClass]: !this.pinned || this.disabled,
+            [`${this.expanderClass} ${this.rolActionClass}`]: !this.pinned || this.disabled,
             [`${this.expanderClass}--empty`]: this.pinned && !this.disabled
         };
     }

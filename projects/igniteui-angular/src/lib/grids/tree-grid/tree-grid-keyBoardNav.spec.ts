@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../test-utils/tree-grid-components.spec';
@@ -14,7 +14,7 @@ const DEBOUNCETIME = 30;
 
 describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWithNoScrollsComponent,

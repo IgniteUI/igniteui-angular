@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -24,7 +24,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland1;
     let rowIsland2;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -41,7 +41,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     }));
 
     describe('Cell selection', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fix.detectChanges();
             hierarchicalGrid = fix.componentInstance.hgrid;
@@ -168,7 +168,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 2, 2, 0, 1);
         }));
 
-        it('should allow to select multiple cells in the same grid on mouse drag', (async() => {
+        it('should allow to select multiple cells in the same grid on mouse drag', (async () => {
             hierarchicalGrid.displayDensity = 'compact';
             fix.detectChanges();
 
@@ -332,7 +332,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(childGridLevel1, 1, 3, 1, 2);
         }));
 
-        it('should be able to select range with shift + mouse click and skip the child grid', (async() => {
+        it('should be able to select range with shift + mouse click and skip the child grid', (async () => {
             hierarchicalGrid.displayDensity = 'compact';
             fix.detectChanges();
 
@@ -364,7 +364,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifySelectedRange(hierarchicalGrid, 1, 5, 1, 2);
         }));
 
-        it('should be able to select multiple ranges holding ctrl key', (async() => {
+        it('should be able to select multiple ranges holding ctrl key', (async () => {
             hierarchicalGrid.displayDensity = 'compact';
             fix.detectChanges();
 
@@ -521,7 +521,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             expect(hierarchicalGrid.rowSelection).toEqual(GridSelectionMode.multiple);
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(hierarchicalGrid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(hierarchicalGrid);
 
             for (const r of hierarchicalGrid.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement);
@@ -530,7 +530,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             let childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             expect(childGrid.rowSelection).toBe(GridSelectionMode.single);
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(childGrid, false);
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(childGrid);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(childGrid);
 
             for (const r of childGrid.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement);
@@ -577,7 +577,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             for (const r of childGridLevel1.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement);
             }
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(childGridLevel1);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(childGridLevel1);
 
             expect(childGridLevel2.rowSelection).toBe(GridSelectionMode.single);
             expect(childGridLevel2.selectedRows).toEqual([]);
@@ -585,7 +585,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             for (const r of childGridLevel2.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement);
             }
-            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(childGridLevel2);
+            GridSelectionFunctions.verifySelectionCheckBoxesAlignment(childGridLevel2);
         });
 
         it('should able to change showRowCheckboxes at runtime', () => {

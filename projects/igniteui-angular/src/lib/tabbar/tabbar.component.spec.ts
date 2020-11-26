@@ -1,5 +1,5 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxBottomNavComponent,
          IgxBottomNavModule,
          IgxTabComponent,
@@ -23,7 +23,7 @@ describe('IgxBottomNav', () => {
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
     const tabItemSelectedCssClass = 'igx-bottom-nav__menu-item--selected';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         const testRoutes = [
             { path: 'view1', component: BottomNavRoutingView1Component, canActivate: [BottomNavRoutingTestGuard] },
             { path: 'view2', component: BottomNavRoutingView2Component, canActivate: [BottomNavRoutingTestGuard] },
@@ -44,7 +44,7 @@ describe('IgxBottomNav', () => {
         let fixture;
         let tabbar;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(BottomNavTestHtmlAttributesComponent);
             tabbar = fixture.componentInstance.tabbar;
         }));
@@ -83,7 +83,7 @@ describe('IgxBottomNav', () => {
         let fixture;
         let tabbar;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabBarTestComponent);
             tabbar = fixture.componentInstance.tabbar;
         }));
@@ -236,7 +236,7 @@ describe('IgxBottomNav', () => {
         let fixture;
         let tabbar;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TemplatedTabBarTestComponent);
             tabbar = fixture.componentInstance.tabbar;
         }));
@@ -256,7 +256,7 @@ describe('IgxBottomNav', () => {
         let bottomNav;
         let theTabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             router = TestBed.inject(Router);
             location = TestBed.inject(Location);
             fixture = TestBed.createComponent(TabBarRoutingTestComponent);
@@ -350,7 +350,7 @@ describe('IgxBottomNav', () => {
         let bottomNav;
         let theTabs;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabBarTabsOnlyModeTestComponent);
             bottomNav = fixture.componentInstance.bottomNavComp;
             fixture.detectChanges();

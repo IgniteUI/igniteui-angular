@@ -1,6 +1,6 @@
 import { IgxRowDirective } from './../row.directive';
 import { DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
@@ -39,7 +39,7 @@ const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowEditingComponent,
@@ -1132,13 +1132,14 @@ describe('IgxGrid - Row Editing #grid', () => {
         let gridContent: DebugElement;
         let cell: IgxGridCellComponent;
 
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(() => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
-        }));
+        });
+
         it(`Paging: Should preserve the changes after page navigation`, () => {
             grid.paging = true;
             grid.perPage = 7;
@@ -1519,10 +1520,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
         });
 
-        it(`Hiding: Should show correct value when showing the column again`, () => {
-            grid.showToolbar = true;
+        it(`Hiding: Should show correct value when showing the column again`, waitForAsync(async () => {
+            fix.componentInstance.showToolbar = true;
             grid.columnHiding = true;
-
+            fix.detectChanges();
+            await fix.whenStable();
             fix.detectChanges();
 
             const targetCbText = 'Product Name';
@@ -1531,7 +1533,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.update('Tea');
 
             // hide column
-            grid.toolbar.columnHidingButton.nativeElement.click();
+            GridFunctions.getColumnHidingButton(fix).click();
             fix.detectChanges();
             const columnChooser = GridFunctions.getColumnHidingElement(fix);
 
@@ -1542,30 +1544,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
             fix.detectChanges();
 
-            grid.toolbar.toggleColumnHidingUI();
+            GridFunctions.getColumnHidingButton(fix).click();
 
 
             expect(cell.value).toEqual('Chai');
-        });
-
-        it(`Hiding: Should be possible to update a cell that is hidden programmatically`, () => {
-            pending('This is NOT possible');
-            const columnChooser = GridFunctions.getColumnHidingElement(fix);
-            const targetCbText = 'Product Name';
-            const newValue = 'Tea';
-            cell.setEditMode(true);
-            cell.column.hidden = true;
-
-            cell.update(newValue);
-
-            // show column
-            grid.toolbar.columnHidingButton.nativeElement.click();
-            GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
-
-            fix.detectChanges();
-
-            expect(cell.value).toEqual(newValue);
-        });
+        }));
     });
 
     describe('Events', () => {

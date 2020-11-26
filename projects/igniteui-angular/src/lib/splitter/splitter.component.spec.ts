@@ -1,6 +1,6 @@
 import { IgxSplitterModule } from './splitter.module';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent } from './splitter.component';
 import { By } from '@angular/platform-browser';
@@ -13,7 +13,7 @@ const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 
 describe('IgxSplitter', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
 
         return TestBed.configureTestingModule({
             declarations: [ SplitterTestComponent ],
@@ -24,7 +24,7 @@ describe('IgxSplitter', () => {
     }));
 
     let fixture, splitter;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
@@ -298,7 +298,7 @@ describe('IgxSplitter', () => {
 
 describe('IgxSplitter pane toggle', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
 
         return TestBed.configureTestingModule({
             declarations: [ SplitterTogglePaneComponent ],
@@ -309,7 +309,7 @@ describe('IgxSplitter pane toggle', () => {
     }));
 
     let fixture, splitter;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;

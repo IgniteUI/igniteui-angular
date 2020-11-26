@@ -514,6 +514,10 @@
         div {
             text-align: center;
         }
+
+        &:focus {
+            outline: none;
+        }
     }
 
     %cal-picker-dates {
@@ -755,6 +759,9 @@
     }
 
     %cal-column-year {
+        padding: 0;
+        margin: 0;
+
         %cal-value--year {
             flex: 1 0 0;
         }
@@ -766,9 +773,7 @@
         justify-content: center;
         align-items: center;
         color: --var($theme, 'content-text-color');
-        cursor: pointer;
         outline: none;
-        // transition: background .15s ease-out;
     }
 
     %cal-value--hover {
@@ -1069,6 +1074,24 @@
     %cal-value--hidden {
         %cal-value-content {
             visibility: hidden;
+        }
+    }
+
+    %calendar__aria-off-screen {
+        position: absolute!important;
+        border: none!important;
+        height: 1px!important;
+        width: 1px!important;
+        left: 0!important;
+        top: 0!important;
+        overflow: hidden!important;
+        padding: 0!important;
+        margin: 0 !important;
+        user-select: none;
+        pointer-events: none;
+
+        &:focus {
+            outline: none;
         }
     }
 }

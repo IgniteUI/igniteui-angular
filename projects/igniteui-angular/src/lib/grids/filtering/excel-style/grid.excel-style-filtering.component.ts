@@ -13,11 +13,13 @@ import {
     ContentChild,
     Output,
     EventEmitter,
+    Optional,
+    Host,
 } from '@angular/core';
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { cloneArray, KEYS, resolveNestedPath } from '../../../core/utils';
+import { cloneArray, KEYS, resolveNestedPath, parseDate, uniqueDates } from '../../../core/utils';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -25,6 +27,7 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
+import { GridBaseAPIService } from '../../api.service';
 
 /**
  * @hidden
@@ -322,17 +325,20 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     get grid(): IgxGridBaseDirective {
-        return this.column?.grid;
+        return this.gridAPI?.grid ?? this.column?.grid;
     }
 
     /**
      * @hidden @internal
      */
     get displayDensity() {
-        return this.column?.grid.displayDensity;
+        return this.grid?.displayDensity;
     }
 
-    constructor(private cdr: ChangeDetectorRef, public element: ElementRef) {}
+    constructor(
+        private cdr: ChangeDetectorRef,
+        public element: ElementRef,
+        @Host() @Optional() private gridAPI?: GridBaseAPIService<IgxGridBaseDirective>) {}
 
     /**
      * @hidden @internal
@@ -445,7 +451,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         for (let index = 0; index < this.uniqueValues.length; index++) {
-            if (this.filterValues.has(this.uniqueValues[index])) {
+            const value = this.getExpressionValue(this.uniqueValues[index]);
+            if (this.filterValues.has(value)) {
                 return true;
             }
         }
@@ -473,7 +480,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             }
 
             const columnValues = (this.column.dataType === DataType.Date) ?
-                colVals.map(val => val ? val.toDateString() : val) : colVals;
+                colVals.map(value => {
+                    const label = this.getFilterItemLabel(value);
+                    return { label, value };
+                }) : colVals;
 
             this.renderValues(columnValues);
             this.loadingEnd.emit();
@@ -486,14 +496,16 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         if (expressionsTree.filteringOperands.length) {
             const state = { expressionsTree: expressionsTree };
-            data = DataUtil.filter(cloneArray(data), state);
+            data = DataUtil.filter(cloneArray(data), state, this.grid);
         }
 
         const columnField = this.column.field;
         const columnValues = (this.column.dataType === DataType.Date) ?
-            data.map(record => resolveNestedPath(record, columnField) ?
-                resolveNestedPath(record, columnField).toDateString() : resolveNestedPath(record, columnField)) :
-            data.map(record => resolveNestedPath(record, columnField));
+            data.map(record => {
+                const value = (resolveNestedPath(record, columnField));
+                const label = this.getFilterItemLabel(value);
+                return { label, value };
+            }) : data.map(record => resolveNestedPath(record, columnField));
 
         this.renderValues(columnValues);
     }
@@ -509,10 +521,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
                 .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
                     new Map);
-
             this.uniqueValues = Array.from(filteredUniqueValues.values());
         } else {
-            this.uniqueValues = Array.from(new Set(columnValues));
+            this.uniqueValues = this.column.dataType === DataType.Date ? uniqueDates(columnValues) : Array.from(new Set(columnValues));
         }
     }
 
@@ -521,9 +532,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
                 if (e.expression.condition.name === 'in') {
                     return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-                        new Date(v).toDateString()) ];
+                        new Date(v).toISOString()) ];
                 }
-                return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toDateString() : e.expression.searchVal] ];
+                return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal] ];
             }, []));
         } else {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
@@ -547,10 +558,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         this.listData.sort((a, b) => this.sortData(a, b));
-
-        if (this.column.dataType === DataType.Date) {
-            this.uniqueValues = this.uniqueValues.map(value => new Date(value));
-        }
 
         if (this.containsNullOrEmpty) {
             this.addBlanksItem(shouldUpdateSelection);
@@ -623,57 +630,37 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.selectAllIndeterminate = false;
 
         this.uniqueValues.forEach(element => {
-            if (element !== undefined && element !== null && element !== '') {
+            const hasValue = (element !== undefined && element !== null && element !== '' && this.column.dataType !== DataType.Date)
+                || !!(element && element.label);
+
+            if (hasValue) {
                 const filterListItem = new FilterListItem();
+                filterListItem.isSelected = true;
+                filterListItem.isFiltered = true;
+
                 if (this.column.filteringExpressionsTree) {
+                    filterListItem.isSelected = false;
+                    filterListItem.isFiltered = false;
+
                     if (shouldUpdateSelection) {
-                        if (this.filterValues.has(element)) {
+                        const value = this.getExpressionValue(element);
+                        if (this.filterValues.has(value)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
-                        } else {
-                            filterListItem.isSelected = false;
-                            filterListItem.isFiltered = false;
                         }
                         this.selectAllIndeterminate = true;
                     } else {
-                        filterListItem.isSelected = false;
-                        filterListItem.isFiltered = false;
                         this.selectAllSelected = false;
                     }
-                } else {
-                    filterListItem.isSelected = true;
-                    filterListItem.isFiltered = true;
-                }
-                if (this.column.dataType === DataType.Date) {
-                    const date = new Date(element);
-
-                    filterListItem.value = date;
-
-                    filterListItem.label = this.column.formatter ?
-                        this.column.formatter(date) :
-                        this.grid.datePipe.transform(date);
-
-                } else if (this.column.dataType === DataType.Number) {
-                    filterListItem.value = element;
-
-                    filterListItem.label = this.column.formatter ?
-                        this.column.formatter(element) :
-                        this.grid.decimalPipe.transform(element);
-
-                } else {
-                    filterListItem.value = element;
-
-                    filterListItem.label = this.column.formatter ?
-                        this.column.formatter(element) :
-                        element;
                 }
 
+                filterListItem.value = this.getFilterItemValue(element);
+                filterListItem.label = this.getFilterItemLabel(element);
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
-            } else {
-                this.containsNullOrEmpty = true;
             }
         });
+        this.containsNullOrEmpty = this.uniqueValues.length > this.listData.length;
     }
 
     private addSelectAllItem() {
@@ -725,6 +712,40 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         } else {
             return 0;
         }
+    }
+
+    private getFilterItemLabel(element: any) {
+        if (this.column.dataType === DataType.Date) {
+            return element && element.label ? element.label : this.column.formatter ?
+                this.column.formatter(element) :
+                this.grid.datePipe.transform(element, this.column.pipeArgs.format, this.column.pipeArgs.timezone,
+                    this.grid.locale);
+        }
+        if (this.column.dataType === DataType.Number) {
+            return this.column.formatter ?
+                this.column.formatter(element) :
+                this.grid.decimalPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
+        }
+        return this.column.formatter ?
+            this.column.formatter(element) :
+            element;
+    }
+
+    private getFilterItemValue(element: any) {
+        if (this.column.dataType === DataType.Date) {
+            element = parseDate(element.value);
+        }
+        return element;
+    }
+
+    private getExpressionValue(element: any): string {
+        let value;
+        if (this.column.dataType === DataType.Date) {
+            value = element && element.value ? new Date(element.value).toISOString() : element.value;
+        } else {
+            value = element;
+        }
+        return value;
     }
 
     // TODO: sort members by access modifier
