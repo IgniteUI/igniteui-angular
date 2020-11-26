@@ -6643,11 +6643,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (event && activeCell) {
             const rowIndex = activeCell.row;
             const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
-            this.navigateTo(rowIndex, visibleColIndex, (c) => {
-                if (c.targetType === 'dataCell' && c.target) {
-                   // c.target.activate(event);
-                }
-            });
+            this.navigateTo(rowIndex, visibleColIndex);
         }
 
         return false;
