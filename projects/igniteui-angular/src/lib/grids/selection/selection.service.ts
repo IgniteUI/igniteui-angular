@@ -261,7 +261,7 @@ export class IgxGridCRUDService {
         if (!this.row) {
             this.cell = newCell;
             this.row = this.createRow(this.cell);
-            const rowArgs = this.row.createEditEventArgs(false);
+            const rowArgs = this.row.createEditEventArgs(false, event);
 
             this.grid.rowEditEnter.emit(rowArgs);
             if (rowArgs.cancel) {
