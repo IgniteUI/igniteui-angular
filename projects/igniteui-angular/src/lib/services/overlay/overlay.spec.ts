@@ -1009,10 +1009,10 @@ describe('igxOverlay', () => {
                 modal: false,
                 closeOnOutsideClick: true,
                 positionStrategy: new ConnectedPositioningStrategy(),
-                target: button.nativeElement,
                 outlet: outlet
             };
 
+            overlaySettings.positionStrategy.settings.target = button.nativeElement;
             overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
             tick();
             fix.detectChanges();

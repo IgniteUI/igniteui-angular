@@ -658,7 +658,7 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.composedPath()[0] || ev.target;
+                const target = ev.composed ? ev.composedPath()[0] : ev.target;
                 //  if the click is on the element do not close this overlay
                 if (!info.elementRef.nativeElement.contains(target)) {
                     // if we should exclude position target check if the click is over it. If so do not close overlay
