@@ -52,7 +52,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return merge({...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
+            return merge({ ...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
         }
         return this._rowData;
     }
@@ -109,7 +109,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             const maxRowSpan = this.grid.multiRowLayoutRowSize;
             height = height * maxRowSpan;
         }
-        return this.addRow ?  height : null;
+        return this.addRow ? height : null;
     }
 
     get cellHeight() {
@@ -166,7 +166,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             return res;
         }
         const cList = this._cells.filter((item) => item.nativeElement.parentElement !== null)
-        .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
+            .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
         res.reset(cList);
         return res;
     }
@@ -205,7 +205,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     set selected(value: boolean) {
         value ? this.selectionService.selectRowsWithNoEvent([this.rowID]) :
-        this.selectionService.deselectRowsWithNoEvent([this.rowID]);
+            this.selectionService.deselectRowsWithNoEvent([this.rowID]);
         this.grid.cdr.markForCheck();
     }
 
@@ -286,7 +286,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             return row.type === TransactionType.ADD;
         }
 
-         return false;
+        return false;
     }
 
     /** @hidden */
@@ -376,7 +376,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
-        public cdr: ChangeDetectorRef) {}
+        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -384,7 +384,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
+        if (this.grid.rowSelection === 'none' || this.deleted || !this.grid.selectRowOnClick) { return; }
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
@@ -413,7 +413,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             return;
         }
         this.selected ? this.selectionService.deselectRow(this.rowID, event) :
-        this.selectionService.selectRowById(this.rowID, false, event);
+            this.selectionService.selectRowById(this.rowID, false, event);
     }
 
     /**
