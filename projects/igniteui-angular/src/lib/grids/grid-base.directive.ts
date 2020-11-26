@@ -1447,8 +1447,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('loadingOverlay', { static: true })
-    public loadingOverlay: ElementRef;
+    @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
+    public loadingOverlay: IgxToggleDirective;
 
     /**
      * @hidden @internal
@@ -1959,7 +1959,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild('rowEditingOverlay', { read: IgxToggleDirective })
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
@@ -2596,7 +2596,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _baseFontSize: number;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
-    protected _loadingId;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
     protected _defaultExpandState = false;
     // Caches
@@ -6203,19 +6202,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const overlaySettings: OverlaySettings = {
                 outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
-                positionStrategy: new ContainerPositionStrategy({
-                    openAnimation: null,
-                    closeAnimation: null
-                }),
+                positionStrategy: new ContainerPositionStrategy(),
             };
-            if (!this._loadingId) {
-                this._loadingId = this.overlayService.attach(this.loadingOverlay, overlaySettings);
-                this.overlayService.show(this._loadingId, overlaySettings);
+            if (this.loadingOverlay.collapsed) {
+                this.loadingOverlay.open(overlaySettings);
             }
         } else {
-            if (this._loadingId) {
-                this.overlayService.hide(this._loadingId);
-                this._loadingId = null;
+            if (!this.loadingOverlay.collapsed) {
+                this.loadingOverlay.close();
             }
         }
     }
