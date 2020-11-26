@@ -18,11 +18,12 @@ export class GridTemplateStrings {
         [height]="height" [width]="width">
     </igx-grid>`;
 
-    public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``) {
+    public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``, toolbarDefinition = '') {
         return `<igx-grid [data]="data"
         ${ attributes}
         ${ events}
         >
+        ${ toolbarDefinition }
         ${ columnDefinitions}
     </igx-grid>`;
     }
@@ -89,6 +90,10 @@ export class ColumnDefinitions {
         <igx-column field="WorkingHours"></igx-column>
         <igx-column field="HireDate"></igx-column>
         <igx-column field="Performance"></igx-column>
+    `;
+
+    public static hireDate = `
+        <igx-column field="HireDate" [dataType]="'date'"></igx-column>
     `;
 
     public static nameJobTitleId = `

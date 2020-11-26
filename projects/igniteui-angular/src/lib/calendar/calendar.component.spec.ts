@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, tick, fakeAsync, flush } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -172,7 +172,7 @@ describe('IgxCalendar - ', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent,
                 IgxCalendarValueComponent],
@@ -183,7 +183,7 @@ describe('IgxCalendar - ', () => {
         describe('Rendered Component - ', () => {
             let fixture, calendar, dom;
             beforeEach(
-                async(() => {
+                waitForAsync(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     calendar = fixture.componentInstance.calendar;
@@ -1220,7 +1220,7 @@ describe('IgxCalendar - ', () => {
         describe('Disabled special dates - ', () => {
             let fixture, calendar;
 
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
                 fixture.detectChanges();
                 calendar = fixture.componentInstance.calendar;
@@ -1295,7 +1295,7 @@ describe('IgxCalendar - ', () => {
         describe('Select and deselect dates - ', () => {
             let fixture, calendar, ci;
             beforeEach(
-                async(() => {
+                waitForAsync(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
                     ci = fixture.componentInstance;
@@ -1614,7 +1614,7 @@ describe('IgxCalendar - ', () => {
         describe('Advanced KB Navigation - ', () => {
             let fixture, calendar, dom;
 
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
                 calendar = fixture.componentInstance.calendar;
@@ -1937,7 +1937,7 @@ describe('IgxCalendar - ', () => {
         describe('Continuous month increment/decrement - ', () => {
             let fixture, dom, calendar, prevMonthBtn, nextMonthBtn;
 
-            beforeEach(async(() => {
+            beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
                 dom = fixture.debugElement;

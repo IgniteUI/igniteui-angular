@@ -1,6 +1,4 @@
-<igx-grid-toolbar [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" role="toolbar" *ngIf="showToolbar" [gridID]="id"
-    [displayDensity]="displayDensity" #toolbar>
-</igx-grid-toolbar>
+<ng-content select="igx-grid-toolbar"></ng-content>
 
 <div [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
     *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)" #groupArea>
@@ -38,7 +36,7 @@
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <ng-container *ngIf="rowDraggable">
-                <div class="igx-grid__drag-indicator" [ngClass]="{
+                <div class="igx-grid__drag-indicator igx-grid__tr-action" [ngClass]="{
                     'igx-grid__drag-indicator--header': !isRowSelectable
                 }" (pointerdown)="$event.preventDefault()"  #headerDragContainer>
                     <div style="visibility: hidden;">
@@ -49,7 +47,7 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }" (pointerdown)="$event.preventDefault()">
                     <ng-template #headSelector
@@ -354,4 +352,4 @@
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>

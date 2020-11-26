@@ -1,8 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent, IgxButtonGroupModule } from './buttonGroup.component';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -48,7 +45,7 @@ class Button {
 
 describe('IgxButtonGroup', () => {
     configureTestSuite();
-   beforeAll(async(() => {
+   beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitButtonGroupComponent,

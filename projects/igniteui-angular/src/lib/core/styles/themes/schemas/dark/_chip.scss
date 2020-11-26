@@ -39,23 +39,22 @@ $_dark-bootstrap-chip: extend($_bootstrap-chip, $_base-dark-chip);
 
 /// Generates a dark indigo chip schema based on a mix of $_indigo-chip and $_base-dark-chip.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 500)] - The chip background color.
-/// @prop {Map} ghost-background [igx-color: ('grays', 300), to-opaque: (igx-color: 'surface')] - The chip ghost background color.
+/// @prop {Color} background [igx-color: ('surface')] - The chip background color.
+/// @prop {Color} ghost-background igx-color: ('surface'), to-opaque: (igx-color: 'surface',)), to-opaque: (igx-color: 'surface')] - The chip ghost background color.
 /// @prop {Map} hover-background [igx-color: ('grays', 300)] - The chip hover background color.
-/// @prop {Map} focus-background [igx-color: ('grays', 300)] The focused chip background color.
+/// @prop {Color} focus-background [igx-color: ('surface')] The focused chip background color.
 /// @requires {function} extend
 /// @requires $_indigo-chip
 /// @requires $_base-dark-chip
 $_dark-indigo-chip: extend(
     $_indigo-chip,
-    $_base-dark-chip,
     (
         background: (
-            igx-color: ('grays', 500)
+            igx-color: ('surface')
         ),
 
         ghost-background: (
-            igx-color: ('grays', 300),
+            igx-color: ('surface'),
 
             to-opaque: (
                 igx-color: 'surface',
@@ -67,7 +66,7 @@ $_dark-indigo-chip: extend(
         ),
 
         focus-background: (
-            igx-color: ('grays', 300)
+            igx-color: ('surface')
         ),
     )
 );

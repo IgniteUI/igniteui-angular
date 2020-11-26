@@ -553,4 +553,4 @@ const appRoutes = [
     }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes);
+export const routing = RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' });

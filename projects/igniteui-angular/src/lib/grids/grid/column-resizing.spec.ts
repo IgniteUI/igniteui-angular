@@ -1,5 +1,5 @@
 import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAvatarModule } from '../../avatar/avatar.component';
@@ -17,7 +17,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ResizableColumnsComponent,

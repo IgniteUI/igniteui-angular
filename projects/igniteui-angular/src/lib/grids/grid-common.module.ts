@@ -23,13 +23,18 @@ import { IgxColumnMovingModule } from './moving/moving.module';
 import { IgxGridSharedModules } from './common/shared.module';
 import { IgxGridSummaryModule } from './summaries/summary.module';
 import { IgxGridToolbarModule } from './toolbar/toolbar.module';
-import { IgxColumnHidingModule } from './hiding/hiding.module';
-import { IgxColumnPinningModule } from './pinning/pinning.module';
 import { IgxColumnActionsModule } from './column-actions/column-actions.module';
 import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
 import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
+import {
+    IgxExcelStyleHeaderIconDirective,
+    IgxHeaderCollapseIndicatorDirective,
+    IgxHeaderExpandIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxRowExpandedIndicatorDirective
+} from './grid/grid.directives';
 /**
  * @hidden
  */
@@ -43,7 +48,12 @@ import { IgxRowDirective } from './row.directive';
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
         IgxGridFooterComponent,
-        IgxAdvancedFilteringDialogComponent
+        IgxAdvancedFilteringDialogComponent,
+        IgxRowExpandedIndicatorDirective,
+        IgxRowCollapsedIndicatorDirective,
+        IgxHeaderExpandIndicatorDirective,
+        IgxHeaderCollapseIndicatorDirective,
+        IgxExcelStyleHeaderIconDirective,
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -55,8 +65,6 @@ import { IgxRowDirective } from './row.directive';
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
-        IgxColumnHidingModule,
-        IgxColumnPinningModule,
         IgxColumnActionsModule,
         IgxGridColumnModule,
         IgxGridHeadersModule,
@@ -72,18 +80,21 @@ import { IgxRowDirective } from './row.directive';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxAdvancedFilteringDialogComponent,
-        IgxGridSharedModules
+        IgxGridSharedModules,
+        IgxRowExpandedIndicatorDirective,
+        IgxRowCollapsedIndicatorDirective,
+        IgxHeaderExpandIndicatorDirective,
+        IgxHeaderCollapseIndicatorDirective,
+        IgxExcelStyleHeaderIconDirective,
     ],
     imports: [
         IgxGridColumnModule,
         IgxGridHeadersModule,
         IgxColumnMovingModule,
         IgxGridResizingModule,
-        IgxColumnPinningModule,
         IgxGridSelectionModule,
         IgxGridSummaryModule,
         IgxGridToolbarModule,
-        IgxColumnHidingModule,
         IgxColumnActionsModule,
         IgxGridPipesModule,
         IgxGridFilteringModule,

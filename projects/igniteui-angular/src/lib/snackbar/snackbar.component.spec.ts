@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
@@ -8,7 +8,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxSnackbar', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SnackbarInitializeTestComponent,
@@ -22,7 +22,7 @@ describe('IgxSnackbar', () => {
     }));
 
     let fixture, domSnackbar, snackbar;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;
@@ -92,7 +92,7 @@ describe('IgxSnackbar', () => {
 
 describe('IgxSnackbar with custom content', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SnackbarCustomContentComponent
@@ -105,7 +105,7 @@ describe('IgxSnackbar with custom content', () => {
     }));
 
     let fixture, domSnackbar, snackbar;
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarCustomContentComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;

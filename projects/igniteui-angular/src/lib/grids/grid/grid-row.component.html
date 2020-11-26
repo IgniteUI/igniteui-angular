@@ -12,7 +12,7 @@
         </div>
     </ng-container>
     <ng-container *ngIf="this.showRowSelectors">
-        <div class="igx-grid__cbx-selection" (pointerdown)="$event.preventDefault()" (click)="onRowSelectorClick($event)">
+        <div class="igx-grid__cbx-selection igx-grid__tr-action" (pointerdown)="$event.preventDefault()" (click)="onRowSelectorClick($event)">
             <ng-template *ngTemplateOutlet="
                 this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
                 context: { $implicit: { index: viewIndex, rowID: rowID, selected: selected }}">
