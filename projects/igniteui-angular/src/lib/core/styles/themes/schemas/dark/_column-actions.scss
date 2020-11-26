@@ -23,3 +23,9 @@ $_dark-fluent-column-actions: extend($_fluent-column-actions);
 /// @requires extend
 /// @requires $_bootstrap-column-actions
 $_dark-bootstrap-column-actions: extend($_bootstrap-column-actions);
+
+/// Generates a dark indigo column actions schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-column-actions
+$_dark-indigo-column-actions: extend($_indigo-column-actions);

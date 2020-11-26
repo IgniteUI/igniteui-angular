@@ -226,4 +226,3 @@ class EarliestSummary extends IgxDateSummaryOperand {
         return result;
     }
 }
-
