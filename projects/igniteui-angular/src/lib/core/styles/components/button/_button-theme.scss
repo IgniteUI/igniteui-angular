@@ -16,6 +16,13 @@
 /// @param {border-radius} $outlined-border-radius [null] - The border radius used for outlined button.
 /// @param {border-radius} $fab-border-radius [null] - The border radius used for fab button.
 /// @param {border-radius} $icon-border-radius [null] - The border radius used for icon button.
+///
+/// @param {Color} $flat-shadow-color [null] - The shadow/outline color of the flat button in its focus state.
+/// @param {Color} $raised-shadow-color [null] - The shadow/outline color of the raised button in its focus state.
+/// @param {Color} $outlined-shadow-color [null] - The shadow/outline color of the outlined button in its focus state.
+/// @param {Color} $icon-shadow-color [null] - The shadow/outline color of the flat icon in its focus state.
+/// @param {Color} $fab-shadow-color [null] - The shadow/outline color of the fab button in its focus state.
+///
 /// @param {Color} $flat-background [null] - The background color of a flat button.
 /// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
 /// @param {Color} $flat-hover-background [null] - The hover background color of a flat button.
@@ -110,6 +117,12 @@
     $flat-hover-icon-color: null,
     $flat-focus-icon-color: null,
 
+    $flat-shadow-color: null,
+    $raised-shadow-color: null,
+    $outlined-shadow-color: null,
+    $icon-shadow-color: null,
+    $fab-shadow-color: null,
+
     $outlined-text-color: null,
     $outlined-outline-color: null,
     $outlined-disabled-outline-color: null,
@@ -169,34 +182,6 @@
     $theme: apply-palette($button-schema, $palette);
 
     $variant: map-get($theme, 'variant');
-
-    $raised-shadow-color: transparent;
-    $outlined-shadow-color: transparent;
-    $icon-shadow-color: transparent;
-    $fab-shadow-color: transparent;
-
-    @if $variant == 'bootstrap' {
-        $raised-shadow-color: rgba(map-get($theme, 'raised-background'), .5);
-        $outlined-shadow-color: rgba(map-get($theme, 'outlined-focus-background'), .5);
-        $icon-shadow-color: rgba(map-get($theme, 'icon-focus-background'), .5);
-        $fab-shadow-color: rgba(map-get($theme, 'fab-background'), .5);
-
-        @if $raised-background {
-            $raised-shadow-color: rgba($raised-background, .5);
-        }
-
-        @if $outlined-focus-background {
-            $outlined-shadow-color: rgba($outlined-focus-background, .5);
-        }
-
-        @if $icon-focus-background {
-            $icon-shadow-color: rgba($icon-focus-background, .5);
-        }
-
-        @if $fab-background {
-            $fab-shadow-color: rgba($fab-background, .5);
-        }
-    }
 
     $flat-border-radius: round-borders(
         if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
@@ -415,6 +400,7 @@
         fab-hover-shadow: $fab-hover-shadow,
         fab-focus-shadow: $fab-focus-shadow,
 
+        flat-shadow-color: $flat-shadow-color,
         raised-shadow-color: $raised-shadow-color,
         outlined-shadow-color: $outlined-shadow-color,
         icon-shadow-color: $icon-shadow-color,
@@ -533,7 +519,6 @@
         indigo-design: $button--size-indigo,
     ), $variant);
 
-
     $button-floating-padding: (
         comfortable: rem(8px) rem(16px),
         cosy: rem(4px) rem(12px),
@@ -557,7 +542,7 @@
 
     $raised-shadow--focus: map-get((
         material: --var($theme, 'raised-focus-shadow'),
-        fluent: --var($theme, 'raised-focus-shadow'),
+        fluent: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'),
         indigo-design: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
     ), $variant);
@@ -567,13 +552,6 @@
         fluent: --var($theme, 'raised-hover-shadow'),
         bootstrap: none,
         indigo-design: none
-    ), $variant);
-
-    $outlined-shadow: map-get((
-        material: null,
-        fluent: null,
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color'),
-        indigo-design: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color')
     ), $variant);
 
     $fab-shadow: map-get((
@@ -592,14 +570,14 @@
 
     $fab-shadow--focus: map-get((
         material: --var($theme, 'fab-focus-shadow'),
-        fluent: --var($theme, 'fab-focus-shadow'),
+        fluent:  0 0 0 rem(3px) --var($theme, 'fab-shadow-color'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color'),
         indigo-design: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
     ), $variant);
 
     $icon-shadow: map-get((
         material: --var($theme, 'raised-focus-shadow'),
-        fluent: --var($theme, 'raised-focus-shadow'),
+        fluent: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'),
         indigo-design: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color')
     ), $variant);
@@ -661,6 +639,8 @@
         &:active {
             background: --var($theme, 'flat-focus-background');
             color: --var($theme, 'flat-focus-text-color');
+            box-shadow: 0 0 0 rem(3px) --var($theme, 'flat-shadow-color');
+
 
             %igx-icon-display {
                 color: --var($theme, 'flat-focus-icon-color');
@@ -702,7 +682,7 @@
         &:active {
             background: --var($theme, 'outlined-focus-background');
             color: --var($theme, 'outlined-focus-text-color');
-            box-shadow: $outlined-shadow;
+            box-shadow: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color');
 
             %igx-icon-display {
                 color: --var($theme, 'outlined-focus-icon-color')
@@ -745,7 +725,12 @@
         &:active {
             color: --var($theme, 'raised-focus-text-color');
             background: --var($theme, 'raised-focus-background');
-            box-shadow: $raised-shadow--focus;
+
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'), $raised-shadow--focus;
+            } @else {
+                box-shadow: $raised-shadow--focus;
+            }
 
             %igx-icon-display {
                 color: --var($theme, 'raised-focus-icon-color')
@@ -792,7 +777,12 @@
         &:active {
             color: --var($theme, 'fab-focus-text-color');
             background: --var($theme, 'fab-focus-background');
-            box-shadow: $fab-shadow--focus;
+
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color'), $fab-shadow--focus;
+            } @else {
+                box-shadow: $raised-shadow--focus;
+            }
         }
 
         igx-icon {
@@ -846,7 +836,12 @@
         &:active {
             color: --var($theme, 'icon-focus-color');
             background: --var($theme, 'icon-focus-background');
-            box-shadow: $icon-shadow;
+
+            @if $variant == 'material' or  $variant == 'fluent' {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'), $icon-shadow;
+            } @else {
+                box-shadow: $icon-shadow;
+            }
         }
     }
 
