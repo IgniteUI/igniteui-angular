@@ -300,9 +300,9 @@ export class IgxGridNavigationService {
             }
 
             if (event.shiftKey && row.treeRow !== undefined) {
-                row.beginAddChild();
+                this.grid.beginAddRowByIndex(row.rowID, row.index, true, event);
             } else if (!event.shiftKey) {
-                row.beginAddRow();
+                this.grid.beginAddRowByIndex(row.rowID, row.index, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             row.rowID === undefined ? row.toggle() :
