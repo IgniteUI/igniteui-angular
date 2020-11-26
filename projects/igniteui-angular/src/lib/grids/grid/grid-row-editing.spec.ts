@@ -162,7 +162,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: row.addRow,
-                event: undefined
+                event: jasmine.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellEditArgs);
             expect(grid.rowEditEnter.emit).toHaveBeenCalledWith(rowEditArgs);
@@ -1873,7 +1873,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false,
                 owner: grid,
                 isAddRow: false,
-                event: undefined
+                event: jasmine.anything() as any
             });
         });
 
@@ -1903,7 +1903,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: true,
                 owner: grid,
                 isAddRow: false,
-                event: undefined
+                event: jasmine.anything() as any
             });
         });
 
