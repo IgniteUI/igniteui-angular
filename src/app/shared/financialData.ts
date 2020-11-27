@@ -886,89 +886,83 @@ export const DATA: any[] = [
 interface IResponse {
     data: any[];
     recordsUpdated: number;
-  }
+}
+
 /* tslint:enable */
 export class FinancialData {
-    public generateData(count: number): any[] {
-        const currData = [];
-        for (let i = 0; i < count; i++) {
-            const rand = Math.floor(Math.random() * Math.floor(DATA.length));
-            const dataObj = Object.assign({}, DATA[rand]);
 
-            dataObj.Settlement = Settlement[this.generateRandomNumber(0, 1)];
-            dataObj.Contract = Contract[this.generateRandomNumber(0, 4)];
-            dataObj.LastUpdated = this.randomizeDate();
-            dataObj['OpenPriceDiff'] = (((dataObj['Open Price'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['BuyDiff'] = (((dataObj['Buy'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['SellDiff'] = (((dataObj['Sell'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['Start(Y)Diff'] = (((dataObj['Start(Y)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['High(Y)Diff'] = (((dataObj['High(Y)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['Low(Y)Diff'] = (((dataObj['Low(Y)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['High(D)Diff'] = (((dataObj['High(D)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-            dataObj['Low(D)Diff'] = (((dataObj['Low(D)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
-
-            const region = REGIONS[this.generateRandomNumber(0, 5)];
-            dataObj.Region = region.Region;
-            dataObj.Country = this.randomizeCountry(region);
-            // for (let y = 0; y < 80; y++) {
-            //     dataObj["Text" + y] = "Text";
-            // }
-
-            for (const mockData of MOCKFINANCEDATA) {
-                for (const prop in mockData) {
-                    if (mockData.hasOwnProperty(prop)) {
-                        dataObj[prop] = mockData[prop];
-                    }
-                }
-            }
-
-            dataObj.ID = i;
-            this.randomizeObjectData(dataObj);
-            currData.push(dataObj);
-        }
-        return currData;
-    }
-    public updateAllPrices(data: any[]): any[] {
-        const currData = [];
+    /** Updates values in every record */
+    public static updateAllPrices(data: any[]): any[] {
+      const newData = [];
         for (const dataRow of data) {
-          const dataObj = Object.assign({}, dataRow);
+            newData.push(this.randomizeObjectData(dataRow));
+        }
+        return newData;
+    }
+
+    /** Updates values in random records */
+    public static updateRandomPrices(data: any[]): any[] {
+      const newData = data.slice();
+      let y = 0;
+      for (let i = Math.round(Math.random() * 10); i < newData.length; i += Math.round(Math.random() * 10)) {
+          newData.push(this.randomizeObjectData(newData[i]));
+          y++;
+      }
+      return newData;
+    }
+
+    /*** Genrates additional financial data fields */
+    public static generateData(count: number): any[] {
+      const currData = [];
+      for (let i = 0; i < count; i++) {
+          const rand = Math.floor(Math.random() * Math.floor(DATA.length));
+          const dataObj = Object.assign({}, DATA[rand]);
+
+          dataObj.Settlement = Settlement[this.generateRandomNumber(0, 1)];
+          dataObj.Contract = Contract[this.generateRandomNumber(0, 4)];
+          dataObj.LastUpdated = this.randomizeDate();
+          dataObj['OpenPriceDiff'] = (((dataObj['Open Price'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['BuyDiff'] = (((dataObj['Buy'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['SellDiff'] = (((dataObj['Sell'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['Start(Y)Diff'] = (((dataObj['Start(Y)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['High(Y)Diff'] = (((dataObj['High(Y)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['Low(Y)Diff'] = (((dataObj['Low(Y)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['High(D)Diff'] = (((dataObj['High(D)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+          dataObj['Low(D)Diff'] = (((dataObj['Low(D)'] - dataObj['Price']) / dataObj['Price']) * 100) * 150;
+
+          const region = REGIONS[this.generateRandomNumber(0, 5)];
+          dataObj.Region = region.Region;
+          dataObj.Country = this.randomizeCountry(region);
+          // for (let y = 0; y < 80; y++) {
+          //     dataObj["Text" + y] = "Text";
+          // }
+
+          for (const mockData of MOCKFINANCEDATA) {
+              for (const prop in mockData) {
+                  if (mockData.hasOwnProperty(prop)) {
+                      dataObj[prop] = mockData[prop];
+                  }
+              }
+          }
+
+          dataObj.ID = i;
           this.randomizeObjectData(dataObj);
           currData.push(dataObj);
-        }
-        return currData;
       }
+      return currData;
+    }
 
-    public updateRandomPrices(data: any[]): any {
-        const currData = data.slice(0, data.length + 1);
-        let y = 0;
-        for (let i = Math.round(Math.random() * 10); i < data.length; i += Math.round(Math.random() * 10)) {
-          const dataObj = Object.assign({}, data[i]);
-          this.randomizeObjectData(dataObj);
-          currData[i] = dataObj;
-          y++;
-        }
-       // return {data: currData, recordsUpdated: y };
-        return currData;
-      }
-    public updateRandomPrices2(data: any[]): IResponse {
-        const currData = data.slice(0, data.length + 1);
-        let y = 0;
-        for (let i = Math.round(Math.random() * 10); i < data.length; i += Math.round(Math.random() * 10)) {
-          const dataObj = Object.assign({}, data[i]);
-          this.randomizeObjectData(dataObj);
-          currData[i] = dataObj;
-          y++;
-        }
-        return {data: currData, recordsUpdated: y };
-      }
-    private randomizeObjectData(dataObj) {
+    /** Generates the values for Change, Price and ChangeP columns */
+    private static randomizeObjectData(dataObj) {
         const changeP = 'Change(%)';
         const res = this.generateNewPrice(dataObj.Price);
         dataObj.Change = res.Price - dataObj.Price;
         dataObj.Price = res.Price;
         dataObj[changeP] = res.ChangePercent;
+        return {...dataObj};
     }
-    private generateNewPrice(oldPrice): any {
+
+    private static generateNewPrice(oldPrice): any {
         const rnd = parseFloat(Math.random().toFixed(2));
         const volatility = 2;
         let newPrice = 0;
@@ -987,10 +981,12 @@ export class FinancialData {
 
         return result;
     }
-    private generateRandomNumber(min, max) {
+
+    private static generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    private randomizeCountry(region: any) {
+
+    private static randomizeCountry(region: any) {
         let country;
         switch (region.Region) {
             case 'North America': {
@@ -1020,7 +1016,8 @@ export class FinancialData {
          }
         return country;
     }
-    private randomizeDate() {
+
+    private static randomizeDate() {
         const date = new Date();
         date.setHours(this.generateRandomNumber(0, 23));
         date.setMonth(this.generateRandomNumber(0, date.getMonth()));
