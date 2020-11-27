@@ -1610,13 +1610,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get loadingOutletDirective() {
-        return this.loadingOutlet;
-    }
-
-    /**
-     * @hidden @internal
-     */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
@@ -2789,12 +2782,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         closeOnOutsideClick: false,
         outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
-    };
-
-    private loadingOverlaySettings: OverlaySettings = {
-        outlet: this.loadingOutletDirective,
-        closeOnOutsideClick: false,
-        positionStrategy: new ContainerPositionStrategy()
     };
 
     /**
@@ -6488,8 +6475,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * hidden/shown based on the current value of shouldOverlayLoading
      */
     protected evaluateLoadingState() {
+        // a new overlay should be shown
+        const overlaySettings: OverlaySettings = {
+            outlet: this.loadingOutlet,
+            closeOnOutsideClick: false,
+            positionStrategy: new ContainerPositionStrategy()
+        };
+
+
         if (this.shouldOverlayLoading) {
-            this.loadingOverlay.open(this.loadingOverlaySettings);
+            this.loadingOverlay.open(overlaySettings);
         } else {
             this.loadingOverlay.close();
         }
