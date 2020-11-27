@@ -138,6 +138,9 @@ import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 import { GridFinJSComponent } from './grid-finjs/grid-finjs.component';
+import { MainComponent } from './grid-finjs/main.component';
+import { ControllerComponent } from './grid-finjs/controllers.component';
+import { CommonModule } from '@angular/common';
 
 const components = [
     ActionStripSampleComponent,
@@ -252,6 +255,8 @@ const components = [
     GridFilteringComponent,
     GridFormattingComponent,
     GridFinJSComponent,
+    MainComponent,
+    ControllerComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
     AboutComponent,
@@ -270,6 +275,7 @@ const components = [
         BrowserAnimationsModule,
         HammerModule,
         FormsModule,
+        CommonModule,
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,

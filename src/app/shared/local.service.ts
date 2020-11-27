@@ -24,7 +24,6 @@ export class LocalService {
     }
 
     getFinancialData(count: number = 10) {
-        const financialData: FinancialData = new FinancialData();
-        this._records.next(financialData.generateData(count));
+        this._records.next(FinancialData.generateData(count));
     }
 }

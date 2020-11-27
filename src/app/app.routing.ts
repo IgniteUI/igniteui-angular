@@ -80,7 +80,7 @@ import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-col
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
-import { GridFinJSComponent } from './grid-finjs/grid-finjs.component';
+import { MainComponent } from './grid-finjs/main.component';
 
 const appRoutes = [
     {
@@ -392,7 +392,7 @@ const appRoutes = [
     },
     {
         path: 'gridFinJS',
-        component: GridFinJSComponent
+        component: MainComponent
     }
 ];
 
