@@ -17,6 +17,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { DebugElement } from '@angular/core';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 const DEBOUNCETIME = 30;
 
@@ -1260,6 +1261,43 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
              fix.detectChanges();
 
              expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
+        });
+
+        it('MCH Grid with no data: should be able to navigate with arrow keys in the headers', () => {
+            grid.filter('Country', 'Bulgaria', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toBe(0);
+
+            let header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
+            UIInteractions.simulateClickAndSelectEvent(header);
+            fix.detectChanges();
+
+            GridFunctions.verifyHeaderIsFocused(header);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, false, false, true);
+            fix.detectChanges();
+
+            header = GridFunctions.getColumnGroupHeaderCell('Address Information', fix);
+            GridFunctions.verifyHeaderIsFocused(header);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, false);
+            fix.detectChanges();
+
+            header = GridFunctions.getColumnHeader('Region', fix);
+            GridFunctions.verifyHeaderIsFocused(header.parent);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, false, false, false);
+            fix.detectChanges();
+
+            header = GridFunctions.getColumnGroupHeaderCell('Country Information', fix);
+            GridFunctions.verifyHeaderIsFocused(header);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader, false, false, true);
+            fix.detectChanges();
+
+            header = GridFunctions.getColumnHeader('CompanyName', fix);
+            GridFunctions.verifyHeaderIsFocused(header.parent);
         });
     });
 });
