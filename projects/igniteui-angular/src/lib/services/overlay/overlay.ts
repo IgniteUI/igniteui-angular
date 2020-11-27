@@ -447,7 +447,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayElement(info: OverlayInfo): HTMLElement {
         if (info.settings.outlet) {
-            return info.settings.outlet.nativeElement;
+            return info.settings.outlet.nativeElement || info.settings.outlet;
         }
         if (!this._overlayElement) {
             this._overlayElement = this._document.createElement('div');
