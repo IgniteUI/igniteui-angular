@@ -83,8 +83,9 @@ export class HelperTestFunctions {
         expect(monthPickers.length).toEqual(viewDates.length);
         for (let index = 0; index < viewDates.length; index++) {
             const dateParts = viewDates[index].toString().split(' '); // weekday month day year
-            expect(monthPickers[index].children[0].innerHTML.trim()).toEqual(dateParts[1]);
-            expect(monthPickers[index].children[1].innerHTML.trim()).toEqual(dateParts[3]);
+            const monthPickerDates = monthPickers[index].querySelectorAll('.igx-calendar-picker__date');
+            expect(monthPickerDates[0].innerHTML.trim()).toEqual(dateParts[1]);
+            expect(monthPickerDates[1].innerHTML.trim()).toEqual(dateParts[3]);
         }
     }
 
@@ -100,7 +101,7 @@ export class HelperTestFunctions {
 
     public static getCalendarSubHeader(fixture): HTMLElement {
         const element = fixture.nativeElement ? fixture.nativeElement : fixture;
-        return element.querySelector('div.igx-calendar-picker');
+        return element.querySelector('.igx-calendar-picker');
     }
 
     public static getMonthView(fixture, monthsViewNumber: number) {

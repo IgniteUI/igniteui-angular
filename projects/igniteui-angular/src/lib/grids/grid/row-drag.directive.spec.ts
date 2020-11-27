@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { TestBed, async, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -58,7 +58,7 @@ describe('Row Drag Tests #grid', () => {
             let dragRows: DebugElement[];
             let rowToDrag: IgxGridRowComponent;
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxGridRowDraggableComponent
@@ -410,7 +410,7 @@ describe('Row Drag Tests #grid', () => {
             let rows: IgxGridRowComponent[];
             let dragRows: DebugElement[];
             configureTestSuite();
-            beforeAll(async(() => {
+            beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxGridRowCustomGhostDraggableComponent
@@ -462,7 +462,7 @@ describe('Row Drag Tests #grid', () => {
         let dropGridRows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
         configureTestSuite();
-        beforeAll(async(() => {
+        beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridFeaturesRowDragComponent
@@ -926,7 +926,7 @@ describe('Row Drag Tests #hGrid', () => {
     let dragRows: DebugElement[];
     let pointerMoveToDropEvent: PointerEvent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestComponent,
@@ -1077,7 +1077,7 @@ describe('Row Drag Tests #tGrid', () => {
     let dragRows: DebugElement[];
     let pointerMoveToDropEvent: PointerEvent;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridTestComponent

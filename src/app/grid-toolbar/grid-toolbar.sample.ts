@@ -8,6 +8,15 @@ import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService, IgxCo
 })
 export class GridToolbarSampleComponent implements OnInit {
 
+    showToolbar = true;
+    title = 'Custom Title';
+    customContent = false;
+    showProgress = false;
+    hidingEnabled = true;
+    pinningEnabled = true;
+    csv = true;
+    excel = true;
+
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public igxGrid1: IgxGridComponent;
 

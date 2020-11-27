@@ -735,6 +735,13 @@ export class GridIDNameJobTitleHireDataPerformanceComponent extends BasicGridCom
 }
 
 @Component({
+    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.hireDate)
+})
+export class GridHireDateComponent extends BasicGridComponent {
+    data = SampleTestData.hireDate();
+}
+
+@Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
                 `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
@@ -1423,7 +1430,8 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
+        <igx-grid-toolbar></igx-grid-toolbar>
         <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
@@ -1568,8 +1576,8 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'"
-    width="900px" height="600px" [rowEditable]="true" >
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px" [rowEditable]="true">
+        <igx-grid-toolbar *ngIf="showToolbar"></igx-grid-toolbar>
         <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
         </igx-column>
@@ -1579,6 +1587,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     </igx-grid>`
 })
 export class IgxGridRowEditingComponent extends BasicGridComponent {
+    showToolbar = false;
     public data = SampleTestData.foodProductData();
 }
 

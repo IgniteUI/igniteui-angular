@@ -80,7 +80,7 @@ const SUMMARY_CELL = 'igx-grid-summary-cell';
 const COLUMN_ACTIONS_INPUT_CLASS = '.igx-column-actions__header-input';
 const COLUMN_ACTIONS_COLUMNS_CLASS = '.igx-column-actions__columns';
 const COLUMN_ACTIONS_COLUMNS_LABEL_CLASS = 'igx-checkbox__label';
-const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
+const GRID_TOOLBAR_TAG = 'igx-grid-toolbar';
 const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
 const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
 const SORT_INDEX_ATTRIBUTE = 'data-sortIndex';
@@ -528,8 +528,8 @@ export class GridFunctions {
     }
 
     /* Toolbar-related members */
-    public static getToolbar(fixture) {
-        return fixture.debugElement.query(By.css(GRID_TOOLBAR_CLASS));
+    public static getToolbar<T>(fixture: ComponentFixture<T>) {
+        return fixture.debugElement.query(By.css(GRID_TOOLBAR_TAG));
     }
 
     public static getOverlay(fixture) {
@@ -537,30 +537,27 @@ export class GridFunctions {
         return div.nativeElement;
     }
 
-    public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
-        const button = GridFunctions.getToolbar(fix).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
+    public static getAdvancedFilteringButton<T>(fix: ComponentFixture<T>) {
+        const button = GridFunctions.getToolbar(fix).query(By.css('igx-grid-toolbar-advanced-filtering > button'));
         return button ? button.nativeElement : undefined;
     }
 
-    public static getColumnHidingButton(fixture) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnColumnHiding');
+    public static getColumnHidingButton<T>(fixture: ComponentFixture<T>) {
+        const button = GridFunctions.getToolbar(fixture).query(By.css('igx-grid-toolbar-hiding > button'));
         return button ? button.nativeElement : undefined;
     }
 
-    public static getColumnPinningButton(fixture) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-            .find((b) => b.nativeElement.name === 'btnColumnPinning');
+    public static getColumnPinningButton<T>(fixture: ComponentFixture<T>) {
+        const button = GridFunctions.getToolbar(fixture).query(By.css('igx-grid-toolbar-pinning > button'));
         return button ? button.nativeElement : undefined;
     }
 
-    public static getExportButton(fixture) {
+    public static getExportButton<T>(fixture: ComponentFixture<T>) {
         const div = GridFunctions.getToolbar(fixture).query(By.css(GRID_TOOLBAR_EXPORT_BUTTON_CLASS));
         return (div) ? div.query(By.css('button')) : null;
     }
 
-    public static getExportOptions(fixture) {
+    public static getExportOptions<T>(fixture: ComponentFixture<T>) {
         const div = GridFunctions.getOverlay(fixture);
         return (div) ? div.querySelectorAll('li') : null;
     }
@@ -2285,8 +2282,8 @@ export class GridSelectionFunctions {
         }
         const hScrollbar = grid.headerContainer.getScroll();
 
-        expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
-        expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+        expect(headerDiv.clientWidth).toEqual(firstRowDiv.clientWidth);
+        expect(headerDiv.clientWidth).toEqual(firstRowDiv.clientWidth);
         if (hScrollbar.scrollWidth) {
             expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth + firstRowDiv.offsetLeft);
         }

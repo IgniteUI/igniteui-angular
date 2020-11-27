@@ -8,7 +8,7 @@ import {
     ApplicationRef,
     ComponentRef
 } from '@angular/core';
-import { TestBed, fakeAsync, tick, async, inject } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, inject, waitForAsync } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -180,7 +180,7 @@ describe('igxOverlay', () => {
         {pattern: /:\s/g, replacement: ':'},
         {pattern: /red;/, replacement: 'red'}
       ];
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         UIInteractions.clearOverlay();
     }));
 
@@ -276,7 +276,7 @@ describe('igxOverlay', () => {
 
     describe('Unit Tests: ', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
                 declarations: DIRECTIVE_COMPONENTS
@@ -1000,7 +1000,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
                 declarations: DIRECTIVE_COMPONENTS
@@ -1167,7 +1167,7 @@ describe('igxOverlay', () => {
 
     describe('Integration tests: ', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
                 declarations: DIRECTIVE_COMPONENTS
@@ -2985,7 +2985,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
                 declarations: DIRECTIVE_COMPONENTS
@@ -3781,7 +3781,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule, IgxComponentsModule],
                 declarations: DIRECTIVE_COMPONENTS

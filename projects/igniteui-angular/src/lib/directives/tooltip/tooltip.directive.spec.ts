@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from './tooltip.directive';
@@ -18,7 +18,7 @@ describe('IgxTooltip', () => {
     let tooltipTarget: IgxTooltipTargetDirective;
     let button;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTooltipSingleTargetComponent,
@@ -35,7 +35,7 @@ describe('IgxTooltip', () => {
 
     describe('Single target with single tooltip', () => {
         // configureTestSuite();
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;
@@ -443,7 +443,7 @@ describe('IgxTooltip', () => {
         let buttonOne;
         let buttonTwo;
 
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTooltipMultipleTargetsComponent);
             fix.detectChanges();
             tooltipNativeElement = fix.debugElement.query(By.directive(IgxTooltipDirective)).nativeElement;

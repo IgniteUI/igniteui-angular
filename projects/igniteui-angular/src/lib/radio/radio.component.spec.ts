@@ -1,10 +1,5 @@
 import { Component, ViewChild, ViewChildren } from '@angular/core';
-import {
-    async,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -16,7 +11,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('IgxRadio', () => {
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxRadioComponent,

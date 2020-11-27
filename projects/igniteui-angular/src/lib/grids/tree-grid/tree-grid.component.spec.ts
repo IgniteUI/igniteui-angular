@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
@@ -21,7 +21,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
@@ -123,7 +123,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Auto-generated columns', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
             grid = fix.componentInstance.treeGrid;
         }));
@@ -137,7 +137,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Loading Template', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridDefaultLoadingComponent);
             grid = fix.componentInstance.treeGrid;
         }));
@@ -158,7 +158,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     });
 
     describe('Hide All', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             grid = fix.componentInstance.treeGrid;
             fix.detectChanges();
