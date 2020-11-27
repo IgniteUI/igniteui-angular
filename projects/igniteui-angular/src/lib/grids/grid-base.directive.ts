@@ -6438,15 +6438,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * hidden/shown based on the current value of shouldOverlayLoading
      */
     protected evaluateLoadingState() {
-        // a new overlay should be shown
-        const overlaySettings: OverlaySettings = {
-            outlet: this.loadingOutlet,
-            closeOnOutsideClick: false,
-            positionStrategy: new ContainerPositionStrategy()
-        };
-
-
         if (this.shouldOverlayLoading) {
+            // a new overlay should be shown
+            const overlaySettings: OverlaySettings = {
+                outlet: this.loadingOutlet,
+                closeOnOutsideClick: false,
+                positionStrategy: new ContainerPositionStrategy()
+            };
             this.loadingOverlay.open(overlaySettings);
         } else {
             this.loadingOverlay.close();
