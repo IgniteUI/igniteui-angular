@@ -29,6 +29,12 @@ import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
 import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
+import {
+    IgxHeaderCollapseIndicatorDirective,
+    IgxHeaderExpandIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxRowExpandedIndicatorDirective
+} from './grid/grid.directives';
 /**
  * @hidden
  */
@@ -43,7 +49,11 @@ import { IgxRowDirective } from './row.directive';
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
         IgxGridFooterComponent,
-        IgxAdvancedFilteringDialogComponent
+        IgxAdvancedFilteringDialogComponent,
+        IgxRowExpandedIndicatorDirective,
+        IgxRowCollapsedIndicatorDirective,
+        IgxHeaderExpandIndicatorDirective,
+        IgxHeaderCollapseIndicatorDirective,
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -71,7 +81,11 @@ import { IgxRowDirective } from './row.directive';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxAdvancedFilteringDialogComponent,
-        IgxGridSharedModules
+        IgxGridSharedModules,
+        IgxRowExpandedIndicatorDirective,
+        IgxRowCollapsedIndicatorDirective,
+        IgxHeaderExpandIndicatorDirective,
+        IgxHeaderCollapseIndicatorDirective,
     ],
     imports: [
         IgxGridColumnModule,
