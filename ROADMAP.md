@@ -4,12 +4,15 @@
 
 ## Milestone 14 (Due by November, 2020)
 
-1. Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
-2. Expose an event that indicates that the Grid is fully loaded [#7924](https://github.com/IgniteUI/igniteui-angular/issues/7924)
-3. Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
-4. Option to select columns instead of hide columns [#6858](https://github.com/IgniteUI/igniteui-angular/issues/6858)
-5. Calendar ARIA [#6272](https://github.com/IgniteUI/igniteui-angular/issues/6272)
-6. IgxInput directive to style file type input [#6544](https://github.com/IgniteUI/igniteui-angular/issues/6544)
+1. **[DONE]** Grid Toolbar refactoring [#8055](https://github.com/IgniteUI/igniteui-angular/issues/8055)
+2. **[DONE]** Expose an event that indicates that the Grid is fully loaded [#7924](https://github.com/IgniteUI/igniteui-angular/issues/7924)
+3. **[DONE]** Igx-grid: Select all rows in a group [#7344](https://github.com/IgniteUI/igniteui-angular/issues/7344)
+4. **[DONE]** Option to select columns instead of hide columns [#6858](https://github.com/IgniteUI/igniteui-angular/issues/6858)
+5. **[DONE]** Calendar ARIA [#6272](https://github.com/IgniteUI/igniteui-angular/issues/6272)
+6. **[DONE]** Make the ESF header icon templatable [#7878](https://github.com/IgniteUI/igniteui-angular/issues/7878)
+7. **[DONE]** A small badge option [#8188](https://github.com/IgniteUI/igniteui-angular/issues/8188)
+8. **[DONE]** Improve the chart color palette generation [#8447](https://github.com/IgniteUI/igniteui-angular/issues/8447)
+9. **[DONE]** Auto position strategy use wrong animation when flipped [#8238](https://github.com/IgniteUI/igniteui-angular/issues/8238)
 
 ## Going down the road
 
@@ -17,6 +20,7 @@
 2. Visual Cell merging [#3514](https://github.com/IgniteUI/igniteui-angular/issues/3514)
 3. RTL Support across Ignite UI for Angular components [#5905](https://github.com/IgniteUI/igniteui-angular/issues/5905)
 4. Scheduler component [#8097](https://github.com/IgniteUI/igniteui-angular/pull/8479/files)
+5. IgxInput directive to style file type input [#6544](https://github.com/IgniteUI/igniteui-angular/issues/6544)
 
 ## Milestone 13 (Released October 20th, 2020)
 
