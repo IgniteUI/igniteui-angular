@@ -92,6 +92,10 @@ export class ColumnDefinitions {
         <igx-column field="Performance"></igx-column>
     `;
 
+    public static hireDate = `
+        <igx-column field="HireDate" [dataType]="'date'"></igx-column>
+    `;
+
     public static nameJobTitleId = `
         <igx-column field="Name"></igx-column>
         <igx-column field="JobTitle"></igx-column>
