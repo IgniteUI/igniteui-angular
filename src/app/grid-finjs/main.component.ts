@@ -23,8 +23,7 @@ export class MainComponent implements AfterViewInit, OnDestroy {
     private subscription$;
 
     constructor(private localService: LocalService, private elRef: ElementRef) {
-        this.subscription$ = this.localService.getFinancialData(1000);
-
+        this.localService.getFinancialData(1000);
     }
 
     public selectionMode = 'multiple';
@@ -57,12 +56,11 @@ export class MainComponent implements AfterViewInit, OnDestroy {
     private _timer;
 
     public ngAfterViewInit() {
-        this.localService.records.subscribe(x => {
+        this.subscription$ = this.localService.records.subscribe(x => {
             this.finGrid.data = x;
             this.finGrid.cdr.detectChanges();
         });
     }
-
     public onSwitchChanged(event: any) {
         switch (event.action) {
             case 'toolbar': {
