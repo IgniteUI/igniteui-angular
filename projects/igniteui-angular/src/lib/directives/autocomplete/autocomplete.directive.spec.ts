@@ -1,5 +1,5 @@
 import { Component, ViewChild, Pipe, PipeTransform, ElementRef } from '@angular/core';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAutocompleteModule, IgxAutocompleteDirective, AutocompleteOverlaySettings } from './autocomplete.directive';
@@ -26,7 +26,7 @@ describe('IgxAutocomplete', () => {
     let dropDown: IgxDropDownComponent;
     configureTestSuite();
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AutocompleteComponent,
@@ -47,7 +47,7 @@ describe('IgxAutocomplete', () => {
             .compileComponents();
     }));
     describe('General tests: ', () => {
-        beforeEach(async(() => {
+        beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;

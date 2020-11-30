@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
@@ -16,7 +16,7 @@ describe('IgxToggle', () => {
     configureTestSuite();
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxToggleActionTestComponent,

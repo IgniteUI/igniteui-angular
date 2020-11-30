@@ -1,8 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
@@ -10,8 +7,10 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxIconComponent, IgxIconService } from '../../icon/public_api';
 import { DisplayDensity } from '../../core/density';
 
-const FLAT_RAISED_OUTLINED_BUTTON_COMPACT = 'igx-button--compact';
-const FLAT_RAISED_OUTLINED_BUTTON_COSY = 'igx-button--cosy';
+const FLAT_RAISED_BUTTON_COMPACT = 'igx-button--compact';
+const FLAT_RAISED_BUTTON_COSY = 'igx-button--cosy';
+const OUTLINED_BUTTON_COMPACT = 'igx-button--outlined-compact';
+const OUTLINED_BUTTON_COSY = 'igx-button--outlined-cosy';
 const FAB_BUTTON_COMPACT = 'igx-button--fab-compact';
 const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
 
@@ -27,7 +26,7 @@ describe('IgxButton', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitButtonComponent,
@@ -210,15 +209,19 @@ function verifyDisplayDensity(buttonDirective, buttonDebugEl, buttonType, expect
 
     switch (expectedDisplayDensity) {
         case DisplayDensity.compact: {
-            if (buttonType === 'flat' || buttonType === 'raised' || buttonType === 'outlined') {
-                expectedButtonDensityClass = FLAT_RAISED_OUTLINED_BUTTON_COMPACT;
+            if (buttonType === 'flat' || buttonType === 'raised') {
+                expectedButtonDensityClass = FLAT_RAISED_BUTTON_COMPACT;
+            } else if (buttonType === 'outlined') {
+                expectedButtonDensityClass = OUTLINED_BUTTON_COMPACT;
             } else if (buttonType === 'fab') {
                 expectedButtonDensityClass = FAB_BUTTON_COMPACT;
             }
         } break;
         case DisplayDensity.cosy: {
-            if (buttonType === 'flat' || buttonType === 'raised' || buttonType === 'outlined') {
-                expectedButtonDensityClass = FLAT_RAISED_OUTLINED_BUTTON_COSY;
+            if (buttonType === 'flat' || buttonType === 'raised') {
+                expectedButtonDensityClass = FLAT_RAISED_BUTTON_COSY;
+            } else if (buttonType === 'outlined') {
+                expectedButtonDensityClass = OUTLINED_BUTTON_COSY;
             } else if (buttonType === 'fab') {
                 expectedButtonDensityClass = FAB_BUTTON_COSY;
             }

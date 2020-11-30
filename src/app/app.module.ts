@@ -10,7 +10,6 @@ import {
     IgxIconService, DisplayDensityToken, DisplayDensity,
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxButtonGroupModule, IgxActionStripModule, GridBaseAPIService
 } from 'igniteui-angular';
-import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
 import { routing } from './routing';
@@ -137,6 +136,7 @@ import { IgxColumnGroupingDirective } from './grid-column-actions/custom-action-
 import { GridAddRowSampleComponent } from './grid-add-row/grid-add-row.sample';
 import { HierarchicalGridAddRowSampleComponent } from './hierarchical-grid-add-row/hierarchical-grid-add-row.sample';
 import { AnimationsSampleComponent } from './styleguide/animations/animations.sample';
+import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -249,6 +249,7 @@ const components = [
     GridAutoSizeSampleComponent,
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
+    GridFormattingComponent,
     GridFilteringComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
@@ -276,7 +277,6 @@ const components = [
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
-        IgxColumnHidingModule,
         IgxDragDropModule,
         IgxDateRangePickerModule,
         IgxDividerModule,

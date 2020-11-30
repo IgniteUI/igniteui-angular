@@ -17,6 +17,7 @@
                 <button igxButton="raised" (click)=" setData(5)">Set small data - 5</button>
                 <button igxButton="raised" (click)=" setData(3)">Set small data - 3</button>
                 <button igxButton="raised" (click)="setData(0)">Set no data</button>
+                <button igxButton="raised" (click)="checkCols()">Check cols</button>
             </div>
             <div [hidden]='gridContainerHidden' [style.height]='containerHeight'>
             <igx-grid
@@ -28,7 +29,7 @@
                 [rowSelection]="selectionMode"
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
-                [width]="'800px'"
+                [width]="'100%'"
                 [height]="height">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"

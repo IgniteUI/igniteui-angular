@@ -179,7 +179,9 @@ private resolver;
             const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
             return inputNames.indexOf(matchingInputPropName) === -1;
         });
-        outputs.forEach(output => {
+
+        // TODO: Skip the `rendered` output. Rendered should be called once per grid.
+        outputs.filter(o => o.propName !== 'rendered').forEach(output => {
             if (this.hGrid[output.propName]) {
                 this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
                     if (!args) {

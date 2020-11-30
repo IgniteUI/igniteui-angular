@@ -1,6 +1,6 @@
 import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DebugElement } from '@angular/core';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -24,6 +24,8 @@ import { Subject } from 'rxjs';
 
 
 describe('IgxGrid - Row Adding #grid', () => {
+        const GRID_ROW = 'igx-grid-row';
+        const DISPLAY_CONTAINER = 'igx-display-container';
         const SUMMARY_ROW = 'igx-grid-summary-row';
         let fixture;
         let grid: IgxGridComponent;
@@ -36,7 +38,7 @@ describe('IgxGrid - Row Adding #grid', () => {
           animationElem.dispatchEvent(endEvent);
     };
     configureTestSuite();
-    beforeAll( async(() => {
+    beforeAll( waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent,
@@ -546,6 +548,42 @@ describe('IgxGrid - Row Adding #grid', () => {
             newRow = grid.getRowByIndex(1);
             expect(newRow.addRow).toBeFalse();
             expect(grid.data.length).toBe(dataLength + 1);
+        });
+
+        it('Should correctly scroll all rows after closing the add row', async() => {
+            grid.width = '400px';
+            fixture.detectChanges();
+
+            const dataLength = grid.data.length;
+            const row = grid.rowList.first;
+            row.beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
+
+            let newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeTrue();
+
+            const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fixture);
+            cancelButtonElement.click();
+            fixture.detectChanges();
+            await wait(100);
+            fixture.detectChanges();
+
+            newRow = grid.getRowByIndex(1);
+            expect(newRow.addRow).toBeFalse();
+            expect(grid.data.length).toBe(dataLength);
+
+            (grid as any).scrollTo(0, grid.columnList.length - 1);
+            await wait(100);
+            fixture.detectChanges();
+
+            // All rows should be scrolled, from their forOf directive. If not then the `_horizontalForOfs` in the grid is outdated.
+            const gridRows = fixture.debugElement.queryAll(By.css(GRID_ROW));
+            gridRows.forEach(item => {
+                const displayContainer = item.query(By.css(DISPLAY_CONTAINER));
+                expect(displayContainer.nativeElement.style.left).not.toBe('0px');
+            });
         });
     });
 

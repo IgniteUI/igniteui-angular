@@ -50,8 +50,11 @@
             </igx-card>
 
             <igx-card>
-                <igx-column-hiding [columns]="grid1.columns"
-                                    columnDisplayOrder="Alphabetical"></igx-column-hiding>
+                <igx-column-actions
+                igxColumnHiding
+                [grid]="grid1"
+                [title]="grid1.columnHidingTitle">
+                </igx-column-actions>
             </igx-card>
         </div>
 
@@ -89,8 +92,11 @@
         <div class="toggles-container">
             <div class="cards-container">
                 <div class="toggle-group" style="margin-right: 30px; min-width: 250px;">
-                    <igx-column-hiding [columns]="grid2.columns" title="Show/Hide Columns"
-                        columnDisplayOrder="Alphabetical"></igx-column-hiding>
+                    <igx-column-actions
+                    igxColumnHiding
+                    [grid]="grid2"
+                    [title]="grid2.columnHidingTitle">
+                    </igx-column-actions>
                 </div>
                 <div class="toggle-group" *ngFor="let col of grid2.columns">
                     <h4>{{ col.field }}</h4>
@@ -179,8 +185,11 @@
         </div>
         <div class="cards-container" hidden>
             <div class="toggle-group" style="min-width: 250px;">
-                <igx-column-hiding [columns]="grid3.columns" title="Show/Hide Columns"
-                    columnDisplayOrder="Alphabetical"></igx-column-hiding>
+                <igx-column-actions
+                igxColumnHiding
+                [grid]="grid3"
+                [title]="grid3.columnHidingTitle">
+                </igx-column-actions>
             </div>
         </div>
         <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)" [primaryKey]="'ProductID'" [rowSelection]="selectionMode">

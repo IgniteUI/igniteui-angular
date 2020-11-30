@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './public_api';
 import {
@@ -21,7 +21,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSummariesComponent,
@@ -40,7 +40,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     describe('', () => {
         let fix;
         let treeGrid;
-        beforeEach(async(/** height/width setter rAF */() => {
+        beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;

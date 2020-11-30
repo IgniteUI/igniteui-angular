@@ -1,4 +1,4 @@
-﻿import { async, TestBed, fakeAsync } from '@angular/core/testing';
+﻿import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
@@ -19,7 +19,7 @@ const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,
