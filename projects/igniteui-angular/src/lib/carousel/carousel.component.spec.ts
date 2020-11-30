@@ -1,10 +1,5 @@
 import { Component, ViewChild, TemplateRef } from '@angular/core';
-import {
-    async,
-    TestBed,
-    fakeAsync,
-    tick
-} from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     IgxCarouselComponent,
@@ -25,7 +20,7 @@ describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CarouselTestComponent,

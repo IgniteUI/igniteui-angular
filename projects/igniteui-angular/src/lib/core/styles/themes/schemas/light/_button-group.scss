@@ -215,11 +215,13 @@ $_bootstrap-button-group: extend(
 
 /// Generates an indigo light button-group schema.
 /// @type {Map}
-/// @prop {Map} item-background [igx-color: ('primary', 500)] - The background color for button group items.
-/// @prop {Color} item-text-color [igx-contrast-color: ('primary', 500)]- The text color for button group items.
+/// @prop {Color} item-background [#fff] - The background color for button group items.
+/// @prop {Color} item-text-color [igx-contrast-color: #fff]- The text color for button group items.
+/// @prop {Map} shadow-color [igx-color: ('grays', 300)] - The outline color of button group items.
+/// @prop {Map} selected-shadow-color [igx-color: ('primary', 200)] - The outline color of selected button group items.
 /// @prop {Map} item-border-color [igx-color: ('primary', 400)] - The border color between button group items.
-/// @prop {Map} item-hover-background [igx-color: ('primary', 400)] - The hover background color for button group items.
-/// @prop {Color} item-hover-text-color [igx-contrast-color: ('primary', 400)] - The hover text color for button group items.
+/// @prop {Map} item-hover-background [igx-color: ('grays', 100)] - The hover background color for button group items.
+/// @prop {Map} item-hover-text-color [igx-contrast-color: ('grays', 100)] - The hover text color for button group items.
 /// @prop {Map} item-selected-background [igx-color: ('primary', 400)] - The background color for a selected item in the button group.
 /// @prop {Color} item-selected-text-color [igx-contrast-color: ('primary', 400)]- The text color for a selected item in the button group.
 /// @prop {Map} item-selected-border-color [igx-color: ('primary', 400)] - The border color for a selected item from the button group.
@@ -240,32 +242,38 @@ $_indigo-button-group: extend(
     (
         variant: 'indigo-design',
 
-        item-background: (
-            igx-color: ('primary', 500),
+        item-background: #fff,
+
+        shadow-color: (
+            igx-color: ('grays', 300),
+        ),
+
+        selected-shadow-color: (
+            igx-color: ('primary', 200)
         ),
 
         item-text-color: (
-            igx-contrast-color: ('primary', 500)
+            igx-contrast-color: #fff
         ),
 
         item-border-color: (
-            igx-color: ('primary', 400),
+            igx-color: ('grays', 300),
         ),
 
         item-hover-background: (
-            igx-color: ('primary', 400),
+            igx-color: ('grays', 100),
         ),
 
         item-hover-text-color: (
-            igx-contrast-color: ('primary', 400)
+            igx-contrast-color: ('grays', 100)
         ),
 
         item-selected-background: (
-            igx-color: ('primary', 400)
+            igx-color: ('primary', 500)
         ),
 
         item-selected-text-color: (
-            igx-contrast-color: ('primary', 400)
+            igx-contrast-color: ('primary', 500)
         ),
 
         item-selected-border-color: (

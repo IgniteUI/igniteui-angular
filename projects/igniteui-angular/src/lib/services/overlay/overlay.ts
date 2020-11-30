@@ -43,7 +43,7 @@ import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.direct
 let warningShown = false;
 
 /**
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-main)
  * The overlay service allows users to show components on overlay div above all other elements in the page.
  */
 @Injectable({ providedIn: 'root' })
@@ -609,7 +609,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayElement(info: OverlayInfo): HTMLElement {
         if (info.settings.outlet) {
-            return info.settings.outlet.nativeElement;
+            return info.settings.outlet.nativeElement || info.settings.outlet;
         }
         if (!this._overlayElement) {
             this._overlayElement = this._document.createElement('div');
@@ -810,7 +810,7 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.target;
+                const target = ev.composed ? ev.composedPath()[0] : ev.target;
                 const overlayElement = info.elementRef.nativeElement;
                 // check if the click is on the overlay element or on an element from the exclusion list, and if so do not close the overlay
                 const excludeElements = info.settings.excludeFromOutsideClick ?

@@ -117,7 +117,9 @@ export class JSZipWrapper {
 
     /* Verifies the contents of all template files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyTemplateFilesContent(message = '') {
+    public async verifyTemplateFilesContent(message = '', hasDates = false) {
+        JSZipFiles.hasDates = hasDates;
+
         let result;
         const msg = (message !== '') ? message + '\r\n' : '';
 

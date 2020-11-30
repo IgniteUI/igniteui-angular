@@ -6,8 +6,14 @@ import {
     ChangeDetectorRef,
     OnDestroy,
     Directive,
-    AfterViewInit
+    AfterViewInit,
+    Inject,
+    NgZone
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil, throttleTime } from 'rxjs/operators';
+import { resizeObservable, isIE, PlatformUtil } from '../../core/utils';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
@@ -21,18 +27,36 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     private _afterViewInit = false;
     private _scrollNativeSize: number;
+    private _detached = false;
+    protected destroy$ = new Subject<any>();
+
 
     ngAfterViewInit() {
         this._afterViewInit = true;
+        if (!this.platformUtil.isBrowser) {
+            return;
+        }
+        const delayTime = isIE() ? 40 : 0;
+        this._zone.runOutsideAngular(() => {
+            resizeObservable(this.nativeElement).pipe(
+                throttleTime(delayTime),
+                takeUntil(this.destroy$)).subscribe((event) => this.handleMutations(event));
+        });
     }
 
     @HostListener('scroll', ['$event'])
     onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
     }
-    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) {
+    constructor(
+        public elementRef: ElementRef,
+        public cdr: ChangeDetectorRef,
+        protected _zone: NgZone,
+        @Inject(DOCUMENT) public document: any,
+        protected platformUtil: PlatformUtil,
+    ) {
         this._scrollNativeSize = this.calculateScrollNativeSize();
-     }
+    }
 
     get nativeElement() {
         return this.elementRef.nativeElement;
@@ -40,6 +64,8 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
 
     public ngOnDestroy() {
         this.destroyed = true;
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     public set size(value) {
@@ -60,8 +86,25 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         return this._scrollNativeSize;
     }
 
+    protected get isAttachedToDom(): boolean {
+        return this.document.body.contains(this.nativeElement);
+    }
+
+    protected handleMutations(event) {
+        const hasSize = !(event[0].contentRect.height === 0 && event[0].contentRect.width === 0);
+        if (!hasSize && !this.isAttachedToDom) {
+            // scroll bar detached from DOM
+            this._detached = true;
+        } else if (this._detached && hasSize && this.isAttachedToDom) {
+            // attached back now.
+            this.restoreScroll();
+        }
+    }
+
+    protected restoreScroll() {}
+
     public calculateScrollNativeSize() {
-        const div = document.createElement('div');
+        const div = this.document.createElement('div');
         const style = div.style;
         style.width = '100px';
         style.height = '100px';
@@ -69,9 +112,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         style.top = '-10000px';
         style.top = '-10000px';
         style.overflow = 'scroll';
-        document.body.appendChild(div);
+        this.document.body.appendChild(div);
         const scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
+        this.document.body.removeChild(div);
         return scrollWidth ? scrollWidth + 1 : 1;
     }
 }

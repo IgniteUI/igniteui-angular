@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -37,7 +37,7 @@ describe('IgxGrid - Summaries #grid', () => {
     const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
     const DEBOUNCETIME = 30;
 
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
@@ -1863,6 +1863,38 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
                 ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
 
+        });
+
+        it('should navigate correctly with Ctrl + ArrowUp/Home when summary position is top', () => {
+            grid.showSummaryOnCollapse = true;
+            fix.detectChanges();
+
+            grid.summaryPosition = 'top';
+            fix.detectChanges();
+
+            fix.detectChanges();
+            let cell = grid.getCellByColumn(6, 'Age');
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            expect(cell.selected).toBe(true);
+            UIInteractions.triggerKeyDownEvtUponElem('Home', cell.nativeElement, true, false, false, true);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(2, 'ID');
+            expect(cell.selected).toBe(true);
+            expect(cell.active).toBe(true);
+
+            cell = grid.getCellByColumn(6, 'Name');
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', cell.nativeElement, true, false, false, true);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(2, 'Name');
+            expect(cell.selected).toBe(true);
+            expect(cell.active).toBe(true);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {

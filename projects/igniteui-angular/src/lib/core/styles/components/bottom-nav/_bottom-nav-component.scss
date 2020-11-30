@@ -61,5 +61,13 @@
     @include e(menu-item, $m: disabled) {
         @extend %igx-bottom-nav-menu-item !optional;
         @extend %igx-bottom-nav-menu-item--disabled !optional;
+
+        .tab-icon {
+            @extend %igx-tab-icon !optional;
+        }
+
+        .tab-label {
+            @extend %igx-tab-label !optional;
+        }
     }
 }

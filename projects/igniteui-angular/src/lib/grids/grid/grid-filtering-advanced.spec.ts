@@ -1,4 +1,4 @@
-﻿import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
+import { waitForAsync, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -29,7 +29,7 @@ const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite();
-    beforeAll(async(() => {
+    beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
@@ -44,7 +44,9 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     }));
 
     describe('General tests - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix: ComponentFixture<IgxGridAdvancedFilteringComponent>;
+        let grid: IgxGridComponent;
+
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;

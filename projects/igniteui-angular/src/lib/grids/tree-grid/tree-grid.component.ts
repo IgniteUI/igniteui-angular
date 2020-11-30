@@ -41,7 +41,7 @@ let NEXT_ID = 0;
 
 /**
  * **Ignite UI for Angular Tree Grid** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid)
  *
  * The Ignite UI Tree Grid displays and manipulates hierarchical data with consistent schema formatted as a table and
  * provides features such as sorting, filtering, editing, column pinning, paging, column moving and hiding.

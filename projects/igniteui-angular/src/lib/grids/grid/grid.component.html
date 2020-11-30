@@ -1,6 +1,4 @@
-<igx-grid-toolbar [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" role="toolbar" *ngIf="showToolbar" [gridID]="id"
-    [displayDensity]="displayDensity" #toolbar>
-</igx-grid-toolbar>
+<ng-content select="igx-grid-toolbar"></ng-content>
 
 <div [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
     *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)" #groupArea>
@@ -37,17 +35,8 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-            <ng-container *ngIf="groupingExpressions.length > 0">
-                <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
-                    [ngClass]="{
-                    'igx-grid__header-indentation--no-border': isRowSelectable || rowDraggable
-                }" #headerGroupContainer  (click)="toggleAllGroupRows()" (pointerdown)="$event.preventDefault()">
-
-                <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
-                </div>
-            </ng-container>
             <ng-container *ngIf="rowDraggable">
-                <div class="igx-grid__drag-indicator" [ngClass]="{
+                <div class="igx-grid__drag-indicator igx-grid__tr-action" [ngClass]="{
                     'igx-grid__drag-indicator--header': !isRowSelectable
                 }" (pointerdown)="$event.preventDefault()"  #headerDragContainer>
                     <div style="visibility: hidden;">
@@ -58,7 +47,7 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }" (pointerdown)="$event.preventDefault()">
                     <ng-template #headSelector
@@ -68,6 +57,13 @@
                                         selectedCount: this.selectionService.filteredSelectedRowIds.length,
                                         totalCount: this.totalRowsCountAfterFilter }}">
                     </ng-template>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="groupingExpressions.length > 0">
+                <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
+                    #headerGroupContainer  (click)="toggleAllGroupRows()" (pointerdown)="$event.preventDefault()">
+
+                <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0 && isPinningToStart">
@@ -167,7 +163,7 @@
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template let-rowIndex="index" let-rowData>
-            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
+            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" [hideGroupRowSelectors]="hideRowSelectors" [rowDraggable]="rowDraggable" #row>
             </igx-grid-groupby-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
@@ -197,7 +193,7 @@
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
-    <div #loadingOverlay>
+    <div igxToggle #loadingOverlay>
         <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
@@ -301,7 +297,7 @@
 }">unfold_more</igx-icon>
 </ng-template>
 
-<div *ngIf="rowEditable" igxToggle>
+<div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
             *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">
@@ -356,4 +352,4 @@
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>

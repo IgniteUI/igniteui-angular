@@ -53,9 +53,15 @@
     }
 
     @include m(focused) {
+        @extend  %igx-switch--focused !optional;
+
         @include e(ripple) {
             @extend %switch-ripple--focused !optional;
         }
+    }
+
+    @include mx(focused, checked) {
+        @extend  %igx-switch--focused-checked !optional;
     }
 
     @include m(checked) {

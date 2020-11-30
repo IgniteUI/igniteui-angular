@@ -20,7 +20,7 @@
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
 export enum DragDirection {
@@ -604,7 +604,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         public element: ElementRef,
         public viewContainer: ViewContainerRef,
         public zone: NgZone,
-        public renderer: Renderer2
+        public renderer: Renderer2,
+        protected platformUtil: PlatformUtil,
     ) {
     }
 
@@ -619,6 +620,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         // Bind events
         this.zone.runOutsideAngular(() => {
+            if (!this.platformUtil.isBrowser) {
+                return;
+            }
             const targetElements = this.dragHandles && this.dragHandles.length ?
                 this.dragHandles.map((item) => item.element.nativeElement) : [this.element.nativeElement];
             targetElements.forEach((element) => {
