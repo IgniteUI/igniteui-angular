@@ -2,7 +2,6 @@ import {
     AfterViewInit,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     OnInit,
     ViewChild } from '@angular/core';
 import {
@@ -20,7 +19,6 @@ import { Contract, REGIONS } from '../shared/financialData';
 export class GridFinJSComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
-    public properties;
     public data = [];
     public multiCellSelection: { data: any[] } = { data: [] };
     public selectionMode = 'multiple';
@@ -28,7 +26,7 @@ export class GridFinJSComponent implements OnInit, AfterViewInit {
     public regions = REGIONS;
     public showToolbar = true;
 
-    constructor(private elRef: ElementRef, public cdr: ChangeDetectorRef) { }
+    constructor(public cdr: ChangeDetectorRef) { }
 
     public ngOnInit() {
         this.grid.groupingExpressions = [{
@@ -50,12 +48,6 @@ export class GridFinJSComponent implements OnInit, AfterViewInit {
             strategy: DefaultSortingStrategy.instance()
         }
         ];
-        // this.volumeChanged = this.volumeSlider.onValueChange.pipe(debounce(() => timer(200)));
-        // this.volumeChanged.subscribe(
-        //     (x) => {
-        //         this.localService.getFinancialData(this.volume);
-        //     },
-        //     (err) => console.log('Error: ' + err));
     }
 
     public ngAfterViewInit() {
