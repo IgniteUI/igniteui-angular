@@ -222,9 +222,8 @@ export class IgxGridCRUDService {
                 this.grid.tbody.nativeElement.focus();
             }
         } else {
-
             if (cell?.row.addRow) {
-                this.beginAddRow(cell);
+                this.beginAddRow(cell, event);
                 return;
             }
             /** Changing the reference with the new editable cell */
@@ -294,7 +293,7 @@ export class IgxGridCRUDService {
     }
 
     /** Enters cell edit mode */
-    beginAddRow(cell) {
+    beginAddRow(cell, event?: Event) {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
         cell.enterAddMode = true;
@@ -302,7 +301,7 @@ export class IgxGridCRUDService {
         if (!this.sameRow(newCell.id.rowID)) {
             this.row = this.createRow(this.cell);
             this.row.isAddRow = true;
-            const rowArgs = this.row.createEditEventArgs(false);
+            const rowArgs = this.row.createEditEventArgs(false, event);
             this.grid.rowEditEnter.emit(rowArgs);
             if (rowArgs.cancel) {
                 this.endEditMode();
@@ -311,7 +310,7 @@ export class IgxGridCRUDService {
             }
             this.grid.openRowOverlay(this.row.id);
         }
-        const args = newCell.createEditEventArgs(false);
+        const args = newCell.createEditEventArgs(false, event);
         this.grid.cellEditEnter.emit(args);
         if (args.cancel) {
             this.endCellEdit();
