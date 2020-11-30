@@ -269,7 +269,7 @@ export class IgxOverlayService implements OnDestroy {
         const info: OverlayInfo = this.getOverlayById(id);
 
         if (!info) {
-           return;
+            return;
         }
 
         info.transformX += deltaX;
@@ -447,7 +447,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayElement(info: OverlayInfo): HTMLElement {
         if (info.settings.outlet) {
-            return info.settings.outlet.nativeElement;
+            return info.settings.outlet.nativeElement || info.settings.outlet;
         }
         if (!this._overlayElement) {
             this._overlayElement = this._document.createElement('div');
@@ -658,14 +658,14 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.target as any;
+                const target = ev.composed ? ev.composedPath()[0] : ev.target;
                 //  if the click is on the element do not close this overlay
                 if (!info.elementRef.nativeElement.contains(target)) {
                     // if we should exclude position target check if the click is over it. If so do not close overlay
                     const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
                     let clickOnPositionTarget = false;
                     if (positionTarget && positionTarget.contains) {
-                        clickOnPositionTarget = positionTarget.contains(target);
+                        clickOnPositionTarget = positionTarget.contains(target as any);
                     }
 
                     if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {
