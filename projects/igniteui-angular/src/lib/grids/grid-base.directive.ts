@@ -4197,7 +4197,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row.animateAdd = false;
             const cell = row.cells.find(c => c.editable);
             if (cell) {
-                cell.setEditMode(true);
+                this.gridAPI.submit_value(event);
+                this.crudService.enterEditMode(cell, event);
                 cell.activate();
             }
         });
