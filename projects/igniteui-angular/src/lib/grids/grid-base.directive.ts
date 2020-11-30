@@ -1563,8 +1563,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('loadingOverlay', { static: true })
-    public loadingOverlay: ElementRef;
+    @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
+    public loadingOverlay: IgxToggleDirective;
 
     /**
      * @hidden @internal
@@ -2061,7 +2061,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild('rowEditingOverlay', { read: IgxToggleDirective })
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
@@ -2709,7 +2709,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _baseFontSize: number;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
-    protected _loadingId;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
     protected _defaultExpandState = false;
     // Caches
@@ -2991,9 +2990,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (!this.crudService.cell &&
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
-                        this.navigation.activeNode.row < this.dataView.length)
-                || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                    this.navigation.activeNode.row < this.dataView.length)
+                    || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
+                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
@@ -3960,7 +3959,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     get showAddButton() {
         return this.rowEditable && this.dataView.length === 0 && this.columns.length > 0;
-     }
+    }
 
     /**
      * @hidden
@@ -6451,15 +6450,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };
-            if (!this._loadingId) {
-                this._loadingId = this.overlayService.attach(this.loadingOverlay, overlaySettings);
-                this.overlayService.show(this._loadingId, overlaySettings);
-            }
+            this.loadingOverlay.open(overlaySettings);
         } else {
-            if (this._loadingId) {
-                this.overlayService.hide(this._loadingId);
-                this._loadingId = null;
-            }
+            this.loadingOverlay.close();
         }
     }
 
@@ -6635,7 +6628,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endAdd(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const cachedRowData = {...row.data};
+        const cachedRowData = { ...row.data };
         let cancelable = false;
         if (!row && !cell) {
             return;
@@ -6664,7 +6657,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.rowEditDone.emit(doneArgs);
                 this.crudService.endRowEdit();
                 if (this.addRowParent.isPinned) {
-                  this.pinRow(row.id);
+                    this.pinRow(row.id);
                 }
             }
             this.addRowParent = null;
@@ -6678,7 +6671,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pipeTrigger++;
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
-            this.onRowAdded.emit({ data: row.data});
+            this.onRowAdded.emit({ data: row.data });
         }
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData);
         this.rowEditExit.emit(nonCancelableArgs);

@@ -6,7 +6,8 @@ import {
     ViewChild,
     HostBinding,
     ApplicationRef,
-    ComponentRef
+    ComponentRef,
+    ViewEncapsulation
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, async, inject } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -177,9 +178,9 @@ function formatString(inputString: string, formatters: any[]) {
 
 describe('igxOverlay', () => {
     const formatters = [
-        {pattern: /:\s/g, replacement: ':'},
-        {pattern: /red;/, replacement: 'red'}
-      ];
+        { pattern: /:\s/g, replacement: ':' },
+        { pattern: /red;/, replacement: 'red' }
+    ];
     beforeEach(async(() => {
         UIInteractions.clearOverlay();
     }));
@@ -825,7 +826,7 @@ describe('igxOverlay', () => {
             fix.detectChanges();
 
             const overlaySettings: OverlaySettings = {
-                target : button.nativeElement,
+                target: button.nativeElement,
                 positionStrategy: new ConnectedPositioningStrategy(),
                 modal: false,
                 closeOnOutsideClick: true
@@ -995,6 +996,46 @@ describe('igxOverlay', () => {
             fix.detectChanges();
 
             overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeUndefined();
+        }));
+
+        it('should correctly handle close on outside click in shadow DOM', fakeAsync(() => {
+            const fix = TestBed.createComponent(EmptyPageInShadowDomComponent);
+            const button = fix.componentInstance.buttonElement;
+            const outlet = fix.componentInstance.outletElement;
+            const overlay = fix.componentInstance.overlay;
+            fix.detectChanges();
+
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new ConnectedPositioningStrategy(),
+                target: button.nativeElement,
+                outlet: outlet
+            };
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+            fix.detectChanges();
+
+            let overlayDiv: Element = outlet.nativeElement.getElementsByTagName('component')[0];
+            expect(overlayDiv).toBeDefined();
+
+            const toggledDiv = overlayDiv.children[0];
+            (toggledDiv as any).click();
+
+            tick();
+            fix.detectChanges();
+
+            overlayDiv = outlet.nativeElement.getElementsByTagName('component')[0];
+            expect(overlayDiv).toBeDefined();
+
+            document.body.click();
+
+            tick();
+            fix.detectChanges();
+
+            overlayDiv = outlet.nativeElement.getElementsByTagName('component')[0];
             expect(overlayDiv).toBeUndefined();
         }));
     });
@@ -1453,20 +1494,20 @@ describe('igxOverlay', () => {
 
         it(`Should use StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop,
             closeAnimation: scaleOutVerTop as default options when using a ConnectedPositioningStrategy without passing options.`, () => {
-                const strategy = new ConnectedPositioningStrategy();
+            const strategy = new ConnectedPositioningStrategy();
 
-                const expectedDefaults = {
-                    horizontalDirection: HorizontalAlignment.Right,
-                    verticalDirection: VerticalAlignment.Bottom,
-                    horizontalStartPoint: HorizontalAlignment.Left,
-                    verticalStartPoint: VerticalAlignment.Bottom,
-                    openAnimation: scaleInVerTop,
-                    closeAnimation: scaleOutVerTop,
-                    minSize: { width: 0, height: 0 }
-                };
+            const expectedDefaults = {
+                horizontalDirection: HorizontalAlignment.Right,
+                verticalDirection: VerticalAlignment.Bottom,
+                horizontalStartPoint: HorizontalAlignment.Left,
+                verticalStartPoint: VerticalAlignment.Bottom,
+                openAnimation: scaleInVerTop,
+                closeAnimation: scaleOutVerTop,
+                minSize: { width: 0, height: 0 }
+            };
 
-                expect(strategy.settings).toEqual(expectedDefaults);
-            });
+            expect(strategy.settings).toEqual(expectedDefaults);
+        });
 
         // adding more than one component to show in igx-overlay:
         it('Should render the component exactly on top of the previous one when adding a new instance with default settings.', () => {
@@ -3926,6 +3967,20 @@ export class EmptyPageComponent {
 }
 
 @Component({
+    template: `
+        <button #button>Show Overlay</button>
+        <div igxOverlayOutlet #outlet></div>
+        `,
+    encapsulation: ViewEncapsulation.ShadowDom
+})
+export class EmptyPageInShadowDomComponent {
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('outlet', { static: true }) outletElement: ElementRef;
+}
+
+@Component({
     template: `<button #button (click)='click($event)'>Show Overlay</button>`,
     styles: [`button {
         position: absolute;
@@ -4012,7 +4067,6 @@ export class TwoButtonsComponent {
         ev.stopPropagation();
     }
 }
-
 @Component({
     template: `
     <div style="width: 420px; height: 280px;">
@@ -4112,6 +4166,7 @@ export class FlexContainerComponent {
 const DYNAMIC_COMPONENTS = [
     EmptyPageComponent,
     SimpleRefComponent,
+    EmptyPageInShadowDomComponent,
     SimpleDynamicComponent,
     SimpleBigSizeComponent,
     DownRightButtonComponent,
