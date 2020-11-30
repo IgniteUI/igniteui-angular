@@ -195,7 +195,7 @@
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
-    <div #loadingOverlay>
+    <div igxToggle #loadingOverlay>
         <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
@@ -279,7 +279,7 @@
 }">unfold_more</igx-icon>
 </ng-template>
 
-<div *ngIf="rowEditable" igxToggle>
+<div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
             *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">
