@@ -32,7 +32,6 @@
 /// @prop {Number} ghost-elevation [8] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
 /// @prop {color} remove-icon-color ["'currentColor'"] - The remove icon color for the chip.
 /// @prop {Map} remove-icon-color-focus [igx-color: ('error')] - The remove icon color on focus for the chip.
-/// @prop {color} $focus-border-color [transparent] - The chip focus border color.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_round-shape-chip
@@ -45,6 +44,10 @@ $_light-chip: extend(
         variant:'material',
 
         remove-icon-color: "'currentColor'",
+
+        focus-outline-color: transparent,
+
+        focus-selected-outline-color: transparent,
 
         remove-icon-color-focus: (
             igx-color: ('error')
@@ -210,21 +213,27 @@ $_bootstrap-chip: extend(
 /// Generates an indigo chip schema.
 /// @type {Map}
 ///
-/// @prop {Number} ghost-elevation [0] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
-/// @prop {Number} border-radius [3px] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} ghost-elevation [1] - The elevation level, between 0-24, to be used for the chip's ghost (dragging mode).
+/// @prop {Number} border-radius [1] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Color} text-color [#fff] - The chip text color.
-/// @prop {Map} background [igx-color: ('grays', 600)] - The chip background color.
-/// @prop {Map} ghost-background [igx-color: ('grays', 800), to-opaque: (igx-color: 'surface')] - The chip ghost background color.
-/// @prop {Color} hover-text-color [#fff] - The chip text hover color.
-/// @prop {Map} hover-background [igx-color: ('grays', 800)] - The chip hover background color.
-/// @prop {Color} focus-text-color [#fff] The focused chip text color.
-/// @prop {Map} focus-background [igx-color: ('grays', 800)] The focused chip background color.
+/// @prop {Color} background [#fff)] - The chip background color.
+/// @prop {Map} ghost-background [igx-color: ('grays', 200), to-opaque: (igx-color: 'surface')] - The chip ghost background color.
+/// @prop {Map} hover-text-color [igx-color: ('grays', 700)] - The chip text hover color.
+/// @prop {Map} hover-background [igx-color: ('grays', 200)] - The chip hover background color.
+/// @prop {Map} focus-text-color [igx-color: ('grays', 700)] The focused chip text color.
+/// @prop {Color} focus-background [#fff)] The focused chip background color.
 /// @prop {Map} selected-text-color [igx-contrast-color: ('primary', 500)] - The selected chip text color.
 /// @prop {Map} selected-background [igx-color: ('primary', 500)] - The selected chip background color.
 /// @prop {Map} hover-selected-text-color [igx-contrast-color: ('primary', 400)] - The selected chip hover text color.
 /// @prop {Map} hover-selected-background [igx-color: ('primary', 400)] - The selected chip hover background color.
 /// @prop {Map} focus-selected-text-color [igx-contrast-color: ('primary', 400)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [igx-color: ('primary', 400)] - The selected chip focus background color.
+/// @prop {Map} focus-outline-color [igx-color: ('grays', 300)] - The chip focus outline color.
+/// @prop {Map} focus-selected-outline-color [igx-color: ('primary', 200)] - The selected chip focus outline color.
+/// @prop {Map} border-color [igx-color: ('grays', 400)] - The chip border color.
+/// @prop {Map} hover-border-color [igx-color: ('grays', 400)] - The chip hover border color.
+/// @prop {Map} focus-border-color [igx-color: ('grays', 400)] - The chip focus border color.
+
 /// @requires {function} extend
 /// @requires {Map} $_light-chip
 /// @requires {Map} $_indigo-shape-chip
@@ -236,30 +245,52 @@ $_indigo-chip: extend(
     (
         variant: 'indigo-design',
 
-        background: (
-            igx-color: ('grays', 600)
+        focus-outline-color: (
+            igx-color: ('grays', 300)
         ),
 
+        focus-selected-outline-color: (
+            igx-color: ('primary', 200)
+        ),
+
+        background: #fff,
+
         ghost-background: (
-            igx-color: ('grays', 800),
+            igx-color: ('surface'),
 
             to-opaque: (
                 igx-color: 'surface',
             )
         ),
 
-        text-color: #fff,
-
-        hover-text-color: #fff,
-
         hover-background: (
-            igx-color: ('grays', 800)
+            igx-color: ('grays', 200)
         ),
 
-        focus-text-color: #fff,
+        focus-background: #fff,
 
-        focus-background: (
-            igx-color: ('grays', 800)
+        hover-text-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        focus-text-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        border-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        hover-border-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        focus-border-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        text-color: (
+            igx-color: ('grays', 700)
         ),
 
         selected-text-color: (

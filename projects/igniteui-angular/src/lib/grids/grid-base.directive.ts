@@ -3290,20 +3290,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public resetHorizontalForOfs() {
+        const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
+        this._horizontalForOfs = [
+            ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
+            ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
+        ];
+    }
+
+    /**
+     * @hidden @internal
+     */
     public _setupRowObservers() {
         const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
-        const resetHorizontalForOfs = () => {
-            this._horizontalForOfs = [
-                ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
-                ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
-            ];
-        };
-        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
-        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
-        resetHorizontalForOfs();
+        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(() => { this.resetHorizontalForOfs(); });
+        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(() => { this.resetHorizontalForOfs(); });
+        this.resetHorizontalForOfs();
     }
 
     /**
