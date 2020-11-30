@@ -609,7 +609,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private getOverlayElement(info: OverlayInfo): HTMLElement {
         if (info.settings.outlet) {
-            return info.settings.outlet.nativeElement;
+            return info.settings.outlet.nativeElement || info.settings.outlet;
         }
         if (!this._overlayElement) {
             this._overlayElement = this._document.createElement('div');
@@ -810,7 +810,7 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
-                const target = ev.target;
+                const target = ev.composed ? ev.composedPath()[0] : ev.target;
                 const overlayElement = info.elementRef.nativeElement;
                 // check if the click is on the overlay element or on an element from the exclusion list, and if so do not close the overlay
                 const excludeElements = info.settings.excludeFromOutsideClick ?
