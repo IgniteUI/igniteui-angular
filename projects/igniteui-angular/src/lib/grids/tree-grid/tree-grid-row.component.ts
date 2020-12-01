@@ -192,8 +192,19 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      * @hidden
      */
     public onRowSelectorClick1(event) {
+        // event.stopPropagation();
+        // if (this.grid.cascadeSelection && this.grid.rowSelection === 'multiple') {
+        //     this.selected ? this.grid.deselectChildren(this.rowID) : this.grid.selectChildren(this.rowID);
+        // } else {
+        //     if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+        //         this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+        //         return;
+        //     }
+        //     this.selected ? this.selectionService.deselectRow(this.rowID, event) :
+        //         this.selectionService.selectRowById(this.rowID, false, event);
+        // }
         event.stopPropagation();
-        if (this.grid.cascadeSelection && this.grid.rowSelection === 'multiple') {
+        if (this.grid.rowSelection === 'multipleCascade') {
             this.selected ? this.grid.deselectChildren(this.rowID) : this.grid.selectChildren(this.rowID);
         } else {
             if (event.shiftKey && this.grid.rowSelection === 'multiple') {

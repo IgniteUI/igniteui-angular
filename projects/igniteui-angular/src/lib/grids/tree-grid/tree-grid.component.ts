@@ -245,18 +245,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @Input()
     public cascadeOnDelete = true;
 
-    /**
-     * An @Input property indicating whether child records should be selected when their parent gets selected.
-     * By default it is set to false.
-     * ```html
-     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeSelection="true">
-     * </igx-tree-grid>
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public cascadeSelection = false;
-
     private _expansionDepth = Infinity;
 
     /**

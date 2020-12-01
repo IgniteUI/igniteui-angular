@@ -6871,7 +6871,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get isMultiRowSelectionEnabled(): boolean {
-        return this.rowSelection === GridSelectionMode.multiple;
+        return this.rowSelection === GridSelectionMode.multiple || this.rowSelection === GridSelectionMode.multipleCascade;
     }
 
     /**
