@@ -1599,8 +1599,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('loadingOverlay', { static: true })
-    public loadingOverlay: ElementRef;
+    @ViewChild('loadingOverlay', { read: IgxToggleDirective, static: true })
+    public loadingOverlay: IgxToggleDirective;
 
     /**
      * @hidden @internal
@@ -2085,7 +2085,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxToggleDirective)
+    @ViewChild('rowEditingOverlay', { read: IgxToggleDirective })
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
@@ -2743,7 +2743,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _baseFontSize: number;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
-    protected _loadingId;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
     protected _defaultExpandState = false;
     // Caches
@@ -3292,20 +3291,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public resetHorizontalForOfs() {
+        const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
+        this._horizontalForOfs = [
+            ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
+            ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
+        ];
+    }
+
+    /**
+     * @hidden @internal
+     */
     public _setupRowObservers() {
         const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
-        const resetHorizontalForOfs = () => {
-            this._horizontalForOfs = [
-                ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
-                ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
-            ];
-        };
-        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
-        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
-        resetHorizontalForOfs();
+        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(() => { this.resetHorizontalForOfs(); });
+        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(() => { this.resetHorizontalForOfs(); });
+        this.resetHorizontalForOfs();
     }
 
     /**
@@ -6484,15 +6488,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 closeOnOutsideClick: false,
                 positionStrategy: new ContainerPositionStrategy()
             };
-            if (!this._loadingId) {
-                this._loadingId = this.overlayService.attach(this.loadingOverlay, overlaySettings);
-                this.overlayService.show(this._loadingId, overlaySettings);
-            }
+            this.loadingOverlay.open(overlaySettings);
         } else {
-            if (this._loadingId) {
-                this.overlayService.hide(this._loadingId);
-                this._loadingId = null;
-            }
+            this.loadingOverlay.close();
         }
     }
 
