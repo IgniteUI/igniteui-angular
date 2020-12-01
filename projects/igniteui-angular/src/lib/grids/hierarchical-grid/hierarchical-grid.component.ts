@@ -36,6 +36,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
+import { FlatGridSelectionMode } from '../common/enums';
 
 let NEXT_ID = 0;
 
@@ -272,6 +273,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     private childGridTemplates: Map<any, any> = new Map();
     private scrollTop = 0;
     private scrollLeft = 0;
+    protected _rowSelectionMode: FlatGridSelectionMode;
+
+    /**
+     * Gets/Sets row selection mode
+     * @remarks
+     * By default the row selection mode is none
+     * @param selectionMode: FlatGridSelectionMode
+     */
+    @Input()
+    get rowSelection() {
+        return this._rowSelectionMode;
+    }
+
+    set rowSelection(selectionMode: FlatGridSelectionMode) {
+        this._rowSelectionMode = selectionMode;
+        if (this.gridAPI.grid && this.columnList) {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges(true);
+        }
+    }
 
     /**
      * @hidden

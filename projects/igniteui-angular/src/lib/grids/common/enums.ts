@@ -27,12 +27,18 @@ export type GridKeydownTargetType =
     'headerCell' |
     'masterDetailRow';
 
-export const GridSelectionMode = mkenum({
+export const FlatGridSelectionMode = mkenum({
     none: 'none',
     single: 'single',
-    multiple: 'multiple'
+    multiple: 'multiple',
 });
-export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
+export type FlatGridSelectionMode = (typeof FlatGridSelectionMode)[keyof typeof FlatGridSelectionMode];
+
+export const GridSelectionMode = mkenum({
+    ...FlatGridSelectionMode,
+    multipleCascade: 'multipleCascade'
+});
+export type GridSelectionMode = FlatGridSelectionMode | (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
 export const ColumnDisplayOrder = mkenum({
     Alphabetical: 'Alphabetical',

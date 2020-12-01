@@ -111,7 +111,8 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode
+    GridPagingMode,
+    FlatGridSelectionMode,
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -2764,7 +2765,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
     private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
-    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
+    protected _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
