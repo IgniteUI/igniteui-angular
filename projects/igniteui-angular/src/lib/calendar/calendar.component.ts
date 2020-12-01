@@ -657,13 +657,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.activeViewIdx = activeViewIdx;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
-            this.focusMonth(event.target);
+            this.focusMonth();
         });
     }
 
-    private focusMonth(target: HTMLElement) {
+    private focusMonth() {
         const month = this.monthsView.monthsRef.find((e) =>
-            e.index === parseInt(target.parentElement.attributes['data-month'].value, 10));
+            e.index === this.monthsView.date.getMonth());
         if (month) { month.nativeElement.focus(); }
     }
 
