@@ -15,6 +15,10 @@
         @extend %igx-tabs__header !optional;
     }
 
+    @include e(container) {
+        @extend %igx-tabs__container !optional;
+    }
+
     @include e(header-wrapper-fixed) {
         @extend %igx-tabs__header-wrapper-fixed !optional;
     }
