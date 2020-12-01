@@ -236,7 +236,8 @@
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
 
-    %igx-tabs {
+    %igx-tabs,
+    %igx-tabs__container {
         display: flex;
         flex-direction: column;
     }
@@ -255,8 +256,9 @@
 
     %igx-tabs__content-fixed,
     %igx-tabs__header-wrapper-fixed {
-        flex: 1 1 auto;
+        flex: 1;
         overflow: hidden;
+        height: inherit;
     }
 
     // ITEM HOLDER (The element that scrolls)
@@ -288,6 +290,7 @@
 
     %igx-tabs__content-fluid {
         display: flex;
+        height: inherit;
     }
 
     // MENU ITEM
@@ -529,6 +532,7 @@
     %igx-tabs__group {
         display: inline-block;
         min-width: 100%;
+        height: inherit;
     }
 
     %igx-tabs--fixed {
