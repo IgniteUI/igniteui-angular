@@ -21,7 +21,7 @@ import {
 } from './calendar.directives';
 import { KEYS } from '../core/utils';
 import { ICalendarDate, monthRange } from './calendar';
-import { CalendarView, IgxMonthPickerBaseDirective } from './month-picker-base';
+import { CalendarView, IgxCalendarView, IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
@@ -296,7 +296,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     get isYearView(): boolean {
-        return this.activeView === CalendarView.YEAR;
+        return this.activeView === CalendarView.YEAR || this.activeView === IgxCalendarView.Year;
     }
 
     /**
@@ -640,7 +640,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public changeMonth(event: Date) {
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
-        this.activeView = CalendarView.DEFAULT;
+        this.activeView = IgxCalendarView.Month;
 
         requestAnimationFrame(() => {
             const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx);
@@ -653,7 +653,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public onActiveViewYear(args: Date, activeViewIdx: number, event?): void {
-        this.activeView = CalendarView.YEAR;
+        this.activeView = IgxCalendarView.Year;
         this.activeViewIdx = activeViewIdx;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
@@ -744,7 +744,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             this.scrollMonth$.next();
         }
 
-        if (this.activeView !== CalendarView.DEFAULT) {
+        if (!this.isDefaultView) {
             return;
         }
 
@@ -772,7 +772,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public viewRendered(event) {
         if (event.fromState !== 'void') {
             this.activeViewChanged.emit(this.activeView);
-            if (this.activeView === 0) { this.resetActiveDate(); }
+            if (this.isDefaultView) { this.resetActiveDate(); }
         }
     }
 
@@ -800,9 +800,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
-        if (this.activeView !== CalendarView.DEFAULT) {
-            return;
-        }
+        if (!this.isDefaultView) { return; }
 
         const isPageDown = event.key === 'PageDown';
         const step = isPageDown ? 1 : -1;
@@ -863,9 +861,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public onKeydownShiftPageUp(event: KeyboardEvent) {
         event.preventDefault();
 
-        if (this.activeView !== CalendarView.DEFAULT) {
-            return;
-        }
+        if (!this.isDefaultView) { return; }
 
         const isPageDown = event.key === 'PageDown';
         const step = isPageDown ? 1 : -1;

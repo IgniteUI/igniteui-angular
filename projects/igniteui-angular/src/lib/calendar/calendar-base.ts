@@ -4,7 +4,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
 import { isDate, mkenum } from '../core/utils';
-import { CalendarView } from './month-picker-base';
+import { IgxCalendarView } from './month-picker-base';
 
 /**
  * Sets the selection type - single, multi or range.
@@ -283,7 +283,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * ```
      */
     @Output()
-    public activeViewChanged  = new EventEmitter<CalendarView>();
+    public activeViewChanged  = new EventEmitter<IgxCalendarView>();
 
     /**
      * @hidden

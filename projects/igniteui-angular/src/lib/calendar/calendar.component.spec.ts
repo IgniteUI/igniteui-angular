@@ -13,7 +13,7 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 import { HelperTestFunctions } from './calendar-helper-utils';
-import { CalendarView } from './month-picker-base';
+import { IgxCalendarView } from './month-picker-base';
 import { IViewDateChangeEventArgs } from './calendar-base';
 
 describe('IgxCalendar - ', () => {
@@ -1660,7 +1660,7 @@ describe('IgxCalendar - ', () => {
                 tick();
 
                 expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(CalendarView.DECADE);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(IgxCalendarView.Decade);
 
                 const years = dom.queryAll(By.css(HelperTestFunctions.YEAR_CSSCLASS));
                 let currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
@@ -1707,7 +1707,7 @@ describe('IgxCalendar - ', () => {
                 tick();
 
                 expect(calendar.activeViewChanged.emit).toHaveBeenCalledTimes(1);
-                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(CalendarView.YEAR);
+                expect(calendar.activeViewChanged.emit).toHaveBeenCalledWith(IgxCalendarView.Year);
 
                 const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
                 const currentMonth = dom.query(By.css(HelperTestFunctions.CURRENT_MONTH_CSSCLASS));
