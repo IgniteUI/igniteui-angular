@@ -236,11 +236,18 @@
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
 
-    %igx-tabs,
+    %igx-tabs {
+		    height: 100%;
+    }
+
+		%igx-tabs__container {
+				height: 100%;
+		}
+
+		%igx-tabs,
     %igx-tabs__container {
         display: flex;
         flex-direction: column;
-        height: 100%;
     }
 
     %igx-tabs__header {
