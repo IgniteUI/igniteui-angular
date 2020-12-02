@@ -8,7 +8,10 @@ export const IgxCalendarView = mkenum({
     Decade: 'decade'
 });
 
-enum CalendarView {
+/**
+ * @hidden
+ */
+export enum CalendarView {
     DEFAULT,
     YEAR,
     DECADE
