@@ -28,3 +28,9 @@ $_fluent-column-actions: extend($_light-column-actions);
 /// @requires {function} extend
 /// @requires {map} $_light-column-actions
 $_bootstrap-column-actions: extend($_light-column-actions);
+
+/// Generates an indigo column actions schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-column-actions
+$_indigo-column-actions: extend($_light-column-actions);
