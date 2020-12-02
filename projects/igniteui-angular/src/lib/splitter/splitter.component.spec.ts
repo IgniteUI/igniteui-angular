@@ -69,13 +69,13 @@ describe('IgxSplitter', () => {
         splitterBarComponent.moveStart.emit(pane1);
         splitterBarComponent.moving.emit(-100);
         fixture.detectChanges();
-        expect(pane1.size).toBe(pane1_originalSize + 100 + 'px');
-        expect(pane2.size).toBe(pane2_originalSize - 100 + 'px');
+        expect(pane1.dragSize).toBe(pane1_originalSize + 100 + 'px');
+        expect(pane2.dragSize).toBe(pane2_originalSize - 100 + 'px');
 
         splitterBarComponent.moving.emit(100);
         fixture.detectChanges();
-        expect(pane1.size).toBe(pane1_originalSize - 100 + 'px');
-        expect(pane2.size).toBe(pane2_originalSize + 100 + 'px');
+        expect(pane1.dragSize).toBe(pane1_originalSize - 100 + 'px');
+        expect(pane2.dragSize).toBe(pane2_originalSize + 100 + 'px');
     });
     it('should allow resizing horizontal splitter', () => {
         const pane1 =  splitter.panes.toArray()[0];
@@ -89,13 +89,13 @@ describe('IgxSplitter', () => {
         splitterBarComponent.moving.emit(-100);
         fixture.detectChanges();
 
-        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize + 100, 0);
-        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 100, 0);
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 100, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 100, 0);
 
         splitterBarComponent.moving.emit(100);
         fixture.detectChanges();
-        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize - 100, 0);
-        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize + 100, 0);
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize - 100, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize + 100, 0);
     });
     it('should honor minSize/maxSize when resizing.', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
@@ -112,16 +112,16 @@ describe('IgxSplitter', () => {
         splitterBarComponent.moveStart.emit(pane1);
         splitterBarComponent.moving.emit(100);
         fixture.detectChanges();
-        expect(pane1.size).toBe('100px');
-        expect(pane2.size).toBe('300px');
+        expect(pane1.dragSize).toBe('100px');
+        expect(pane2.dragSize).toBe('300px');
 
         splitterBarComponent.moveStart.emit(pane1);
         splitterBarComponent.moving.emit(-200);
         splitterBarComponent.moveStart.emit(pane1);
         splitterBarComponent.moving.emit(-50);
         fixture.detectChanges();
-        expect(pane1.size).toBe('300px');
-        expect(pane2.size).toBe('100px');
+        expect(pane1.dragSize).toBe('300px');
+        expect(pane2.dragSize).toBe('100px');
     });
 
     it('should not allow drag resize if resizable is set to false.', () => {
@@ -149,20 +149,20 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent);
         fixture.detectChanges();
-        expect(pane1.size).toBe(pane1_originalSize - 10 + 'px');
-        expect(pane2.size).toBe(pane2_originalSize + 10 + 'px');
+        expect(pane1.dragSize).toBe(pane1_originalSize - 10 + 'px');
+        expect(pane2.dragSize).toBe(pane2_originalSize + 10 + 'px');
 
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
         fixture.detectChanges();
-        expect(pane1.size).toBe(pane1_originalSize + 10 + 'px');
-        expect(pane2.size).toBe(pane2_originalSize - 10 + 'px');
+        expect(pane1.dragSize).toBe(pane1_originalSize + 10 + 'px');
+        expect(pane2.dragSize).toBe(pane2_originalSize - 10 + 'px');
 
         pane2.resizable = false;
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
         fixture.detectChanges();
-        expect(pane1.size).toBe(pane1_originalSize + 10 + 'px');
-        expect(pane2.size).toBe(pane2_originalSize - 10 + 'px');
+        expect(pane1.dragSize).toBe(pane1_originalSize + 10 + 'px');
+        expect(pane2.dragSize).toBe(pane2_originalSize - 10 + 'px');
     });
 
     it('should allow resizing with left/right arrow keys', () => {
@@ -178,20 +178,20 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent);
         fixture.detectChanges();
-        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize - 10, 0);
-        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize + 10, 0);
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize - 10, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize + 10, 0);
 
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
         fixture.detectChanges();
-        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize + 10, 0);
-        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 10, 0);
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 10, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 10, 0);
 
         pane1.resizable = false;
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
         fixture.detectChanges();
-        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize + 10, 0);
-        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 10, 0);
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 10, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 10, 0);
     });
 
     it('should allow expand/collapse with Ctrl + up/down arrow keys', () => {
@@ -238,6 +238,60 @@ describe('IgxSplitter', () => {
         UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
         fixture.detectChanges();
         expect(pane2.collapsed).toBeFalsy();
+    });
+
+    it('should allow resize in % when pane size is auto.', () => {
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        expect(pane1.size).toBe('auto');
+        expect(pane2.size).toBe('auto');
+        const pane1_originalSize = pane1.element.offsetWidth;
+        const pane2_originalSize = pane2.element.offsetWidth;
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.moving.emit(-100);
+        fixture.detectChanges();
+
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 100, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 100, 0);
+
+        // on move end convert to % value and apply to size.
+        splitterBarComponent.movingEnd.emit(-100);
+        fixture.detectChanges();
+
+        expect(pane1.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+
+        expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
+        expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
+    });
+
+    it('should allow mixing % and px sizes.', () => {
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        pane1.size = '200px';
+        fixture.detectChanges();
+
+        const pane1_originalSize = pane1.element.offsetWidth;
+        const pane2_originalSize = pane2.element.offsetWidth;
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.moving.emit(-100);
+        fixture.detectChanges();
+
+        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 100, 0);
+        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 100, 0);
+
+        // on move end convert to % value and apply to size.
+        splitterBarComponent.movingEnd.emit(-100);
+        fixture.detectChanges();
+
+        // fist pane should remain in px
+        expect(pane1.size).toBe('300px');
+        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+
+        expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
+        expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
     });
 
 });
