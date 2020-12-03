@@ -2707,68 +2707,67 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
 
 @Component({
     template: `
-    <div style="width: 600px; height: 400px;">
-    <igx-tabs #tabs>
-      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
-      <igx-tabs-group label="Tab 2">
-        <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 3">
-        <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-            [width]="column.width"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 4">
-        <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
-            [paging]="true" [perPage]="3">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-            [hasSummary]="true"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 5">
-        <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-            [paging]="true" [perPage]="4">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 6">
-      <div style='height:300px;'>
-      <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-       >
-      <igx-column
-          *ngFor="let column of columns"
-          [field]="column.field"
-          [header]="column.field"
-      >
-      </igx-column>
-      </igx-grid>
-      </div>
-    </igx-tabs-group>
-    </igx-tabs>
-  </div>
+	<div style="width: 600px; height: 400px;">
+		<igx-tabs #tabs>
+			<igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+			<igx-tabs-group label="Tab 2">
+				<igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
+					<igx-column
+					    *ngFor="let column of columns"
+					    [field]="column.field"
+					    [header]="column.field"
+					>
+					</igx-column>
+				</igx-grid>
+			</igx-tabs-group>
+			<igx-tabs-group label="Tab 3">
+				<igx-grid #grid3 [data]="data" [primaryKey]="'id'">
+					<igx-column
+					    *ngFor="let column of columns"
+					    [field]="column.field"
+					    [header]="column.field"
+					    [width]="column.width"
+					>
+					</igx-column>
+				</igx-grid>
+			</igx-tabs-group>
+			<igx-tabs-group label="Tab 4">
+				<igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
+				    [paging]="true" [perPage]="3">
+					<igx-column
+					    *ngFor="let column of columns"
+					    [field]="column.field"
+					    [header]="column.field"
+					    [hasSummary]="true"
+					>
+					</igx-column>
+				</igx-grid>
+			</igx-tabs-group>
+			<igx-tabs-group label="Tab 5">
+				<igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
+				    [paging]="true" [perPage]="4">
+					<igx-column
+					    *ngFor="let column of columns"
+					    [field]="column.field"
+					    [header]="column.field"
+					>
+					</igx-column>
+				</igx-grid>
+			</igx-tabs-group>
+			<igx-tabs-group label="Tab 6">
+			<div style='height:300px;'>
+				<igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
+				<igx-column
+				*ngFor="let column of columns"
+				[field]="column.field"
+				[header]="column.field"
+				>
+				</igx-column>
+				</igx-grid>
+			</div>
+			</igx-tabs-group>
+		</igx-tabs>
+	</div>
     `
 })
 export class IgxGridInsideIgxTabsComponent {
