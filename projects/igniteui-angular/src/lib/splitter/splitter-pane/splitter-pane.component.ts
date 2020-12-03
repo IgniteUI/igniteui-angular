@@ -20,6 +20,7 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
 export class IgxSplitterPaneComponent {
 
     private _size = 'auto';
+    private _dragSize;
     private _collapsed = false;
 
     /** @hidden @internal */
@@ -41,6 +42,20 @@ export class IgxSplitterPaneComponent {
 
     set size(value) {
         this._size = value;
+        this.el.nativeElement.style.flex = this.flex;
+    }
+
+    /** @hidden @internal */
+    get isPercentageSize() {
+        return this.size === 'auto' || this.size.indexOf('%') !== -1;
+    }
+
+    /** @hidden @internal */
+    get dragSize() {
+        return this._dragSize;
+    }
+    set dragSize(val) {
+        this._dragSize = val;
         this.el.nativeElement.style.flex = this.flex;
     }
 
@@ -137,10 +152,10 @@ export class IgxSplitterPaneComponent {
      */
     @HostBinding('style.flex')
     public get flex() {
-        const grow = this.size !== 'auto' ? 0 : 1;
-        const shrink = this.size !== 'auto' ? 0 : 1;
-
-        return `${grow} ${shrink} ${this.size}`;
+        const isAuto = this.size === 'auto' && !this.dragSize;
+        const grow = !isAuto ? 0 : 1;
+        const size = this.dragSize || this.size;
+        return `${grow} ${grow} ${size}`;
     }
 
     /**
