@@ -544,6 +544,7 @@
     %igx-tabs__group {
         display: inline-block;
         min-width: 100%;
+        overflow-y: auto;
     }
 
     %igx-tabs--fixed {
