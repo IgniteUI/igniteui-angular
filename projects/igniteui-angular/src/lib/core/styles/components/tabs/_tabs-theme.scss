@@ -237,17 +237,23 @@
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
 
     %igx-tabs {
-		    height: 100%;
+        height: 100%;
     }
 
-		%igx-tabs__container {
-				height: 100%;
-		}
+    %igx-tabs__container {
+        height: 100%;
+    }
 
-		%igx-tabs,
+    %igx-tabs,
     %igx-tabs__container {
         display: flex;
         flex-direction: column;
+    }
+
+    %igx-tabs__group,
+    %igx-tabs__content-fixed,
+    %igx-tabs__content-fluid {
+        height: inherit;
     }
 
     %igx-tabs__header {
@@ -266,7 +272,6 @@
     %igx-tabs__header-wrapper-fixed {
         flex: 1;
         overflow: hidden;
-        height: inherit;
     }
 
     // ITEM HOLDER (The element that scrolls)
@@ -298,7 +303,6 @@
 
     %igx-tabs__content-fluid {
         display: flex;
-        height: inherit;
     }
 
     // MENU ITEM
@@ -540,7 +544,6 @@
     %igx-tabs__group {
         display: inline-block;
         min-width: 100%;
-        height: inherit;
     }
 
     %igx-tabs--fixed {
