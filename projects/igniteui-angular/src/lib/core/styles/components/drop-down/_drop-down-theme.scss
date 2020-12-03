@@ -215,6 +215,10 @@
     $prefix-margin-cosy: 0 rem(16px) 0 0;
     $prefix-margin-compact: 0 rem(12px) 0 0;
 
+    $suffix-margin-comfortable: 0 0 0 rem(8px);
+    $suffix-margin-cosy: 0 0 0 rem(6px);
+    $suffix-margin-compact: 0 0 0 rem(4px);
+
     $item-padding: (
         comfortable: $item-padding-comfortable,
         cosy: $item-padding-cosy,
@@ -225,6 +229,12 @@
         comfortable: $prefix-margin-comfortable,
         cosy: $prefix-margin-cosy,
         compact: $prefix-margin-compact
+    );
+
+    $suffix-margin: (
+        comfortable: $suffix-margin-comfortable,
+        cosy: $suffix-margin-cosy,
+        compact: $suffix-margin-compact
     );
 
     $header-item-padding: (
@@ -267,26 +277,7 @@
         width: 100%;
         white-space: nowrap;
         height: map-get($item-height, 'comfortable');
-    }
-
-    %igx-drop-down__item {
-        color: --var($theme, 'item-text-color');
-        cursor: pointer;
-        padding: map-get($item-padding, 'comfortable');
-        border-radius: --var($theme, 'item-border-radius');
         position: relative;
-
-        &:focus {
-            outline: 0;
-            outline-color: transparent;
-            background: --var($theme, 'focused-item-background');
-            color: --var($theme, 'focused-item-text-color');
-        }
-
-        &:hover {
-            background: --var($theme, 'hover-item-background');
-            color: --var($theme, 'hover-item-text-color');
-        }
 
         igx-prefix,
         [igxPrefix] {
@@ -306,6 +297,25 @@
         }
     }
 
+    %igx-drop-down__item {
+        color: --var($theme, 'item-text-color');
+        cursor: pointer;
+        padding: map-get($item-padding, 'comfortable');
+        border-radius: --var($theme, 'item-border-radius');
+
+        &:focus {
+            outline: 0;
+            outline-color: transparent;
+            background: --var($theme, 'focused-item-background');
+            color: --var($theme, 'focused-item-text-color');
+        }
+
+        &:hover {
+            background: --var($theme, 'hover-item-background');
+            color: --var($theme, 'hover-item-text-color');
+        }
+    }
+
     %igx-drop-down__content {
         display: flex;
         width: 100%;
@@ -315,6 +325,7 @@
     %igx-drop-down__inner {
         display: block;
         @include ellipsis();
+        margin-right: auto;
     }
 
     %igx-drop-down__item--cosy {
@@ -324,6 +335,11 @@
         igx-prefix,
         [igxPrefix] {
             @extend %igx-drop-down__prefix--cosy;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--cosy;
         }
     }
 
@@ -335,6 +351,11 @@
         [igxPrefix] {
             @extend %igx-drop-down__prefix--compact;
         }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--compact;
+        }
     }
 
     %igx-drop-down__prefix {
@@ -342,15 +363,32 @@
     }
 
     %igx-drop-down__suffix {
-        margin-#{$left}: auto;
+        + igx-suffix,
+        + [igxSuffix] {
+            margin: map-get($suffix-margin, 'comfortable');
+        }
     }
 
     %igx-drop-down__prefix--cosy {
         margin: map-get($prefix-margin, 'cosy');
     }
 
+    %igx-drop-down__suffix--cosy {
+        + igx-suffix,
+        + [igxSuffix] {
+            margin: map-get($suffix-margin, 'cosy');
+        }
+    }
+
     %igx-drop-down__prefix--compact {
         margin: map-get($prefix-margin, 'compact');
+    }
+
+    %igx-drop-down__suffix--compact {
+        + igx-suffix,
+        + [igxSuffix] {
+            margin: map-get($suffix-margin, 'compact');
+        }
     }
 
     %igx-drop-down__header {
@@ -362,11 +400,31 @@
     %igx-drop-down__header--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($header-item-padding, 'cosy');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix--cosy;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--cosy;
+        }
     }
 
     %igx-drop-down__header--compact {
         height: map-get($item-height, 'compact');
         padding: map-get($header-item-padding, 'compact');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix--compact;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--compact;
+        }
     }
 
     %igx-drop-down__group {
