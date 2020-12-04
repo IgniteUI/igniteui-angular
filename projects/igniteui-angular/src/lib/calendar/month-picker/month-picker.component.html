@@ -14,7 +14,7 @@
             (keydown)="changeYearKB($event, false)"
             [ngStyle]="{'min-width.%': 25, 'left': 0}" 
             role="button"
-            [attr.aria-label]="'Previous Year ' + calendarModel.getPrevYear(viewDate).getFullYear()"
+            [attr.aria-label]="'Previous Year ' + getPreviousYear()"
             data-action="prev">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
@@ -36,7 +36,7 @@
             (keydown)="changeYearKB($event)"
             [ngStyle]="{'min-width.%': 25,'right': 0}"
             role="button"
-            [attr.aria-label]="'Next Year ' + calendarModel.getNextYear(viewDate).getFullYear()"
+            [attr.aria-label]="'Next Year ' + getNextYear()"
             data-action="next">
 
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
