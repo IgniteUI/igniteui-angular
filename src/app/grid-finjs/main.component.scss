@@ -1,0 +1,19 @@
+.grid__wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+:host ::ng-deep {
+    .fin-dark-theme {
+        .finjs-slider,
+        .sample-toolbar {
+            color: rgba(255, 255, 255, 0.87);
+        }
+    }
+}
