@@ -284,6 +284,27 @@ describe('Column Pinning UI #grid', () => {
         });
     });
 
+    it('Checks order of columns after unpinning', () => {
+        for (const column of grid.columns) {
+            column.pin();
+        }
+        fix.detectChanges();
+        grid.getColumnByName('ID').unpin();
+        grid.getColumnByName('ReleaseDate').unpin();
+        grid.getColumnByName('Downloads').unpin();
+        grid.getColumnByName('ProductName').unpin();
+        grid.getColumnByName('Released').unpin();
+        fix.detectChanges();
+        grid.unpinnedColumns.forEach((column, index) => {
+            if (index === grid.unpinnedColumns.length - 1) {
+                return;
+            }
+            expect(
+                column.index < grid.unpinnedColumns[index + 1].index
+            ).toBe(true);
+        });
+    });
+
     it('- should size cells correctly when there is a large pinned templated column', fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(ColumnPinningWithTemplateTestComponent);
         fix.detectChanges();
