@@ -893,7 +893,7 @@ export class FinancialData {
 
     /** Updates values in every record */
     public static updateAllPrices(data: any[]): any[] {
-      const newData = [];
+        const newData = [];
         for (const dataRow of data) {
             newData.push(this.randomizeObjectData(dataRow));
         }
