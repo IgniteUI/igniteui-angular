@@ -211,10 +211,30 @@
     $item-padding-cosy: 0 rem(20px);
     $item-padding-compact: 0 rem(16px);
 
+    $prefix-margin-comfortable: rem(20px);
+    $prefix-margin-cosy: rem(16px);
+    $prefix-margin-compact: rem(12px);
+
+    $suffix-margin-comfortable: rem(8px);
+    $suffix-margin-cosy: rem(6px);
+    $suffix-margin-compact: rem(4px);
+
     $item-padding: (
         comfortable: $item-padding-comfortable,
         cosy: $item-padding-cosy,
         compact: $item-padding-compact
+    );
+
+    $prefix-margin: (
+        comfortable: $prefix-margin-comfortable,
+        cosy: $prefix-margin-cosy,
+        compact: $prefix-margin-compact
+    );
+
+    $suffix-margin: (
+        comfortable: $suffix-margin-comfortable,
+        cosy: $suffix-margin-cosy,
+        compact: $suffix-margin-compact
     );
 
     $header-item-padding: (
@@ -222,6 +242,9 @@
         cosy: 0 rem(12px),
         compact: 0 rem(8px)
     );
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %igx-drop-down {
         position: absolute;
@@ -254,6 +277,24 @@
         width: 100%;
         white-space: nowrap;
         height: map-get($item-height, 'comfortable');
+        position: relative;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix;
+        }
+
+        igx-divider {
+            position: absolute;
+            width: 100%;
+            #{$left}: 0;
+            bottom: 0;
+        }
     }
 
     %igx-drop-down__item {
@@ -275,19 +316,79 @@
         }
     }
 
+    %igx-drop-down__content {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+
     %igx-drop-down__inner {
         display: block;
         @include ellipsis();
+        margin-#{$right}: auto;
     }
 
     %igx-drop-down__item--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($item-padding, 'cosy');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix--cosy;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--cosy;
+        }
     }
 
     %igx-drop-down__item--compact {
         height: map-get($item-height, 'compact');
         padding: map-get($item-padding, 'compact');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix--compact;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--compact;
+        }
+    }
+
+    %igx-drop-down__prefix {
+        margin-#{$right}: map-get($prefix-margin, 'comfortable');
+    }
+
+    %igx-drop-down__suffix {
+        + igx-suffix,
+        + [igxSuffix] {
+            margin-#{$left}: map-get($suffix-margin, 'comfortable');
+        }
+    }
+
+    %igx-drop-down__prefix--cosy {
+        margin-#{$right}: map-get($prefix-margin, 'cosy');
+    }
+
+    %igx-drop-down__suffix--cosy {
+        + igx-suffix,
+        + [igxSuffix] {
+            margin-#{$left}: map-get($suffix-margin, 'cosy');
+        }
+    }
+
+    %igx-drop-down__prefix--compact {
+        margin-#{$right}: map-get($prefix-margin, 'compact');
+    }
+
+    %igx-drop-down__suffix--compact {
+        + igx-suffix,
+        + [igxSuffix] {
+            margin-#{$left}: map-get($suffix-margin, 'compact');
+        }
     }
 
     %igx-drop-down__header {
@@ -299,11 +400,31 @@
     %igx-drop-down__header--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($header-item-padding, 'cosy');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix--cosy;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--cosy;
+        }
     }
 
     %igx-drop-down__header--compact {
         height: map-get($item-height, 'compact');
         padding: map-get($header-item-padding, 'compact');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-drop-down__prefix--compact;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-drop-down__suffix--compact;
+        }
     }
 
     %igx-drop-down__group {
