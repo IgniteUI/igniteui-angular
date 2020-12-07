@@ -433,6 +433,10 @@
 
         &:focus %igx-thumb-dot::before {
             box-shadow: none;
+
+            @if $variant == 'fluent' {
+                border-color: --var($theme, 'thumb-disabled-border-color') !important;
+            }
         }
     }
 
