@@ -1925,10 +1925,14 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(600);
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(600);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(600);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
 
         it('IgxTabs: should initialize a grid with correct width/height when there is no column width set', async () => {
@@ -1990,8 +1994,13 @@ describe('IgxGrid Component Tests #grid', () => {
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
+            const expectedHeight = grid.nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height;
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
@@ -2009,7 +2018,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height;
             expect(grid.calcHeight).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
