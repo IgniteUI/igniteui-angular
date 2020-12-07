@@ -11,6 +11,8 @@
 /// @param {Color} $track-color [null] - The color of the track.
 /// @param {Color} $track-step-color [null] - The color of the track steps.
 /// @param {Color} $thumb-color [null] - The color of the thumb.
+/// @param {Color} $thumb-focus-color [null] - The focus color of the thumb.
+///
 /// @param {Color} $label-background-color [null] - The background color of the bubble label.
 /// @param {Color} $label-text-color [null] - The text color of the bubble label.
 ///
@@ -81,6 +83,7 @@
         track-hover-color: $track-hover-color,
         thumb-color: $thumb-color,
         thumb-hover-color: $thumb-hover-color,
+        thumb-focus-color: $thumb-focus-color,
         label-background-color: $label-background-color,
         label-text-color: $label-text-color,
         disabled-thumb-color: $disabled-thumb-color,
@@ -93,7 +96,6 @@
         tick-label-color-tall: $tick-label-color-tall,
         tick-color: $tick-color,
         tick-color-tall: $tick-color-tall,
-        thumb-focus-color: $thumb-focus-color,
     ));
 }
 
@@ -116,6 +118,13 @@
         fluent: 4px,
         bootstrap: 5px,
         indigo-design: 2px
+    ), $variant);
+
+    $slider-outline-width: map-get((
+        material: 3px,
+        fluent: 0,
+        bootstrap: 3px,
+        indigo-design: 3px
     ), $variant);
 
     // Slide ticks
@@ -408,9 +417,11 @@
             transform: scale(.8);
         }
 
-        @if $variant == 'indigo-design' {
-            &:focus %igx-thumb-dot::before {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'thumb-focus-color');
+        &:focus %igx-thumb-dot::before {
+            box-shadow: 0 0 0 rem($slider-outline-width) --var($theme, 'thumb-focus-color');
+
+            @if $variant == 'fluent' {
+                border-color: --var($theme, 'thumb-focus-color') !important;
             }
         }
     }
@@ -419,10 +430,9 @@
         &:hover %igx-thumb-label {
             opacity: 0;
         }
-        @if $variant == 'indigo-design' {
-            &:focus %igx-thumb-dot::before {
-                box-shadow: none;
-            }
+
+        &:focus %igx-thumb-dot::before {
+            box-shadow: none;
         }
     }
 
