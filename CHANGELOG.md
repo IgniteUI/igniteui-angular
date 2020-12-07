@@ -1,6 +1,12 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 11.1.0
+
+### New Features
+- `IgxDropDown`
+    - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
+
 ## 11.0.0
 
 
@@ -20,8 +26,6 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxCalendar`
     - Is now fully accessible to screen readers.
-- `IgxDropDown`
-    - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 
 ### Improvements
 - `IgxOverlay`
