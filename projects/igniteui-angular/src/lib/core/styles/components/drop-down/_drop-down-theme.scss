@@ -211,13 +211,13 @@
     $item-padding-cosy: 0 rem(20px);
     $item-padding-compact: 0 rem(16px);
 
-    $prefix-margin-comfortable: 0 rem(20px) 0 0;
-    $prefix-margin-cosy: 0 rem(16px) 0 0;
-    $prefix-margin-compact: 0 rem(12px) 0 0;
+    $prefix-margin-comfortable: rem(20px);
+    $prefix-margin-cosy: rem(16px);
+    $prefix-margin-compact: rem(12px);
 
-    $suffix-margin-comfortable: 0 0 0 rem(8px);
-    $suffix-margin-cosy: 0 0 0 rem(6px);
-    $suffix-margin-compact: 0 0 0 rem(4px);
+    $suffix-margin-comfortable: rem(8px);
+    $suffix-margin-cosy: rem(6px);
+    $suffix-margin-compact: rem(4px);
 
     $item-padding: (
         comfortable: $item-padding-comfortable,
@@ -325,7 +325,7 @@
     %igx-drop-down__inner {
         display: block;
         @include ellipsis();
-        margin-right: auto;
+        margin-#{$right}: auto;
     }
 
     %igx-drop-down__item--cosy {
@@ -359,35 +359,35 @@
     }
 
     %igx-drop-down__prefix {
-        margin: map-get($prefix-margin, 'comfortable');
+        margin-#{$right}: map-get($prefix-margin, 'comfortable');
     }
 
     %igx-drop-down__suffix {
         + igx-suffix,
         + [igxSuffix] {
-            margin: map-get($suffix-margin, 'comfortable');
+            margin-#{$left}: map-get($suffix-margin, 'comfortable');
         }
     }
 
     %igx-drop-down__prefix--cosy {
-        margin: map-get($prefix-margin, 'cosy');
+        margin-#{$right}: map-get($prefix-margin, 'cosy');
     }
 
     %igx-drop-down__suffix--cosy {
         + igx-suffix,
         + [igxSuffix] {
-            margin: map-get($suffix-margin, 'cosy');
+            margin-#{$left}: map-get($suffix-margin, 'cosy');
         }
     }
 
     %igx-drop-down__prefix--compact {
-        margin: map-get($prefix-margin, 'compact');
+        margin-#{$right}: map-get($prefix-margin, 'compact');
     }
 
     %igx-drop-down__suffix--compact {
         + igx-suffix,
         + [igxSuffix] {
-            margin: map-get($suffix-margin, 'compact');
+            margin-#{$left}: map-get($suffix-margin, 'compact');
         }
     }
 
