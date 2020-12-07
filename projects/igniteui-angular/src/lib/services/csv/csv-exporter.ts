@@ -6,7 +6,7 @@ import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { IBaseEventArgs } from '../../core/utils';
 
 export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
-    csvData: string;
+    csvData?: string;
 }
 
 /**

@@ -1,0 +1,10 @@
+<div class="grid__wrapper" [class.fin-dark-theme]="theme">
+    <app-finjs-controllers #controllers
+        (switchChanged)="onSwitchChanged($event)"
+        (volumeChanged)="onVolumeChanged($event)"
+        (frequencyChanged)="onFrequencyChanged($event)"
+        (playAction)="onPlayAction($event)">
+    </app-finjs-controllers>
+    <app-finjs-grid #grid>
+    </app-finjs-grid>
+</div>

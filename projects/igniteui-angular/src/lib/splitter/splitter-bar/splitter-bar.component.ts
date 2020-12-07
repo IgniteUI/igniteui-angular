@@ -88,6 +88,9 @@ export class IgxSplitBarComponent {
     @Output()
     public moving = new EventEmitter<number>();
 
+    @Output()
+    public movingEnd = new EventEmitter<number>();
+
     /**
      * A temporary holder for the pointer coordinates.
      */
@@ -210,6 +213,15 @@ export class IgxSplitBarComponent {
             this.moving.emit(delta);
             event.cancel = true;
             event.owner.element.nativeElement.style.transform = '';
+        }
+    }
+
+    public onDragEnd(event: any) {
+        const isHorizontal = this.type === SplitterType.Horizontal;
+        const curr =  isHorizontal ? event.pageX : event.pageY;
+        const delta = this.startPoint - curr;
+        if (delta !== 0) {
+            this.movingEnd.emit(delta);
         }
     }
 
