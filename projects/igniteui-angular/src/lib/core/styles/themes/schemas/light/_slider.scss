@@ -62,8 +62,6 @@ $_light-slider: (
         igx-color: ('secondary', 500)
     ),
 
-    thumb-focus-color: transparent,
-
     thumb-border-color: (
         igx-color: ('secondary', 500)
     ),
@@ -213,10 +211,6 @@ $_indigo-slider: extend(
 
         track-hover-color: (
             igx-color: ('primary', 400)
-        ),
-
-        thumb-focus-color: (
-            igx-color: ('primary', 200)
         ),
 
         base-track-color: (
