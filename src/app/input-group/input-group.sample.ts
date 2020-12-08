@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import {
     IgxInputGroupType,
     ButtonGroupAlignment,
@@ -36,6 +36,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
 
     public myForm = this.fb.group({
       myTextField: [],
+      myTextField2: ['', Validators.required],
       mySelectField: []
     });
     public date = new Date();
@@ -102,10 +103,12 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
 
     public enableText() {
       this.myForm.get('myTextField').enable();
+      this.myForm.get('myTextField2').enable();
     }
 
     public disableText() {
       this.myForm.get('myTextField').disable();
+      this.myForm.get('myTextField2').disable();
     }
 
     public enableSelect() {
