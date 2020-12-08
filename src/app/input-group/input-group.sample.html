@@ -212,6 +212,10 @@
                 <label igxLabel for="myTextField">A Text Field</label>
                 <input igxInput required name="myTextField" formControlName="myTextField">
             </igx-input-group>
+            <igx-input-group>
+                <label igxLabel for="myTextField2">A Text Field With Reactive Required</label>
+                <input igxInput name="myTextField2" formControlName="myTextField2">
+            </igx-input-group>
             <igx-select #select required formControlName="mySelectField">
                 <label igxLabel>A Select Field</label>
                 <igx-select-item *ngFor="let item of items" [value]="item">
