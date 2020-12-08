@@ -13,17 +13,10 @@
                 [values]="inputTypes"
                 (onSelect)="selectInputType($event)"
             ></igx-buttongroup>
-            <strong>Enable/Disable fields</strong>
-            <igx-switch
-                [checked]="true"
-                id="enableDisable"
-                (click)="disableFields()"
-            ></igx-switch>
-            <strong>Enable/Disable Required</strong>
-            <igx-switch
-                [checked]="false"
-                (click)="toggleRequired()"
-            ></igx-switch>
+            <strong>Disable fields</strong>
+            <igx-switch name="disabledswitch" [(ngModel)]="isDisabled"></igx-switch>
+            <strong>Enable Required</strong>
+            <igx-switch name="requiredswitch" [(ngModel)]="isRequired"></igx-switch>
         </div>
         <div class="form__fields">
             <!-- input type search - suffix/prefix -->
@@ -31,9 +24,8 @@
                 <label igxLabel>Always Material & Use Input type TOKEN</label>
                 <igx-icon igxPrefix>search</igx-icon>
                 <input
-                    name="inputTest"
+                    name="inputSearchTest"
                     #input
-                    value="{{ inputValue }}"
                     [(ngModel)]="inputValue"
                     igxInput
                     placeholder="Search"
@@ -60,7 +52,6 @@
                     [required]="isRequired"
                     id="fluentfirstName"
                     igxInput
-                    value="{{ inputValue }}"
                     [(ngModel)]="inputValue"
                     [disabled]="isDisabled"
                 />
@@ -75,10 +66,9 @@
                     http://
                 </igx-prefix>
                 <input
-                    name="inputTest"
+                    name="inputWebTest"
                     [required]="isRequired"
                     [disabled]="isDisabled"
-                    [value]="inputValue"
                     [(ngModel)]="inputValue"
                     igxInput
                     type="text"
@@ -86,7 +76,36 @@
                 <igx-suffix>
                     .com
                 </igx-suffix>
-                <igx-hint>Type you web address</igx-hint>
+                <igx-hint>Type your web address</igx-hint>
+            </igx-input-group>
+            <br />
+
+
+            <input
+                name="inputWebTestSimple"
+                [required]="isRequired"
+                [disabled]="isDisabled"
+                [(ngModel)]="inputValue"
+                type="text"
+            />
+            <br />
+
+            <!-- text field with validation -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Web address</label>
+                <igx-prefix>
+                    <igx-icon>link</igx-icon>
+                </igx-prefix>
+                <input
+                    name="inputValidityTest"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    pattern="^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+                    [(ngModel)]="inputValue"
+                    igxInput
+                    type="text"
+                />
+                <igx-hint>Type your web address</igx-hint>
             </igx-input-group>
             <br />
 
@@ -97,10 +116,9 @@
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
                 <textarea
-                    name="inputTest"
+                    name="inputTextareaTest"
                     [required]="isRequired"
                     igxInput
-                    [value]="inputValue"
                     [disabled]="isDisabled"
                     [(ngModel)]="inputValue"
                 ></textarea>
@@ -127,16 +145,8 @@
 
             <!-- date field -->
             <igx-date-picker [value]="date">
-                <ng-template
-                    igxDatePickerTemplate
-                    let-openDialog="openDialog"
-                    let-value="value"
-                    let-displayData="displayData"
-                >
-                    <igx-input-group
-                        [displayDensity]="density"
-                        [type]="inputType"
-                    >
+                <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+                    <igx-input-group [displayDensity]="density" [type]="inputType">
                         <label igxLabel>Date: </label>
                         <input
                             [required]="isRequired"
@@ -146,9 +156,7 @@
                             [disabled]="isDisabled"
                         />
                         <igx-suffix>
-                            <igx-icon (click)="openDialog()"
-                                >date_range</igx-icon
-                            >
+                            <igx-icon (click)="openDialog()">date_range</igx-icon>
                         </igx-suffix>
                     </igx-input-group>
                 </ng-template>
@@ -189,4 +197,27 @@
             <br />
         </div>
     </form>
+
+    <div class="input-group-sample-form">
+        <div class="form__fields-settings">
+            <button igxButton (click)="enableText()">Enable Text</button>
+            <button igxButton (click)="disableText()">Disable Text</button>
+            <button igxButton (click)="enableSelect()">Enable Select</button>
+            <button igxButton (click)="disableSelect()">Disable Select</button>
+            <button igxButton (click)="enableForm()">Enable Form</button>
+            <button igxButton (click)="disableForm()">Disable Form</button>
+        </div>
+        <form [formGroup]="myForm" class="form__fields">
+            <igx-input-group>
+                <label igxLabel for="myTextField">A Text Field</label>
+                <input igxInput required name="myTextField" formControlName="myTextField">
+            </igx-input-group>
+            <igx-select #select required formControlName="mySelectField">
+                <label igxLabel>A Select Field</label>
+                <igx-select-item *ngFor="let item of items" [value]="item">
+                    {{item}}
+                </igx-select-item>
+            </igx-select>
+        </form>
+    </div>
 </div>

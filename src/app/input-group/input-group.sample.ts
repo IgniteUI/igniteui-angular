@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import {
     IgxInputGroupType,
     ButtonGroupAlignment,
@@ -24,19 +25,29 @@ interface Selection {
 })
 export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public inputValue: any;
-    public isRequired = false;
+    public isRequired = true;
     public isDisabled = false;
     public alignment = ButtonGroupAlignment.vertical;
     public density = 'comfortable';
     public displayDensities: Selection[];
     public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];
-    date = new Date();
+    public items: string[] = ["Orange", "Apple", "Banana", "Mango"];
+
+    public myForm = this.fb.group({
+      myTextField: [],
+      mySelectField: []
+    });
+    public date = new Date();
+
     constructor(
         @Inject(DisplayDensityToken)
         public displayDensityOptions: IDisplayDensityOptions,
+        private fb: FormBuilder,
         @Inject(IGX_INPUT_GROUP_TYPE) public TOKEN: IgxInputGroupType
-    ) {}
+    ) {
+        this.myForm.disable();
+    }
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -89,15 +100,27 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
         console.log('New type set is = ', currentType);
     }
 
-    public disableFields() {
-        if (this.isDisabled === false) {
-            this.isDisabled = true;
-        } else if (this.isDisabled === true) {
-            this.isDisabled = false;
-        }
+    public enableText() {
+      this.myForm.get('myTextField').enable();
     }
 
-    public toggleRequired() {
-        this.isRequired = !this.isRequired;
+    public disableText() {
+      this.myForm.get('myTextField').disable();
+    }
+
+    public enableSelect() {
+      this.myForm.get('mySelectField').enable();
+    }
+
+    public disableSelect() {
+      this.myForm.get('mySelectField').disable();
+    }
+
+    public enableForm() {
+      this.myForm.enable();
+    }
+
+    public disableForm() {
+      this.myForm.disable();
     }
 }
