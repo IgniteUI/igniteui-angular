@@ -32,7 +32,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public displayDensities: Selection[];
     public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];
-    public items: string[] = ["Orange", "Apple", "Banana", "Mango"];
+    public items: string[] = ['Orange', 'Apple', 'Banana', 'Mango'];
 
     public myForm = this.fb.group({
       myTextField: [],
