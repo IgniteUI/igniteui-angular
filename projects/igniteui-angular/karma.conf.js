@@ -13,10 +13,10 @@ module.exports = function (config) {
     ],
     plugins: [
       require('karma-jasmine'),
+      require('karma-coverage'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
       require('karma-jasmine-html-reporter'),
-      require('karma-coverage-istanbul-reporter'),
       require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
@@ -28,12 +28,17 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reports: ['html', 'lcovonly'],
-      fixWebpackSourcePaths: true
+    reporters: ['progress', 'coverage'],
+    preprocessors: {
+      'projects/igniteui-angular/**/*.js': ['coverage']
     },
-    reporters: ['spec'],
+    coverageReporter: {
+      dir: require('path').join(__dirname, '../../coverage'),
+      reporters: [
+        { type: 'html' },
+        { type: 'lcovonly' },
+      ]
+    },
     specReporter: {
       suppressSkipped: true,
       suppressErrorSummary: false,

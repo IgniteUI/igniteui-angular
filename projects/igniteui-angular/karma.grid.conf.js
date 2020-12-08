@@ -13,10 +13,10 @@ module.exports = function (config) {
     ],
     plugins: [
       require('karma-jasmine'),
+      require('karma-coverage'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
       require('karma-jasmine-html-reporter'),
-      require('karma-coverage-istanbul-reporter'),
       require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
@@ -29,12 +29,19 @@ module.exports = function (config) {
       tags: 'grid',
       skipTags: 'perf'
     },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage/grid'),
-      reports: ['html', 'json', 'lcovonly'],
-      fixWebpackSourcePaths: true
+    preprocessors: {
+      'projects/igniteui-angular/**/*.js': ['coverage']
     },
-    reporters: ['spec'],
+    coverageReporter: {
+      dir: require('path').join(__dirname, '../../coverage/grid'),
+      reporters: [
+        // reporters not supporting the `file` property
+        { type: 'html' },
+        { type: 'json' },
+        { type: 'lcovonly' },
+      ]
+    },
+    reporters: ['progress', 'coverage'],
     specReporter: {
         suppressSkipped: true,
         suppressErrorSummary: false,

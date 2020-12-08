@@ -13,10 +13,10 @@ module.exports = function (config) {
     ],
     plugins: [
       require('karma-jasmine'),
+      require('karma-coverage'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
       require('karma-junit-reporter'),
-      require('karma-coverage-istanbul-reporter'),
       require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
@@ -28,10 +28,16 @@ module.exports = function (config) {
       tagPrefix: '#',
       tags: 'hGrid'
     },
-    coverageIstanbulReporter: {
+    preprocessors: {
+      'projects/igniteui-angular/**/*.js': ['coverage']
+    },
+    coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage/hierarchical-grid'),
-      reports: ['lcovonly', 'json', 'cobertura'],
-      fixWebpackSourcePaths: true
+      reporters: [
+        { type: 'cobertura' },
+        { type: 'json' },
+        { type: 'lcovonly' },
+      ]
     },
     reporters: ['junit'],
     junitReporter: {
