@@ -15,6 +15,32 @@
                     <input igxInput name="age" placeholder="Age"/>
                 </igx-input-group>
             </div>
+            <div>
+                <h5 class="sample-title">Template Form</h5>
+                <form>
+                    <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" #comboModel="ngModel"
+                        [(ngModel)]="values1" minlength="2" required
+                        [data]="items" [filterable]="filterableFlag" [displayKey]="valueKeyVar" [disabled]="isDisabled"
+                        [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                        <label igxLabel>States</label>
+                        <igx-hint>Please select the states you've visited</igx-hint>
+                    </igx-combo>
+                </form>
+                <button igxButton (click)="values1 = values1.concat(['Missouri'])">Add Missouri</button>
+                <button igxButton (click)="values1 = []">Clear values </button>
+            </div>
+            <div>
+                <h5 class="sample-title">Reactive Form</h5>
+                <form class="input-group-form" [formGroup]="user">
+                    <div class="container">
+                        <igx-combo #combo1 class="input-container" [itemsMaxHeight]="130" [data]="genres"
+                            [valueKey]="'type'" [displayKey]="'type'" type="line" formControlName="genres"
+                            searchPlaceholder="Search...">
+                            <label igxLabel>States</label>
+                        </igx-combo>
+                    </div>
+                </form>
+            </div>
             <div class="input-row">
                 <igx-combo #combo class="input-container" [placeholder]="'Locations'"
                             (onAddition)="handleAddition($event)"
@@ -54,12 +80,14 @@
                     <igx-hint>Please select the states you've visited</igx-hint>
                 </igx-combo>
             </div>
-            <div class="btn-wrapper mb24">
-                <div class="btn-container">
-                    <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
-                    </button>
-                    <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
-                </div>
+        </div>
+        <div class="btn-wrapper mb24">
+            <div class="btn-container">
+                <button igxButton="raised" igxRipple (click)="isDisabled = !isDisabled">Toggle disabled
+                </button>
+                <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
+                </button>
+                <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
             </div>
             <ng-template #customItemTemplate let-display let-key="valueKey">
                 <div class="state-card--simple">

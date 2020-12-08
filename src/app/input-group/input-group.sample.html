@@ -11,7 +11,7 @@
             <input igxInput #myInput="igxInput" [value]="value" [required]="isRequired"/>
             <igx-hint *ngIf="!myInput.isValid">This is required</igx-hint>
         </igx-input-group>
-        <button igxButton (click)="toggleRequired()">Toggle required</button>
+        <button igxButton (click)="isRequired = !isRequired">Toggle required</button>
     </form>
 
     <h3 class="sample-title">Line Style Input</h3>
