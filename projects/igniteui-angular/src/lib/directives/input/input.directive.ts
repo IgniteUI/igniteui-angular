@@ -203,7 +203,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     @HostListener('input')
     public onInput() {
-        this.checkValidity();
+        this.checkNativeValidity();
     }
     /**
      * @hidden
@@ -297,7 +297,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 }
             }
         } else {
-            this.checkValidity();
+            this.checkNativeValidity();
         }
     }
     /**
@@ -386,12 +386,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * A function to assign a validity property of an input.
+     * A function to assign a native validity property of an input.
+     * This should be used when there's no ngControl
      *
      * @hidden
      * @internal
      */
-    private checkValidity() {
+    private checkNativeValidity() {
         if (!this.disabled && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ?
                             this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
