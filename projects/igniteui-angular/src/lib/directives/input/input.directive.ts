@@ -75,7 +75,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input()
     set value(value: any) {
         this.nativeElement.value = value ?? '';
-        this.checkValidity();
+        this.updateValidityState();
     }
     /**
      * Gets the `value` property.
@@ -131,15 +131,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     @Input()
     public set required(value: boolean) {
-        if (typeof value === 'boolean') {
-            this.nativeElement.required = this.inputGroup.isRequired = value;
-
-            if (value && !this.nativeElement.checkValidity()) {
-                this._valid = IgxInputState.INVALID;
-            } else {
-                this._valid = IgxInputState.INITIAL;
-            }
-        }
+        this.nativeElement.required = this.inputGroup.isRequired = value;
     }
 
     /**
@@ -190,8 +182,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @hidden
      * @internal
      */
-    @HostListener('focus', ['$event'])
-    public onFocus(event) {
+    @HostListener('focus')
+    public onFocus() {
         this.inputGroup.isFocused = true;
     }
     /**
@@ -200,17 +192,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @hidden
      * @internal
      */
-    @HostListener('blur', ['$event'])
-    public onBlur(event) {
+    @HostListener('blur')
+    public onBlur() {
         this.inputGroup.isFocused = false;
-        this._valid = IgxInputState.INITIAL;
-        if (this.ngControl) {
-            if (!this.ngControl.valid) {
-                this._valid = IgxInputState.INVALID;
-            }
-        } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
-            this._valid = IgxInputState.INVALID;
-        }
+        this.updateValidityState();
     }
     /**
      * @hidden
@@ -293,21 +278,26 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         if (this.disabled !== this.ngControl.disabled) {
             this.disabled = this.ngControl.disabled;
         }
-        if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-            if (this.ngControl.control.touched || this.ngControl.control.dirty) {
-                //  TODO: check the logic when control is touched or dirty
-                if (this.inputGroup.isFocused) {
-                    // the user is still typing in the control
-                    this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        this.updateValidityState();
+    }
+    /**
+     * @hidden
+     * @internal
+     */
+    protected updateValidityState() {
+        if (this.ngControl) {
+            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
+                if (!this.disabled && (this.ngControl.control.touched || this.ngControl.control.dirty)) {
+                    // the control is not disabled and is touched or dirty
+                    this._valid = this.ngControl.invalid ? IgxInputState.INVALID : this.focused ? IgxInputState.VALID : IgxInputState.INITIAL;
                 } else {
-                    // the user had touched the control previously but now the value is changing due to changes in the form
-                    this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                    //  if control is untouched, pristine, or disabled its state is initial. This is when user did not interact
+                    //  with the input or when form/control is reset
+                    this._valid = IgxInputState.INITIAL;
                 }
-            } else {
-                //  if control is untouched and pristine its state is initial. This is when user did not interact
-                //  with the input or when form/control is reset
-                this._valid = IgxInputState.INITIAL;
             }
+        } else {
+            this.checkValidity();
         }
     }
     /**
@@ -345,8 +335,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 return true;
             }
         }
-
-        return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
+        return false;
     }
 
     /**
@@ -403,8 +392,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     private checkValidity() {
-        if (!this.ngControl && this._hasValidators()) {
-            this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (!this.disabled && this._hasValidators()) {
+            this._valid = this.nativeElement.checkValidity() ?
+                            this.focused ? IgxInputState.VALID : IgxInputState.INITIAL :
+                            IgxInputState.INVALID;
         }
     }
 }
