@@ -1,4 +1,3 @@
-
 import { DebugElement } from '@angular/core';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -239,6 +238,27 @@ describe('Column Pinning UI #grid', () => {
             toolbar = grid.toolbar.columnPinningUI;
             expect(toolbar.columnItems.length).toBe(4);
         });
+
+        it('Checks order of columns after unpinning', () => {
+            for (const column of grid.columns) {
+                column.pin();
+            }
+            fix.detectChanges();
+            grid.getColumnByName('ID').unpin();
+            grid.getColumnByName('ReleaseDate').unpin();
+            grid.getColumnByName('Downloads').unpin();
+            grid.getColumnByName('ProductName').unpin();
+            grid.getColumnByName('Released').unpin();
+            fix.detectChanges();
+            grid.unpinnedColumns.forEach((column, index) => {
+                if (index === grid.unpinnedColumns.length - 1) {
+                    return;
+                }
+                expect(
+                    column.index < grid.unpinnedColumns[index + 1].index
+                ).toBe(true);
+            });
+        });
     });
 
     describe('', () => {
@@ -281,27 +301,6 @@ describe('Column Pinning UI #grid', () => {
             fix.detectChanges();
             verifyCheckbox(columnName, false, false, columnChooserElement, fix);
             expect(grid.columns[1].allChildren.every((col) => !col.pinned)).toBe(true);
-        });
-    });
-
-    it('Checks order of columns after unpinning', () => {
-        for (const column of grid.columns) {
-            column.pin();
-        }
-        fix.detectChanges();
-        grid.getColumnByName('ID').unpin();
-        grid.getColumnByName('ReleaseDate').unpin();
-        grid.getColumnByName('Downloads').unpin();
-        grid.getColumnByName('ProductName').unpin();
-        grid.getColumnByName('Released').unpin();
-        fix.detectChanges();
-        grid.unpinnedColumns.forEach((column, index) => {
-            if (index === grid.unpinnedColumns.length - 1) {
-                return;
-            }
-            expect(
-                column.index < grid.unpinnedColumns[index + 1].index
-            ).toBe(true);
         });
     });
 
