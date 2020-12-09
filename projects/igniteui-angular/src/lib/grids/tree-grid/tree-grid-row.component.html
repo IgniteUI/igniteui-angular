@@ -43,7 +43,7 @@
             [style.flex-basis]="col.width"
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
-            [value]="rowData | dataMapper:col.field:grid.pipeTrigger"
+            [value]="rowData | dataMapper:col.field:grid.pipeTrigger:rowData[col.field]"
             [cellTemplate]="col.bodyTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [active]="isCellActive(col.visibleIndex)"
@@ -74,7 +74,7 @@
             [style.flex-basis]="col.width"
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
-            [value]="rowData | dataMapper:col.field:grid.pipeTrigger"
+            [value]="rowData | dataMapper:col.field:grid.pipeTrigger:rowData[col.field]"
             [isLoading]="isLoading"
             [cellTemplate]="col.bodyTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
@@ -127,7 +127,7 @@
                 [style.left]="col.rightPinnedOffset"
                 [width]="col.getCellWidth()"
                 [visibleColumnIndex]="col.visibleIndex"
-                [value]="rowData | dataMapper:col.field:grid.pipeTrigger"
+                [value]="rowData | dataMapper:col.field:grid.pipeTrigger:rowData[col.field]"
                 [cellTemplate]="col.bodyTemplate"
                 [lastSearchInfo]="grid.lastSearchInfo"
                 [active]="isCellActive(col.visibleIndex)"
@@ -160,7 +160,7 @@
                 [style.left]="col.rightPinnedOffset"
                 [width]="col.getCellWidth()"
                 [visibleColumnIndex]="col.visibleIndex"
-                [value]="rowData | dataMapper:col.field:grid.pipeTrigger"
+                [value]="rowData | dataMapper:col.field:grid.pipeTrigger:rowData[col.field]"
                 [isLoading]="isLoading"
                 [cellTemplate]="col.bodyTemplate"
                 [lastSearchInfo]="grid.lastSearchInfo"
@@ -172,5 +172,4 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
-</ng-template>
 </ng-template>
