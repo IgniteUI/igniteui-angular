@@ -4240,6 +4240,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should filter grid through custom date filter dialog.', fakeAsync(() => {
+            const column = grid.getColumnByName('ReleaseDate');
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(100);
@@ -4269,8 +4270,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
             // Verify the results are with 'today' date.
-            const cellValue = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            expect(new Date(cellValue.innerText).toDateString()).toMatch(new Date().toDateString());
+            const pipe = new DatePipe(grid.locale);
+            const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            const filteredDate = SampleTestData.today;
+            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
+            expect(cell.innerText).toMatch(cellText);
+            expect(datePickerInput.value).toMatch(inputText);
             expect(grid.filteredData.length).toEqual(1);
         }));
 
@@ -4281,6 +4287,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 return newRec;
             });
             fix.detectChanges();
+            const column = grid.getColumnByName('ReleaseDate');
 
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -4311,8 +4318,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
             // Verify the results are with 'today' date.
-            const cellValue = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            expect(new Date(cellValue.innerText).toDateString()).toMatch(new Date().toDateString());
+            const pipe = new DatePipe(grid.locale);
+            const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            const filteredDate = SampleTestData.today;
+            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
+            expect(cell.innerText).toMatch(cellText);
+            expect(datePickerInput.value).toMatch(inputText);
             expect(grid.filteredData.length).toEqual(1);
         }));
 
@@ -4321,6 +4333,126 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
                 return newRec;
+            });
+            fix.detectChanges();
+            const column = grid.getColumnByName('ReleaseDate');
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const datePickerInput = datePicker.querySelector('input');
+
+            // Click date picker input to open calendar.
+            datePickerInput.dispatchEvent(new MouseEvent('click'));
+            tick(100);
+            fix.detectChanges();
+
+            // Click today item.
+            const calendar = document.querySelector('igx-calendar');
+            const todayItem = calendar.querySelector('.igx-calendar__date--current');
+            (todayItem as HTMLElement).click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            // Verify the results are with 'today' date.
+            const pipe = new DatePipe(grid.locale);
+            const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            const filteredDate = SampleTestData.today;
+            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
+            expect(cell.innerText).toMatch(cellText);
+            expect(datePickerInput.value).toMatch(inputText);
+            expect(grid.filteredData.length).toEqual(1);
+        }));
+
+        it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
+            fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
+                return newRec;
+            });
+
+            const formatOptions = {
+                timezone: 'utc',
+            };
+            const column = grid.getColumnByName('ReleaseDate');
+            column.pipeArgs = formatOptions;
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+
+            const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            const datePicker = expr.querySelector('igx-date-picker');
+            const datePickerInput = datePicker.querySelector('input');
+
+            // Click date picker input to open calendar.
+            datePickerInput.dispatchEvent(new MouseEvent('click'));
+            tick(100);
+            fix.detectChanges();
+
+            // Click today item.
+            const calendar = document.querySelector('igx-calendar');
+            const days = calendar.querySelectorAll('igx-day-item');
+            const todayItem = calendar.querySelector('.igx-calendar__date--current');
+            let todayIndex;
+            let i = 0;
+            while (!todayIndex) {
+                const item = days[i];
+                if (item === todayItem) {
+                    todayIndex = i;
+                }
+                i++;
+            }
+
+            // find the day 15 days later than today
+            const day = days[todayIndex + 15];
+            (day as HTMLElement).click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click 'apply' button to apply filter.
+            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
+
+            // Verify the results. Filtered day is date that is 15 days after today
+            const pipe = new DatePipe(grid.locale);
+            const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15);
+            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
+            expect(cell.innerText).toMatch(cellText);
+            expect(datePickerInput.value).toMatch(inputText);
+            expect(grid.filteredData.length).toEqual(1);
+        }));
+
+        it('Should filter grid through custom date filter dialog when using pipeArgs and formatter for the column', fakeAsync(() => {
+            registerLocaleData(localeFR);
+            const pipe = new DatePipe('fr-FR');
+            const formatOptions = {
+                timezone: 'utc',
+            };
+            const column = grid.getColumnByName('ReleaseDate');
+            column.pipeArgs = formatOptions;
+            grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
+                const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longDate') : 'No value!';
+                return val;
             });
             fix.detectChanges();
 
@@ -4344,17 +4476,35 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
+            const days = calendar.querySelectorAll('igx-day-item');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            (todayItem as HTMLElement).click();
+            let todayIndex;
+            let i = 0;
+            while (!todayIndex) {
+                const item = days[i];
+                if (item === todayItem) {
+                    todayIndex = i;
+                }
+                i++;
+            }
+
+            // find the day 15 days later than today
+            const day = days[todayIndex + 15];
+            (day as HTMLElement).click();
             tick(100);
             fix.detectChanges();
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            // Verify the results are with 'today' date.
-            const cellValue = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            expect(new Date(cellValue.innerText).toDateString()).toMatch(new Date().toDateString());
+            // Verify the results. Filtered day is date that is 15 days after today
+            const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
+            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15);
+            const inputText = column.formatter(filteredDate);
+            const cellText = column.formatter(filteredDate);
+            expect(cell.innerText).toMatch(cellText);
+            // TODO https://github.com/IgniteUI/igniteui-angular/issues/8697
+            // expect(datePickerInput.value).toMatch(inputText);
             expect(grid.filteredData.length).toEqual(1);
         }));
 
@@ -5347,6 +5497,58 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(8, 'incorrect rendered list items count');
 
             const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            checkboxElements[2].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(1050);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+
+            expect(listItems[1].innerText).toBe('No value!');
+            for (let i = 2; i < listItems.length; i++) {
+                const date = dates[i - 2];
+                const label = date !== null && date !== undefined && date !== '' ? datePipe.transform(date, 'longDate') : 'No value!';
+                expect(listItems[i].innerText).toBe(label);
+            }
+
+            const loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+        }));
+
+        it('Verify date values are displayed in correct format according to column formatter after filtering', fakeAsync(() => {
+            registerLocaleData(localeFR);
+            const grid = fix.componentInstance.grid;
+            grid.locale = 'fr-FR';
+            const datePipe = new DatePipe(grid.locale);
+            grid.getColumnByName('ReleaseDate').formatter = ((value: any) => {
+                const pipe = new DatePipe('fr-FR');
+                const val = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'longTime') : 'No value!';
+                return val;
+            });
+
+            const dates = fix.componentInstance.data.filter(d => d.ReleaseDate !== null && d.ReleaseDate !== undefined)
+                .map(el => new Date(el.ReleaseDate)).sort((a, b) => a - b);
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(1050);
+            fix.detectChanges();
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
+            expect(listItems.length).toBe(8, 'incorrect rendered list items count');
+
+            const checkboxElements = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            checkboxElements[0].click();
             checkboxElements[2].click();
             tick();
             fix.detectChanges();
