@@ -204,6 +204,20 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
+    public getNextYear() {
+        return this.calendarModel.getNextYear(this.viewDate).getFullYear();
+    }
+
+    /**
+     * @hidden
+     */
+    public getPreviousYear() {
+        return this.calendarModel.getPrevYear(this.viewDate).getFullYear();
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.pageup', ['$event'])
     public previousYear(event?: KeyboardEvent) {
         event?.preventDefault();
