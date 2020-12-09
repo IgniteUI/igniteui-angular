@@ -28,7 +28,7 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress'],
     preprocessors: {
       'projects/igniteui-angular/**/*.js': ['coverage']
     },
