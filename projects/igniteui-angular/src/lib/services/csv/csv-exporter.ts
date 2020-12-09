@@ -42,6 +42,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxCsvExporterService
      */
     @Output()

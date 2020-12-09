@@ -50,17 +50,17 @@ export class TreeGridSampleComponent implements OnInit {
 
     public addRow() {
         this.grid1.addRow({
-            'ID': `ADD${this.nextRow++}`,
-            'CompanyName': 'Around the Horn',
-            'ContactName': 'Thomas Hardy',
-            'ContactTitle': 'Sales Representative',
-            'Address': '120 Hanover Sq.',
-            'City': 'London',
-            'Region': null,
-            'PostalCode': 'WA1 1DP',
-            'Country': 'UK',
-            'Phone': '(171) 555-7788',
-            'Fax': '(171) 555-6750'
+            ID: `ADD${this.nextRow++}`,
+            CompanyName: 'Around the Horn',
+            ContactName: 'Thomas Hardy',
+            ContactTitle: 'Sales Representative',
+            Address: '120 Hanover Sq.',
+            City: 'London',
+            Region: null,
+            PostalCode: 'WA1 1DP',
+            Country: 'UK',
+            Phone: '(171) 555-7788',
+            Fax: '(171) 555-6750'
         });
     }
 
@@ -72,17 +72,17 @@ export class TreeGridSampleComponent implements OnInit {
         const selectedRowId = this.grid1.selectedRows[0];
         this.grid1.addRow (
             {
-                'ID': `ADD${this.nextRow++}`,
-                'CompanyName': 'Around the Horn',
-                'ContactName': 'Thomas Hardy',
-                'ContactTitle': 'Sales Representative',
-                'Address': '120 Hanover Sq.',
-                'City': 'London',
-                'Region': null,
-                'PostalCode': 'WA1 1DP',
-                'Country': 'UK',
-                'Phone': '(171) 555-7788',
-                'Fax': '(171) 555-6750'
+                ID: `ADD${this.nextRow++}`,
+                CompanyName: 'Around the Horn',
+                ContactName: 'Thomas Hardy',
+                ContactTitle: 'Sales Representative',
+                Address: '120 Hanover Sq.',
+                City: 'London',
+                Region: null,
+                PostalCode: 'WA1 1DP',
+                Country: 'UK',
+                Phone: '(171) 555-7788',
+                Fax: '(171) 555-6750'
             },
             selectedRowId);
     }

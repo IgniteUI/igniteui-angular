@@ -21,6 +21,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
 
     /**
      * Gets/Sets if the action buttons will be rendered as menu items. When in menu, items will be rendered with text label.
+     *
      * @example
      * ```html
      *  <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
@@ -52,6 +53,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
 
     /**
      * Getter to be used in template
+     *
      * @hidden
      * @internal
      */
@@ -61,6 +63,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
 
     /**
      * Check if the param is a row from a grid
+     *
      * @hidden
      * @internal
      * @param context

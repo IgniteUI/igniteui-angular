@@ -226,7 +226,7 @@ describe('IgxForOf directive -', () => {
 
             spyOn(fix.componentInstance.parentVirtDir.onChunkLoad, 'emit');
 
-            fix.componentInstance.data = [{ '1': 1, '2': 2, '3': 3, '4': 4 }];
+            fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
 
             expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
@@ -289,16 +289,16 @@ describe('IgxForOf directive -', () => {
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
             fix.componentInstance.data = [
-                { '1': '1', height: '100px' },
-                { '1': '2', height: '1800px' },
-                { '1': '3', height: '200px' },
-                { '1': '4', height: '200px' },
-                { '1': '5', height: '300px' },
-                { '1': '6', height: '100px' },
-                { '1': '7', height: '100px' },
-                { '1': '8', height: '100px' },
-                { '1': '9', height: '150px' },
-                { '1': '10', height: '150px' }
+                { 1: '1', height: '100px' },
+                { 1: '2', height: '1800px' },
+                { 1: '3', height: '200px' },
+                { 1: '4', height: '200px' },
+                { 1: '5', height: '300px' },
+                { 1: '6', height: '100px' },
+                { 1: '7', height: '100px' },
+                { 1: '8', height: '100px' },
+                { 1: '9', height: '150px' },
+                { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
             await wait();
@@ -307,16 +307,16 @@ describe('IgxForOf directive -', () => {
 
             fix.componentInstance.height = '1900px';
             fix.componentInstance.data = [
-                { '1': '1', height: '1800px' },
-                { '1': '2', height: '100px' },
-                { '1': '3', height: '200px' },
-                { '1': '4', height: '200px' },
-                { '1': '5', height: '300px' },
-                { '1': '6', height: '100px' },
-                { '1': '7', height: '100px' },
-                { '1': '8', height: '100px' },
-                { '1': '9', height: '150px' },
-                { '1': '10', height: '150px' }
+                { 1: '1', height: '1800px' },
+                { 1: '2', height: '100px' },
+                { 1: '3', height: '200px' },
+                { 1: '4', height: '200px' },
+                { 1: '5', height: '300px' },
+                { 1: '6', height: '100px' },
+                { 1: '7', height: '100px' },
+                { 1: '8', height: '100px' },
+                { 1: '9', height: '150px' },
+                { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
             await wait();
@@ -1233,7 +1233,7 @@ class DataGenerator {
             instance.cols = cols;
             instance.data = dummyData;
         } else {
-            return { data: dummyData, cols: cols };
+            return { data: dummyData, cols };
         }
     }
 

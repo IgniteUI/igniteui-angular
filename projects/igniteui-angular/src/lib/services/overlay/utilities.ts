@@ -212,8 +212,8 @@ export class Util {
             left: scrollPosition.x,
             right: scrollPosition.x + width,
             bottom: scrollPosition.y + height,
-            width: width,
-            height: height,
+            width,
+            height,
         };
     }
 

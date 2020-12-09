@@ -18,7 +18,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-        !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
+        !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) {
+ return;
+}
 
         const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
         if (targetGrid !== this.grid.nativeElement) {
@@ -132,6 +134,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Handles scrolling in child grid and ensures target child row is in main grid view port.
+     *
      * @param rowIndex The row index which should be in view.
      * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
      * @param cb  Optional.Callback function called when operation is complete.
@@ -183,6 +186,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Moves navigation to child grid.
+     *
      * @param parentRowIndex The parent row index, at which the child grid is rendered.
      * @param childLayoutIndex Optional. The index of the child row island to which the child grid belongs to. Uses first if not set.
      */
@@ -227,6 +231,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Moves navigation back to parent grid.
+     *
      * @param rowIndex
      */
     protected _moveToParent(isNext: boolean, columnIndex, cb?) {
@@ -251,6 +256,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     /**
      * Gets information on the row position relative to the root grid view port.
      * Returns whether the row is in view and its offset.
+     *
      * @param rowObj
      * @param isNext
      */
@@ -302,6 +308,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Gets closest element by its tag name.
+     *
      * @param sourceElem The element from which to start the search.
      * @param targetTag The target element tag name, for which to search.
      */
@@ -318,6 +325,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Gets the max top view in the current grid hierarchy.
+     *
      * @param grid
      */
     private _getMaxTop(grid) {
@@ -333,6 +341,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Gets the min bottom view in the current grid hierarchy.
+     *
      * @param grid
      */
     private _getMinBottom(grid) {
@@ -348,12 +357,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Finds the next grid that allows scrolling down.
+     *
      * @param grid The grid from which to begin the search.
      */
     private getNextScrollableDown(grid) {
         let currGrid = grid.parent;
         if (!currGrid) {
-            return { grid: grid, prev: null };
+            return { grid, prev: null };
         }
         let scrollTop = currGrid.verticalScrollContainer.scrollPosition;
         let scrollHeight = currGrid.verticalScrollContainer.getScroll().scrollHeight;
@@ -368,17 +378,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             nonScrollable = scrollHeight === 0 ||
                 Math.round(scrollTop + currGrid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
         }
-        return { grid: currGrid, prev: prev };
+        return { grid: currGrid, prev };
     }
 
     /**
      * Finds the next grid that allows scrolling up.
+     *
      * @param grid The grid from which to begin the search.
      */
     private getNextScrollableUp(grid) {
         let currGrid = grid.parent;
         if (!currGrid) {
-            return { grid: grid, prev: null };
+            return { grid, prev: null };
         }
         let nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
         let prev = grid;
@@ -387,6 +398,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             currGrid = currGrid.parent;
             nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
         }
-        return { grid: currGrid, prev: prev };
+        return { grid: currGrid, prev };
     }
 }

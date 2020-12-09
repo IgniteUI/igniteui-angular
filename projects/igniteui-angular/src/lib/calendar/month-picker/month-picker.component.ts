@@ -132,7 +132,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         }
 
         requestAnimationFrame(() => {
-            if (this.dacadeView) { this.dacadeView.el.nativeElement.focus(); }
+            if (this.dacadeView) {
+ this.dacadeView.el.nativeElement.focus();
+}
         });
     }
 
@@ -166,7 +168,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
+            if (this.yearsBtn) {
+ this.yearsBtn.nativeElement.focus();
+}
         });
     }
 
@@ -207,7 +211,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     @HostListener('keydown.pageup', ['$event'])
     public previousYear(event?: KeyboardEvent) {
         event?.preventDefault();
-        if (event && this.yearAction === 'next') { return; }
+        if (event && this.yearAction === 'next') {
+ return;
+}
         this.yearAction = 'prev';
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
@@ -219,7 +225,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     @HostListener('keydown.pagedown', ['$event'])
     public nextYear(event?: KeyboardEvent) {
         event?.preventDefault();
-        if (event && this.yearAction === 'prev') { return; }
+        if (event && this.yearAction === 'prev') {
+ return;
+}
         this.yearAction = 'next';
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getNextYear(this.viewDate);

@@ -1336,9 +1336,7 @@ export class IgxSliderComponent implements
     }
 
     private closestTo(goal: number, positions: number[]): number {
-        return positions.reduce((previous, current) => {
-            return (Math.abs(goal - current) < Math.abs(goal - previous) ? current : previous);
-        });
+        return positions.reduce((previous, current) => (Math.abs(goal - current) < Math.abs(goal - previous) ? current : previous));
     }
 
     private valueToFraction(value: number, pMin = this._pMin, pMax = this._pMax) {

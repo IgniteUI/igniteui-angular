@@ -7,6 +7,7 @@ export abstract class IgxExporterOptionsBase {
      * let ignoreColumnsVisibility = this.exportOptions.ignoreColumnsVisibility;
      * this.exportOptions.ignoreColumnsVisibility = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreColumnsVisibility = false;
@@ -17,6 +18,7 @@ export abstract class IgxExporterOptionsBase {
      * let ignoreFiltering = this.exportOptions.ignoreFiltering;
      * this.exportOptions.ignoreFiltering = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreFiltering = false;
@@ -27,6 +29,7 @@ export abstract class IgxExporterOptionsBase {
      * let ignoreColumnsOrder = this.exportOptions.ignoreColumnsOrder;
      * this.exportOptions.ignoreColumnsOrder = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreColumnsOrder = false;
@@ -37,6 +40,7 @@ export abstract class IgxExporterOptionsBase {
      * let ignoreSorting = this.exportOptions.ignoreSorting;
      * this.exportOptions.ignoreSorting = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreSorting = false;
@@ -54,6 +58,7 @@ export abstract class IgxExporterOptionsBase {
      * ```typescript
      * let fileName = this.exportOptions.fileName;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     get fileName() {
@@ -65,6 +70,7 @@ export abstract class IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.fileName = 'exportedData01';
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     set fileName(value) {

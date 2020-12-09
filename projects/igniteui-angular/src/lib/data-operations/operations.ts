@@ -5,9 +5,7 @@ export function isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>)
     if (h1.length !== h2.length) {
         return false;
     }
-    return h1.every((level, index): boolean => {
-        return level.fieldName === h2[index].fieldName && level.value === h2[index].value;
-    });
+    return h1.every((level, index): boolean => level.fieldName === h2[index].fieldName && level.value === h2[index].value);
 }
 
 export function getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {

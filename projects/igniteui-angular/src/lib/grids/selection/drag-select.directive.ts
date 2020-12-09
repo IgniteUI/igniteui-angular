@@ -89,7 +89,7 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
         this.unsubscribe();
         this._sub = this._interval$.subscribe(() => this.onDragScroll.emit(direction));
         this.lastDirection = direction;
-    }
+    };
 
     stopDragSelection = () => {
         if (!this.activeDrag) {
@@ -98,7 +98,7 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
         this.onDragStop.emit(false);
         this.unsubscribe();
         this.lastDirection = DragScrollDirection.NONE;
-    }
+    };
 
     _measureDimensions(x: number, y: number): DragScrollDirection {
         let direction: DragScrollDirection;

@@ -29,7 +29,7 @@ const complex = [{
     value: 6
 }];
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.css']
@@ -75,7 +75,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.genres = [
             { type: 'Action' , movies: ['The Matrix', 'Kill Bill: Vol.1', 'The Dark Knight Rises']},
             { type: 'Adventure' , movies: ['Interstellar', 'Inglourious Basterds', 'Inception']},
-            // tslint:disable-next-line:object-literal-sort-keys
+            // eslint-disable-next-line
             { type: 'Comedy' , movies: ['Wild Tales', 'In Bruges', 'Three Billboards Outside Ebbing, Missouri',
                 'Untouchable', '3 idiots']},
             { type: 'Crime' , movies: ['Training Day', 'Heat', 'American Gangster']},
@@ -102,7 +102,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
             'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };

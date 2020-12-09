@@ -17,7 +17,7 @@ interface Selection {
 }
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-input-group-sample',
     styleUrls: ['input-group.sample.scss'],
     templateUrl: 'input-group.sample.html',

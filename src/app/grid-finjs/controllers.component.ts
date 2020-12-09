@@ -95,7 +95,9 @@ export class ControllerComponent implements OnInit, OnDestroy {
         this.intervalSlider.disabled = disableButtons;
         this.selectedButton = ind;
         this.buttonGroup1.buttons.forEach((button, index) => {
-            if (index === 2) { button.disabled = !disableButtons; } else {
+            if (index === 2) {
+ button.disabled = !disableButtons;
+} else {
                 this.buttonGroup1.buttons[0].disabled = disableButtons;
                 this.buttonGroup1.buttons[1].disabled = disableButtons;
             }

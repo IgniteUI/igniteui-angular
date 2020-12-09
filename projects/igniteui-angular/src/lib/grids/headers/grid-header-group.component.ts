@@ -71,6 +71,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets the column of the header group.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     @Input()
@@ -78,6 +79,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets the `id` of the grid in which the header group is stored.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     @Input()
@@ -115,6 +117,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets the width of the header group.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     get width() {
@@ -123,6 +126,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets the style classes of the header group.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     @HostBinding('class')
@@ -161,6 +165,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets the grid of the header group.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     get grid(): any {
@@ -169,6 +174,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets whether the header group belongs to a column that is filtered.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     get isFiltered(): boolean {
@@ -177,6 +183,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets whether the header group is stored in the last column in the pinned area.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     get isLastPinned(): boolean {
@@ -197,6 +204,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets whether the header group is stored in a pinned column.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     get isPinned(): boolean {
@@ -205,6 +213,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets whether the header group belongs to a column that is moved.
+     *
      * @memberof IgxGridHeaderGroupComponent
      */
     get isHeaderDragged(): boolean {

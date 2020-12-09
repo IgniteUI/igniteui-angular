@@ -33,7 +33,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
-declare var Simulator: any;
+declare let Simulator: any;
 
 const LIST_CSS_CLASS = 'igx-list';
 const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';

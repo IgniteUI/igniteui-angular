@@ -212,6 +212,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
     /**
      * Verifies if the passed transaction is correct. If not throws an exception.
+     *
      * @param transaction Transaction to be verified
      */
     protected verifyAddedTransaction(states: Map<any, S>, transaction: T, recordRef?: any): void {
@@ -240,6 +241,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
     /**
      * Updates the provided states collection according to passed transaction and recordRef
+     *
      * @param states States collection to apply the update to
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
@@ -279,7 +281,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type } as S;
+            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
@@ -292,6 +294,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * Compares the state with recordRef and clears all duplicated values. If any state ends as
      * empty object removes it from states.
+     *
      * @param state State to clean
      */
     protected cleanState(id: any, states: Map<any, S>): void {
@@ -326,6 +329,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
     /**
      * Updates state related record in the provided data
+     *
      * @param data Data source to update
      * @param state State to update data from
      */

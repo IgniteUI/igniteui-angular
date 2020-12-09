@@ -292,9 +292,7 @@ export class CustomStringFilter extends IgxStringFilteringOperand {
         super();
         this.append({
             name: 'Custom',
-            logic: (value: any, searchVal: any, ignoreCase: boolean) => {
-                return value === searchVal;
-            },
+            logic: (value: any, searchVal: any, ignoreCase: boolean) => value === searchVal,
             isUnary: false,
             iconName: 'starts_with'
         });

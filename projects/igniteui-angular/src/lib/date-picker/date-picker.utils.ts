@@ -56,6 +56,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Parse a Date value from masked string input based on determined date parts
+     *
      * @param inputData masked value to parse
      * @param dateTimeParts Date parts array for the mask
      */
@@ -126,7 +127,7 @@ export abstract class DatePickerUtil {
             currentPart = {
                 start: position,
                 end: position + formatArray[i].length,
-                type: type,
+                type,
                 format: formatArray[i]
             };
         }
@@ -281,6 +282,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Determines whether the provided value is greater than the provided max value.
+     *
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
      * @returns true if provided value is greater than provided maxValue
@@ -310,6 +312,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Determines whether the provided value is less than the provided min value.
+     *
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
      * @returns true if provided value is less than provided minValue
@@ -388,6 +391,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method generates date parts structure based on editor mask and locale.
+     *
      * @param maskValue: string
      * @param locale: string
      * @returns array containing information about date parts - type, position, format
@@ -445,6 +449,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method generates input mask based on date parts.
+     *
      * @param dateStruct array
      * @returns input mask
      */
@@ -473,6 +478,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method generates editor mask.
+     *
      * @param dateStruct
      * @returns editor mask
      */
@@ -510,6 +516,7 @@ export abstract class DatePickerUtil {
     }
     /**
      * This method parses an input string base on date parts and returns a date and its validation state.
+     *
      * @param dateFormatParts
      * @param prevDateValue
      * @param inputValue
@@ -558,6 +565,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method replaces prompt chars with empty string.
+     *
      * @param value
      */
     public static trimEmptyPlaceholders(value: string, promptChar?: string): string {
@@ -567,6 +575,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method is used for spinning date parts.
+     *
      * @param dateFormatParts
      * @param inputValue
      * @param position
@@ -587,7 +596,7 @@ export abstract class DatePickerUtil {
         const datePartValue = DatePickerUtil.getDateValueFromInput(dateFormatParts, datePartType, inputValue);
         newValue = parseInt(datePartValue, 10);
 
-        let maxValue, minValue;
+        let maxValue; let minValue;
         const minMax = DatePickerUtil.getMinMaxValue(dateFormatParts, datePart, inputValue);
         minValue = minMax.min;
         maxValue = minMax.max;
@@ -635,6 +644,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method returns date input with prompt chars.
+     *
      * @param dateFormatParts
      * @param date
      * @param inputValue
@@ -656,6 +666,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method checks if date input is done.
+     *
      * @param dateFormatParts
      * @param input
      * @returns input completeness
@@ -685,6 +696,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Parse provided input to Date.
+     *
      * @param value input to parse
      * @returns Date if parse succeed or null
      */
@@ -703,6 +715,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Returns whether provided input is date
+     *
      * @param value input to check
      * @returns true if provided input is date
      */
@@ -712,6 +725,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Returns whether the input is valid date
+     *
      * @param value input to check
      * @returns true if provided input is a valid date
      */
@@ -819,7 +833,7 @@ export abstract class DatePickerUtil {
     }
 
     private static getMinMaxValue(dateFormatParts: any[], datePart, inputValue: string): any {
-        let maxValue, minValue;
+        let maxValue; let minValue;
         switch (datePart.type) {
             case DateParts.Month: {
                 minValue = 1;

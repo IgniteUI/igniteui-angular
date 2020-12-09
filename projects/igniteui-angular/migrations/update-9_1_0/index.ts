@@ -7,7 +7,7 @@ import { UpdateChanges, InputPropertyType, BoundPropertyObject } from '../common
 
 const version = '9.1.0';
 
-export default function (): Rule {
+export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 

@@ -66,6 +66,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * Gets/Sets the value of the `id` attribute.
+     *
      * @remarks
      * If not provided it will be automatically generated.
      * @example
@@ -87,6 +88,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     @Input()
@@ -109,6 +111,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```typescript
      * let filteredData = this.grid.filteredData;
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     public get data(): any[] {
@@ -124,6 +127,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      *       Name: "A"
      * }];
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     public set filteredData(value) {
@@ -135,6 +139,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```typescript
      * let filteredData = this.grid.filteredData;
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     public get filteredData() {
@@ -143,6 +148,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * Gets/Sets the total number of records in the data source.
+     *
      * @remarks
      * This property is required for remote grid virtualization to function when it is bound to remote data.
      * @example
@@ -166,6 +172,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```html
      * <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" [expandChildren]="true"></igx-hierarchical-grid>
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     @Input()
@@ -180,6 +187,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```typescript
      * const expanded = this.grid.expandChildren;
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     get expandChildren(): boolean {
@@ -192,6 +200,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * ```typescript
      * const foreignKey = this.grid.foreignKey;
      * ```
+     *
      * @memberof IgxHierarchicalGridComponent
      */
     public get foreignKey() {
@@ -448,15 +457,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
-        const nestedColumns = childLayouts.map((layout) => {
-            return layout.columnList.toArray();
-        });
+        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
         const colLength = this.columnList.length;
         if (colsArray.length > 0) {
-            const topCols = this.columnList.filter((item) => {
-                return colsArray.indexOf(item) === -1;
-            });
+            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
             this.columnList.reset(topCols);
             if (recalcColSizes && this.columnList.length !== colLength) {
                 this.calculateGridSizes(false);

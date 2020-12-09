@@ -15,7 +15,7 @@ import {
 } from 'igniteui-angular';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-sample',
     styleUrls: ['overlay.sample.css'],
     templateUrl: './overlay.sample.html',
@@ -175,40 +175,40 @@ export class OverlaySampleComponent implements OnInit {
 
     onChange2() { // WIP
         const stringMapping = {
-            'ScrollStrategy': {
-                'Absolute': new AbsoluteScrollStrategy(),
-                'Block': new BlockScrollStrategy(),
-                'Close': new CloseScrollStrategy(),
-                'NoOp': new NoOpScrollStrategy()
+            ScrollStrategy: {
+                Absolute: new AbsoluteScrollStrategy(),
+                Block: new BlockScrollStrategy(),
+                Close: new CloseScrollStrategy(),
+                NoOp: new NoOpScrollStrategy()
             },
-            'PositionStrategy': {
-                'Auto': new AutoPositionStrategy(),
-                'Connected': new ConnectedPositioningStrategy(),
-                'Global': new GlobalPositionStrategy(),
-                'Container': new ContainerPositionStrategy(),
-                'Elastic': new ElasticPositionStrategy({
+            PositionStrategy: {
+                Auto: new AutoPositionStrategy(),
+                Connected: new ConnectedPositioningStrategy(),
+                Global: new GlobalPositionStrategy(),
+                Container: new ContainerPositionStrategy(),
+                Elastic: new ElasticPositionStrategy({
                     minSize: { width: 150, height: 150 }
                 }),
             },
-            'VerticalDirection': {
-                'Top': -1,
-                'Middle': -0.5,
-                'Bottom': 0
+            VerticalDirection: {
+                Top: -1,
+                Middle: -0.5,
+                Bottom: 0
             },
-            'VerticalStartPoint': {
-                'Top': -1,
-                'Middle': -0.5,
-                'Bottom': 0
+            VerticalStartPoint: {
+                Top: -1,
+                Middle: -0.5,
+                Bottom: 0
             },
-            'HorizontalDirection': {
-                'Left': -1,
-                'Center': -0.5,
-                'Right': 0
+            HorizontalDirection: {
+                Left: -1,
+                Center: -0.5,
+                Right: 0
             },
-            'HorizontalStartPoint': {
-                'Left': -1,
-                'Center': -0.5,
-                'Right': 0
+            HorizontalStartPoint: {
+                Left: -1,
+                Center: -0.5,
+                Right: 0
             }
         };
 

@@ -204,6 +204,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     /**
      * Updates related row of provided grid's data source with provided new row value
+     *
      * @param grid Grid to update data for
      * @param rowID ID of the row to update
      * @param rowValueInDataSource Initial value of the row as it is in data source
@@ -596,9 +597,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         const args: IRowToggleEventArgs = {
-            rowID: rowID,
-            expanded: expanded,
-            event: event,
+            rowID,
+            expanded,
+            event,
             cancel: false
         };
 

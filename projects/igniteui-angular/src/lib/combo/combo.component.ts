@@ -55,9 +55,9 @@ enum DataTypes {
  * @hidden
  */
 const ItemHeights = {
-    'comfortable': 40,
-    'cosy': 32,
-    'compact': 28,
+    comfortable: 40,
+    cosy: 32,
+    compact: 28,
 };
 
 /**
@@ -118,6 +118,7 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs {
 
 /**
  * When called with sets A & B, returns A - B (as array);
+ *
  * @hidden
  */
 function diffInSets(set1: Set<any>, set2: Set<any>): any[] {
@@ -1083,16 +1084,15 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`
      */
     private getValueDisplayPairs(ids: any[]) {
-        return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => {
-            return {
+        return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => ({
                 [this.valueKey]: e[this.valueKey],
                 [this.displayKey]: e[this.displayKey]
-            };
-        });
+            }));
     }
 
     /**
      * Returns if the specified itemID is selected
+     *
      * @hidden
      * @internal
      */
@@ -1185,7 +1185,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             }
         }
         this.manageRequiredAsterisk();
-    }
+    };
 
     protected manageRequiredAsterisk(): void {
         if (this.ngControl && this.ngControl.control.validator) {
@@ -1382,6 +1382,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Get current selection state
+     *
      * @returns Array of selected items
      * ```typescript
      * let selectedItems = this.combo.selectedItems();
@@ -1394,6 +1395,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Select defined items
+     *
      * @param newItems new items to be selected
      * @param clearCurrentSelection if true clear previous selected items
      * ```typescript
@@ -1409,6 +1411,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Deselect defined items
+     *
      * @param items items to deselected
      * ```typescript
      * this.combo.deselectItems(["New York", "New Jersey"]);
@@ -1423,6 +1426,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Select all (filtered) items
+     *
      * @param ignoreFilter if set to true, selects all items, otherwise selects only the filtered ones.
      * ```typescript
      * this.combo.selectAllItems();
@@ -1436,6 +1440,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Deselect all (filtered) items
+     *
      * @param ignoreFilter if set to true, deselects all items, otherwise deselects only the filtered ones.
      * ```typescript
      * this.combo.deselectAllItems();
@@ -1451,6 +1456,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Selects/Deselects a single item
+     *
      * @param itemID the itemID of the specific item
      * @param select If the item should be selected (true) or deselected (false)
      *
@@ -1548,6 +1554,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
     /**
      * Event handlers
+     *
      * @hidden
      * @internal
      */

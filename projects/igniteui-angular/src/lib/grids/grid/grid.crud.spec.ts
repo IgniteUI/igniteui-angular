@@ -422,7 +422,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.length).toBe(0);
     });
 
-    it('should be able to updateRow when PK is defined outside displayContainer', async() => {
+    it('should be able to updateRow when PK is defined outside displayContainer', async () => {
         grid.height = '250px';
         await wait(50);
         fix.detectChanges();
@@ -443,7 +443,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.data[grid.data.map((record) => record[grid.primaryKey]).indexOf(97)]).toBeDefined();
     });
 
-    it('should be able to deleteRow when PK is defined outside displayContainer', async() => {
+    it('should be able to deleteRow when PK is defined outside displayContainer', async () => {
         grid.height = '250px';
         await wait(50);
         fix.detectChanges();
@@ -464,7 +464,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.data.length).toBe(10);
     });
 
-    it('should be able to updateCell when PK is defined outside displayContainer', async() => {
+    it('should be able to updateCell when PK is defined outside displayContainer', async () => {
         grid.height = '250px';
         await wait(50);
         fix.detectChanges();

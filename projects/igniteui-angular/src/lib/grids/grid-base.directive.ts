@@ -237,6 +237,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the resource strings.
+     *
      * @remarks
      * By default it uses EN resources.
      */
@@ -251,6 +252,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
+     *
      * @remarks
      * By default it is 6000ms.
      */
@@ -259,6 +261,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether to autogenerate the columns.
+     *
      * @remarks
      * The default value is false. When set to true, it will override all columns declared through code or in markup.
      * @example
@@ -281,6 +284,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a custom template when empty.
+     *
      * @example
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
@@ -291,6 +295,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a custom template for adding row UI when grid is empty.
+     *
      * @example
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [addRowEmptyTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
@@ -301,6 +306,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a custom template when loading.
+     *
      * @example
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
@@ -311,6 +317,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the filtering logic of the `IgxGridComponent`.
+     *
      * @remarks
      * The default is AND.
      * @example
@@ -330,6 +337,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the filtering state.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(filteringExpressionsTree)]="model.filteringExpressions"></igx-grid>
@@ -373,6 +381,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after filtering is performed.
+     *
      * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * @example
@@ -386,6 +395,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after advanced filtering is performed.
+     *
      * @remarks
      * Returns the advanced filtering expressions tree.
      * @example
@@ -399,6 +409,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when grid is scrolled horizontally/vertically.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
@@ -410,6 +421,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the advanced filtering state.
+     *
      * @example
      * ```typescript
      * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
@@ -447,6 +459,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the locale.
+     *
      * @remarks
      * If not set, returns browser's language.
      */
@@ -477,6 +490,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the paging feature is enabled.
+     *
      * @remarks
      * The default state is disabled (false).
      * @example
@@ -497,6 +511,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the current page index.
+     *
      * @example
      * ```html
      *  <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
@@ -523,6 +538,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after the current page is changed.
+     *
      * @example
      * ```html
      * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
@@ -538,6 +554,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the number of visible items per page.
+     *
      * @remarks
      * The default is 15.
      * @example
@@ -564,6 +581,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when `perPage` property value of the grid is changed.
+     *
      * @example
      * ```html
      * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
@@ -579,6 +597,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a custom `ng-template` for the pagination UI of the grid.
+     *
      * @example
      * ```html
      * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
@@ -612,6 +631,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets if the row selectors are hidden.
+     *
      * @remarks
      *  By default row selectors are shown
      */
@@ -628,6 +648,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether rows can be moved.
+     *
      * @example
      * ```html
      * <igx-grid #grid [rowDraggable]="true"></igx-grid>
@@ -652,6 +673,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the row ID that is being dragged.
+     *
      * @remarks
      * The row ID is either the primaryKey value or the data record instance.
      */
@@ -664,6 +686,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the rows are editable.
+     *
      * @remarks
      * By default it is set to false.
      * @example
@@ -694,6 +717,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the height.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -724,6 +748,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the width of the grid.
+     *
      * @example
      * ```typescript
      * let gridWidth = this.grid.width;
@@ -745,6 +770,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the width of the header.
+     *
      * @example
      * ```html
      * let gridHeaderWidth = this.grid.headerWidth;
@@ -756,6 +782,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the styling classes applied to all even `IgxGridRowComponent`s in the grid.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-even-class'" [autoGenerate]="true"></igx-grid>
@@ -766,6 +793,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the styling classes applied to all odd `IgxGridRowComponent`s in the grid.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-odd-class'" [autoGenerate]="true"></igx-grid>
@@ -776,6 +804,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the row height.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
@@ -793,6 +822,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the default width of the columns.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
@@ -811,6 +841,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the primary key.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
@@ -822,6 +853,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Get/Sets the message displayed when there are no records.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
@@ -837,6 +869,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the grid is going to show a loading indicator.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
@@ -861,6 +894,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the columns should be auto-generated once again after the initialization of the grid
+     *
      * @remarks
      * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
      * Note that after generating the columns, this property would be disabled to avoid re-creating
@@ -874,6 +908,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
@@ -915,6 +950,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the initial pinning configuration.
+     *
      * @remarks
      * Allows to apply pinning the columns to the start or the end.
      * Note that pinning to both sides at a time is not allowed.
@@ -982,6 +1018,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets if the filtering is enabled.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1010,6 +1047,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a value indicating whether the advanced filtering is enabled.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
@@ -1033,6 +1071,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the filter mode.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1056,6 +1095,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the summary position.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" summaryPosition="top" [autoGenerate]="true"></igx-grid>
@@ -1075,6 +1115,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the summary calculation mode.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" summaryCalculationMode="rootLevelOnly" [autoGenerate]="true"></igx-grid>
@@ -1098,6 +1139,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Controls whether the summary row is visible when groupBy/parent row is collapsed.
+     *
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [showSummaryOnCollapse]="true" [autoGenerate]="true"></igx-grid>
@@ -1118,6 +1160,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the filtering strategy of the grid.
+     *
      * @example
      * ```html
      *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
@@ -1134,6 +1177,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the sorting strategy of the grid.
+     *
      * @example
      * ```html
      *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
@@ -1150,6 +1194,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a unique values strategy used by the Excel Style Filtering
+     *
      * @remarks
      * Provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
@@ -1165,6 +1210,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the current selection state.
+     *
      * @remarks
      * Represents the selected rows' IDs (primary key or rowData)
      * @example
@@ -1185,6 +1231,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked.
+     *
      * @remarks
      * Returns the `IgxGridCellComponent`.
      * @example
@@ -1197,6 +1244,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when `IgxGridCellComponent` is selected.
+     *
      * @remarks
      *  Returns the `IgxGridCellComponent`.
      * @example
@@ -1209,6 +1257,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      *  Emitted when `IgxGridRowComponent` is selected.
+     *
      * @example
      * ```html
      * <igx-grid #grid (onRowSelectionChange)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
@@ -1219,6 +1268,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      *  Emitted when `IgxColumnComponent` is selected.
+     *
      * @example
      * ```html
      * <igx-grid #grid (onColumnSelectionChange)="onColumnSelectionChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
@@ -1229,6 +1279,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when `IgxColumnComponent` is pinned.
+     *
      * @remarks
      * The index that the column is inserted at may be changed through the `insertAtIndex` property.
      * @example
@@ -1245,6 +1296,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when cell enters edit mode.
+     *
      * @remarks
      * This event is cancelable.
      * @example
@@ -1258,6 +1310,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when cell exits edit mode.
+     *
      * @example
      * ```html
      * <igx-grid #grid3 (cellEditExit)="editExit($event)" [data]="data" [primaryKey]="'ProductID'">
@@ -1269,6 +1322,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when cell has been edited.
+     *
      * @remarks
      * Event is fired after editing is completed, when the cell is exiting edit mode.
      * This event is cancelable.
@@ -1283,6 +1337,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after cell has been edited and editing has been committed.
+     *
      * @example
      * ```html
      * <igx-grid #grid3 (cellEditDone)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
@@ -1294,6 +1349,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a row enters edit mode.
+     *
      * @remarks
      * Emitted when [rowEditable]="true".
      * This event is cancelable.
@@ -1308,6 +1364,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when exiting edit mode for a row.
+     *
      * @remarks
      * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
@@ -1325,6 +1382,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after exiting edit mode for a row and editing has been committed.
+     *
      * @remarks
      * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
@@ -1341,6 +1399,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when row editing is canceled.
+     *
      * @remarks
      * Emits when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
@@ -1356,6 +1415,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a column is initialized.
+     *
      * @remarks
      * Returns the column object.
      * @example
@@ -1368,6 +1428,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when sorting is performed through the UI.
+     *
      * @remarks
      * Returns the sorting expression.
      * @example
@@ -1380,6 +1441,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when filtering is performed through the UI.
+     *
      * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * @example
@@ -1392,6 +1454,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when paging is performed.
+     *
      * @remarks
      * Returns an object consisting of the previous and next pages.
      * @example
@@ -1404,6 +1467,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a row added through the API.
+     *
      * @remarks
      * Returns the data for the new `IgxGridRowComponent` object.
      * @example
@@ -1416,6 +1480,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a row is deleted through API.
+     *
      * @remarks
      * Returns an `IRowDataEventArgs` object.
      * @example
@@ -1428,6 +1493,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when column is resized.
+     *
      * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
      * @example
@@ -1440,6 +1506,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a cell is right clicked.
+     *
      * @remarks
      * Returns the `IgxGridCellComponent` object.
      * ```html
@@ -1451,6 +1518,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a cell is double clicked.
+     *
      * @remarks
      * Returns the `IgxGridCellComponent` object.
      * @example
@@ -1463,6 +1531,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when column visibility is changed.
+     *
      * @remarks
      * Args: { column: any, newValue: boolean }
      * @example
@@ -1475,6 +1544,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when column moving starts.
+     *
      * @remarks
      * Returns the moved `IgxColumnComponent` object.
      * @example
@@ -1487,6 +1557,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted during the column moving operation.
+     *
      * @remarks
      * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
      * @example
@@ -1499,6 +1570,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when column moving ends.
+     *
      * @remarks
      * Returns the source and target `IgxColumnComponent` objects.
      * @example
@@ -1511,6 +1583,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
+     *
      * @remarks
      * This event is fired only if the key combination is supported in the grid.
      * Return the target type, target object and the original event. This event is cancelable.
@@ -1524,6 +1597,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when start dragging a row.
+     *
      * @remarks
      * Return the dragged row.
      */
@@ -1532,6 +1606,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when dropping a row.
+     *
      * @remarks
      * Return the dropped row.
      */
@@ -1540,6 +1615,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a copy operation is executed.
+     *
      * @remarks
      * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseDirective#clipboardOptions}.
      */
@@ -1554,6 +1630,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when the expanded state of a row gets changed.
+     *
      * @example
      * ```html
      * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
@@ -1564,6 +1641,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when the pinned state of a row is changed.
+     *
      * @example
      * ```html
      * <igx-grid [data]="employeeData" (onRowPinning)="rowPin($event)" [autoGenerate]="true"></igx-grid>
@@ -1643,6 +1721,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of all `IgxGridHeaderGroupComponent`.
+     *
      * @example
      * ```typescript
      * const headerGroupsList = this.grid.headerGroupsList;
@@ -1654,6 +1733,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of all `IgxGridHeaderComponent`.
+     *
      * @example
      * ```typescript
      * const headers = this.grid.headerCellList;
@@ -1665,6 +1745,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of all `IgxGridFilteringCellComponent`.
+     *
      * @example
      * ```typescript
      * const filterCells = this.grid.filterCellList;
@@ -1691,15 +1772,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this._summaryRowList) {
             return res;
         }
-        const sumList = this._summaryRowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        });
+        const sumList = this._summaryRowList.filter((item) => item.element.nativeElement.parentElement !== null);
         res.reset(sumList);
         return res;
     }
 
     /**
      * A list of `IgxGridRowComponent`.
+     *
      * @example
      * ```typescript
      * const rowList = this.grid.rowList;
@@ -1711,12 +1791,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return res;
         }
         const rList = this._rowList
-            .filter((item) => {
-                return item.element.nativeElement.parentElement !== null;
-            })
-            .sort((a, b) => {
-                return a.index - b.index;
-            });
+            .filter((item) => item.element.nativeElement.parentElement !== null)
+            .sort((a, b) => a.index - b.index);
         res.reset(rList);
         return res;
     }
@@ -1726,6 +1802,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of currently rendered `IgxGridRowComponent`'s.
+     *
      * @example
      * ```typescript
      * const dataList = this.grid.dataRowList;
@@ -1736,17 +1813,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this._dataRowList) {
             return res;
         }
-        const rList = this._dataRowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        }).sort((a, b) => {
-            return a.index - b.index;
-        });
+        const rList = this._dataRowList.filter((item) => item.element.nativeElement.parentElement !== null).sort((a, b) => a.index - b.index);
         res.reset(rList);
         return res;
     }
 
     /**
      * A template reference for the template when the filtered grid is empty.
+     *
      * @example
      * ```
      * const emptyTempalte = this.grid.emptyGridTemplate;
@@ -1757,6 +1831,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A template reference for the template when the grid is empty.
+     *
      * @example
      * ```
      * const emptyTempalte = this.grid.emptyGridTemplate;
@@ -2147,6 +2222,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the sorting state.
+     *
      * @remarks
      * Supports two-way data binding.
      * @example
@@ -2168,6 +2244,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before sorting is performed.
+     *
      * @remarks
      * Returns the sorting expressions.
      * @example
@@ -2192,6 +2269,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the number of hidden columns.
+     *
      * @example
      * ```typescript
      * const hiddenCol = this.grid.hiddenColumnsCount;
@@ -2459,6 +2537,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets cell selection mode.
+     *
      * @remarks
      * By default the cell selection mode is multiple
      * @param selectionMode: GridSelectionMode
@@ -2479,6 +2558,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets row selection mode
+     *
      * @remarks
      * By default the row selection mode is none
      * @param selectionMode: GridSelectionMode
@@ -2499,6 +2579,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets column selection mode
+     *
      * @remarks
      * By default the row selection mode is none
      * @param selectionMode: GridSelectionMode
@@ -2535,6 +2616,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when an export process is initiated by the user.
+     *
      * @example
      * ```typescript
      * toolbarExporting(event: IGridToolbarExportEventArgs){
@@ -2549,6 +2631,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when making a range selection.
+     *
      * @remarks
      * Range selection can be made either through drag selection or through keyboard selection.
      */
@@ -2807,11 +2890,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.actionStrip?.hide();
         const args: IGridScrollEventArgs = {
             direction: 'vertical',
-            event: event,
+            event,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
         this.onScroll.emit(args);
-    }
+    };
 
     private horizontalScrollHandler = (event) => {
         const scrollLeft = event.target.scrollLeft;
@@ -2826,9 +2909,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.hideOverlays();
-        const args: IGridScrollEventArgs = { direction: 'horizontal', event: event, scrollPosition: this.headerContainer.scrollPosition };
+        const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
         this.onScroll.emit(args);
-    }
+    };
 
     /**
      * @hidden
@@ -2890,6 +2973,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the state of the grid virtualization.
+     *
      * @remarks
      * Includes the start index and how many records are rendered.
      * @example
@@ -3019,7 +3103,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (this.selectionService.dragMode && isIE()) { return; }
+            if (this.selectionService.dragMode && isIE()) {
+ return;
+}
             if (!this.crudService.cell &&
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
@@ -3306,8 +3392,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
-        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(() => { this.resetHorizontalForOfs(); });
-        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(() => { this.resetHorizontalForOfs(); });
+        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(() => {
+ this.resetHorizontalForOfs();
+});
+        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(() => {
+ this.resetHorizontalForOfs();
+});
         this.resetHorizontalForOfs();
     }
 
@@ -3440,6 +3530,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Toggles the specified column's visibility.
+     *
      * @example
      * ```typescript
      * this.grid1.toggleColumnVisibility({
@@ -3461,6 +3552,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets a list of key-value pairs [row ID, expansion state].
+     *
      * @remarks
      * Includes only states that differ from the default one.
      * Supports two-way binding.
@@ -3486,6 +3578,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Expands all rows.
+     *
      * @example
      * ```typescript
      * this.grid.expandAll();
@@ -3498,6 +3591,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Collapses all rows.
+     *
      * @example
      * ```typescript
      * this.grid.collapseAll();
@@ -3510,6 +3604,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Expands the row by its id.
+     *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
@@ -3524,6 +3619,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Collapses the row by its id.
+     *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
@@ -3539,6 +3635,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Toggles the row by its id.
+     *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
@@ -3563,6 +3660,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the native element.
+     *
      * @example
      * ```typescript
      * const nativeEl = this.grid.nativeElement.
@@ -3574,6 +3672,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the outlet used to attach the grid's overlays to.
+     *
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
@@ -3593,6 +3692,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the default row height.
+     *
      * @example
      * ```typescript
      * const rowHeigh = this.grid.defaultRowHeight;
@@ -3625,6 +3725,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
+     *
      * @remarks
      * Used internally for restricting header group component width.
      * The values below depend on the header cell default right/left padding values.
@@ -3656,26 +3757,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the current width of the container for the pinned `IgxColumnComponent`s.
+     *
      * @example
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth;
      * ```
      */
     get pinnedWidth() {
-        if (!isNaN(this._pinnedWidth)) { return this._pinnedWidth; }
+        if (!isNaN(this._pinnedWidth)) {
+ return this._pinnedWidth;
+}
         this._pinnedWidth = this.getPinnedWidth();
         return this._pinnedWidth;
     }
 
     /**
      * Gets the current width of the container for the unpinned `IgxColumnComponent`s.
+     *
      * @example
      * ```typescript
      * const unpinnedWidth = this.grid.getUnpinnedWidth;
      * ```
      */
     get unpinnedWidth() {
-        if (!isNaN(this._unpinnedWidth)) { return this._unpinnedWidth; }
+        if (!isNaN(this._unpinnedWidth)) {
+ return this._unpinnedWidth;
+}
         this._unpinnedWidth = this.getUnpinnedWidth();
         return this._unpinnedWidth;
     }
@@ -3716,6 +3823,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets an array of `IgxColumnComponent`s.
+     *
      * @example
      * ```typescript
      * const colums = this.grid.columns.
@@ -3727,6 +3835,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets an array of the pinned `IgxColumnComponent`s.
+     *
      * @example
      * ```typescript
      * const pinnedColumns = this.grid.pinnedColumns.
@@ -3742,19 +3851,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets an array of the pinned `IgxRowComponent`s.
+     *
      * @example
      * ```typescript
      * const pinnedRow = this.grid.pinnedRows;
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this._pinnedRowList.toArray().sort((a, b) => {
-            return a.index - b.index;
-        });
+        return this._pinnedRowList.toArray().sort((a, b) => a.index - b.index);
     }
 
     /**
      * Gets an array of unpinned `IgxColumnComponent`s.
+     *
      * @example
      * ```typescript
      * const unpinnedColumns = this.grid.unpinnedColumns.
@@ -3786,6 +3895,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxColumnComponent` by field name.
+     *
      * @example
      * ```typescript
      * const myCol = this.grid1.getColumnByName("ID");
@@ -3805,6 +3915,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxRowDirective` by index.
+     *
      * @example
      * ```typescript
      * const myRow = this.grid1.getRowByIndex(1);
@@ -3817,6 +3928,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns `IgxGridRowComponent` object by the specified primary key .
+     *
      * @remarks
      * Requires that the `primaryKey` property is set.
      * @example
@@ -3831,6 +3943,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an array of visible `IgxColumnComponent`s.
+     *
      * @example
      * ```typescript
      * const visibleColumns = this.grid.visibleColumns.
@@ -3846,6 +3959,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxGridCellComponent` that matches the conditions.
+     *
      * @example
      * ```typescript
      * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
@@ -3867,6 +3981,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an `IgxGridCellComponent` object by the specified primary key and column field.
+     *
      * @remarks
      * Requires that the primaryKey property is set.
      * @example
@@ -3882,6 +3997,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the total number of pages.
+     *
      * @example
      * ```typescript
      * const totalPages = this.grid.totalPages;
@@ -3896,6 +4012,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets if the current page is the first page.
+     *
      * @example
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
@@ -3907,6 +4024,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Goes to the next page, if the grid is not already at the last page.
+     *
      * @example
      * ```typescript
      * this.grid1.nextPage();
@@ -3920,6 +4038,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Goes to the previous page, if the grid is not already at the first page.
+     *
      * @example
      * ```typescript
      * this.grid1.previousPage();
@@ -3933,6 +4052,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the total number of records.
+     *
      * @remarks
      * Only functions when paging is enabled.
      * @example
@@ -3955,6 +4075,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the current page is the last page.
+     *
      * @example
      * ```typescript
      * const lastPage = this.grid.isLastPage;
@@ -3966,13 +4087,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the total width of the `IgxGridComponent`.
+     *
      * @example
      * ```typescript
      * const gridWidth = this.grid.totalWidth;
      * ```
      */
     get totalWidth(): number {
-        if (!isNaN(this._totalWidth)) { return this._totalWidth; }
+        if (!isNaN(this._totalWidth)) {
+ return this._totalWidth;
+}
         // Take only top level columns
         const cols = this.visibleColumns.filter(col => col.level === 0 && !col.pinned);
         let totalWidth = 0;
@@ -4010,6 +4134,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Reorder columns in the main columnList and _columns collections.
+     *
      * @hidden
      */
     protected _moveColumns(from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
@@ -4042,6 +4167,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Reorders columns inside the passed column collection.
      * When reordering column group collection, the collection is not flattened.
      * In all other cases, the columns collection is flattened, this is why adittional calculations on the dropIndex are done.
+     *
      * @hidden
      */
     protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[],
@@ -4061,6 +4187,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Reorder column group collection.
+     *
      * @hidden
      */
     protected _moveChildColumns(parent: IgxColumnComponent, from: IgxColumnComponent, to: IgxColumnComponent, pos: DropPosition) {
@@ -4070,6 +4197,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     /**
      * Places a column before or after the specified target column.
+     *
      * @example
      * ```typescript
      * grid.moveColumn(column, target);
@@ -4109,6 +4237,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Notiy changes, reset cache and populateVisibleIndexes.
+     *
      * @hidden
      */
     private _columnsReordered(column: IgxColumnComponent, target) {
@@ -4122,7 +4251,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const args = {
             source: column,
-            target: target
+            target
         };
 
         this.onColumnMovingEnd.emit(args);
@@ -4130,6 +4259,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Goes to the desired page index.
+     *
      * @example
      * ```typescript
      * this.grid1.paginate(1);
@@ -4146,6 +4276,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Manually marks the `IgxGridComponent` for change detection.
+     *
      * @example
      * ```typescript
      * this.grid1.markForCheck();
@@ -4174,9 +4305,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.addRowParent = {
-            rowID: rowID,
+            rowID,
             index: isInPinnedArea ? pinIndex : unpinIndex,
-            asChild: asChild,
+            asChild,
             isPinned: isInPinnedArea
         };
         this._pipeTrigger++;
@@ -4204,6 +4335,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
+     *
      * @example
      * ```typescript
      * this.grid1.addRow(record);
@@ -4222,6 +4354,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
+     *
      * @remarks
      * Requires that the `primaryKey` property is set.
      * The method accept rowSelector as a parameter, which is the rowID.
@@ -4263,6 +4396,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Updates the `IgxGridRowComponent` and the corresponding data record by primary key.
+     *
      * @remarks
      * Requires that the `primaryKey` property is set.
      * @example
@@ -4306,6 +4440,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Updates the `IgxGridRowComponent`
+     *
      * @remarks
      * The row is specified by
      * rowSelector parameter and the data source record with the passed value.
@@ -4339,6 +4474,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the data that is contained in the row component.
+     *
      * @remarks
      * If the primary key is not specified the row selector match the row data.
      * @example
@@ -4358,6 +4494,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Sort a single `IgxColumnComponent`.
+     *
      * @remarks
      * Sort the `IgxGridComponent`'s `IgxColumnComponent` based on the provided array of sorting expressions.
      * @example
@@ -4379,6 +4516,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Filters a single `IgxColumnComponent`.
+     *
      * @example
      * ```typescript
      * public filter(term) {
@@ -4397,6 +4535,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
+     *
      * @example
      * ```typescript
      * grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
@@ -4411,6 +4550,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Enables summaries for the specified column and applies your customSummary.
+     *
      * @remarks
      * If you do not provide the customSummary, then the default summary for the column data type will be applied.
      * @example
@@ -4434,6 +4574,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Disable summaries for the specified column.
+     *
      * @example
      * ```typescript
      * grid.disableSummaries('ProductName');
@@ -4455,6 +4596,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * If name is provided, clears the filtering state of the corresponding `IgxColumnComponent`.
+     *
      * @remarks
      * Otherwise clears the filtering state of all `IgxColumnComponent`s.
      * @example
@@ -4469,6 +4611,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * If name is provided, clears the sorting state of the corresponding `IgxColumnComponent`.
+     *
      * @remarks
      * otherwise clears the sorting state of all `IgxColumnComponent`.
      * @example
@@ -4502,6 +4645,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Pins a column by field name.
+     *
      * @remarks
      * Returns whether the operation is successful.
      * @example
@@ -4518,6 +4662,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Unpins a column by field name. Returns whether the operation is successful.
+     *
      * @example
      * ```typescript
      * this.grid.pinColumn("ID");
@@ -4532,6 +4677,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Pin the row by its id.
+     *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
@@ -4550,8 +4696,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
-            rowID: rowID,
-            row: row
+            rowID,
+            row
         };
         this.onRowPinning.emit(eventArgs);
 
@@ -4567,6 +4713,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Unpin the row by its id.
+     *
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
@@ -4583,8 +4730,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const row = this.gridAPI.get_row_by_key(rowID);
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
-            rowID: rowID,
-            row: row
+            rowID,
+            row
         };
         this.onRowPinning.emit(eventArgs);
         this.endEdit(true);
@@ -4607,6 +4754,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Recalculates grid width/height dimensions.
+     *
      * @remarks
      * Should be run when changing DOM elements dimentions manually that affect the grid's size.
      * @example
@@ -4620,6 +4768,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Finds the next occurrence of a given string in the grid and scrolls to the cell if it isn't visible.
+     *
      * @remarks
      * Returns how many times the grid contains the string.
      * @example
@@ -4636,6 +4785,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Finds the previous occurrence of a given string in the grid and scrolls to the cell if it isn't visible.
+     *
      * @remarks
      * Returns how many times the grid contains the string.
      * @example
@@ -4652,6 +4802,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Reapplies the existing search.
+     *
      * @remarks
      * Returns how many times the grid contains the last search.
      * @example
@@ -4689,6 +4840,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Removes all the highlights in the cell.
+     *
      * @example
      * ```typescript
      * this.grid.clearSearch();
@@ -4714,6 +4866,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has sortable columns.
+     *
      * @example
      * ```typescript
      * const sortableGrid = this.grid.hasSortableColumns;
@@ -4725,6 +4878,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has editable columns.
+     *
      * @example
      * ```typescript
      * const editableGrid = this.grid.hasEditableColumns;
@@ -4736,6 +4890,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has filterable columns.
+     *
      * @example
      * ```typescript
      * const filterableGrid = this.grid.hasFilterableColumns;
@@ -4747,6 +4902,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has summarized columns.
+     *
      * @example
      * ```typescript
      * const summarizedGrid = this.grid.hasSummarizedColumns;
@@ -4778,6 +4934,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
+     *
      * @example
      * ```typescript
      * const movableGrid = this.grid.hasMovableColumns;
@@ -4789,6 +4946,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has column groups.
+     *
      * @example
      * ```typescript
      * const groupGrid = this.grid.hasColumnGroups;
@@ -4799,6 +4957,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     /**
      * Returns if the `IgxGridComponent` has column layouts for multi-row layout definition.
+     *
      * @example
      * ```typescript
      * const layoutGrid = this.grid.hasColumnLayouts;
@@ -4810,6 +4969,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an array of the selected `IgxGridCellComponent`s.
+     *
      * @example
      * ```typescript
      * const selectedCells = this.grid.selectedCells;
@@ -5170,7 +5330,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public hasVerticalScroll() {
-        if (this._init) { return false; }
+        if (this._init) {
+ return false;
+}
         const isScrollable = this.verticalScrollContainer ? this.verticalScrollContainer.isScrollable() : false;
         return !!(this.calcWidth && this.dataView &&
             this.dataView.length > 0 &&
@@ -5321,6 +5483,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets calculated width of the pinned area.
+     *
      * @example
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth();
@@ -5369,7 +5532,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (column) {
             column.hasSummary = hasSummary;
             if (summaryOperand) {
-                if (this.rootSummariesEnabled) { this.summaryService.retriggerRootPipe++; }
+                if (this.rootSummariesEnabled) {
+ this.summaryService.retriggerRootPipe++;
+}
                 column.summaries = summaryOperand;
             }
         }
@@ -5505,7 +5670,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public onHeaderSelectorClick(event) {
-        if (!this.isMultiRowSelectionEnabled) { return; }
+        if (!this.isMultiRowSelectionEnabled) {
+ return;
+}
         this.selectionService.areAllRowSelected() ?
             this.selectionService.clearRowSelection(event) : this.selectionService.selectAllRows(event);
     }
@@ -5535,6 +5702,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the currently transformed paged/filtered/sorted/grouped pinned row data, displayed in the grid.
+     *
      * @example
      * ```typescript
      *      const pinnedDataView = this.grid.pinnedDataView;
@@ -5546,6 +5714,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns currently transformed paged/filtered/sorted/grouped unpinned row data, displayed in the grid.
+     *
      * @example
      * ```typescript
      *      const pinnedDataView = this.grid.pinnedDataView;
@@ -5557,6 +5726,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the currently transformed paged/filtered/sorted/grouped/pinned/unpinned row data, displayed in the grid.
+     *
      * @example
      * ```typescript
      *      const dataView = this.grid.dataView;
@@ -5570,6 +5740,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Select specified rows by ID.
+     *
      * @example
      * ```typescript
      * this.grid.selectRows([1,2,5], true);
@@ -5584,6 +5755,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Deselect specified rows by ID.
+     *
      * @example
      * ```typescript
      * this.grid.deselectRows([1,2,5]);
@@ -5597,6 +5769,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Selects all rows
+     *
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
@@ -5615,6 +5788,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Deselects all rows
+     *
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * If you set the parameter onlyFilterData to false that will deselect all rows in the grid exept deleted rows.
@@ -5795,6 +5969,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      *
      * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
      * @remarks
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
@@ -5806,6 +5981,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Get current selected columns.
+     *
      * @example
      * Returns an array with selected columns
      * ```typescript
@@ -5819,6 +5995,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Select specified columns.
+     *
      * @example
      * ```typescript
      * this.grid.selectColumns(['ID','Name'], true);
@@ -5847,6 +6024,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Deselect specified columns by filed.
+     *
      * @example
      * ```typescript
      * this.grid.deselectColumns(['ID','Name']);
@@ -5873,6 +6051,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Deselects all columns
+     *
      * @example
      * ```typescript
      * this.grid.deselectAllColumns();
@@ -5885,6 +6064,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Selects all columns
+     *
      * @example
      * ```typescript
      * this.grid.deselectAllColumns();
@@ -5920,6 +6100,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      *
      * Returns an array of the current columns selection in the form of `[{ column.field: cell.value }, ...]`.
+     *
      * @remarks
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
@@ -5941,7 +6122,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.headerContainer.scrollPosition += evt.target.scrollLeft;
             evt.target.scrollLeft = 0;
         }
-    }
+    };
 
     /**
      * @hidden
@@ -5992,6 +6173,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
+     *
      * @remarks
      * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
@@ -6038,6 +6220,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns `ICellPosition` which defines the next cell,
      * according to the current position, that match specific criteria.
+     *
      * @remarks
      * You can pass callback function as a third parameter of `getPreviousCell` method.
      * The callback function accepts IgxColumnComponent as a param
@@ -6071,6 +6254,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns `ICellPosition` which defines the previous cell,
      * according to the current position, that match specific criteria.
+     *
      * @remarks
      * You can pass callback function as a third parameter of `getPreviousCell` method.
      * The callback function accepts IgxColumnComponent as a param
@@ -6102,7 +6286,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
-        if (!cb) { return; }
+        if (!cb) {
+ return;
+}
         let row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) {
             if ((this as any).totalItemCount) {
@@ -6126,7 +6312,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNavigationArguments(row, visibleColIndex) {
-        let targetType: GridKeydownTargetType, target;
+        let targetType: GridKeydownTargetType; let target;
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
                 targetType = 'groupRow';
@@ -6146,7 +6332,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
                 break;
         }
-        return { targetType: targetType, target: target };
+        return { targetType, target };
     }
 
     private getNextDataRowIndex(currentRowIndex, previous = false): number {
@@ -6162,6 +6348,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the previous editable row index or -1 if no such row is found.
+     *
      * @param currentIndex The index of the current editable record.
      */
     private findPrevEditableDataRowIndex(currentIndex): number {
@@ -6178,6 +6365,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the record at the specified data view index is a an editable data record.
      * If record is group rec, summary rec, child rec, ghost rec. etc. it is not editable.
+     *
      * @param dataViewIndex The index of that record in the data view.
      */
     private isEditableDataRecordAtIndex(dataViewIndex) {
@@ -6189,6 +6377,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the record at the specified data view index is a ghost.
      * If record is pinned but is not in pinned area then it is a ghost record.
+     *
      * @param dataViewIndex The index of that record in the data view.
      */
     private isGhostRecordAtIndex(dataViewIndex) {
@@ -6200,7 +6389,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private isValidPosition(rowIndex, colIndex): boolean {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
         const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
-        if (rows < 1 || cols < 1) { return false; }
+        if (rows < 1 || cols < 1) {
+ return false;
+}
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
             colIndex > - 1 && colIndex <= Math.max(...this.visibleColumns.map(c => c.visibleIndex))) {
             return true;
@@ -6291,6 +6482,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an array containing the filtered sorted data.
+     *
      * @example
      * ```typescript
      * const filteredSortedData = this.grid1.filteredSortedData;
@@ -6431,7 +6623,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
-                                metadata: metadata,
+                                metadata,
                             });
                         }
                     } else {
@@ -6445,7 +6637,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                                 row: dataRow,
                                 column: c.field,
                                 index: occurenceIndex++,
-                                metadata: metadata,
+                                metadata,
                             });
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
@@ -6604,6 +6796,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     // TODO: Refactor
     /**
      * Finishes the row transactions on the current row.
+     *
      * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
      * @example
@@ -6617,7 +6810,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const cell = this.crudService.cell;
         let canceled = false;
         // TODO: Merge the crudService with with BaseAPI service
-        if (!row && !cell) { return; }
+        if (!row && !cell) {
+ return;
+}
 
         if (row?.isAddRow) {
             canceled = this.endAdd(commit, event);
@@ -6764,7 +6959,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.verticalScrollContainer.scrollPrev();
         }
-    }
+    };
 
     /**
      * @hidden @internal
@@ -6929,6 +7124,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Closes the advanced filtering dialog.
+     *
      * @param applyChanges indicates whether the changes should be applied
      */
     public closeAdvancedFilteringDialog(applyChanges: boolean) {

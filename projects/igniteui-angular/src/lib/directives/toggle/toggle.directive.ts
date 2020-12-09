@@ -364,7 +364,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.unsubscribe();
         const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
         this.onClosed.emit(closedEventArgs);
-    }
+    };
 
     private unsubscribe() {
         this.clearSubscription(this._overlayOpenedSub);
@@ -471,6 +471,7 @@ export class IgxToggleActionDirective implements OnInit {
 
     /**
      * Updates provided overlay settings
+     *
      * @param settings settings to update
      * @returns returns updated copy of provided overlay settings
      */

@@ -31,7 +31,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
 
         // this.data = SAMPLE_DATA.slice(0);
 
-        // tslint:disable: max-line-length
+        /* eslint-disable max-len */
         this.columns = [
             { field: 'ID', width: '25%', resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },
             { field: 'CompanyName', width: '25%', resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'string'},
@@ -47,7 +47,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
             { field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'date' },
             { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'boolean' }
         ];
-        // tslint:enable: max-line-length
+        /* eslint-enable max-len */
         this.selectionMode = GridSelectionMode.multiple;
     }
 

@@ -60,6 +60,7 @@ export class IgxRowEditTabStopDirective {
     /**
      * Moves focus to first/last editable cell in the editable row and put the cell in edit mode.
      * If cell is out of view first scrolls to the cell
+     *
      * @param event keyboard event containing information about whether SHIFT key was pressed
      */
     private move(event: KeyboardEvent) {

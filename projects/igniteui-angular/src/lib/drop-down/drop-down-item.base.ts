@@ -37,6 +37,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```typescript
      * let itemId =  this.item.id;
      * ```
+     *
      * @memberof IgxSelectItemComponent
      */
     @HostBinding('attr.id')
@@ -256,6 +257,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Gets item index
+     *
      * @hidden @internal
      */
     public get itemIndex(): number {
@@ -264,6 +266,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Gets item element height
+     *
      * @hidden @internal
      */
     public get elementHeight(): number {
@@ -272,6 +275,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Get item html element
+     *
      * @hidden @internal
      */
     public get element(): ElementRef {
@@ -307,7 +311,9 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected ensureItemFocus() {
         if (this.dropDown.allowItemsFocus) {
             const focusedItem = this.dropDown.items.find((item) => item.focused);
-            if (!focusedItem) { return; }
+            if (!focusedItem) {
+ return;
+}
             focusedItem.element.nativeElement.focus({ preventScroll: true });
         }
     }

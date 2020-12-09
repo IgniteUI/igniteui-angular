@@ -150,7 +150,7 @@ export class IgxGridStateDirective {
                 } else {
                     advancedFiltering = {};
                 }
-                return { advancedFiltering: advancedFiltering };
+                return { advancedFiltering };
             },
             restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
                 const filterTree = context.createExpressionsTreeFromObject(state);
@@ -159,8 +159,7 @@ export class IgxGridStateDirective {
         },
         columns: {
             getFeatureState(context: IgxGridStateDirective): IGridState {
-                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => {
-                    return {
+                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
                         pinned: c.pinned,
                         sortable: c.sortable,
                         filterable: c.filterable,
@@ -181,8 +180,7 @@ export class IgxGridStateDirective {
                         resizable: c.resizable,
                         searchable: c.searchable,
                         selectable: c.selectable
-                    };
-                });
+                    }));
                 return { columns: gridColumns };
             },
             restoreFeatureState(context: IgxGridStateDirective, state: IColumnState[]): void {
@@ -244,9 +242,7 @@ export class IgxGridStateDirective {
         },
         cellSelection: {
             getFeatureState(context: IgxGridStateDirective): IGridState {
-                const selection = context.currGrid.getSelectedRanges().map(range => {
-                    return { rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd };
-                });
+                const selection = context.currGrid.getSelectedRanges().map(range => ({ rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd }));
                 return { cellSelection: selection };
             },
             restoreFeatureState(context: IgxGridStateDirective, state: GridSelectionRange[]): void {
@@ -307,7 +303,7 @@ export class IgxGridStateDirective {
                             context.currGrid = chGrid;
                             if (context.currGrid) {
                                 const childGridState = context.buildState(context.featureKeys) as IGridState;
-                                childGridStates.push({ id: `${rowIsland.id}`, parentRowID: parentRowID, state: childGridState });
+                                childGridStates.push({ id: `${rowIsland.id}`, parentRowID, state: childGridState });
                             }
                         });
                     });
@@ -336,7 +332,7 @@ export class IgxGridStateDirective {
              * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
              */
             getParentRowID(grid: IgxHierarchicalGridComponent) {
-                let childGrid, childRow;
+                let childGrid; let childRow;
                 while (grid.parent) {
                     childRow = grid.childRow;
                     childGrid = grid;
@@ -380,6 +376,7 @@ export class IgxGridStateDirective {
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
+     *
      * @param `serialize` determines whether the returned object will be serialized to JSON string. Default value is true.
      * @param `feature` string or array of strings determining the features to be added in the state. If skipped, all features are added.
      * @returns Returns the serialized to JSON string IGridState object, or the non-serialized IGridState object.
@@ -404,6 +401,7 @@ export class IgxGridStateDirective {
 
     /**
      * Restores grid features' state based on the IGridState object passed as an argument.
+     *
      * @param IGridState object to restore state from.
      * @returns
      * ```html

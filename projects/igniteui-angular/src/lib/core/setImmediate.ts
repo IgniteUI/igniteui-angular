@@ -25,7 +25,7 @@ const queue = {};
 let counter = 0;
 let eventListenerAdded = false;
 
-const run = function (id) {
+const run = function(id) {
     if (queue.hasOwnProperty(id)) {
         const fn = queue[id];
         delete queue[id];
@@ -33,7 +33,7 @@ const run = function (id) {
     }
 };
 
-const listener = function (event) {
+const listener = function(event) {
     run(event.data);
 };
 
@@ -54,7 +54,7 @@ export function setImmediate(cb: any) {
         args.push(arguments[i++]);
     }
 
-    queue[++counter] = function () {
+    queue[++counter] = function() {
         (typeof cb === 'function' ? cb : Function(cb)).apply(undefined, args);
     };
 

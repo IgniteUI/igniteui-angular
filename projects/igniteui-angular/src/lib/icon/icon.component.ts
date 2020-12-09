@@ -54,6 +54,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon") public icon: IgxIconComponent;
@@ -69,6 +70,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that sets the value of the `id` attribute.
+     *
      * @example
      * ```html
      * <igx-icon id="igx-icon-1" fontSet="material">settings</igx-icon>
@@ -80,6 +82,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that sets the value of the `fontSet`. By default it's "material".
+     *
      * @example
      * ```html
      * <igx-icon fontSet="material">settings</igx-icon>
@@ -90,6 +93,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that allows you to disable the `active` property. By default it's applied.
+     *
      * @example
      * ```html
      * <igx-icon [isActive]="false">settings</igx-icon>
@@ -100,6 +104,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that allows you to change the `iconColor` of the icon.
+     *
      * @example
      * ```html
      * <igx-icon color="blue">settings</igx-icon>
@@ -110,6 +115,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An @Input property that allows you to set the `iconName` of the icon.
+     *
      *  @example
      * ```html
      * <igx-icon name="contains" fontSet="filter-icons"></igx-icon>
@@ -156,6 +162,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An accessor that returns the value of the font property.
+     *
      * @example
      * ```typescript
      *  @ViewChild("MyIcon")
@@ -171,6 +178,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An accessor that returns the value of the active property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -186,6 +194,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An accessor that returns inactive property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -202,6 +211,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An accessor that returns the opposite value of the `iconColor` property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -218,6 +228,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An accessor that returns the value of the iconName property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -234,6 +245,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     /**
      *  An accessor that returns the key of the SVG image.
      *  The key consists of the fontSet and the iconName separated by underscore.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -253,6 +265,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")

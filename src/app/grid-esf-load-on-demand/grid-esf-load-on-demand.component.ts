@@ -24,7 +24,7 @@ export class GridEsfLoadOnDemandComponent implements OnInit {
                                  columnExprTree: IFilteringExpressionsTree,
                                  done: (uniqueValues: any[]) => void) => {
     this.esfService.getColumnData(column, columnExprTree, uniqueValues => done(uniqueValues));
-  }
+  };
 
   public ngOnInit(): void {
       this.displayDensities = [

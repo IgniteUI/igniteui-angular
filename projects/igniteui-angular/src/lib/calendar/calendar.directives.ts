@@ -2,6 +2,7 @@
  * This file contains all the directives used by the @link IgxCalendarComponent.
  * Except for the directives which are used for templating the calendar itself
  * you should generally not use them directly.
+ *
  * @preferred
  */
 import {
@@ -155,6 +156,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
 
     /**
      * A callback function to be invoked when month increment/decrement starts.
+     *
      * @hidden
      */
     @Input()
@@ -162,6 +164,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
 
     /**
      * A callback function to be invoked when month increment/decrement stops.
+     *
      * @hidden
      */
     @Input()

@@ -1869,14 +1869,18 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toBe(2);
 
             let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
-            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            expect(() => {
+ filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
+})
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
             await wait(500);
             fix.detectChanges();
 
             chipToRemove = filterUIRow.componentInstance.expressionsList[2];
-            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            expect(() => {
+ filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
+})
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
             await wait(100);
@@ -2508,7 +2512,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 
     describe(null, () => {
-        let fix, grid;
+        let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
@@ -2516,9 +2520,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should correctly update empty filter cells when scrolling horizontally.', async () => {
-            let emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => {
-                return cell.nativeElement.children.length === 0;
-            });
+            let emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => cell.nativeElement.children.length === 0);
             expect(emptyFilterCells.length).toEqual(1);
 
             let emptyFilterHeader = emptyFilterCells[0].parent.query(By.directive(IgxGridHeaderComponent));
@@ -2529,9 +2531,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             await wait();
             fix.detectChanges();
 
-            emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => {
-                return cell.nativeElement.children.length === 0;
-            });
+            emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => cell.nativeElement.children.length === 0);
             expect(emptyFilterCells.length).toEqual(1);
 
             emptyFilterHeader = emptyFilterCells[0].parent.query(By.directive(IgxGridHeaderComponent));
@@ -3752,9 +3752,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
-            grid.columns[4].formatter = (val: Date) => {
-                return new Intl.DateTimeFormat('bg-BG').format(val);
-            };
+            grid.columns[4].formatter = (val: Date) => new Intl.DateTimeFormat('bg-BG').format(val);
             grid.cdr.detectChanges();
 
             // Open excel style filtering component
@@ -4943,7 +4941,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 
     describe('Templates: ', () => {
-        let fix, grid;
+        let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
@@ -5470,7 +5468,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 
     describe('External Excel Style Filtering', () => {
-        let fix, grid;
+        let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalESFComponent);
             grid = fix.componentInstance.grid;

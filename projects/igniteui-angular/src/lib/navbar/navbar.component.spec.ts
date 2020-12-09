@@ -28,7 +28,7 @@ describe('IgxNavbar', () => {
         }).compileComponents();
     }));
 
-    let fixture, component, domNavbar;
+    let fixture; let component; let domNavbar;
 
     describe('Default Action Icon', () => {
         beforeEach(() => {

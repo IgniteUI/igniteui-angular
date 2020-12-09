@@ -13,17 +13,14 @@ const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 
 describe('IgxSplitter', () => {
     configureTestSuite();
-    beforeAll(waitForAsync(() => {
-
-        return TestBed.configureTestingModule({
+    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
             declarations: [ SplitterTestComponent ],
             imports: [
                 IgxSplitterModule
             ]
-        }).compileComponents();
-    }));
+        }).compileComponents()));
 
-    let fixture, splitter;
+    let fixture; let splitter;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
@@ -298,17 +295,14 @@ describe('IgxSplitter', () => {
 
 describe('IgxSplitter pane toggle', () => {
     configureTestSuite();
-    beforeAll(waitForAsync(() => {
-
-        return TestBed.configureTestingModule({
+    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
             declarations: [ SplitterTogglePaneComponent ],
             imports: [
                 IgxSplitterModule
             ]
-        }).compileComponents();
-    }));
+        }).compileComponents()));
 
-    let fixture, splitter;
+    let fixture; let splitter;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();

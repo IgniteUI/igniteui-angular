@@ -10,7 +10,7 @@ import {
 } from 'igniteui-angular';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-select-sample',
     styleUrls: ['./select.sample.scss'],
     templateUrl: './select.sample.html'
@@ -28,7 +28,7 @@ export class SelectSampleComponent implements OnInit {
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
-            'citiesSelect': ['', Validators.required]
+            citiesSelect: ['', Validators.required]
         });
     }
 
@@ -50,7 +50,7 @@ export class SelectSampleComponent implements OnInit {
     ];
 
     public validationType = {
-        'citiesSelect': [Validators.required]
+        citiesSelect: [Validators.required]
     };
 
     public ngOnInit() {

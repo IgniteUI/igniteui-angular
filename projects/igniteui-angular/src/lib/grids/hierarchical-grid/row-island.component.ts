@@ -70,6 +70,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *      </igx-row-island>
      * </igx-hierarchical-grid>
      * ```
+     *
      * @memberof IgxRowIslandComponent
      */
     @Input()
@@ -84,6 +85,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *      </igx-row-island>
      * </igx-hierarchical-grid>
      * ```
+     *
      * @memberof IgxRowIslandComponent
      */
     @Input()
@@ -106,6 +108,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * ```typescript
      * const expanded = this.rowIsland.expandChildren;
      * ```
+     *
      * @memberof IgxRowIslandComponent
      */
     get expandChildren(): boolean {
@@ -142,6 +145,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *      </igx-row-island>
      * </igx-hierarchical-grid>
      * ```
+     *
      * @memberof IgxRowIslandComponent
      */
     @Output()
@@ -157,6 +161,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *      </igx-row-island>
      * </igx-hierarchical-grid>
      * ```
+     *
      * @memberof IgxRowIslandComponent
      */
     @Output()
@@ -283,9 +288,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             });
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
-        const topCols = this.columnList.filter((item) => {
-            return colsArray.indexOf(item) === -1;
-        });
+        const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         this.childColumns.reset(topCols);
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             Promise.resolve().then(() => {

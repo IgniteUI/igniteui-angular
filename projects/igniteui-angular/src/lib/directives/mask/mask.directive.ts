@@ -160,6 +160,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     /**
      * TODO: Remove after date/time picker integration refactor
+     *
      * @hidden
      */
     public ngAfterViewChecked(): void {
@@ -170,7 +171,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     @HostListener('keydown', ['$event'])
     public onKeyDown(event): void {
         const key = event.keyCode || event.charCode;
-        if (!key) { return; }
+        if (!key) {
+ return;
+}
 
         if (isIE() && this._stopPropagation) {
             this._stopPropagation = false;
@@ -224,7 +227,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
         this.inputValue = replacedData.value;
-        if (this._key === KEYCODES.BACKSPACE) { replacedData.end = this._start; }
+        if (this._key === KEYCODES.BACKSPACE) {
+ replacedData.end = this._start;
+}
         this.setSelectionRange(replacedData.end);
 
         const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
@@ -335,10 +340,14 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden */
-    public registerOnChange(fn: (_: any) => void): void { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: any) => void): void {
+ this._onChangeCallback = fn;
+}
 
     /** @hidden */
-    public registerOnTouched(fn: () => void): void { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void): void {
+ this._onTouchedCallback = fn;
+}
 }
 
 /**

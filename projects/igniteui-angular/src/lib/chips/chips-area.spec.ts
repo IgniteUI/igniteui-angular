@@ -88,18 +88,14 @@ class TestChipReorderComponent {
     chipsOrderChanged(event) {
         const newChipList = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipList.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+            const chipItem = this.chipList.filter((item) => item.id === event.chipsArray[i].id)[0];
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
     }
 
     chipRemoved(event) {
-        this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.owner.id;
-        });
+        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.chipsArea.cdr.detectChanges();
     }
 }
@@ -165,7 +161,7 @@ describe('IgxChipsArea ', () => {
 
 
     describe('Selection', () => {
-        const spaceKeyEvent = new KeyboardEvent('keydown', { 'key': ' ' });
+        const spaceKeyEvent = new KeyboardEvent('keydown', { key: ' ' });
 
         it('should be able to select chip using input property', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
@@ -222,13 +218,13 @@ describe('IgxChipsArea ', () => {
 
             expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
 
-            const rightKey = new KeyboardEvent('keydown', { 'key': 'ArrowRight' });
+            const rightKey = new KeyboardEvent('keydown', { key: 'ArrowRight' });
             firstChipComp.onChipKeyDown(rightKey);
             fix.detectChanges();
 
             expect(document.activeElement).toBe(secondChipComp.elementRef.nativeElement);
 
-            const leftKey = new KeyboardEvent('keydown', { 'key': 'ArrowLeft' });
+            const leftKey = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
             secondChipComp.onChipKeyDown(leftKey);
             fix.detectChanges();
 
@@ -417,9 +413,9 @@ describe('IgxChipsArea ', () => {
     });
 
     describe('Reorder', () => {
-        const leftKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowLeft', shiftKey: true });
-        const rightKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowRight', shiftKey: true });
-        const deleteKeyEvent = new KeyboardEvent('keydown', { 'key': 'Delete' });
+        const leftKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowLeft', shiftKey: true });
+        const rightKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true });
+        const deleteKeyEvent = new KeyboardEvent('keydown', { key: 'Delete' });
 
         beforeEach(() => {
             fix = TestBed.createComponent(TestChipReorderComponent);
@@ -452,7 +448,7 @@ describe('IgxChipsArea ', () => {
             expect(newSecondChipLeft).toEqual(secondChipLeft);
         });
 
-        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async() => {
+        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async () => {
             chipArea = fix.componentInstance.chipsArea;
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const targetChip = chipComponents[2].componentInstance;

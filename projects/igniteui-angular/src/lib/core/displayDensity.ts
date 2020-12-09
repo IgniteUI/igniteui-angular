@@ -34,7 +34,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 @Directive({
     selector: '[igxDisplayDensityBase]'
 })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
     protected _displayDensity: DisplayDensity;
 

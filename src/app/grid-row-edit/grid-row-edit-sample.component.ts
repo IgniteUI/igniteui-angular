@@ -49,8 +49,8 @@ export class GridRowEditSampleComponent {
         }
     };
     public currentActiveGrid: {
-        id: string,
-        transactions: any[]
+        id: string;
+        transactions: any[];
     } = {
             id: '',
             transactions: []
@@ -107,9 +107,7 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         this.currentActiveGrid = {
             id: gridID,
-            transactions: (<Transaction[]>currentGrid.transactions.getTransactionLog()).map(e => {
-                return `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`;
-            })
+            transactions: (<Transaction[]>currentGrid.transactions.getTransactionLog()).map(e => `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`)
         };
         this.toggle.open();
     }

@@ -5,7 +5,7 @@ import { IFileContent } from './jszip-verification-wrapper.spec';
 @Injectable()
 export class ExportTestDataService {
 
-    /* tslint:disable max-line-length */
+    /* eslint-disable  max-len */
     private _differentTypesData = [
         { Number: 1, String: '1', Boolean: true, Date: new Date(2018, 3, 3) },
         { Number: 2, String: '2', Boolean: false, Date: new Date(2018, 5, 6) },
@@ -101,9 +101,9 @@ export class ExportTestDataService {
         { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer' },
         { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO' },
         { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer' },
-        // tslint:disable-next-line:object-literal-sort-keys
+        // eslint-disable-next-line
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead' },
-        // tslint:disable-next-line:object-literal-sort-keys
+        // eslint-disable-next-line
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager' }
     ];
@@ -116,9 +116,9 @@ export class ExportTestDataService {
         { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer', HireDate: '2007-12-19T11:23:17.714Z' },
         { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z' },
         { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z' },
-        // tslint:disable-next-line:object-literal-sort-keys
+        // eslint-disable-next-line
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z' },
-        // tslint:disable-next-line:object-literal-sort-keys
+        // eslint-disable-next-line
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
     ];
@@ -300,7 +300,7 @@ export class FileContentData {
 
     get contactsPartialDataContent() {
         this._sharedStringsData =
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             `count="6" uniqueCount="6"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance Orta</t></si><si><t>770-504-2217</t></si><si><t>Richard Mahoney LongerName</t></si><si><t>780-555-1331</t></si>`;
 
         this._tableData = `ref="A1:B4" totalsRowShown="0">
@@ -308,7 +308,7 @@ export class FileContentData {
             `</tableColumns>`;
 
         this._worksheetData =
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" t="s"><v>4</v></c><c r="B3" s="1"/></row><row r="4"><c r="A4" s="1"/><c r="B4" t="s"><v>5</v></c></row></sheetData>`;
 
         return this.createData();
@@ -404,7 +404,7 @@ export class FileContentData {
             `<tableColumn id="3" name="JobTitle"/></tableColumns>`;
 
         this._worksheetData =
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>6</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" t="s"><v>8</v></c><c r="C5" t="s"><v>9</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" t="s"><v>10</v></c><c r="C6" t="s"><v>11</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" t="s"><v>12</v></c><c r="C7" t="s"><v>13</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" t="s"><v>14</v></c><c r="C8" t="s"><v>15</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" t="s"><v>16</v></c><c r="C9" t="s"><v>17</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" t="s"><v>18</v></c><c r="C10" t="s"><v>15</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" t="s"><v>19</v></c><c r="C11" t="s"><v>20</v></c></row></sheetData>`;
 
         return this.createData();
@@ -722,7 +722,7 @@ export class FileContentData {
             `<tableColumn id="3" name="JobTitle"/></tableColumns>`;
 
         this._worksheetData =
-        // tslint:disable-next-line:max-line-length
+        // eslint-disable-next-line max-len
         `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>6</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" t="s"><v>8</v></c><c r="C5" t="s"><v>9</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" t="s"><v>10</v></c><c r="C6" t="s"><v>11</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" t="s"><v>12</v></c><c r="C7" t="s"><v>13</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" t="s"><v>14</v></c><c r="C8" t="s"><v>15</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" t="s"><v>16</v></c><c r="C9" t="s"><v>17</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" t="s"><v>18</v></c><c r="C10" t="s"><v>15</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" t="s"><v>19</v></c><c r="C11" t="s"><v>20</v></c></row></sheetData>`;
 
         this._workbookData =  `<?xml version="1.0" encoding="UTF-8"?>
@@ -1018,5 +1018,5 @@ export class FileContentData {
 
         return this.createData();
     }
-    /* tslint:enable max-line-length */
+    /* eslint-enable  max-len */
 }

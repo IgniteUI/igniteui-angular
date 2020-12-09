@@ -77,13 +77,13 @@ describe('igxCombo', () => {
         ];
         const elementRef = { nativeElement: null };
         const mockSelection: {
-            [key: string]: jasmine.Spy
+            [key: string]: jasmine.Spy;
         } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
-            'get': mockNgControl
+            get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
         const mockIconService = new IgxIconService(null, null);
@@ -340,8 +340,8 @@ describe('igxCombo', () => {
             combo.selectItems(newSelection);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
-                oldSelection: oldSelection,
-                newSelection: newSelection,
+                oldSelection,
+                newSelection,
                 added: newSelection,
                 removed: [],
                 event: undefined,
@@ -356,8 +356,8 @@ describe('igxCombo', () => {
             newSelection.push(newItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
-                oldSelection: oldSelection,
-                newSelection: newSelection,
+                oldSelection,
+                newSelection,
                 removed: [],
                 added: [combo.data[3]],
                 event: undefined,
@@ -371,8 +371,8 @@ describe('igxCombo', () => {
             combo.selectItems(newSelection, true);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(3);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
-                oldSelection: oldSelection,
-                newSelection: newSelection,
+                oldSelection,
+                newSelection,
                 removed: oldSelection,
                 added: newSelection,
                 event: undefined,
@@ -388,8 +388,8 @@ describe('igxCombo', () => {
             expect(combo.selectedItems().length).toEqual(0);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(4);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(<IComboSelectionChangeEventArgs>{
-                oldSelection: oldSelection,
-                newSelection: newSelection,
+                oldSelection,
+                newSelection,
                 removed: [combo.data[0]],
                 added: [],
                 event: undefined,
@@ -553,7 +553,7 @@ describe('igxCombo', () => {
             combo.data = data;
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
-            spyOn(combo.onSelectionChange, 'emit').and.callFake(function (event: IComboSelectionChangeEventArgs) {
+            spyOn(combo.onSelectionChange, 'emit').and.callFake(function(event: IComboSelectionChangeEventArgs) {
                 return event.newSelection = [];
             });
             // No items are initially selected
@@ -833,7 +833,7 @@ describe('igxCombo', () => {
             const dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
             const dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
 
-            const verifyDropdownItemHeight = function () {
+            const verifyDropdownItemHeight = function() {
                 expect(combo.itemHeight).toEqual(itemHeight);
                 expect(dropdownItems[0].nativeElement.clientHeight).toEqual(itemHeight);
                 expect(combo.itemsMaxHeight).toEqual(itemMaxHeight);
@@ -873,11 +873,11 @@ describe('igxCombo', () => {
             const headers: Array<string> = Array.from(new Set(combo.data.map(item => item.region)));
             combo.toggle();
             fixture.detectChanges();
-            const checkGroupedItemsClass = function () {
+            const checkGroupedItemsClass = function() {
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                 dropdownItems = dropdownContainer.children;
-                Array.from(dropdownItems).forEach(function (item) {
+                Array.from(dropdownItems).forEach(function(item) {
                     const itemElement = item as HTMLElement;
                     const itemText = itemElement.innerText.toString();
                     const expectedClass: string = headers.includes(itemText) ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
@@ -1141,7 +1141,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             combo = fixture.componentInstance.instance;
 
-            const verifyComboData = function () {
+            const verifyComboData = function() {
                 fixture.detectChanges();
                 let ind = combo.virtualScrollContainer.state.startIndex;
                 for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
@@ -1541,7 +1541,7 @@ describe('igxCombo', () => {
                 expect(focusedItems.length).toEqual(0);
                 expect(selectedItems.length).toEqual(0);
 
-                const focusAndVerifyItem = function (itemIndex: number, key: string) {
+                const focusAndVerifyItem = function(itemIndex: number, key: string) {
                     UIInteractions.triggerEventHandlerKeyDown(key, dropdownContent);
                     fixture.detectChanges();
                     focusedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_FOCUSED}`);
@@ -1549,7 +1549,7 @@ describe('igxCombo', () => {
                     expect(focusedItems[0]).toEqual(dropdownItems[itemIndex]);
                 };
 
-                const selectAndVerifyItem = function (itemIndex: number) {
+                const selectAndVerifyItem = function(itemIndex: number) {
                     UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
                     fixture.detectChanges();
                     selectedItems = dropdownList.querySelectorAll(`.${CSS_CLASS_SELECTED}`);
@@ -2223,8 +2223,8 @@ describe('igxCombo', () => {
             let dropdownItems;
             let expectedValues = combo.data.filter(data => data.field.toLowerCase().includes('m'));
 
-            const checkFilteredItems = function (listItems: HTMLElement[]) {
-                listItems.forEach(function (el) {
+            const checkFilteredItems = function(listItems: HTMLElement[]) {
+                listItems.forEach(function(el) {
                     const itemText: string = el.textContent.trim();
                     expect(expectedValues.find(item => 'State: ' + item.field + 'Region: ' + item.region === itemText)).toBeDefined();
                 });
@@ -2233,7 +2233,7 @@ describe('igxCombo', () => {
             combo.toggle();
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
-            const verifyFilteredItems = function (inputValue: string, expectedItemsNumber) {
+            const verifyFilteredItems = function(inputValue: string, expectedItemsNumber) {
                 UIInteractions.triggerInputEvent(searchInput, inputValue);
                 fixture.detectChanges();
                 dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
@@ -2282,7 +2282,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
 
-            const verifyOnSearchInputEventIsFired = function (inputValue: string) {
+            const verifyOnSearchInputEventIsFired = function(inputValue: string) {
                 UIInteractions.triggerInputEvent(searchInput, inputValue);
                 fixture.detectChanges();
                 timesFired++;
@@ -2301,7 +2301,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
 
-            const verifyFilteredItems = function (inputValue: string,
+            const verifyFilteredItems = function(inputValue: string,
                 expectedDropdownItemsNumber: number,
                 expectedFilteredItemsNumber: number) {
                 UIInteractions.triggerInputEvent(searchInput, inputValue);
@@ -2315,7 +2315,7 @@ describe('igxCombo', () => {
             verifyFilteredItems('M', 7, 15);
             verifyFilteredItems('Mi', 5, 5);
             verifyFilteredItems('M', 7, 15);
-            combo.filteredData.forEach(function (item) {
+            combo.filteredData.forEach(function(item) {
                 expect(combo.data).toContain(item);
             });
         });
@@ -2340,7 +2340,7 @@ describe('igxCombo', () => {
         }));
         it('should not display group headers when no results are filtered for a group', () => {
             let dropdownList;
-            const filteredItems: { [index: string]: any; } = combo.data.reduce(function (filteredArray, item) {
+            const filteredItems: { [index: string]: any } = combo.data.reduce(function(filteredArray, item) {
                 if (item.field.toLowerCase().trim().includes('mi')) {
                     (filteredArray[item['region']] = filteredArray[item['region']] || []).push(item);
                 }
@@ -2354,7 +2354,7 @@ describe('igxCombo', () => {
             dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
             const listHeaders: NodeListOf<HTMLElement> = dropdownList.querySelectorAll(`.${CSS_CLASS_HEADERITEM}`);
             expect(listHeaders.length).toEqual(Object.keys(filteredItems).length);
-            const headers = Array.prototype.map.call(listHeaders, function (item) {
+            const headers = Array.prototype.map.call(listHeaders, function(item) {
                 return item.textContent.trim();
             });
             Object.keys(filteredItems).forEach(key => {
@@ -2916,7 +2916,7 @@ class IgxComboSampleComponent {
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
             'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };
@@ -2990,7 +2990,7 @@ class IgxComboFormComponent {
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
             'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };
@@ -3005,9 +3005,9 @@ class IgxComboFormComponent {
         }
 
         this.reactiveForm = fb.group({
-            'firstName': new FormControl('', Validators.required),
-            'password': ['', Validators.required],
-            'townCombo': [[this.items[0]], Validators.required]
+            firstName: new FormControl('', Validators.required),
+            password: ['', Validators.required],
+            townCombo: [[this.items[0]], Validators.required]
         });
 
     }
@@ -3049,7 +3049,7 @@ class IgxComboInTemplatedFormComponent {
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
             'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };

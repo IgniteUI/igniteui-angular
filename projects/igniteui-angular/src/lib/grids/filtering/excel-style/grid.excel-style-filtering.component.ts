@@ -416,7 +416,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.closeDropdown();
     }
 
-    private areExpressionsSelectable () {
+    private areExpressionsSelectable() {
         if (this.expressionsList.length === 1 &&
             (this.expressionsList[0].expression.condition.name === 'equals' ||
                 this.expressionsList[0].expression.condition.name === 'true' ||
@@ -495,7 +495,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         const expressionsTree = this.getColumnFilterExpressionsTree();
 
         if (expressionsTree.filteringOperands.length) {
-            const state = { expressionsTree: expressionsTree };
+            const state = { expressionsTree };
             data = DataUtil.filter(cloneArray(data), state, this.grid);
         }
 
@@ -520,7 +520,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
             const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
                 .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
-                    new Map);
+                    new Map());
             this.uniqueValues = Array.from(filteredUniqueValues.values());
         } else {
             this.uniqueValues = this.column.dataType === DataType.Date ? uniqueDates(columnValues) : Array.from(new Set(columnValues));

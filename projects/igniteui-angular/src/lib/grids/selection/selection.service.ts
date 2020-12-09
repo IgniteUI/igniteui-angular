@@ -78,7 +78,7 @@ export class IgxRow {
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
-            rowData: rowData,
+            rowData,
             oldValue: cachedRowData,
             newValue: updatedData,
             owner: this.grid,
@@ -135,7 +135,7 @@ export class IgxCell {
             cellID: this.id,
             // rowData - should be the updated/committed rowData - this effectively should be the newValue
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
-            rowData: rowData,
+            rowData,
             oldValue: this.value,
             newValue: value,
             column: this.column,
@@ -468,7 +468,9 @@ export class IgxGridSelectionService {
         this.selection.has(node.row) ? this.selection.get(node.row).add(node.column) :
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
 
-        if (addToRange) { this._ranges.add(JSON.stringify(this.generateRange(node))); }
+        if (addToRange) {
+ this._ranges.add(JSON.stringify(this.generateRange(node)));
+}
     }
 
     /**
@@ -554,7 +556,9 @@ export class IgxGridSelectionService {
         this.keyboardState.active = true;
         this.initPointerState();
         this.keyboardState.shift = shift && !shiftTab;
-        if (!this.grid.navigation.isDataRow(node.row)) { return; }
+        if (!this.grid.navigation.isDataRow(node.row)) {
+ return;
+}
         // Kb navigation with shift and no previous node.
         // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
@@ -698,7 +702,9 @@ export class IgxGridSelectionService {
     }
 
     clear(clearAcriveEl = false): void {
-        if (clearAcriveEl) { this.activeElement = null; }
+        if (clearAcriveEl) {
+ this.activeElement = null;
+}
         this.selection.clear();
         this.temp.clear();
         this._ranges.clear();
@@ -759,7 +765,9 @@ export class IgxGridSelectionService {
 
     /** Select the specified row and emit event. */
     selectRowById(rowID, clearPrevSelection?, event?): void {
-        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) { return; }
+        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) {
+ return;
+}
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
 
         const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
@@ -771,7 +779,9 @@ export class IgxGridSelectionService {
 
     /** Deselect the specified row and emit event. */
     deselectRow(rowID, event?): void {
-        if (!this.isRowSelected(rowID)) { return; }
+        if (!this.isRowSelected(rowID)) {
+ return;
+}
         const newSelection = this.getSelectedRows().filter(r => r !== rowID);
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
             this.selectedRowsChange.next();
@@ -781,7 +791,9 @@ export class IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
-        if (clearPrevSelection) { this.rowSelection.clear(); }
+        if (clearPrevSelection) {
+ this.rowSelection.clear();
+}
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
@@ -818,8 +830,12 @@ export class IgxGridSelectionService {
     }
 
     areAllRowSelected(): boolean {
-        if (!this.grid.data) { return false; }
-        if (this.allRowsSelected !== undefined) { return this.allRowsSelected; }
+        if (!this.grid.data) {
+ return false;
+}
+        if (this.allRowsSelected !== undefined) {
+ return this.allRowsSelected;
+}
 
         const dataItemsID = this.getRowIDs(this.allData);
         return this.allRowsSelected = Math.min(this.rowSelection.size, dataItemsID.length) > 0 &&
@@ -840,19 +856,25 @@ export class IgxGridSelectionService {
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
-        if (this.areEqualCollections(currSelection, newSelection)) { return; }
+        if (this.areEqualCollections(currSelection, newSelection)) {
+ return;
+}
 
         const args = {
-            oldSelection: currSelection, newSelection: newSelection,
-            added: added, removed: removed, event: event, cancel: false
+            oldSelection: currSelection, newSelection,
+            added, removed, event, cancel: false
         };
         this.grid.onRowSelectionChange.emit(args);
-        if (args.cancel) { return; }
+        if (args.cancel) {
+ return;
+}
         this.selectRowsWithNoEvent(args.newSelection, true);
     }
 
     public getRowDataById(rowID): Object {
-        if (!this.grid.primaryKey) { return rowID; }
+        if (!this.grid.primaryKey) {
+ return rowID;
+}
         const rowIndex = this.getRowIDs(this.grid.gridAPI.get_all_data(true)).indexOf(rowID);
         return rowIndex < 0 ? {} : this.grid.gridAPI.get_all_data(true)[rowIndex];
     }
@@ -969,8 +991,12 @@ export class IgxGridSelectionService {
 
     /** Select specified columns. No event is emitted. */
     selectColumnsWithNoEvent(fields: string[], clearPrevSelection?): void {
-        if (clearPrevSelection) { this.columnSelection.clear(); }
-        fields.forEach(field => { this.columnSelection.add(field); });
+        if (clearPrevSelection) {
+ this.columnSelection.clear();
+}
+        fields.forEach(field => {
+ this.columnSelection.add(field);
+});
     }
 
     /** Deselect the specified column and emit event. */
@@ -995,14 +1021,18 @@ export class IgxGridSelectionService {
 
     public emitColumnSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedColumns();
-        if (this.areEqualCollections(currSelection, newSelection)) { return; }
+        if (this.areEqualCollections(currSelection, newSelection)) {
+ return;
+}
 
         const args = {
-            oldSelection: currSelection, newSelection: newSelection,
-            added: added, removed: removed, event: event, cancel: false
+            oldSelection: currSelection, newSelection,
+            added, removed, event, cancel: false
         };
         this.grid.onColumnSelectionChange.emit(args);
-        if (args.cancel) { return; }
+        if (args.cancel) {
+ return;
+}
         this.selectColumnsWithNoEvent(args.newSelection, true);
     }
 

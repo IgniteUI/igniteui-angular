@@ -15,6 +15,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * let ignorePinning = this.exportOptions.ignorePinning;
      * this.exportOptions.ignorePinning = true;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public ignorePinning = false;
@@ -25,6 +26,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * let exportAsTable = this.exportOptions.exportAsTable;
      * this.exportOptions.exportAsTable = false;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public exportAsTable = true;
@@ -38,6 +40,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * let width = this.exportOptions.columnWidth;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public get columnWidth(): number {
@@ -50,6 +53,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.columnWidth = 55;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public set columnWidth(value: number) {
@@ -65,6 +69,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * let height = this.exportOptions.rowHeight;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public get rowHeight(): number {
@@ -77,6 +82,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.rowHeight = 25;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public set rowHeight(value: number) {
@@ -92,6 +98,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * let worksheetName = this.exportOptions.worksheetName;
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public get worksheetName(): string {
@@ -107,6 +114,7 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.worksheetName = "Worksheet";
      * ```
+     *
      * @memberof IgxExcelExporterOptions
      */
     public set worksheetName(value: string) {

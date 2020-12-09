@@ -42,9 +42,7 @@ export class DatePickerSampleComponent {
     @ViewChild('datePicker', { static: true })
     private dp: IgxDatePickerComponent;
 
-    formatter = (_: Date) => {
-        return _.toLocaleString('en');
-    }
+    formatter = (_: Date) => _.toLocaleString('en');
 
     public deselect(datePicker) {
         datePicker.deselectDate();

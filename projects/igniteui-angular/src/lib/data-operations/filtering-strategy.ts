@@ -41,7 +41,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             if (expressions instanceof FilteringExpressionsTree) {
                 const expressionsTree = expressions as IFilteringExpressionsTree;
                 const operator = expressionsTree.operator as FilteringLogic;
-                let matchOperand, operand;
+                let matchOperand; let operand;
 
                 if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
                     for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
@@ -78,7 +78,9 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instace: FilteringStrategy = null;
 
-    public constructor() { super(); }
+    public constructor() {
+ super();
+}
 
     public static instance() {
         return this._instace || (this._instace = new this());

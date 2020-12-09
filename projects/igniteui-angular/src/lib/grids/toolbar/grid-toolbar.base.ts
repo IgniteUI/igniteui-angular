@@ -15,6 +15,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 /**
  * Base class for the pinning/hiding column actions.
+ *
  * @hidden @internal
  */
 @Directive()

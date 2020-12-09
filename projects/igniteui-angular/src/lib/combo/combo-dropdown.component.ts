@@ -126,14 +126,12 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     protected scrollHandler = () => {
         this.comboAPI.disableTransitions = true;
-    }
+    };
 
     protected get sortedChildren(): IgxDropDownItemBaseDirective[] {
         if (this.children !== undefined) {
             return this.children.toArray()
-                .sort((a: IgxDropDownItemBaseDirective, b: IgxDropDownItemBaseDirective) => {
-                    return a.index - b.index;
-                });
+                .sort((a: IgxDropDownItemBaseDirective, b: IgxDropDownItemBaseDirective) => a.index - b.index);
         }
         return null;
     }

@@ -467,6 +467,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     /**
      * A method that opens the dialog.
+     *
      * @memberOf {@link IgxDialogComponent}
      * ```html
      * <button (click)="dialog.open() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
@@ -483,6 +484,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     /**
      * A method that that closes the dialog.
+     *
      *  @memberOf {@link IgxDialogComponent}
      * ```html
      * <button (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
@@ -497,6 +499,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     /**
      * A method that opens/closes the dialog.
+     *
      * @memberOf {@link IgxDialogComponent}
      * ```html
      * <button (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>

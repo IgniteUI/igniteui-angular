@@ -45,7 +45,7 @@ const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
-const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
+const shiftTabKeysEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 
 describe('igxSelect', () => {
     let fixture;
@@ -53,14 +53,14 @@ describe('igxSelect', () => {
     let inputElement: DebugElement;
     let selectList: DebugElement;
     let selectListWrapper: DebugElement;
-    const verifyFocusedItem = function (focusedItemIndex) {
+    const verifyFocusedItem = function(focusedItemIndex) {
         const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
         expect(focusedItems.length).toEqual(1);
         expect(selectList.children[focusedItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
         expect(select.focusedItem).toBe(select.items[focusedItemIndex]);
         expect(select.items[focusedItemIndex].focused).toBeTruthy();
     };
-    const verifySelectedItem = function (itemIndex) {
+    const verifySelectedItem = function(itemIndex) {
         expect(select.input.value).toEqual(select.items[itemIndex].value);
         expect(select.value).toEqual(select.items[itemIndex].value);
         const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
@@ -69,7 +69,7 @@ describe('igxSelect', () => {
         expect(select.selectedItem).toBe(select.items[itemIndex] as IgxSelectItemComponent);
         expect(select.items[itemIndex].selected).toBeTruthy();
     };
-    const verifyOpenCloseEvents = function (
+    const verifyOpenCloseEvents = function(
         openEventCounter = 0,
         closeEventCounter = 0,
         toggleCallCounter = 0
@@ -936,7 +936,7 @@ describe('igxSelect', () => {
                 let selectedItemIndex = 5;
                 let selectedItemValue = select.items[selectedItemIndex].value;
 
-                const checkInputValue = function () {
+                const checkInputValue = function() {
                     expect(select.selectedItem.value).toEqual(selectedItemValue);
                     expect(select.value).toEqual(selectedItemValue);
                     expect(inputElement.nativeElement.value.toString().trim()).toEqual(selectedItemValue);
@@ -990,7 +990,7 @@ describe('igxSelect', () => {
             it('should populate the input with the selected item text', fakeAsync(() => {
                 let selectedItemIndex = 0;
 
-                const checkInputValue = function () {
+                const checkInputValue = function() {
                     expect(select.selectedItem.text).toEqual(select.input.value);
                     expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
                 };
@@ -1055,7 +1055,7 @@ describe('igxSelect', () => {
                     let focusedItem = select.items[2];
                     const navigationStep = focusedItem.index;
 
-                    const navigateDropdownItems = function (keydownEvent: KeyboardEvent) {
+                    const navigateDropdownItems = function(keydownEvent: KeyboardEvent) {
                         for (let index = 0; index < navigationStep; index++) {
                             inputElement.triggerEventHandler('keydown', keydownEvent);
                         }
@@ -1063,7 +1063,7 @@ describe('igxSelect', () => {
                         fixture.detectChanges();
                     };
 
-                    const verifyFocusedItemIsNotSelected = function () {
+                    const verifyFocusedItemIsNotSelected = function() {
                         expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
                         expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
                         expect(select.focusedItem).toEqual(focusedItem);
@@ -1248,7 +1248,7 @@ describe('igxSelect', () => {
                     cancel: false
                 };
 
-                const navigateDropdownItems = function (selectEvent: KeyboardEvent) {
+                const navigateDropdownItems = function(selectEvent: KeyboardEvent) {
                     inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
                     tick();
                     fixture.detectChanges();
@@ -1365,7 +1365,7 @@ describe('igxSelect', () => {
                     const groupElement = selectList.children[groupIndex];
                     const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
 
-                    const checkInputValue = function () {
+                    const checkInputValue = function() {
                         expect(select.selectedItem.text).toEqual(select.input.value);
                         expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
                     };
@@ -1410,7 +1410,7 @@ describe('igxSelect', () => {
                     // const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
                     const expectedInputText = 'Paris star';
 
-                    const checkInputValue = function () {
+                    const checkInputValue = function() {
                         expect(select.selectedItem.itemText).toEqual(expectedInputText);
                         expect(select.selectedItem.itemText).toEqual(select.input.value);
                         expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.itemText);
@@ -2164,19 +2164,19 @@ describe('igxSelect', () => {
         let listTop: number;
         let listBottom: number;
 
-        const negateInputPaddings = function () {
+        const negateInputPaddings = function() {
             return (parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingTop) -
                 parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingBottom)
             ) / 2;
         };
-        const getBoundingRectangles = function () {
+        const getBoundingRectangles = function() {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
             inputItemDiff = selectedItemRect.height - inputRect.height;
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
-        const verifySelectedItemPositioning = function (reversed = false) {
+        const verifySelectedItemPositioning = function(reversed = false) {
             expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                 selectedItemRect.height - negateInputPaddings() :
@@ -2191,7 +2191,7 @@ describe('igxSelect', () => {
             // Select's ddl width is based on the input's width. This introduces ~0.5px differences.
             expect(selectedItemRect.width).toBeCloseTo(selectList.nativeElement.scrollWidth, 0);
         };
-        const verifyListPositioning = function () {
+        const verifyListPositioning = function() {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             // check with precision of 2 digits after decimal point, as it is the meaningful portion anyways.
             expect(listRect.top).toBeCloseTo(listTop, 2);
@@ -2392,7 +2392,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
             }));
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             it('should display list with selected item and all items before it and position selected item over input when last item is selected',
                 fakeAsync(() => {
                     selectedItemIndex = 9;
@@ -2411,7 +2411,7 @@ describe('igxSelect', () => {
                 }));
         });
         describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = function () {
+            const calculatePrefixesWidth = function() {
                 let prefixesWidth = 0;
                 const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
                 Array.from(prefixes).forEach((prefix: DebugElement) => {
@@ -2673,7 +2673,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
-            'get': mockNgControl
+            get: mockNgControl
         });
 
         // init
@@ -2774,8 +2774,8 @@ class IgxSelectGroupsComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public locations: {
-        continent: string,
-        capitals: string[]
+        continent: string;
+        capitals: string[];
     }[] = [
             { continent: 'Europe', capitals: ['Berlin', 'London', 'Paris'] },
             { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
@@ -2925,22 +2925,22 @@ class IgxSelectReactiveFormComponent {
     ];
 
     public validationType = {
-        'firstName': [Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')],
-        'password': [Validators.required, Validators.maxLength(12)],
-        'optionsSelect': [Validators.required]
+        firstName: [Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')],
+        password: [Validators.required, Validators.maxLength(12)],
+        optionsSelect: [Validators.required]
     };
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
-            'firstName': new FormControl('', Validators.required),
-            'password': ['', Validators.required],
-            'optionsSelect': ['', Validators.required]
+            firstName: new FormControl('', Validators.required),
+            password: ['', Validators.required],
+            optionsSelect: ['', Validators.required]
         });
     }
     onSubmitReactive() { }
 
     public removeValidators(form: FormGroup) {
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).clearValidators();
             form.get(key).updateValueAndValidity();
@@ -2948,7 +2948,7 @@ class IgxSelectReactiveFormComponent {
     }
 
     public addValidators(form: FormGroup) {
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).setValidators(this.validationType[key]);
             form.get(key).updateValueAndValidity();

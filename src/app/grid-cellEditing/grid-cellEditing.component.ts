@@ -202,10 +202,14 @@ export class GridCellEditingComponent {
             const cell = args.event.shiftKey ?
                 this.gridWithPK.getPreviousCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable) :
                 this.gridWithPK.getNextCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable);
-            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => {
+ obj.target.nativeElement.focus();
+});
         } else if (type === 'dataCell'  && args.event.key.toLowerCase() === 'enter') {
             args.cancel = true;
-            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => {
+ obj.target.nativeElement.focus();
+});
         }
     }
 }

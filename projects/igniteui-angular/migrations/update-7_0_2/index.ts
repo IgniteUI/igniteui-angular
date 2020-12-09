@@ -1,4 +1,4 @@
-// tslint:disable:no-implicit-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import {
     Rule,
     SchematicContext,

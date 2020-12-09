@@ -38,6 +38,7 @@ import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 
 /**
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
+ *
  * @export
  */
 export interface AutocompleteItemSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -332,7 +333,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         // Update model after the input is re-focused, in order to have proper valid styling.
         // Otherwise when item is selected using mouse (and input is blurred), then valid style will be removed.
         this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
-    }
+    };
 
     private highlightFirstItem = () => {
         if (this.target.focusedItem) {
@@ -341,7 +342,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.target.navigateFirst();
         this.cdr.detectChanges();
-    }
+    };
 
     /** @hidden @internal */
     public ngOnInit() {

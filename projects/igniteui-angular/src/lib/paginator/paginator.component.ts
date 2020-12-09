@@ -55,6 +55,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let page = this.paginator.page;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -73,6 +74,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let itemsPerPage = this.paginator.perPage;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -95,6 +97,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let totalRecords = this.paginator.totalRecords;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -112,6 +115,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let options = this.paginator.selectOptions;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -129,6 +133,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```html
      * <igx-paginator [pagerEnabled]="true"></igx-paginator>
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -139,6 +144,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```html
      * <igx-paginator [pagerHidden]="true"></igx-paginator>
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -149,6 +155,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```html
      * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -159,6 +166,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```html
      * <igx-paginator [dropdownHidden]="true"></igx-paginator>
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -220,6 +228,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
+     *
      * @example
      * ```html
      * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
@@ -235,6 +244,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     /**
      * Emitted after the current page is changed.
+     *
      * @example
      * ```html
      * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
@@ -294,6 +304,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     /**
      * Sets DisplayDensity for the <select> inside the paginator
+     *
      * @hidden
      */
     public paginatorSelectDisplayDensity(): string {
@@ -307,6 +318,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.nextPage();
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
@@ -319,6 +331,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.previousPage();
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
@@ -331,6 +344,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.paginate(1);
      * ```
+     *
      * @param val
      * @memberof IgxPaginatorComponent
      */

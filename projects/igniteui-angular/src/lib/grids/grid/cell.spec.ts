@@ -223,7 +223,7 @@ describe('IgxGrid - Cell component #grid', () => {
                 fix.detectChanges();
 
                 const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
-                lastColumnCells.forEach(function (item) {
+                lastColumnCells.forEach(function(item) {
                     expect(item.width).toEqual('30px');
                 });
             });
@@ -239,7 +239,7 @@ describe('IgxGrid - Cell component #grid', () => {
             await wait();
             const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
             fix.detectChanges();
-            lastColumnCells.forEach(function (item) {
+            lastColumnCells.forEach(function(item) {
                 expect(item.width).toEqual('500px');
             });
         });
@@ -406,29 +406,25 @@ export class ConditionalCellStyleTestComponent implements OnInit {
     cellClasses;
     cellClasses1;
 
-    callback = (rowData: any, columnKey: any) => {
-        return rowData[columnKey] >= 5;
-    }
+    callback = (rowData: any, columnKey: any) => rowData[columnKey] >= 5;
 
-    callback1 = (rowData: any) => {
-        return rowData[this.grid.primaryKey] === 5;
-    }
+    callback1 = (rowData: any) => rowData[this.grid.primaryKey] === 5;
 
     public ngOnInit(): void {
         this.cellClasses = {
-            'test': this.callback,
-            'test2': this.callback1
+            test: this.callback,
+            test2: this.callback1
         };
 
         this.cellClasses1 = {
-            'test2': this.callback1
+            test2: this.callback1
         };
 
         this.columns = [
             { field: 'ProductID', width: 100, cellClasses: this.cellClasses },
             { field: 'ProductName', width: 200, cellClasses: this.cellClasses1 },
             { field: 'InStock', width: 150, cellClasses: this.cellClasses1 },
-            { field: 'UnitsInStock', width: 150, cellClasses: { 'test1': true } },
+            { field: 'UnitsInStock', width: 150, cellClasses: { test1: true } },
             { field: 'OrderDate', width: 150, cellClasses: this.cellClasses1 }
         ];
         this.data = SampleTestData.foodProductDataExtended();

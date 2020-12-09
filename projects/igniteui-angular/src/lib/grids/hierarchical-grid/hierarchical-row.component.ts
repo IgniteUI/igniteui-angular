@@ -122,7 +122,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
      */
     public select = () => {
         this.grid.selectRows([this.rowID]);
-    }
+    };
 
     /**
      * @hidden
@@ -130,7 +130,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
      */
     public deselect = () => {
         this.grid.deselectRows([this.rowID]);
-    }
+    };
 
     /**
      * @hidden
@@ -157,6 +157,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         grid.hgridAPI.getChildGrids(true).forEach(g => {
             if (g.crudService.cellInEditMode) {
             g.endEdit();
-        }});
+        }
+});
     }
 }

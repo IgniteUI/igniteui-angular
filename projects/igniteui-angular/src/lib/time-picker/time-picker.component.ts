@@ -256,7 +256,7 @@ export class IgxTimePickerComponent implements
         this._itemsDelta = { hours: 1, minutes: 1, seconds: 1, ...value };
     }
 
-    get itemsDelta(): { hours: number, minutes: number, seconds: number } {
+    get itemsDelta(): { hours: number; minutes: number; seconds: number } {
         return this._itemsDelta;
     }
 
@@ -348,6 +348,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker [promptChar] = "'_'">
      * ```
+     *
      * @memberof IgxTimePickerComponent
      */
     @Input()
@@ -362,6 +363,7 @@ export class IgxTimePickerComponent implements
      *  //..
      * <igx-time-picker [mode]="mode"></igx-time-picker>
      * ```
+     *
      * @memberof IgxTimePickerComponent
      */
     @Input()
@@ -393,6 +395,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
      * ```
+     *
      * @memberof IgxTimePickerComponent
      */
     @Input()
@@ -600,7 +603,7 @@ export class IgxTimePickerComponent implements
     private _format: string;
     private _mask: string;
     private _displayValue: string;
-    private _itemsDelta: { hours: number, minutes: number, seconds: number } = { hours: 1, minutes: 1, seconds: 1 };
+    private _itemsDelta: { hours: number; minutes: number; seconds: number } = { hours: 1, minutes: 1, seconds: 1 };
 
     private _isHourListLoop = this.isSpinLoop;
     private _isMinuteListLoop = this.isSpinLoop;
@@ -690,13 +693,19 @@ export class IgxTimePickerComponent implements
     }
 
     /** @hidden @internal */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: Date) => void) {
+ this._onChangeCallback = fn;
+}
 
     /** @hidden @internal */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void) {
+ this._onTouchedCallback = fn;
+}
 
     /** @hidden @internal */
-    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+    public setDisabledState(isDisabled: boolean): void {
+ this.disabled = isDisabled;
+}
 
     //#endregion
 
@@ -849,6 +858,7 @@ export class IgxTimePickerComponent implements
      * ```typescript
      * let template = this.template();
      * ```
+     *
      * @memberof IgxTimePickerComponent
      */
     get template(): TemplateRef<any> {
@@ -860,6 +870,7 @@ export class IgxTimePickerComponent implements
 
     /**
      * Gets the context passed to the input group template.
+     *
      * @memberof IgxTimePickerComponent
      */
     get context() {
@@ -1166,7 +1177,7 @@ export class IgxTimePickerComponent implements
             return '';
         } else {
             let hour = value.getHours();
-            let formattedSeconds, formattedMinute, formattedHour;
+            let formattedSeconds; let formattedMinute; let formattedHour;
 
             const minute = value.getMinutes();
             const seconds = value.getSeconds();
@@ -1328,7 +1339,7 @@ export class IgxTimePickerComponent implements
         }
         const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
         const sections = value.split(/[\s:]+/);
-        let hour, minutes, seconds, amPM;
+        let hour; let minutes; let seconds; let amPM;
 
         date.setSeconds(0);
 
@@ -1597,6 +1608,7 @@ export class IgxTimePickerComponent implements
 
     /**
      * opens the dialog.
+     *
      * @param target HTMLElement - the target element to use for positioning the drop down container according to
      * ```html
      * <igx-time-picker [value]="date" mode="dropdown" #retemplated>
@@ -1639,6 +1651,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrhintoView(picker)"></igx-time-picker>
      * ```
+     *
      * @param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
@@ -1662,6 +1675,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrMintoView(picker)"></igx-time-picker>
      * ```
+     *
      * @param item to be scrolled in view.
      */
     public scrollMinuteIntoView(item: string): void {
@@ -1685,6 +1699,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrMintoView(picker)"></igx-time-picker>
      * ```
+     *
      * @param item to be scrolled in view.
      */
     public scrollSecondsIntoView(item: string): void {
@@ -1709,6 +1724,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrAmPmIntoView(picker)"></igx-time-picker>
      * ```
+     *
      * @param item to be scrolled in view.
      */
     public scrollAmPmIntoView(item: string): void {

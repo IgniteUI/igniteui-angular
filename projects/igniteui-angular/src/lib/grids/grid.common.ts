@@ -35,7 +35,7 @@ export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
     public settings: RowEditPositionSettings;
-    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean,
+    position(contentElement: HTMLElement, size: { width: number; height: number }, document?: Document, initialCall?: boolean,
             target?: Point | HTMLElement): void {
         const container = this.settings.container; // grid.tbody
         const targetElement = <HTMLElement>target || <HTMLElement>this.settings.target; // current grid.row

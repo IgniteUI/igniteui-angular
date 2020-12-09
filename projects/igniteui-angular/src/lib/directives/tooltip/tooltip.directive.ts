@@ -517,6 +517,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * If there is open animation in progress this method will finish is.
      * If there is no open animation in progress this method will open the toggle with no animation.
+     *
      * @param overlaySettings setting to use for opening the toggle
      */
     protected forceOpen(overlaySettings?: OverlaySettings) {
@@ -537,6 +538,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * If there is close animation in progress this method will finish is.
      * If there is no close animation in progress this method will close the toggle with no animation.
+     *
      * @param overlaySettings settings to use for closing the toggle
      */
     protected forceClose(overlaySettings?: OverlaySettings) {

@@ -50,22 +50,30 @@ export class IgxForOfContext<T> {
     /**
      * A function that returns whether the element is the first or not
      */
-    get first(): boolean { return this.index === 0; }
+    get first(): boolean {
+ return this.index === 0;
+}
 
     /**
      * A function that returns whether the element is the last or not
      */
-    get last(): boolean { return this.index === this.count - 1; }
+    get last(): boolean {
+ return this.index === this.count - 1;
+}
 
     /**
      * A function that returns whether the element is even or not
      */
-    get even(): boolean { return this.index % 2 === 0; }
+    get even(): boolean {
+ return this.index % 2 === 0;
+}
 
     /**
      * A function that returns whether the element is odd or not
      */
-    get odd(): boolean { return !this.even; }
+    get odd(): boolean {
+ return !this.even;
+}
 
 }
 
@@ -453,7 +461,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
 
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.func = (evt) => { this.onHScroll(evt); };
+            this.func = (evt) => {
+ this.onHScroll(evt);
+};
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             if (!this.scrollComponent) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
@@ -553,6 +563,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```typescript
      * this.parentVirtDir.addScrollTop(5);
      * ```
+     *
      * @param addTop negative value to scroll up and positive to scroll down;
      */
     public addScrollTop(addTop: number): boolean {
@@ -598,6 +609,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```typescript
      * this.parentVirtDir.scrollTo(5);
      * ```
+     *
      * @param index
      */
     public scrollTo(index) {
@@ -1021,7 +1033,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    get igxForTrackBy(): TrackByFunction<T> { return this._trackByFn; }
+    get igxForTrackBy(): TrackByFunction<T> {
+ return this._trackByFn;
+}
 
     /**
      * Sets the function used to track changes in the items collection.
@@ -1034,7 +1048,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * };
      * ```
      */
-    set igxForTrackBy(fn: TrackByFunction<T>) { this._trackByFn = fn; }
+    set igxForTrackBy(fn: TrackByFunction<T>) {
+ this._trackByFn = fn;
+}
 
     /**
      * @hidden

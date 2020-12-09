@@ -21,6 +21,7 @@ export class IgxHintDirective implements OnInit {
      * ```typescript
      * let isHintPositionStart = this.igxHint.isPositionStart;
      * ```
+     *
      * @memberof IgxHintDirective
      */
     @HostBinding('class.igx-input-group__hint-item--start')
@@ -36,6 +37,7 @@ export class IgxHintDirective implements OnInit {
      * ```typescript
      * let isHintPositionEnd = this.igxHint.isPositionEnd;
      * ```
+     *
      * @memberof IgxHintDirective
      */
     @HostBinding('class.igx-input-group__hint-item--end')
@@ -51,6 +53,7 @@ export class IgxHintDirective implements OnInit {
      *  <igx-hint #hint [position]="'start'">IgxHint displayed at the start</igx-hint>
      * </igx-input-group>
      * ```
+     *
      * @memberof IgxHintDirective
      */
     @Input('position')
@@ -68,6 +71,7 @@ export class IgxHintDirective implements OnInit {
      * public igxHint: IgxHintDirective;
      * let hintPosition =  this.igxHint.position;
      * ```
+     *
      * @memberof IgxHintDirective
      */
     get position() {

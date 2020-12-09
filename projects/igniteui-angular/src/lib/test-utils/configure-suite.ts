@@ -4,6 +4,7 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
  * Destroy fixtures after each, reset testing module after all
+ *
  * @hidden
  */
 export const configureTestSuite = () => {

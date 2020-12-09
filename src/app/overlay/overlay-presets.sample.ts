@@ -8,7 +8,7 @@ import {
 import { RelativePositionStrategy, AbsolutePosition, RelativePosition } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-presets-sample',
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss']

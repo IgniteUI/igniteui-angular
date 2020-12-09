@@ -13,6 +13,7 @@ export enum SplitterType {
 /**
  * Provides a framework for a simple layout, splitting the view horizontally or vertically
  * into multiple smaller resizable and collapsible areas.
+ *
  * @igxModule IgxSplitterModule
  *
  * @igxParent Layouts
@@ -45,6 +46,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) {}
     /**
      * Gets/Sets the splitter orientation.
+     *
      * @example
      * ```html
      * <igx-splitter [type]="type">...</igx-splitter>
@@ -64,6 +66,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * Gets the list of splitter panes.
+     *
      * @example
      * ```typescript
      * const panes = this.splitter.panes;

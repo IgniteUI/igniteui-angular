@@ -106,6 +106,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
 
     /**
      * Prevents automatically focusing the input when clicking on other elements in the input group (e.g. prefix or suffix).
+     *
      * @remarks Automatic focus causes software keyboard to show on mobile devices.
      *
      * @example

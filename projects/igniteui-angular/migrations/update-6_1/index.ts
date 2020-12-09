@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-// tslint:disable:no-implicit-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import { normalize } from '@angular-devkit/core';
 import {
     chain,

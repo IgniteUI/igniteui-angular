@@ -28,7 +28,7 @@ export interface BoundPropertyObject {
     bindingType: InputPropertyType;
 }
 
-// tslint:disable:arrow-parens
+/* eslint-disable arrow-parens */
 export class UpdateChanges {
     protected projectService: tss.server.ProjectService;
     protected serverHost: ServerHost;
@@ -104,6 +104,7 @@ export class UpdateChanges {
 
     /**
      * Create a new base schematic to apply changes
+     *
      * @param rootPath Root folder for the schematic to read configs, pass __dirname
      */
     constructor(private rootPath: string, private host: Tree, private context?: SchematicContext) {
@@ -375,7 +376,7 @@ export class UpdateChanges {
     protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
         const langServ = this.getDefaultLanguageService(entryPath);
         let content = this.host.read(entryPath).toString();
-        const changes = new Set<{ change, position }>();
+        const changes = new Set<{ change; position }>();
         for (const change of memberChanges.changes) {
             const matches = findMatches(content, change);
             for (const matchPosition of matches) {

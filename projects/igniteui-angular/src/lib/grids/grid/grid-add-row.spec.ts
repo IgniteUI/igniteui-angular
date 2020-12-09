@@ -210,7 +210,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.pinnedRecords.length).toBe(1);
             expect(grid.unpinnedRecords[grid.unpinnedRecords.length - 1]).toBe(grid.data[grid.data.length - 1]);
         });
-        it('should navigate to added row on snackbar button click.', async() => {
+        it('should navigate to added row on snackbar button click.', async () => {
             const rows = grid.rowList.toArray();
             const dataCount = grid.data.length;
             rows[0].beginAddRow();
@@ -239,7 +239,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
         });
 
-        it('should navigate to added row on snackbar button click when row is not in current view.', async() => {
+        it('should navigate to added row on snackbar button click when row is not in current view.', async () => {
             grid.paging = true;
             grid.perPage = 5;
             fixture.detectChanges();
@@ -291,7 +291,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(typeof(cell.value)).toBe(type);
         });
 
-        it('should allow setting a different display time for snackbar', async() => {
+        it('should allow setting a different display time for snackbar', async () => {
             grid.snackbarDisplayTime = 50;
             fixture.detectChanges();
 
@@ -490,7 +490,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength + 1);
         });
 
-        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', async() => {
+        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', async () => {
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -550,7 +550,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength + 1);
         });
 
-        it('Should correctly scroll all rows after closing the add row', async() => {
+        it('Should correctly scroll all rows after closing the add row', async () => {
             grid.width = '400px';
             fixture.detectChanges();
 
@@ -936,7 +936,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
-        it('Should exit add row mode when resizing a column', async() => {
+        it('Should exit add row mode when resizing a column', async () => {
             spyOn(grid, 'endEdit').and.callThrough();
 
             fixture.detectChanges();

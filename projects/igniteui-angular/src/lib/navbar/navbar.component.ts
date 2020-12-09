@@ -16,13 +16,13 @@ import { IgxIconModule } from '../icon/public_api';
  * IgxActionIcon is a container for the action nav icon of the IgxNavbar.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-navbar-action,[igxNavbarAction]'
 })
 export class IgxNavbarActionDirective { }
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-navbar-title,[igxNavbarTitle]'
 })
 export class IgxNavbarTitleDirective { }

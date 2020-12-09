@@ -1,4 +1,4 @@
-// tslint:disable-next-line:no-implicit-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { Tree } from '@angular-devkit/schematics';
@@ -14,7 +14,7 @@ export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
 // }
 
-export function getIdentifierPositions(sourceText: string, name: string): Array<{ start: number, end: number }> {
+export function getIdentifierPositions(sourceText: string, name: string): Array<{ start: number; end: number }> {
     const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
     const positions = [];
 
@@ -50,7 +50,7 @@ export function getIdentifierPositions(sourceText: string, name: string): Array<
 }
 
 /** Returns the positions of import from module string literals  */
-export function getImportModulePositions(sourceText: string, startsWith: string): Array<{ start: number, end: number }> {
+export function getImportModulePositions(sourceText: string, startsWith: string): Array<{ start: number; end: number }> {
     const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
     const positions = [];
 
@@ -78,7 +78,7 @@ const namedImportFilter = (statement: ts.Statement) => {
 };
 
 export function getRenamePositions(sourcePath: string, name: string, service: ts.LanguageService):
-    Array<{ start: number, end: number }> {
+    Array<{ start: number; end: number }> {
 
     const source = service.getProgram().getSourceFile(sourcePath);
     const positions = [];
@@ -136,6 +136,7 @@ export function replaceMatch(content: string, toReplace: string, replaceWith: st
 
 /**
  * Create a TypeScript language service
+ *
  * @param serviceHost A TypeScript language service host
  */
 export function getLanguageService(filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageService {
@@ -157,9 +158,7 @@ export function getLanguageService(filePaths: string[], host: Tree, options: ts.
         },
         getCurrentDirectory: () => process.cwd(),
         getDefaultLibFileName: opts => ts.getDefaultLibFilePath(opts),
-        fileExists: fileName => {
-            return filePaths.indexOf(fileName) !== -1;
-        }
+        fileExists: fileName => filePaths.indexOf(fileName) !== -1
     };
 
     return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
@@ -176,6 +175,7 @@ function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {
 
 /**
  * Create a project service singleton that holds all projects within a directory tree
+ *
  * @param serverHost Used by the tss to navigate the directory tree
  */
 export function createProjectService(serverHost: tss.server.ServerHost): tss.server.ProjectService {
@@ -183,7 +183,7 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
     const logger = new Logger(false, tss.server.LogLevel.verbose);
     const projectService = new tss.server.ProjectService({
         host: serverHost,
-        logger: logger,
+        logger,
         /* not needed since we will run only migrations */
         cancellationToken: tss.server.nullCancellationToken,
         /* do not allow more than one InferredProject per project root */
@@ -216,13 +216,16 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
 
 /**
  * Get type information about a TypeScript identifier
+ *
  * @param langServ TypeScript/Angular LanguageService
  * @param entryPath path to file
  * @param position Index of identifier
  */
 export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
-    if (!definition) { return null; }
+    if (!definition) {
+ return null;
+}
 
     // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
     if (definition.kind.toString() === 'reference') {
@@ -240,10 +243,14 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
          at this point the map contains all .html files that we've included
          we have to ignore them, since the language service will attempt to parse them as .ts files
         */
-        if (!definition.fileName.endsWith('.ts')) { return null; }
+        if (!definition.fileName.endsWith('.ts')) {
+ return null;
+}
 
         const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
-        if (!sourceFile) { return null; }
+        if (!sourceFile) {
+ return null;
+}
 
         const classDeclaration = sourceFile
             .statements
@@ -251,10 +258,14 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
             .find(m => m.name.getText() === definition.containerName);
 
         // there must be at least one class declaration in the .ts file and the property must belong to it
-        if (!classDeclaration) { return null; }
+        if (!classDeclaration) {
+ return null;
+}
 
         const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
-        if (!member?.name) { return null; }
+        if (!member?.name) {
+ return null;
+}
 
         typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
     }
@@ -267,7 +278,9 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
 
 export function isMemberIgniteUI(change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean {
     const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
-    if (!typeDef) { return false; }
+    if (!typeDef) {
+ return false;
+}
     return typeDef.fileName.includes(IG_PACKAGE_NAME)
         && change.definedIn.indexOf(typeDef.name) !== -1;
 }

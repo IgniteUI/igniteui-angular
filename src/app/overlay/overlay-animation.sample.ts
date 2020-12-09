@@ -11,7 +11,7 @@ import {
 import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-animation-sample',
     templateUrl: './overlay-animation.sample.html',
     styleUrls: ['overlay-animation.sample.scss']

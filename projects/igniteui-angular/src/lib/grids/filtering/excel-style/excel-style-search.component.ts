@@ -196,7 +196,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         if (selectedIndex === 0) {
             this.displayedListData.forEach(element => {
-                if (element === this.addToCurrentFilter) { return; }
+                if (element === this.addToCurrentFilter) {
+ return;
+}
                 element.isSelected = eventArgs.checked;
             });
 
@@ -360,7 +362,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         condition = this.createCondition('empty');
                     }
                     filterTree.filteringOperands.push({
-                        condition: condition,
+                        condition,
                         fieldName: this.esf.column.field,
                         ignoreCase: this.esf.column.filteringIgnoreCase,
                         searchVal: element.value

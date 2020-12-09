@@ -767,7 +767,7 @@ describe('Row Drag Tests #grid', () => {
             dragGrid.selectRange(range);
             fixture.detectChanges();
 
-            const verifyCellSelection = function () {
+            const verifyCellSelection = function() {
                 for (let index = 0; index < rowCells.length; index++) {
                     const cellSelected = index <= 2 ? true : false;
                     expect(rowCells[index].selected).toEqual(cellSelected);
@@ -814,10 +814,10 @@ describe('Row Drag Tests #grid', () => {
             const row = dragGridRows[2];
             rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
             const rowCells = row.cells.toArray();
-            const groupHeader = dragGrid.groupsRecords.find(function (element) {
+            const groupHeader = dragGrid.groupsRecords.find(function(element) {
                 return element.value === rowCells[2].value;
             });
-            let groupRow = groupHeader.records.find(function (element) {
+            let groupRow = groupHeader.records.find(function(element) {
                 return element['ID'] === rowCells[1].value;
             });
             expect(groupHeader.records.length).toEqual(2);
@@ -848,7 +848,7 @@ describe('Row Drag Tests #grid', () => {
             verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             expect(groupHeader.records.length).toEqual(2);
-            groupRow = groupHeader.records.find(function (element) {
+            groupRow = groupHeader.records.find(function(element) {
                 return element['ID'] === rowCells[1].value;
             });
             expect(groupRow).toBeDefined();
@@ -1410,6 +1410,7 @@ export class IgxTreeGridTestComponent {
 
 /**
  * Move pointer to the provided point and calls pointerdown event over provided element
+ *
  * @param element Element to fire event on
  * @param startPoint Point on which to move the pointer to
  * @param fixture Test's ComponentFixture
@@ -1424,6 +1425,7 @@ async function pointerDown(element: Element, startPoint: Point, fixture: Compone
 
 /**
  * Move pointer to the provided point and calls pointermove event over provided element
+ *
  * @param element Element to fire event on
  * @param startPoint Point on which to move the pointer to
  * @param fixture Test's ComponentFixture
@@ -1438,6 +1440,7 @@ async function pointerMove(element: Element, startPoint: Point, fixture: Compone
 
 /**
  * Move pointer to the provided point and calls pointerup event over provided element
+ *
  * @param element Element to fire event on
  * @param startPoint Point on which to move the pointer to
  * @param fixture Test's ComponentFixture
@@ -1452,6 +1455,7 @@ async function pointerUp(element: Element, startPoint: Point, fixture: Component
 
 /**
  * Verifies weather the onRowDragStart event has been emitted with the correct arguments
+ *
  * @param grid IgxGrid from which a row is being dragged
  * @param dragRow Grid row which is being dragged
  * @param dragDirective IgxRowDragDirective of the dragged row
@@ -1467,14 +1471,15 @@ function verifyRowDragStartEvent(
     expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
-        dragDirective: dragDirective,
-        cancel: cancel,
+        dragDirective,
+        cancel,
         owner: grid
     });
 }
 
 /**
  * Verifies weather the onRowDragEnd event has been emitted with the correct arguments
+ *
  * @param grid IgxGrid from which a row is being dragged
  * @param dragRow Grid row which is being dragged
  * @param dragDirective IgxRowDragDirective of the dragged row
@@ -1488,7 +1493,7 @@ function verifyRowDragEndEvent(
     timesCalled: number = 1) {
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
-        dragDirective: dragDirective,
+        dragDirective,
         dragData: dragRow,
         animation: animations,
         owner: grid

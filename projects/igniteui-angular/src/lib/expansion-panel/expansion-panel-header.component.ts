@@ -40,6 +40,7 @@ export class IgxExpansionPanelHeaderComponent {
      * ```typescript
      * let panelHeaderId =  this.panel.header.id;
      * ```
+     *
      * @memberof IgxExpansionPanelComponent
      */
     public id = '';
@@ -115,7 +116,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * @hidden
      */
-    public get controls (): string {
+    public get controls(): string {
         return this.panel.id;
     }
 
@@ -162,7 +163,7 @@ export class IgxExpansionPanelHeaderComponent {
       * @hidden
       */
      @HostBinding('class.igx-expansion-panel__header--expanded')
-     public get isExpanded () {
+     public get isExpanded() {
             return !this.panel.collapsed;
          }
 

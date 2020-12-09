@@ -19,7 +19,9 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         this._target = target ? target : this.dropdown as IgxSelectBase;
     }
 
-    constructor() { super(null); }
+    constructor() {
+ super(null);
+}
 
     /** Captures keydown events and calls the appropriate handlers on the target component */
     handleKeyDown(event: KeyboardEvent) {
@@ -64,7 +66,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         super.handleKeyDown(event);
     }
 
-    // tslint:disable:member-ordering
+    /* eslint-disable @typescript-eslint/member-ordering */
     private inputStream = '';
     private clearStream$ = Subscription.EMPTY;
 

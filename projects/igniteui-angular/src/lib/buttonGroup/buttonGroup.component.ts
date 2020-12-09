@@ -272,9 +272,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     get selectedButtons(): IgxButtonDirective[] {
-        return this.buttons.filter((b, i) => {
-            return this.selectedIndexes.indexOf(i) !== -1;
-        });
+        return this.buttons.filter((b, i) => this.selectedIndexes.indexOf(i) !== -1);
 
     }
 
@@ -288,6 +286,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *    this.cdr.detectChanges();
      * }
      * ```
+     *
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
@@ -304,7 +303,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'true');
         this._renderer.addClass(buttonElement, 'igx-button-group__item--selected');
 
-        this.onSelect.emit({ button: button, index: index });
+        this.onSelect.emit({ button, index });
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
         if (indexInViewButtons !== -1) {
@@ -331,6 +330,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *    this.cdr.detectChanges();
      * }
      * ```
+     *
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public deselectButton(index: number) {
@@ -347,7 +347,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'false');
         this._renderer.removeClass(buttonElement, 'igx-button-group__item--selected');
 
-        this.onUnselect.emit({ button: button, index: index });
+        this.onUnselect.emit({ button, index });
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
         if (indexInViewButtons !== -1) {

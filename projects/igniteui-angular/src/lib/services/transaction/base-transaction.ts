@@ -47,7 +47,9 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    getTransactionLog(id?: any): T[] { return []; }
+    getTransactionLog(id?: any): T[] {
+ return [];
+}
 
     /**
      * @inheritdoc
@@ -124,6 +126,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
 
     /**
      * Updates the provided states collection according to passed transaction and recordRef
+     *
      * @param states States collection to apply the update to
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
@@ -137,13 +140,14 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
                 state.value = transaction.newValue;
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type } as S;
+            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
     }
 
     /**
      * Updates the recordRef of the provided state with all the changes in the state. Accepts primitive and object value types
+     *
      * @param state State to update value for
      * @returns updated value including all the changes in provided state
      */
@@ -154,6 +158,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * Merges second values in first value and the result in empty object. If values are primitive type
      * returns second value if exists, or first value.
+     *
      * @param first Value to merge into
      * @param second Value to merge
      */

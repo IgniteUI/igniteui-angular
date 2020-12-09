@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-// tslint:disable:no-implicit-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import { EmptyTree } from '@angular-devkit/schematics';
-// tslint:disable-next-line:no-submodule-imports
+// eslint-disable-next-line import/no-internal-modules
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
 describe('Update 8.2.3', () => {

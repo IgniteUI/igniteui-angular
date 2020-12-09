@@ -30,6 +30,7 @@ export class IgxSlideComponent implements OnDestroy {
      *  <igx-slide index = "1"></igx-slide>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public index: number;
@@ -41,6 +42,7 @@ export class IgxSlideComponent implements OnDestroy {
      *  <igx-slide direction="NEXT"></igx-slide>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public direction: Direction;
@@ -50,6 +52,7 @@ export class IgxSlideComponent implements OnDestroy {
      * ```typescript
      * let tabIndex =  this.carousel.tabIndex;
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('attr.tabindex')
@@ -88,6 +91,7 @@ export class IgxSlideComponent implements OnDestroy {
      * ```typescript
      * let class =  this.slide.cssClass;
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide')
@@ -107,6 +111,7 @@ export class IgxSlideComponent implements OnDestroy {
      *  <igx-slide [(active)] ="model.isActive"></igx-slide>
      * <igx-carousel>
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide--current')
@@ -135,6 +140,7 @@ export class IgxSlideComponent implements OnDestroy {
      * ```typescript
      * let nativeElement =  this.slide.nativeElement;
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     public get nativeElement() {

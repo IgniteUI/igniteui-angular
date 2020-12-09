@@ -138,9 +138,9 @@ export class IgxGridFilteringPipe implements PipeTransform {
         advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number, pinned?) {
         const grid = this.gridAPI.grid;
         const state = {
-            expressionsTree: expressionsTree,
+            expressionsTree,
             strategy: filterStrategy,
-            advancedExpressionsTree: advancedExpressionsTree
+            advancedExpressionsTree
         };
 
         if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {

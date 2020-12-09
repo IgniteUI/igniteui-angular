@@ -42,7 +42,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public gridState: IGridState;
   public serialize = true;
   public templatedIcon = false;
-  public features: { key: GridFeatures, shortName: string }[] = [
+  public features: { key: GridFeatures; shortName: string }[] = [
     { key: 'advancedFiltering', shortName: 'Adv Filt' },
     { key: 'cellSelection', shortName: 'Cell Sel' },
     { key: 'columns', shortName: 'Columns' } ,
@@ -79,7 +79,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   @ViewChild('treeGridHier', { static: true }) treeGridHier: IgxTreeGridComponent;
 
   public initialColumns: any[] = [
-    // tslint:disable:max-line-length
+    /* eslint-disable max-len */
     { field: 'FirstName', header: 'First Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true, summaries: MySummary },
     { field: 'LastName', header: 'Last Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true},
     { field: 'Country', header: 'Country', width: '140px', dataType: 'string', groupable: true, movable: true, sortable: true, filterable: true, resizable: true },
@@ -101,7 +101,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     { field: 'ChildLevels', label: 'Child Levels', width: 200, resizable: true, sortable: true, filterable: true, groupable: true, dataType: 'number', hasSummary: true },
     { field: 'ProductName', label: 'Product Name', width: 300, resizable: true, sortable: true, filterable: true, movable: true, dataType: 'string', hasSummary: false }
   ];
-  // tslint:enable:max-line-length
+  /* eslint-enable max-len */
 
   constructor(private router: Router) { }
 
@@ -130,7 +130,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public getContext(grid: IgxGridBaseDirective) {
     if (this.state) {
       const stateDirective = this.state.find(st => st.grid.id === grid.id);
-      return { $implicit: grid, stateDirective: stateDirective};
+      return { $implicit: grid, stateDirective};
     }
     return { $implicit: grid };
   }

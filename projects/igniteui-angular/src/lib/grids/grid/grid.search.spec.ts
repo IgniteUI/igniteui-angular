@@ -22,7 +22,7 @@ describe('IgxGrid - search API #grid - ', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
-    let fix, component, grid: IgxGridComponent, fixNativeElement;
+    let fix; let component; let grid: IgxGridComponent; let fixNativeElement;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({

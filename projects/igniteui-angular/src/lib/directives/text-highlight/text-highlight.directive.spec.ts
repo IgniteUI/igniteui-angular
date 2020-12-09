@@ -290,7 +290,7 @@ describe('IgxHighlight', () => {
 
 @Component({
     template:
-        // tslint:disable-next-line:max-line-length
+        // eslint-disable-next-line max-len
         `<div igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="groupName" [value]="html" [column]="0" [row]="0" [containerClass]="'test'">
             {{html}}
         </div>`
@@ -300,7 +300,7 @@ class HighlightLoremIpsumComponent {
     public activeHighlightClass = 'igx-highlight__active';
     public groupName = 'test';
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     public html = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vulputate luctus dui ut maximus. Quisque sed suscipit lorem. Vestibulum sit.';
 
     @ViewChild(forwardRef(() => IgxTextHighlightDirective), { read: IgxTextHighlightDirective, static: true })
@@ -322,7 +322,7 @@ class HighlightLoremIpsumComponent {
         const activeHighlightInfo: IActiveHighlightInfo = {
             row: 0,
             column: 0,
-            index: index
+            index
         };
         IgxTextHighlightDirective.setActiveHighlight(this.groupName, activeHighlightInfo);
     }

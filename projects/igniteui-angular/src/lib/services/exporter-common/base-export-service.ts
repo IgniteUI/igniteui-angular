@@ -86,6 +86,7 @@ export abstract class IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
@@ -97,6 +98,7 @@ export abstract class IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
@@ -110,6 +112,7 @@ export abstract class IgxBaseExporter {
      * ```typescript
      * this.exporterService.export(this.igxGridForExport, this.exportOptions);
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public export(grid: any, options: IgxExporterOptionsBase): void {
@@ -166,6 +169,7 @@ export abstract class IgxBaseExporter {
      * ```typescript
      * this.exporterService.exportData(this.arrayForExport, this.exportOptions);
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public exportData(data: any[], options: IgxExporterOptionsBase): void {

@@ -1,6 +1,6 @@
-// tslint:disable:no-implicit-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import { EmptyTree } from '@angular-devkit/schematics';
-// tslint:disable-next-line:no-submodule-imports
+// eslint-disable-next-line import/no-internal-modules
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -12,12 +12,24 @@ describe('UpdateChanges', () => {
     let appTree: UnitTestTree;
 
     class UnitUpdateChanges extends UpdateChanges {
-        public getSelectorChanges() { return this.selectorChanges; }
-        public getClassChanges() { return this.classChanges; }
-        public getOutputChanges() { return this.outputChanges; }
-        public getInputChanges() { return this.inputChanges; }
-        public getThemePropChanges() { return this.themePropsChanges; }
-        public getImportsChanges() { return this.importsChanges; }
+        public getSelectorChanges() {
+ return this.selectorChanges;
+}
+        public getClassChanges() {
+ return this.classChanges;
+}
+        public getOutputChanges() {
+ return this.outputChanges;
+}
+        public getInputChanges() {
+ return this.inputChanges;
+}
+        public getThemePropChanges() {
+ return this.themePropsChanges;
+}
+        public getImportsChanges() {
+ return this.importsChanges;
+}
     }
 
     beforeEach(() => {
@@ -31,7 +43,7 @@ describe('UpdateChanges', () => {
         }));
     });
 
-    // tslint:disable:arrow-parens
+    /* eslint-disable arrow-parens */
     it('should replace/remove components', done => {
         const selectorsJson: SelectorChanges = {
             changes: [
@@ -620,12 +632,12 @@ export class AppModule { }`);
     it('should handle changes with valueTransform functions', done => {
         const inputsJson: BindingChanges = {
             changes: [{
-                'name': 'someProp',
-                'replaceWith': 'someOtherProp',
-                'valueTransform': 'some_prop_transform',
-                'owner': {
-                    'selector': 'igx-component',
-                    'type': ElementType.component
+                name: 'someProp',
+                replaceWith: 'someOtherProp',
+                valueTransform: 'some_prop_transform',
+                owner: {
+                    selector: 'igx-component',
+                    type: ElementType.component
                 }
             }]
         };
@@ -682,7 +694,7 @@ export class AppModule { }`);
         expect(appTree.readContent('test2.component.html')).toEqual(`<igx-component someOtherProp="falseValue"></igx-component>`);
         expect(appTree.readContent('test3.component.html')).toEqual(`<igx-component someOtherProp='falseValue'></igx-component>`);
         expect(appTree.readContent('test4.component.html')).toEqual(`<igx-component [someOtherProp]="'trueValue'"><igx-component>\n` +
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 `<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
 <igx-component someOtherProp="trueValue"><igx-component>
 <igx-component someOtherProp="falseValue"><igx-component>`);
@@ -692,12 +704,12 @@ export class AppModule { }`);
     it('Should be able to change binding type via transform function', done => {
         const inputsJson: BindingChanges = {
             changes: [{
-                'name': 'prop',
-                'replaceWith': 'newProp',
-                'valueTransform': 'prop_transform',
-                'owner': {
-                    'selector': 'igx-component',
-                    'type': ElementType.component
+                name: 'prop',
+                replaceWith: 'newProp',
+                valueTransform: 'prop_transform',
+                owner: {
+                    selector: 'igx-component',
+                    type: ElementType.component
                 }
             }]
         };

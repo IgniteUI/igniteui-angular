@@ -315,9 +315,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }
 
         // Apply formatter to the last column
-        col.formatter = (val: string) => {
-            return val.toLowerCase();
-        };
+        col.formatter = (val: string) => val.toLowerCase();
         fix.detectChanges();
 
         expect(col.formatter).toBeTruthy();

@@ -82,7 +82,7 @@ function addNormalize(options: Options): Rule {
   };
 }
 
-export default function (options: Options): Rule {
+export default function(options: Options): Rule {
   return chain([
     readInput(options),
     addNormalize(options),

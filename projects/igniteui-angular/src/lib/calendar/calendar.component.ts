@@ -162,6 +162,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Apply the different states for the transitions of animateChange
+     *
      * @hidden
      * @internal
      */
@@ -221,6 +222,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Month button, that displays the months view.
+     *
      * @hidden
      * @internal
      */
@@ -247,6 +249,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * ViewChildrenden representing all of the rendered days views.
+     *
      * @hidden
      * @internal
      */
@@ -273,6 +276,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Denote if the year view is active.
+     *
      * @hidden
      * @internal
      */
@@ -391,7 +395,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true  })
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 
@@ -454,7 +458,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public previousMonth(isKeydownTrigger = false) {
-        if (isKeydownTrigger && this.animationAction === ScrollMonth.NEXT) { return; }
+        if (isKeydownTrigger && this.animationAction === ScrollMonth.NEXT) {
+ return;
+}
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getPrevMonth(this.viewDate);
         this.animationAction = ScrollMonth.PREV;
@@ -463,7 +469,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     public suppressBlur() {
         this.monthViews?.forEach(d => d.shouldResetDate = false);
-        if (this.daysView) { this.daysView.shouldResetDate = false; }
+        if (this.daysView) {
+ this.daysView.shouldResetDate = false;
+}
     }
 
     /**
@@ -473,7 +481,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public nextMonth(isKeydownTrigger = false) {
-        if (isKeydownTrigger && this.animationAction === 'prev') { return; }
+        if (isKeydownTrigger && this.animationAction === 'prev') {
+ return;
+}
         this.isKeydownTrigger = isKeydownTrigger;
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
@@ -482,6 +492,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Continious navigation through the previous months
+     *
      * @hidden
      * @internal
      */
@@ -490,10 +501,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.monthScrollDirection = ScrollMonth.PREV;
         this.animationAction = ScrollMonth.PREV;
         this.previousMonth(isKeydownTrigger);
-    }
+    };
 
     /**
      * Continious navigation through the next months
+     *
      * @hidden
      * @internal
      */
@@ -502,10 +514,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.monthScrollDirection = ScrollMonth.NEXT;
         this.animationAction = ScrollMonth.NEXT;
         this.nextMonth(isKeydownTrigger);
-    }
+    };
 
     /**
      * Stop continuous navigation
+     *
      * @hidden
      * @internal
      */
@@ -530,7 +543,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         }
 
         this.monthScrollDirection = ScrollMonth.NONE;
-    }
+    };
 
     /**
      * @hidden
@@ -565,7 +578,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    public getFormattedDate(): { weekday: string, monthday: string } {
+    public getFormattedDate(): { weekday: string; monthday: string } {
 
         const date = this.headerDate;
 
@@ -577,6 +590,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Handles invoked on date selection
+     *
      * @hidden
      * @internal
      */
@@ -625,7 +639,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
         requestAnimationFrame(() => {
             const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx);
-            if (elem) { elem.nativeElement.focus(); }
+            if (elem) {
+ elem.nativeElement.focus();
+}
         });
     }
 
@@ -645,7 +661,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     private focusMonth() {
         const month = this.monthsView.monthsRef.find((e) =>
             e.index === this.monthsView.date.getMonth());
-        if (month) { month.nativeElement.focus(); }
+        if (month) {
+ month.nativeElement.focus();
+}
     }
 
     /**
@@ -680,6 +698,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Helper method that does deselection for all month views when selection is "multi"
      * If not called, selection in other month views stays
+     *
      * @hidden
      * @internal
      */
@@ -700,6 +719,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Getter for the context object inside the calendar templates.
+     *
      * @hidden
      * @internal
      */
@@ -753,7 +773,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public viewRendered(event) {
         if (event.fromState !== 'void') {
             this.activeViewChanged.emit(this.activeView);
-            if (this.activeView === 0) { this.resetActiveDate(); }
+            if (this.activeView === 0) {
+ this.resetActiveDate();
+}
         }
     }
 
@@ -762,9 +784,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     public resetActiveDate() {
-        if (!this.monthViews) { return; }
+        if (!this.monthViews) {
+ return;
+}
         let dates = [];
-        this.monthViews.map(mv => mv.dates).forEach(days => { dates = dates.concat(days.toArray()); });
+        this.monthViews.map(mv => mv.dates).forEach(days => {
+ dates = dates.concat(days.toArray());
+});
         const date = dates.find(day => day.selected && day.isCurrentMonth) || dates.find(day => day.isToday && day.isCurrentMonth)
             || dates.find(d => d.isFocusable);
         if (date) {
@@ -774,6 +800,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Keyboard navigation of the calendar
+     *
      * @hidden
      * @internal
      */
@@ -802,15 +829,21 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
             let month = this.nextDate.getMonth() + step;
             if (isPageDown) {
-                if (month > 11) { month = 0; year += step; }
+                if (month > 11) {
+ month = 0; year += step;
+}
             } else {
-                if (month < 0) { month = 11; year += step; }
+                if (month < 0) {
+ month = 11; year += step;
+}
             }
 
             const range = monthRange(this.nextDate.getFullYear(), month);
 
             let day = this.nextDate.getDate();
-            if (day > range[1]) { day = range[1]; }
+            if (day > range[1]) {
+ day = range[1];
+}
 
             this.nextDate.setDate(day);
             this.nextDate.setMonth(month);
@@ -823,7 +856,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                     dayItem = monthView.dates.find((d) => d.date.date.getTime() === next.getTime());
                     monthView = monthView.nextMonthView;
                 }
-                if (dayItem && dayItem.isFocusable) { dayItem.nativeElement.focus(); }
+                if (dayItem && dayItem.isFocusable) {
+ dayItem.nativeElement.focus();
+}
             };
         }
 
@@ -836,6 +871,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Keyboard navigation of the calendar
+     *
      * @hidden
      * @internal
      */
@@ -872,7 +908,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
             const range = monthRange(year, this.nextDate.getMonth());
 
             let day = this.nextDate.getDate();
-            if (day > range[1]) { day = range[1]; }
+            if (day > range[1]) {
+ day = range[1];
+}
 
             this.nextDate.setDate(day);
             this.nextDate.setFullYear(year);
@@ -884,13 +922,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                     dayItem = monthView.dates.find((d) => d.date.date.getTime() === next.getTime());
                     monthView = monthView.nextMonthView;
                 }
-                if (dayItem && dayItem.isFocusable) { dayItem.nativeElement.focus(); }
+                if (dayItem && dayItem.isFocusable) {
+ dayItem.nativeElement.focus();
+}
             };
         }
     }
 
     /**
      * Keyboard navigation of the calendar
+     *
      * @hidden
      * @internal
      */
@@ -903,6 +944,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Keyboard navigation of the calendar
+     *
      * @hidden
      * @internal
      */
@@ -915,6 +957,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Stop continuous navigation on mouseup event
+     *
      * @hidden
      * @internal
      */
@@ -938,6 +981,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Helper method building and returning the context object inside
      * the calendar templates.
+     *
      * @hidden
      * @internal
      */
@@ -954,6 +998,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Helper method that sets references for prev/next months for each month in the view
+     *
      * @hidden
      * @internal
      */
@@ -968,6 +1013,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Helper method returning previous/next day views
+     *
      * @hidden
      * @internal
      */

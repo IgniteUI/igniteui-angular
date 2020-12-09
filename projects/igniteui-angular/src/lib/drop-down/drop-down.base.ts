@@ -196,6 +196,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
 
     /**
      * Emits onSelection with the target item & event
+     *
      * @hidden @internal
      * @param newSelection the item selected
      * @param event the event that triggered the call
@@ -248,6 +249,7 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
 
     /**
      * Navigates to the item on the specified index
+     *
      * @param newIndex number - the index of the item in the `items` collection
      */
     public navigateItem(newIndex: number) {

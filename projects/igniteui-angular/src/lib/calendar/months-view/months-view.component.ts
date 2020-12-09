@@ -30,6 +30,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let monthsViewId =  this.monthsView.id;
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @HostBinding('attr.id')
@@ -45,6 +46,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let date =  this.monthsView.date;
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @Input()
@@ -73,6 +75,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-months-view> [monthFormat] = "short'"</igx-months-view>
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     public set monthFormat(value: string) {
@@ -86,6 +89,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let locale =  this.monthsView.locale;
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @Input()
@@ -100,6 +104,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-months-view [locale]="de"></igx-months-view>
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     public set locale(value: string) {
@@ -120,6 +125,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-months-view (onSelection)="onSelection($event)"></igx-months-view>
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @Output()
@@ -325,7 +331,9 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) { return; }
+        if (!node) {
+ return;
+}
 
         const months = this.monthsRef.toArray();
         if (months.indexOf(node) + 1 < months.length) {
@@ -344,7 +352,9 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) { return; }
+        if (!node) {
+ return;
+}
 
         const months = this.monthsRef.toArray();
         if (months.indexOf(node) - 1 >= 0) {

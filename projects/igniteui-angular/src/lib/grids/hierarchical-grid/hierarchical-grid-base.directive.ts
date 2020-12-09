@@ -56,6 +56,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
+     *
      * @example
      * ```html
      * <igx-hierarchical-grid #grid [data]="localData" [hasChildrenKey]="'hasEmployees'">
@@ -67,6 +68,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Gets/Sets whether the expand/collapse all button in the header should be rendered.
+     *
      * @remark
      * The default value is false.
      * @example
@@ -80,6 +82,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
+     *
      * @example
      * ```typescript
      *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
@@ -101,6 +104,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Gets the outlet used to attach the grid's overlays to.
+     *
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */

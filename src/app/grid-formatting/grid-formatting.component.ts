@@ -106,7 +106,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
         done: (uniqueValues: any[]) => void) => {
         // Get specific column data.
         this.getColumnData(column, columnExprTree, uniqueValues => done(uniqueValues));
-    }
+    };
 
     public getColumnData(column: IgxColumnComponent,
         columnExprTree: IFilteringExpressionsTree,

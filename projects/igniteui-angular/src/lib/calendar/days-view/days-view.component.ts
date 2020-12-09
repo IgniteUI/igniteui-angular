@@ -143,7 +143,9 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         if (this.shouldResetDate) {
             const date = this.dates.find(day => day.selected && day.isCurrentMonth)
             || this.dates.find(day => day.isToday && day.isCurrentMonth) || this.dates.find(d => d.isFocusable);
-            if (date) { this.activeDate = date.date.date.toLocaleDateString(); }
+            if (date) {
+ this.activeDate = date.date.date.toLocaleDateString();
+}
             this.monthsViewBlur.emit();
         }
         this.shouldResetDate = true;
@@ -381,7 +383,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
 
         this.outOfRangeDates = [{
             type: DateRangeType.Specific,
-            dateRange: dateRange
+            dateRange
         }];
     }
 

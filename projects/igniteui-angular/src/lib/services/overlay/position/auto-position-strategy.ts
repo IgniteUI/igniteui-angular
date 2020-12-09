@@ -37,6 +37,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Checks if element can be flipped without get off the viewport
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns true if element can be flipped and stain in viewport
      */
@@ -59,6 +60,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Checks if element can be flipped without get off the viewport
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns true if element can be flipped and stain in viewport
      */
@@ -118,6 +120,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Calculates necessary horizontal push according to provided connectedFit
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns amount of necessary translation which will push the element into viewport
      */
@@ -140,6 +143,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Calculates necessary vertical push according to provided connectedFit
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns amount of necessary translation which will push the element into viewport
      */
@@ -157,6 +161,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Changes open and close animation with reverse animation if one exists
+     *
      * @param flipDirection direction for which to change the animations
      */
     private flipAnimation(flipDirection: FlipDirection): void {
@@ -170,6 +175,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Tries to find the reverse animation according to provided direction
+     *
      * @param animation animation to update
      * @param direction required animation direction
      * @returns reverse animation in given direction if one exists

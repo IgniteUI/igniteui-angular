@@ -106,17 +106,23 @@ export class IgxLayoutDirective {
     /**
      * @hidden
      */
-    @HostBinding('style.flex-wrap') get flexwrap() { return this.wrap; }
+    @HostBinding('style.flex-wrap') get flexwrap() {
+ return this.wrap;
+}
 
     /**
      * @hidden
      */
-    @HostBinding('style.justify-content') get justifycontent() { return this.justify; }
+    @HostBinding('style.justify-content') get justifycontent() {
+ return this.justify;
+}
 
     /**
      * @hidden
      */
-    @HostBinding('style.align-items') get align() { return this.itemAlign; }
+    @HostBinding('style.align-items') get align() {
+ return this.itemAlign;
+}
 
     /**
      * @hidden

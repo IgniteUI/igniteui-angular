@@ -331,9 +331,9 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private _gesturesAttached = false;
-    private _widthCache: { width: number, miniWidth: number, windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
+    private _widthCache: { width: number; miniWidth: number; windowWidth: number } = { width: null, miniWidth: null, windowWidth: null };
     private _resizeObserver: Subscription;
-    private css: { [name: string]: string; } = {
+    private css: { [name: string]: string } = {
         drawer: 'igx-nav-drawer__aside',
         mini: 'igx-nav-drawer__aside--mini',
         overlay: 'igx-nav-drawer__overlay',
@@ -710,7 +710,7 @@ export class IgxNavigationDrawerComponent implements
                 this.pinChange.emit(false);
             }
         }
-    }
+    };
 
     private swipe = (evt: HammerInput) => {
         // TODO: Could also force input type: http://stackoverflow.com/a/27108052
@@ -735,7 +735,7 @@ export class IgxNavigationDrawerComponent implements
             (deltaX > 0 && startPosition < this.maxEdgeZone)) {
             this.toggle();
         }
-    }
+    };
 
     private panstart = (evt: HammerInput) => { // TODO: test code
         if (!this.enableGestures || this.pin || evt.pointerType !== 'touch') {
@@ -753,7 +753,7 @@ export class IgxNavigationDrawerComponent implements
             this.renderer.addClass(this.overlay, 'panning');
             this.renderer.addClass(this.drawer, 'panning');
         }
-    }
+    };
 
     private pan = (evt: HammerInput) => {
         // TODO: input.deltaX = prevDelta.x + (center.x - offset.x);
@@ -801,7 +801,7 @@ export class IgxNavigationDrawerComponent implements
             }
             this.setXSize(newX, percent.toPrecision(2));
         }
-    }
+    };
 
     private panEnd = (evt: HammerInput) => {
         if (this._panning) {
@@ -817,7 +817,7 @@ export class IgxNavigationDrawerComponent implements
             }
             this._panStartWidth = null;
         }
-    }
+    };
 
     private resetPan() {
         this._panning = false;
@@ -830,6 +830,7 @@ export class IgxNavigationDrawerComponent implements
 
     /**
      * Sets the absolute position or width in case the drawer doesn't change position.
+     *
      * @param x the number pixels to translate on the X axis or the width to set. 0 width will clear the style instead.
      * @param opacity optional value to apply to the overlay
      */
@@ -851,10 +852,10 @@ export class IgxNavigationDrawerComponent implements
     private toggleOpenedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleOpenedEvent, false);
         this.opened.emit();
-    }
+    };
 
     private toggleClosedEvent = (evt?) => {
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleClosedEvent, false);
         this.closed.emit();
-    }
+    };
 }

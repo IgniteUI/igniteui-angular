@@ -23,9 +23,9 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 export interface IGridEditDoneEventArgs extends IBaseEventArgs {
     rowID: any;
     cellID?: {
-        rowID: any,
-        columnID: any,
-        rowIndex: number
+        rowID: any;
+        columnID: any;
+        rowIndex: number;
     };
     rowData: any;
     oldValue: any;

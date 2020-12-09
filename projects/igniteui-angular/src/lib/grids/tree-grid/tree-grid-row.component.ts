@@ -150,6 +150,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
 
     /**
      * Spawns the add child row UI for the specific row.
+     *
      * @example
      * ```typescript
      * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;

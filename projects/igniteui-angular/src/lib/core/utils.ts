@@ -43,6 +43,7 @@ export function cloneArray(array: any[], deep?: boolean) {
 
 /**
  * Doesn't clone leaf items
+ *
  * @hidden
  */
 export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
@@ -63,6 +64,7 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
 
 /**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
+ *
  * @param obj1 Object to merge into
  * @param obj2 Object to merge from
  * @returns Obj1 with merged cloned keys from Obj2
@@ -80,6 +82,7 @@ export function mergeObjects(obj1: {}, obj2: {}): any {
  * Creates deep clone of provided value.
  * Supports primitive values, dates and objects.
  * If passed value is array returns shallow copy of the array.
+ *
  * @param value value to clone
  * @returns Deep copy of provided value
  * @hidden
@@ -109,6 +112,7 @@ export function cloneValue(value: any): any {
 
 /**
  * Parse provided input to Date.
+ *
  * @param value input to parse
  * @returns Date if parse succeed or null
  * @hidden
@@ -123,13 +127,16 @@ export function parseDate(value: any): Date | null {
 
 /**
  * Returns an array with unique dates only.
+ *
  * @param columnValues collection of date values (might be numbers or ISO 8601 strings)
  * @returns collection of unique dates.
  * @hidden
  */
 export function uniqueDates(columnValues: any[]) {
     return columnValues.reduce((a, c) => {
-        if (!a.cache[c.label]) { a.result.push(c); }
+        if (!a.cache[c.label]) {
+ a.result.push(c);
+}
         a.cache[c.label] = true;
         return a;
     }, { result: [], cache: {} }).result;
@@ -137,6 +144,7 @@ export function uniqueDates(columnValues: any[]) {
 
 /**
  * Checks if provided variable is Object
+ *
  * @param value Value to check
  * @returns true if provided variable is Object
  * @hidden
@@ -147,6 +155,7 @@ export function isObject(value: any): boolean {
 
 /**
  * Checks if provided variable is Date
+ *
  * @param value Value to check
  * @returns true if provided variable is Date
  * @hidden
@@ -158,6 +167,7 @@ export function isDate(value: any): boolean {
 /**
  * Checks if the two passed arguments are equal
  * Currently supports date objects
+ *
  * @param obj1
  * @param obj2
  * @returns: `boolean`
@@ -509,7 +519,9 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
     chunk();
 }
 
-export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) { return x; }
+export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) {
+ return x;
+}
 
 export function reverseAnimationResolver(animation: AnimationReferenceMetadata): AnimationReferenceMetadata {
     return oppositeAnimation.get(animation) ?? animation;

@@ -54,6 +54,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * ```typescript
      * let isSelected = this.tabGroup.isSelected;
      * ```
+     *
      * @memberof IgxTabsGroupComponent
      */
     public get isSelected(): boolean {
@@ -159,6 +160,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
 
     /**
      * A method that sets the focus on a tab.
+     *
      * @memberof {@link IgxTabsGroupComponent}
      * ```typescript
      *  @ViewChild("MyChild")

@@ -25,11 +25,11 @@ const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
 const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 describe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
 
-    let fixture, grid: IgxGridComponent, componentInstance;
+    let fixture; let grid: IgxGridComponent; let componentInstance;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -482,7 +482,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(cityColumn.width).toBe(colWidthPx);
         });
 
-        it('Width should be correct. Column group with three columns. Columns with mixed width - px and percent.', async() => {
+        it('Width should be correct. Column group with three columns. Columns with mixed width - px and percent.', async () => {
             const col1 = grid.getColumnByName('Country');
             const col2 = grid.getColumnByName('Region');
             const col3 = grid.getColumnByName('City');
@@ -1664,4 +1664,4 @@ class NestedColGroupsTests {
             'slaveColGroup', masterColGroupChildrenCount);
     }
 }
-// tslint:enable:max-line-length
+/* eslint-enable max-len */

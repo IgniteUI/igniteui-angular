@@ -2474,7 +2474,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
     describe('Localization - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
-            let fix, grid: IgxGridComponent;
+            let fix; let grid: IgxGridComponent;
             fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
             grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
@@ -2596,7 +2596,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Column groups - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
             grid = fix.componentInstance.grid;
@@ -2623,7 +2623,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('External - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
@@ -2674,7 +2674,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Expression tree bindings - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
             fix.detectChanges();

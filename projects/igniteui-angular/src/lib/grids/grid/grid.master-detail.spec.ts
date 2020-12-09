@@ -933,7 +933,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it('Should be able to expand detail view of newly added row.', async () => {
-                grid.addRow({ 'ID': '123', 'CompanyName': 'Test', 'ContactName': 'Test', 'Address': 'Test Address' });
+                grid.addRow({ ID: '123', CompanyName: 'Test', ContactName: 'Test', Address: 'Test Address' });
                 fix.detectChanges();
                 // scroll to bottom
                 grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);

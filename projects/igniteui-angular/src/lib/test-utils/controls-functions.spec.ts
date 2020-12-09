@@ -84,6 +84,7 @@ export class ControlsFunction {
 
     /**
      * Formats a date according to the provided formatting options
+     *
      * @param date Date to be formatted
      * @param formatOptions DateTime formatting options
      * @param locale Date language

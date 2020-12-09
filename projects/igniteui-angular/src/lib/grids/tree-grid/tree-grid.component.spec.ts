@@ -78,7 +78,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         }));
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
-            there are fewer than 10 records in the data view`, (async() => {
+            there are fewer than 10 records in the data view`, (async () => {
                 grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
                 fix.detectChanges();
@@ -171,7 +171,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             tick(30);
             fix.detectChanges();
 
-            let fixEl = fix.nativeElement, gridEl = grid.nativeElement;
+            let fixEl = fix.nativeElement; let gridEl = grid.nativeElement;
             let tHeadItems = fixEl.querySelector('igx-grid-header-group');
             let gridRows = fixEl.querySelector('igx-tree-grid-row');
             let paging = fixEl.querySelector('.igx-paginator');

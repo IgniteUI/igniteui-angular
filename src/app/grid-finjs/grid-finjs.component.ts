@@ -131,26 +131,14 @@ export class GridFinJSComponent implements OnInit, AfterViewInit {
     }
 
     /** Grid CellStyles and CellClasses */
-    private negative = (rowData: any): boolean => {
-        return rowData['Change(%)'] < 0;
-    }
-    private positive = (rowData: any): boolean => {
-        return rowData['Change(%)'] > 0;
-    }
-    private changeNegative = (rowData: any): boolean => {
-        return rowData['Change(%)'] < 0 && rowData['Change(%)'] > -1;
-    }
-    private changePositive = (rowData: any): boolean => {
-        return rowData['Change(%)'] > 0 && rowData['Change(%)'] < 1;
-    }
-    private strongPositive = (rowData: any): boolean => {
-        return rowData['Change(%)'] >= 1;
-    }
-    private strongNegative = (rowData: any, key: string): boolean => {
-        return rowData['Change(%)'] <= -1;
-    }
+    private negative = (rowData: any): boolean => rowData['Change(%)'] < 0;
+    private positive = (rowData: any): boolean => rowData['Change(%)'] > 0;
+    private changeNegative = (rowData: any): boolean => rowData['Change(%)'] < 0 && rowData['Change(%)'] > -1;
+    private changePositive = (rowData: any): boolean => rowData['Change(%)'] > 0 && rowData['Change(%)'] < 1;
+    private strongPositive = (rowData: any): boolean => rowData['Change(%)'] >= 1;
+    private strongNegative = (rowData: any, key: string): boolean => rowData['Change(%)'] <= -1;
 
-    // tslint:disable:member-ordering
+    /* eslint-disable @typescript-eslint/member-ordering */
     public trends = {
         changeNeg: this.changeNegative,
         changePos: this.changePositive,
@@ -166,7 +154,7 @@ export class GridFinJSComponent implements OnInit, AfterViewInit {
         strongNegative2: this.strongNegative,
         strongPositive2: this.strongPositive
     };
-    // tslint:enable:member-ordering
+    /* eslint-enable @typescript-eslint/member-ordering */
 
     get grouped(): boolean {
         return this.grid.groupingExpressions.length > 0;

@@ -632,7 +632,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             GridFunctions.focusFirstCell(fix);
 
-            grid.navigateTo(50, 50, (args) => { args.target.activate(null); });
+            grid.navigateTo(50, 50, (args) => {
+ args.target.activate(null);
+});
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -968,7 +970,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            grid.navigateTo(9, -1, (args) => { args.target.nativeElement.dispatchEvent(new Event('pointerdown')); });
+            grid.navigateTo(9, -1, (args) => {
+ args.target.nativeElement.dispatchEvent(new Event('pointerdown'));
+});
             await wait(100);
             fix.detectChanges();
             await wait(100);

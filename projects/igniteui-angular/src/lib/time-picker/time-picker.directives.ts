@@ -1,6 +1,7 @@
 /**
  * This file contains all the directives used by the @link IgxTimePickerComponent.
  * You should generally not use them directly.
+ *
  * @preferred
  */
 import {

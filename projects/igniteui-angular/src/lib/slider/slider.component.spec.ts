@@ -9,7 +9,7 @@ import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientati
 import { FormsModule } from '@angular/forms';
 import { IgxDirectionality, DIR_DOCUMENT } from '../services/direction/directionality';
 
-declare var Simulator: any;
+declare let Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
@@ -573,7 +573,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
         });
 
-        it('labels should show/hide on pointer up/down', async() => {
+        it('labels should show/hide on pointer up/down', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(50);
@@ -591,7 +591,7 @@ describe('IgxSlider', () => {
             expect(activeLabel).toBeNull();
         });
 
-        it('should be able to change thumbLabelVisibilityDuration', async() => {
+        it('should be able to change thumbLabelVisibilityDuration', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
             sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: <any>((e: any) => {})});
@@ -844,7 +844,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
         });
 
-        it('labels should show/hide on pointer up/down', async() => {
+        it('labels should show/hide on pointer up/down', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             fixture.detectChanges();
 
@@ -864,7 +864,7 @@ describe('IgxSlider', () => {
             expect(activeLabel).toBeNull();
         });
 
-        it('should be able to change thumbLabelVisibilityDuration', async() => {
+        it('should be able to change thumbLabelVisibilityDuration', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
             slider.thumbLabelVisibilityDuration = 1000;
             sliderEl.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
@@ -1018,7 +1018,7 @@ describe('IgxSlider', () => {
             expect(slider.lowerBound).toBe(1);
         });
 
-        it('label view should not be enabled if labels array is set uncorrectly', async() => {
+        it('label view should not be enabled if labels array is set uncorrectly', async () => {
             expect(slider.labelsViewEnabled).toBe(true);
 
             slider.labels = ['Winter'];

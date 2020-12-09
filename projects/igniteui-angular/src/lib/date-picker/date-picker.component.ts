@@ -129,6 +129,7 @@ const noop = () => { };
 
 /**
  * Date Picker displays a popup calendar that lets users select a single date.
+ *
  * @igxModule IgxDatePickerModule
  * @igxTheme igx-calendar-theme, igx-icon-theme
  * @igxGroup Scheduling
@@ -150,7 +151,7 @@ const noop = () => { };
             useExisting: IgxDatePickerComponent,
             multi: true
         }],
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
     styles: [`
@@ -163,6 +164,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
     /**
      * Gets/Sets the `IgxDatePickerComponent` label.
+     *
      * @remarks
      * The default label is 'Date'.
      * @example
@@ -186,6 +188,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the `IgxDatePickerComponent` label visibility.
+     *
      * @remarks
      * By default the visibility is set to true.
      * @example
@@ -196,6 +199,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the locales.
+     *
      * @remarks Default locale is en.
      * @example
      * ```html
@@ -206,6 +210,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the default template editor's tabindex.
+     *
      * @example
      * ```html
      * <igx-date-picker editorTabIndex="1"></igx-date-picker>
@@ -215,6 +220,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets on which day the week starts.
+     *
      * @example
      * ```html
      * <igx-date-picker [weekStart]="WEEKDAYS.FRIDAY" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
@@ -224,6 +230,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets the format options of the `IgxDatePickerComponent`.
+     *
      * @example
      * ```typescript
      * let formatOptions = this.datePicker.formatOptions;
@@ -236,6 +243,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
+     *
      * @remarks
      * Apllies to dates that are out of the current month.
      * Default value is `false`.
@@ -253,6 +261,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the number of month views displayed.
+     *
      * @remarks
      * Default value is `1`.
      * @example
@@ -280,6 +289,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Sets the format options of the `IgxDatePickerComponent`.
+     *
      * @example
      * ```typescript
      * this.datePicker.formatOptions = {  day: "numeric",  month: "long", weekday: "long", year: "numeric"};
@@ -291,6 +301,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the date display format of the `IgxDatePickerComponent` in dropdown mode.
+     *
      * @example
      * ```typescript
      * let format = this.datePicker.format;
@@ -307,6 +318,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the date mask of the `IgxDatePickerComponent` when in editable dropdown mode.
+     *
      *  @example
      * ```typescript
      * let mask = this.datePicker.mask;
@@ -317,6 +329,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the format views of the `IgxDatePickerComponent`.
+     *
      * @example
      * ```typescript
      * let formatViews = this.datePicker.formatViews;
@@ -334,6 +347,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the disabled dates descriptors.
+     *
      * @example
      * ```typescript
      * let disabledDates = this.datepicker.disabledDates;
@@ -351,6 +365,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the special dates descriptors.
+     *
      * @example
      * ```typescript
      * let specialDates = this.datepicker.specialDates;
@@ -391,6 +406,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets the formatted date when `IgxDatePickerComponent` is in dialog mode.
+     *
      *  @example
      * ```typescript
      * let selectedDate = this.datePicker.displayData;
@@ -431,6 +447,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets the input group template.
+     *
      * @example
      * ```typescript
      * let template = this.template();
@@ -477,6 +494,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the selected date.
+     *
      *  @example
      * ```html
      * <igx-date-picker [value]="date"></igx-date-picker>
@@ -494,6 +512,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the value of `id` attribute.
+     *
      * @remarks If not provided it will be automatically generated.
      * @example
      * ```html
@@ -506,6 +525,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets a custom formatter function on the selected or passed date.
+     *
      * @example
      * ```html
      * <igx-date-picker [value]="date" [formatter]="formatter"></igx-date-picker>
@@ -516,6 +536,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Enables/Disables the `IgxDatePickerComponent`.
+     *
      *  @example
      * ```html
      * <igx-date-picker [disabled]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
@@ -526,6 +547,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the orientation of the `IgxDatePickerComponent` header.
+     *
      *  @example
      * ```html
      * <igx-date-picker [vertical]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
@@ -536,6 +558,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the today button's label.
+     *
      *  @example
      * ```html
      * <igx-date-picker cancelButtonLabel="cancel" todayButtonLabel="Tomorrow"></igx-date-picker>
@@ -546,6 +569,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * *Gets/Sets the cancel button's label.
+     *
      * @example
      * ```html
      * <igx-date-picker cancelButtonLabel="Close" todayButtonLabel="Today"></igx-date-picker>
@@ -556,6 +580,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
+     *
      *  @example
      * ```html
      * <igx-date-picker mode="dropdown"></igx-date-picker>
@@ -566,6 +591,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets whether date should spin continuously or stop when min/max is reached.
+     *
      *  @example
      * ```html
      * <igx-date-picker [isSpinLoop]="false"></igx-date-picker>
@@ -576,6 +602,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets/Sets the container used for the popup element.
+     *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      * @example
@@ -609,6 +636,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Emitted when selection is made in the calendar.
+     *
      *  @example
      * ```html
      * <igx-date-picker (onSelection)="selection($event)"></igx-date-picker>
@@ -619,6 +647,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Emitted when date picker value is changed.
+     *
      * @example
      * ```html
      * <igx-date-picker (valueChange)="valueChanged($event)" mode="dropdown"></igx-date-picker>
@@ -629,6 +658,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Emitted when the user types/spins to a disabled date in the date-picker editor.
+     *
      *  @example
      * ```html
      * <igx-date-picker (onDisabledDate)="onDisabledDate($event)"></igx-date-picker>
@@ -639,6 +669,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Emitted when the user types/spins invalid date in the date-picker editor.
+     *
      *  @example
      * ```html
      * <igx-date-picker (onValidationFailed)="onValidationFailed($event)"></igx-date-picker>
@@ -779,13 +810,19 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /** @hidden @internal */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: Date) => void) {
+ this._onChangeCallback = fn;
+}
 
     /** @hidden @internal */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void) {
+ this._onTouchedCallback = fn;
+}
 
     /** @hidden @internal */
-    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+    public setDisabledState(isDisabled: boolean): void {
+ this.disabled = isDisabled;
+}
 
     /** @hidden @internal */
     public registerOnValidatorChange(fn: any) {
@@ -987,6 +1024,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Selects today's date from calendar.
+     *
      *  @remarks
      * Changes the input field value, @calendar.viewDate and @calendar.value.
      *  @example
@@ -1001,6 +1039,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Change the calendar selection.
+     *
      * @remarks
      * Calling this method will emit the @calendar.onSelection event,
      * which will fire @handleSelection method.
@@ -1020,6 +1059,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Deselects the calendar date.
+     *
      * @example
      * ```typescript
      * this.datePicker.deselectDate();
@@ -1036,6 +1076,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Opens the date picker drop down or dialog.
+     *
      * @param target HTMLElement - the target element to use for positioning the drop down container according to
      * @example
      * ```typescript
@@ -1183,7 +1224,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
          * The IgxDateTimeEditor will be used to handle all inputs, i.e. this handler will be removed.
          * It extends the IgxMaskDirective which contains logic that handles this issue.
          */
-        if (isIE() && !this._isInEditMode && !this.inputGroup.isFocused) { return; }
+        if (isIE() && !this._isInEditMode && !this.inputGroup.isFocused) {
+ return;
+}
         const targetValue = event.target.value;
         const cursorPosition = this._getCursorPosition();
         const checkInput = DatePickerUtil.checkForCompleteDateInput(this.dateFormatParts, targetValue);
@@ -1342,7 +1385,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             // this is a workaround fixing the following IE11 issue:
             // IE11 has added character code 8206 (mark for RTL) to the output of toLocaleDateString() that
             // precedes each portion that comprises the total date... For more information read this article:
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             // https://www.csgpro.com/blog/2016/08/a-bad-date-with-internet-explorer-11-trouble-with-new-unicode-characters-in-javascript-date-strings/
             const localeDateStrIE = new Date(value.getFullYear(), value.getMonth(), value.getDate(),
                 value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
@@ -1364,6 +1407,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Apply custom user formatter upon date.
+     *
      * @param formatter custom formatter function.
      * @param date passed date
      */

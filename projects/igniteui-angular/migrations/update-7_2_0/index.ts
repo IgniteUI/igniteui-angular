@@ -9,7 +9,7 @@ import { addResetCss } from '../../schematics/ng-add/add-normalize';
 
 const version = '7.2.0';
 
-export default function (): Rule {
+export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 

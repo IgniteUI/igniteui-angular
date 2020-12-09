@@ -214,7 +214,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public onGroupSelectorClick(event) {
-        if (!this.grid.isMultiRowSelectionEnabled) { return; }
+        if (!this.grid.isMultiRowSelectionEnabled) {
+ return;
+}
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
             this.groupRow.records.forEach(row => {

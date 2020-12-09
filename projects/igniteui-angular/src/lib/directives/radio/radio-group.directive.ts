@@ -67,7 +67,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     @Input()
-    get value(): any { return this._value; }
+    get value(): any {
+ return this._value;
+}
     set value(newValue: any) {
         if (this._value !== newValue) {
             this._value = newValue;
@@ -84,7 +86,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      *  ```
      */
     @Input()
-    get name(): string { return this._name; }
+    get name(): string {
+ return this._name;
+}
     set name(newValue: string) {
         if (this._name !== newValue) {
             this._name = newValue;
@@ -104,7 +108,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     @Input()
-    get required(): boolean { return this._required; }
+    get required(): boolean {
+ return this._required;
+}
     set required(newValue: boolean) {
         if (this._required !== newValue) {
             this._required = newValue;
@@ -121,7 +127,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     @Input()
-    get disabled(): boolean { return this._disabled; }
+    get disabled(): boolean {
+ return this._disabled;
+}
     set disabled(newValue: boolean) {
         if (this._disabled !== newValue) {
             this._disabled = newValue;
@@ -141,7 +149,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     @Input()
-    get labelPosition(): RadioLabelPosition | string { return this._labelPosition; }
+    get labelPosition(): RadioLabelPosition | string {
+ return this._labelPosition;
+}
     set labelPosition(newValue: RadioLabelPosition | string) {
         if (this._labelPosition !== newValue) {
             this._labelPosition = newValue === RadioLabelPosition.BEFORE ? RadioLabelPosition.BEFORE : RadioLabelPosition.AFTER;
@@ -159,7 +169,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     @Input()
-    get selected() { return this._selected; }
+    get selected() {
+ return this._selected;
+}
     set selected(selected: IgxRadioComponent | null) {
         if (this._selected !== selected) {
             this._selected = selected;
@@ -183,6 +195,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
 
     /**
      * The css class applied to the component.
+     *
      * @hidden
      * @internal
      */
@@ -240,7 +253,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized = true;
 
-        setTimeout(() => { this._initRadioButtons(); });
+        setTimeout(() => {
+ this._initRadioButtons();
+});
     }
 
     /**
@@ -265,7 +280,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * @hidden
      * @internal
      */
-    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) {
+ this._onChangeCallback = fn;
+}
 
     /**
      * Registers a function called when the control is touched.

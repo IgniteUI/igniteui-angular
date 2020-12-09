@@ -101,6 +101,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let carouselRole =  this.carousel.role;
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @HostBinding('attr.role') public role = 'region';
@@ -111,6 +112,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel id="my-first-carousel"></igx-carousel>
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @HostBinding('attr.id')
@@ -133,6 +135,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let tabIndex =  this.carousel.tabIndex;
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @HostBinding('attr.tabindex')
@@ -145,6 +148,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let class =  this.carousel.cssClass;
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @HostBinding('class.igx-carousel')
@@ -167,6 +171,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [loop]="false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public loop = true;
@@ -177,6 +182,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      *  <igx-carousel [pause]="false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public pause = true;
@@ -186,6 +192,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let timeInterval = this.carousel.interval;
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @Input()
@@ -199,6 +206,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [interval] = "1000"></igx-carousel>
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
@@ -212,6 +220,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [navigation] = "false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public navigation = true;
@@ -222,6 +231,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public keyboardSupport = true;
@@ -232,6 +242,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public gesturesSupport = true;
@@ -242,6 +253,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [maximumIndicatorsCount] = "10"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public maximumIndicatorsCount = 5;
@@ -253,6 +265,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * <igx-carousel indicatorsOrientation='top'>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom;
@@ -264,6 +277,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * <igx-carousel animationType='none'>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public animationType = CarouselAnimationType.slide;
@@ -366,6 +380,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @ContentChildren(IgxSlideComponent)
@@ -377,6 +392,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onSlideChanged)="onSlideChanged($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onSlideChanged = new EventEmitter<ISlideEventArgs>();
@@ -387,6 +403,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onSlideAdded)="onSlideAdded($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onSlideAdded = new EventEmitter<ISlideEventArgs>();
@@ -397,6 +414,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onSlideRemoved)="onSlideRemoved($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onSlideRemoved = new EventEmitter<ISlideEventArgs>();
@@ -407,6 +425,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onCarouselPaused)="onCarouselPaused($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onCarouselPaused = new EventEmitter<IgxCarouselComponent>();
@@ -417,6 +436,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onCarouselPlaying)="onCarouselPlaying($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
@@ -447,7 +467,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     public ngAfterContentInit() {
         this.slides.changes
             .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxSlideComponent>) => { this.initSlides(change); });
+            .subscribe((change: QueryList<IgxSlideComponent>) => {
+ this.initSlides(change);
+});
 
         this.initSlides(this.slides);
     }
@@ -650,7 +672,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             if (this.currentSlide) {
                 this.currentSlide.active = true;
                 const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
-                activeSlides.forEach(slide => { slide.active = false; });
+                activeSlides.forEach(slide => {
+ slide.active = false;
+});
             } else if (this.total) {
                 this.slides.first.active = true;
             }
@@ -712,6 +736,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let slideCount =  this.carousel.total;
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public get total(): number {
@@ -723,6 +748,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let currentSlideNumber =  this.carousel.current;
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public get current(): number {
@@ -742,6 +768,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let isPlaying =  this.carousel.isPlaying;
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public get isPlaying(): boolean {
@@ -753,6 +780,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let isDestroyed =  this.carousel.isDestroyed;
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public get isDestroyed(): boolean {
@@ -763,6 +791,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let nativeElement =  this.carousel.nativeElement;
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     get nativeElement(): any {
@@ -774,6 +803,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let slide1 =  this.carousel.get(1);
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public get(index: number): IgxSlideComponent {
@@ -785,6 +815,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * this.carousel.add(newSlide);
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public add(slide: IgxSlideComponent) {
@@ -799,6 +830,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * this.carousel.remove(slide);
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public remove(slide: IgxSlideComponent) {
@@ -815,6 +847,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * this.carousel.select(this.carousel.get(2), Direction.NEXT);
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public select(slide: IgxSlideComponent, direction: Direction = Direction.NONE) {
@@ -829,6 +862,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * this.carousel.next();
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public next() {
@@ -846,6 +880,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * this.carousel.prev();
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public prev() {
@@ -865,6 +900,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * this.carousel.play();
      * }
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public play() {
@@ -883,6 +919,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *  this.carousel.stop();
      * }
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     public stop() {

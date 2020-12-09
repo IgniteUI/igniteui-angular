@@ -178,6 +178,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * ```html
      * <div [igxDrag]="{ source: myElement }"></div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input('igxDrag')
@@ -191,6 +192,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -207,6 +209,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * ```typescript
      * public dragDir = DragDirection.HORIZONTAL;
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -223,6 +226,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Numbers drop area!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -237,6 +241,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      <span>Drag Me!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -249,6 +254,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -268,6 +274,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      </div>
      * </ng-template>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -282,6 +289,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -296,6 +304,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -316,6 +325,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Input()
@@ -339,6 +349,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The drag has stared!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -356,6 +367,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The element has moved!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -373,6 +385,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The drag has ended!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -390,6 +403,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The element has been clicked!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -407,6 +421,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The ghost has been created!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -424,6 +439,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The ghost has been destroyed!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -441,6 +457,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The move has ended!");
      * }
      * ```
+     *
      * @memberof IgxDragDirective
      */
     @Output()
@@ -696,6 +713,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * Sets desired location of the base element or ghost element if rended relative to the document.
+     *
      * @param newLocation New location that should be applied. It is advised to get new location using getBoundingClientRects() + scroll.
      */
     public setLocation(newLocation: IgxDragLocation) {
@@ -721,6 +739,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * Animates the base or ghost element depending on the `ghost` input to its initial location.
      * If `ghost` is true but there is not ghost rendered, it will be created and animated.
      * If the base element has changed its DOM position its initial location will be changed accordingly.
+     *
      * @param customAnimArgs Custom transition properties that will be applied when performing the transition.
      * @param startLocation Start location from where the transition should start.
      */
@@ -771,6 +790,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * Animates the base or ghost element to a specific target location or other element using transition.
      * If `ghost` is true but there is not ghost rendered, it will be created and animated.
      * It is recommended to use 'getBoundingClientRects() + pageScroll' when determining desired location.
+     *
      * @param target Target that the base or ghost will transition to. It can be either location in the page or another HTML element.
      * @param customAnimArgs Custom transition properties that will be applied when performing the transition.
      * @param startLocation Start location from where the transition should start.
@@ -867,7 +887,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     public onPointerMove(event) {
         if (this._clicked) {
-            let pageX, pageY;
+            let pageX; let pageY;
             if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
                 // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
                 pageX = event.pageX;
@@ -889,8 +909,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     owner: this,
                     startX: pageX - totalMovedX,
                     startY: pageY - totalMovedY,
-                    pageX: pageX,
-                    pageY: pageY,
+                    pageX,
+                    pageY,
                     cancel: false
                 };
                 this.zone.run(() => {
@@ -966,7 +986,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return;
         }
 
-        let pageX, pageY;
+        let pageX; let pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
             // Check first for pointer events or non touch, because we can have pointer events and touch events at once.
             pageX = event.pageX;
@@ -984,8 +1004,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             owner: this,
             startX: this._startX,
             startY: this._startY,
-            pageX: pageX,
-            pageY: pageY
+            pageX,
+            pageY
         };
         this._pointerDownId = null;
         this._clicked = false;
@@ -1134,10 +1154,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const customEventArgs: IgxDragCustomEventDetails = {
             startX: this._startX,
             startY: this._startY,
-            pageX: pageX,
-            pageY: pageY,
+            pageX,
+            pageY,
             owner: this,
-            originalEvent: originalEvent
+            originalEvent
         };
 
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
@@ -1177,10 +1197,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const eventArgs: IgxDragCustomEventDetails = {
             startX: this._startX,
             startY: this._startY,
-            pageX: pageX,
-            pageY: pageY,
+            pageX,
+            pageY,
             owner: this,
-            originalEvent: originalEvent
+            originalEvent
         };
 
         this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
@@ -1332,6 +1352,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * ```html
      * <div [igxDrop]="{ source: myElement }"></div>
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Input('igxDrop')
@@ -1354,6 +1375,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *         <span>Numbers drop area!</span>
      * </div>
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Input()
@@ -1382,6 +1404,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *      public myDropStrategy = IgxAppendDropStrategy;
      * }
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Input()
@@ -1404,6 +1427,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has entered the chip area!");
      * }
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Output()
@@ -1420,6 +1444,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has entered the chip area!");
      * }
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Output()
@@ -1436,6 +1461,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has left the chip area!");
      * }
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Output()
@@ -1454,6 +1480,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has been dropped in the chip area!");
      * }
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Output()
@@ -1519,8 +1546,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             startY: event.detail.startY,
             pageX: event.detail.pageX,
             pageY: event.detail.pageY,
-            offsetX: offsetX,
-            offsetY: offsetY
+            offsetX,
+            offsetY
         };
 
         this.over.emit(eventArgs);
@@ -1548,8 +1575,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             startY: event.detail.startY,
             pageX: event.detail.pageX,
             pageY: event.detail.pageY,
-            offsetX: offsetX,
-            offsetY: offsetY
+            offsetX,
+            offsetY
         };
         this._zone.run(() => {
             this.enter.emit(eventArgs);
@@ -1578,8 +1605,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             startY: event.detail.startY,
             pageX: event.detail.pageX,
             pageY: event.detail.pageY,
-            offsetX: offsetX,
-            offsetY: offsetY
+            offsetX,
+            offsetY
         };
         this._zone.run(() => {
             this.leave.emit(eventArgs);
@@ -1608,8 +1635,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             startY: event.detail.startY,
             pageX: event.detail.pageX,
             pageY: event.detail.pageY,
-            offsetX: offsetX,
-            offsetY: offsetY,
+            offsetX,
+            offsetY,
             cancel: false
         };
         this._zone.run(() => {

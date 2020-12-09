@@ -10,7 +10,7 @@ import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condi
 import { GridFunctions, PAGER_CLASS } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../test-utils/controls-functions.spec';
 
-function verifyGridPager (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
+function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
     const grid = fix.componentInstance.grid;
 
     expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);

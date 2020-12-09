@@ -34,7 +34,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     // Unit tests for inertia function.
-    it('inertia should accelerate and then deccelerate vertically.', async() => {
+    it('inertia should accelerate and then deccelerate vertically.', async () => {
         pending('This should be tested in the e2e test');
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
@@ -53,7 +53,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
         expect(end).toBeLessThan(mid);
     });
 
-    it('inertia should accelerate and then deccelerate horizontally.', async() => {
+    it('inertia should accelerate and then deccelerate horizontally.', async () => {
         pending('This should be tested in the e2e test');
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
@@ -311,7 +311,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         const evt = {
             pointerType: 2,
             target: targetElem,
-            pointerId: pointerId
+            pointerId
         };
         scrollInertiaDir.onPointerDown(evt);
 
@@ -408,11 +408,13 @@ export class ScrollInertiaComponent implements OnInit {
     ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
 
-        this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });
+        this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => {
+ this.onScroll(evt);
+});
     }
 
     public onScroll(evt) {
-        let calcScrollStep, calcScrollLeftStep;
+        let calcScrollStep; let calcScrollLeftStep;
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
         const prevScrLeft = ind < 0 ? 0 : this.scrLeftArray[ind];

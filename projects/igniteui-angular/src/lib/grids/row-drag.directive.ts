@@ -150,7 +150,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
         this.endDragging();
-    }
+    };
 
     private get isHierarchicalGrid() {
         return this.row.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';

@@ -724,9 +724,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 475: Object.assign({}, treeGrid.getRowByKey(475).rowData),
                 19: Object.assign({}, treeGrid.getRowByKey(19).rowData)
             };
-            const initialData = treeGrid.data.map(e => {
-                return Object.assign({}, e);
-            });
+            const initialData = treeGrid.data.map(e => Object.assign({}, e));
             let targetCell: IgxGridCellComponent;
             // Get 147 row
             targetCell = treeGrid.getCellByKey(147, 'Name');
@@ -1178,7 +1176,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             tick();
             fixture.detectChanges();
 
-            const row = {'ID': 2, 'ParentID': 1, 'Name': 'Gilberto Todd', 'JobTitle': 'Director', 'Age': 41};
+            const row = {ID: 2, ParentID: 1, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41};
             expect(grid.getRowData(2)).toEqual(row);
 
             grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true });
@@ -1193,7 +1191,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(grid.getRowData(2)).toEqual(row);
             expect(grid.getRowData(11)).toEqual({});
 
-            const newRow = {'ID': 11, 'ParentID': 1, 'Name': 'Joe Peterson', 'JobTitle': 'Manager', 'Age': 37};
+            const newRow = {ID: 11, ParentID: 1, Name: 'Joe Peterson', JobTitle: 'Manager', Age: 37};
             grid.addRow(newRow);
             fixture.detectChanges();
 

@@ -175,7 +175,7 @@ class NestedPropertyGridComponent {
     combo: IgxComboComponent;
 
     public locations = LOCATIONS;
-    public parseArray(arr: { id: number, shop: string }[]): string {
+    public parseArray(arr: { id: number; shop: string }[]): string {
         return (arr || []).map((e) => e.shop).join(', ');
     }
 }

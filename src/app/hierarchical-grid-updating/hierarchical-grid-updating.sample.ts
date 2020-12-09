@@ -86,12 +86,12 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
     addRow() {
         this.hGrid.addRow({
-            'CustomerID': this.lastIdx,
-            'CompanyName': 'Some Company ' + this.lastIdx,
-            'ContactName': 'Some Contact ' + this.lastIdx,
-            'ContactTitle': 'Some Title ' + this.lastIdx++,
-            'Country': 'Germany',
-            'Phone': '000-0000'
+            CustomerID: this.lastIdx,
+            CompanyName: 'Some Company ' + this.lastIdx,
+            ContactName: 'Some Contact ' + this.lastIdx,
+            ContactTitle: 'Some Title ' + this.lastIdx++,
+            Country: 'Germany',
+            Phone: '000-0000'
         });
     }
 

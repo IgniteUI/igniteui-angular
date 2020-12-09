@@ -96,6 +96,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```html
      * <igx-toast (onShowing) = "onShowing($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Output()
@@ -107,6 +108,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```html
      * <igx-toast (onShown)="onShown($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Output()
@@ -118,6 +120,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```html
      * <igx-toast (onHiding)="onHiding($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Output()
@@ -129,6 +132,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```html
      * <igx-toast (onHidden)="onHidden($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Output()
@@ -143,6 +147,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let toastRole = this.toast.role;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -157,6 +162,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let autoHide = this.toast.autoHide;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -172,6 +178,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let displayTime = this.toast.displayTime;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -179,6 +186,7 @@ export class IgxToastComponent extends IgxToggleDirective
 
     /**
      * Gets/Sets the container used for the toast element.
+     *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      * @example
@@ -206,6 +214,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```html
      * <igx-toast [(isVisible)]="model.isVisible"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -255,6 +264,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let toastPosition = this.toast.position;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -265,6 +275,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let nativeElement = this.toast.element;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     public get element() {
@@ -297,6 +308,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * this.toast.show();
      * ```
+     *
      * @memberof IgxToastComponent
      */
     public show(message?: string): void {
@@ -337,6 +349,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * this.toast.hide();
      * ```
+     *
      * @memberof IgxToastComponent
      */
     public hide(): void {
@@ -347,6 +360,7 @@ export class IgxToastComponent extends IgxToggleDirective
 
     /**
      * Wraps @show() method due @IToggleView interface implementation.
+     *
      * @hidden
      */
     public open() {
@@ -355,6 +369,7 @@ export class IgxToastComponent extends IgxToggleDirective
 
     /**
      * Wraps @hide() method due @IToggleView interface implementation.
+     *
      * @hidden
      */
     public close() {
@@ -366,6 +381,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * this.toast.toggle();
      * ```
+     *
      * @memberof IgxToastComponent
      */
     public toggle() {

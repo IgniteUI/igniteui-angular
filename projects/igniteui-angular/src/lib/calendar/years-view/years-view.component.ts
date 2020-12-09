@@ -39,6 +39,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let yearsViewId =  this.yearsView.id;
      * ```
+     *
      * @memberof IgxCalendarComponent
      */
     @HostBinding('attr.id')
@@ -54,6 +55,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let date =  this.yearsView.date;
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Input()
@@ -75,6 +77,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-years-view [yearFormat]="numeric"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     public set yearFormat(value: string) {
@@ -88,6 +91,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let locale =  this.yearsView.locale;
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Input()
@@ -102,6 +106,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-years-view [locale]="de"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     public set locale(value: string) {
@@ -122,6 +127,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-years-view (onSelection)="onSelection($event)"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Output()

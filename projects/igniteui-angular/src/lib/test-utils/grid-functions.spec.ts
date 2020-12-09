@@ -227,7 +227,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         resolve();
-    })
+    });
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
@@ -1034,9 +1034,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaders(fix: ComponentFixture<any>): DebugElement[] {
         const allHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-        const groupHeaders = allHeaders.filter(h => {
-            return h.componentInstance.column.columnGroup;
-        });
+        const groupHeaders = allHeaders.filter(h => h.componentInstance.column.columnGroup);
         return groupHeaders;
     }
 
@@ -1051,13 +1049,13 @@ export class GridFunctions {
 
     public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnHeader(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey, ctrlKey }));
         fix.detectChanges();
     }
 
     public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnGroupHeaderCell(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey, ctrlKey }));
         fix.detectChanges();
     }
 
@@ -1816,9 +1814,7 @@ export class GridFunctions {
     }
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
-        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => {
-            return header.nativeElement.title === columnField;
-        });
+        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -2155,7 +2151,7 @@ export class GridSelectionFunctions {
             await wait();
             fix.detectChanges();
             resolve();
-        })
+        });
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
@@ -2177,7 +2173,7 @@ export class GridSelectionFunctions {
             fix.detectChanges();
             resolve();
             resolve();
-        })
+        });
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
         UIInteractions.simulateClickAndSelectEvent(startCell);
@@ -2322,6 +2318,7 @@ export class GridSelectionFunctions {
 
     /**
      * Returns if the specified element looks like a selection checkbox based on specific class affix
+     *
      * @param element The element to check
      * @param modifier The modifier to the base class
      */
@@ -2402,8 +2399,8 @@ export class GridSelectionFunctions {
 
     public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey = false) {
         const event = {
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { }
         };
 

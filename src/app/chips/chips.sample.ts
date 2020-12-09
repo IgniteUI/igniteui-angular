@@ -77,9 +77,7 @@ export class ChipsSampleComponent {
     chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipList.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+            const chipItem = this.chipList.filter((item) => item.id === event.chipsArray[i].id)[0];
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
@@ -90,9 +88,7 @@ export class ChipsSampleComponent {
     }
 
     chipRemoved(event: IBaseChipEventArgs) {
-        this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.owner.id;
-        });
+        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.cdr.detectChanges();
     }
 
@@ -101,9 +97,7 @@ export class ChipsSampleComponent {
     }
 
     selectChip(chipId) {
-        const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => {
-            return chip.id === chipId;
-        });
+        const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => chip.id === chipId);
         chipToSelect.selected = true;
     }
 
@@ -118,9 +112,7 @@ export class ChipsSampleComponent {
     chipsOrderChangedTo(event) {
         const newChipListTo = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipListTo.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+            const chipItem = this.chipListTo.filter((item) => item.id === event.chipsArray[i].id)[0];
             newChipListTo.push(chipItem);
         }
         this.chipListTo = newChipListTo;
@@ -130,9 +122,7 @@ export class ChipsSampleComponent {
     chipsOrderChangedCc(event) {
         const newChipListCc = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipListCc.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+            const chipItem = this.chipListCc.filter((item) => item.id === event.chipsArray[i].id)[0];
             newChipListCc.push(chipItem);
         }
         this.chipListCc = newChipListCc;
@@ -155,9 +145,7 @@ export class ChipsSampleComponent {
 
         this.chipsAreaCc.cdr.detectChanges();
 
-        this.chipListTo = this.chipListTo.filter(item => {
-            return item.text !== chipSwapEl.text;
-        });
+        this.chipListTo = this.chipListTo.filter(item => item.text !== chipSwapEl.text);
 
         this.chipsAreaTo.cdr.detectChanges();
         this.dropCc.nativeElement.style.visibility = 'hidden';
@@ -171,9 +159,7 @@ export class ChipsSampleComponent {
 
         this.chipsAreaTo.cdr.detectChanges();
 
-        this.chipListCc = this.chipListCc.filter(item => {
-            return item.text !== chipSwapEl.text;
-        });
+        this.chipListCc = this.chipListCc.filter(item => item.text !== chipSwapEl.text);
 
         this.chipsAreaCc.cdr.detectChanges();
         this.dropTo.nativeElement.style.visibility = 'hidden';

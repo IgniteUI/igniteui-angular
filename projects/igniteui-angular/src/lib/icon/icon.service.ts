@@ -41,6 +41,7 @@ export class IgxIconService {
     /**
      * Observable that emits when an icon is successfully loaded
      * through a HTTP request.
+     *
      * @example
      * ```typescript
      * this.service.iconLoaded.subscribe((ev: IgxIconLoadedEvent) => ...);
@@ -161,7 +162,7 @@ export class IgxIconService {
         httpRequest.responseType = 'text';
 
         // load – when the result is ready, that includes HTTP errors like 404.
-        httpRequest.onload = function (event: ProgressEvent) {
+        httpRequest.onload = function(event: ProgressEvent) {
             if (event) {
                 const request = event.target as XMLHttpRequest;
                 if (request.status === 200) {
@@ -176,7 +177,7 @@ export class IgxIconService {
         };
 
         // error – when the request couldn’t be made, e.g.network down or invalid URL.
-        httpRequest.onerror = function (event: ProgressEvent) {
+        httpRequest.onerror = function(event: ProgressEvent) {
             if (event) {
                 const request = event.target as XMLHttpRequest;
                 throw new Error(`Could not fetch SVG from url: ${url}; error status code: ${request.status} (${request.statusText})`);

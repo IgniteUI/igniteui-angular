@@ -212,7 +212,7 @@ describe('Excel Exporter', () => {
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
         });
 
-        it('should honor all pinned columns.', async() => {
+        it('should honor all pinned columns.', async () => {
             const result = await TestMethods.createGridAndPinColumn(2, 0);
             const fix = result.fixture;
             const grid = result.grid;

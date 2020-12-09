@@ -147,7 +147,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                     id: rowID,
                     type: TransactionType.DELETE,
                     newValue: null,
-                    path: path
+                    path
                 },
                     collection[index]
                 );
@@ -159,6 +159,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     /**
      * Updates related row of provided grid's data source with provided new row value
+     *
      * @param grid Grid to update data for
      * @param rowID ID of the row to update
      * @param rowValueInDataSource Initial value of the row as it is in data source
@@ -177,7 +178,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 id: rowID,
                 type: TransactionType.UPDATE,
                 newValue: rowNewValue,
-                path: path
+                path
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
@@ -252,7 +253,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                     path.push(parentRowID);
                     this.grid.transactions.add({
                         id: rowId,
-                        path: path,
+                        path,
                         newValue: data,
                         type: TransactionType.ADD
                     } as HierarchicalTransaction,

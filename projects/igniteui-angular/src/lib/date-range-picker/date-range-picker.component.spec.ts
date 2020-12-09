@@ -40,7 +40,7 @@ describe('IgxDateRangePicker', () => {
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
-            'get': mockNgControl
+            get: mockNgControl
         });
         it('should set range dates correctly through selectRange method', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
@@ -1207,7 +1207,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         const startDate = `${this.monthFormatter.format(date.start)} ${date.start.getDate()}, ${date.start.getFullYear()}`;
         const endDate = `${this.monthFormatter.format(date.end)} ${date.end.getDate()}, ${date.end.getFullYear()}`;
         return `You selected ${startDate}-${endDate}`;
-    }
+    };
 }
 @Component({
     selector: 'igx-date-range-templates-test',

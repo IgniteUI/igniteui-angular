@@ -1072,7 +1072,7 @@ class IgxDateTimeEditorFormComponent {
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
-            'dateEditor': ['', Validators.required]
+            dateEditor: ['', Validators.required]
         });
     }
 

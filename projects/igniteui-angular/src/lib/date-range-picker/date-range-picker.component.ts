@@ -63,6 +63,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     implements IToggleView, OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
     /**
      * Display calendar in either `dialog` or `dropdown` mode.
+     *
      * @remarks
      * Default mode is `dialog`
      *
@@ -241,6 +242,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /**
      * Enables/Disables the `IgxDateRangePickerComponent`.
+     *
      *  @example
      * ```html
      * <igx-date-range-picker [disabled]="'true'"></igx-date-range-picker>
@@ -251,6 +253,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
+     *
      *   @example
      * ```html
      * <igx-date-range-picker [placeholder]="'Choose your dates'"></igx-date-range-picker>
@@ -431,7 +434,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
-        if (!this.collapsed || this.disabled) { return; }
+        if (!this.collapsed || this.disabled) {
+ return;
+}
 
         this.updateCalendar();
         const settings = this.mode === InteractionMode.Dialog ? this.dialogOverlaySettings : this.dropdownOverlaySettings;
@@ -553,10 +558,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                 const startInput = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
                 const endInput = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
                 if (!startInput.dateTimeEditor.value) {
-                    Object.assign(errors, { 'startValue': true });
+                    Object.assign(errors, { startValue: true });
                 }
                 if (!endInput.dateTimeEditor.value) {
-                    Object.assign(errors, { 'endValue': true });
+                    Object.assign(errors, { endValue: true });
                 }
             }
 
@@ -566,11 +571,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             const end = DatePickerUtil.parseDate(value.end);
             if ((min && start && DatePickerUtil.lessThanMinValue(start, min, false))
                 || (min && end && DatePickerUtil.lessThanMinValue(end, min, false))) {
-                Object.assign(errors, { 'minValue': true });
+                Object.assign(errors, { minValue: true });
             }
             if ((max && start && DatePickerUtil.greaterThanMaxValue(start, max, false))
                 || (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false))) {
-                Object.assign(errors, { 'maxValue': true });
+                Object.assign(errors, { maxValue: true });
             }
         }
 
@@ -765,11 +770,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                 this.inputDirective.valid = this.getInputState(this.inputGroup.isFocused);
             } else if (this.hasProjectedInputs) {
                 this.projectedInputs
-                    .forEach(i => { i.inputDirective.valid = this.getInputState(i.isFocused); });
+                    .forEach(i => {
+ i.inputDirective.valid = this.getInputState(i.isFocused);
+});
             }
         }
         this.setRequiredToInputs();
-    }
+    };
 
     private updateDisabledState() {
         if (this.hasProjectedInputs) {

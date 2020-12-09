@@ -13,7 +13,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 
-declare var Simulator: any;
+declare let Simulator: any;
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -885,10 +885,10 @@ class HelperTestFunctions {
         const deltaX = activeSlide.offsetWidth * deltaXOffset;
         const event = deltaXOffset < 0 ? 'panleft' : 'panright';
         const panOptions = {
-            deltaX: deltaX,
+            deltaX,
             deltaY: 0,
             duration: 100,
-            velocity: velocity,
+            velocity,
             preventDefault: <any>( ( e: any ) => {  })
         };
 

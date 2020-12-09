@@ -9,7 +9,7 @@ import { IgxNavigationService } from '../core/navigation/nav.service';
 import { PlatformUtil } from '../core/utils';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
-declare var Simulator: any;
+declare let Simulator: any;
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
@@ -99,9 +99,7 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.id).toBe('customNavDrawer');
             expect(domNavDrawer.id).toBe('customNavDrawer');
 
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
     it('should attach events and register to nav service and detach on destroy', waitForAsync(() => {
@@ -126,9 +124,7 @@ describe('Navigation Drawer', () => {
             expect(state.get('testNav')).toBeUndefined();
             expect(touchManager.getManagerForElement(document)).toBe(null);
 
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
     it('should open and close with API calls', waitForAsync(() => {
@@ -153,9 +149,7 @@ describe('Navigation Drawer', () => {
             drawer.toggle();
             expect(drawer.isOpen).toBeFalsy();
 
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
     it('async API calls should emit events', waitForAsync(() => {
@@ -211,15 +205,15 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.hasAnimateWidth).toBeTruthy();
             expect(fixture.debugElement.query((x) => x.nativeNode.nodeName === 'ASIDE').nativeElement.classList)
                 .toContain('igx-nav-drawer__aside--mini');
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
     it('should update with dynamic min template', waitForAsync(() => {
 
         // immediate requestAnimationFrame for testing
-        spyOn(window, 'requestAnimationFrame').and.callFake(callback => { callback(0); return 0; });
+        spyOn(window, 'requestAnimationFrame').and.callFake(callback => {
+ callback(0); return 0;
+});
         const template = `<igx-nav-drawer>
                             <ng-template igxDrawer></ng-template>
                             <ng-template *ngIf="miniView" igxDrawerMini></ng-template>
@@ -248,9 +242,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
 
             expect(asideElem.styles['width']).toEqual(fixture.componentInstance.navDrawer.miniWidth);
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
     it('should set pin, gestures options', waitForAsync(() => {
@@ -277,9 +269,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             expect(fixture.componentInstance.navDrawer.enableGestures).toBeTruthy();
 
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
     it('should stay at 100% parent height when pinned', waitForAsync(() => {
@@ -449,12 +439,10 @@ describe('Navigation Drawer', () => {
             expect(fixture.componentInstance.navDrawer.maxEdgeZone)
                 .toBe(fixture.componentInstance.drawerMiniWidth * 1.1);
 
-        }).catch((reason) => {
-            return Promise.reject(reason);
-        });
+        }).catch((reason) => Promise.reject(reason));
     }));
 
-    it('should update width from css or property', async(done) => {
+    it('should update width from css or property', async (done) => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                             <ng-template igxDrawer></ng-template>
                             <ng-template igxDrawerMini></ng-template>

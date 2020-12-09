@@ -263,6 +263,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Select an item by index
+     *
      * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
@@ -284,6 +285,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * Navigates to the item on the specified index
      * If the data in the drop-down is virtualized, pass the index of the item in the virtualized data.
+     *
      * @param newIndex number
      */
     public navigateItem(index: number) {
@@ -295,7 +297,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             const subRequired = this.isIndexOutOfBounds(index, direction);
             this.focusedItem = {
                 value: this.virtDir.igxForOf[index],
-                index: index
+                index
             } as IgxDropDownItemBaseDirective;
             if (subRequired) {
                 this.virtDir.scrollTo(index);
@@ -496,6 +498,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Virtual scroll implementation
+     *
      * @hidden @internal
      */
     public navigateFirst() {
@@ -541,6 +544,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Handles the `onSelection` emit and the drop down toggle when selection changes
+     *
      * @hidden
      * @internal
      * @param newSelection

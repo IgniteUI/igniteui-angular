@@ -21,7 +21,7 @@ describe('IgxSnackbar', () => {
         }).compileComponents();
     }));
 
-    let fixture, domSnackbar, snackbar;
+    let fixture; let domSnackbar; let snackbar;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
         fixture.detectChanges();
@@ -104,7 +104,7 @@ describe('IgxSnackbar with custom content', () => {
         }).compileComponents();
     }));
 
-    let fixture, domSnackbar, snackbar;
+    let fixture; let domSnackbar; let snackbar;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarCustomContentComponent);
         fixture.detectChanges();

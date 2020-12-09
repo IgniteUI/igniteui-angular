@@ -1580,7 +1580,7 @@ export class IgxDatePickerWithCustomFormatterComponent {
     public date = new Date(2017, 7, 7);
     public customFormatter = (_: Date) => (
         `${_.getFullYear()}/${_.getMonth()}/${_.getDate()}`
-    )
+    );
 }
 
 @Component({

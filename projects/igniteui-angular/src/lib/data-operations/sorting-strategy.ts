@@ -36,9 +36,7 @@ export class DefaultSortingStrategy implements ISortingStrategy {
                 isDate?: boolean) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => {
-            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate);
-        };
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate);
         return this.arraySort(data, cmpFunc);
     }
 
@@ -180,7 +178,7 @@ export class IgxSorting implements IGridSortingStrategy {
                 groupParent: parent,
                 groups: [],
                 height: grid ? grid.renderedRowHeight : null,
-                column: column
+                column
             };
             if (parent) {
                 parent.groups.push(groupRow);

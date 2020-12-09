@@ -90,6 +90,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Position the items outer container so selected item text is positioned over input text and if header
      * And/OR footer - both header/footer are visible
+     *
      * @param selectFit selectFit to use for computation.
      */
     protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
@@ -124,6 +125,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
     /**
      * Sets element's style which effectively positions the provided element
+     *
      * @param element Element to position
      * @param selectFit selectFit to use for computation.
      * @param initialCall should be true if this is the initial call to the position method calling setStyles
@@ -137,6 +139,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Calculate the necessary input and selected item styles to be used for positioning item text over input text.
      * Calculate & Set default items container width.
+     *
      * @param selectFit selectFit to use for computation.
      */
     private calculateStyles(selectFit: SelectFit, target: Point | HTMLElement): SelectStyles  {

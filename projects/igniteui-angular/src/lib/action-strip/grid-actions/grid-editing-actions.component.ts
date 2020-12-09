@@ -13,6 +13,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Host `class.igx-action-strip` binding.
+     *
      * @hidden
      * @internal
      */
@@ -46,6 +47,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
+     *
      * @example
      * ```typescript
      * this.gridEditingActions.startEdit();
@@ -76,6 +78,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Delete a row according to the context
+     *
      * @example
      * ```typescript
      * this.gridEditingActions.deleteRow();
@@ -113,6 +116,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Getter if the row is disabled
+     *
      * @hidden
      * @internal
      */
@@ -125,6 +129,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Getter if the row is root.
+     *
      * @hidden
      * @internal
      */

@@ -664,7 +664,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 if (!(this.cdr as ViewRef).destroyed) {
-                this.cdr.detectChanges(); }
+                this.cdr.detectChanges();
+}
             }
         });
     }

@@ -409,7 +409,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
+        if (this.grid.rowSelection === 'none' || this.deleted) {
+ return;
+}
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
@@ -558,6 +560,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Spawns the add row UI for the specific row.
+     *
      * @example
      * ```typescript
      * const row = this.grid1.getRowByIndex(1);

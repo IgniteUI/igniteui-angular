@@ -445,7 +445,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
         if (exactMatch) {
             if (contentStringResolved === searchTextResolved) {
-                // tslint:disable-next-line:max-line-length
+                // eslint-disable-next-line max-len
                 this.appendSpan(`<span class="${this._defaultCssClass} ${this.cssClass ? this.cssClass : ''}">${stringValue}</span>`);
                 matchCount++;
             } else {
@@ -460,7 +460,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
                 const end = foundIndex + searchTextResolved.length;
 
                 this.appendText(stringValue.substring(previousMatchEnd, start));
-                // tslint:disable-next-line:max-line-length
+                // eslint-disable-next-line max-len
                 this.appendSpan(`<span class="${this._defaultCssClass} ${this.cssClass ? this.cssClass : ''}">${stringValue.substring(start, end)}</span>`);
 
                 previousMatchEnd = end;

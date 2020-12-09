@@ -49,7 +49,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                 childData = this.removeDeletedRecord(grid, record.rowID, childData);
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
                 const summaryRecord: ISummaryRecord = {
-                    summaries: summaries,
+                    summaries,
                     max: maxSummaryHeight,
                     cellIndentation: record.level + 1
                 };
@@ -68,7 +68,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                         childData = this.removeDeletedRecord(grid, parent.rowID, childData);
                         const summaries = grid.summaryService.calculateSummaries(parent.rowID, childData);
                         const summaryRecord: ISummaryRecord = {
-                            summaries: summaries,
+                            summaries,
                             max: maxSummaryHeight,
                             cellIndentation: parent.level + 1
                         };
@@ -85,7 +85,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                 childData = this.removeDeletedRecord(grid, record.rowID, childData);
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
                 const summaryRecord: ISummaryRecord = {
-                    summaries: summaries,
+                    summaries,
                     max: maxSummaryHeight,
                     cellIndentation: record.level + 1
                 };
@@ -101,7 +101,9 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         }
         const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === 'delete').map(t => t.id);
         let row = grid.records.get(rowId);
-        if (!row && deletedRows.lenght === 0) { return []; }
+        if (!row && deletedRows.lenght === 0) {
+ return [];
+}
         row = row.children ? row : row.parent;
         while (row) {
             rowId = row.rowID;

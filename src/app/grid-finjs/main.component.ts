@@ -172,7 +172,9 @@ export class MainComponent implements AfterViewInit, OnDestroy {
         this.controller.intervalSlider.disabled = disableButtons;
         this.selectedButton = ind;
         this.controller.buttonGroup1.buttons.forEach((button, index) => {
-            if (index === 2) { button.disabled = !disableButtons; } else {
+            if (index === 2) {
+ button.disabled = !disableButtons;
+} else {
                 this.controller.buttonGroup1.buttons[0].disabled = disableButtons;
                 this.controller.buttonGroup1.buttons[1].disabled = disableButtons;
             }

@@ -64,6 +64,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      *  let cellColumn = this.cell.column;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -74,6 +75,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellRow = this.cell.row;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -84,6 +86,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let rowData = this.cell.rowData;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -108,6 +111,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let template =  this.cell.cellTemplate;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -124,6 +128,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellValue = this.cell.value;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -138,6 +143,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.highlightClass = 'igx-cell-highlight';
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public highlightClass = 'igx-highlight';
@@ -151,6 +157,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.activeHighlightClass = 'igx-cell-highlight_active';
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public activeHighlightClass = 'igx-highlight__active';
@@ -160,6 +167,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellForamatter = this.cell.formatter;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -170,6 +178,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      *  let context = this.cell.context();
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get context(): any {
@@ -184,6 +193,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let template = this.cell.template;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get template(): TemplateRef<any> {
@@ -205,6 +215,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let template = this.cell.template;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get pinnedIndicatorTemplate() {
@@ -219,6 +230,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let gridId = this.cell.gridID;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get gridID(): any {
@@ -230,6 +242,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let grid = this.cell.grid;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get grid(): any {
@@ -241,6 +254,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let rowIndex = this.cell.rowIndex;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.data-rowIndex')
@@ -253,6 +267,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let columnIndex = this.cell.columnIndex;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get columnIndex(): number {
@@ -264,6 +279,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let visibleColumnIndex = this.cell.visibleColumnIndex;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.data-visibleIndex')
@@ -281,6 +297,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellID = this.cell.cellID;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public get cellID() {
@@ -309,6 +326,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellNativeElement = this.cell.nativeElement;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     get nativeElement(): HTMLElement {
@@ -335,7 +353,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     set cellSelectionMode(value) {
-        if (this._cellSelection === value) { return; }
+        if (this._cellSelection === value) {
+ return;
+}
          this.zone.runOutsideAngular(() => {
             value === GridSelectionMode.multiple ?
             this.addPointerListeners(value) : this.removePointerListeners(this._cellSelection);
@@ -375,6 +395,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellRole = this.cell.role;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.role')
@@ -385,6 +406,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let isCellReadonly = this.cell.readonly;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.aria-readonly')
@@ -422,6 +444,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let cellWidth = this.cell.width;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @Input()
@@ -444,6 +467,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let isSelected = this.cell.selected;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @HostBinding('class.igx-grid__td--selected')
@@ -456,6 +480,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.selected = true.
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     set selected(val: boolean) {
@@ -469,6 +494,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let isCellColumnSelected = this.cell.columnSelected;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     @HostBinding('class.igx-grid__td--column-selected')
@@ -482,6 +508,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.editValue = value;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public set editValue(value) {
@@ -496,6 +523,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * let editValue = this.cell.editValue;
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public get editValue() {
@@ -579,13 +607,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected platformUtil: PlatformUtil) { }
 
     private addPointerListeners(selection) {
-        if (selection !== GridSelectionMode.multiple) { return; }
+        if (selection !== GridSelectionMode.multiple) {
+ return;
+}
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
     }
 
     private  removePointerListeners(selection) {
-        if (selection !== GridSelectionMode.multiple) { return; }
+        if (selection !== GridSelectionMode.multiple) {
+ return;
+}
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
@@ -738,6 +770,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.update('New Value');
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     // TODO: Refactor
@@ -780,7 +813,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
-    }
+    };
 
     /**
      *
@@ -795,9 +828,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
         if (dragMode) {
             this.grid.cdr.detectChanges();
-            if (isIE()) { this.grid.tbody.nativeElement.focus({ preventScroll: true }); }
+            if (isIE()) {
+ this.grid.tbody.nativeElement.focus({ preventScroll: true });
+}
         }
-    }
+    };
 
     /**
      * @hidden
@@ -806,12 +841,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     pointerup = (event: PointerEvent) => {
         const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (!isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
-        this.grid.navigation.activeNode.gridID !== this.gridID))) { return; }
+        this.grid.navigation.activeNode.gridID !== this.gridID))) {
+ return;
+}
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
-            if (isIE()) { this.grid.tbody.nativeElement.focus({ preventScroll: true }); }
+            if (isIE()) {
+ this.grid.tbody.nativeElement.focus({ preventScroll: true });
+}
         }
-    }
+    };
 
     /**
      * @hidden
@@ -834,7 +873,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell: this,
             event
         });
-    }
+    };
 
     /**
      * @hidden
@@ -904,6 +943,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.highlightText('Cell Value', true);
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
@@ -915,6 +955,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```typescript
      * this.cell.clearHighLight();
      * ```
+     *
      * @memberof IgxGridCellComponent
      */
     public clearHighlight() {

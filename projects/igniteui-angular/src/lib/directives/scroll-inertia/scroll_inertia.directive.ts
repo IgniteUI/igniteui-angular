@@ -73,21 +73,37 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             }
             const targetElem = this.parentElement;
             targetElem.addEventListener('wheel',
-                    (evt) => { this.onWheel(evt); });
+                    (evt) => {
+ this.onWheel(evt);
+});
             targetElem.addEventListener('touchstart',
-                    (evt) => { this.onTouchStart(evt); });
+                    (evt) => {
+ this.onTouchStart(evt);
+});
             targetElem.addEventListener('touchmove',
-                    (evt) => { this.onTouchMove(evt); });
+                    (evt) => {
+ this.onTouchMove(evt);
+});
             targetElem.addEventListener('touchend',
-                    (evt) => { this.onTouchEnd(evt); });
+                    (evt) => {
+ this.onTouchEnd(evt);
+});
             targetElem.addEventListener('pointerdown',
-                    (evt) => { this.onPointerDown(evt); });
+                    (evt) => {
+ this.onPointerDown(evt);
+});
             targetElem.addEventListener('pointerup',
-                     (evt) => { this.onPointerUp(evt); });
+                     (evt) => {
+ this.onPointerUp(evt);
+});
             targetElem.addEventListener('MSGestureStart',
-                    (evt) => { this.onMSGestureStart(evt); });
+                    (evt) => {
+ this.onMSGestureStart(evt);
+});
             targetElem.addEventListener('MSGestureChange',
-                    (evt) => { this.onMSGestureChange(evt); });
+                    (evt) => {
+ this.onMSGestureChange(evt);
+});
         });
     }
 
@@ -387,9 +403,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (!this.IgxScrollInertiaScrollContainer) {
             return;
         }
-        const touchPos = event,
-            destX = this._startX + this._touchStartX - touchPos.screenX,
-            destY = this._startY + this._touchStartY - touchPos.screenY;
+        const touchPos = event;
+            const destX = this._startX + this._touchStartX - touchPos.screenX;
+            const destY = this._startY + this._touchStartY - touchPos.screenY;
         /* Logic regarding x tolerance to prevent accidental horizontal scrolling when scrolling vertically */
         this._totalMovedX = this._touchStartX - touchPos.screenX;
         if (Math.abs(this._totalMovedX) < this.swipeToleranceX && !this._offsetRecorded) {
@@ -435,8 +451,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     }
 
    protected _inertiaInit(speedX, speedY) {
-    const stepModifer = this.inertiaStep,
-        inertiaDuration = this.inertiaDuration;
+    const stepModifer = this.inertiaStep;
+        const inertiaDuration = this.inertiaDuration;
     let x = 0;
     this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
     this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
@@ -489,21 +505,37 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 return;
             }
             targetElem.removeEventListener('wheel',
-                (evt) => { this.onWheel(evt); });
+                (evt) => {
+ this.onWheel(evt);
+});
             targetElem.removeEventListener('touchstart',
-                (evt) => { this.onTouchStart(evt); });
+                (evt) => {
+ this.onTouchStart(evt);
+});
             targetElem.removeEventListener('touchmove',
-                (evt) => { this.onTouchMove(evt); });
+                (evt) => {
+ this.onTouchMove(evt);
+});
             targetElem.removeEventListener('touchend',
-                (evt) => { this.onTouchEnd(evt); });
+                (evt) => {
+ this.onTouchEnd(evt);
+});
             targetElem.removeEventListener('pointerdown',
-                (evt) => { this.onPointerDown(evt); });
+                (evt) => {
+ this.onPointerDown(evt);
+});
             targetElem.removeEventListener('pointerup',
-                (evt) => { this.onPointerUp(evt); });
+                (evt) => {
+ this.onPointerUp(evt);
+});
             targetElem.removeEventListener('MSGestureStart',
-                (evt) => { this.onMSGestureStart(evt); });
+                (evt) => {
+ this.onMSGestureStart(evt);
+});
             targetElem.removeEventListener('MSGestureChange',
-                (evt) => { this.onMSGestureChange(evt); });
+                (evt) => {
+ this.onMSGestureChange(evt);
+});
         });
     }
 

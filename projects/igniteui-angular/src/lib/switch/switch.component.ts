@@ -346,12 +346,16 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) {
+ this._onChangeCallback = fn;
+}
     /**
      * @hidden
      * @internal
      */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void) {
+ this._onTouchedCallback = fn;
+}
 }
 
 export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
@@ -360,7 +364,7 @@ export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
     multi: true
 };
 
-/* tslint:disable directive-selector */
+/* eslint-disable  @angular-eslint/directive-selector */
 @Directive({
     selector: `igx-switch[required][formControlName],
     igx-switch[required][formControl],

@@ -1135,7 +1135,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(defaultHeight).toBeFalsy(); // initially body height is null in auto-sizing scenarios with empty data
                 expect(fix.componentInstance.grid.calcHeight).toBeNull();
 
-                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
                 fix.detectChanges();
 
                 defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
@@ -1172,7 +1172,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 expect(defaultHeight).toBeFalsy();
                 expect(fix.componentInstance.grid.calcHeight).toBeNull();
-                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
                 fix.detectChanges();
                 await wait(500);
                 defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
@@ -1207,7 +1207,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
-        it('should not keep default height when lower the amount of bound data', async() => {
+        it('should not keep default height when lower the amount of bound data', async () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
@@ -1362,11 +1362,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
                 const newRec = rec as any as {
-                    ProductID: number,
-                    ProductName: string,
-                    InStock: boolean,
-                    UnitsInStock: number,
-                    OrderDate: string
+                    ProductID: number;
+                    ProductName: string;
+                    InStock: boolean;
+                    UnitsInStock: number;
+                    OrderDate: string;
                 };
                 newRec.OrderDate = rec.OrderDate.toISOString();
                 return newRec;
@@ -1405,11 +1405,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
                 const newRec = rec as any as {
-                    ProductID: number,
-                    ProductName: string,
-                    InStock: boolean,
-                    UnitsInStock: number,
-                    OrderDate: number
+                    ProductID: number;
+                    ProductName: string;
+                    InStock: boolean;
+                    UnitsInStock: number;
+                    OrderDate: number;
                 };
                 newRec.OrderDate = rec.OrderDate.getTime();
                 return newRec;
@@ -1449,11 +1449,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
                 const newRec = rec as any as {
-                    ProductID: number,
-                    ProductName: string,
-                    InStock: boolean,
-                    UnitsInStock: number,
-                    OrderDate: number
+                    ProductID: number;
+                    ProductName: string;
+                    InStock: boolean;
+                    UnitsInStock: number;
+                    OrderDate: number;
                 };
                 newRec.OrderDate = rec.OrderDate.getTime();
                 return newRec;
@@ -1792,7 +1792,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(prevCellCoords).toEqual({ rowIndex: 99, visibleColumnIndex: 0 });
         });
 
-        it('should not reset vertical scroll position when calling navigateTo with only rowIndex specified', async() => {
+        it('should not reset vertical scroll position when calling navigateTo with only rowIndex specified', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
@@ -1818,7 +1818,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(200);
         });
 
-        it('should emit onScroll event when scrolling horizontally/vertically', async() => {
+        it('should emit onScroll event when scrolling horizontally/vertically', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(30, 10);
             fix.detectChanges();
@@ -1867,8 +1867,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             const cols = fix.componentInstance.columns;
 
-            const row = {'col0': 0, 'col1': 4, 'col2': 8, 'col3': 12, 'col4': 16};
-            const secondRow = {'col0': 0, 'col1': 1, 'col2': 2, 'col3': 3, 'col4': 4};
+            const row = {col0: 0, col1: 4, col2: 8, col3: 12, col4: 16};
+            const secondRow = {col0: 0, col1: 1, col2: 2, col3: 3, col4: 4};
 
             expect(grid.getRowData(row)).toEqual(row);
 
@@ -2198,9 +2198,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeFilter: ['ng-reflect-value']
             };
             const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => {
-                    return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84';
-                }).length === 1;
+                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2228,9 +2226,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeFilter: ['ng-reflect-value']
             };
             const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => {
-                    return mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22';
-                }).length === 1;
+                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2258,9 +2254,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeFilter: ['ng-reflect-value']
             };
             const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => {
-                    return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8';
-                }).length === 1;
+                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2288,9 +2282,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeFilter: ['aria-selected']
             };
             const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => {
-                    return mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true';
-                }).length === 1;
+                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2399,7 +2391,7 @@ export class IgxGridDefaultRenderingComponent {
     public initColumnsRows(rowsNumber: number, columnsNumber: number): void {
         this.columns = [];
         this.data = [];
-        let i, j: number;
+        let i; let j: number;
         for (i = 0; i < columnsNumber; i++) {
             this.columns.push({
                 key: 'col' + i,
@@ -2486,33 +2478,33 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public data = [];
 
     public fullData = [
-        { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste' },
-        { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados' },
-        { 'ID': 'ANTON', 'CompanyName': 'Antonio Moreno Taquería' },
-        { 'ID': 'AROUT', 'CompanyName': 'Around the Horn' },
-        { 'ID': 'BERGS', 'CompanyName': 'Berglunds snabbköp' },
-        { 'ID': 'BLAUS', 'CompanyName': 'Blauer See Delikatessen' },
-        { 'ID': 'BLONP', 'CompanyName': 'Blondesddsl père et fils' },
-        { 'ID': 'BOLID', 'CompanyName': 'Bólido Comidas preparadas' },
-        { 'ID': 'BONAP', 'CompanyName': 'Bon app\'' },
-        { 'ID': 'BOTTM', 'CompanyName': 'Bottom-Dollar Markets' },
-        { 'ID': 'BSBEV', 'CompanyName': 'B\'s Beverages' },
-        { 'ID': 'CACTU', 'CompanyName': 'Cactus Comidas para llevar' },
-        { 'ID': 'CENTC', 'CompanyName': 'Centro comercial Moctezuma' },
-        { 'ID': 'CHOPS', 'CompanyName': 'Chop-suey Chinese' },
-        { 'ID': 'COMMI', 'CompanyName': 'Comércio Mineiro' },
-        { 'ID': 'CONSH', 'CompanyName': 'Consolidated Holdings' },
-        { 'ID': 'DRACD', 'CompanyName': 'Drachenblut Delikatessen' },
-        { 'ID': 'DUMON', 'CompanyName': 'Du monde entier' },
-        { 'ID': 'EASTC', 'CompanyName': 'Eastern Connection' },
-        { 'ID': 'ERNSH', 'CompanyName': 'Ernst Handel' },
-        { 'ID': 'FAMIA', 'CompanyName': 'Familia Arquibaldo' },
-        { 'ID': 'FISSA', 'CompanyName': 'FISSA Fabrica Inter' },
-        { 'ID': 'FOLIG', 'CompanyName': 'Folies gourmandes' },
-        { 'ID': 'FOLKO', 'CompanyName': 'Folk och fä HB' },
-        { 'ID': 'FRANK', 'CompanyName': 'Frankenversand' },
-        { 'ID': 'FRANR', 'CompanyName': 'France restauration' },
-        { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.' }
+        { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste' },
+        { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados' },
+        { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería' },
+        { ID: 'AROUT', CompanyName: 'Around the Horn' },
+        { ID: 'BERGS', CompanyName: 'Berglunds snabbköp' },
+        { ID: 'BLAUS', CompanyName: 'Blauer See Delikatessen' },
+        { ID: 'BLONP', CompanyName: 'Blondesddsl père et fils' },
+        { ID: 'BOLID', CompanyName: 'Bólido Comidas preparadas' },
+        { ID: 'BONAP', CompanyName: 'Bon app\'' },
+        { ID: 'BOTTM', CompanyName: 'Bottom-Dollar Markets' },
+        { ID: 'BSBEV', CompanyName: 'B\'s Beverages' },
+        { ID: 'CACTU', CompanyName: 'Cactus Comidas para llevar' },
+        { ID: 'CENTC', CompanyName: 'Centro comercial Moctezuma' },
+        { ID: 'CHOPS', CompanyName: 'Chop-suey Chinese' },
+        { ID: 'COMMI', CompanyName: 'Comércio Mineiro' },
+        { ID: 'CONSH', CompanyName: 'Consolidated Holdings' },
+        { ID: 'DRACD', CompanyName: 'Drachenblut Delikatessen' },
+        { ID: 'DUMON', CompanyName: 'Du monde entier' },
+        { ID: 'EASTC', CompanyName: 'Eastern Connection' },
+        { ID: 'ERNSH', CompanyName: 'Ernst Handel' },
+        { ID: 'FAMIA', CompanyName: 'Familia Arquibaldo' },
+        { ID: 'FISSA', CompanyName: 'FISSA Fabrica Inter' },
+        { ID: 'FOLIG', CompanyName: 'Folies gourmandes' },
+        { ID: 'FOLKO', CompanyName: 'Folk och fä HB' },
+        { ID: 'FRANK', CompanyName: 'Frankenversand' },
+        { ID: 'FRANR', CompanyName: 'France restauration' },
+        { ID: 'FRANS', CompanyName: 'Franchi S.p.A.' }
     ];
 
     public get semiData(): any[] {
@@ -2852,7 +2844,7 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
     }
 
     public ngOnInit() {
-        const cols = [], d = [];
+        const cols = []; const d = [];
         for (let i = 0; i < 30; i++) {
             cols.push({ field: 'field' + i, width: '100px', hasSummary: false });
         }

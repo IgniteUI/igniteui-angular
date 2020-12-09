@@ -1,9 +1,9 @@
 import * as path from 'path';
 
-// tslint:disable:no-implicit-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 import { virtualFs } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
-// tslint:disable-next-line:no-submodule-imports
+// eslint-disable-next-line import/no-internal-modules
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
 describe('Update 6.0.0', () => {
@@ -28,7 +28,7 @@ describe('Update 6.0.0', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    // tslint:disable:arrow-parens
+    /* eslint-disable arrow-parens */
     it('should update igx-tab-bar selector', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',

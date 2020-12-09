@@ -35,6 +35,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```typescript
      * let filteringOperands = gridExpressionsTree.filteringOperands;
      * ```
+     *
      * @memberof FilteringExpressionsTree
      */
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[] = [];
@@ -47,6 +48,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```typescript
      * let operator = gridExpressionsTree.operator;
      * ```
+     *
      * @memberof FilteringExpressionsTree
      */
     operator: FilteringLogic;
@@ -59,6 +61,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```typescript
      * let columnField = expressionTree.fieldName;
      * ```
+     *
      * @memberof FilteringExpressionsTree
      */
     fieldName?: string;
@@ -71,6 +74,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```typescript
      * let type = expressionTree.type;
      * ```
+     *
      * @memberof FilteringExpressionsTree
      */
     type?: FilteringExpressionsTreeType;
@@ -83,6 +87,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
 
     /**
      * Checks if filtering expressions tree is empty.
+     *
      * @param expressionTree filtering expressions tree.
      */
     public static empty(expressionTree: IFilteringExpressionsTree): boolean {
@@ -94,6 +99,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```typescript
      * let filteringExpression = gridExpressionTree.find('Column Field');
      * ```
+     *
      * @memberof FilteringExpressionsTree
      */
     public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
@@ -111,6 +117,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      * ```typescript
      * let filteringExpressionIndex = gridExpressionTree.findIndex('Column Field');
      * ```
+     *
      * @memberof FilteringExpressionsTree
      */
     public findIndex(fieldName: string): number {

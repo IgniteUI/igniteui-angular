@@ -572,29 +572,41 @@ describe('IgxTabs', () => {
         }));
 
         it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
-            fixture.ngZone.run(() => { router.initialNavigation(); });
+            fixture.ngZone.run(() => {
+ router.initialNavigation();
+});
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[2].nativeTabItem); });
+            fixture.ngZone.run(() => {
+ UIInteractions.simulateClickAndSelectEvent(theTabs[2].nativeTabItem);
+});
             tick();
             expect(location.path()).toBe('/view3');
 
-            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem); });
+            fixture.ngZone.run(() => {
+ UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem);
+});
             tick();
             expect(location.path()).toBe('/view2');
 
-            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem); });
+            fixture.ngZone.run(() => {
+ UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem);
+});
             tick();
             expect(location.path()).toBe('/view1');
         }));
 
         it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
-            fixture.ngZone.run(() => { router.initialNavigation(); });
+            fixture.ngZone.run(() => {
+ router.initialNavigation();
+});
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { router.navigate(['/view3']); });
+            fixture.ngZone.run(() => {
+ router.navigate(['/view3']);
+});
             tick();
             expect(location.path()).toBe('/view3');
             fixture.detectChanges();
@@ -603,7 +615,9 @@ describe('IgxTabs', () => {
             expect(theTabs[0].isSelected).toBe(false);
             expect(theTabs[1].isSelected).toBe(false);
 
-            fixture.ngZone.run(() => { router.navigate(['/view2']); });
+            fixture.ngZone.run(() => {
+ router.navigate(['/view2']);
+});
             tick();
             expect(location.path()).toBe('/view2');
             fixture.detectChanges();
@@ -612,7 +626,9 @@ describe('IgxTabs', () => {
             expect(theTabs[0].isSelected).toBe(false);
             expect(theTabs[2].isSelected).toBe(false);
 
-            fixture.ngZone.run(() => { router.navigate(['/view1']); });
+            fixture.ngZone.run(() => {
+ router.navigate(['/view1']);
+});
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
@@ -741,11 +757,15 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             theTabs = tabsComp.contentTabs.toArray();
 
-            fixture.ngZone.run(() => { router.initialNavigation(); });
+            fixture.ngZone.run(() => {
+ router.initialNavigation();
+});
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem); });
+            fixture.ngZone.run(() => {
+ UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem);
+});
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
@@ -753,7 +773,9 @@ describe('IgxTabs', () => {
             expect(theTabs[0].isSelected).toBe(true);
             expect(theTabs[1].isSelected).toBe(false);
 
-            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem); });
+            fixture.ngZone.run(() => {
+ UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem);
+});
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();

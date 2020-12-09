@@ -45,7 +45,7 @@ describe('IgxDropDown ', () => {
             { value: 'Item4', index: 4 } as IgxDropDownItemComponent,
             { value: 'Item5', index: 5 } as IgxDropDownItemComponent];
         const mockSelection: {
-            [key: string]: jasmine.Spy
+            [key: string]: jasmine.Spy;
         } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
@@ -556,11 +556,15 @@ describe('IgxDropDown ', () => {
                 dropdown.items[4].isHeader = true;
 
                 spyOn(dropdown, 'selectItem').and.callThrough();
-                expect(() => { dropdown.selectItem(calledSelected); }).toThrow();
+                expect(() => {
+ dropdown.selectItem(calledSelected);
+}).toThrow();
 
                 // Set non-IgxDropDownItemBaseDirective
                 expectedSelected = 7 as any;
-                expect(() => { dropdown.selectItem(calledSelected); }).toThrow();
+                expect(() => {
+ dropdown.selectItem(calledSelected);
+}).toThrow();
 
                 subscription.unsubscribe();
             }));
@@ -820,7 +824,7 @@ describe('IgxDropDown ', () => {
     });
     describe('Virtualisation tests', () => {
         let scroll: IgxForOfDirective<any>;
-        let button, items;
+        let button; let items;
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({

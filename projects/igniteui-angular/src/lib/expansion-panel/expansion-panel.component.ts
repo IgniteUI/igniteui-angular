@@ -73,6 +73,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      * ```typescript
      * let panelId =  this.panel.id;
      * ```
+     *
      * @memberof IgxExpansionPanelComponent
      */
     @HostBinding('attr.id')

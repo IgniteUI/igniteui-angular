@@ -92,6 +92,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let isHeader =  this.listItem.isHeader;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @Input()
@@ -106,6 +107,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let isHidden =  this.listItem.hidden;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @Input()
@@ -116,6 +118,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.role')
@@ -131,6 +134,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let itemAriaLabel = this.listItem.ariaLabel;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.aria-label')
@@ -150,6 +154,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let headerStyle =  this.listItem.headerStyle;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('class.igx-list__header')
@@ -162,6 +167,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let innerStyle =  this.listItem.innerStyle;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('class.igx-list__item-base')
@@ -174,6 +180,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let isHidden = this.listItem.display;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('style.display')
@@ -323,6 +330,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let itemPanState =  this.listItem.panState;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public get panState(): IgxListPanState {
@@ -334,6 +342,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let itemIndex =  this.listItem.index;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @Input()
@@ -346,6 +355,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * this.listItem.index = index;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public set index(value: number) {
@@ -357,6 +367,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let listItemElement =  this.listItem.element.
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public get element() {
@@ -368,6 +379,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let listItemContainer =  this.listItem.contentElement.
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public get contentElement() {
@@ -393,6 +405,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let itemWidth = this.listItem.width;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public get width() {
@@ -406,6 +419,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let maxLeft = this.listItem.maxLeft;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public get maxLeft() {
@@ -417,6 +431,7 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let maxRight = this.listItem.maxRight;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     public get maxRight() {

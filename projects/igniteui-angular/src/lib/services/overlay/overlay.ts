@@ -128,6 +128,7 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Creates overlay settings with global or container position strategy and preset position settings
+     *
      * @param position Preset position settings. Default position is 'center'
      * @param outlet The outlet container to attach the overlay to
      * @returns Non-modal overlay settings based on Global or Container position strategy and the provided position.
@@ -141,13 +142,14 @@ export class IgxOverlayService implements OnDestroy {
             scrollStrategy: new NoOpScrollStrategy(),
             modal: false,
             closeOnOutsideClick: true,
-            outlet: outlet
+            outlet
         };
         return overlaySettings;
     }
 
     /**
      * Creates overlay settings with auto, connected or elastic position strategy and preset position settings
+     *
      * @param target Attaching target for the component to show
      * @param strategy The relative position strategy to be applied to the overlay settings. Default is Auto positioning strategy.
      * @param position Preset position settings. By default the element is positioned below the target, left aligned.
@@ -160,7 +162,7 @@ export class IgxOverlayService implements OnDestroy {
         OverlaySettings {
         const positionSettings = this.createRelativePositionSettings(position);
         const overlaySettings: OverlaySettings = {
-            target: target,
+            target,
             positionStrategy: this.createPositionStrategy(strategy, positionSettings),
             scrollStrategy: new NoOpScrollStrategy(),
             modal: false,
@@ -283,6 +285,7 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
+     *
      * @param component ElementRef to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
@@ -290,6 +293,7 @@ export class IgxOverlayService implements OnDestroy {
     attach(element: ElementRef, settings?: OverlaySettings): string;
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
+     *
      * @param component Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
@@ -317,12 +321,14 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Shows the overlay for provided id.
+     *
      * @param id Id to show overlay for
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
     show(id: string, settings?: OverlaySettings): string;
     /**
      * Shows the provided component.
+     *
      * @param component ElementRef or Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
@@ -331,7 +337,7 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      * @deprecated Use `attach(component)` to obtain an Id. Then `show(id, settings?)` with provided Id.
      */
-    // tslint:disable-next-line:unified-signatures
+    // eslint-disable-next-line @typescript-eslint/unified-signatures
     show(component: ElementRef | Type<any>, settings?: OverlaySettings): string;
     show(compOrId: string | ElementRef | Type<any>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
@@ -824,7 +830,7 @@ export class IgxOverlayService implements OnDestroy {
                 }
             }
         }
-    }
+    };
 
     private addOutsideClickListener(info: OverlayInfo) {
         if (info.settings.closeOnOutsideClick) {
@@ -917,7 +923,7 @@ export class IgxOverlayService implements OnDestroy {
         for (let i = this._overlayInfos.length; i--;) {
             this.reposition(this._overlayInfos[i].id);
         }
-    }
+    };
 
     /**
      * @hidden

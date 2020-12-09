@@ -14,7 +14,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 
-// tslint:disable: no-use-before-declare
+/* eslint-disable @typescript-eslint/no-use-before-define */
 describe('IgxTimePicker', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -416,7 +416,7 @@ describe('IgxTimePicker', () => {
         // get time from dialog header
         const timeFromPopupHeader: any = dom.query(By.css('.igx-time-picker__header')).nativeElement.children;
         const formatedTimeFromPopupHeader =
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             `${timeFromPopupHeader[1].innerText.replace(/\n/g, '')} ${timeFromPopupHeader[0].innerText}`;
 
         args = { key: 'Enter', bubbles: true };
@@ -1840,10 +1840,10 @@ describe('IgxTimePicker', () => {
 
     describe('Hour/minute only mode', () => {
         configureTestSuite();
-        let fixture: ComponentFixture<IgxTimePickerDropDownSingleHourComponent>,
-            timePicker: IgxTimePickerComponent,
-            dom: DebugElement,
-            input: DebugElement;
+        let fixture: ComponentFixture<IgxTimePickerDropDownSingleHourComponent>;
+            let timePicker: IgxTimePickerComponent;
+            let dom: DebugElement;
+            let input: DebugElement;
 
         beforeEach(
             waitForAsync(() => {

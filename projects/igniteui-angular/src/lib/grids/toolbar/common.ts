@@ -2,12 +2,12 @@ import { Directive, HostBinding, TemplateRef } from '@angular/core';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
 
 
-// tslint:disable-next-line: directive-selector
+// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[excelText],excel-text' })
 export class IgxExcelTextDirective { }
 
 
-// tslint:disable-next-line: directive-selector
+// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[csvText],csv-text' })
 export class IgxCSVTextDirective { }
 
@@ -26,6 +26,7 @@ export class IgxCSVTextDirective { }
 export class IgxGridToolbarTitleDirective {
     /**
      * Host `class.igx-grid-toolbar__title` binding.
+     *
      * @hidden
      * @internal
      */
@@ -50,6 +51,7 @@ export class IgxGridToolbarTitleDirective {
 export class IgxGridToolbarActionsDirective {
     /**
      * Host `class.igx-grid-toolbar__actions` binding.
+     *
      * @hidden
      * @internal
      */

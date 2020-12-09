@@ -65,8 +65,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
         const classList = {
             'igx-grid__th': !this.column.columnGroup,
-            'asc': this.ascending,
-            'desc': this.descending,
+            asc: this.ascending,
+            desc: this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
             'igx-grid__th--selectable': this.selectable,

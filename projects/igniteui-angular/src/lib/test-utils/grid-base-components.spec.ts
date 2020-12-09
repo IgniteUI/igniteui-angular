@@ -157,7 +157,9 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     @ViewChild(IgxGridComponent, { static: true }) grid: IgxGridComponent;
     hasGroupColumns = false;
-    constructor(cdr: ChangeDetectorRef) { super(cdr); }
+    constructor(cdr: ChangeDetectorRef) {
+ super(cdr);
+}
     data = SampleTestData.contactInfoDataFull();
 }
 
@@ -217,6 +219,8 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
-    constructor(cdr: ChangeDetectorRef) { super(cdr); }
+    constructor(cdr: ChangeDetectorRef) {
+ super(cdr);
+}
     data = SampleTestData.contactInfoDataFull();
 }

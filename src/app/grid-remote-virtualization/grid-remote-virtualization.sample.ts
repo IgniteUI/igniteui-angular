@@ -19,7 +19,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
 
     constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (dataState) => {
-            let qS = '?', requiredChunkSize: number;
+            let qS = '?'; let requiredChunkSize: number;
             if (dataState) {
                 const skip = dataState.startIndex;
 

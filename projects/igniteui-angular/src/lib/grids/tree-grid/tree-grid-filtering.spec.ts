@@ -352,7 +352,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
-                const filteredParentNodes = treeGrid.data.filter(function (n) {
+                const filteredParentNodes = treeGrid.data.filter(function(n) {
                     return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
                 });
 
@@ -383,7 +383,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
-                const filteredParentNodes = treeGrid.data.filter(function (n) {
+                const filteredParentNodes = treeGrid.data.filter(function(n) {
                     return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
                 });
 
@@ -401,7 +401,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
                 treeGrid.clearFilter();
                 fix.detectChanges();
-                // tslint:disable-next-line: no-use-before-declare
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
                 const customFilter = new CustomTreeGridFilterStrategy();
                 // apply the same filter condition but with custu
                 treeGrid.filterStrategy = customFilter;

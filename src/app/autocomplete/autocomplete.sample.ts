@@ -52,14 +52,10 @@ export class AutocompleteGroupPipeContains implements PipeTransform {
     public transform = (continents: any[], term = '') => filterGroupContains(continents, term);
 }
 
-const filterContains = (items: any[], term: string, exactMatch = false): any[] => {
-    return items.filter((item) => {
+const filterContains = (items: any[], term: string, exactMatch = false): any[] => items.filter((item) => {
         const itm = (item.name ? item.name : item).toString().toLowerCase();
         const trm = term.toString().toLowerCase();
         return exactMatch ? itm === trm : itm.indexOf(trm) > -1;
     });
-};
 
-const filterGroupContains = (groupItems: any[], term = '', exactMatch = false): any[] => {
-    return groupItems.filter((groupItem) => filterContains(groupItem.countries, term, exactMatch).length > 0);
-};
+const filterGroupContains = (groupItems: any[], term = '', exactMatch = false): any[] => groupItems.filter((groupItem) => filterContains(groupItem.countries, term, exactMatch).length > 0);

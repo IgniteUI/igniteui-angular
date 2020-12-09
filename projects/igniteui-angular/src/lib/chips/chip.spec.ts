@@ -60,9 +60,7 @@ class TestChipComponent {
     public chips: QueryList<IgxChipComponent>;
 
     chipRemoved(event) {
-        this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.owner.id;
-        });
+        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.cdr.detectChanges();
     }
 }

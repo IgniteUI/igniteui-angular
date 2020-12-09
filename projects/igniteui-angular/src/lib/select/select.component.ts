@@ -335,7 +335,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public writeValue = (value: any) => {
         this.value = value;
-    }
+    };
 
     /** @hidden @internal */
     public registerOnChange(fn: any): void {
@@ -468,6 +468,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /**
      * Event handlers
+     *
      * @hidden @internal
      */
     public handleOpening(event: CancelableEventArgs) {

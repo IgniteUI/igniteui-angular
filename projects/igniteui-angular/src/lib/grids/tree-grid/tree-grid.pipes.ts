@@ -109,7 +109,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             const record: ITreeGridRecord = {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
-                parent: parent,
+                parent,
                 level: indentationLevel
             };
             record.expanded = this.gridAPI.get_row_expansion_state(record);

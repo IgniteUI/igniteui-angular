@@ -42,7 +42,7 @@ export class HierarchicalRemoteService {
         return dataResult;
     }
 
-    private _updateCachedData (data: any, startIndex: number, lastChunk: boolean) {
+    private _updateCachedData(data: any, startIndex: number, lastChunk: boolean) {
         for (let i = 0; i < data.length; i++) {
             this.cachedData[i + startIndex] = data[i];
         }

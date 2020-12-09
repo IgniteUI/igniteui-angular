@@ -67,7 +67,7 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
  * Use it to wrap anything you want to be used as a thumbnail.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListThumbnail]'
 })
 export class IgxListThumbnailDirective {}
@@ -77,7 +77,7 @@ export class IgxListThumbnailDirective {}
  * Use it to wrap anything you want to be used as a list action: icon, checkbox...
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListAction]'
 })
 export class IgxListActionDirective {}
@@ -87,7 +87,7 @@ export class IgxListActionDirective {}
  * Use it to wrap anything you want to be used as a plane text.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLine]'
 })
 export class IgxListLineDirective {}
@@ -97,7 +97,7 @@ export class IgxListLineDirective {}
  * Use it to make anything to look like list Title.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLineTitle]'
 })
 export class IgxListLineTitleDirective {
@@ -110,7 +110,7 @@ export class IgxListLineTitleDirective {
  * Use it to make anything to look like list Subtitle.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLineSubTitle]'
 })
 export class IgxListLineSubTitleDirective {
@@ -191,9 +191,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     protected get sortedChildren(): IgxListItemComponent[] {
         if (this.children !== undefined) {
             return this.children.toArray()
-                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => {
-                    return a.index - b.index;
-                });
+                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
         }
         return null;
     }

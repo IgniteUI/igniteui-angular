@@ -68,6 +68,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Getter for the 'display' property of the current `IgxActionStrip`
+     *
      * @hidden
      * @internal
      */
@@ -81,6 +82,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     /**
      * An @Input property that set the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
+     *
      * @example
      * ```html
      *  <igx-action-strip [hidden]="false">
@@ -97,6 +99,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Host `class.igx-action-strip` binding.
+     *
      * @hidden
      * @internal
      */
@@ -105,6 +108,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Host `attr.class` binding.
+     *
      * @hidden
      * @internal
      */
@@ -123,6 +127,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
      * This element will be the placeholder of the action strip.
+     *
      * @example
      * ```html
      * <igx-action-strip [context]="cell"></igx-action-strip>
@@ -132,6 +137,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public context: any;
     /**
      * Menu Items ContentChildren inside the Action Strip
+     *
      * @hidden
      * @internal
      */
@@ -141,6 +147,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * ActionButton as ContentChildren inside the Action Strip
+     *
      * @hidden
      * @internal
      */
@@ -149,6 +156,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Getter for menu overlay settings
+     *
      * @hidden
      * @internal
      */
@@ -156,6 +164,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Menu Items list.
+     *
      * @hidden
      * @internal
      */
@@ -174,6 +183,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Reference to the menu
+     *
      * @hidden
      * @internal
      */
@@ -213,6 +223,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Showing the Action Strip and appending it the specified context element.
+     *
      * @param context
      * @example
      * ```typescript
@@ -237,6 +248,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Hiding the Action Strip and removing it from its current context element.
+     *
      * @example
      * ```typescript
      * this.actionStrip.hide();
@@ -252,6 +264,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Close the menu if opened
+     *
      * @hidden
      * @internal
      */

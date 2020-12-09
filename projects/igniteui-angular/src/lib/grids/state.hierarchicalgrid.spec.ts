@@ -16,7 +16,7 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { GridSelectionMode } from './common/enums';
 import { wait } from '../test-utils/ui-interactions.spec';
 
-// tslint:disable:max-line-length
+/* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     configureTestSuite();
     let fix;
@@ -420,7 +420,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('setState should correctly restore grid columns state from string', async() => {
+    it('setState should correctly restore grid columns state from string', async () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
@@ -566,7 +566,7 @@ class HelperFunctions {
     }
 
     private static getParentRowID(grid: IgxHierarchicalGridComponent) {
-        let childGrid, childRow;
+        let childGrid; let childRow;
         while (grid.parent) {
             childRow = grid.childRow;
             childGrid = grid;
@@ -638,7 +638,7 @@ export class IgxHierarchicalGridTestExpandedBaseComponent {
     };
 
     public columns: any[] = [
-        // tslint:disable:max-line-length
+        /* eslint-disable max-len */
         { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
         { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, movable: true, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true }
     ];
@@ -649,7 +649,7 @@ export class IgxHierarchicalGridTestExpandedBaseComponent {
         { field: 'Col1', header: 'Col 1', width: '140px', dataType: 'boolean', pinned: false, movable: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
         { field: 'Col2', header: 'Col 2', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
         { field: 'Col3', header: 'Col 3', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     ];
 
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -674,9 +674,9 @@ export function generateDataUneven(count: number, level: number, parentID: strin
            children = generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);
         }
         prods.push({
-            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-            'Col2': i, 'Col3': i, childData: children, childData2: children });
+            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
+            Col2: i, Col3: i, childData: children, childData2: children });
     }
     return prods;
 }
-// tslint:enable:max-line-length
+/* eslint-enable max-len */

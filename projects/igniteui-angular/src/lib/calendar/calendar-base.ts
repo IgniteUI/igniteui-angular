@@ -461,6 +461,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Performs a single selection.
+     *
      * @hidden
      */
     private selectSingle(value: Date) {
@@ -470,6 +471,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Performs a multiple selection
+     *
      * @hidden
      */
     private selectMultiple(value: Date | Date[]) {
@@ -546,6 +548,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Performs a single deselection.
+     *
      * @hidden
      */
     private deselectSingle(value: Date) {
@@ -558,6 +561,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Performs a multiple deselection.
+     *
      * @hidden
      */
     private deselectMultiple(value: Date[]) {
@@ -580,6 +584,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Performs deselection of a single value, when selection is multi
      * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
+     *
      * @hidden
      */
     public deselectMultipleInMonth(value: Date) {
@@ -591,6 +596,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Performs a range deselection.
+     *
      * @hidden
      */
     private deselectRange(value: Date[]) {
@@ -655,6 +661,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
     /**
      * Checks whether a date is disabled.
+     *
      * @hidden
      */
     public isDateDisabled(date: Date) {

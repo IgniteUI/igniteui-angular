@@ -492,7 +492,7 @@ describe('Column Hiding UI #grid', () => {
             });
             fix.detectChanges();
 
-            let fixEl = fix.nativeElement, gridEl = grid.nativeElement;
+            let fixEl = fix.nativeElement; let gridEl = grid.nativeElement;
             let tHeadItems = fixEl.querySelector('igx-grid-header-group');
             let gridRows = fixEl.querySelector('igx-grid-row');
             let paging = fixEl.querySelector('.igx-paginator');

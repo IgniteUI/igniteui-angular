@@ -112,7 +112,7 @@ export function addDependencies(options: Options): Rule {
 /**
  * Recursively search for the first property that matches targetProp within a json file.
  */
-export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): { key: string, value: any } {
+export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): { key: string; value: any } {
     if (workspace.hasOwnProperty(targetProp)) {
         return { key: targetProp, value: workspace[targetProp] };
     }

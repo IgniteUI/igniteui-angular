@@ -785,7 +785,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: cellValue,
-                newValue: newValue,
+                newValue,
                 cancel: true,
                 column: cell.column,
                 owner: grid
@@ -924,7 +924,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 rowID: cell.row.rowID,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 oldValue: initialValue,
-                newValue: newValue,
+                newValue,
                 column: cell.column,
                 owner: grid
             };

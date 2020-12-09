@@ -4,10 +4,11 @@ import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 /**
  * Filter tree to project source dirs
+ *
  * @deprecated Temporary
  */
 export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
-    // tslint:disable:arrow-parens
+    /* eslint-disable arrow-parens */
     let config: WorkspaceSchema;
     const configPath = getWorkspacePath(host);
     let sourcePaths: string[];
@@ -25,7 +26,5 @@ export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
         sourcePaths = host.root.subdirs.filter(x => x.indexOf('node_modules') === -1).map(x => `/${x}`);
     }
 
-    return filter(x => {
-        return !!sourcePaths.find(folder => x.startsWith(folder));
-    });
+    return filter(x => !!sourcePaths.find(folder => x.startsWith(folder)));
 }

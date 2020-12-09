@@ -3,7 +3,7 @@ import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '10.2.0';
 
-export default function (): Rule {
+export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         context.logger.info(
             `Applying migration for Ignite UI for Angular to version ${version}`
@@ -11,7 +11,7 @@ export default function (): Rule {
 
         const update = new UpdateChanges(__dirname, host, context);
 
-        update.addCondition('type_is_invalid', function (
+        update.addCondition('type_is_invalid', function(
             matchedOwner: string
         ): boolean {
             if (!matchedOwner) {

@@ -427,5 +427,5 @@ export class TreeGridFunctions {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
-        })
+        });
 }

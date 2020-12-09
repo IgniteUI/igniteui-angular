@@ -181,7 +181,7 @@ describe('IgxCalendar - ', () => {
         }));
 
         describe('Rendered Component - ', () => {
-            let fixture, calendar, dom;
+            let fixture; let calendar; let dom;
             beforeEach(
                 waitForAsync(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
@@ -1218,7 +1218,7 @@ describe('IgxCalendar - ', () => {
         });
 
         describe('Disabled special dates - ', () => {
-            let fixture, calendar;
+            let fixture; let calendar;
 
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
@@ -1293,7 +1293,7 @@ describe('IgxCalendar - ', () => {
         });
 
         describe('Select and deselect dates - ', () => {
-            let fixture, calendar, ci;
+            let fixture; let calendar; let ci;
             beforeEach(
                 waitForAsync(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
@@ -1612,7 +1612,7 @@ describe('IgxCalendar - ', () => {
         });
 
         describe('Advanced KB Navigation - ', () => {
-            let fixture, calendar, dom;
+            let fixture; let calendar; let dom;
 
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
@@ -1935,7 +1935,7 @@ describe('IgxCalendar - ', () => {
         });
 
         describe('Continuous month increment/decrement - ', () => {
-            let fixture, dom, calendar, prevMonthBtn, nextMonthBtn;
+            let fixture; let dom; let calendar; let prevMonthBtn; let nextMonthBtn;
 
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);

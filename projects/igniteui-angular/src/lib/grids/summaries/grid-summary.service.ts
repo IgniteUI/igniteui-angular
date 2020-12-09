@@ -22,7 +22,9 @@ export class IgxGridSummaryService {
     }
 
     public clearSummaryCache(args?) {
-        if (!this.summaryCacheMap.size) { return; }
+        if (!this.summaryCacheMap.size) {
+ return;
+}
         if (!args) {
             this.summaryCacheMap.clear();
             if (this.grid && this.grid.rootSummariesEnabled) {
@@ -36,7 +38,9 @@ export class IgxGridSummaryService {
         }
         if (args.rowID !== undefined && args.rowID !== null) {
             let columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
-            if (columnName && this.grid.rowEditable) { return; }
+            if (columnName && this.grid.rowEditable) {
+ return;
+}
 
             const isGroupedColumn = (this.grid as FlatGridType).groupingExpressions &&
             (this.grid as FlatGridType).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
@@ -49,7 +53,9 @@ export class IgxGridSummaryService {
 
     public removeSummaries(rowID, columnName?) {
         this.deleteSummaryCache(this.rootSummaryID, columnName);
-        if (this.summaryCacheMap.size === 1 && this.summaryCacheMap.has(this.rootSummaryID)) { return; }
+        if (this.summaryCacheMap.size === 1 && this.summaryCacheMap.has(this.rootSummaryID)) {
+ return;
+}
         if (this.isTreeGrid) {
             if (this.grid.transactions.enabled && this.deleteOperation) {
                 this.deleteOperation = false;
@@ -77,14 +83,18 @@ export class IgxGridSummaryService {
                 cache.delete(columnName);
             }
         });
-        if (this.grid.rootSummariesEnabled) {  this.retriggerRootPipe++; }
+        if (this.grid.rootSummariesEnabled) {
+  this.retriggerRootPipe++;
+}
     }
 
     public calcMaxSummaryHeight() {
         if (this.summaryHeight) {
             return this.summaryHeight;
         }
-        if (!this.grid.data) {return this.summaryHeight = 0; }
+        if (!this.grid.data) {
+return this.summaryHeight = 0;
+}
         let maxSummaryLength = 0;
         this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             const getCurrentSummaryColumn = column.summaries.operate([], [], column.field).length;
@@ -105,7 +115,9 @@ export class IgxGridSummaryService {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
-        if (!this.hasSummarizedColumns || !data) {return rowSummaries; }
+        if (!this.hasSummarizedColumns || !data) {
+return rowSummaries;
+}
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
@@ -125,7 +137,9 @@ export class IgxGridSummaryService {
     }
 
     public updateSummaryCache(groupingArgs) {
-        if (this.summaryCacheMap.size === 0 || !this.hasSummarizedColumns) { return; }
+        if (this.summaryCacheMap.size === 0 || !this.hasSummarizedColumns) {
+ return;
+}
         if (this.groupingExpressions.length === 0) {
             this.groupingExpressions = groupingArgs.expressions.map(record => record.fieldName);
             return;
@@ -160,7 +174,9 @@ export class IgxGridSummaryService {
     }
 
     private getSummaryID(rowID, groupingExpressions) {
-        if (groupingExpressions.length === 0) { return []; }
+        if (groupingExpressions.length === 0) {
+ return [];
+}
         const summaryIDs = [];
         let data = this.grid.data;
         if (this.grid.transactions.enabled) {
@@ -182,7 +198,9 @@ export class IgxGridSummaryService {
 
     private removeAllTreeGridSummaries(rowID, columnName?) {
         let row = (this.grid as TreeGridType).records.get(rowID);
-        if (!row) { return; }
+        if (!row) {
+ return;
+}
         row = row.children ? row : row.parent;
         while (row) {
             rowID = row.rowID;
@@ -213,7 +231,8 @@ export class IgxGridSummaryService {
                 this.summaryCacheMap.forEach((cache, id) => {
                    if (id.indexOf(colName) !== -1) {
                        this.summaryCacheMap.delete(id);
-                   }});
+                   }
+});
             });
         }
     }

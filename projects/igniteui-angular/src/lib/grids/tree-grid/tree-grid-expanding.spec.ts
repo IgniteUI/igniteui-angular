@@ -1401,7 +1401,7 @@ describe('Custom expand/collapse template #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
     }));
 
-    it('should allow setting custom template for  expand/collapse icons', async() => {
+    it('should allow setting custom template for  expand/collapse icons', async () => {
         const row = treeGrid.dataRowList.toArray()[0];
         let expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
         expect(expander.innerText).toBe('EXPANDED');

@@ -1963,7 +1963,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(6);
     }));
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -2770,14 +2770,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(GroupByDataMoreColumnsComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.testData = [
-            { 'A': '1', 'B': 'ALFKI', 'C': '2', 'D': '3', 'E': '4', 'F': '5', 'H': '6', 'G': '7', 'K': '8', 'L': '9', 'M': '10', 'N': '1' }
+            { A: '1', B: 'ALFKI', C: '2', D: '3', E: '4', F: '5', H: '6', G: '7', K: '8', L: '9', M: '10', N: '1' }
         ];
         tick();
         fix.detectChanges();
         let m = '';
-        const expr = fix.componentInstance.columns.map(val => {
-            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
-        });
+        const expr = fix.componentInstance.columns.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
         // not allowed to group by more than 10 columns
         try {
             grid.groupBy(expr);
@@ -2794,9 +2792,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         tick();
-        const expr = grid.columns.map(val => {
-            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
-        });
+        const expr = grid.columns.map(val => ({ fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true }));
         grid.groupBy(expr);
         tick();
         expect(grid.groupsRowList.toArray().length).toBe(0);
@@ -3136,19 +3132,19 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.componentInstance.enableSorting = true;
             fix.detectChanges();
 
-            grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy });
 
             expect(grid.sortingExpressions)
-                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
+                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy }]);
             expect(grid.groupingExpressions).toEqual([]);
 
-            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
-            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy });
+            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy });
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy });
 
             expect(grid.sortingExpressions)
-                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy }]);
             expect(grid.groupingExpressions)
-                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy }]);
         }));
 
     it('should update grouping expression when sorting a column first then grouping by another and changing sorting for it',
@@ -3337,7 +3333,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
 
         grid.paging = false;
-        grid.columns[1].groupingComparer = function (a, b) {
+        grid.columns[1].groupingComparer = function(a, b) {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
                 return 0;

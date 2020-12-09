@@ -243,7 +243,7 @@ export class ObjectComparer {
 
         // Compare properties
         if (Object.prototype.toString.call(actual) === '[object Array]') {
-            // tslint:disable-next-line:prefer-for-of
+            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < actual.length; i++) {
                 result = (result && template.indexof(actual[i]) >= 0);
             }

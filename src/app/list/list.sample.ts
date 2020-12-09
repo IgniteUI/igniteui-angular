@@ -159,9 +159,7 @@ export class ListSampleComponent implements OnInit {
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
 
-        _fo.get_value = (item: any) => {
-            return item.element.nativeElement.textContent.trim();
-        };
+        _fo.get_value = (item: any) => item.element.nativeElement.textContent.trim();
 
         _fo.metConditionFn = (item: any) => {
             item.hidden = false;

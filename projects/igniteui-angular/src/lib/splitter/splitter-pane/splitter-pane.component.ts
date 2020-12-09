@@ -2,6 +2,7 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
 
 /**
  * Represents individual resizable/collapsible panes.
+ *
  * @igxModule IgxSplitterModule
  *
  * @igxParent IgxSplitterComponent
@@ -61,6 +62,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets the minimum allowed size of the current pane.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -73,6 +75,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Set the maximum allowed size of the current pane.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -85,6 +88,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets whether pane is resizable.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -99,6 +103,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Event fired when collapsed state of pane is changed.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -167,6 +172,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets whether current pane is collapsed.
+     *
      * @example
      * ```typescript
      * const isCollapsed = pane.collapsed;
@@ -198,6 +204,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Toggles the collapsed state of the pane.
+     *
      * @example
      * ```typescript
      * pane.toggle();

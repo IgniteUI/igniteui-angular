@@ -5,7 +5,7 @@ import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribu
 
 const version = '11.0.0';
 
-export default function (): Rule {
+export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         context.logger.info(
             `Applying migration for Ignite UI for Angular to version ${version}`
@@ -35,9 +35,7 @@ export default function (): Rule {
         };
 
 
-        const makeNgIf = (name: string, value: string) => {
-            return name.startsWith('[') && value !== 'true';
-        };
+        const makeNgIf = (name: string, value: string) => name.startsWith('[') && value !== 'true';
 
         // Try to preserve the template context variable binding
         const getTemplateBinding = (node: Element) => {

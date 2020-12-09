@@ -49,6 +49,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxExcelExporterService
      */
     @Output()

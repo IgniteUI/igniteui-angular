@@ -75,6 +75,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Adds provided  transaction with recordRef if any
+     *
      * @param transaction Transaction to be added
      * @param recordRef Reference to the value of the record in the data source related to the changed item
      */
@@ -82,6 +83,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Returns all recorded transactions in chronological order
+     *
      * @param id Optional record id to get transactions for
      * @returns All transaction in the service or for the specified record
      */
@@ -99,6 +101,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Returns aggregated changes from all transactions
+     *
      * @param mergeChanges If set to true will merge each state's value over relate recordRef
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record
@@ -107,6 +110,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Returns the state of the record with provided id
+     *
      * @param id The id of the record
      * @param pending Should get pending state
      * @returns State of the record if any
@@ -115,6 +119,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Returns value of the required id including all uncommitted changes
+     *
      * @param id The id of the record to return value for
      * @param mergeChanges If set to true will merge state's value over relate recordRef
      * and will return merged value
@@ -124,6 +129,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Applies all transactions over the provided data
+     *
      * @param data Data source to update
      * @param id Optional record id to commit transactions for
      */
@@ -131,6 +137,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
 
     /**
      * Clears all transactions
+     *
      * @param id Optional record id to clear transactions for
      */
     clear(id?: any): void;
@@ -144,6 +151,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Clears all pending transactions and aggregated pending state. If commit is set to true
      * commits pending states as single transaction
+     *
      * @param commit Should commit the pending states
      */
     endPending(commit: boolean): void;

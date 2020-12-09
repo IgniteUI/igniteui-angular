@@ -82,6 +82,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     *
      * @example
      * ```html
      * <igx-chip [id]="'igx-chip-1'"></igx-chip>
@@ -93,6 +94,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
+     *
      * @example
      * ```html
      * <igx-chip [id]="'igx-chip-1'" [tabIndex]="1"></igx-chip>
@@ -113,6 +115,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that stores data related to the chip.
+     *
      * @example
      * ```html
      * <igx-chip [data]="{ value: 'Country' }"></igx-chip>
@@ -124,6 +127,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
      * By default it is set to false.
+     *
      * @example
      * ```html
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true"></igx-chip>
@@ -135,6 +139,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * An @Input property that enables/disables the draggable element animation when the element is released.
      * By default it's set to true.
+     *
      * @example
      * ```html
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [animateOnRelease]="false"></igx-chip>
@@ -146,6 +151,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * An @Input property that enables/disables the hiding of the base element that has been dragged.
      * By default it's set to true.
+     *
      * @example
      * ```html
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [hideBaseOnDrag]="false"></igx-chip>
@@ -157,6 +163,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * An @Input property that defines if the `IgxChipComponent` should render remove button and throw remove events.
      * By default it is set to false.
+     *
      * @example
      * ```html
      * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [removable]="true"></igx-chip>
@@ -167,6 +174,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that overrides the default icon that the chip applies to the remove button.
+     *
      * @example
      * ```html
      * <igx-chip [id]="chip.id" [removable]="true" [removeIcon]="iconTemplate"></igx-chip>
@@ -179,6 +187,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * An @Input property that defines if the `IgxChipComponent` can be selected on click or through navigation,
      * By default it is set to false.
+     *
      * @example
      * ```html
      * <igx-chip [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true"></igx-chip>
@@ -189,6 +198,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that overrides the default icon that the chip applies when it is selected.
+     *
      * @example
      * ```html
      * <igx-chip [id]="chip.id" [selectable]="true" [selectIcon]="iconTemplate"></igx-chip>
@@ -209,6 +219,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
      * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
+     *
      * @example
      * ```html
      * <igx-chip [id]="chip.id" [disabled]="true"></igx-chip>
@@ -219,6 +230,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * Sets the `IgxChipComponent` selected state.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
@@ -243,6 +255,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * Returns if the `IgxChipComponent` is selected.
+     *
      * @example
      * ```typescript
      * @ViewChild('myChip')
@@ -259,6 +272,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * An @Input property that sets the `IgxChipComponent` background color.
      * The `color` property supports string, rgb, hex.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [color]="'#ff0000'"></igx-chip>
@@ -271,6 +285,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * Returns the background color of the `IgxChipComponent`.
+     *
      * @example
      * ```typescript
      * @ViewChild('myChip')
@@ -287,6 +302,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * Emits an event when the `IgxChipComponent` moving starts.
      * Returns the moving `IgxChipComponent`.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onMoveStart)="moveStarted($event)">
@@ -298,6 +314,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * Emits an event when the `IgxChipComponent` moving ends.
      * Returns the moved `IgxChipComponent`.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onMoveEnd)="moveEnded($event)">
@@ -309,6 +326,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * Emits an event when the `IgxChipComponent` is removed.
      * Returns the removed `IgxChipComponent`.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onRemove)="remove($event)">
@@ -320,6 +338,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * Emits an event when the `IgxChipComponent` is clicked.
      * Returns the clicked `IgxChipComponent`, whether the event should be canceled.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onClick)="chipClick($event)">
@@ -332,6 +351,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * Emits event when the `IgxChipComponent` is selected/deselected.
      * Returns the selected chip reference, whether the event should be canceled, what is the next selection state and
      * when the event is triggered by interaction `originalEvent` is provided, otherwise `originalEvent` is `null`.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (onSelection)="chipSelect($event)">
@@ -342,6 +362,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * Emits event when the `IgxChipComponent` is selected/deselected and any related animations and transitions also end.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (onSelectionDone)="chipSelectEnd($event)">
@@ -354,6 +375,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
      * Returns the focused/selected `IgxChipComponent`, whether the event should be canceled,
      * if the `alt`, `shift` or `control` key is pressed and the pressed key name.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onKeyDown)="chipKeyDown($event)">
@@ -366,6 +388,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * Emits an event when the `IgxChipComponent` has entered the `IgxChipsAreaComponent`.
      * Returns the target `IgxChipComponent`, the drag `IgxChipComponent`, as  well as
      * the original drop event arguments.
+     *
      * @example
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onDragEnter)="chipEnter($event)">
@@ -389,6 +412,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
+     *
      * @example
      * ```html
      * <igx-chip [id]="chip.id" [draggable]="true"></igx-chip>

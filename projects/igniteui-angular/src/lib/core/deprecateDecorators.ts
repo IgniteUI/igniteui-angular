@@ -25,11 +25,11 @@ export function DeprecateClass(message: string) {
 export function DeprecateMethod(message: string): MethodDecorator {
     let isMessageShown = false;
 
-    return function (target: any, key: string, descriptor: PropertyDescriptor) {
+    return function(target: any, key: string, descriptor: PropertyDescriptor) {
         if (descriptor && descriptor.value) {
             const originalMethod = descriptor.value;
 
-            descriptor.value = function () {
+            descriptor.value = function() {
                 const targetName = typeof target === 'function' ? target.name : target.constructor.name;
                 isMessageShown = showMessage(`${targetName}.${key}: ${message}`, isMessageShown);
 
@@ -52,7 +52,7 @@ export function DeprecateProperty(message: string): PropertyDecorator {
         // if the target already has the property defined
         const originalDescriptor = Object.getOwnPropertyDescriptor(target, key);
         if (originalDescriptor) {
-            let getter, setter;
+            let getter; let setter;
             getter = originalDescriptor.get;
             setter = originalDescriptor.set;
 
@@ -64,7 +64,7 @@ export function DeprecateProperty(message: string): PropertyDecorator {
             }
 
             if (setter) {
-                originalDescriptor.set = function (value) {
+                originalDescriptor.set = function(value) {
                     isMessageShown = showMessage(messageToDisplay, isMessageShown);
                     setter.call(this, value);
                 };
@@ -79,11 +79,11 @@ export function DeprecateProperty(message: string): PropertyDecorator {
         Object.defineProperty(target, key, {
             configurable: true,
             enumerable: true,
-            set: function(value) {
+            set(value) {
                 isMessageShown = showMessage(messageToDisplay, isMessageShown);
                 this[newKey] = value;
             },
-            get: function() {
+            get() {
                 isMessageShown = showMessage(messageToDisplay, isMessageShown);
                 return this[newKey];
             }

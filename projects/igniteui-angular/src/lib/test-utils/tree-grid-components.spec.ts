@@ -598,7 +598,7 @@ export class IgxTreeGridLoadOnDemandComponent {
         setTimeout(() => {
             done(this.allData.filter(r => r.ParentID === parentID));
         }, 1000);
-    }
+    };
 }
 @Component({
     template: `
@@ -642,7 +642,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
         setTimeout(() => {
             done(this.allData.filter(r => r.ParentID === parentID));
         }, 1000);
-    }
+    };
 }
 
 @Component({
@@ -697,7 +697,7 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
             const children = this.getChildren(parentID);
             done(children);
         }, 1000);
-    }
+    };
 }
 
 @Component({
