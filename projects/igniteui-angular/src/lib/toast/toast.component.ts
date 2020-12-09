@@ -67,9 +67,6 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
 })
 export class IgxToastComponent extends IgxToggleDirective
     implements IToggleView, OnInit, OnDestroy {
-    private d$ = new Subject<boolean>();
-    private _isVisible = false;
-
     /**
      * @hidden
      */
@@ -286,12 +283,14 @@ export class IgxToastComponent extends IgxToggleDirective
      * @hidden
      * @internal
      */
-    toastMessage = '';
+    public toastMessage = '';
 
     /**
      * @hidden
      */
     private timeoutId: number;
+    private d$ = new Subject<boolean>();
+    private _isVisible = false;
 
     constructor(
         private _element: ElementRef,

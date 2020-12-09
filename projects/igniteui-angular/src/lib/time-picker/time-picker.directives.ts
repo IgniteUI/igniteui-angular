@@ -21,6 +21,8 @@ import { InteractionMode } from '../core/enums';
     selector: '[igxItemList]'
 })
 export class IgxItemListDirective {
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
 
     @Input('igxItemList')
     public type: string;
@@ -31,9 +33,6 @@ export class IgxItemListDirective {
         @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase,
         private elementRef: ElementRef
     ) { }
-
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
 
     @HostBinding('class.igx-time-picker__column')
     get defaultCSS(): boolean {
@@ -68,48 +67,6 @@ export class IgxItemListDirective {
     @HostListener('blur')
     public onBlur() {
         this.isActive = false;
-    }
-
-    private nextItem(): void {
-        switch (this.type) {
-            case 'hourList': {
-                this.timePicker.nextHour();
-                break;
-            }
-            case 'minuteList': {
-                this.timePicker.nextMinute();
-                break;
-            }
-            case 'secondsList': {
-                this.timePicker.nextSeconds();
-                break;
-            }
-            case 'ampmList': {
-                this.timePicker.nextAmPm();
-                break;
-            }
-        }
-    }
-
-    private prevItem(): void {
-        switch (this.type) {
-            case 'hourList': {
-                this.timePicker.prevHour();
-                break;
-            }
-            case 'minuteList': {
-                this.timePicker.prevMinute();
-                break;
-            }
-            case 'secondsList': {
-                this.timePicker.prevSeconds();
-                break;
-            }
-            case 'ampmList': {
-                this.timePicker.prevAmPm();
-                break;
-            }
-        }
     }
 
     /**
@@ -228,6 +185,48 @@ export class IgxItemListDirective {
             this.nextItem();
         } else if (event.deltaY > 0) {
             this.prevItem();
+        }
+    }
+
+    private nextItem(): void {
+        switch (this.type) {
+            case 'hourList': {
+                this.timePicker.nextHour();
+                break;
+            }
+            case 'minuteList': {
+                this.timePicker.nextMinute();
+                break;
+            }
+            case 'secondsList': {
+                this.timePicker.nextSeconds();
+                break;
+            }
+            case 'ampmList': {
+                this.timePicker.nextAmPm();
+                break;
+            }
+        }
+    }
+
+    private prevItem(): void {
+        switch (this.type) {
+            case 'hourList': {
+                this.timePicker.prevHour();
+                break;
+            }
+            case 'minuteList': {
+                this.timePicker.prevMinute();
+                break;
+            }
+            case 'secondsList': {
+                this.timePicker.prevSeconds();
+                break;
+            }
+            case 'ampmList': {
+                this.timePicker.prevAmPm();
+                break;
+            }
         }
     }
 }
