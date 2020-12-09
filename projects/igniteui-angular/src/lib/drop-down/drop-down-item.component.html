@@ -1,1 +1,8 @@
-<span class="igx-drop-down__inner"><ng-content></ng-content></span>
+<span class="igx-drop-down__content">
+    <ng-content select="igx-prefix, [igxPrefix]"></ng-content>
+    <span class="igx-drop-down__inner">
+        <ng-content></ng-content>
+    </span>
+    <ng-content select="igx-suffix, [igxSuffix]"></ng-content>
+    <ng-content select="igx-divider"></ng-content>
+</span>
