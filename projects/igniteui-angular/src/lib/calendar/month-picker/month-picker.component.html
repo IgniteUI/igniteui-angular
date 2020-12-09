@@ -12,11 +12,10 @@
             class="igx-calendar-picker__prev"
             (click)="previousYear()"
             (keydown)="changeYearKB($event, false)"
-            [ngStyle]="{'min-width.%': 25, 'left': 0}">
+            [ngStyle]="{'min-width.%': 25, 'left': 0}" 
             role="button"
-            [attr.aria-label]"'Previous Year ' + previousYear()"
-            data-action="prev"
-
+            [attr.aria-label]="'Previous Year ' + getPreviousYear()"
+            data-action="prev">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
         <div [style.width.%]="100">
@@ -35,10 +34,10 @@
             class="igx-calendar-picker__next"
             (click)="nextYear()"
             (keydown)="changeYearKB($event)"
-            [ngStyle]="{'min-width.%': 25,'right': 0}">
+            [ngStyle]="{'min-width.%': 25,'right': 0}"
             role="button"
-            [attr.aria-label]"'Next Year ' + nextYear()"
-            data-action="next"
+            [attr.aria-label]="'Next Year ' + getNextYear()"
+            data-action="next">
 
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
