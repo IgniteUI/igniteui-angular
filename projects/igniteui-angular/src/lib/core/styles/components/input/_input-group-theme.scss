@@ -979,6 +979,14 @@
         }
     }
 
+    %form-group-textarea--disabled {
+        color: --var($theme, 'disabled-text-color') !important;
+
+        &::placeholder {
+            color: --var($theme, 'disabled-placeholder-color');
+        }
+    }
+
     %form-group-textarea--cosy {
         min-height: rem(82px, map-get($base-scale-size, 'cosy'));
         margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'cosy'))};
