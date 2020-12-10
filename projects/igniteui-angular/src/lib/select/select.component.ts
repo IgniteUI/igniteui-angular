@@ -503,7 +503,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public onBlur(): void {
         this._onTouchedCallback();
-        if (this.ngControl && !this.ngControl.valid) {
+        if (this.ngControl && this.ngControl.invalid) {
             this.input.valid = IgxInputState.INVALID;
         } else {
             this.input.valid = IgxInputState.INITIAL;
@@ -519,9 +519,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
             if (this.inputGroup.isFocused) {
-                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.VALID;
             } else {
-                this.input.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
             }
         }
         this.manageRequiredAsterisk();
