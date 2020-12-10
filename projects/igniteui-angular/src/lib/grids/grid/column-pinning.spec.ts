@@ -243,7 +243,7 @@ describe('Column Pinning UI #grid', () => {
             expect(toolbar.pinnableColumns.length).toBe(4);
         });
 
-        fit('Checks order of columns after unpinning', () => {
+        it('Checks order of columns after unpinning', () => {
             for (const column of grid.columns) {
                 column.pin();
             }
