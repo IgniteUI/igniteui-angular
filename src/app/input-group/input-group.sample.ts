@@ -14,8 +14,4 @@ export class InputGroupSampleComponent {
 
     public isRequired = true;
     public value = '';
-
-    public toggleRequired() {
-        this.isRequired = !this.isRequired;
-    }
 }

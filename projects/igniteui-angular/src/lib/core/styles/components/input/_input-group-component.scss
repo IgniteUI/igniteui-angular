@@ -169,6 +169,10 @@
         @include e(input) {
             @extend %form-group-input--disabled !optional;
         }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--disabled !optional;
+        }
     }
 
     @include m(cosy) {

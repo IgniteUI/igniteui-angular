@@ -19,7 +19,7 @@
     (onClosing)="testOnClosing($event)"
     (onClosed)="testOnClosed()"
     (onSelection)="testOnSelection($event)"
-    [disabled]="false"
+    [disabled]="isDisabled"
     [displayDensity]="'cosy'">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
@@ -116,7 +116,7 @@
     <div class="sample-actions">
         <button igxButton="raised" (click)="handleOpen()">Open</button>
         <button igxButton="raised" (click)="handleClose()">Close</button>
-        <button igxButton="raised" (click)="toggleDisabled()">toggle Disable</button>
+        <button igxButton="raised" (click)="isDisabled = !isDisabled">toggle Disable</button>
         <button igxButton="raised" (click)="openCustomOverlaySettings()">open Custom Overlay</button>
     </div>
     <section>
