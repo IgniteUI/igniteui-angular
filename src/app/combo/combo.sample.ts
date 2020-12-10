@@ -41,13 +41,13 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
     alignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
-    private initData: any[] = [];
     public filterableFlag = true;
     public customValuesFlag = true;
     public autoFocusSearch = true;
     public items: any[] = [];
     public values1:  Array<any> = ['Arizona'];
     public values2:  Array<any>;
+    public isDisabled = false;
 
     public valueKeyVar = 'field';
     public currentDataType = '';
@@ -113,7 +113,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
                     field: e,
                     region: key.substring(0, key.length - 3)
                 });
-                this.initData = this.items;
             });
         }
     }
