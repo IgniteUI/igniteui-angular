@@ -233,7 +233,6 @@ $_bootstrap-chip: extend(
 /// @prop {Map} border-color [igx-color: ('grays', 400)] - The chip border color.
 /// @prop {Map} hover-border-color [igx-color: ('grays', 400)] - The chip hover border color.
 /// @prop {Map} focus-border-color [igx-color: ('grays', 400)] - The chip focus border color.
-
 /// @requires {function} extend
 /// @requires {Map} $_light-chip
 /// @requires {Map} $_indigo-shape-chip

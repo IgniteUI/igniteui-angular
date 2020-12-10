@@ -208,6 +208,7 @@ describe('IgxInput', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
 
+        dispatchInputEvent('focus', inputElement, fixture);
         igxInput.value = 'test';
         fixture.detectChanges();
 
@@ -330,7 +331,7 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
-        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
 
 
         igxInput.value = '';
@@ -465,6 +466,7 @@ describe('IgxInput', () => {
 
         dispatchInputEvent('focus', input, fixture);
         dispatchInputEvent('blur', input, fixture);
+        dispatchInputEvent('input', input, fixture);
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
@@ -550,10 +552,13 @@ describe('IgxInput', () => {
 
         dispatchInputEvent('blur', input.nativeElement, fixture);
         expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(input.valid).toBe(IgxInputState.INVALID);
 
+        dispatchInputEvent('focus', input.nativeElement, fixture);
         input.value = '123';
         dispatchInputEvent('input', input.nativeElement, fixture);
         expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+        expect(input.valid).toBe(IgxInputState.VALID);
 
         dispatchInputEvent('blur', input.nativeElement, fixture);
         expect(input.valid).toBe(IgxInputState.INITIAL);
@@ -805,7 +810,7 @@ class DataBoundDisabledInputComponent {
         <section>
         <igx-input-group>
             <label igxLabel>single line</label>
-            <input type="text" formControlName="str" igxInput>
+            <input #strinput type="text" formControlName="str" igxInput>
         </igx-input-group>
         <br>
         <igx-input-group>
@@ -827,7 +832,7 @@ class DataBoundDisabledInputComponent {
     </form>`
 })
 class ReactiveFormComponent {
-    @ViewChild(IgxInputDirective, { static: true }) public strIgxInput: IgxInputDirective;
+    @ViewChild('strinput', { static: true, read: IgxInputDirective }) public strIgxInput: IgxInputDirective;
 
     form = this.fb.group({
         str: ['', Validators.required],
