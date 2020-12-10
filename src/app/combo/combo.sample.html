@@ -16,8 +16,8 @@
                 <h5 class="sample-title">Template Form</h5>
                 <form>
                     <igx-combo class="input-container" [placeholder]="'Locations'" name="anyName" #comboModel="ngModel"
-                        [(ngModel)]="values1" [ngModelOptions]="{ updateOn: 'blur' }" minlength="2" required
-                        [data]="items" [filterable]="filterableFlag" [displayKey]="valueKeyVar"
+                        [(ngModel)]="values1" minlength="2" required
+                        [data]="items" [filterable]="filterableFlag" [displayKey]="valueKeyVar" [disabled]="isDisabled"
                         [valueKey]="valueKeyVar" [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                         <label igxLabel>States</label>
                         <igx-hint>Please select the states you've visited</igx-hint>
@@ -79,6 +79,8 @@
         </div>
         <div class="btn-wrapper mb24">
             <div class="btn-container">
+                <button igxButton="raised" igxRipple (click)="isDisabled = !isDisabled">Toggle disabled
+                </button>
                 <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
                 </button>
                 <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
