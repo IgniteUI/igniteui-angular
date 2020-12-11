@@ -25,4 +25,4 @@ $_bootstrap-shape-chip: (
 /// @type Map
 /// @prop {Number} border-radius [1] - The border radius used for chip. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $_round-shape-button
-$_indigo-shape-chip: extend($_round-shape-chip)
+$_indigo-shape-chip: extend($_round-shape-chip);
