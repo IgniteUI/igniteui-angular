@@ -27,6 +27,7 @@ export interface IActiveNode {
 export class IgxGridNavigationService {
     public grid: IgxGridBaseDirective & GridType;
     public _activeNode: IActiveNode = {} as IActiveNode;
+    public lastActiveNode: IActiveNode = {} as IActiveNode;
     protected pendingNavigation = false;
 
     public get activeNode() {
@@ -39,6 +40,7 @@ export class IgxGridNavigationService {
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) { return; }
         if (event.repeat && SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) {
             event.preventDefault();
         }
@@ -65,8 +67,6 @@ export class IgxGridNavigationService {
         if ([' ', 'spacebar', 'space'].indexOf(key) === -1) {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         }
-        if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) { return; }
-
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
@@ -222,10 +222,20 @@ export class IgxGridNavigationService {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
         if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
-            this.grid.navigateTo(0, 0, (obj) => {
+            const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
+            const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
+            if (shouldClearSelection) {
                 this.grid.clearCellSelection();
-                obj.target.activate(event);
-            });
+            }
+            this.lastActiveNode.row = this.lastActiveNode.row >= 1 && this.lastActiveNode.row < gridRows ?
+            this.lastActiveNode.row : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, -1)).index;
+            if (shouldClearSelection && !this.isColumnFullyVisible(this.lastActiveNode.column)) {
+                this.grid.navigateTo(this.lastActiveNode.row, this.lastActiveNode.column);
+            }
+            this.setActiveNode(hasLastActiveNode ? this.lastActiveNode : this.firstVisibleNode);
+            const range = { rowStart: this.activeNode.row, rowEnd: this.activeNode.row, columnStart: this.activeNode.column, columnEnd: this.activeNode.column };
+            this.grid.selectRange(range);
+            this.grid.notifyChanges();
         }
     }
 
@@ -233,12 +243,14 @@ export class IgxGridNavigationService {
         if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
                 (!header && !this.grid.hasSummarizedColumns))) { return; }
-
-        this.setActiveNode({
-            row: header ? -1 : this.grid.dataView.length, column: 0,
-            level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0 }
-        });
-        this.performHorizontalScrollToCell(0);
+            const shouldScrollIntoView = this.lastActiveNode && !(this.lastActiveNode.row !== 0 || this.lastActiveNode.row !== this.grid.dataView.length);
+            console.log(shouldScrollIntoView, this.lastActiveNode);
+            this.lastActiveNode.row =  header ? -1 : this.grid.dataView.length;
+            this.lastActiveNode.level = header && !this.lastActiveNode.level ? 0 : this.lastActiveNode.level;
+            this.lastActiveNode.column = this.lastActiveNode.column || this.grid.columnList.find(c => this.isColumnFullyVisible(c.visibleIndex)).visibleIndex;
+            this.setActiveNode(this.lastActiveNode);
+            if (shouldScrollIntoView) { this.performHorizontalScrollToCell(this.activeNode.column); }
+            this.grid.notifyChanges();
     }
 
     get lastColumnIndex() {
@@ -252,6 +264,14 @@ export class IgxGridNavigationService {
     }
     get containerTopOffset() {
         return parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+    }
+    get firstVisibleNode() {
+        return {
+            row: this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, -1)).index,
+            column: this.grid.rowList.first.columns ?
+                this.grid.columnList.find(c => this.isColumnFullyVisible(c.visibleIndex)).visibleIndex : 0,
+            level: 0
+        }
     }
 
     public isColumnFullyVisible(columnIndex: number) {
