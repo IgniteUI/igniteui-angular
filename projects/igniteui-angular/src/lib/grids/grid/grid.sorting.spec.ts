@@ -9,6 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
@@ -75,7 +76,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
         });
 
-        it('Should sort grid ascending by date column', () => {
+        it('Should sort grid by ISO 8601 date column', () => {
             fixture = TestBed.createComponent(GridWithPrimaryKeyComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -103,6 +104,76 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(5, currentColumn).value).toEqual('2008-12-18T11:23:17.714Z');
             expect(grid.getCellByColumn(4, currentColumn).value).toEqual('2011-11-28T11:23:17.714Z');
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('2017-06-19T11:43:07.714Z');
+        });
+
+        it('Should sort grid by milliseconds date column', () => {
+            fixture = TestBed.createComponent(GridWithPrimaryKeyComponent);
+            fixture.componentInstance.data = SampleTestData.personJobDataFull().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.HireDate = new Date(rec.HireDate).getTime();
+                return newRec;
+            });
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            const currentColumn = 'HireDate';
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(new Date('2005-10-14T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(1, currentColumn).value).toEqual(new Date('2005-11-18T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(2, currentColumn).value).toEqual(new Date('2005-11-19T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(3, currentColumn).value).toEqual(new Date('2007-12-19T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(4, currentColumn).value).toEqual(new Date('2008-12-18T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(5, currentColumn).value).toEqual(new Date('2011-11-28T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(new Date('2017-06-19T11:43:07.714Z').getTime());
+
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(9, currentColumn).value).toEqual(new Date('2005-10-14T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(8, currentColumn).value).toEqual(new Date('2005-11-18T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(7, currentColumn).value).toEqual(new Date('2005-11-19T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(6, currentColumn).value).toEqual(new Date('2007-12-19T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(5, currentColumn).value).toEqual(new Date('2008-12-18T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(4, currentColumn).value).toEqual(new Date('2011-11-28T11:23:17.714Z').getTime());
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(new Date('2017-06-19T11:43:07.714Z').getTime());
+        });
+
+        it('Should sort grid by date column', () => {
+            fixture = TestBed.createComponent(GridWithPrimaryKeyComponent);
+            fixture.componentInstance.data = SampleTestData.personJobDataFull().map(rec => {
+                const newRec = Object.assign({}, rec) as any;
+                newRec.HireDate = new Date(rec.HireDate);
+                return newRec;
+            });
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            const currentColumn = 'HireDate';
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(0, currentColumn).value.toISOString()).toEqual('2005-10-14T11:23:17.714Z');
+            expect(grid.getCellByColumn(1, currentColumn).value.toISOString()).toEqual('2005-11-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(2, currentColumn).value.toISOString()).toEqual('2005-11-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(3, currentColumn).value.toISOString()).toEqual('2007-12-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(4, currentColumn).value.toISOString()).toEqual('2008-12-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(5, currentColumn).value.toISOString()).toEqual('2011-11-28T11:23:17.714Z');
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value.toISOString()).toEqual('2017-06-19T11:43:07.714Z');
+
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(9, currentColumn).value.toISOString()).toEqual('2005-10-14T11:23:17.714Z');
+            expect(grid.getCellByColumn(8, currentColumn).value.toISOString()).toEqual('2005-11-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(7, currentColumn).value.toISOString()).toEqual('2005-11-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(6, currentColumn).value.toISOString()).toEqual('2007-12-19T11:23:17.714Z');
+            expect(grid.getCellByColumn(5, currentColumn).value.toISOString()).toEqual('2008-12-18T11:23:17.714Z');
+            expect(grid.getCellByColumn(4, currentColumn).value.toISOString()).toEqual('2011-11-28T11:23:17.714Z');
+            expect(grid.getCellByColumn(0, currentColumn).value.toISOString()).toEqual('2017-06-19T11:43:07.714Z');
         });
 
         it('Should not sort grid when trying to sort by invalid column', () => {
