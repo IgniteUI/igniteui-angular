@@ -2,14 +2,14 @@
     <div class="controls-holder">
         <div class="switches">
             <div class="control-item">
-                <igx-switch [checked]="true" [(ngModel)]="theme" (change)="onChange('theme', $event)">Dark</igx-switch>
+                <igx-switch [checked]="false" [(ngModel)]="theme" (change)="onChange('theme', $event)">Dark</igx-switch>
             </div>
             <div class="control-item">
-                <igx-switch [checked]="grouped" (change)="onChange('grouped', $event)" color="blue" cssClass="finjs-sample-switch">
+                <igx-switch [checked]="true" (change)="onChange('grouped', $event)" color="blue" cssClass="finjs-sample-switch">
                     Grouped</igx-switch>
             </div>
             <div class="control-item">
-                <igx-switch (change)="onChange('toolbar', $event)" color="blue" cssClass="finjs-sample-switch">Toolbar</igx-switch>
+                <igx-switch [checked]="true" (change)="onChange('toolbar', $event)" color="blue" cssClass="finjs-sample-switch">Toolbar</igx-switch>
             </div>
             <div class="finjs-slider control-item">
                 <label for="slider">Records: {{volume}}</label>
