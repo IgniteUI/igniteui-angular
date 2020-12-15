@@ -336,11 +336,11 @@
     </article>
 
     <footer class="igx-excel-filter__secondary-footer">
-        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
+        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick($event)">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
 
         <div>
             <button igxButton [displayDensity]="displayDensity" (click)="cancelChanges()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
-            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick()">
+            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>
         </div>
