@@ -132,7 +132,7 @@ export class IgxGridNavigationService {
             case 'f2':
                 const cell = this.grid.getCellByColumnVisibleIndex(this.activeNode.row, this.activeNode.column);
                 if (!this.isDataRow(rowIndex) || !cell.editable) { break; }
-                this.grid.crudService.enterEditMode(cell);
+                this.grid.crudService.enterEditMode(cell, event);
                 break;
             case 'escape':
             case 'esc':
@@ -143,7 +143,7 @@ export class IgxGridNavigationService {
                 }
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
-                    this.grid.endEdit(false);
+                    this.grid.endEdit(false, event);
                     if (isEdge()) { this.grid.cdr.detectChanges(); }
                     this.grid.tbody.nativeElement.focus();
                 }
@@ -300,9 +300,9 @@ export class IgxGridNavigationService {
             }
 
             if (event.shiftKey && row.treeRow !== undefined) {
-                row.beginAddChild();
+                this.grid.beginAddRowByIndex(row.rowID, row.index, true, event);
             } else if (!event.shiftKey) {
-                row.beginAddRow();
+                this.grid.beginAddRowByIndex(row.rowID, row.index, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             row.rowID === undefined ? row.toggle() :
@@ -318,18 +318,18 @@ export class IgxGridNavigationService {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
         if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
-            this.grid.endEdit(true);
+            this.grid.endEdit(true, event);
             return;
         }
         event.preventDefault();
         if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             if (this.grid.crudService.row?.isAddRow) {
-                this.grid.gridAPI.submit_add_value();
+                this.grid.gridAPI.submit_add_value(event);
                 const row = this.grid.rowList.find(r => r.rowID === this.grid.crudService.row.id);
                 row.rowData = this.grid.crudService.row.data;
             } else {
-                this.grid.gridAPI.submit_value();
+                this.grid.gridAPI.submit_value(event);
             }
             shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
