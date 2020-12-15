@@ -6,10 +6,9 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
-### General
-- **Breaking Change**
+    ### General
     - `IgxCalendar`
-        - The `CalendarView` enum is now deprecated. Use the new `IgxCalendarView`, which is a string enumeration. Using `ng update` will automatically migrate your project to use the new names.
+        - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
 
 ## 11.0.4
 
