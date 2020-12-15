@@ -6,7 +6,7 @@
     "start": "ng serve --open --configuration hmr",
     "start:es5": "ng serve --open --configuration es5",
     "build": "ng build",
-    "test": "ng test",
+    "test": "ng test igniteui-angular",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "test:lib": "ng test igniteui-angular --watch=false --no-progress --code-coverage",
