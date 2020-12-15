@@ -48,7 +48,7 @@
 <ng-container *ngIf="showExpanderIndicator">
     <div #indicator
          class="igx-grid__tree-grouping-indicator"
-         (click)="toggle($event)" (focus)="onIndicatorFocus()">
+         (click)="toggle($event)" (focus)="onIndicatorFocus($event)">
          <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
         </ng-container>
     </div>
