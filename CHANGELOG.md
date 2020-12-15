@@ -6,7 +6,7 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
-    ### General
+### General
     - `IgxCalendar`
         - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
 
