@@ -233,15 +233,11 @@ export class IgxGridNavigationService {
         if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
             const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
-            if (shouldClearSelection) {
-                this.grid.clearCellSelection();
-            }
-            this.lastActiveNode.row = this.lastActiveNode.row >= 1 && this.lastActiveNode.row < gridRows ?
-            this.lastActiveNode.row : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, -1)).index;
+            if (shouldClearSelection) { this.grid.clearCellSelection(); }
+            this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ? this.firstVisibleNode(this.lastActiveNode.row) : this.firstVisibleNode());
             if (shouldClearSelection && !this.isColumnFullyVisible(this.lastActiveNode.column)) {
-                this.grid.navigateTo(this.lastActiveNode.row, this.lastActiveNode.column);
+                this.grid.navigateTo(this.activeNode.row, this.activeNode.column);
             }
-            this.setActiveNode(hasLastActiveNode ? this.lastActiveNode : this.firstVisibleNode);
             const range = { rowStart: this.activeNode.row, rowEnd: this.activeNode.row, columnStart: this.activeNode.column, columnEnd: this.activeNode.column };
             this.grid.selectRange(range);
             this.grid.notifyChanges();
@@ -252,14 +248,11 @@ export class IgxGridNavigationService {
         if ((header || this.grid.dataView.length) && this.activeNode &&
             (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length ||
                 (!header && !this.grid.hasSummarizedColumns))) { return; }
-            const shouldScrollIntoView = this.lastActiveNode && !(this.lastActiveNode.row !== 0 || this.lastActiveNode.row !== this.grid.dataView.length);
-            console.log(shouldScrollIntoView, this.lastActiveNode);
-            this.lastActiveNode.row =  header ? -1 : this.grid.dataView.length;
-            this.lastActiveNode.level = header && !this.lastActiveNode.level ? 0 : this.lastActiveNode.level;
-            this.lastActiveNode.column = this.lastActiveNode.column || this.grid.columnList.find(c => this.isColumnFullyVisible(c.visibleIndex)).visibleIndex;
-            this.setActiveNode(this.lastActiveNode);
+            const shouldScrollIntoView = this.lastActiveNode && (header && this.lastActiveNode.row !== -1) || (!header && this.lastActiveNode.row !== this.grid.dataView.length);
+            this.setActiveNode(this.firstVisibleNode(header ? -1 : this.grid.dataView.length));
             if (shouldScrollIntoView) { this.performHorizontalScrollToCell(this.activeNode.column); }
             this.grid.notifyChanges();
+
     }
 
     get lastColumnIndex() {
@@ -274,13 +267,17 @@ export class IgxGridNavigationService {
     get containerTopOffset() {
         return parseInt(this.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
     }
-    get firstVisibleNode() {
-        return {
-            row: this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, -1)).index,
-            column: this.grid.rowList.first.columns ?
-                this.grid.columnList.find(c => this.isColumnFullyVisible(c.visibleIndex)).visibleIndex : 0,
-            level: 0
-        }
+    private  firstVisibleNode(rowIndex?) {
+        const colIndex = this.lastActiveNode.column !== undefined ? this.lastActiveNode.column :
+            this.grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex).find(c => this.isColumnFullyVisible(c.visibleIndex)).visibleIndex;
+        const column = this.grid.visibleColumns.find((col) => !col.columnLayout && col.visibleIndex === colIndex);
+        const node = { row: rowIndex ? rowIndex : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, colIndex)).index,
+            column: column.visibleIndex, level: column.level,
+            mchCache: {level: column.level, visibleIndex: column.visibleIndex},
+            layout: column.columnLayoutChild ? { rowStart: column.rowStart, colStart: column.colStart,
+                rowEnd: column.rowEnd, colEnd: column.colEnd, columnVisibleIndex: column.visibleIndex} : null }
+        console.log(node);
+        return node;
     }
 
     public isColumnFullyVisible(columnIndex: number) {
