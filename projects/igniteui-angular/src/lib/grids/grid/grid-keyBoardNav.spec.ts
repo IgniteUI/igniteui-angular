@@ -132,7 +132,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             const args: IActiveNodeChangeEventArgs = {
                 row: 0,
                 column: 0,
-                level: undefined,
+                level: 0,
                 tag: 'dataCell'
             };
 
@@ -257,7 +257,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(200);
             fix.detectChanges();
 
-            const cell = grid.getCellByColumn(0, 'col0');
+            const cell = grid.getCellByColumn(4, 'col5');
             expect(cell).toBeDefined();
             GridSelectionFunctions.verifyCellActive(cell);
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -708,8 +708,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const row = grid.getRowByIndex(0);
-            expect(row).toBeDefined();
-            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
+            expect(row).not.toBeDefined();
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
         });
 
         it('should toggle expand/collapse state of group row with ArrowRight/ArrowLeft key.', () => {
