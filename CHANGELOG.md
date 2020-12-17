@@ -6,9 +6,17 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
+### General
+    - `IgxCalendar`
+        - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
+
+## 11.0.4
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - a new property `event` has been introduced to `IGridEditEventArgs` and `IGridEditDoneEventArgs`; the property represents the original DOM event that triggers any of Grid editing events like `rowEditEnter`, `cellEditEnter`, `cellEdit`, `cellEditDone`, `cellEditExit`, `rowEdit`, `rowEditDone`, `rowEditExit`
 
 ## 11.0.0
-
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

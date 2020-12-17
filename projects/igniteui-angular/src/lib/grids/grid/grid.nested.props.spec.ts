@@ -545,7 +545,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: initialRowData.locations,
             cancel: false,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: jasmine.anything() as any
         };
 
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -606,7 +607,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: initialRowData.locations,
             cancel: false,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: jasmine.anything() as any
         };
 
         expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -671,7 +673,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: row.rowData,
             owner: grid,
             isAddRow: row.addRow,
-            cancel: false
+            cancel: false,
+            event: jasmine.anything() as any
         };
 
         expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -690,7 +693,7 @@ describe('Edit cell with data of type Array', () => {
         grid.endEdit(false);
         fixture.detectChanges();
         await fixture.whenStable();
-
+        rowArgs.event = undefined;
         expect(row.inEditMode).toBeFalsy();
         expect(cell.editMode).toBeFalsy();
 
@@ -732,7 +735,8 @@ describe('Edit cell with data of type Array', () => {
             oldValue: row.rowData,
             owner: grid,
             isAddRow: row.addRow,
-            cancel: false
+            cancel: false,
+            event: jasmine.anything() as any
         };
 
         expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -751,7 +755,7 @@ describe('Edit cell with data of type Array', () => {
         grid.endEdit(true);
         fixture.detectChanges();
         await fixture.whenStable();
-
+        rowArgs.event = undefined;
         expect(row.inEditMode).toBeFalsy();
         expect(cell.editMode).toBeFalsy();
 
