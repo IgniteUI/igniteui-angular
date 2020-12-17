@@ -1,8 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 11.0.0
 
+## 11.0.4
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - a new property `event` has been introduced to `IGridEditEventArgs` and `IGridEditDoneEventArgs`; the property represents the original DOM event that triggers any of Grid editing events like `rowEditEnter`, `cellEditEnter`, `cellEdit`, `cellEditDone`, `cellEditExit`, `rowEdit`, `rowEditDone`, `rowEditExit`
+
+## 11.0.0
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
