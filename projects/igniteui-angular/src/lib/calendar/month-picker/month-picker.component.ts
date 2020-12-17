@@ -11,7 +11,7 @@ import { trigger, transition, useAnimation } from '@angular/animations';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
 import { KEYS } from '../../core/utils';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
-import { IgxMonthPickerBaseDirective, CalendarView } from '../month-picker-base';
+import { IgxMonthPickerBaseDirective, IgxCalendarView } from '../month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
 import { ScrollMonth } from '../calendar-base';
@@ -163,7 +163,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public selectYear(event: Date) {
         this.previousViewDate = this.viewDate;
         this.viewDate = new Date(event.getFullYear(), event.getMonth(), event.getDate());
-        this.activeView = CalendarView.DEFAULT;
+        this.activeView = IgxCalendarView.Month;
 
         requestAnimationFrame(() => {
             if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
@@ -199,6 +199,20 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         if (value) {
             this.viewDate = this.selectedDates = value;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getNextYear() {
+        return this.calendarModel.getNextYear(this.viewDate).getFullYear();
+    }
+
+    /**
+     * @hidden
+     */
+    public getPreviousYear() {
+        return this.calendarModel.getPrevYear(this.viewDate).getFullYear();
     }
 
     /**

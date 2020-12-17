@@ -106,7 +106,7 @@
         class="igx-grid__tree-grouping-indicator"
         [ngStyle]="{ visibility: showIndicator ? 'visible' : 'hidden' }"
         (click)="toggle($event)"
-        (focus)="onIndicatorFocus()"
+        (focus)="onIndicatorFocus($event)"
     >
         <ng-container
             *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }"
