@@ -189,6 +189,20 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     @HostBinding('class.igx-radio-group')
     public cssClass = 'igx-radio-group';
 
+     /**
+      * Sets vertical alignment to the radio group, if `[vertical]` is set to `true`.
+      * By default the alignment is horizontal.
+      *
+      * @example
+      * ```html
+      * <igx-radio-group [vertical]="true"></igx-radio-group>
+      * ```
+      */
+
+    @HostBinding('class.igx-radio-group--vertical')
+    @Input()
+    public vertical = false;
+
     /**
      * @hidden
      * @internal
