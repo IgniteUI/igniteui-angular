@@ -24,8 +24,17 @@ import { IgxIconModule } from '../icon/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
+import { mkenum } from '../core/utils';
 
-export enum ButtonGroupAlignment { horizontal, vertical }
+/**
+ * Determines the Button Group alignment
+ */
+export const ButtonGroupAlignment = mkenum({
+    horizontal: 'horizontal',
+    vertical: 'vertical'
+});
+export type ButtonGroupAlignment = (typeof ButtonGroupAlignment)[keyof typeof ButtonGroupAlignment];
+
 let NEXT_ID = 0;
 
 /**
