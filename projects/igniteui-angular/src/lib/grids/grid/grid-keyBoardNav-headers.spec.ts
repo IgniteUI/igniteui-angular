@@ -70,10 +70,10 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('ID', fix);
-            expect(header).toBeTruthy();
-            expect(grid.navigation.activeNode.column).toEqual(0);
+            expect(header).not.toBeDefined();
+            expect(grid.navigation.activeNode.column).toEqual(3);
             expect(grid.navigation.activeNode.row).toEqual(-1);
-            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(200);
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
         });
 
