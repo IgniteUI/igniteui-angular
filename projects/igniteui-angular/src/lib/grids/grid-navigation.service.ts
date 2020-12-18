@@ -233,17 +233,20 @@ export class IgxGridNavigationService {
         if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
             const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
-            if (shouldClearSelection) { this.grid.clearCellSelection(); }
-
             this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ?
                 this.firstVisibleNode(this.lastActiveNode.row) : this.firstVisibleNode());
-            if (shouldClearSelection && !this.isColumnFullyVisible(this.lastActiveNode.column)) {
-                this.grid.navigateTo(this.activeNode.row, this.activeNode.column);
+            if (shouldClearSelection) {
+                this.grid.clearCellSelection();
+                this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
+                    obj.target.activate(event);
+                    this.grid.cdr.detectChanges();
+                } );
+            } else {
+                const range = { rowStart: this.activeNode.row, rowEnd: this.activeNode.row,
+                    columnStart: this.activeNode.column, columnEnd: this.activeNode.column };
+                this.grid.selectRange(range);
+                this.grid.notifyChanges();
             }
-            const range = { rowStart: this.activeNode.row, rowEnd: this.activeNode.row,
-                columnStart: this.activeNode.column, columnEnd: this.activeNode.column };
-            this.grid.selectRange(range);
-            this.grid.notifyChanges();
         }
     }
 
@@ -276,12 +279,13 @@ export class IgxGridNavigationService {
     private  firstVisibleNode(rowIndex?) {
         const colIndex = this.lastActiveNode.column !== undefined ? this.lastActiveNode.column :
             this.grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex)
-            .find(c => this.isColumnFullyVisible(c.visibleIndex)).visibleIndex;
+            .find(c => this.isColumnFullyVisible(c.visibleIndex))?.visibleIndex;
         const column = this.grid.visibleColumns.find((col) => !col.columnLayout && col.visibleIndex === colIndex);
-        const node = { row: rowIndex ? rowIndex : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, colIndex)).index,
-            column: column.visibleIndex, level: column.level,
-            mchCache: {level: column.level, visibleIndex: column.visibleIndex},
-            layout: column.columnLayoutChild ? { rowStart: column.rowStart, colStart: column.colStart,
+        const rowInd = rowIndex ? rowIndex : this.grid.rowList.find(r => !this.shouldPerformVerticalScroll(r.index, colIndex))?.index;
+        const node = { row: rowInd ?? 0,
+            column: column?.visibleIndex ?? 0, level: column?.level ?? 0,
+            mchCache: column ? {level: column.level, visibleIndex: column.visibleIndex} : {} as ColumnGroupsCache,
+            layout: column && column.columnLayoutChild ? { rowStart: column.rowStart, colStart: column.colStart,
                 rowEnd: column.rowEnd, colEnd: column.colEnd, columnVisibleIndex: column.visibleIndex} : null };
         return node;
     }
