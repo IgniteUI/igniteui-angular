@@ -229,7 +229,7 @@ export class IgxGridNavigationService {
             if (shouldClearSelection) {
                 this.grid.clearCellSelection();
                 this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
-                    obj.target.activate(event);
+                    obj.target?.activate(event);
                     this.grid.cdr.detectChanges();
                 } );
             } else {
