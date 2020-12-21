@@ -14,7 +14,7 @@ const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
 const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
-describe('Dialog', () => {
+fdescribe('Dialog', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -87,7 +87,7 @@ describe('Dialog', () => {
         const expectedMessage = 'message';
 
         dialog.isOpen = true;
-        tick();
+        tick(100);
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(true);
 
@@ -105,7 +105,7 @@ describe('Dialog', () => {
         fixture.componentInstance.myDialog = true;
 
         fixture.detectChanges();
-        tick();
+        tick(100);
         expect(dialog.isOpen).toEqual(true);
 
 

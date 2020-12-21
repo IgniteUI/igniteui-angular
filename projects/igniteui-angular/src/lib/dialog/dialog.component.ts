@@ -392,7 +392,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
         this.isOpenChange.emit(value);
         if (value) {
-            this.open();
+            requestAnimationFrame(() => {
+                this.open();
+            });
         } else {
             this.close();
         }
@@ -463,6 +465,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     private emitCloseFromDialog() {
         this.onClose.emit({ dialog: this, event: null });
+        this.isOpenChange.emit(false);
     }
 
     /**
@@ -475,6 +478,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         this.toggleRef.open(overlaySettings);
+        this.isOpenChange.emit(true);
         this.onOpen.emit({ dialog: this, event: null });
         if (!this.leftButtonLabel && !this.rightButtonLabel) {
             this.toggleRef.element.focus();
