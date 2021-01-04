@@ -1,6 +1,18 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 10.2.9
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+ - **Behavioral Change** -
+    When there isn't a previous active node and the user enters the grid using tab or shift + tab key:
+    the first fully visible element is activated: /no scroll bar positioning is reset/changed;
+    If there is a previous active node in the grid - the previously active node is reactivated without resetting the scroll positions;
+    If we follow the default tab navigation and we are currently on a data cell with / rowIndex: -1, columnIndex: 6/ for example
+    when we tab down to the root summaries the summary cell with visible column index 6 should be activated and scroll into the view;
+    The same applies if you shift+tab to the headers header cell with visible index 6 is activated and scrolled into the view;
+    If you have an active node and go to another tab and then return back the active node and the current scroll position should not be changed;
 ## 10.2.0
 
 ### General
@@ -78,7 +90,7 @@ All notable changes for each version of this project will be documented in this 
             return result;
         }
     }
-    ```  
+    ```
     - A new `pipeArgs` input property is exposed by the `IgxColumnComponent`, which is used to pass arguments to the Angular `DatePipe` and `DecimalPipe`, to format the display for date and numeric columns.
     ```typescript
 - ` IGX_INPUT_GROUP_TYPE` injection token
