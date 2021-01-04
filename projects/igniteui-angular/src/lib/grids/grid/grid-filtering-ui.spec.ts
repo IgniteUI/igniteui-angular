@@ -3258,21 +3258,24 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.displayDensity = DisplayDensity.compact;
             tick(200);
             fix.detectChanges();
+            spyOn(grid.onColumnVisibilityChanged, 'emit');
 
             const column = grid.columns.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsHidden(column, false, 6);
 
             // Open excel style filtering component and hide 'ProductName' column through header icon
-            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            tick(100);
-            fix.detectChanges();
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
             GridFunctions.clickHideIconInExcelStyleFiltering(fix);
             tick(200);
             fix.detectChanges();
 
             // Verify Excel menu is closed
             expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
-            GridFunctions.verifyColumnIsHidden(column, true, 5);
+            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith({
+                column: column,
+                newValue: true
+            });
         }));
 
         it('Should move pinned column correctly by using move buttons', fakeAsync(() => {
