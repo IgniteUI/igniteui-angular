@@ -516,8 +516,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * @example
      * ```typescript
      * public selectFiveDayRange() {
-     *  const inFiveDays = new Date(new Date().setDate(today.getDate() + 5));
      *  const today = new Date();
+     *  const inFiveDays = new Date(new Date().setDate(today.getDate() + 5));
      *  this.dateRange.selectRange(today, inFiveDays);
      * }
      * ```
@@ -747,6 +747,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public handleSelection(selectionData: Date[]): void {
         this.value = this.extractRange(selectionData);
         this.rangeSelected.emit(this.value);
+        if (this.mode === InteractionMode.DropDown && selectionData?.length > 1) {
+            this.close();
+        }
     }
 
     protected onStatusChanged = () => {
