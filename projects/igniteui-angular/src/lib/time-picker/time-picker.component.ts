@@ -365,7 +365,7 @@ export class IgxTimePickerComponent implements
      * @memberof IgxTimePickerComponent
      */
     @Input()
-    public mode = InteractionMode.Dialog;
+    public mode: InteractionMode = InteractionMode.Dialog;
 
     /**
      * Determines the container the popup element should be attached to.
