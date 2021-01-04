@@ -209,7 +209,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     @HostBinding('class.igx-radio-group--vertical')
-    public vertical = false;
+    private vertical = false;
 
     /**
      * Returns the alignment of the `igx-radio-group`.
