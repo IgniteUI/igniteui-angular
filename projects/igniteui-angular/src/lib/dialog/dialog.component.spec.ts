@@ -198,7 +198,8 @@ describe('Dialog', () => {
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
             dialog,
-            event: null
+            event: null,
+            cancel: false
         };
         spyOn(dialog.onOpen, 'emit');
         dialog.open();
