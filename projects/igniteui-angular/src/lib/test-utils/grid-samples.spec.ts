@@ -1088,6 +1088,25 @@ export class IgxGridDatesFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridESFComponent extends BasicGridComponent {
+    public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
     template: `
     <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
     </igx-grid-excel-style-filtering>
