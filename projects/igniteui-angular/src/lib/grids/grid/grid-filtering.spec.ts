@@ -15,7 +15,12 @@ import {
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../test-utils/grid-samples.spec';
+import {
+    IgxGridFilteringComponent,
+    CustomFilter,
+    IgxGridFilteringBindingComponent,
+    IgxGridESFComponent
+} from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 
@@ -24,7 +29,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxGridFilteringComponent
+                IgxGridFilteringComponent,
+                IgxGridESFComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -647,6 +653,18 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
+    }));
+
+    it('should exclude null and undefined values when filter by \'false\' and column dataType is not set', fakeAsync(() => {
+        fix = TestBed.createComponent(IgxGridESFComponent);
+        fix.detectChanges();
+        grid = fix.componentInstance.grid;
+
+        grid.filter('Released', false, IgxStringFilteringOperand.instance().condition('equals'), true);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(!(grid.getCellByColumn(0, 'Released').value));
+        expect(!(grid.getCellByColumn(1, 'Released').value));
     }));
 
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
