@@ -48,7 +48,7 @@ export class WorksheetData {
             return;
         }
 
-        const actualData = this._data.filter(item => !item.originalRowData.isExpression).map(item => item.rowData);
+        const actualData = this._data.map(item => item.rowData);
 
         this._keys = ExportUtilities.getKeysFromData(actualData);
         if (this._keys.length === 0) {
