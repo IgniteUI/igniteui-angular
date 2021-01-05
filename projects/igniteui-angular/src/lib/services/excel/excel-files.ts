@@ -61,6 +61,7 @@ export class WorksheetFile implements IExcelFile {
     private freezePane = '';
     private rowHeight = '';
 
+    // Check if implementation can be removed
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const sheetData = [];
         const cols = [];
@@ -133,24 +134,27 @@ export class WorksheetFile implements IExcelFile {
             }
         }
         const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+        const hasGroupedRows = worksheetData.isTreeGridData || worksheetData.isGroupedGridData;
 
         folder.file('sheet1.xml',
                     ExcelStrings.getSheetXML(dimension, freezePane, cols.join(''), sheetData.join(''), hasTable,
-                    worksheetData.isTreeGridData, maxOutlineLevel));
+                    hasGroupedRows, maxOutlineLevel));
     }
 
     public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
         return new Promise(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+                const hasGroupedRows = worksheetData.isTreeGridData || worksheetData.isGroupedGridData;
 
                 folder.file('sheet1.xml', ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
+                    this.dimension, this.freezePane, cols, rows, hasTable, hasGroupedRows, this.maxOutlineLevel));
                 resolve();
             });
         });
     }
 
+    // DO NOT touch this method, works perfectly fine for all cases.
     private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
         let sheetData = '';
         let cols = '';
@@ -207,6 +211,7 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
+    // DO NOT touch this method, works perfectly fine for all cases.
     private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
         const rowDataArr = new Array(worksheetData.rowCount - 1);
         const height =  worksheetData.options.rowHeight;
@@ -223,22 +228,25 @@ export class WorksheetFile implements IExcelFile {
 
     private processRow(worksheetData: WorksheetData, i: number) {
         const rowData = new Array(worksheetData.columnCount + 2);
-        if (!worksheetData.isTreeGridData) {
-            rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}>`;
+        const record = worksheetData.data[i - 1];
+
+        const originalData = record.originalRowData;
+        const sCollapsed = (!originalData.expanded) ? '' : (originalData.expanded === true) ? '' : ` collapsed="1"`;
+        const sHidden = (originalData.parent && this.hasCollapsedParent(originalData)) ? ` hidden="1"` : '';
+        const rowOutlineLevel = originalData.level ? originalData.level : 0;
+        const sOutlineLevel = rowOutlineLevel > 0 ? ` outlineLevel="${rowOutlineLevel}"` : '';
+        this.maxOutlineLevel = this.maxOutlineLevel < rowOutlineLevel ? rowOutlineLevel : this.maxOutlineLevel;
+        rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${sOutlineLevel}${sCollapsed}${sHidden}>`;
+
+        if (!record.originalRowData.isExpression) {
+            for (let j = 0; j < worksheetData.columnCount; j++) {
+                const cellData = WorksheetFile.getCellData(worksheetData, i, j);
+                rowData[j + 1] = cellData;
+            }
         } else {
-            const originalData = worksheetData.data[i - 1].originalRowData;
-            const sCollapsed = (!originalData.expanded) ? '' : (originalData.expanded === true) ? '' : ` collapsed="1"`;
-            const sHidden = (originalData.parent && this.hasCollapsedParent(originalData)) ? ` hidden="1"` : '';
-            const rowOutlineLevel = originalData.level ? originalData.level : 0;
-            const sOutlineLevel = rowOutlineLevel > 0 ? ` outlineLevel="${rowOutlineLevel}"` : '';
-            this.maxOutlineLevel = this.maxOutlineLevel < rowOutlineLevel ? rowOutlineLevel : this.maxOutlineLevel;
-            rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${sOutlineLevel}${sCollapsed}${sHidden}>`;
+            rowData[1] = WorksheetFile.getCellData(worksheetData, i, 0);
         }
 
-        for (let j = 0; j < worksheetData.columnCount; j++) {
-            const cellData = WorksheetFile.getCellData(worksheetData, i, j);
-            rowData[j + 1] = cellData;
-        }
         rowData[worksheetData.columnCount + 1] = '</row>';
 
         return rowData.join('');
@@ -258,10 +266,13 @@ export class WorksheetFile implements IExcelFile {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
         const columnHeader = worksheetData.keys[column];
+        const fullRow = worksheetData.data[row - 1];
 
-        const rowData = worksheetData.data[row - 1].rowData;
+        const cellValue = worksheetData.isSpecialData ?
+            fullRow.rowData :
+            fullRow.rowData[columnHeader];
 
-        const cellValue = worksheetData.isSpecialData ? rowData : rowData[columnHeader];
+        debugger
 
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;

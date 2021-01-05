@@ -11,8 +11,8 @@ export class WorksheetData {
     private _isSpecialData: boolean;
 
     constructor(private _data: any[], private _columnWidths: number[], public options: IgxExcelExporterOptions,
-            public indexOfLastPinnedColumn, public sort: any, public isTreeGridData = false) {
-        this.initializeData();
+            public indexOfLastPinnedColumn, public sort: any, public isTreeGridData = false, public isGroupedGridData = false) {
+            this.initializeData();
     }
 
     public get data() {
@@ -48,7 +48,7 @@ export class WorksheetData {
             return;
         }
 
-        const actualData = this._data.map((item) => item.rowData);
+        const actualData = this._data.filter(item => !item.originalRowData.isExpression).map(item => item.rowData);
 
         this._keys = ExportUtilities.getKeysFromData(actualData);
         if (this._keys.length === 0) {

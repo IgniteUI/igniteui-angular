@@ -34,16 +34,16 @@ export class TreeGridSampleComponent implements OnInit {
         ];
 
         this.columns = [
-            { field: 'ID', width: 150, resizable: true, movable: true, pinned: true },
+            //{ field: 'ID', width: 150, resizable: true, movable: true, pinned: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true },
-            { field: 'ContactName', width: 150, resizable: true, movable: true },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true },
-            { field: 'Address', width: 150, resizable: true, movable: true },
-            { field: 'City', width: 150, resizable: true, movable: true },
-            { field: 'Region', width: 150, resizable: true, movable: true },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true },
-            { field: 'Phone', width: 150, resizable: true, movable: true },
-            { field: 'Fax', width: 150, resizable: true, movable: true }
+            // { field: 'ContactName', width: 150, resizable: true, movable: true },
+            // { field: 'ContactTitle', width: 150, resizable: true, movable: true },
+            // { field: 'Address', width: 150, resizable: true, movable: true },
+            // { field: 'City', width: 150, resizable: true, movable: true },
+            // { field: 'Region', width: 150, resizable: true, movable: true },
+            // { field: 'PostalCode', width: 150, resizable: true, movable: true },
+            // { field: 'Phone', width: 150, resizable: true, movable: true },
+            // { field: 'Fax', width: 150, resizable: true, movable: true }
         ];
         this.data = HIERARCHICAL_SAMPLE_DATA.slice(0);
     }

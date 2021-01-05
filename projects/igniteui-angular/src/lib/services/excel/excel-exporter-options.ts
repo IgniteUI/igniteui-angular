@@ -20,6 +20,16 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
     public ignorePinning = false;
 
     /**
+     * Specifies if column grouping should be ignored.
+     * ```typescript
+     * let ignoreGrouping = this.exportOptions.ignoreGrouping;
+     * this.exportOptions.ignoreGrouping = true;
+     * ```
+     * @memberof IgxExcelExporterOptions
+     */
+    public ignoreGrouping = false;
+
+    /**
      * Specifies whether the exported data should be formatted as Excel table. (True by default)
      * ```typescript
      * let exportAsTable = this.exportOptions.exportAsTable;

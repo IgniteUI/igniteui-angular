@@ -29,9 +29,16 @@
     </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [cellSelection]="'single'" [width]="'1200px'"
         [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState'
-        [summaryCalculationMode]="summaryMode" [summaryPosition]='position' [rowDraggable]="true">
+        [summaryCalculationMode]="summaryMode" [summaryPosition]='position' [rowDraggable]="true"
+        [exportExcelText]="'Export Excel'">
+        <igx-grid-toolbar>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-exporter [exportExcel]="true">
+                </igx-grid-toolbar-exporter>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'
+            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true'
             [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
         <!--<ng-template igxGroupByRow let-groupRow>
@@ -48,17 +55,17 @@
     <br />
 
     <button igxButton="raised" (click)="groupBy('CompanyName')">Group/Ungroup 'CompanyName'</button>
-    <button igxButton="raised" (click)="groupBy('ContactTitle')">Group/Ungroup 'ContactTitle'</button>
-    <button igxButton="raised" (click)="groupBy('City')">Group/Ungroup 'City'</button>
-    <button igxButton="raised" (click)="groupBy('PostalCode')">Group/Ungroup 'PostalCode'</button>
+    <button igxButton="raised" (click)="groupBy('Salary')">Group/Ungroup 'Salary'</button>
+    <!-- <button igxButton="raised" (click)="groupBy('City')">Group/Ungroup 'City'</button>
+    <button igxButton="raised" (click)="groupBy('PostalCode')">Group/Ungroup 'PostalCode'</button> -->
     <button igxButton="raised" (click)="getRowsList()">Get rowslist'</button>
     <button igxButton="raised" (click)="getState()">Get state</button>
 
     <br />
-    <button igxButton="raised" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
+    <!-- <button igxButton="raised" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
     <button igxButton="raised" (click)="ungroupMultiple()">Ungroup "Address", "Country"</button>
     <button igxButton="raised" (click)="groupUngroupMultiple()">Ungroup "CompanyName", group "ContactTitle",
-        "Address"</button>
+        "Address"</button> -->
     <br />
     <button igxButton="raised" (click)="toggleDensity()">Toggle density</button>
     <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>

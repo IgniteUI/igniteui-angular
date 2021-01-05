@@ -7,6 +7,15 @@ import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
 import { TreeGridFilteringStrategy } from '../../grids/tree-grid/tree-grid.filtering.pipe';
+import { IGroupingState } from '../../data-operations/groupby-state.interface';
+
+export interface IGridExportRecord {
+    data: string | {};
+    level?: number;
+    expanded?: boolean;
+    isExpression?: boolean;
+    parent?: ITreeGridRecord;
+}
 
 /**
  * onRowExport event arguments
@@ -70,10 +79,11 @@ const DEFAULT_COLUMN_WIDTH = 8.43;
 
 export abstract class IgxBaseExporter {
     private _columnList: any[];
-    private flatRecords = [];
+    private flatRecords: IGridExportRecord[] = [];
     private _columnWidthList: number[];
 
     protected _isTreeGrid = false;
+    protected _isGroupedGrid = false;
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
 
@@ -122,7 +132,7 @@ export abstract class IgxBaseExporter {
         this._columnWidthList = new Array<any>(columns.filter(c => !c.hidden).length);
 
         const hiddenColumns = [];
-        let lastVisbleColumnIndex = -1;
+        let lastVisibleColumnIndex = -1;
 
         columns.forEach((column) => {
             const columnHeader = column.header !== '' ? column.header : column.field;
@@ -142,7 +152,7 @@ export abstract class IgxBaseExporter {
             if (index !== -1) {
                 this._columnList[index] = columnInfo;
                 this._columnWidthList[index] = columnWidth;
-                lastVisbleColumnIndex = Math.max(lastVisbleColumnIndex, index);
+                lastVisibleColumnIndex = Math.max(lastVisibleColumnIndex, index);
             } else {
                 hiddenColumns.push(columnInfo);
             }
@@ -154,7 +164,7 @@ export abstract class IgxBaseExporter {
 
         // Append the hidden columns to the end of the list
         hiddenColumns.forEach((hiddenColumn) => {
-            this._columnList[++lastVisbleColumnIndex] = hiddenColumn;
+            this._columnList[++lastVisibleColumnIndex] = hiddenColumn;
         });
 
         const data = this.prepareData(grid, options);
@@ -230,10 +240,11 @@ export abstract class IgxBaseExporter {
     private exportRow(data: any[], rowData: any, index: number, isSpecialData: boolean) {
         let row;
 
-        if (!isSpecialData) {
+        if (!isSpecialData && !rowData.isExpression) {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
-                    let rawValue = this._isTreeGrid ? resolveNestedPath(rowData.data, e.field) : resolveNestedPath(rowData, e.field);
+                    let rawValue = resolveNestedPath(rowData.data, e.field);
+
                     const shouldApplyFormatter = e.formatter && !e.skipFormatter;
 
                     if (e.dataType === 'date' &&
@@ -251,7 +262,7 @@ export abstract class IgxBaseExporter {
                 return a;
             }, {});
         } else {
-            row = this._isTreeGrid ? rowData.data : rowData;
+            row = rowData.data;
         }
 
         const rowArgs = {
@@ -269,54 +280,83 @@ export abstract class IgxBaseExporter {
     private prepareData(grid: any, options: IgxExporterOptionsBase): any[] {
         this.flatRecords = [];
         let rootRecords = grid.rootRecords;
+        let groupedGridGroupingState = {} as IGroupingState;
+
         this._isTreeGrid = rootRecords !== undefined;
+        this._isGroupedGrid = grid.groupsRecords && grid.groupsRecords.length !== 0;
 
         if (this._isTreeGrid) {
             this.prepareHierarchicalData(rootRecords);
-        }
-
-        let data = this._isTreeGrid ? this.flatRecords : grid.data;
-
-        if (((grid.filteringExpressionsTree &&
-            grid.filteringExpressionsTree.filteringOperands.length > 0) ||
-            (grid.advancedFilteringExpressionsTree &&
-            grid.advancedFilteringExpressionsTree.filteringOperands.length > 0)) &&
-            !options.ignoreFiltering) {
-            const filteringState: any = {
-                expressionsTree: grid.filteringExpressionsTree,
-                advancedExpressionsTree: grid.advancedFilteringExpressionsTree,
-                logic: grid.filteringLogic
+        } else if (this._isGroupedGrid) {
+            groupedGridGroupingState = {
+                expressions: grid.groupingExpressions,
+                expansion: grid.groupingExpansionState,
+                defaultExpanded: grid.groupsExpanded,
             };
+            debugger
+            this.prepareGroupedData(grid.groupsRecords);
+        } else {
+            this.prepareFlatData(grid.data);
+        }
 
-            if (this._isTreeGrid) {
-                this.flatRecords = [];
-                filteringState.strategy = (grid.filterStrategy) ? grid.filterStrategy : new TreeGridFilteringStrategy();
-                rootRecords = filteringState.strategy.filter(rootRecords,
-                    filteringState.expressionsTree, filteringState.advancedExpressionsTree);
-                this.prepareHierarchicalData(rootRecords);
-                data = this.flatRecords;
-            } else {
-                filteringState.strategy = grid.filterStrategy;
-                data = DataUtil.filter(data, filteringState, grid);
+        if (!this._isGroupedGrid) {
+            if (((grid.filteringExpressionsTree &&
+                grid.filteringExpressionsTree.filteringOperands.length > 0) ||
+                (grid.advancedFilteringExpressionsTree &&
+                grid.advancedFilteringExpressionsTree.filteringOperands.length > 0)) &&
+                !options.ignoreFiltering) {
+                const filteringState: any = {
+                    expressionsTree: grid.filteringExpressionsTree,
+                    advancedExpressionsTree: grid.advancedFilteringExpressionsTree,
+                    logic: grid.filteringLogic
+                };
+
+                if (this._isTreeGrid) {
+                    this.flatRecords = [];
+                    filteringState.strategy = (grid.filterStrategy) ? grid.filterStrategy : new TreeGridFilteringStrategy();
+                    rootRecords = filteringState.strategy.filter(rootRecords,
+                        filteringState.expressionsTree, filteringState.advancedExpressionsTree);
+                    this.prepareHierarchicalData(rootRecords);
+                } else {
+                    filteringState.strategy = grid.filterStrategy;
+
+                    if (this._isGroupedGrid) {
+                        grid.groupsRecords = DataUtil.filter(grid.groupsRecords, filteringState, grid);
+                        grid.groupsRecords = DataUtil.group(grid.groupsRecords, groupedGridGroupingState);
+                        this.prepareGroupedData(grid.groupsRecords);
+                    } else {
+                        this.flatRecords = DataUtil.filter(this.flatRecords, filteringState, grid);
+                    }
+                }
+            }
+
+            if (grid.sortingExpressions &&
+                grid.sortingExpressions.length > 0 &&
+                !options.ignoreSorting) {
+                this._sort = cloneValue(grid.sortingExpressions[0]);
+
+                if (this._isTreeGrid) {
+                    this.flatRecords = [];
+                    rootRecords = DataUtil.treeGridSort(rootRecords, grid.sortingExpressions, grid.sortStrategy);
+                    this.prepareHierarchicalData(rootRecords);
+                } else if (this._isGroupedGrid) {
+                    grid.groupsRecords = DataUtil.sort(grid.groupsRecords, grid.sortingExpressions, grid.sortStrategy, grid);
+                    grid.groupsRecords = DataUtil.group(grid.groupsRecords, groupedGridGroupingState);
+                    this.prepareGroupedData(grid.groupsRecords);
+                } else {
+                    this.flatRecords = DataUtil.sort(this.flatRecords, grid.sortingExpressions, grid.sortStrategy, grid);
+                }
+            }
+
+            if (grid.groupingExpressions &&
+                grid.groupingExpressions.length > 0 &&
+                !grid.ignoreGrouping) {
+                grid.groupsRecords = DataUtil.group(grid.groupsRecords, groupedGridGroupingState);
+                this.prepareGroupedData(grid.groupsRecords);
             }
         }
 
-        if (grid.sortingExpressions &&
-            grid.sortingExpressions.length > 0 &&
-            !options.ignoreSorting) {
-            this._sort = cloneValue(grid.sortingExpressions[0]);
-
-            if (this._isTreeGrid) {
-                this.flatRecords = [];
-                rootRecords = DataUtil.treeGridSort(rootRecords, grid.sortingExpressions, grid.sortStrategy);
-                this.prepareHierarchicalData(rootRecords);
-                data = this.flatRecords;
-            } else {
-                data = DataUtil.sort(data, grid.sortingExpressions, grid.sortStrategy, grid);
-            }
-        }
-
-        return data;
+        return this.flatRecords;
     }
 
     private prepareHierarchicalData(records: ITreeGridRecord[]) {
@@ -324,10 +364,64 @@ export abstract class IgxBaseExporter {
             return;
         }
         for (let i = 0; i < records.length; i++) {
-            const hierarchicalRecord = records[i];
+            const hierarchicalRecord: IGridExportRecord = {
+                data: records[i].data,
+                level: records[i].level,
+                parent: records[i].parent,
+                expanded: records[i].expanded,
+            };
 
             this.flatRecords.push(hierarchicalRecord);
-            this.prepareHierarchicalData(hierarchicalRecord.children);
+            this.prepareHierarchicalData(records[i].children);
+        }
+    }
+
+    private prepareFlatData(records: any) {
+        if (!records) {
+            return;
+        }
+        for (let i = 0; i < records.length; i++) {
+            const record: IGridExportRecord = {
+                data: records[i]
+            };
+
+            this.flatRecords.push(record);
+        }
+    }
+
+    private prepareGroupedData(records: any) {
+        if (!records) {
+            return;
+        }
+
+        const firstCol = this._columnList[0].header;
+
+        for (let i = 0; i < records.length; i++) {
+            const record = records[i];
+
+            const groupExpression: IGridExportRecord = {
+                data: { [firstCol]: `${record.expression.fieldName} - ${record.value}` },
+                level: record.level,
+                isExpression: true
+            };
+
+            this.flatRecords.push(groupExpression);
+
+            if (record.groups.length > 0) {
+                this.prepareGroupedData(record.groups);
+            } else {
+                const rowRecords = record.records;
+
+                for (let j = 0; j < rowRecords.length; j++) {
+                    const currentRecord: IGridExportRecord = {
+                        data: rowRecords[j],
+                        level: record.level + 1,
+                        //isExpression: false,
+                    };
+
+                    this.flatRecords.push(currentRecord);
+                }
+            }
         }
     }
 
