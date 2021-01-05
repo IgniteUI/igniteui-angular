@@ -121,4 +121,9 @@
 
 @include b(igx-radio-group) {
     display: block;
+
+    @include m(vertical) {
+        display: flex;
+        flex-flow: column;
+    }
 }
