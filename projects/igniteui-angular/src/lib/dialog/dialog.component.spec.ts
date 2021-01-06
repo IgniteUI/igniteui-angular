@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
+import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
@@ -199,19 +199,30 @@ describe('Dialog', () => {
         const args: IDialogEventArgs = {
             dialog,
             event: null,
+        };
+        const cancellableArgs: IDialogCancellableEventArgs = {
+            dialog,
+            event: null,
             cancel: false
         };
+
         spyOn(dialog.onOpen, 'emit');
+        spyOn(dialog.onOpened, 'emit');
+        spyOn(dialog.isOpenChange, 'emit');
         dialog.open();
         tick();
         fixture.detectChanges();
-        expect(dialog.onOpen.emit).toHaveBeenCalledWith(args);
+        expect(dialog.onOpen.emit).toHaveBeenCalledWith(cancellableArgs);
+        expect(dialog.isOpenChange.emit).toHaveBeenCalled();
 
         spyOn(dialog.onClose, 'emit');
+        spyOn(dialog.onClosed, 'emit');
         dialog.close();
         tick();
         fixture.detectChanges();
-        expect(dialog.onClose.emit).toHaveBeenCalledWith(args);
+        expect(dialog.onClose.emit).toHaveBeenCalled();
+        expect(dialog.onClosed.emit).toHaveBeenCalledWith(args);
+        expect(dialog.isOpenChange.emit).toHaveBeenCalled();
 
         dialog.open();
         tick();

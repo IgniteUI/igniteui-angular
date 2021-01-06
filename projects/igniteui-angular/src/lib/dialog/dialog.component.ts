@@ -277,7 +277,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     /**
-     * An event that is emitted when the dialog is opened.
+     * An event that is emitted before the dialog is opened.
      * ```html
      * <igx-dialog (onOpen)="onDialogOpenHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
      * </igx-dialog>
@@ -287,7 +287,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public onOpen = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
-     * An event that is emitted when the dialog is opened.
+     * An event that is emitted after the dialog is opened.
      * ```html
      * <igx-dialog (onOpened)="onDialogOpenedHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
      * </igx-dialog>
@@ -297,7 +297,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public onOpened = new EventEmitter<IDialogEventArgs>();
 
     /**
-     * An event that is emitted when the dialog is closed.
+     * An event that is emitted before the dialog is closed.
      * ```html
      * <igx-dialog (onClose)="onDialogCloseHandler($event)" title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
      * </igx-dialog>
@@ -307,7 +307,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public onClose = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
-     * An event that is emitted when the dialog is closed.
+     * An event that is emitted after the dialog is closed.
      * ```html
      * <igx-dialog (onClosed)="onDialogClosedHandler($event)" title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
      * </igx-dialog>
@@ -485,10 +485,10 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     private emitCloseFromDialog(eventArgs) {
-        const dialogEventsArgs = { dialog: this, event: eventArgs.event, cancel: eventArgs.cancel }
+        const dialogEventsArgs = { dialog: this, event: eventArgs.event, cancel: eventArgs.cancel };
         this.onClose.emit(dialogEventsArgs);
         eventArgs.cancel = dialogEventsArgs.cancel;
-        if(!eventArgs.cancel){
+        if (!eventArgs.cancel) {
             this.isOpenChange.emit(false);
         }
     }
@@ -596,7 +596,7 @@ export interface IDialogEventArgs extends IBaseEventArgs {
     event: Event;
 }
 
-export interface IDialogCancellableEventArgs extends IDialogEventArgs, CancelableEventArgs {}
+export interface IDialogCancellableEventArgs extends IDialogEventArgs, CancelableEventArgs { }
 
 /**
  * @hidden
