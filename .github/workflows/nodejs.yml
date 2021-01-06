@@ -52,6 +52,8 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Install xmllint
+      run: sudo apt-get install libxml2-utils
     - name: Install coverage combiner, combine scripts and deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: |
