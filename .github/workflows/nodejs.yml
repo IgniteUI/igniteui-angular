@@ -40,12 +40,18 @@ jobs:
     #   env:
     #     NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
-    - if: github.repository == 'IgniteUI/igniteui-angular'
-      name: Combine scripts
-      run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+    - name: Install coverage combiner and Combine scripts
+      with:
+        node-version: 14
+      if: github.repository == 'IgniteUI/igniteui-angular'
+      run: |
+        npm install -g istanbul-combine
+        istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
     # Old Config
     # - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
-    - if: github.repository == 'IgniteUI/igniteui-angular'
-      name: Deploy results to coveralls.io
+    - name: Deploy results to coveralls.io
+      with:
+        node-version: 14
+      if: github.repository == 'IgniteUI/igniteui-angular'
       run: cat ./coverage/lcov.info | coveralls
 
