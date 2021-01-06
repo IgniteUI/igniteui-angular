@@ -30,15 +30,15 @@ jobs:
     - run: npm run test:lib:others
       env:
         NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:lib:grid
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:lib:tgrid
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:lib:hgrid
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
+    # - run: npm run test:lib:grid
+    #   env:
+    #     NODE_OPTIONS: --max_old_space_size=4096
+    # - run: npm run test:lib:tgrid
+    #   env:
+    #     NODE_OPTIONS: --max_old_space_size=4096
+    # - run: npm run test:lib:hgrid
+    #   env:
+    #     NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
     - run: echo "GITHUB_REPO=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
     - run: echo ${GITHUB_REPO}
