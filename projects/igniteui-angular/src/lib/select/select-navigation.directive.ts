@@ -99,8 +99,8 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
         let nextItem = this.findNextItem(items, text);
 
-        // If there is no such an item starting with the current text input stream AND the last Char in the input stream is the same as the first one,
-        // find next item starting with the same first Char.
+        // If there is no such an item starting with the current text input stream AND the last Char in the input stream
+        // is the same as the first one, find next item starting with the same first Char.
         // Covers cases of holding down the same key Ex: "pppppp" that iterates trough list items starting with "p".
         if (!nextItem && text.charAt(0) === text.charAt(text.length - 1)) {
             text = text.slice(0, 1);
