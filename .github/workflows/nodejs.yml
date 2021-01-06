@@ -43,12 +43,12 @@ jobs:
     - run: echo "GITHUB_REPO=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
     - run: echo ${GITHUB_REPO}
     - run: echo ---checks---
-    - run: echo "GITHUB_REPO_CHECK=${GITHUB_REPO} == IgniteUI/igniteui-angular" >> $GITHUB_ENV
-    - run: if [${GITHUB_REPO} == IgniteUI/igniteui-angular]; then echo "true"; else echo "false"; fi
+    - run: echo "GITHUB_REPO_CHECK=${GITHUB_REPO} == 'IgniteUI/igniteui-angular'" >> $GITHUB_ENV
+    - run: if [${GITHUB_REPO} == 'IgniteUI/igniteui-angular']; then echo "true"; else echo "false"; fi
     - run: echo ---end-of-checks---
     # Combine Scripts
-    - run: if [${GITHUB_REPO} == IgniteUI/igniteui-angular]; then istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json; fi
+    - run: if [${GITHUB_REPO} == 'IgniteUI/igniteui-angular']; then istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json; fi
     # Old Config
     # - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
-    - run: if [${GITHUB_REPO} == IgniteUI/igniteui-angular]; then cat ./coverage/lcov.info | coveralls; fi
+    - run: if [${GITHUB_REPO} == 'IgniteUI/igniteui-angular']; then cat ./coverage/lcov.info | coveralls; fi
 
