@@ -55,7 +55,7 @@ jobs:
     - name: Install coverage combiner, combine scripts and deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: |
-        npm i istanbul-combine
-        ./node_modules/istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
-        cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+        npm install -g istanbul-combine
+        istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+        cat ./coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
 
