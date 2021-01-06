@@ -43,5 +43,5 @@ jobs:
     - run: echo "GITHUB_REPO=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
     - run: echo ${GITHUB_REPO}
     # - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
-    - run: if [${GITHUB_REPO == *"IgniteUI/igniteui-angular"*}]; then cat ./coverage/lcov.info | coveralls;
+    - run: if [${GITHUB_REPO == *"IgniteUI/igniteui-angular"*}]; then cat ./coverage/lcov.info | coveralls; fi
 
