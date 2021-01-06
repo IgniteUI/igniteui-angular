@@ -44,11 +44,13 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     strategy:
-          matrix:
-            node-version: 14.x
+      matrix:
+        node: [14]
     steps:
-    - uses: actions/setup-node@v1
     - name: Install coverage combiner, combine scripts and deploy results to coveralls.io
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: |
         npm install -g istanbul-combine
