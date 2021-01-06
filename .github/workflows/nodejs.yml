@@ -48,7 +48,6 @@ jobs:
         node: [14]
     steps:
     - uses: actions/setup-node@v1
-    - name: Install coverage combiner, combine scripts and deploy results to coveralls.io
       with:
         node-version: ${{ matrix.node-version }}
       if: github.repository == 'IgniteUI/igniteui-angular'
