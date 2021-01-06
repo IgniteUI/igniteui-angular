@@ -372,8 +372,8 @@ export class IgxOverlayService implements OnDestroy {
      * this.overlay.hide(id);
      * ```
      */
-    hide(id: string) {
-        this._hide(id);
+    hide(id: string, event?: Event) {
+        this._hide(id, event);
     }
 
     /**
@@ -896,10 +896,10 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings.closeOnEscape && !this._keyPressEventListener) {
             this._keyPressEventListener = fromEvent(this._document, 'keydown').pipe(
                 filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc')
-            ).subscribe(() => {
+            ).subscribe((ev) => {
                 const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
                 if (targetOverlay.settings.closeOnEscape) {
-                    this.hide(targetOverlay.id);
+                    this.hide(targetOverlay.id, ev);
                 }
             });
         }

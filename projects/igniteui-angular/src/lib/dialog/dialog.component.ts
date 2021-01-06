@@ -24,7 +24,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
-import { IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
 /**
@@ -284,7 +284,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Output()
-    public onOpen = new EventEmitter<IDialogEventArgs>();
+    public onOpen = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
      * An event that is emitted when the dialog is opened.
@@ -304,7 +304,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Output()
-    public onClose = new EventEmitter<IDialogEventArgs>();
+    public onClose = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
      * An event that is emitted when the dialog is closed.
@@ -324,7 +324,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Output()
-    public onLeftButtonSelect = new EventEmitter<IDialogEventArgs>();
+    public onLeftButtonSelect = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
      * An event that is emitted when the right button is clicked.
@@ -336,7 +336,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Output()
-    public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
+    public onRightButtonSelect = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
      * @hidden
@@ -410,7 +410,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
     public set isOpen(value: boolean) {
         if (value !== this.isOpen) {
-            this.isOpenChange.emit(value);
             if (value) {
                 requestAnimationFrame(() => {
                     this.open();
@@ -486,15 +485,16 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     private emitCloseFromDialog(eventArgs) {
-        if (!eventArgs.cancel) {
+        const dialogEventsArgs = { dialog: this, event: eventArgs.event, cancel: eventArgs.cancel }
+        this.onClose.emit(dialogEventsArgs);
+        eventArgs.cancel = dialogEventsArgs.cancel;
+        if(!eventArgs.cancel){
             this.isOpenChange.emit(false);
-            this.onClose.emit({ dialog: this, event: null, cancel: false });
         }
     }
 
     private emitClosedFromDialog() {
-        this.isOpenChange.emit(false);
-        this.onClosed.emit({ dialog: this, event: null, cancel: false });
+        this.onClosed.emit({ dialog: this, event: null });
     }
 
     /**
@@ -506,9 +506,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
-        const eventArgs: IDialogEventArgs = { dialog: this, event: null, cancel: false };
+        const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null, cancel: false };
+        this.onOpen.emit(eventArgs);
         if (!eventArgs.cancel) {
-            this.onOpen.emit(eventArgs);
             this.toggleRef.open(overlaySettings);
             this.isOpenChange.emit(true);
             if (!this.leftButtonLabel && !this.rightButtonLabel) {
@@ -591,10 +591,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 }
 
-export interface IDialogEventArgs extends IBaseCancelableBrowserEventArgs {
+export interface IDialogEventArgs extends IBaseEventArgs {
     dialog: IgxDialogComponent;
     event: Event;
 }
+
+export interface IDialogCancellableEventArgs extends IDialogEventArgs, CancelableEventArgs {}
 
 /**
  * @hidden
