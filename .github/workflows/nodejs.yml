@@ -40,3 +40,8 @@ jobs:
       env:
         NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
+    - run: echo "GITHUB_REPO=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
+    - run: echo ${GITHUB_REPO}
+    # - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
+    - run: if [${GITHUB_REPO == *"IgniteUI/igniteui-angular"*}]; then cat ./coverage/lcov.info | coveralls
+
