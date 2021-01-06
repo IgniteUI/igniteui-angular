@@ -41,6 +41,7 @@ jobs:
     #     NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
     - name: Install coverage combiner and Combine scripts
+      uses: actions/setup-node@v1
       with:
         node-version: 14
       if: github.repository == 'IgniteUI/igniteui-angular'
@@ -50,6 +51,7 @@ jobs:
     # Old Config
     # - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
     - name: Deploy results to coveralls.io
+      uses: actions/setup-node@v1
       with:
         node-version: 14
       if: github.repository == 'IgniteUI/igniteui-angular'
