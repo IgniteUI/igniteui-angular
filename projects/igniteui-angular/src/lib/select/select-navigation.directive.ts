@@ -68,8 +68,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
     private inputStream = '';
     private clearStream$ = Subscription.EMPTY;
 
-    /** Handle continuous letter typing navigation */
-    @HostListener('keyup', ['$event'])
+    @HostListener('keydown', ['$event'])
     public captureKey(event: KeyboardEvent) {
         // relying only on key, available on all major browsers:
         // https://caniuse.com/#feat=keyboardevent-key (IE/Edge quirk doesn't affect letter typing)
@@ -82,6 +81,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         this.clearStream$ = timer(500).subscribe(() => {
             this.inputStream = '';
         });
+
         this.inputStream += event.key;
         const focusedItem = this.target.focusedItem as IgxSelectItemComponent;
 
@@ -94,14 +94,20 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
 
     public activateItemByText(text: string) {
         const items = this.target.items as IgxSelectItemComponent[];
-        const activeItemIndex = items.indexOf(this.target.focusedItem as IgxSelectItemComponent) || 0;
-        // ^ this is focused OR selected if the dd is closed
-        let nextItem = items.slice(activeItemIndex + 1).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
 
-        if (!nextItem) {
-            nextItem = items.slice(0, activeItemIndex).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
+        // ^ this is focused OR selected if the dd is closed
+
+        let nextItem = this.findNextItem(items, text);
+
+        // If there is no such an item starting with the current text input stream AND the last Char in the input stream is the same as the first one,
+        // find next item starting with the same first Char.
+        // Covers cases of holding down the same key Ex: "pppppp" that iterates trough list items starting with "p".
+        if (!nextItem && text.charAt(0) === text.charAt(text.length - 1)) {
+            text = text.slice(0, 1);
+            nextItem = this.findNextItem(items, text);
         }
 
+        // If there is no other item to be found, do not change the active item.
         if (!nextItem) {
             return;
         }
@@ -110,6 +116,15 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             this.target.selectItem(nextItem);
         }
         this.target.navigateItem(items.indexOf(nextItem));
+    }
+
+    private findNextItem(items: IgxSelectItemComponent[],  text: string) {
+        const activeItemIndex = items.indexOf(this.target.focusedItem as IgxSelectItemComponent) || 0;
+
+        // Match next item in ddl items and wrap around if needed
+        const item = items.slice(activeItemIndex + 1).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase()))) ||
+            items.slice(0, activeItemIndex).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
+        return item;
     }
 
     ngOnDestroy(): void {
