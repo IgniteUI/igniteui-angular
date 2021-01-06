@@ -1018,5 +1018,24 @@ export class FileContentData {
 
         return this.createData();
     }
+
+    get exportGroupedData() {
+        this._sharedStringsData =
+            `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand - BMW</t></si><si><t>Price - 150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price - 100000</t></si><si><t>Performance</t></si><si><t>Brand - Tesla</t></si><si><t>Roadster</t></si><si><t>Price - 75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price - 65000</t></si><si><t>Base</t></si><si><t>Brand - VW</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
+
+        this._tableData =
+            `ref="A1:B20" totalsRowShown="0">
+            <autoFilter ref="A1:B20"/><tableColumns count="2"><tableColumn id="1" name="Model"/><tableColumn id="2" name="Edition"/></tableColumns>`;
+
+        this._worksheetData =
+            `<sheetPr><outlinePr summaryBelow="0"/></sheetPr>
+            <dimension ref="A1:B20"/>
+            <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+            <sheetFormatPr defaultRowHeight="15" outlineLevelRow="2" x14ac:dyDescent="0.25"/>
+            <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/></cols>
+            <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c></row><row r="3" outlineLevel="1"><c r="A3" t="s"><v>3</v></c></row><row r="4" outlineLevel="2"><c r="A4" t="s"><v>4</v></c><c r="B4" t="s"><v>5</v></c></row><row r="5" outlineLevel="1"><c r="A5" t="s"><v>6</v></c></row><row r="6" outlineLevel="2"><c r="A6" t="s"><v>4</v></c><c r="B6" t="s"><v>7</v></c></row><row r="7"><c r="A7" t="s"><v>8</v></c></row><row r="8" outlineLevel="1"><c r="A8" t="s"><v>6</v></c></row><row r="9" outlineLevel="2"><c r="A9" t="s"><v>9</v></c><c r="B9" t="s"><v>7</v></c></row><row r="10" outlineLevel="1"><c r="A10" t="s"><v>10</v></c></row><row r="11" outlineLevel="2"><c r="A11" t="s"><v>11</v></c><c r="B11" t="s"><v>12</v></c></row><row r="12" outlineLevel="1"><c r="A12" t="s"><v>13</v></c></row><row r="13" outlineLevel="2"><c r="A13" t="s"><v>11</v></c><c r="B13" t="s"><v>14</v></c></row><row r="14"><c r="A14" t="s"><v>15</v></c></row><row r="15" outlineLevel="1"><c r="A15" t="s"><v>6</v></c></row><row r="16" outlineLevel="2"><c r="A16" t="s"><v>16</v></c><c r="B16" t="s"><v>17</v></c></row><row r="17" outlineLevel="1"><c r="A17" t="s"><v>10</v></c></row><row r="18" outlineLevel="2"><c r="A18" t="s"><v>16</v></c><c r="B18" t="s"><v>18</v></c></row><row r="19" outlineLevel="1"><c r="A19" t="s"><v>13</v></c></row><row r="20" outlineLevel="2"><c r="A20" t="s"><v>19</v></c><c r="B20" t="s"><v>18</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
     /* tslint:enable max-line-length */
 }

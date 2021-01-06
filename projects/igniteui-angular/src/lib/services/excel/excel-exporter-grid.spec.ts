@@ -14,7 +14,8 @@ import {
     GridIDNameJobTitleComponent,
     ProductsComponent,
     GridIDNameJobTitleHireDataPerformanceComponent,
-    GridHireDateComponent
+    GridHireDateComponent,
+    GridExportGroupedDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -43,9 +44,10 @@ describe('Excel Exporter', () => {
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                GridWithEmtpyColumnsComponent,
+                GridWithEmptyColumnsComponent,
                 GridIDNameJobTitleHireDataPerformanceComponent,
-                GridHireDateComponent
+                GridHireDateComponent,
+                GridExportGroupedDataComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -458,7 +460,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export columns without header', async () => {
-            const fix = TestBed.createComponent(GridWithEmtpyColumnsComponent);
+            const fix = TestBed.createComponent(GridWithEmptyColumnsComponent);
             fix.detectChanges();
             await wait();
 
@@ -538,6 +540,21 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.hireDate);
+        });
+
+        it('Should export grouped grid', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.groupBy({ fieldName: 'Price', dir: SortingDirection.Desc, ignoreCase: false });
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedData);
         });
     });
 
@@ -775,7 +792,7 @@ describe('Excel Exporter', () => {
     </igx-grid>`
 })
 
-export class GridWithEmtpyColumnsComponent {
+export class GridWithEmptyColumnsComponent {
     public data = SampleTestData.personJobDataFull();
 
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
