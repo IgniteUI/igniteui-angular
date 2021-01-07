@@ -324,7 +324,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Output()
-    public onLeftButtonSelect = new EventEmitter<IDialogCancellableEventArgs>();
+    public onLeftButtonSelect = new EventEmitter<IDialogEventArgs>();
 
     /**
      * An event that is emitted when the right button is clicked.
@@ -336,7 +336,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Output()
-    public onRightButtonSelect = new EventEmitter<IDialogCancellableEventArgs>();
+    public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
     /**
      * @hidden
@@ -410,6 +410,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
     public set isOpen(value: boolean) {
         if (value !== this.isOpen) {
+            this.isOpenChange.emit(value);
             if (value) {
                 requestAnimationFrame(() => {
                     this.open();
@@ -482,6 +483,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     ngAfterContentInit() {
         this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitCloseFromDialog(eventArgs));
         this.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitClosedFromDialog());
+        this.toggleRef.onOpened.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitOpenedFromDialog());
     }
 
     private emitCloseFromDialog(eventArgs) {
@@ -495,6 +497,10 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     private emitClosedFromDialog() {
         this.onClosed.emit({ dialog: this, event: null });
+    }
+
+    private emitOpenedFromDialog() {
+        this.onOpened.emit({ dialog: this, event: null });
     }
 
     /**
@@ -562,14 +568,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * @hidden
      */
     public onInternalLeftButtonSelect(event) {
-        this.onLeftButtonSelect.emit({ dialog: this, event, cancel: false });
+        this.onLeftButtonSelect.emit({ dialog: this, event });
     }
 
     /**
      * @hidden
      */
     public onInternalRightButtonSelect(event) {
-        this.onRightButtonSelect.emit({ dialog: this, event, cancel: false });
+        this.onRightButtonSelect.emit({ dialog: this, event });
     }
 
     /**

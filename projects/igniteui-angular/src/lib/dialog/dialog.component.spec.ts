@@ -200,7 +200,7 @@ describe('Dialog', () => {
             dialog,
             event: null,
         };
-        const cancellableArgs: IDialogCancellableEventArgs = {
+        let cancellableArgs: IDialogCancellableEventArgs = {
             dialog,
             event: null,
             cancel: false
@@ -214,12 +214,15 @@ describe('Dialog', () => {
         fixture.detectChanges();
         expect(dialog.onOpen.emit).toHaveBeenCalledWith(cancellableArgs);
         expect(dialog.isOpenChange.emit).toHaveBeenCalled();
+        expect(dialog.onOpened.emit).toHaveBeenCalledWith(args);
 
         spyOn(dialog.onClose, 'emit');
         spyOn(dialog.onClosed, 'emit');
         dialog.close();
         tick();
         fixture.detectChanges();
+
+        cancellableArgs = { dialog, event: undefined, cancel: false };
         expect(dialog.onClose.emit).toHaveBeenCalled();
         expect(dialog.onClosed.emit).toHaveBeenCalledWith(args);
         expect(dialog.isOpenChange.emit).toHaveBeenCalled();
