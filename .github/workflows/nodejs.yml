@@ -52,6 +52,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install dependencies
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: npm ci
