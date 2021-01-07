@@ -47,7 +47,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
 
-describe('igxSelect', () => {
+fdescribe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
@@ -783,7 +783,7 @@ describe('igxSelect', () => {
             expect(selectComp.collapsed).toBeTruthy();
         }));
     });
-    describe('Selection tests: ', () => {
+    fdescribe('Selection tests: ', () => {
         describe('Using simple select component', () => {
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -1501,7 +1501,7 @@ describe('igxSelect', () => {
             expect(groupElement.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeFalsy();
         }));
     });
-    describe('Key navigation tests: ', () => {
+    fdescribe('Key navigation tests: ', () => {
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             select = fixture.componentInstance.select;
