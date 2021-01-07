@@ -44,13 +44,13 @@ jobs:
         NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
     - name: Install coverage combiner
-      if: github.repository == 'IgniteUI/igniteui-angular' && ${{ matrix.node-version }} == '14.x'
+      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
       run: sudo npm install -g istanbul-combine
     - name: Combine scripts
-      if: github.repository == 'IgniteUI/igniteui-angular' && ${{ matrix.node-version }} == '14.x'
+      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
       run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
     - name: Coveralls GitHub Action
-      if: github.repository == 'IgniteUI/igniteui-angular' && ${{ matrix.node-version }} == '14.x'
+      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
       uses: coverallsapp/github-action@v1.1.2
       with:
         github-token: ${{ github.token }}
