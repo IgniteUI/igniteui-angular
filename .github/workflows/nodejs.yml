@@ -55,9 +55,6 @@ jobs:
     - name: Deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-      with:
-        repo-token: ${{ github.token }}
-        repository: ${{ github.repository }}
 
   # coverage:
   #   needs: run-tests
