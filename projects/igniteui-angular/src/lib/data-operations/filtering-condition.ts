@@ -548,7 +548,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
      * @memberof IgxStringFilteringOperand
      */
     public static applyIgnoreCase(a: string, ignoreCase: boolean): string {
-        a = a || '';
+        a = a === null || a === undefined ? '' : a;
         // bulletproof
         return ignoreCase ? ('' + a).toLowerCase() : a;
     }
