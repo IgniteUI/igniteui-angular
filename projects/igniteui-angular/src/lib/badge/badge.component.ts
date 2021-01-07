@@ -156,7 +156,6 @@ export class IgxBadgeComponent {
      */
     @HostBinding('attr.aria-roledescription')
     get roleDescription() {
-        // eslint-disable-next-line
         if (this.icon) {
             return this.type + ' type badge with icon type ' + this.icon;
         } else if (this.value || this.value === 0) {

@@ -101,9 +101,7 @@ export class ExportTestDataService {
         { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer' },
         { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO' },
         { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer' },
-        // eslint-disable-next-line
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead' },
-        // eslint-disable-next-line
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager' }
     ];
@@ -116,9 +114,7 @@ export class ExportTestDataService {
         { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer', HireDate: '2007-12-19T11:23:17.714Z' },
         { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z' },
         { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z' },
-        // eslint-disable-next-line
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z' },
-        // eslint-disable-next-line
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
     ];

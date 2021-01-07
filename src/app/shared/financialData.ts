@@ -48,7 +48,6 @@ export const MOCKFINANCEDATA: any[] = [
     "IndSect": "Consumer, Cyclical",
     "IndSubg": "Airlines",
     "SecType": "PUBLIC",
-    // eslint-disable-next-line
     "CpnTyp": "FIXED",
     "IssuerN": "AMERICAN AIRLINES GROUP",
     "Moodys": "WR",

@@ -3273,7 +3273,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith({
-                column: column,
+                column,
                 newValue: true
             });
         }));

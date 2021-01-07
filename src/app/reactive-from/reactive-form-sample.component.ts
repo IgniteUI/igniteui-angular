@@ -25,7 +25,6 @@ export class ReactiveFormSampleComponent {
         this.genres = [
             { type: 'Action', movies: ['The Matrix', 'Kill Bill: Vol.1', 'The Dark Knight Rises'] },
             { type: 'Adventure', movies: ['Interstellar', 'Inglourious Basterds', 'Inception'] },
-            // eslint-disable-next-line
             {
                 type: 'Comedy', movies: ['Wild Tales', 'In Bruges', 'Three Billboards Outside Ebbing, Missouri',
                     'Untouchable', '3 idiots']
