@@ -64,5 +64,5 @@ jobs:
       run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
     - name: Deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
-      run: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+      run: NODE_ENV=test cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
