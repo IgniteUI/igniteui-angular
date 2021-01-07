@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         repo-token: ${{ github.token }}
+        repository: ${{ github.repository }}
     - run: npm ci
     - run: npm run lint:lib
     - run: npm run build:lib
