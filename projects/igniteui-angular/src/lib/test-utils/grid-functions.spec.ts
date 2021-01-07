@@ -226,7 +226,7 @@ export class GridFunctions {
         await wait(debounceTime);
         fix.detectChanges();
 
-        resolve();
+        resolve(null);
     });
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
@@ -1480,8 +1480,7 @@ export class GridFunctions {
     public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
         path: number[]) {
         let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
-        for (let index = 0; index < path.length; index++) {
-            const pos = path[index];
+        for (const pos of path) {
             const directChildren = GridFunctions.getAdvancedFilteringTreeChildItems(node, true);
             node = directChildren[pos];
         }
@@ -1729,23 +1728,19 @@ export class GridFunctions {
     }
 
     public static sortNativeElementsVertically(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a).getBoundingClientRect().top - (<HTMLElement>b).getBoundingClientRect().top);
+        return arr.sort((a: HTMLElement, b: HTMLElement) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
     }
 
     public static sortNativeElementsHorizontally(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a).getBoundingClientRect().left - (<HTMLElement>b).getBoundingClientRect().left);
+        return arr.sort((a: HTMLElement, b: HTMLElement) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
     }
 
     public static sortDebugElementsVertically(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+        return arr.sort((a, b) => a.nativeElement.getBoundingClientRect().top - b.nativeElement.getBoundingClientRect().top);
     }
 
     public static sortDebugElementsHorizontally(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().left - (<HTMLElement>b.nativeElement).getBoundingClientRect().left);
+        return arr.sort((a, b) => a.nativeElement.getBoundingClientRect().left - b.nativeElement.getBoundingClientRect().left);
     }
 
     public static getRowEditingBannerRow(fix): HTMLElement {
@@ -1814,7 +1809,8 @@ export class GridFunctions {
     }
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
-        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => header.nativeElement.title === columnField);
+        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
+                                            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -2110,8 +2106,7 @@ export class GridSummaryFunctions {
 
     public static getAllVisibleSummariesSorted(fix: ComponentFixture<any>) {
         const summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
-        return summaries.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+        return summaries.sort((a, b) => a.nativeElement.getBoundingClientRect().top - b.nativeElement.getBoundingClientRect().top);
     }
 
     public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 36) {
@@ -2150,7 +2145,7 @@ export class GridSelectionFunctions {
             UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
             await wait();
             fix.detectChanges();
-            resolve();
+            resolve(null);
         });
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
@@ -2171,8 +2166,8 @@ export class GridSelectionFunctions {
             UIInteractions.simulateClickAndSelectEvent(endCell, true);
             await wait();
             fix.detectChanges();
-            resolve();
-            resolve();
+            resolve(null);
+            resolve(null);
         });
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
@@ -2362,7 +2357,7 @@ export class GridSelectionFunctions {
     //
 
     public static expandRowIsland(rowNumber = 1) {
-        (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
+        (document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber] as any).click();
     }
 
     public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {

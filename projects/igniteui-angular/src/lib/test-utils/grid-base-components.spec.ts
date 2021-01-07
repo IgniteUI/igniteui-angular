@@ -13,10 +13,10 @@ import { IgxColumnActionsComponent } from '../grids/column-actions/column-action
     `
 })
 export class BasicGridComponent {
-    public data = [];
-
     @ViewChild(IgxGridComponent, { static: true })
     public grid: IgxGridComponent;
+
+    public data = [];
 }
 
 @Component({
@@ -121,7 +121,8 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 @Component({
     template: `<div>
     <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
-    ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable, '<igx-grid-toolbar></igx-grid-toolbar>') }
+    ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
+        '<igx-grid-toolbar></igx-grid-toolbar>') }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
@@ -151,23 +152,25 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 @Component({
     template: `<div>
     <igx-column-actions igxColumnHiding [grid]="grid" *ngIf="showInline"></igx-column-actions>
-    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.contactInfoGroupableColumns) }
+    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width"', '', ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     @ViewChild(IgxGridComponent, { static: true }) grid: IgxGridComponent;
     hasGroupColumns = false;
-    constructor(cdr: ChangeDetectorRef) {
- super(cdr);
-}
     data = SampleTestData.contactInfoDataFull();
+    constructor(cdr: ChangeDetectorRef) {
+        super(cdr);
+    }
 }
 
 @Component({
     template: `<div>
         <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
-        ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable,
-            '<igx-grid-toolbar><igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions></igx-grid-toolbar>')}
+        ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable,
+            `<igx-grid-toolbar>
+            <igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>
+            </igx-grid-toolbar>`)}
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
@@ -215,12 +218,13 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 @Component({
     template: `<div>
     <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline"></igx-column-actions>
-    ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns, '<igx-grid-toolbar></igx-grid-toolbar>')}
+    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" ', '', ColumnDefinitions.contactInfoGroupableColumns,
+        '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
-    constructor(cdr: ChangeDetectorRef) {
- super(cdr);
-}
     data = SampleTestData.contactInfoDataFull();
+    constructor(cdr: ChangeDetectorRef) {
+        super(cdr);
+    }
 }

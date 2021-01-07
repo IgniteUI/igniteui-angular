@@ -24,18 +24,17 @@ export class MySummaryOperand extends IgxSummaryOperand {
     templateUrl: 'tree-grid-flat-data.sample.html'
 })
 export class TreeGridFlatDataSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
-    private nextRow = 1;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
     public selectionMode;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
-
     public density = '';
     public displayDensities;
+
+    private nextRow = 1;
 
     constructor(private excelExporterService: IgxExcelExporterService,
                 private csvExporterService: IgxCsvExporterService) {

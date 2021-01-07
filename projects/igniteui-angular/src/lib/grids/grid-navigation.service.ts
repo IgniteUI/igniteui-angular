@@ -158,7 +158,9 @@ export class IgxGridNavigationService {
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
                     this.grid.endEdit(false, event);
-                    if (isEdge()) { this.grid.cdr.detectChanges(); }
+                    if (isEdge()) {
+                        this.grid.cdr.detectChanges();
+                    }
                     this.grid.tbody.nativeElement.focus();
                 }
                 break;

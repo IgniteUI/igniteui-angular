@@ -24,7 +24,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-            ${GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`, '', ColumnDefinitions.indexAndValue)}</div>`
+            ${GridTemplateStrings.declareGrid('[autoGenerate]="autoGenerate"', '', ColumnDefinitions.indexAndValue)}</div>`
 })
 export class GridInDivComponent extends GridAutoGenerateComponent {
     data = SampleTestData.oneItemNumberData();
@@ -105,13 +105,13 @@ export class ColumnsFromIterableComponent extends BasicGridComponent {
                 ColumnDefinitions.columnTemplates)
 })
 export class TemplatedColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameData();
-
     @ViewChild('newHeader', { read: TemplateRef, static: true })
     public newHeaderTemplate: TemplateRef<any>;
 
     @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
+
+    data = SampleTestData.personIDNameData();
 }
 
 @Component({
@@ -570,9 +570,9 @@ export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idFirstLastNameSortable)
 })
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameRegionData();
-
     @ViewChild('nameColumn', { static: true }) public nameColumn;
+
+    data = SampleTestData.personIDNameRegionData();
 }
 
 @Component({
@@ -1106,14 +1106,14 @@ export class IgxGridDatesFilteringComponent extends BasicGridComponent {
     </igx-grid>`
 })
 export class IgxGridExternalESFComponent extends BasicGridComponent implements AfterViewInit {
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
 
     public data = SampleTestData.excelFilteringData();
-
-    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
-    public esf: IgxGridExcelStyleFilteringComponent;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();
@@ -1126,10 +1126,10 @@ export class IgxGridExternalESFComponent extends BasicGridComponent implements A
 
 export class CustomFilterStrategy extends FilteringStrategy {
     public constructor() {
- super();
-}
+        super();
+    }
 
-    public findMatchByExpression(rec: object, expr): boolean {
+    public findMatchByExpression(rec, expr): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName);
         const ignoreCase = expr.fieldName === 'JobTitle' ? false : true;
@@ -1140,7 +1140,7 @@ export class CustomFilterStrategy extends FilteringStrategy {
         return super.filter(data, expressionsTree, null, null);
     }
 
-    public getFieldValue(rec: object, fieldName: string): any {
+    public getFieldValue(rec, fieldName: string): any {
         return fieldName === 'Name' ?  rec[fieldName]['FirstName'] :  rec[fieldName];
     }
  }
@@ -1176,9 +1176,10 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
     </igx-grid>`
 })
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
-    private _filteringStrategy = new FilteringStrategy();
     public data = SampleTestData.excelFilteringData();
     public doneCallbackCounter = 0;
+
+    private _filteringStrategy = new FilteringStrategy();
 
     public columnValuesStrategy = (column: IgxColumnComponent,
                                    columnExprTree: IFilteringExpressionsTree,
@@ -1286,14 +1287,14 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
     </igx-grid>`
 })
 export class IgxGridExternalESFTemplateComponent extends BasicGridComponent implements OnInit {
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
 
     public data = SampleTestData.excelFilteringData();
-
-    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
-    public esf: IgxGridExcelStyleFilteringComponent;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();
@@ -1562,13 +1563,21 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     public onRowCheckboxClick(event, rowContext) {
         event.stopPropagation();
         event.preventDefault();
-        rowContext.selected ? this.grid.deselectRows([rowContext.rowID]) : this.grid.selectRows([rowContext.rowID]);
+        if (rowContext.selected) {
+            this.grid.deselectRows([rowContext.rowID]);
+        } else {
+            this.grid.selectRows([rowContext.rowID]);
+        }
     }
 
     public onHeaderCheckboxClick(event, headContext) {
         event.stopPropagation();
         event.preventDefault();
-        headContext.selected ? this.grid.deselectAllRows() : this.grid.selectAllRows();
+        if (headContext.selected) {
+            this.grid.deselectAllRows();
+        } else {
+            this.grid.selectAllRows();
+        }
     }
 }
 
@@ -1669,11 +1678,11 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
     `
 })
 export class IgxGridCustomOverlayComponent extends BasicGridComponent {
-    public data = SampleTestData.foodProductData();
     @ViewChildren(IgxRowEditTabStopDirective) public buttons: QueryList<IgxRowEditTabStopDirective>;
+    public data = SampleTestData.foodProductData();
 
     public get gridAPI() {
-        return (<any>this.grid).gridAPI;
+        return this.grid.gridAPI;
     }
 
     public get cellInEditMode() {
@@ -1743,14 +1752,14 @@ export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
     `
 })
 export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
-    public width = '800px';
-    public height = null;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
+
+    public width = '800px';
+    public height = null;
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -1788,14 +1797,14 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     `
 })
 export class IgxGridGroupByComponent extends DataParent implements OnInit {
-    public width = '600px';
-    public height = '600px';
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
+
+    public width = '600px';
+    public height = '600px';
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -2190,7 +2199,7 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
      protected sortByParity(a: any, b: any) {
         return a % 2 === 0 ? -1 : b % 2 === 0 ? 1 : 0;
     }
-     protected compareObjects(obj1: object, obj2: object, key: string, reverse: number) {
+     protected compareObjects(obj1, obj2, key: string, reverse: number) {
         const a = obj1[key];
         const b = obj2[key];
         return reverse * this.sortByParity(a, b);

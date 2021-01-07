@@ -25,20 +25,19 @@ export class MySummaryOperand extends IgxSummaryOperand {
     templateUrl: 'tree-grid-load-on-demand.sample.html'
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data1: Array<any>;
     public data2: Array<any>;
     public columns: Array<any>;
-    private nextRow = 1;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
     public selectionMode;
 
-    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
-
     public density = '';
     public displayDensities;
     private dataService = new TreeGridLoadOnDemandService();
+    private nextRow = 1;
 
     constructor(private excelExporterService: IgxExcelExporterService,
                 private csvExporterService: IgxCsvExporterService) {

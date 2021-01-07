@@ -2261,9 +2261,9 @@ export class IgxTimePickerTestComponent {
     `
 })
 export class IgxTimePickerWithPassedTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 3, 24, 17);
     public customFormat = 'h:mm:ss tt';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2272,10 +2272,10 @@ export class IgxTimePickerWithPassedTimeComponent {
     `
 })
 export class IgxTimePickerWithPmTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 12, 27, 23);
     public customFormat = 'h:mm:ss tt';
     public mode = 'dialog';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2284,9 +2284,9 @@ export class IgxTimePickerWithPmTimeComponent {
     `
 })
 export class IgxTimePickerWithAMPMLeadingZerosTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 23, 27);
     public customFormat = 'hh:mm tt';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2295,9 +2295,9 @@ export class IgxTimePickerWithAMPMLeadingZerosTimeComponent {
     `
 })
 export class IgxTimePickerWith24HTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 24, 27);
     public customFormat = 'HH:mm';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2307,10 +2307,10 @@ export class IgxTimePickerWith24HTimeComponent {
     `
 })
 export class IgxTimePickerWithMInMaxTimeValueComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 4, 27, 13);
     public myMinValue = '3:24:11 AM';
     public myMaxValue = '5:24:28 AM';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2320,10 +2320,10 @@ export class IgxTimePickerWithMInMaxTimeValueComponent {
     `
 })
 export class IgxTimePickerWithSpinLoopFalseValueComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 1, 0, 0);
     public customFormat = 'hh:mm:ss tt';
     public customitemsDelta: any = { hours: 2, minutes: 2, seconds: 3 };
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2333,10 +2333,10 @@ export class IgxTimePickerWithSpinLoopFalseValueComponent {
     `
 })
 export class IgxTimePickerWithItemsDeltaValueComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 10, 56, 12);
     public customFormat = 'hh:mm:ss tt';
     public customitemsDelta: any = { hours: 2, minutes: 2, seconds: 1 };
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2378,14 +2378,13 @@ export class IgxTimePickerCustomLabelComponent {
     `
 })
 export class IgxTimePickerDropDownComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
+    @ViewChild('dummyInput') public dummyInput: ElementRef;
     itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
     format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
-
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
-    @ViewChild('dummyInput') public dummyInput: ElementRef;
 }
 @Component({
     template: `
@@ -2397,11 +2396,10 @@ export class IgxTimePickerDropDownComponent {
     `
 })
 export class IgxTimePickerDropDownSingleHourComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     customDate = new Date(2018, 10, 27, 4, 5);
     mode = InteractionMode.DropDown;
     format = 'H:m';
-
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 @Component({
     template: `
@@ -2412,9 +2410,8 @@ export class IgxTimePickerDropDownSingleHourComponent {
     `
 })
 export class IgxTimePickerDropDownNoValueComponent {
-    mode = InteractionMode.DropDown;
-
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
+    mode = InteractionMode.DropDown;
 }
 
 
@@ -2464,13 +2461,13 @@ export class IgxTimePickerWithOutletComponent {
 `
 })
 export class IgxTimePickerReactiveFormComponent {
-    reactiveForm: FormGroup;
-
     @ViewChild('timePickerOnChange', { read: IgxTimePickerComponent, static: true })
     public timePickerOnChangeComponent: IgxTimePickerComponent;
 
     @ViewChild('timePickerOnBlur', { read: IgxTimePickerComponent, static: true })
     public timePickerOnBlurComponent: IgxTimePickerComponent;
+
+    reactiveForm: FormGroup;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
@@ -2513,18 +2510,18 @@ export class IgxTimePickerReactiveFormComponent {
 export class IgxTimePickerTestingModule { }
 
 // helper functions
-function findByInnerText(collection, searchText) {
+const findByInnerText = (collection, searchText) => {
     for (const element of collection) {
         if (element.nativeElement.innerText === searchText) {
             return element;
         }
     }
-}
+};
 
-function getDateStringFromDateObject(date: Date): string {
+const getDateStringFromDateObject = (date: Date): string => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const year = date.getFullYear();
 
     return year + '/' + month + '/' + day;
-}
+};

@@ -1,4 +1,4 @@
-import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Output, EventEmitter, Inject, ElementRef } from '@angular/core';
+import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Inject, ElementRef } from '@angular/core';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { DOCUMENT } from '@angular/common';
 
@@ -41,29 +41,6 @@ export enum SplitterType {
     templateUrl: './splitter.component.html'
 })
 export class IgxSplitterComponent implements AfterContentInit {
-    private _type: SplitterType = SplitterType.Horizontal;
-
-    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) {}
-    /**
-     * Gets/Sets the splitter orientation.
-     *
-     * @example
-     * ```html
-     * <igx-splitter [type]="type">...</igx-splitter>
-     * ```
-     */
-    @Input()
-    get type() {
-        return this._type;
-    }
-    set type(value) {
-        this._type = value;
-        if (this.panes) {
-            // if type is changed runtime, should reset sizes.
-            this.panes.forEach(x => x.size = 'auto');
-        }
-    }
-
     /**
      * Gets the list of splitter panes.
      *
@@ -74,15 +51,6 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
     public panes!: QueryList<IgxSplitterPaneComponent>;
-
-    /**
-     * @hidden @internal
-     * Gets the `flex-direction` property of the current `SplitterComponent`.
-     */
-    @HostBinding('style.flex-direction')
-    public get direction(): string {
-        return this.type === SplitterType.Horizontal ? 'row' : 'column';
-    }
 
     /**
      * @hidden @internal
@@ -97,6 +65,8 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     @HostBinding('style.display')
     public display = 'flex';
+
+    private _type: SplitterType = SplitterType.Horizontal;
 
     /**
      * @hidden @internal
@@ -121,6 +91,36 @@ export class IgxSplitterComponent implements AfterContentInit {
      * The sibling pane in each pair of panes divided by a splitter bar.
      */
     private sibling!: IgxSplitterPaneComponent;
+
+    constructor(@Inject(DOCUMENT) public document, private elementRef: ElementRef) {}
+    /**
+     * Gets/Sets the splitter orientation.
+     *
+     * @example
+     * ```html
+     * <igx-splitter [type]="type">...</igx-splitter>
+     * ```
+     */
+    @Input()
+    get type() {
+        return this._type;
+    }
+    set type(value) {
+        this._type = value;
+        if (this.panes) {
+            // if type is changed runtime, should reset sizes.
+            this.panes.forEach(x => x.size = 'auto');
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * Gets the `flex-direction` property of the current `SplitterComponent`.
+     */
+    @HostBinding('style.flex-direction')
+    public get direction(): string {
+        return this.type === SplitterType.Horizontal ? 'row' : 'column';
+    }
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
@@ -195,6 +195,15 @@ export class IgxSplitterComponent implements AfterContentInit {
         this.sibling.dragSize = null;
     }
 
+    /** @hidden @internal */
+    public getPaneSiblingsByOrder(order: number, barIndex: number): Array<IgxSplitterPaneComponent> {
+        const panes = this.panes.toArray();
+        const prevPane = panes[order - barIndex - 1];
+        const nextPane = panes[order - barIndex];
+        const siblings = [prevPane, nextPane];
+        return siblings;
+    }
+
     private getTotalSize() {
         const computed = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
         const totalSize = this.type === SplitterType.Horizontal ? computed.getPropertyValue('width') : computed.getPropertyValue('height');
@@ -212,14 +221,5 @@ export class IgxSplitterComponent implements AfterContentInit {
             pane.order = k;
             k += 2;
         });
-    }
-
-    /** @hidden @internal */
-    public getPaneSiblingsByOrder(order: number, barIndex: number): Array<IgxSplitterPaneComponent> {
-        const panes = this.panes.toArray();
-        const prevPane = panes[order - barIndex - 1];
-        const nextPane = panes[order - barIndex];
-        const siblings = [prevPane, nextPane];
-        return siblings;
     }
 }

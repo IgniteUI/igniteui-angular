@@ -11,16 +11,15 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class TreeGridSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
-    private nextRow = 1;
     public selectionMode;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
-
     public density = '';
     public displayDensities;
+
+    private nextRow = 1;
 
     constructor(private excelExporterService: IgxExcelExporterService,
         private csvExporterService: IgxCsvExporterService) {

@@ -1,4 +1,3 @@
-
 import { Calendar } from '../calendar/calendar';
 import { cloneValue } from '../core/utils';
 import { ValueData } from '../services/excel/test-data.service.spec';
@@ -780,7 +779,7 @@ export class SampleTestData {
         for (let r = 0; r < rowsCount; r++) {
             const record = {};
             for (let c = 0; c < columns.length; c++) {
-                (startFromOne && c === 0) ? record[columns[c].key] = 1 : record[columns[c].key] = c * r;
+                record[columns[c].key] = startFromOne && c === 0 ? 1 : c * r;
             }
             data.push(record);
         }
@@ -1584,7 +1583,7 @@ export class SampleTestData {
      * @param rows Number of items to add to the array
      * @param type The type of the items
      */
-    public static generateListOfPrimitiveValues(rows: number, type: Number | String | Boolean): any[] {
+    public static generateListOfPrimitiveValues(rows: number, type: string): any[] {
         const data: any[] = [];
         for (let row = 0; row < rows; row++) {
             if (type === 'Number') {
@@ -1596,23 +1595,6 @@ export class SampleTestData {
             }
         }
         return data;
-    }
-
-    /* Gets the name of the identifier column if exists. */
-    private static getIDColumnName(dataItem: any) {
-        if (!dataItem) {
-            return undefined;
-        }
-
-        if (dataItem["ID"]) {
-            return "ID";
-        } else if (dataItem["Id"]) {
-            return "Id";
-        } else if (dataItem["id"]) {
-            return "id";
-        } else {
-            return undefined;
-        }
     }
 
     /* Generates hierahical data  */
@@ -1630,6 +1612,23 @@ export class SampleTestData {
             Col2: i, Col3: i, childData: children, childData2: children });
         }
         return prods;
+    }
+
+    /* Gets the name of the identifier column if exists. */
+    private static getIDColumnName(dataItem: any) {
+        if (!dataItem) {
+            return undefined;
+        }
+
+        if (dataItem["ID"]) {
+            return "ID";
+        } else if (dataItem["Id"]) {
+            return "Id";
+        } else if (dataItem["id"]) {
+            return "id";
+        } else {
+            return undefined;
+        }
     }
 }
 

@@ -12,7 +12,7 @@ export abstract class IgxTabsBase {
     tabsContainer: ElementRef;
     itemsContainer: ElementRef;
     headerContainer: ElementRef;
-    onTabItemSelected: EventEmitter<{}>; // TODO: Define event arg interface!
+    onTabItemSelected: EventEmitter<any>; // TODO: Define event arg interface!
     hasContentTabs: boolean;
     scrollElement(element: any, scrollRight: boolean) {}
     performSelectionChange(newTab: IgxTabItemBase) {}
@@ -23,9 +23,9 @@ export abstract class IgxTabsBase {
 /** @hidden */
 export abstract class IgxTabItemBase {
     abstract readonly nativeTabItem: ElementRef;
-    get index(): number {
- return 0;
-}
+    get index() {
+        return 0;
+    }
     select(): void {}
     setSelectedInternal(newValue: boolean) {}
 }

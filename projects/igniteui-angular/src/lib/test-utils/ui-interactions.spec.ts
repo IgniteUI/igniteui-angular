@@ -2,39 +2,28 @@ import { first } from 'rxjs/operators';
 import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
-export function wait(ms = 0) {
-    return new Promise((resolve, reject) => setTimeout(resolve, ms));
-}
+export const wait = (ms = 0) => new Promise((resolve, reject) => setTimeout(resolve, ms));
 
-export function waitForGridScroll(grid) {
-    // wait for grid scroll operation to complete and state to be updated.
-    return new Promise((resolve, reject) => {
-        grid.onScroll.pipe(first()).subscribe(() => {
-            grid.cdr.detectChanges();
-            resolve();
-        });
+export const waitForGridScroll = (grid) => new Promise((resolve, reject) => {
+    grid.onScroll.pipe(first()).subscribe(() => {
+        grid.cdr.detectChanges();
+        resolve(null);
     });
-}
+});
 
-export function waitForActiveNodeChange(grid) {
-    // wait for grid activation operation to complete and state to be updated.
-    return new Promise((resolve, reject) => {
-        grid.activeNodeChange.pipe(first()).subscribe(() => {
-            grid.cdr.detectChanges();
-            resolve();
-        });
+export const waitForActiveNodeChange = (grid) => new Promise((resolve, reject) => {
+    grid.activeNodeChange.pipe(first()).subscribe(() => {
+        grid.cdr.detectChanges();
+        resolve(null);
     });
-}
+});
 
-export function waitForSelectionChange(grid) {
-    // wait for grid selection operation to complete and state to be updated.
-    return new Promise((resolve, reject) => {
-        grid.onSelection.pipe(first()).subscribe(() => {
-            grid.cdr.detectChanges();
-            resolve();
-        });
+export const waitForSelectionChange = (grid) => new Promise((resolve, reject) => {
+    grid.onSelection.pipe(first()).subscribe(() => {
+        grid.cdr.detectChanges();
+        resolve(null);
     });
-}
+});
 
 declare let Touch: {
     prototype: Touch;
@@ -237,8 +226,7 @@ export class UIInteractions {
             // target.triggerEventHandler('focus', {});
             const inputEl = target.nativeElement as HTMLInputElement;
             inputEl.setSelectionRange(selectionStart, selectionEnd);
-            for (let i = 0; i < characters.length; i++) {
-                const char = characters[i];
+            for (const char of characters) {
                 this.triggerEventHandlerKeyDown(char, target);
                 this.triggerInputKeyInteraction(char, target);
                 this.triggerEventHandlerKeyUp(char, target);
@@ -349,7 +337,7 @@ export class UIInteractions {
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
-            resolve();
+            resolve(event);
         });
     }
 
@@ -364,7 +352,7 @@ export class UIInteractions {
         const touchEventObject = new TouchEvent('touchstart', { touches: [t] });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(touchEventObject);
-            resolve();
+            resolve(touchEventObject);
         });
     }
 
@@ -379,7 +367,7 @@ export class UIInteractions {
         const touchEventObject = new TouchEvent('touchmove', { touches: [t] });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(touchEventObject);
-            resolve();
+            resolve(touchEventObject);
         });
     }
 
@@ -394,7 +382,7 @@ export class UIInteractions {
         const touchEventObject = new TouchEvent('touchend', { touches: [t] });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(touchEventObject);
-            resolve();
+            resolve(touchEventObject);
         });
     }
 

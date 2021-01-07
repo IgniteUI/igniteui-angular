@@ -89,12 +89,9 @@ describe('IgxBottomNav', () => {
         }));
 
         it('should initialize igx-bottom-nav, igx-tab-panel and igx-tab', () => {
-            let panels: IgxTabPanelComponent[];
-            let tabs: IgxTabComponent[];
-
             fixture.detectChanges();
-            panels = tabbar.panels.toArray();
-            tabs = tabbar.tabs.toArray();
+            const panels: IgxTabPanelComponent[] = tabbar.panels.toArray();
+            const tabs: IgxTabComponent[] = tabbar.tabs.toArray();
 
             expect(tabbar).toBeDefined();
             expect(tabbar.id).toContain('igx-bottom-nav-');

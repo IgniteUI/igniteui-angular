@@ -5,7 +5,6 @@ import {
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy,
     IgxSelectComponent,
-    DisplayDensity,
     IButtonGroupEventArgs
 } from 'igniteui-angular';
 
@@ -16,7 +15,6 @@ import {
     templateUrl: './select.sample.html'
 })
 export class SelectSampleComponent implements OnInit {
-    @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     @ViewChild('model', { read: IgxSelectComponent, static: true })
@@ -24,13 +22,9 @@ export class SelectSampleComponent implements OnInit {
     @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
     public selectDisplayDensity: IgxSelectComponent;
 
-    public isDisabled = false;
+    @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
 
-    constructor(fb: FormBuilder) {
-        this.reactiveForm = fb.group({
-            citiesSelect: ['', Validators.required]
-        });
-    }
+    public isDisabled = false;
 
     public items: any[] = [];
     public value: 'opt1';
@@ -52,6 +46,12 @@ export class SelectSampleComponent implements OnInit {
     public validationType = {
         citiesSelect: [Validators.required]
     };
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            citiesSelect: ['', Validators.required]
+        });
+    }
 
     public ngOnInit() {
         for (let i = 1; i < 10; i++) {

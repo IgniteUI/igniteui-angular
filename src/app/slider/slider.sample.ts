@@ -17,9 +17,6 @@ class Task {
     templateUrl: 'slider.sample.html'
 })
 export class SliderSampleComponent {
-    private _lowerValue: Date;
-    private _upperValue: Date;
-
     public labelOrientaion = TickLabelsOrientation.Horizontal;
     public ticksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
@@ -38,6 +35,9 @@ export class SliderSampleComponent {
         lower: 2,
         upper: 5
     };
+
+    private _lowerValue: Date;
+    private _upperValue: Date;
 
     constructor() {
         for (let i = 0; i <= 500; i++) {

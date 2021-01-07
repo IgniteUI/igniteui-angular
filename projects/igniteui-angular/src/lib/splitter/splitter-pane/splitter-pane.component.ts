@@ -19,46 +19,12 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
     templateUrl: './splitter-pane.component.html'
 })
 export class IgxSplitterPaneComponent {
-
-    private _size = 'auto';
-    private _dragSize;
-    private _collapsed = false;
-
-    /** @hidden @internal */
-    public owner;
-
     /**
-     * Gets/Sets the size of the current pane.
-     *  * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
+     * @hidden @internal
+     * Gets/Sets the 'display' property of the current pane.
      */
-    @Input()
-    get size() {
-        return this._size;
-    }
-
-    set size(value) {
-        this._size = value;
-        this.el.nativeElement.style.flex = this.flex;
-    }
-
-    /** @hidden @internal */
-    get isPercentageSize() {
-        return this.size === 'auto' || this.size.indexOf('%') !== -1;
-    }
-
-    /** @hidden @internal */
-    get dragSize() {
-        return this._dragSize;
-    }
-    set dragSize(val) {
-        this._dragSize = val;
-        this.el.nativeElement.style.flex = this.flex;
-    }
+    @HostBinding('style.display')
+    public display = 'flex';
 
     /**
      * Gets/Sets the minimum allowed size of the current pane.
@@ -114,19 +80,9 @@ export class IgxSplitterPaneComponent {
     @Output()
     public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
 
-
     /** @hidden @internal */
     @HostBinding('style.order')
     public order!: number;
-
-    /**
-     *
-     * @hidden @internal
-     * Gets the host native element.
-     */
-    public get element(): any {
-        return this.el.nativeElement;
-    }
 
     /**
      * @hidden @internal
@@ -151,6 +107,51 @@ export class IgxSplitterPaneComponent {
     @HostBinding('style.max-width')
     public maxHeight = '100%';
 
+    /** @hidden @internal */
+    public owner;
+
+    /**
+     * Gets/Sets the size of the current pane.
+     *  * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
+     */
+    @Input()
+    get size() {
+        return this._size;
+    }
+
+    set size(value) {
+        this._size = value;
+        this.el.nativeElement.style.flex = this.flex;
+    }
+
+    /** @hidden @internal */
+    get isPercentageSize() {
+        return this.size === 'auto' || this.size.indexOf('%') !== -1;
+    }
+
+    /** @hidden @internal */
+    get dragSize() {
+        return this._dragSize;
+    }
+    set dragSize(val) {
+        this._dragSize = val;
+        this.el.nativeElement.style.flex = this.flex;
+    }
+
+    /**
+     *
+     * @hidden @internal
+     * Gets the host native element.
+     */
+    public get element(): any {
+        return this.el.nativeElement;
+    }
+
     /**
      * @hidden @internal
      * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
@@ -162,13 +163,6 @@ export class IgxSplitterPaneComponent {
         const size = this.dragSize || this.size;
         return `${grow} ${grow} ${size}`;
     }
-
-    /**
-     * @hidden @internal
-     * Gets/Sets the 'display' property of the current pane.
-     */
-    @HostBinding('style.display')
-    public display = 'flex';
 
     /**
      * Gets/Sets whether current pane is collapsed.
@@ -188,19 +182,12 @@ export class IgxSplitterPaneComponent {
         return this._collapsed;
     }
 
-    /** @hidden @internal */
-    private _getSiblings() {
-        const panes = this.owner.panes.toArray();
-        const index = panes.indexOf(this);
-        const siblings = [];
-        if (index !== 0) {
-            siblings.push(panes[index - 1]);
-        }
-        if (index !== panes.length - 1) {
-            siblings.push(panes[index + 1]);
-        }
-        return siblings;
-    }
+    private _size = 'auto';
+    private _dragSize;
+    private _collapsed = false;
+
+
+    constructor(private el: ElementRef) { }
 
     /**
      * Toggles the collapsed state of the pane.
@@ -217,5 +204,17 @@ export class IgxSplitterPaneComponent {
         this.onToggle.emit(this);
     }
 
-    constructor(private el: ElementRef) { }
+    /** @hidden @internal */
+    private _getSiblings() {
+        const panes = this.owner.panes.toArray();
+        const index = panes.indexOf(this);
+        const siblings = [];
+        if (index !== 0) {
+            siblings.push(panes[index - 1]);
+        }
+        if (index !== panes.length - 1) {
+            siblings.push(panes[index + 1]);
+        }
+        return siblings;
+    }
 }

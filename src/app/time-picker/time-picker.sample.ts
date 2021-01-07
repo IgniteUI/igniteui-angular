@@ -7,6 +7,12 @@ import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositio
     templateUrl: 'time-picker.sample.html'
 })
 export class TimePickerSampleComponent implements AfterViewInit {
+    @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
+    public tp: IgxTimePickerComponent;
+
+    @ViewChild('target')
+    public target: IgxInputDirective;
+
     max = '19:00';
     min = '09:00';
 
@@ -28,12 +34,6 @@ export class TimePickerSampleComponent implements AfterViewInit {
         closeOnOutsideClick: true,
         positionStrategy: new AutoPositionStrategy()
     };
-
-    @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
-    public tp: IgxTimePickerComponent;
-
-    @ViewChild('target')
-    public target: IgxInputDirective;
 
     ngAfterViewInit() {
         this.myOverlaySettings.target = this.target.nativeElement;

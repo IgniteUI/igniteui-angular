@@ -9,6 +9,15 @@ import { IgxGridComponent, SplitterType } from 'igniteui-angular';
     templateUrl: 'splitter.sample.html'
 })
 export class SplitterSampleComponent implements AfterViewInit {
+    @ViewChild('grid1', { static: true })
+    grid1: IgxGridComponent;
+
+    @ViewChild('grid2', { static: true })
+    grid2: IgxGridComponent;
+
+    @ViewChild('grid3', { static: true })
+    grid3: IgxGridComponent;
+
     type = SplitterType.Horizontal;
     data1 = [];
     data2 = [];
@@ -19,15 +28,6 @@ export class SplitterSampleComponent implements AfterViewInit {
         { name: 'EmployeeID', type: 'number', level: 2 },
         { name: 'ProductID', type: 'number', level: 2 }
     ];
-
-    @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
-
-    @ViewChild('grid2', { static: true })
-    grid2: IgxGridComponent;
-
-    @ViewChild('grid3', { static: true })
-    grid3: IgxGridComponent;
 
     constructor(private remoteService: RemoteService) {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';

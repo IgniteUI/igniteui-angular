@@ -31,13 +31,13 @@
             "accessibility": "explicit"
           }
         ],
-        // "@typescript-eslint/naming-convention": [
-        //   "error",
-        //   {
-        //     "selector": "enumMember",
-        //     "format": ["PascalCase"]
-        //   }
-        // ],
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "enumMember",
+            "format": ["PascalCase"]
+          }
+        ],
         "brace-style": [
           "error",
           "1tbs"

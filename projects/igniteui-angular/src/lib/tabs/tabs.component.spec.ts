@@ -104,14 +104,11 @@ describe('IgxTabs', () => {
         }));
 
         it('should initialize igx-tabs, igx-tabs-group and igx-tab-item', fakeAsync(() => {
-            let groups: IgxTabsGroupComponent[];
-            let tabsItems: IgxTabItemComponent[];
-
             tick(100);
             fixture.detectChanges();
 
-            groups = tabs.groups.toArray();
-            tabsItems = tabs.tabs.toArray();
+            const groups: IgxTabsGroupComponent[] = tabs.groups.toArray();
+            const tabsItems: IgxTabItemComponent[] = tabs.tabs.toArray();
 
             expect(tabs).toBeDefined();
             expect(tabs instanceof IgxTabsComponent).toBeTruthy();
@@ -134,8 +131,6 @@ describe('IgxTabs', () => {
         }));
 
         it('should initialize default values of properties', fakeAsync(() => {
-            let tabItems;
-
             tick(100);
             fixture.detectChanges();
 
@@ -149,7 +144,7 @@ describe('IgxTabs', () => {
             tick(100);
             fixture.detectChanges();
 
-            tabItems = tabs.tabs.toArray();
+            const tabItems = tabs.tabs.toArray();
             expect(tabItems[0].disabled).toBe(false);
             expect(tabItems[1].disabled).toBe(false);
         }));
@@ -218,10 +213,6 @@ describe('IgxTabs', () => {
         it('should select/deselect tabs', fakeAsync(() => {
             fixture.detectChanges();
 
-            let tabItems;
-            let tab1: IgxTabItemComponent;
-            let tab2: IgxTabItemComponent;
-
             expect(tabs.selectedIndex).toBe(0);
             fixture.componentInstance.tabSelectedHandler = () => {
                 expect(tabs.selectedIndex).toBe(0);
@@ -230,9 +221,9 @@ describe('IgxTabs', () => {
 
             tick(100);
             fixture.detectChanges();
-            tabItems = tabs.tabs.toArray();
-            tab1 = tabItems[0];
-            tab2 = tabItems[1];
+            const tabItems = tabs.tabs.toArray();
+            const tab1: IgxTabItemComponent = tabItems[0];
+            const tab2: IgxTabItemComponent = tabItems[1];
 
             fixture.componentInstance.tabSelectedHandler = () => { };
 
@@ -439,16 +430,12 @@ describe('IgxTabs', () => {
             const tabs = fixture.componentInstance.tabs;
             fixture.detectChanges();
 
-            let tabItems;
-            let tab1: IgxTabItemComponent;
-            let tab3: IgxTabItemComponent;
-
             tick(100);
             fixture.detectChanges();
 
-            tabItems = tabs.tabs.toArray();
-            tab1 = tabItems[0];
-            tab3 = tabItems[2];
+            const tabItems = tabs.tabs.toArray();
+            const tab1: IgxTabItemComponent = tabItems[0];
+            const tab3: IgxTabItemComponent = tabItems[2];
 
             tick(100);
             fixture.detectChanges();
@@ -900,12 +887,13 @@ class TabsTest2Component {
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
     public collection: any[];
 
-    public tabSelectedHandler(args) {
-    }
-
     public constructor() {
         this.resetCollectionThreeTabs();
     }
+
+    public tabSelectedHandler(args) {
+    }
+
     public resetCollectionOneTab() {
         this.collection =
             [

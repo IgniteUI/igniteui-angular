@@ -59,11 +59,6 @@ let nextId = 0;
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
     /**
-     * @hidden
-     * @internal
-     */
-    protected _value: any;
-    /**
      * Returns a reference to the native checkbox element.
      *
      * @example
@@ -194,18 +189,9 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * An event that is emitted after the switch state is changed.
      * Provides references to the `IgxSwitchComponent` and the `checked` property as event arguments.
      */
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
     readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onChangeCallback: (_: any) => void = noop;
     /**
      * Returns the class of the switch component.
      *
@@ -255,6 +241,21 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public inputId = `${this.id}-input`;
     /**
+     * @hidden
+     * @internal
+     */
+    protected _value: any;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onTouchedCallback: () => void = noop;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onChangeCallback: (_: any) => void = noop;
+    /**
      * Toggles the checked state of the switch.
      *
      * @example
@@ -295,21 +296,21 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public _onLabelClick(event) {
+    public onLabelClick() {
         this.toggle();
     }
     /**
      * @hidden
      * @internal
      */
-    public onFocus(event) {
+    public onFocus() {
         this.focused = true;
     }
     /**
      * @hidden
      * @internal
      */
-    public onBlur(event) {
+    public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }

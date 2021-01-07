@@ -698,7 +698,7 @@ export class IgxTimePickerComponent implements
                 seconds = parseInt(value, 10);
                 break;
 
-            case TimeParts.amPM:
+            case TimeParts.AMPM:
                 amPM = value;
                 break;
         }
