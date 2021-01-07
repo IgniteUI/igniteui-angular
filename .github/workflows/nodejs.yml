@@ -23,7 +23,7 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '14.x'
     - run: npm ci
     - run: npm run lint:lib
     - run: npm run build:lib
@@ -40,10 +40,6 @@ jobs:
     #   env:
     #     NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '14.x'
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
     # - name: Install dependencies
     #   if: github.repository == 'IgniteUI/igniteui-angular'
     #   run: npm ci
