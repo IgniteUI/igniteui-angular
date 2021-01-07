@@ -10,14 +10,6 @@ import { RemoteService } from '../shared/remote.service';
     encapsulation: ViewEncapsulation.None
 })
 export class VirtualForSampleComponent implements OnInit {
-    public alignment = ButtonGroupAlignment.vertical;
-    search1: string;
-    data = [];
-    remoteData: any;
-    totalCount: any;
-    options = {};
-    prevRequest: any;
-    itemSize = '50px';
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
     virtDirVertical: IgxForOfDirective<any>;
 
@@ -29,6 +21,15 @@ export class VirtualForSampleComponent implements OnInit {
 
     @ViewChild('virtDirVariableVertical', { read: IgxForOfDirective, static: true })
     virtDirVariableVertical: IgxForOfDirective<any>;
+
+    public alignment = ButtonGroupAlignment.vertical;
+    search1: string;
+    data = [];
+    remoteData: any;
+    totalCount: any;
+    options = {};
+    prevRequest: any;
+    itemSize = '50px';
 
     constructor(private remoteService: RemoteService) {
         this.remoteService.urlBuilder = (dataState) => {

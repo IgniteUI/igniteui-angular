@@ -1,8 +1,5 @@
 import * as path from 'path';
-/* eslint-disable import/no-extraneous-dependencies */
-import { virtualFs } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
-// eslint-disable-next-line import/no-internal-modules
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
 describe('Update 8.2.6', () => {

@@ -12,8 +12,6 @@ import {
     ViewChild,
     TemplateRef,
     AfterContentInit,
-    IterableDiffers,
-    OnInit,
     ChangeDetectorRef,
     AfterViewInit
 } from '@angular/core';
@@ -58,71 +56,6 @@ export class IgxActionStripMenuItemDirective {
 })
 
 export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
-    constructor(
-        private _viewContainer: ViewContainerRef,
-        private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        public cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions);
-    }
-
-    /**
-     * Getter for the 'display' property of the current `IgxActionStrip`
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('style.display')
-    get display(): string {
-        return this._hidden ? 'none' : 'flex';
-    }
-
-    private _hidden = false;
-
-    /**
-     * An @Input property that set the visibility of the Action Strip.
-     * Could be used to set if the Action Strip will be initially hidden.
-     *
-     * @example
-     * ```html
-     *  <igx-action-strip [hidden]="false">
-     * ```
-     */
-    @Input()
-    public set hidden(value) {
-        this._hidden = value;
-    }
-
-    public get hidden() {
-        return this._hidden;
-    }
-
-    /**
-     * Host `class.igx-action-strip` binding.
-     *
-     * @hidden
-     * @internal
-     */
-    @Input('class')
-    hostClass: string;
-
-    /**
-     * Host `attr.class` binding.
-     *
-     * @hidden
-     * @internal
-     */
-    @HostBinding('attr.class')
-    get hostClasses(): string {
-        const classes = [this.getComponentDensityClass('igx-action-strip')];
-        // The custom classes should be at the end.
-        if (!classes.includes('igx-action-strip')) {
-            classes.push('igx-action-strip');
-        }
-        classes.push(this.hostClass);
-        return classes.join(' ');
-    }
-
     /**
      * Sets the context of an action strip.
      * The context should be an instance of a @Component, that has element property.
@@ -155,12 +88,86 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     public actionButtons: QueryList<IgxGridActionsBaseDirective>;
 
     /**
+     * An @Input property that set the visibility of the Action Strip.
+     * Could be used to set if the Action Strip will be initially hidden.
+     *
+     * @example
+     * ```html
+     *  <igx-action-strip [hidden]="false">
+     * ```
+     */
+    @Input()
+    public set hidden(value) {
+        this._hidden = value;
+    }
+
+    public get hidden() {
+        return this._hidden;
+    }
+
+    /**
+     * Host `class.igx-action-strip` binding.
+     *
+     * @hidden
+     * @internal
+     */
+    @Input('class')
+    public hostClass: string;
+
+    /**
+     * Reference to the menu
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dropdown')
+    public menu: IgxDropDownComponent;
+
+    /**
      * Getter for menu overlay settings
      *
      * @hidden
      * @internal
      */
     public menuOverlaySettings: OverlaySettings  = { scrollStrategy: new CloseScrollStrategy() };
+
+    private _hidden = false;
+
+    constructor(
+        private _viewContainer: ViewContainerRef,
+        private renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        public cdr: ChangeDetectorRef) {
+        super(_displayDensityOptions);
+    }
+
+    /**
+     * Getter for the 'display' property of the current `IgxActionStrip`
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('style.display')
+    get display(): string {
+        return this._hidden ? 'none' : 'flex';
+    }
+
+    /**
+     * Host `attr.class` binding.
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.class')
+    get hostClasses(): string {
+        const classes = [this.getComponentDensityClass('igx-action-strip')];
+        // The custom classes should be at the end.
+        if (!classes.includes('igx-action-strip')) {
+            classes.push('igx-action-strip');
+        }
+        classes.push(this.hostClass);
+        return classes.join(' ');
+    }
 
     /**
      * Menu Items list.
@@ -180,15 +187,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         });
         return [... this._menuItems.toArray(), ... actions];
     }
-
-    /**
-     * Reference to the menu
-     *
-     * @hidden
-     * @internal
-     */
-    @ViewChild('dropdown')
-    public menu: IgxDropDownComponent;
 
     /**
      * @hidden

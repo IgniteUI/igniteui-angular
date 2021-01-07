@@ -224,8 +224,8 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
 export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
     if (!definition) {
- return null;
-}
+        return null;
+    }
 
     // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
     if (definition.kind.toString() === 'reference') {
@@ -244,13 +244,13 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
          we have to ignore them, since the language service will attempt to parse them as .ts files
         */
         if (!definition.fileName.endsWith('.ts')) {
- return null;
-}
+            return null;
+        }
 
         const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
         if (!sourceFile) {
- return null;
-}
+            return null;
+        }
 
         const classDeclaration = sourceFile
             .statements
@@ -259,13 +259,13 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
 
         // there must be at least one class declaration in the .ts file and the property must belong to it
         if (!classDeclaration) {
- return null;
-}
+            return null;
+        }
 
         const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
         if (!member?.name) {
- return null;
-}
+            return null;
+        }
 
         typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
     }
@@ -278,11 +278,7 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
 
 export function isMemberIgniteUI(change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean {
     const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
-    if (!typeDef) {
- return false;
-}
-    return typeDef.fileName.includes(IG_PACKAGE_NAME)
-        && change.definedIn.indexOf(typeDef.name) !== -1;
+    return !typeDef ? false : typeDef.fileName.includes(IG_PACKAGE_NAME) && change.definedIn.indexOf(typeDef.name) !== -1;
 }
 
 //#endregion

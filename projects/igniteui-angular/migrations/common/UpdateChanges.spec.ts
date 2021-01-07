@@ -1,6 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { EmptyTree } from '@angular-devkit/schematics';
-// eslint-disable-next-line import/no-internal-modules
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,23 +11,23 @@ describe('UpdateChanges', () => {
 
     class UnitUpdateChanges extends UpdateChanges {
         public getSelectorChanges() {
- return this.selectorChanges;
-}
+            return this.selectorChanges;
+        }
         public getClassChanges() {
- return this.classChanges;
-}
+            return this.classChanges;
+        }
         public getOutputChanges() {
- return this.outputChanges;
-}
+            return this.outputChanges;
+        }
         public getInputChanges() {
- return this.inputChanges;
-}
+            return this.inputChanges;
+        }
         public getThemePropChanges() {
- return this.themePropsChanges;
-}
+            return this.themePropsChanges;
+        }
         public getImportsChanges() {
- return this.importsChanges;
-}
+            return this.importsChanges;
+        }
     }
 
     beforeEach(() => {
