@@ -52,12 +52,9 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install xmllint
-      run: sudo apt-get install libxml2-utils
     - name: Install coverage combiner, combine scripts and deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: |
-        sudo /home/cirrus/sdks/flutter/bin/flutter pub get
         npm install -g istanbul-combine
         istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
         cat ./coverage/lcov.info | node_modules/coveralls/bin/coveralls.js
