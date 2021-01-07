@@ -649,10 +649,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
-    it('should exclude null and undefined values when filter by \'false\' and column dataType is not set', fakeAsync(() => {
-        grid.columns[3].dataType = undefined;
-        grid.filterMode = 'excelStyleFilter';
-        fix.detectChanges();
+    it('should exclude null and undefined values when filter by \'false\'', fakeAsync(() => {
         expect(grid.rowList.length).toEqual(8);
 
         grid.filter('Released', false, IgxStringFilteringOperand.instance().condition('equals'), true);
