@@ -19,8 +19,6 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
 
     steps:
-    - env:
-        NODE_OPTIONS: --max_old_space_size=4096
     - name: Checkout
       uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -29,6 +27,8 @@ jobs:
         repo-token: ${{ github.token }}
         repository: ${{ github.repository }}
         GITHUB_TOKEN: ${{ github.token }}
+      env:
+        NODE_OPTIONS: --max_old_space_size=4096
     - run: npm ci
     - run: npm run lint:lib
     - run: npm run build:lib
@@ -37,9 +37,6 @@ jobs:
     # - run: npm run test:lib:tgrid
     # - run: npm run test:lib:hgrid
     - run: npm run test:schematics
-    # - name: Install dependencies
-    #   if: github.repository == 'IgniteUI/igniteui-angular'
-    #   run: npm ci
     - name: Install coverage combiner
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: sudo npm install -g istanbul-combine
