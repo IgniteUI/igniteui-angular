@@ -72,7 +72,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
     public captureKey(event: KeyboardEvent) {
         // relying only on key, available on all major browsers:
         // https://caniuse.com/#feat=keyboardevent-key (IE/Edge quirk doesn't affect letter typing)
-        if (!event || !event.key || event.key.length > 1 || " ") {
+        if (!event || !event.key || event.key.length > 1 || ' ') {
             // ignore longer keys ('Alt', 'ArrowDown', etc) AND space (used of open/close)
             return;
         }
