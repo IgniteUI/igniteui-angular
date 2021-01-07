@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [10]
+        node: [14]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -61,8 +61,8 @@ jobs:
       run: sudo npm install -g istanbul-combine
     - name: Combine scripts
       if: github.repository == 'IgniteUI/igniteui-angular'
-      run: NODE_ENV=test istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+      run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
     - name: Deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
-      run: NODE_ENV=test cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+      run: cat ./coverage/lcov.info | coveralls
 
