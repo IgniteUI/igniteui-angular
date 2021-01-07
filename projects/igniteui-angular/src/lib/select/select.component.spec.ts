@@ -783,7 +783,7 @@ fdescribe('igxSelect', () => {
             expect(selectComp.collapsed).toBeTruthy();
         }));
     });
-    fdescribe('Selection tests: ', () => {
+    describe('Selection tests: ', () => {
         describe('Using simple select component', () => {
             beforeEach(waitForAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -849,7 +849,7 @@ fdescribe('igxSelect', () => {
                 fixture.detectChanges();
                 verifySelectedItem(selectedItemIndex);
             });
-            it('should select item with ENTER/SPACE keys', fakeAsync(() => {
+            fit('should select item with ENTER/SPACE keys', fakeAsync(() => {
                 let selectedItemIndex = 2;
                 select.toggle();
                 tick();
@@ -1050,7 +1050,7 @@ fdescribe('igxSelect', () => {
                     const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
                     expect(selectedItems.length).toEqual(0);
                 }));
-            it('should not append any text to the input box when an item is focused but not selected',
+            fit('should not append any text to the input box when an item is focused but not selected',
                 fakeAsync(() => {
                     let focusedItem = select.items[2];
                     const navigationStep = focusedItem.index;
@@ -1501,7 +1501,7 @@ fdescribe('igxSelect', () => {
             expect(groupElement.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeFalsy();
         }));
     });
-    fdescribe('Key navigation tests: ', () => {
+    describe('Key navigation tests: ', () => {
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             select = fixture.componentInstance.select;
@@ -1509,7 +1509,7 @@ fdescribe('igxSelect', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
         }));
-        it('should toggle dropdown on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
+        fit('should toggle dropdown on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
@@ -1581,7 +1581,7 @@ fdescribe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
+        fit('should properly emit opening/closing events on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             spyOn(select.onOpening, 'emit');
             spyOn(select.onOpened, 'emit');
             spyOn(select.onClosing, 'emit');
