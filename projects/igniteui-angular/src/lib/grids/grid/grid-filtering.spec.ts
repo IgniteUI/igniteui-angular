@@ -905,6 +905,17 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(2);
     }));
 
+    it('Should always emit onFilteringDone with proper eventArgs, even when column does not exist', fakeAsync(() => {
+        spyOn(grid.onFilteringDone, 'emit');
+        grid.filteringLogic = FilteringLogic.Or;
+        grid.filter('Nonexisting', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
+        tick(100);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(0);
+        const args = grid.filteringExpressionsTree.find('Nonexisting') as FilteringExpressionsTree;
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
+    }));
+
     it('Should emit onFilteringDone when filtering globally', fakeAsync(() => {
         spyOn(grid.onFilteringDone, 'emit');
 
