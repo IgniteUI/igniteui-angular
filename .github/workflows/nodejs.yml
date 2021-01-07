@@ -40,22 +40,13 @@ jobs:
     #   env:
     #     NODE_OPTIONS: --max_old_space_size=4096
     - run: npm run test:schematics
-
-  coverage:
-    needs: run-tests
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [14]
-    steps:
-    - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '14.x'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Install dependencies
-      if: github.repository == 'IgniteUI/igniteui-angular'
-      run: npm ci
+    # - name: Install dependencies
+    #   if: github.repository == 'IgniteUI/igniteui-angular'
+    #   run: npm ci
     - name: Install coverage combiner
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: sudo npm install -g istanbul-combine
@@ -65,4 +56,14 @@ jobs:
     - name: Deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+  # coverage:
+  #   needs: run-tests
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node: [14]
+  #   steps:
+  #   - uses: actions/checkout@v2
+    
 
