@@ -587,7 +587,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * ```
      */
     @Input()
-    public mode = InteractionMode.Dialog;
+    public mode: InteractionMode = InteractionMode.Dialog;
 
     /**
      * Gets/Sets whether date should spin continuously or stop when min/max is reached.

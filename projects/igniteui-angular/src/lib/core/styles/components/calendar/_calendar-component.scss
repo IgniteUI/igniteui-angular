@@ -107,6 +107,11 @@
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;
+
+        &:hover,
+        &:focus {
+            @extend %cal-value--hover !optional;
+        }
     }
 
     @include e(date, 'special') {

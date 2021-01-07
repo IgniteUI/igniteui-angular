@@ -155,7 +155,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             newValue: { index: 200, value: 200 },
             cancel: false,
             owner: grid,
-            isAddRow: false
+            isAddRow: false,
+            event: undefined
         };
 
         const doneArgs: IGridEditDoneEventArgs = {
@@ -164,7 +165,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
             owner: grid,
-            isAddRow: false
+            isAddRow: false,
+            event: undefined
         };
 
         (grid as IgxGridComponent).rowEdit.pipe(first()).subscribe(e => {
@@ -199,7 +201,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             newValue: { index: 777, value: 777 },
             cancel: false,
             owner: grid,
-            isAddRow: false
+            isAddRow: false,
+            event: undefined
         };
 
         (grid as IgxGridComponent).rowEdit.pipe(first()).subscribe(e => {
@@ -214,7 +217,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: { index: 1, value: 1 },
             newValue: { index: 777, value: 777 },
             owner: grid,
-            isAddRow: false
+            isAddRow: false,
+            event: undefined
         };
 
         // Update an existing cell - changing the new value in the event
@@ -248,7 +252,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             newValue: 200,
             cancel: false,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: undefined
         };
 
         const doneArgs: IGridEditDoneEventArgs = {
@@ -258,7 +263,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: 1,
             newValue: 200,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: undefined
         };
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);
@@ -298,7 +304,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             newValue: 777,
             cancel: false,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: undefined
         };
 
         const handlerUpdateArgs: IGridEditDoneEventArgs = {
@@ -308,7 +315,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: 1,
             newValue: 777,
             column: cell.column,
-            owner: grid
+            owner: grid,
+            event: undefined
         };
 
         (grid as IgxGridComponent).cellEdit.pipe(first()).subscribe(e => {

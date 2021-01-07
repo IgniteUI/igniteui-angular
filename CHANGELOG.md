@@ -1,8 +1,22 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 11.0.0
 
+## 11.0.4
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - a new property `event` has been introduced to `IGridEditEventArgs` and `IGridEditDoneEventArgs`; the property represents the original DOM event that triggers any of Grid editing events like `rowEditEnter`, `cellEditEnter`, `cellEdit`, `cellEditDone`, `cellEditExit`, `rowEdit`, `rowEditDone`, `rowEditExit`
+    - **Behavioral Change** -
+    When there isn't a previous active node and the user enters the grid using tab or shift + tab key:
+    the first fully visible element is activated: /no scroll bar positioning is reset/changed;
+    If there is a previous active node in the grid - the previously active node is reactivated without resetting the scroll positions;
+    If we follow the default tab navigation and we are currently on a data cell with / rowIndex: -1, columnIndex: 6/ for example
+    when we tab down to the root summaries the summary cell with visible column index 6 should be activated and scroll into the view;
+    The same applies if you shift+tab to the headers header cell with visible index 6 is activated and scrolled into the view;
+    If you have an active node and go to another tab and then return back the active node and the current scroll position should not be changed;
+
+## 11.0.0
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

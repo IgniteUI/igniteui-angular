@@ -10,21 +10,18 @@ import { debounce } from 'rxjs/operators';
     templateUrl: './controllers.component.html'
 })
 export class ControllerComponent implements OnInit, OnDestroy {
-    @ViewChild('buttonGroup1', { static: true }) public buttonGroup1: IgxButtonGroupComponent;
-    @ViewChild('buttonGroup2', { static: true }) public buttonGroup2: IgxButtonGroupComponent;
+    @ViewChild('buttonGroup1', { static: true }) public playButtons: IgxButtonGroupComponent;
     @ViewChild('slider1', { static: true }) public volumeSlider: IgxSliderComponent;
     @ViewChild('slider2', { static: true }) public intervalSlider: IgxSliderComponent;
 
     @Output() public switchChanged = new EventEmitter<any>();
     @Output() public volumeChanged = new EventEmitter<any>();
-    @Output() public frequencyChanged = new EventEmitter<any>();
     @Output() public playAction = new EventEmitter<any>();
 
     public selectionMode = 'multiple';
     public theme = false;
     public volume = 1000;
     public frequency = 500;
-    public grouped = true;
     public controls = [
         {
             disabled: false,
@@ -59,21 +56,17 @@ export class ControllerComponent implements OnInit, OnDestroy {
         switch (event.index) {
             case 0: {
                 this.disableOtherButtons(event.index, true);
-                this.playAction.emit({ action: 'playRandom'} );
+                this.playAction.emit({ action: 'playRandom'});
                 break;
             }
             case 1: {
                 this.disableOtherButtons(event.index, true);
-                this.playAction.emit({ action: 'playAll'} );
+                this.playAction.emit({ action: 'playAll'});
                 break;
             }
             case 2: {
                 this.disableOtherButtons(event.index, false);
-                this.playAction.emit({ action: 'stop'} );
-                break;
-            }
-            case 3: {
-                this.disableOtherButtons(event.index, true);
+                this.playAction.emit({ action: 'stop'});
                 break;
             }
             default:
@@ -94,12 +87,12 @@ export class ControllerComponent implements OnInit, OnDestroy {
         this.volumeSlider.disabled = disableButtons;
         this.intervalSlider.disabled = disableButtons;
         this.selectedButton = ind;
-        this.buttonGroup1.buttons.forEach((button, index) => {
+        this.playButtons.buttons.forEach((button, index) => {
             if (index === 2) {
- button.disabled = !disableButtons;
-} else {
-                this.buttonGroup1.buttons[0].disabled = disableButtons;
-                this.buttonGroup1.buttons[1].disabled = disableButtons;
+                button.disabled = !disableButtons;
+            } else {
+                this.playButtons.buttons[0].disabled = disableButtons;
+                this.playButtons.buttons[1].disabled = disableButtons;
             }
         });
     }

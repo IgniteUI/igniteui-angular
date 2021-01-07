@@ -71,7 +71,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         // be sure row is in view
         if (grid.rowList.filter(r => r === row).length !== 0) {
-            grid.crudService.enterEditMode(firstEditable);
+            grid.crudService.enterEditMode(firstEditable, event);
         }
         this.strip.hide();
     }
@@ -110,7 +110,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
-        grid.beginAddRowByIndex(context.rowID, context.index, asChild);
+        grid.beginAddRowByIndex(context.rowID, context.index, asChild, event);
         this.strip.hide();
     }
 

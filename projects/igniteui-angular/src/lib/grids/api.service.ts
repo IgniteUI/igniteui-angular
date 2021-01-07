@@ -116,34 +116,34 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public submit_value() {
+    public submit_value(event?: Event) {
         const cell = this.grid.crudService.cell;
         if (cell) {
-            const args = this.update_cell(cell, cell.editValue);
+            const args = this.update_cell(cell, cell.editValue, event);
             this.grid.crudService.cellEditingBlocked = args.cancel;
             if (args.cancel) {
                 return args.cancel;
             }
-            this.grid.crudService.exitCellEdit();
+            this.grid.crudService.exitCellEdit(event);
         }
     }
 
-    public submit_add_value() {
+    public submit_add_value(event?: Event) {
         const cell = this.grid.crudService.cell;
         if (cell) {
-            const args = this.update_add_cell(cell, cell.editValue);
+            const args = this.update_add_cell(cell, cell.editValue, event);
             if (args.cancel) {
                 this.grid.endAddRow();
                 return args.cancel;
             }
-            return this.grid.crudService.exitCellEdit();
+            return this.grid.crudService.exitCellEdit(event);
         }
     }
 
-    public update_add_cell(cell: IgxCell, value: any): IGridEditEventArgs  {
+    public update_add_cell(cell: IgxCell, value: any, event?: Event): IGridEditEventArgs  {
         cell.editValue = value;
 
-        const args = cell.createEditEventArgs();
+        const args = cell.createEditEventArgs(true, event);
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
@@ -158,15 +158,15 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const data = cell.rowData;
         mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
         this.grid.crudService.row.data = data;
-        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
         return args;
     }
 
-    update_cell(cell: IgxCell, value: any) {
+    update_cell(cell: IgxCell, value: any, event?: Event) {
         cell.editValue = value;
-        const args = cell.createEditEventArgs();
+        const args = cell.createEditEventArgs(true, event);
 
         if (isEqual(args.oldValue, args.newValue)) {
             return args;
@@ -197,7 +197,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             (this.grid as any)._pipeTrigger++;
         }
 
-        const doneArgs = cell.createDoneEditEventArgs(args.newValue);
+        const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
         this.grid.cellEditDone.emit(doneArgs);
         return args;
     }
@@ -240,7 +240,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    update_row(row: IgxRow, value: any) {
+    update_row(row: IgxRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = grid.crudService.row;
@@ -249,7 +249,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const hasSummarized = grid.hasSummarizedColumns;
         this._update_row(row, value);
 
-        const args = row.createEditEventArgs();
+        const args = row.createEditEventArgs(true, event);
 
         // If no valid row is found
         if (index === -1) {
@@ -292,7 +292,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         (grid as any)._pipeTrigger++;
 
-        const doneArgs = row.createDoneEditEventArgs(cachedRowData);
+        const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
         grid.rowEditDone.emit(doneArgs);
         return args;
     }
