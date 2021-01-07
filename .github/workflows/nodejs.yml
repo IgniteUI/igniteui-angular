@@ -47,14 +47,17 @@ jobs:
     #   if: github.repository == 'IgniteUI/igniteui-angular'
     #   run: npm ci
     - name: Install coverage combiner
-      if: github.repository == 'IgniteUI/igniteui-angular'
+      if: github.repository == 'IgniteUI/igniteui-angularTEST'
       run: sudo npm install -g istanbul-combine
     - name: Combine scripts
-      if: github.repository == 'IgniteUI/igniteui-angular'
+      if: github.repository == 'IgniteUI/igniteui-angularTEST'
       run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
     - name: Deploy results to coveralls.io
       if: github.repository == 'IgniteUI/igniteui-angular'
       run: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+      with:
+        repo-token: ${{ github.token }}
+        repository: ${{ github.repository }}
 
   # coverage:
   #   needs: run-tests
