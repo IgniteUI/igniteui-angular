@@ -529,9 +529,9 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         if (info.settings.positionStrategy.settings.closeAnimation) {
-            this.playCloseAnimation(info);
+            this.playCloseAnimation(info, event);
         } else {
-            this.onCloseDone(info);
+            this.onCloseDone(info, event);
         }
     }
 
@@ -633,9 +633,9 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private onCloseDone(info: OverlayInfo) {
+    private onCloseDone(info: OverlayInfo, event?: Event) {
         this.cleanUp(info);
-        this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event: event});
     }
 
     private cleanUp(info: OverlayInfo) {
@@ -718,7 +718,7 @@ export class IgxOverlayService implements OnDestroy {
         info.openAnimationPlayer.play();
     }
 
-    private playCloseAnimation(info: OverlayInfo) {
+    private playCloseAnimation(info: OverlayInfo, ev?: Event) {
         if (!info.closeAnimationPlayer) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
             info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
@@ -739,7 +739,7 @@ export class IgxOverlayService implements OnDestroy {
                 if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
                     info.openAnimationPlayer.reset();
                 }
-                this.onCloseDone(info);
+                this.onCloseDone(info, ev);
             });
         }
 
