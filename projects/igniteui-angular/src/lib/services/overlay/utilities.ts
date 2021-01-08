@@ -108,7 +108,7 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
-    componentRef?: ComponentRef<{}>;
+    componentRef?: ComponentRef<any>;
 }
 
 export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
@@ -138,7 +138,7 @@ export interface Size {
 export interface OverlayInfo {
     id?: string;
     elementRef?: ElementRef;
-    componentRef?: ComponentRef<{}>;
+    componentRef?: ComponentRef<any>;
     settings?: OverlaySettings;
     initialSize?: Size;
     hook?: HTMLElement;

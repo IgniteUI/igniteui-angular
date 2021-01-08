@@ -575,7 +575,7 @@ describe('IgxSlider', () => {
 
         it('labels should show/hide on pointer up/down', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
-            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: (e: any) => {}});
             await wait(50);
             fixture.detectChanges();
 
@@ -583,7 +583,7 @@ describe('IgxSlider', () => {
             let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
             expect(activeLabel).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: (e: any) => {}});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -594,7 +594,7 @@ describe('IgxSlider', () => {
         it('should be able to change thumbLabelVisibilityDuration', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: <any>((e: any) => {})});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: (e: any) => {}});
             await wait(50);
             fixture.detectChanges();
 
@@ -602,7 +602,7 @@ describe('IgxSlider', () => {
             let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
             expect(activeLabel).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: (e: any) => {}});
             await wait(750);
             fixture.detectChanges();
 
@@ -848,7 +848,7 @@ describe('IgxSlider', () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             fixture.detectChanges();
 
-            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: (e: any) => {}});
             await wait(100);
             fixture.detectChanges();
 
@@ -856,7 +856,7 @@ describe('IgxSlider', () => {
             let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
             expect(activeLabel).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: <any>((e: any) => {})});
+            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: (e: any) => {}});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -1353,19 +1353,19 @@ describe('IgxSlider', () => {
             thumbTo.triggerEventHandler('focus', null);
             fix.detectChanges();
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: ( e: any ) => {  }});
             fix.detectChanges();
             let currentValue = instance.slider.value;
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(currentValue).toBeGreaterThan(0);
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: ( e: any ) => {  }});
             fix.detectChanges();
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(instance.slider.value).toBeGreaterThan(currentValue as number);
 
             currentValue = instance.slider.value;
-            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: ( e: any ) => {  }});
             fix.detectChanges();
             expect(spyOnValueChanged).toHaveBeenCalledTimes(1);
             expect(instance.slider.value).toEqual(currentValue);
@@ -1645,7 +1645,7 @@ describe('IgxSlider', () => {
         });
     });
 
-    function panRight(element, elementHeight, elementWidth, duration) {
+    const panRight = (element, elementHeight, elementWidth, duration) => {
         const panOptions = {
             deltaX: elementWidth * 0.6,
             clientX: elementWidth * 0.6,
@@ -1656,12 +1656,12 @@ describe('IgxSlider', () => {
 
         return new Promise((resolve, reject) => {
             Simulator.gestures.pan(element, panOptions, () => {
-                resolve();
+                resolve(null);
             });
         });
-    }
+    };
 
-    function verifySecondaryTicsLabelsAreHidden(ticks, hidden) {
+    const verifySecondaryTicsLabelsAreHidden = (ticks, hidden) => {
         const allTicks = Array.from(ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}`));
         const secondaryTicks =  allTicks.filter((tick: any) =>
             !tick.classList.contains(SLIDER_PRIMARY_GROUP_TICKS_CLASS_NAME)
@@ -1670,15 +1670,15 @@ describe('IgxSlider', () => {
            const label = (tick as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
            expect(label.classList.contains(SLIDER_TICK_LABELS_HIDDEN_CLASS)).toEqual(hidden);
         });
-    }
+    };
 
-    function verifyPrimaryTicsLabelsAreHidden(ticks, hidden) {
+    const verifyPrimaryTicsLabelsAreHidden = (ticks, hidden) => {
         const primaryTicks = ticks.nativeElement.querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS}`);
         primaryTicks.forEach(tick => {
            const label = (tick as HTMLElement).querySelector(SLIDER_TICK_LABELS_CLASS);
            expect(label.classList.contains(SLIDER_TICK_LABELS_HIDDEN_CLASS)).toEqual(hidden);
         });
-    }
+    };
 });
 
 @Component({
@@ -1688,13 +1688,13 @@ describe('IgxSlider', () => {
     `
 })
 export class SliderRtlComponent {
+    @ViewChild(IgxSliderComponent)
+    public slider: IgxSliderComponent;
+
     public value = {
         lower: 20,
         upper: 80
     };
-
-    @ViewChild(IgxSliderComponent)
-    public slider: IgxSliderComponent;
 
     public type: IgxSliderType = IgxSliderType.RANGE;
 

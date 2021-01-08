@@ -20,6 +20,19 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         return result;
     }
 
+    public commit(data: any[], primaryKeyOrId?: any, childDataKey?: any, id?: any): void {
+        if (childDataKey !== undefined) {
+            let transactions = this.getAggregatedChanges(true);
+            if (id !== undefined) {
+                transactions = transactions.filter(t => t.id === id);
+            }
+            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, true);
+            this.clear(id);
+        } else {
+            super.commit(data, primaryKeyOrId);
+        }
+    }
+
     protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         super.updateState(states, transaction, recordRef);
 
@@ -49,19 +62,6 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
                     }
                 }
             });
-        }
-    }
-
-    public commit(data: any[], primaryKeyOrId?: any, childDataKey?: any, id?: any): void {
-        if (childDataKey !== undefined) {
-            let transactions = this.getAggregatedChanges(true);
-            if (id !== undefined) {
-                transactions = transactions.filter(t => t.id === id);
-            }
-            DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKeyOrId, true);
-            this.clear(id);
-        } else {
-            super.commit(data, primaryKeyOrId);
         }
     }
 

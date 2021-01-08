@@ -5,6 +5,11 @@ import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
+    /**
+     * @inheritdoc
+     */
+    public onStateUpdate = new EventEmitter<StateUpdateEvent>();
+
     protected _transactions: T[] = [];
     protected _redoStack: Action<T>[][] = [];
     protected _undoStack: Action<T>[][] = [];
@@ -27,29 +32,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public onStateUpdate = new EventEmitter<StateUpdateEvent>();
-
-    /**
-     * @inheritdoc
-     */
     public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
         this.addTransaction(transaction, states, recordRef);
-    }
-
-    protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
-        this.updateState(states, transaction, recordRef);
-
-        const transactions = this._isPending ? this._pendingTransactions : this._transactions;
-        transactions.push(transaction);
-
-        if (!this._isPending) {
-            const actions = [{ transaction, recordRef }];
-            this._undoStack.push(actions);
-            this._redoStack = [];
-            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions });
-        }
     }
 
     /**
@@ -198,8 +184,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      */
     public redo(): void {
         if (this._redoStack.length > 0) {
-            let actions: Action<T>[];
-            actions = this._redoStack.pop();
+            const actions: Action<T>[] = this._redoStack.pop();
             for (const action of actions) {
                 this.updateState(this._states, action.transaction, action.recordRef);
                 this._transactions.push(action.transaction);
@@ -207,6 +192,20 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
             this._undoStack.push(actions);
             this.onStateUpdate.emit({ origin: TransactionEventOrigin.REDO, actions });
+        }
+    }
+
+    protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
+        this.updateState(states, transaction, recordRef);
+
+        const transactions = this._isPending ? this._pendingTransactions : this._transactions;
+        transactions.push(transaction);
+
+        if (!this._isPending) {
+            const actions = [{ transaction, recordRef }];
+            this._undoStack.push(actions);
+            this._redoStack = [];
+            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions });
         }
     }
 

@@ -4,10 +4,6 @@ import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
 export class IgxBaseTransactionService<T extends Transaction, S extends State> implements TransactionService<T, S> {
-    protected _isPending = false;
-    protected _pendingTransactions: T[] = [];
-    protected _pendingStates: Map<any, S> = new Map();
-
     /**
      * @inheritdoc
      */
@@ -33,6 +29,10 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
      * @inheritdoc
      */
     public onStateUpdate = new EventEmitter<StateUpdateEvent>();
+
+    protected _isPending = false;
+    protected _pendingTransactions: T[] = [];
+    protected _pendingStates: Map<any, S> = new Map();
 
     /**
      * @inheritdoc

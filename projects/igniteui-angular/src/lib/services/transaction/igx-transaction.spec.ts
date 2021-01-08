@@ -33,7 +33,7 @@ describe('IgxTransaction', () => {
             expect(trans['_transactions'].length).toEqual(0);
             expect(trans['_redoStack'].length).toEqual(0);
             let transactionIndex = 1;
-            transactions.forEach(function(transaction) {
+            transactions.forEach((transaction) => {
                 trans.add(transaction);
                 expect(trans.getTransactionLog(transaction.id).pop()).toEqual(transaction);
                 expect(trans['_transactions'].length).toEqual(transactionIndex);
@@ -56,16 +56,12 @@ describe('IgxTransaction', () => {
                 { id: '9', type: TransactionType.ADD, newValue: 9 },
                 { id: '8', type: TransactionType.UPDATE, newValue: 10 }
             ];
-            transactions.forEach(function(t) {
-                trans.add(t);
-            });
+            transactions.forEach(t => trans.add(t));
 
             const transaction = { id: '6', type: TransactionType.ADD, newValue: 6 };
             expect(trans.getTransactionLog('6').pop()).toEqual(transaction);
             const msg = `Cannot add this transaction. Transaction with id: ${transaction.id} has been already added.`;
-            expect(function() {
-                trans.add(transaction);
-            }).toThrowError(msg);
+            expect(() => trans.add(transaction)).toThrowError(msg);
         });
 
         it('Should throw an error when trying to update transaction with no recordRef', () => {
@@ -82,15 +78,13 @@ describe('IgxTransaction', () => {
                 { id: '9', type: TransactionType.ADD, newValue: 9 },
                 { id: '8', type: TransactionType.UPDATE, newValue: 10 }
             ];
-            transactions.forEach(function(transaction) {
-                trans.add(transaction);
-            });
+            transactions.forEach(transaction => trans.add(transaction));
 
             const updateTransaction = { id: '2', type: TransactionType.DELETE, newValue: 7 };
             expect(trans.getTransactionLog('2').pop()).toEqual(updateTransaction);
             const msg = `Cannot add this transaction. This is first transaction of type ${updateTransaction.type} ` +
                 `for id ${updateTransaction.id}. For first transaction of this type recordRef is mandatory.`;
-            expect(function() {
+            expect(() => {
                 updateTransaction.newValue = 107;
                 trans.add(updateTransaction);
             }).toThrowError(msg);
@@ -104,9 +98,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1').pop()).toEqual(deleteTransaction);
 
             const msg = `Cannot add this transaction. Transaction with id: ${deleteTransaction.id} has been already deleted.`;
-            expect(function() {
-                trans.add(deleteTransaction);
-            }).toThrowError(msg);
+            expect(() => trans.add(deleteTransaction)).toThrowError(msg);
         });
 
         it('Should throw an error when trying to update an already deleted item', () => {
@@ -117,7 +109,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1').pop()).toEqual(deleteTransaction);
 
             const msg = `Cannot add this transaction. Transaction with id: ${deleteTransaction.id} has been already deleted.`;
-            expect(function() {
+            expect(() => {
                 deleteTransaction.type = TransactionType.UPDATE;
                 deleteTransaction.newValue = 5;
                 trans.add(deleteTransaction);
@@ -701,7 +693,7 @@ describe('IgxTransaction', () => {
 
             expect(trans.getState('Key1')).toBeTruthy();
             expect(trans.getAggregatedValue('Key1', true)).toEqual({ key: 'Key1', value1: 10, value2: 2, value3: 30 });
-            expect((<any>trans.getTransactionLog())).toEqual(
+            expect(trans.getTransactionLog() as any).toEqual(
                 [
                     {
                         id: 'Key1',
