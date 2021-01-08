@@ -7,7 +7,6 @@ import { GridType, FlatGridType, TreeGridType } from '../common/grid.interface';
 /** @hidden */
 @Injectable()
 export class IgxGridSummaryService {
-    protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
     public grid: GridType;
     public rootSummaryID = 'igxGridRootSummary';
     public summaryHeight = 0;
@@ -16,6 +15,8 @@ export class IgxGridSummaryService {
     public retriggerRootPipe = 0;
     public deleteOperation = false;
 
+    protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
+
     public recalculateSummaries() {
         this.resetSummaryHeight();
         this.grid.notifyChanges(true);
@@ -23,8 +24,8 @@ export class IgxGridSummaryService {
 
     public clearSummaryCache(args?) {
         if (!this.summaryCacheMap.size) {
- return;
-}
+            return;
+        }
         if (!args) {
             this.summaryCacheMap.clear();
             if (this.grid && this.grid.rootSummariesEnabled) {
@@ -39,8 +40,8 @@ export class IgxGridSummaryService {
         if (args.rowID !== undefined && args.rowID !== null) {
             let columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
             if (columnName && this.grid.rowEditable) {
- return;
-}
+                return;
+            }
 
             const isGroupedColumn = (this.grid as FlatGridType).groupingExpressions &&
             (this.grid as FlatGridType).groupingExpressions.map(expr => expr.fieldName).indexOf(columnName) !== -1;
@@ -54,8 +55,8 @@ export class IgxGridSummaryService {
     public removeSummaries(rowID, columnName?) {
         this.deleteSummaryCache(this.rootSummaryID, columnName);
         if (this.summaryCacheMap.size === 1 && this.summaryCacheMap.has(this.rootSummaryID)) {
- return;
-}
+            return;
+        }
         if (this.isTreeGrid) {
             if (this.grid.transactions.enabled && this.deleteOperation) {
                 this.deleteOperation = false;
@@ -93,8 +94,8 @@ export class IgxGridSummaryService {
             return this.summaryHeight;
         }
         if (!this.grid.data) {
-return this.summaryHeight = 0;
-}
+            return this.summaryHeight = 0;
+        }
         let maxSummaryLength = 0;
         this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             const getCurrentSummaryColumn = column.summaries.operate([], [], column.field).length;
@@ -116,8 +117,8 @@ return this.summaryHeight = 0;
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
         if (!this.hasSummarizedColumns || !data) {
-return rowSummaries;
-}
+            return rowSummaries;
+        }
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const summaryResult = column.summaries.operate(data.map(r => resolveNestedPath(r, column.field)),
@@ -138,8 +139,8 @@ return rowSummaries;
 
     public updateSummaryCache(groupingArgs) {
         if (this.summaryCacheMap.size === 0 || !this.hasSummarizedColumns) {
- return;
-}
+            return;
+        }
         if (this.groupingExpressions.length === 0) {
             this.groupingExpressions = groupingArgs.expressions.map(record => record.fieldName);
             return;
@@ -175,8 +176,8 @@ return rowSummaries;
 
     private getSummaryID(rowID, groupingExpressions) {
         if (groupingExpressions.length === 0) {
- return [];
-}
+            return [];
+        }
         const summaryIDs = [];
         let data = this.grid.data;
         if (this.grid.transactions.enabled) {
@@ -199,8 +200,8 @@ return rowSummaries;
     private removeAllTreeGridSummaries(rowID, columnName?) {
         let row = (this.grid as TreeGridType).records.get(rowID);
         if (!row) {
- return;
-}
+            return;
+        }
         row = row.children ? row : row.parent;
         while (row) {
             rowID = row.rowID;

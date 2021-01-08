@@ -1414,7 +1414,7 @@ describe('Custom expand/collapse template #tGrid', () => {
     });
 });
 
-function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
+const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const disabled = 'igx-button--disabled';
     const grid = fix.componentInstance.treeGrid;
     const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
@@ -1435,4 +1435,4 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
         expect(pagingButtons[2].className.includes(disabled)).toBe(buttonsVisibility[2]);
         expect(pagingButtons[3].className.includes(disabled)).toBe(buttonsVisibility[3]);
     }
-}
+};

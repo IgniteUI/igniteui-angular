@@ -398,13 +398,9 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     });
 });
 
-function getHighlightSpans(nativeParent: HTMLElement) {
-    return nativeParent.querySelectorAll('.' + HIGHLIGHT_CLASS);
-}
+const getHighlightSpans = (nativeParent: HTMLElement) => nativeParent.querySelectorAll('.' + HIGHLIGHT_CLASS);
 
-function getActiveSpan(nativeParent: HTMLElement) {
-    return nativeParent.querySelector('.' + ACTIVE_CLASS);
-}
+const getActiveSpan = (nativeParent: HTMLElement) => nativeParent.querySelector('.' + ACTIVE_CLASS);
 
 /**
  * Verifies the results from a search execution by providing the expected highlighted elements count
@@ -412,7 +408,7 @@ function getActiveSpan(nativeParent: HTMLElement) {
  * expectedActiveSpanIndex should be passed as -1 if there should be no active span element.
  * (Optionally the result from findNext/findPrev methods - the actualAPISearchCount, can also be checked.)
  */
-function verifySearchResult(nativeParent, expectedHighlightSpansCount, expectedActiveSpanIndex, actualAPISearchCount?) {
+const verifySearchResult = (nativeParent, expectedHighlightSpansCount, expectedActiveSpanIndex, actualAPISearchCount?) => {
     const spans = getHighlightSpans(nativeParent);
     const activeSpan = getActiveSpan(nativeParent);
 
@@ -429,17 +425,17 @@ function verifySearchResult(nativeParent, expectedHighlightSpansCount, expectedA
         // If active element should not exist. (used when spans.length is expected to be 0 as well)
         expect(activeSpan).toBeNull('active element was found');
     }
-}
+};
 
-function getHighlightedCellValue(cell: HTMLElement) {
+const getHighlightedCellValue = (cell: HTMLElement) => {
     const valueDivs: HTMLElement[] = Array.from(cell.querySelectorAll(CELL_VALUE_DIV_CSS_CLASS));
     return valueDivs.filter(v => !v.hidden).map(v => v.innerText.trim()).join('');
-}
+};
 
 /**
  * Verifies that every single cell contains only one visible div with the cell value in it.
  */
-function verifyVisibleCellValueDivsCount(fix) {
+const verifyVisibleCellValueDivsCount = (fix) => {
     // Verify that there is NO cell with a duplicated value.
     const allCells = TreeGridFunctions.getAllCells(fix);
     allCells.forEach(cell => {
@@ -447,11 +443,11 @@ function verifyVisibleCellValueDivsCount(fix) {
         // only one visible 'value div' should be present
         expect(valueDivs.filter(div => !div.hidden).length).toBe(1, 'incorrect visible value divs count');
     });
-}
+};
 
-function verifyActiveCellValue(nativeParent: HTMLElement, expectedValue: string) {
+const verifyActiveCellValue = (nativeParent: HTMLElement, expectedValue: string) => {
     const activeSpan = getActiveSpan(nativeParent);
     const cell = activeSpan.parentElement.parentElement;
     const cellValue = getHighlightedCellValue(cell);
     expect(cellValue).toBe(expectedValue);
-}
+};

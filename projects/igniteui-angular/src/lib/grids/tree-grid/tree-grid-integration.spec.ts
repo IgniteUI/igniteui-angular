@@ -169,14 +169,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(225, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(225, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(225);
 
             // API autosizing
             column.autosize();
             fix.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
             expect(parseInt(column.width, 10)).toBe(152);
         });
 
@@ -186,7 +186,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             column.resizable = true;
             treeGrid.cdr.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(225, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(225, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(225);
 
             // UI autosizing
@@ -194,7 +194,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
             fix.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
             expect(parseInt(column.width, 10)).toBe(152);
         });
     });
@@ -283,14 +283,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(180, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(180, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(180);
 
             // API autosizing
             column.autosize();
             fix.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
             expect(parseInt(column.width, 10)).toBe(152);
         });
 
@@ -300,7 +300,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             column.resizable = true;
             treeGrid.cdr.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(180, 'incorrect column width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(180, 'incorrect column width');
             expect(parseInt(column.width, 10)).toBe(180);
 
             // UI autosizing
@@ -308,7 +308,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
             fix.detectChanges();
 
-            expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
+            expect(headerCell.nativeElement.getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
             expect(parseInt(column.width, 10)).toBe(152);
         });
     });
@@ -324,16 +324,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('should show the banner below the edited parent node', () => {
             // Collapsed state
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            grid.collapseAll();
-            fix.detectChanges();
-            verifyBannerPositioning(0);
 
-            // Expanded state
-            grid.expandAll();
-            fix.detectChanges();
-            verifyBannerPositioning(3);
-
-            function verifyBannerPositioning(columnIndex: number) {
+            const verifyBannerPositioning = (columnIndex: number) => {
                 const cell = grid.getCellByColumn(columnIndex, 'Name');
                 cell.setEditMode(true);
                 fix.detectChanges();
@@ -348,7 +340,16 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 expect(bannerTop).toBeGreaterThanOrEqual(editRowBottom);
                 // No much space between the row and the banner
                 expect(bannerTop - editRowBottom).toBeLessThan(2);
-            }
+            };
+
+            grid.collapseAll();
+            fix.detectChanges();
+            verifyBannerPositioning(0);
+
+            // Expanded state
+            grid.expandAll();
+            fix.detectChanges();
+            verifyBannerPositioning(3);
         });
 
         it('should show the banner below the edited child node', () => {
@@ -529,7 +530,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             cancelBtn.triggerEventHandler('keydown.Tab', mockObj);
             await wait(30);
             fix.detectChanges();
-            expect((<any>grid.rowEditTabs.first).move).not.toHaveBeenCalled();
+            expect((grid.rowEditTabs.first as any).move).not.toHaveBeenCalled();
             expect(mockObj.preventDefault).not.toHaveBeenCalled();
             expect(mockObj.stopPropagation).toHaveBeenCalled();
 
@@ -537,7 +538,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             await wait(30);
             fix.detectChanges();
             expect(dateCell.editMode).toBeTruthy();
-            expect((<any>grid.rowEditTabs.last).move).toHaveBeenCalled();
+            expect((grid.rowEditTabs.last as any).move).toHaveBeenCalled();
             expect(mockObj.preventDefault).toHaveBeenCalled();
             expect(mockObj.stopPropagation).toHaveBeenCalled();
         });

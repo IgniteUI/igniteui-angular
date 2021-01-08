@@ -189,7 +189,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             grid.columnList.forEach((col) => col.hidden = true);
             tick(30);
             fix.detectChanges();
-            fixEl = fix.nativeElement, gridEl = grid.nativeElement;
+            fixEl = fix.nativeElement;
+            gridEl = grid.nativeElement;
 
             tHeadItems = fixEl.querySelector('igx-grid-header-group');
             gridRows = fixEl.querySelector('igx-tree-grid-row');

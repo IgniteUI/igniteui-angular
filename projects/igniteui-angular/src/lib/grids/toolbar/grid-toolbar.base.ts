@@ -65,7 +65,7 @@ export abstract class BaseToolbarDirective {
 }
 
 
-function _makeOverlaySettings(): OverlaySettings {
+const _makeOverlaySettings = (): OverlaySettings => {
     const positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -79,4 +79,4 @@ function _makeOverlaySettings(): OverlaySettings {
         closeOnEscape: true,
         closeOnOutsideClick: true
     };
-}
+};
