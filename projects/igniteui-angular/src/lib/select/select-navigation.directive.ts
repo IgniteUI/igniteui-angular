@@ -69,7 +69,6 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
     private inputStream = '';
     private clearStream$ = Subscription.EMPTY;
 
-    // @HostListener('keydown', ['$event'])
     public captureKey(event: KeyboardEvent) {
         // relying only on key, available on all major browsers:
         // https://caniuse.com/#feat=keyboardevent-key (IE/Edge quirk doesn't affect letter typing)
