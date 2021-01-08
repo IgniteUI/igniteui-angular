@@ -48,24 +48,6 @@ let warningShown = false;
  */
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService implements OnDestroy {
-    private _componentId = 0;
-    private _overlayInfos: OverlayInfo[] = [];
-    private _overlayElement: HTMLElement;
-    private _document: Document;
-    private _keyPressEventListener: Subscription;
-    private destroy$ = new Subject<boolean>();
-    private _cursorStyleIsSet = false;
-    private _cursorOriginalValue: string;
-
-    private _defaultSettings: OverlaySettings = {
-        excludeFromOutsideClick: [],
-        positionStrategy: new GlobalPositionStrategy(),
-        scrollStrategy: new NoOpScrollStrategy(),
-        modal: true,
-        closeOnOutsideClick: true,
-        closeOnEscape: false
-    };
-
     /**
      * Emitted before the component is opened.
      * ```typescript
@@ -125,6 +107,35 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      */
     public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
+
+    private _componentId = 0;
+    private _overlayInfos: OverlayInfo[] = [];
+    private _overlayElement: HTMLElement;
+    private _document: Document;
+    private _keyPressEventListener: Subscription;
+    private destroy$ = new Subject<boolean>();
+    private _cursorStyleIsSet = false;
+    private _cursorOriginalValue: string;
+
+    private _defaultSettings: OverlaySettings = {
+        excludeFromOutsideClick: [],
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: true,
+        closeOnOutsideClick: true,
+        closeOnEscape: false
+    };
+
+    constructor(
+        private _factoryResolver: ComponentFactoryResolver,
+        private _appRef: ApplicationRef,
+        private _injector: Injector,
+        private builder: AnimationBuilder,
+        @Inject(DOCUMENT) private document: any,
+        private _zone: NgZone,
+        protected platformUtil: PlatformUtil) {
+        this._document = this.document;
+    }
 
     /**
      * Creates overlay settings with global or container position strategy and preset position settings
@@ -272,17 +283,6 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    constructor(
-        private _factoryResolver: ComponentFactoryResolver,
-        private _appRef: ApplicationRef,
-        private _injector: Injector,
-        private builder: AnimationBuilder,
-        @Inject(DOCUMENT) private document: any,
-        private _zone: NgZone,
-        protected platformUtil: PlatformUtil) {
-        this._document = <Document>this.document;
-    }
-
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
      *
@@ -304,8 +304,7 @@ export class IgxOverlayService implements OnDestroy {
         moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
     attach(component: ElementRef | Type<any>, settings?: OverlaySettings,
         moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string {
-        let info: OverlayInfo;
-        info = this.getOverlayInfo(component, moduleRef);
+        const info: OverlayInfo = this.getOverlayInfo(component, moduleRef);
 
         //  if there is no info most probably wrong type component was provided and we just go out
         if (!info) {
@@ -444,6 +443,31 @@ export class IgxOverlayService implements OnDestroy {
         info.elementRef.nativeElement.parentElement.style.transform = translate;
     }
 
+    /** @hidden @internal */
+    public getOverlayById(id: string): OverlayInfo {
+        if (!id) {
+            return null;
+        }
+
+        const info = this._overlayInfos.find(e => e.id === id);
+        return info;
+    }
+
+    /** @hidden */
+    public repositionAll = () => {
+        for (let i = this._overlayInfos.length; i--;) {
+            this.reposition(this._overlayInfos[i].id);
+        }
+    };
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
     private _show(info: OverlayInfo) {
         const eventArgs: OverlayCancelableEventArgs = { id: info.id, componentRef: info.componentRef, cancel: false };
         this.onOpening.emit(eventArgs);
@@ -544,9 +568,9 @@ export class IgxOverlayService implements OnDestroy {
     private getOverlayInfo(component: any, moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): OverlayInfo {
         const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
-            info.elementRef = <ElementRef>component;
+            info.elementRef = component;
         } else {
-            let dynamicFactory: ComponentFactory<{}>;
+            let dynamicFactory: ComponentFactory<any>;
             const factoryResolver = moduleRef ? moduleRef.componentFactoryResolver : this._factoryResolver;
             try {
                 dynamicFactory = factoryResolver.resolveComponentFactory(component);
@@ -556,12 +580,12 @@ export class IgxOverlayService implements OnDestroy {
             }
 
             const injector = moduleRef ? moduleRef.injector : this._injector;
-            const dynamicComponent: ComponentRef<{}> = dynamicFactory.create(injector);
+            const dynamicComponent: ComponentRef<any> = dynamicFactory.create(injector);
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
             const element = dynamicComponent.location.nativeElement;
-            info.elementRef = <ElementRef>{ nativeElement: element };
+            info.elementRef = { nativeElement: element };
             info.componentRef = dynamicComponent;
         }
 
@@ -683,7 +707,7 @@ export class IgxOverlayService implements OnDestroy {
             //  and then getting the positions from it.
             //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
             //  As soon as this is resolved we can remove this hack
-            const innerRenderer = (<any>info.openAnimationPlayer)._renderer;
+            const innerRenderer = (info.openAnimationPlayer as any)._renderer;
             info.openAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
             info.openAnimationPlayer.onDone(() => {
                 this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
@@ -733,7 +757,7 @@ export class IgxOverlayService implements OnDestroy {
             //  and then getting the positions from it.
             //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
             //  As soon as this is resolved we can remove this hack
-            const innerRenderer = (<any>info.closeAnimationPlayer)._renderer;
+            const innerRenderer = (info.closeAnimationPlayer as any)._renderer;
             info.closeAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
 
             info.closeAnimationPlayer.onDone(() => {
@@ -791,16 +815,6 @@ export class IgxOverlayService implements OnDestroy {
         if (params.easing) {
             wrapperElement.style.transitionTimingFunction = params.easing;
         }
-    }
-
-    /** @hidden @internal */
-    public getOverlayById(id: string): OverlayInfo {
-        if (!id) {
-            return null;
-        }
-
-        const info = this._overlayInfos.find(e => e.id === id);
-        return info;
     }
 
     private documentClicked = (ev: MouseEvent) => {
@@ -916,20 +930,5 @@ export class IgxOverlayService implements OnDestroy {
             this._keyPressEventListener.unsubscribe();
             this._keyPressEventListener = null;
         }
-    }
-
-    /** @hidden */
-    public repositionAll = () => {
-        for (let i = this._overlayInfos.length; i--;) {
-            this.reposition(this._overlayInfos[i].id);
-        }
-    };
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
     }
 }

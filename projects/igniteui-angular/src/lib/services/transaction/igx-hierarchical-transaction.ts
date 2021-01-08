@@ -66,7 +66,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
-    private clearArraysFromObject(obj: {}) {
+    private clearArraysFromObject(obj: any) {
         if (obj) {
             for (const prop of Object.keys(obj)) {
                 if (Array.isArray(obj[prop])) {

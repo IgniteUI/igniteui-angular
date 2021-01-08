@@ -1,6 +1,4 @@
 export abstract class IgxExporterOptionsBase {
-    private _fileName: string;
-
     /**
      * Specifies whether hidden columns should be exported.
      * ```typescript
@@ -44,6 +42,8 @@ export abstract class IgxExporterOptionsBase {
      * @memberof IgxExporterOptionsBase
      */
     public ignoreSorting = false;
+
+    private _fileName: string;
 
     constructor(fileName: string, protected _fileExtension: string) {
         this.setFileName(fileName);

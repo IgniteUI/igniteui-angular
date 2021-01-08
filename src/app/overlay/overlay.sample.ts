@@ -21,22 +21,11 @@ import {
     templateUrl: './overlay.sample.html',
 })
 export class OverlaySampleComponent implements OnInit {
-    private xAddition = 0;
-    private yAddition = 0;
-
-    private _overlaySettings: OverlaySettings = {
-        positionStrategy: new GlobalPositionStrategy(),
-        scrollStrategy: new NoOpScrollStrategy(),
-        modal: true,
-        closeOnOutsideClick: true
-    };
-    constructor(
-        private cdr: ChangeDetectorRef
-    ) {
-        for (let item = 0; item < this.itemsCount; item++) {
-            this.items.push(`Item ${item}`);
-        }
-    }
+    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
+    @ViewChild('button', { static: true }) public button: ElementRef;
+    @ViewChild('container', { static: true }) public container: ElementRef;
+    @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
+    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
 
     items = [];
     itemsCount = 10;
@@ -64,11 +53,22 @@ export class OverlaySampleComponent implements OnInit {
     modal = true;
     useOutlet = false;
 
-    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('button', { static: true }) public button: ElementRef;
-    @ViewChild('container', { static: true }) public container: ElementRef;
-    @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
-    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
+    private xAddition = 0;
+    private yAddition = 0;
+
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: true,
+        closeOnOutsideClick: true
+    };
+    constructor(
+        private cdr: ChangeDetectorRef
+    ) {
+        for (let item = 0; item < this.itemsCount; item++) {
+            this.items.push(`Item ${item}`);
+        }
+    }
 
     onChange(ev) {
         switch (ev.radio.name) {
@@ -336,14 +336,6 @@ export class OverlaySampleComponent implements OnInit {
         e.target.classList.add('selected');
     }
 
-    private removeSelectedClass(type: string) {
-        const items = document.getElementsByClassName(type);
-        for (let index = 0; index < items.length; index++) {
-            const element = items[index];
-            element.classList.remove('selected');
-        }
-    }
-
     public toggleDropDown() {
         if (this.igxDropDown.collapsed) {
             this.items = [];
@@ -374,8 +366,17 @@ export class OverlaySampleComponent implements OnInit {
 
     public onDragStart(e) {
         const originalEvent: PointerEvent = e.originalEvent;
-        const buttonRect = (<any>originalEvent.target).getBoundingClientRect();
+        const buttonRect = (originalEvent.target as HTMLElement).getBoundingClientRect();
         this.xAddition = originalEvent.clientX - buttonRect.left;
         this.yAddition = originalEvent.clientY - buttonRect.top;
+    }
+
+    private removeSelectedClass(type: string) {
+        const items = document.getElementsByClassName(type);
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let index = 0; index < items.length; index++) {
+            const element = items[index];
+            element.classList.remove('selected');
+        }
     }
 }
