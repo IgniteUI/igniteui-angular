@@ -493,7 +493,7 @@ describe('CSV Grid Exporter', () => {
         });
     });
 
-    function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
+    const getExportedData = (grid, csvOptions: IgxCsvExporterOptions) => {
         const result = new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
@@ -502,10 +502,10 @@ describe('CSV Grid Exporter', () => {
             exporter.export(grid, csvOptions);
         });
         return result;
-    }
+    };
 
-    async function exportAndVerify(component, csvOptions, expectedData, errorMessage = '') {
+    const exportAndVerify = async (component, csvOptions, expectedData, errorMessage = '') => {
         const wrapper = await getExportedData(component, csvOptions);
         wrapper.verifyData(expectedData, errorMessage);
-    }
+    };
 });

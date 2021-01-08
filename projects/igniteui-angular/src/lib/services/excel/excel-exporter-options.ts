@@ -4,10 +4,6 @@ import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base
  * Objects of this class are used to configure the Excel exporting process.
  */
 export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
-    private _columnWidth: number;
-    private _rowHeight: number;
-    private _worksheetName: string;
-
     /**
      * Specifies if column pinning should be ignored. If ignoreColumnsOrder is set to true,
      * this option will always be considered as set to true.
@@ -30,6 +26,10 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      * @memberof IgxExcelExporterOptions
      */
     public exportAsTable = true;
+
+    private _columnWidth: number;
+    private _rowHeight: number;
+    private _worksheetName: string;
 
     constructor(fileName: string) {
         super(fileName, '.xlsx');

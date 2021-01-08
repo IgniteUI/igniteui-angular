@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -53,14 +53,14 @@ describe('igxSelect', () => {
     let inputElement: DebugElement;
     let selectList: DebugElement;
     let selectListWrapper: DebugElement;
-    const verifyFocusedItem = function(focusedItemIndex) {
+    const verifyFocusedItem = focusedItemIndex => {
         const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
         expect(focusedItems.length).toEqual(1);
         expect(selectList.children[focusedItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
         expect(select.focusedItem).toBe(select.items[focusedItemIndex]);
         expect(select.items[focusedItemIndex].focused).toBeTruthy();
     };
-    const verifySelectedItem = function(itemIndex) {
+    const verifySelectedItem = itemIndex => {
         expect(select.input.value).toEqual(select.items[itemIndex].value);
         expect(select.value).toEqual(select.items[itemIndex].value);
         const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
@@ -69,11 +69,7 @@ describe('igxSelect', () => {
         expect(select.selectedItem).toBe(select.items[itemIndex] as IgxSelectItemComponent);
         expect(select.items[itemIndex].selected).toBeTruthy();
     };
-    const verifyOpenCloseEvents = function(
-        openEventCounter = 0,
-        closeEventCounter = 0,
-        toggleCallCounter = 0
-    ) {
+    const verifyOpenCloseEvents = (openEventCounter = 0, closeEventCounter = 0, toggleCallCounter = 0) => {
         expect(select.onOpening.emit).toHaveBeenCalledTimes(openEventCounter);
         expect(select.onOpened.emit).toHaveBeenCalledTimes(openEventCounter);
         expect(select.open).toHaveBeenCalledTimes(openEventCounter);
@@ -936,7 +932,7 @@ describe('igxSelect', () => {
                 let selectedItemIndex = 5;
                 let selectedItemValue = select.items[selectedItemIndex].value;
 
-                const checkInputValue = function() {
+                const checkInputValue = () => {
                     expect(select.selectedItem.value).toEqual(selectedItemValue);
                     expect(select.value).toEqual(selectedItemValue);
                     expect(inputElement.nativeElement.value.toString().trim()).toEqual(selectedItemValue);
@@ -990,7 +986,7 @@ describe('igxSelect', () => {
             it('should populate the input with the selected item text', fakeAsync(() => {
                 let selectedItemIndex = 0;
 
-                const checkInputValue = function() {
+                const checkInputValue = () => {
                     expect(select.selectedItem.text).toEqual(select.input.value);
                     expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
                 };
@@ -1055,7 +1051,7 @@ describe('igxSelect', () => {
                     let focusedItem = select.items[2];
                     const navigationStep = focusedItem.index;
 
-                    const navigateDropdownItems = function(keydownEvent: KeyboardEvent) {
+                    const navigateDropdownItems = (keydownEvent: KeyboardEvent) => {
                         for (let index = 0; index < navigationStep; index++) {
                             inputElement.triggerEventHandler('keydown', keydownEvent);
                         }
@@ -1063,7 +1059,7 @@ describe('igxSelect', () => {
                         fixture.detectChanges();
                     };
 
-                    const verifyFocusedItemIsNotSelected = function() {
+                    const verifyFocusedItemIsNotSelected = () => {
                         expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
                         expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
                         expect(select.focusedItem).toEqual(focusedItem);
@@ -1248,7 +1244,7 @@ describe('igxSelect', () => {
                     cancel: false
                 };
 
-                const navigateDropdownItems = function(selectEvent: KeyboardEvent) {
+                const navigateDropdownItems = (selectEvent: KeyboardEvent) => {
                     inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
                     tick();
                     fixture.detectChanges();
@@ -1365,7 +1361,7 @@ describe('igxSelect', () => {
                     const groupElement = selectList.children[groupIndex];
                     const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
 
-                    const checkInputValue = function() {
+                    const checkInputValue = () => {
                         expect(select.selectedItem.text).toEqual(select.input.value);
                         expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
                     };
@@ -1410,7 +1406,7 @@ describe('igxSelect', () => {
                     // const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
                     const expectedInputText = 'Paris star';
 
-                    const checkInputValue = function() {
+                    const checkInputValue = () => {
                         expect(select.selectedItem.itemText).toEqual(expectedInputText);
                         expect(select.selectedItem.itemText).toEqual(select.input.value);
                         expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.itemText);
@@ -1902,14 +1898,14 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
 
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of filteredItemsInxs) {
                     inputElement.triggerEventHandler('keyup', { key: 'p' });
                     tick();
                     fixture.detectChanges();
                     inputElement.triggerEventHandler('keyup', { key: 'a' });
                     tick();
                     fixture.detectChanges();
-                    verifyFocusedItem(filteredItemsInxs[index]);
+                    verifyFocusedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -1941,11 +1937,11 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
 
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of filteredItemsInxs) {
                     inputElement.triggerEventHandler('keyup', { key: 'l' });
                     tick();
                     fixture.detectChanges();
-                    verifyFocusedItem(filteredItemsInxs[index]);
+                    verifyFocusedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -1977,22 +1973,22 @@ describe('igxSelect', () => {
 
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keyup', { key: 'ü' });
                 tick();
                 fixture.detectChanges();
-                verifyFocusedItem(filteredItemsInxs[index]);
+                verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
 
             // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keyup', { key: 'с' });
                 tick();
                 fixture.detectChanges();
-                verifyFocusedItem(filteredItemsInxs[index]);
+                verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
@@ -2021,14 +2017,14 @@ describe('igxSelect', () => {
         it('should filter and select items on character key navigation when dropdown is closed',
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of filteredItemsInxs) {
                     inputElement.triggerEventHandler('keyup', { key: 'p' });
                     tick();
                     fixture.detectChanges();
                     inputElement.triggerEventHandler('keyup', { key: 'a' });
                     tick();
                     fixture.detectChanges();
-                    verifySelectedItem(filteredItemsInxs[index]);
+                    verifySelectedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -2052,11 +2048,11 @@ describe('igxSelect', () => {
         it('character key navigation when dropdown is closed should wrap selection',
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of  filteredItemsInxs) {
                     inputElement.triggerEventHandler('keyup', { key: 'l' });
                     tick();
                     fixture.detectChanges();
-                    verifySelectedItem(filteredItemsInxs[index]);
+                    verifySelectedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -2085,22 +2081,22 @@ describe('igxSelect', () => {
 
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keyup', { key: 'ü' });
                 tick();
                 fixture.detectChanges();
-                verifySelectedItem(filteredItemsInxs[index]);
+                verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
 
             // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keyup', { key: 'с' });
                 tick();
                 fixture.detectChanges();
-                verifySelectedItem(filteredItemsInxs[index]);
+                verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
@@ -2164,19 +2160,17 @@ describe('igxSelect', () => {
         let listTop: number;
         let listBottom: number;
 
-        const negateInputPaddings = function() {
-            return (parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingTop) -
+        const negateInputPaddings = () => (parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingTop) -
                 parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingBottom)
             ) / 2;
-        };
-        const getBoundingRectangles = function() {
+        const getBoundingRectangles = () => {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
             inputItemDiff = selectedItemRect.height - inputRect.height;
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
-        const verifySelectedItemPositioning = function(reversed = false) {
+        const verifySelectedItemPositioning = (reversed = false) => {
             expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                 selectedItemRect.height - negateInputPaddings() :
@@ -2191,7 +2185,7 @@ describe('igxSelect', () => {
             // Select's ddl width is based on the input's width. This introduces ~0.5px differences.
             expect(selectedItemRect.width).toBeCloseTo(selectList.nativeElement.scrollWidth, 0);
         };
-        const verifyListPositioning = function() {
+        const verifyListPositioning = () => {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             // check with precision of 2 digits after decimal point, as it is the meaningful portion anyways.
             expect(listRect.top).toBeCloseTo(listTop, 2);
@@ -2411,7 +2405,7 @@ describe('igxSelect', () => {
                 }));
         });
         describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = function() {
+            const calculatePrefixesWidth = () => {
                 let prefixesWidth = 0;
                 const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
                 Array.from(prefixes).forEach((prefix: DebugElement) => {

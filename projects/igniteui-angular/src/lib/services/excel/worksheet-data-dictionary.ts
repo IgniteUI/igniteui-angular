@@ -5,11 +5,13 @@ export class WorksheetDataDictionary {
     private static DEFAULT_FONT = '11pt Calibri';
     private static TEXT_PADDING = 5;
 
+    public hasNumberValues = false;
+    public hasDateValues = false;
+
+    public stringsCount: number;
+
     private _dictionary: any;
     private _widthsDictionary: any;
-
-    private _sortedKeysByValue: string[];
-    private _sortedKeysByValueAreValid: boolean;
 
     private _keys: string[];
     private _keysAreValid: boolean;
@@ -19,10 +21,6 @@ export class WorksheetDataDictionary {
     private _context: any;
 
     private _columnTypeInfo: boolean[];
-    public hasNumberValues = false;
-    public hasDateValues = false;
-
-    public stringsCount: number;
 
     constructor(columnCount: number, columnWidth: number, columnWidthsList: number[]) {
         this._dictionary = {};

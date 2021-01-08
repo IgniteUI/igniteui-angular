@@ -95,22 +95,11 @@ const noop = () => { };
 export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {
 
-    private ngControl: NgControl = null;
-    private _overlayDefaults: OverlaySettings;
-    private _value: any;
-    private _type = null;
-    protected destroy$ = new Subject<boolean>();
-
-    /** @hidden @internal do not use the drop-down container class */
-    public cssClass = false;
-
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
 
     /** @hidden @internal */
     @ViewChild('input', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
-
-    @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement: ElementRef;
 
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
@@ -119,39 +108,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
-    /** @hidden @internal */
-    public allowItemsFocus = false;
-
-    /** @hidden @internal */
-    public height: string;
-
-    /**
-     * An @Input property that gets/sets the component value.
-     *
-     * ```typescript
-     * // get
-     * let selectValue = this.select.value;
-     * ```
-     *
-     * ```typescript
-     * // set
-     * this.select.value = 'London';
-     * ```
-     * ```html
-     * <igx-select [value]="value"></igx-select>
-     * ```
-     */
-    @Input()
-    public get value(): any {
-        return this._value;
-    }
-    public set value(v: any) {
-        if (this._value === v) {
-            return;
-        }
-        this._value = v;
-        this.setSelection(this.items.find(x => x.value === this.value));
-    }
     /**
      * An @Input property that sets input placeholder.
      *
@@ -179,25 +135,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
     public maxHeight = '256px';
-
-    /** @hidden @internal */
-    public width: string;
-
-    /**
-     * An @Input property that sets how the select will be styled.
-     * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
-     * ```html
-     * <igx-select [type]="'box'"></igx-select>
-     * ```
-     */
-    @Input()
-    public get type(): IgxInputGroupType {
-            return this._type || this._inputGroupType || 'line';
-        }
-
-    public set type(val: IgxInputGroupType) {
-        this._type = val;
-    }
 
     /**
      * Emitted before the dropdown is opened
@@ -306,6 +243,71 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(IgxSelectFooterDirective, { read: TemplateRef, static: false })
     public footerTemplate: TemplateRef<any> = null;
 
+    @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement: ElementRef;
+
+    /** @hidden @internal */
+    public width: string;
+
+    /** @hidden @internal do not use the drop-down container class */
+    public cssClass = false;
+
+    /** @hidden @internal */
+    public allowItemsFocus = false;
+
+    /** @hidden @internal */
+    public height: string;
+
+    protected destroy$ = new Subject<boolean>();
+
+    private ngControl: NgControl = null;
+    private _overlayDefaults: OverlaySettings;
+    private _value: any;
+    private _type = null;
+
+    /**
+     * An @Input property that gets/sets the component value.
+     *
+     * ```typescript
+     * // get
+     * let selectValue = this.select.value;
+     * ```
+     *
+     * ```typescript
+     * // set
+     * this.select.value = 'London';
+     * ```
+     * ```html
+     * <igx-select [value]="value"></igx-select>
+     * ```
+     */
+    @Input()
+    public get value(): any {
+        return this._value;
+    }
+    public set value(v: any) {
+        if (this._value === v) {
+            return;
+        }
+        this._value = v;
+        this.setSelection(this.items.find(x => x.value === this.value));
+    }
+
+    /**
+     * An @Input property that sets how the select will be styled.
+     * The allowed values are `line`, `box` and `border`. The input-group default is `line`.
+     * ```html
+     * <igx-select [type]="'box'"></igx-select>
+     * ```
+     */
+    @Input()
+    public get type(): IgxInputGroupType {
+            return this._type || this._inputGroupType || 'line';
+        }
+
+    public set type(val: IgxInputGroupType) {
+        this._type = val;
+    }
+
     /** @hidden @internal */
     public get selectionValue() {
         const selectedItem = this.selectedItem;
@@ -316,6 +318,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public get selectedItem(): IgxSelectItemComponent {
         return this.selection.first_item(this.id);
     }
+
+    private _onChangeCallback: (_: any) => void = noop;
+    private _onTouchedCallback: () => void = noop;
 
     constructor(
         protected elementRef: ElementRef,
@@ -328,9 +333,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     //#region ControlValueAccessor
-
-    private _onChangeCallback: (_: any) => void = noop;
-    private _onTouchedCallback: () => void = noop;
 
     /** @hidden @internal */
     public writeValue = (value: any) => {
@@ -434,38 +436,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         });
     }
 
-
-    protected navigate(direction: Navigate, currentIndex?: number) {
-        if (this.collapsed && this.selectedItem) {
-            this.navigateItem(this.selectedItem.itemIndex);
-        }
-        super.navigate(direction, currentIndex);
-    }
-
-    protected manageRequiredAsterisk(): void {
-        const hasRequiredHTMLAttribute = this.elementRef.nativeElement.hasAttribute('required');
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
-            this.cdr.markForCheck();
-
-        // If validator is dynamically cleared and no required HTML attribute is set,
-        // reset label's required class(asterisk) and IgxInputState #6896
-        } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
-            this.input.valid = IgxInputState.INITIAL;
-            this.inputGroup.isRequired = false;
-            this.cdr.markForCheck();
-        }
-    }
-    private setSelection(item: IgxDropDownItemBaseDirective) {
-        if (item && item.value !== undefined && item.value !== null) {
-            this.selection.set(this.id, new Set([item]));
-        } else {
-            this.selection.clear(this.id);
-        }
-    }
-
     /**
      * Event handlers
      *
@@ -516,17 +486,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._onTouchedCallback();
     }
 
-    protected onStatusChanged() {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            if (this.inputGroup.isFocused) {
-                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.VALID;
-            } else {
-                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
-            }
-        }
-        this.manageRequiredAsterisk();
-    }
     /**
      * @hidden @internal
      */
@@ -560,6 +519,50 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public mousedownHandler(event) {
         event.preventDefault();
+    }
+
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            if (this.inputGroup.isFocused) {
+                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.VALID;
+            } else {
+                this.input.valid = this.ngControl.invalid ? IgxInputState.INVALID : IgxInputState.INITIAL;
+            }
+        }
+        this.manageRequiredAsterisk();
+    }
+
+
+    protected navigate(direction: Navigate, currentIndex?: number) {
+        if (this.collapsed && this.selectedItem) {
+            this.navigateItem(this.selectedItem.itemIndex);
+        }
+        super.navigate(direction, currentIndex);
+    }
+
+    protected manageRequiredAsterisk(): void {
+        const hasRequiredHTMLAttribute = this.elementRef.nativeElement.hasAttribute('required');
+        if (this.ngControl && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = error && error.required;
+            this.cdr.markForCheck();
+
+        // If validator is dynamically cleared and no required HTML attribute is set,
+        // reset label's required class(asterisk) and IgxInputState #6896
+        } else if (this.inputGroup.isRequired && this.ngControl && !this.ngControl.control.validator && !hasRequiredHTMLAttribute) {
+            this.input.valid = IgxInputState.INITIAL;
+            this.inputGroup.isRequired = false;
+            this.cdr.markForCheck();
+        }
+    }
+    private setSelection(item: IgxDropDownItemBaseDirective) {
+        if (item && item.value !== undefined && item.value !== null) {
+            this.selection.set(this.id, new Set([item]));
+        } else {
+            this.selection.clear(this.id);
+        }
     }
 }
 

@@ -701,7 +701,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    function getExportedData(grid, exportOptions: IgxExcelExporterOptions) {
+    const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
             exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
@@ -710,30 +710,25 @@ describe('Excel Exporter', () => {
             exporter.export(grid, exportOptions);
         });
         return exportData;
-    }
+    };
 
-    function setColWidthAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, value) {
-        return new Promise<void>((resolve) => {
+    const setColWidthAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, value) => new Promise<void>((resolve) => {
             options.columnWidth = value;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), ' Width :' + value).then(() => resolve());
             });
         });
-    }
 
-    function setRowHeightAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, value) {
-        return new Promise<void>((resolve) => {
+    const setRowHeightAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, value) => new Promise<void>((resolve) => {
             options.rowHeight = value;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
             });
         });
-    }
 
-    function setWorksheetNameAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, worksheetName) {
-        return new Promise<void>((resolve) => {
+    const setWorksheetNameAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, worksheetName) => new Promise<void>((resolve) => {
             options.worksheetName = worksheetName;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
@@ -741,9 +736,8 @@ describe('Excel Exporter', () => {
                     .then(() => resolve());
             });
         });
-    }
 
-    function createExportOptions(fileName, columnWidth?) {
+    const createExportOptions = (fileName, columnWidth?) => {
         const opts = new IgxExcelExporterOptions(fileName);
 
         // Set column width to a specific value to workaround the issue where
@@ -751,13 +745,13 @@ describe('Excel Exporter', () => {
         opts.columnWidth = columnWidth;
 
         return opts;
-    }
+    };
 
-    async function exportAndVerify(component, exportOptions, expectedData) {
+    const exportAndVerify = async (component, exportOptions, expectedData) => {
         const wrapper = await getExportedData(component, exportOptions);
         await wrapper.verifyStructure();
         await wrapper.verifyDataFilesContent(expectedData);
-    }
+    };
 });
 
 @Component({
@@ -776,7 +770,7 @@ describe('Excel Exporter', () => {
 })
 
 export class GridWithEmtpyColumnsComponent {
-    public data = SampleTestData.personJobDataFull();
-
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+
+    public data = SampleTestData.personJobDataFull();
 }

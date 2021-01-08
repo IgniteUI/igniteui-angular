@@ -33,8 +33,6 @@ export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
  */
 @Injectable()
 export class IgxCsvExporterService extends IgxBaseExporter {
-    private _stringData: string;
-
     /**
      * This event is emitted when the export process finishes.
      * ```typescript
@@ -47,6 +45,8 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      */
     @Output()
     public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
+
+    private _stringData: string;
 
     protected exportDataImplementation(data: any[], options: IgxCsvExporterOptions) {
         data = data.map((item) => item.rowData);

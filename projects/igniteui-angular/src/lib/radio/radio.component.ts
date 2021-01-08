@@ -208,6 +208,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      *
      * @memberof IgxRadioComponent
      */
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
     readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
     /**
@@ -270,8 +271,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @hidden
      */
     protected _value: any = null;
-
-    constructor() { }
     /**
      * @hidden
      */
@@ -280,6 +279,8 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @hidden
      */
     private _onChangeCallback: (_: any) => void = noop;
+
+    constructor() { }
     /**
      * @hidden
      */
