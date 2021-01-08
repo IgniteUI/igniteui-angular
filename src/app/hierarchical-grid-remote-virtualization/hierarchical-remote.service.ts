@@ -42,15 +42,6 @@ export class HierarchicalRemoteService {
         return dataResult;
     }
 
-    private _updateCachedData(data: any, startIndex: number, lastChunk: boolean) {
-        for (let i = 0; i < data.length; i++) {
-            this.cachedData[i + startIndex] = data[i];
-        }
-        if (lastChunk) {
-            this.cachedData.splice(startIndex + data.length);
-        }
-    }
-
     getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
         return this.http.get(this.buildUrl(virtualizationState, grid)).pipe(
             map(response => response),
@@ -82,15 +73,23 @@ export class HierarchicalRemoteService {
     public buildUrl(virtualizationArgs, grid) {
         let qS = '';
         if (virtualizationArgs) {
-            let requiredChunkSize: number;
             const childRecsBeforeIndex = this.cachedData
             .filter((x, index) => grid.isChildGridRecord(x) && index <= virtualizationArgs.startIndex);
             const skip = virtualizationArgs.startIndex - childRecsBeforeIndex.length;
             this.requestStartIndex = skip;
-            requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;
+            const requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;
             const top = requiredChunkSize;
             qS = `&$skip=${skip}&$top=${top}&$count=true`;
         }
         return `${this.url}${qS}`;
+    }
+
+    private _updateCachedData(data: any, startIndex: number, lastChunk: boolean) {
+        for (let i = 0; i < data.length; i++) {
+            this.cachedData[i + startIndex] = data[i];
+        }
+        if (lastChunk) {
+            this.cachedData.splice(startIndex + data.length);
+        }
     }
 }

@@ -32,17 +32,6 @@ let NEXT_ID = 0;
     templateUrl: 'icon.component.html'
 })
 export class IgxIconComponent implements OnInit, OnDestroy {
-    @ViewChild('noLigature', { read: TemplateRef, static: true })
-    private noLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
-    private explicitLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('svgImage', { read: TemplateRef, static: true })
-    private svgImage: TemplateRef<HTMLElement>;
-
-    private destroy$ = new Subject<void>();
-
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
      *
@@ -124,10 +113,21 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     @Input('name')
     public iconName: string;
 
+    @ViewChild('noLigature', { read: TemplateRef, static: true })
+    private noLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
+    private explicitLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild('svgImage', { read: TemplateRef, static: true })
+    private svgImage: TemplateRef<HTMLElement>;
+
     /**
      * An ElementRef property of the `igx-icon` component.
      */
     public el: ElementRef;
+
+    private destroy$ = new Subject<void>();
 
     constructor(
             private _el: ElementRef,

@@ -1,12 +1,10 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
     OverlaySettings,
     GlobalPositionStrategy,
     NoOpScrollStrategy,
     IgxToggleDirective,
-    HorizontalAlignment,
-    scaleInTop,
-    scaleOutTop
+    HorizontalAlignment
 } from 'igniteui-angular';
 import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animate } from '@angular/animations';
 
@@ -17,16 +15,16 @@ import { AnimationReferenceMetadata, animation, style, AnimationMetadata, animat
     styleUrls: ['overlay-animation.sample.scss']
 })
 export class OverlayAnimationSampleComponent {
+    @ViewChild('audiToggle', { static: true }) public audiToggle: IgxToggleDirective;
+    @ViewChild('bmwToggle', { static: true }) public bmwToggle: IgxToggleDirective;
+    @ViewChild('mercedesToggle', { static: true }) public mercedesToggle: IgxToggleDirective;
+
     private _overlaySettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
         scrollStrategy: new NoOpScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true
     };
-
-    @ViewChild('audiToggle', { static: true }) public audiToggle: IgxToggleDirective;
-    @ViewChild('bmwToggle', { static: true }) public bmwToggle: IgxToggleDirective;
-    @ViewChild('mercedesToggle', { static: true }) public mercedesToggle: IgxToggleDirective;
 
     public mouseenter(ev) {
         const openAnimationMetaData: AnimationMetadata[] = [

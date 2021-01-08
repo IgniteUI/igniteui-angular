@@ -30,20 +30,21 @@ import {
 import { IgxInputGroupBase } from './input-group.common';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
+import { mkenum } from '../core/utils';
 
 let NEXT_ID = 0;
 
-enum IgxInputGroupThemeEnum {
-    'material',
-    'fluent',
-    'bootstrap',
-    'indigo-design',
-}
+const IgxInputGroupTheme = mkenum({
+    Material: 'material',
+    Fluent: 'fluent',
+    Bootstrap: 'bootstrap',
+    IndigoDesign: 'indigo-design'
+});
 
 /**
  * Determines the Input Group theme.
  */
-export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
+export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInputGroupTheme];
 
 @Component({
     selector: 'igx-input-group',
@@ -52,12 +53,7 @@ export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
         { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }
     ],
 })
-export class IgxInputGroupComponent extends DisplayDensityBase
-    implements IgxInputGroupBase, AfterContentInit {
-    private _type: IgxInputGroupType = null;
-    private _filled = false;
-    private _variant: IgxInputGroupTheme = 'material';
-
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterContentInit {
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -118,6 +114,22 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     public suppressInputAutofocus = false;
 
     /** @hidden */
+    @HostBinding('class.igx-input-group--warning')
+    public hasWarning = false;
+
+    /** @hidden */
+    @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
+    protected hints: QueryList<IgxHintDirective>;
+
+    /** @hidden */
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
+    protected input: IgxInputDirective;
+
+    private _type: IgxInputGroupType = null;
+    private _filled = false;
+    private _variant: IgxInputGroupTheme = 'material';
+
+    /** @hidden */
     @HostBinding('class.igx-input-group--valid')
     public get validClass(): boolean {
         return this.input.valid === IgxInputState.VALID;
@@ -128,10 +140,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     public get invalidClass(): boolean {
         return this.input.valid === IgxInputState.INVALID;
     }
-
-    /** @hidden */
-    @HostBinding('class.igx-input-group--warning')
-    public hasWarning = false;
 
     /** @hidden */
     @HostBinding('class.igx-input-group--filled')
@@ -155,38 +163,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     @HostBinding('class.igx-input-group--compact')
     public get isDisplayDensityCompact() {
         return this.displayDensity === DisplayDensity.compact;
-    }
-
-    /** @hidden */
-    @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
-    protected hints: QueryList<IgxHintDirective>;
-
-    /** @hidden */
-    @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: true })
-    protected input: IgxInputDirective;
-
-    /** @hidden */
-    @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
-        if (
-            !this.isFocused &&
-            event.target !== this.input.nativeElement &&
-            !this.suppressInputAutofocus
-        ) {
-            this.input.focus();
-        }
-    }
-
-    /** @hidden */
-    @HostListener('pointerdown', ['$event'])
-    public onPointerDown(event: PointerEvent) {
-        if (this.isFocused && event.target !== this.input.nativeElement) {
-            event.preventDefault();
-        }
-    }
-
-    hintClickHandler(event) {
-        event.stopPropagation();
     }
 
     /**
@@ -243,7 +219,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         public element: ElementRef<HTMLElement>,
         @Optional()
         @Inject(DisplayDensityToken)
-        private _displayDensityOptions: IDisplayDensityOptions,
+        _displayDensityOptions: IDisplayDensityOptions,
         @Optional()
         @Inject(IGX_INPUT_GROUP_TYPE)
         private _inputGroupType: IgxInputGroupType,
@@ -251,6 +227,30 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         private document: any
     ) {
         super(_displayDensityOptions);
+    }
+
+    /** @hidden */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        if (
+            !this.isFocused &&
+            event.target !== this.input.nativeElement &&
+            !this.suppressInputAutofocus
+        ) {
+            this.input.focus();
+        }
+    }
+
+    /** @hidden */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerDown(event: PointerEvent) {
+        if (this.isFocused && event.target !== this.input.nativeElement) {
+            event.preventDefault();
+        }
+    }
+
+    hintClickHandler(event) {
+        event.stopPropagation();
     }
 
     ngAfterContentInit() {

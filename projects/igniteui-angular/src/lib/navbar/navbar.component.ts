@@ -57,9 +57,6 @@ let NEXT_ID = 0;
 })
 
 export class IgxNavbarComponent {
-    private static NEXT_ID = 1;
-    private isVisible = true;
-
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -69,37 +66,7 @@ export class IgxNavbarComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-navbar-${NEXT_ID++}`;
-    /**
-     * Returns whether the `IgxNavbarComponent` action button is visible, true/false.
-     * ```typescript
-     *  @ViewChild("MyChild")
-     * public navBar: IgxNavbarComponent;
-     * ngAfterViewInit(){
-     *     let actionButtonVisibile = this.navBar.isActionButtonVisible;
-     * }
-     * ```
-     */
-    @Input()
-    public get isActionButtonVisible(): boolean {
-        if (this.actionIconTemplate || !this.actionButtonIcon) {
-            return false;
-        }
-        return this.isVisible;
-    }
 
-    public get isTitleContentVisible(): boolean {
-        return this.titleContent ? true : false;
-    }
-
-    /**
-     * Sets whether the action button of the `IgxNavbarComponent` is visible.
-     * ```html
-     * <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
-     * ```
-     */
-    public set isActionButtonVisible(value: boolean) {
-        this.isVisible = value;
-    }
     /**
      * An @Input property that sets the icon of the `IgxNavbarComponent`.
      * ```html
@@ -138,7 +105,7 @@ export class IgxNavbarComponent {
      * ```
      */
     @Input()
-    public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
+    public titleId = `igx-navbar-title-${NEXT_ID++}`;
 
     /**
      * @hidden
@@ -151,6 +118,40 @@ export class IgxNavbarComponent {
      */
     @ContentChild(IgxNavbarTitleDirective, { read: IgxNavbarTitleDirective })
     protected titleContent: IgxNavbarTitleDirective;
+
+    private isVisible = true;
+
+    /**
+     * Sets whether the action button of the `IgxNavbarComponent` is visible.
+     * ```html
+     * <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
+     * ```
+     */
+    public set isActionButtonVisible(value: boolean) {
+        this.isVisible = value;
+    }
+
+    /**
+     * Returns whether the `IgxNavbarComponent` action button is visible, true/false.
+     * ```typescript
+     *  @ViewChild("MyChild")
+     * public navBar: IgxNavbarComponent;
+     * ngAfterViewInit(){
+     *     let actionButtonVisibile = this.navBar.isActionButtonVisible;
+     * }
+     * ```
+     */
+    @Input()
+    public get isActionButtonVisible(): boolean {
+        if (this.actionIconTemplate || !this.actionButtonIcon) {
+            return false;
+        }
+        return this.isVisible;
+    }
+
+    public get isTitleContentVisible(): boolean {
+        return this.titleContent ? true : false;
+    }
 
     /**
      * @hidden

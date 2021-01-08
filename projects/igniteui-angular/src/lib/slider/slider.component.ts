@@ -739,6 +739,11 @@ export class IgxSliderComponent implements
      */
     public onPan: Subject<number> = new Subject<number>();
 
+    /**
+     * @hidden
+     */
+    public stepDistance: number;
+
     // Limit handle travel zone
     private _pMin = 0;
     private _pMax = 1;
@@ -770,18 +775,13 @@ export class IgxSliderComponent implements
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
 
-    /**
-     * @hidden
-     */
-    // eslint-disable-next-line @typescript-eslint/member-ordering
-    public stepDistance = this._step;
-
-    constructor(
-        private renderer: Renderer2,
-        private _el: ElementRef,
-        private _cdr: ChangeDetectorRef,
-        private _ngZone: NgZone,
-        private _dir: IgxDirectionality) { }
+    constructor(private renderer: Renderer2,
+                private _el: ElementRef,
+                private _cdr: ChangeDetectorRef,
+                private _ngZone: NgZone,
+                private _dir: IgxDirectionality) {
+        this.stepDistance = this._step;
+    }
 
     /**
      * @hidden

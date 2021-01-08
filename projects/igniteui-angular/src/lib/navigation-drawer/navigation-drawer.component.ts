@@ -62,8 +62,6 @@ export class IgxNavigationDrawerComponent implements
     OnDestroy,
     OnChanges {
 
-    private _isOpen = false;
-
     /** @hidden @internal */
     @HostBinding('class.igx-nav-drawer')
     public cssClass = true;
@@ -116,53 +114,9 @@ export class IgxNavigationDrawerComponent implements
     @Input() public enableGestures = true;
 
     /**
-     * State of the drawer.
-     *
-     * ```typescript
-     * // get
-     * let navDrawerIsOpen = this.navdrawer.isOpen;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [(isOpen)]='model.isOpen'></igx-nav-drawer>
-     * ```
-     */
-    @Input()
-    public get isOpen() {
-        return this._isOpen;
-    }
-    public set isOpen(value) {
-        this._isOpen = value;
-        this.isOpenChange.emit(this._isOpen);
-    }
-
-    /**
      * @hidden
      */
     @Output() public isOpenChange = new EventEmitter<boolean>();
-
-    /**
-     * When pinned the drawer is relatively positioned instead of sitting above content.
-     * May require additional layout styling.
-     *
-     * ```typescript
-     * // get
-     * let navDrawerIsPinned = this.navdrawer.pin;
-     * ```
-     *
-     * ```html
-     * <!--set-->
-     * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
-     * ```
-     */
-    @Input() public pin = false;
 
     /**
      * Minimum device width required for automatic pin to be toggled.
@@ -181,13 +135,20 @@ export class IgxNavigationDrawerComponent implements
     @Input() public pinThreshold = 1024;
 
     /**
-     * Returns nativeElement of the component.
+     * When pinned the drawer is relatively positioned instead of sitting above content.
+     * May require additional layout styling.
      *
-     * @hidden
+     * ```typescript
+     * // get
+     * let navDrawerIsPinned = this.navdrawer.pin;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [pin]='false'></igx-nav-drawer>
+     * ```
      */
-    get element() {
-        return this.elementRef.nativeElement;
-    }
+    @Input() public pin = false;
 
     /**
      * Width of the drawer in its open state. Defaults to "280px".
@@ -273,6 +234,55 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
+    protected contentTemplate: IgxNavDrawerTemplateDirective;
+
+    @ViewChild('aside', { static: true }) private _drawer: ElementRef;
+    @ViewChild('overlay', { static: true }) private _overlay: ElementRef;
+    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef;
+
+    private _isOpen = false;
+
+    /**
+     * State of the drawer.
+     *
+     * ```typescript
+     * // get
+     * let navDrawerIsOpen = this.navdrawer.isOpen;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [(isOpen)]='model.isOpen'></igx-nav-drawer>
+     * ```
+     */
+    @Input()
+    public get isOpen() {
+        return this._isOpen;
+    }
+    public set isOpen(value) {
+        this._isOpen = value;
+        this.isOpenChange.emit(this._isOpen);
+    }
+
+    /**
+     * Returns nativeElement of the component.
+     *
+     * @hidden
+     */
+    get element() {
+        return this.elementRef.nativeElement;
+    }
+
+    /**
+     * @hidden
+     */
     get template() {
         if (this.miniTemplate && !this.isOpen) {
             return this.miniTemplate.template;
@@ -299,12 +309,6 @@ export class IgxNavigationDrawerComponent implements
         }
         this._miniTemplate = v;
     }
-
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
-    protected contentTemplate: IgxNavDrawerTemplateDirective;
 
     /**
      * @hidden
@@ -339,10 +343,6 @@ export class IgxNavigationDrawerComponent implements
         overlay: 'igx-nav-drawer__overlay',
         styleDummy: 'igx-nav-drawer__style-dummy'
     };
-
-    @ViewChild('aside', { static: true }) private _drawer: ElementRef;
-    @ViewChild('overlay', { static: true }) private _overlay: ElementRef;
-    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef;
 
     /**
      * @hidden
@@ -765,11 +765,9 @@ export class IgxNavigationDrawerComponent implements
         const right: boolean = this.position === 'right';
         // when on the right use inverse of deltaX
         const deltaX = right ? -evt.deltaX : evt.deltaX;
-        let visibleWidth;
         let newX;
         let percent;
-
-        visibleWidth = this._panStartWidth + deltaX;
+        const visibleWidth = this._panStartWidth + deltaX;
 
         if (this.isOpen && deltaX < 0) {
             // when visibleWidth hits limit - stop animating

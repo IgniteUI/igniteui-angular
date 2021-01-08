@@ -205,6 +205,22 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public disableAnimation = false;
 
     /**
+     * Sets/gets the `id` of the tabs.
+     *
+     * @remarks
+     * If not set, the `id` will have value `"igx-tabs-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-tabs id="my-first-tabs"></igx-tabs>
+     * ```
+     * @memberof IgxTabsComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-tabs-${NEXT_TABS_ID++}`;
+
+    /**
      * Provides an observable collection of all `IgxTabItemComponent`s.
      * First try to get them as content children if not available get them as view children.
      * ```typescript
@@ -239,28 +255,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public offset = 0;
-
-    private _currentTabsId = NEXT_TABS_ID++;
     private _groupChanges$: Subscription;
     private _selectedIndex = -1;
     private _resizeObserver: ResizeObserver;
-
-    /**
-     * Sets/gets the `id` of the tabs.
-     *
-     * @remarks
-     * If not set, the `id` will have value `"igx-tabs-0"`.
-     *
-     * @example
-     * ```html
-     * <igx-tabs id="my-first-tabs"></igx-tabs>
-     * ```
-     * @memberof IgxTabsComponent
-     */
-    // eslint-disable-next-line @typescript-eslint/member-ordering
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-tabs-${this._currentTabsId}`;
 
     /**
      * @hidden
@@ -395,14 +392,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public getTabItemId(index: number): string {
-        return `igx-tab-item-${this._currentTabsId}-${index}`;
+        return `igx-tab-item-${NEXT_TABS_ID}-${index}`;
     }
 
     /**
      * @hidden
      */
     public getTabsGroupId(index: number): string {
-        return `igx-tabs-group-${this._currentTabsId}-${index}`;
+        return `igx-tabs-group-${NEXT_TABS_ID}-${index}`;
     }
 
     /**

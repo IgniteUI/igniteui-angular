@@ -151,29 +151,6 @@ export class IgxListLineSubTitleDirective {
 })
 export class IgxListComponent extends IgxListBaseDirective {
     /**
-     * Sets the resource strings.
-     * By default it uses EN resources.
-     */
-   @Input()
-   set resourceStrings(value: IListResourceStrings) {
-       this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-   }
-
-    /**
-     * Returns the resource strings.
-     */
-    get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
-    }
-
-    private _resourceStrings = CurrentResourceStrings.ListResStrings;
-
-    constructor(public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
-    }
-
-    /**
      * Returns a collection of all items and headers in the list.
      *
      * @example
@@ -183,18 +160,6 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
     public children: QueryList<IgxListItemComponent>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected get sortedChildren(): IgxListItemComponent[] {
-        if (this.children !== undefined) {
-            return this.children.toArray()
-                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
-        }
-        return null;
-    }
 
     /**
      * Sets/gets the empty list template.
@@ -294,20 +259,6 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @Input()
     public panEndTriggeringThreshold = 0.5;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
-    protected defaultEmptyListTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
-    protected defaultDataLoadingTemplate: TemplateRef<any>;
 
     /**
      * Sets/gets the `id` of the list.
@@ -435,6 +386,55 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @Output()
     public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
+    protected defaultEmptyListTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
+    protected defaultDataLoadingTemplate: TemplateRef<any>;
+
+    /**
+     * Sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    set resourceStrings(value: IListResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * Returns the resource strings.
+     */
+    get resourceStrings(): IListResourceStrings {
+        return this._resourceStrings;
+    }
+
+    private _resourceStrings = CurrentResourceStrings.ListResStrings;
+
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected get sortedChildren(): IgxListItemComponent[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
+        }
+        return null;
+    }
 
     /**
      * Gets the `role` attribute value.

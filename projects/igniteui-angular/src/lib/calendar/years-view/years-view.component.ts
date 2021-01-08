@@ -1,4 +1,15 @@
-import { Component, Output, EventEmitter, Input, HostBinding, HostListener, ElementRef, Injectable, ViewChildren, QueryList} from '@angular/core';
+import {
+    Component,
+    Output,
+    EventEmitter,
+    Input,
+    HostBinding,
+    HostListener,
+    ElementRef,
+    Injectable,
+    ViewChildren,
+    QueryList
+} from '@angular/core';
 import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';

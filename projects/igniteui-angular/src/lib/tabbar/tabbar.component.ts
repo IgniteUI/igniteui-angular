@@ -134,6 +134,22 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
 
     /**
+     * Sets/gets the `id` of the tab bar.
+     * If not set, the `id` of the first tab bar component will be `"igx-bottom-nav-0"`.
+     * ```html
+     * <igx-bottom-nav id = "my-first-tab-bar"></igx-bottom-nav>
+     * ```
+     * ```typescript
+     * let tabBarId =  this.tabBar.id;
+     * ```
+     *
+     * @memberof IgxBottomNavComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-bottom-nav-${NEXT_ID++}`;
+
+    /**
      * Gets the `index` of selected tab/panel in the respective collection.
      * ```typescript
      * let index =  this.tabBar.selectedIndex;
@@ -166,25 +182,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * @hidden
      */
     private _itemStyle = 'igx-bottom-nav';
-    private _currentBottomNavId = NEXT_ID++;
     private _panelsChanges$: Subscription;
-
-    /**
-     * Sets/gets the `id` of the tab bar.
-     * If not set, the `id` of the first tab bar component will be `"igx-bottom-nav-0"`.
-     * ```html
-     * <igx-bottom-nav id = "my-first-tab-bar"></igx-bottom-nav>
-     * ```
-     * ```typescript
-     * let tabBarId =  this.tabBar.id;
-     * ```
-     *
-     * @memberof IgxBottomNavComponent
-     */
-    // eslint-disable-next-line @typescript-eslint/member-ordering
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-bottom-nav-${this._currentBottomNavId}`;
 
     /**
      * Gets the selected tab in the tab bar.
@@ -261,14 +259,14 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * @hidden
      */
     public getTabId(index: number): string {
-        return `igx-tab-${this._currentBottomNavId}-${index}`;
+        return `igx-tab-${NEXT_ID}-${index}`;
     }
 
     /**
      * @hidden
      */
     public getTabPanelId(index: number): string {
-        return `igx-tab-panel-${this._currentBottomNavId}-${index}`;
+        return `igx-tab-panel-${NEXT_ID}-${index}`;
     }
 
     private setPanelsAttributes() {

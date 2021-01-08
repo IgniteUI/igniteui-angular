@@ -17,7 +17,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
      }
 
     public transform(flatData: ITreeGridRecord[],
@@ -39,8 +39,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         const recordsWithSummary = [];
         const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
 
-        for (let i = 0; i < collection.length; i++) {
-            const record = collection[i];
+        for (const record of collection) {
             recordsWithSummary.push(record);
 
             const isCollapsed = !record.expanded && record.children && record.children.length > 0 && showSummaryOnCollapse;
@@ -102,8 +101,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === 'delete').map(t => t.id);
         let row = grid.records.get(rowId);
         if (!row && deletedRows.lenght === 0) {
- return [];
-}
+            return [];
+        }
         row = row.children ? row : row.parent;
         while (row) {
             rowId = row.rowID;

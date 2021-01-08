@@ -1,4 +1,3 @@
-
 import {
     ChangeDetectionStrategy,
     Component,
@@ -39,27 +38,6 @@ import { HammerGesturesManager } from '../core/touch';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxListItemComponent implements IListChild {
-
-    /**
-     * @hidden
-     */
-    private _panState: IgxListPanState = IgxListPanState.NONE;
-
-    /**
-     * @hidden
-     */
-    private panOffset = 0;
-
-    /**
-     * @hidden
-     */
-    private _index: number = null;
-
-    /**
-     * @hidden
-     */
-    private lastPanDir = IgxListPanState.NONE;
-
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
      * ```typescript
@@ -77,12 +55,6 @@ export class IgxListItemComponent implements IListChild {
      */
     @ViewChild('rightPanningTmpl')
     public rightPanningTemplateElement;
-
-    constructor(
-        public list: IgxListBaseDirective,
-        private elementRef: ElementRef,
-        private _renderer: Renderer2) {
-    }
 
     /**
      * Sets/gets whether the `list item` is a header.
@@ -114,19 +86,6 @@ export class IgxListItemComponent implements IListChild {
     public hidden = false;
 
     /**
-     * Gets the `role` attribute of the `list item`.
-     * ```typescript
-     * let itemRole =  this.listItem.role;
-     * ```
-     *
-     * @memberof IgxListItemComponent
-     */
-    @HostBinding('attr.role')
-    public get role() {
-        return this.isHeader ? 'separator' : 'listitem';
-    }
-
-    /**
      * Sets/gets the `aria-label` attribute of the `list item`.
      * ```typescript
      * this.listItem.ariaLabel = "Item1";
@@ -148,6 +107,45 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostBinding('style.touch-action')
     public touchAction = 'pan-y';
+
+    /**
+     * @hidden
+     */
+    private _panState: IgxListPanState = IgxListPanState.NONE;
+
+    /**
+     * @hidden
+     */
+    private panOffset = 0;
+
+    /**
+     * @hidden
+     */
+    private _index: number = null;
+
+    /**
+     * @hidden
+     */
+    private lastPanDir = IgxListPanState.NONE;
+
+    constructor(
+        public list: IgxListBaseDirective,
+        private elementRef: ElementRef,
+        private _renderer: Renderer2) {
+    }
+
+    /**
+     * Gets the `role` attribute of the `list item`.
+     * ```typescript
+     * let itemRole =  this.listItem.role;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('attr.role')
+    public get role() {
+        return this.isHeader ? 'separator' : 'listitem';
+    }
 
     /**
      * Indicates whether `list item` should have header style.

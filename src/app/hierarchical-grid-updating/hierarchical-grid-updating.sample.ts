@@ -14,6 +14,14 @@ import { RemoteService } from '../shared/remote.service';
     providers: [ RemoteService, IgxHierarchicalTransactionServiceFactory ]
 })
 export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
+    @ViewChild('rowIsland1', { static: true })
+    rowIsland1: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { static: true })
+    rowIsland2: IgxRowIslandComponent;
+
+    @ViewChild('hGrid', { static: true })
+    hGrid: IgxHierarchicalGridComponent;
 
     public lastChildGrid: IgxHierarchicalGridComponent;
     public lastIdx = 1000;
@@ -25,15 +33,6 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
         { name: 'EmployeeID', type: 'number', level: 2 },
         { name: 'ProductID', type: 'number', level: 2 }
     ];
-
-    @ViewChild('rowIsland1', { static: true })
-    rowIsland1: IgxRowIslandComponent;
-
-    @ViewChild('rowIsland2', { static: true })
-    rowIsland2: IgxRowIslandComponent;
-
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
 
     constructor(private remoteService: RemoteService) {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';

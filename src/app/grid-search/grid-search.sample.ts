@@ -9,15 +9,13 @@ import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 })
 
 export class GridSearchComponent implements OnInit {
-
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
     public displayDensities;
     public density = 'comfortable';
     public selectionMode;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;
@@ -483,6 +481,6 @@ export class GridSearchComponent implements OnInit {
 
     toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
-        col.pinned ? col.pinned = false : col.pinned = true;
+        col.pinned = !col.pinned;
     }
 }

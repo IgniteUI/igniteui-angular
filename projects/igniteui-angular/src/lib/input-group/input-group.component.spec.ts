@@ -303,7 +303,7 @@ class InputGroupSearchComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
-function testInputGroupType(type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) {
+const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) => {
     let isLine = false;
     let isBorder = false;
     let isBox = false;
@@ -333,7 +333,7 @@ function testInputGroupType(type: IgxInputGroupType, component: IgxInputGroupCom
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
     expect(component.isTypeSearch).toBe(isSearch);
-}
+};
 
 @Component({
     template: `<igx-input-group #igxInputGroup [disabled]="disabled">

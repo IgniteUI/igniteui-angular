@@ -15,7 +15,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
-                this.flipAnimation(FlipDirection.horizontal);
+                this.flipAnimation(FlipDirection.Horizontal);
             } else {
                 const horizontalPush = this.horizontalPush(connectedFit);
                 transformString.push(`translateX(${horizontalPush}px)`);
@@ -25,7 +25,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
-                this.flipAnimation(FlipDirection.vertical);
+                this.flipAnimation(FlipDirection.Vertical);
             } else {
                 const verticalPush = this.verticalPush(connectedFit);
                 transformString.push(`translateY(${verticalPush}px)`);
@@ -182,12 +182,12 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
      */
     private updateAnimation(animation: AnimationReferenceMetadata, direction: FlipDirection): AnimationReferenceMetadata {
         switch (direction) {
-            case FlipDirection.horizontal:
+            case FlipDirection.Horizontal:
                 if (isHorizontalAnimation(animation)) {
                     return reverseAnimationResolver(animation);
                 }
                 break;
-            case FlipDirection.vertical:
+            case FlipDirection.Vertical:
                 if (isVerticalAnimation(animation)) {
                     return reverseAnimationResolver(animation);
                 }
@@ -199,6 +199,6 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 }
 
 enum FlipDirection {
-    horizontal,
-    vertical
+    Horizontal,
+    Vertical
 }

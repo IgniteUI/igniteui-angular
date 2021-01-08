@@ -31,6 +31,14 @@ class MySummary extends IgxNumberSummaryOperand {
 })
 
 export class GridSaveStateComponent implements OnInit, AfterViewInit {
+    @ViewChild(IgxExpansionPanelComponent, { static: true }) public igxExpansionPanel: IgxExpansionPanelComponent;
+    @ViewChildren(IgxGridStateDirective) public gridStateDirective: IgxGridStateDirective;
+    @ViewChildren(IgxGridStateDirective) public state: QueryList<IgxGridStateDirective>;
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+    @ViewChild('hGrid', { static: true }) hGrid: IgxHierarchicalGridComponent;
+    @ViewChild('treeGrid', { static: true }) treeGrid: IgxTreeGridComponent;
+    @ViewChild('treeGridHier', { static: true }) treeGridHier: IgxTreeGridComponent;
+
   public localData = employeesData;
   public hierData = this.generateDataUneven(10, 3);
   public treeGridFlatData = TREEGRID_FLAT_DATA;
@@ -69,14 +77,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     expansion: true,
     rowPinning: true
   };
-
-  @ViewChild(IgxExpansionPanelComponent, { static: true }) public igxExpansionPanel: IgxExpansionPanelComponent;
-  @ViewChildren(IgxGridStateDirective) public gridStateDirective: IgxGridStateDirective;
-  @ViewChildren(IgxGridStateDirective) public state: QueryList<IgxGridStateDirective>;
-  @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
-  @ViewChild('hGrid', { static: true }) hGrid: IgxHierarchicalGridComponent;
-  @ViewChild('treeGrid', { static: true }) treeGrid: IgxTreeGridComponent;
-  @ViewChild('treeGridHier', { static: true }) treeGridHier: IgxTreeGridComponent;
 
   public initialColumns: any[] = [
     /* eslint-disable max-len */

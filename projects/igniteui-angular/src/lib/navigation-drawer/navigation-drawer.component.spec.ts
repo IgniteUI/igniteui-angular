@@ -447,7 +447,6 @@ describe('Navigation Drawer', () => {
                             <ng-template igxDrawer></ng-template>
                             <ng-template igxDrawerMini></ng-template>
                         </igx-nav-drawer>`;
-        let fixture: ComponentFixture<TestComponentDIComponent>;
         TestBed.overrideComponent(TestComponentDIComponent, {
             set: {
                 template
@@ -456,7 +455,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         await TestBed.compileComponents();
-        fixture = TestBed.createComponent(TestComponentDIComponent);
+        const fixture: ComponentFixture<TestComponentDIComponent> = TestBed.createComponent(TestComponentDIComponent);
         fixture.detectChanges();
         // const comp: DebugElement = fixture.debugElement.query(By.component(IgxNavbarComponent));
 
@@ -488,7 +487,6 @@ describe('Navigation Drawer', () => {
 
     it('should update pin based on window width (pinThreshold)', async (done) => {
         const template = `'<igx-nav-drawer [(pin)]="pin" [pinThreshold]="pinThreshold"></igx-nav-drawer>'`;
-        let fixture: ComponentFixture<TestComponentPin>;
         TestBed.overrideComponent(TestComponentPin, {
             set: {
                 template
@@ -497,7 +495,7 @@ describe('Navigation Drawer', () => {
 
         // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
         await TestBed.compileComponents();
-        fixture = TestBed.createComponent(TestComponentPin);
+        const fixture: ComponentFixture<TestComponentPin> = TestBed.createComponent(TestComponentPin);
 
         // watch for initial pin with 2-way bind expression changed errors
         expect(() => fixture.detectChanges()).not.toThrow();
@@ -567,7 +565,7 @@ describe('Navigation Drawer', () => {
         expect(fix.componentInstance.navDrawer.element.classList.contains('igx-nav-drawer')).toBeTruthy();
     });
 
-    function swipe(element, posX, posY, duration, deltaX, deltaY) {
+    const swipe = (element, posX, posY, duration, deltaX, deltaY) => {
         const swipeOptions = {
             deltaX,
             deltaY,
@@ -580,12 +578,12 @@ describe('Navigation Drawer', () => {
             // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
             Simulator.setType('touch');
             Simulator.gestures.swipe(element, swipeOptions, () => {
-                resolve();
+                resolve(null);
             });
         });
-    }
+    };
 
-    function pan(element, posX, posY, duration, deltaX, deltaY) {
+    const pan = (element, posX, posY, duration, deltaX, deltaY) => {
         const swipeOptions = {
             deltaX,
             deltaY,
@@ -598,10 +596,10 @@ describe('Navigation Drawer', () => {
             // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
             Simulator.setType('touch');
             Simulator.gestures.pan(element, swipeOptions, () => {
-                resolve();
+                resolve(null);
             });
         });
-    }
+    };
 });
 
 @Component({
@@ -618,9 +616,9 @@ class TestComponent {
     template: '<igx-nav-drawer></igx-nav-drawer>'
 })
 class TestComponentDIComponent {
+    @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
     public drawerMiniWidth: string | number;
     public drawerWidth: string | number;
-    @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
 }
 
 class TestComponentPin extends TestComponentDIComponent {

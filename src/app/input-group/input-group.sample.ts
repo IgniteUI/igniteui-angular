@@ -87,7 +87,8 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        console.log('The InputGroupToken set for all material themed components(that have no explicit type set on component OR sample lv) is: ',
+        console.log(`The InputGroupToken set for all material themed components
+            (that have no explicit type set on component OR sample lv) is: `,
         this.TOKEN);
     }
 

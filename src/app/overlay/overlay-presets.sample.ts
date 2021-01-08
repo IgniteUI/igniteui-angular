@@ -19,9 +19,6 @@ export class OverlayPresetsSampleComponent implements OnInit {
     @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
     @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
 
-    private _overlaySettings: OverlaySettings;
-    private xAddition = 0;
-    private yAddition = 0;
     items = [];
     itemsCount = 10;
     relStrategies = [RelativePositionStrategy.Auto, RelativePositionStrategy.Connected, RelativePositionStrategy.Elastic];
@@ -35,7 +32,12 @@ export class OverlayPresetsSampleComponent implements OnInit {
         RelativePosition.Below,
         RelativePosition.Before,
         RelativePosition.After,
-        RelativePosition.Default];
+        RelativePosition.Default
+    ];
+
+    private _overlaySettings: OverlaySettings;
+    private xAddition = 0;
+    private yAddition = 0;
 
     constructor(
     ) {
@@ -90,7 +92,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
 
     public onDragStart(e) {
         const originalEvent: PointerEvent = e.originalEvent;
-        const buttonRect = (<any>originalEvent.target).getBoundingClientRect();
+        const buttonRect = (originalEvent.target as HTMLElement).getBoundingClientRect();
         this.xAddition = originalEvent.clientX - buttonRect.left;
         this.yAddition = originalEvent.clientY - buttonRect.top;
     }
