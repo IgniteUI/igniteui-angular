@@ -122,9 +122,8 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         const activeItemIndex = items.indexOf(this.target.focusedItem as IgxSelectItemComponent) || 0;
 
         // Match next item in ddl items and wrap around if needed
-        const item = items.slice(activeItemIndex + 1).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase()))) ||
+        return items.slice(activeItemIndex + 1).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase()))) ||
             items.slice(0, activeItemIndex).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
-        return item;
     }
 
     ngOnDestroy(): void {
