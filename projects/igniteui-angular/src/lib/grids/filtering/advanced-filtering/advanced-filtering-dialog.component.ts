@@ -1038,10 +1038,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this._overlayComponentId = overlayComponentId;
     }
 
-     /**
+    /**
      * @hidden @internal
      */
-    public getFormatter(field:string) {
+    public getFormatter(field: string) {
         return this.grid.getColumnByName(field).formatter;
     }
 
