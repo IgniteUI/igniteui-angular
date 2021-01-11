@@ -5,7 +5,7 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
+    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, IGridEditEventArgs
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -119,9 +119,9 @@ export class GridCellEditingComponent {
         }
     }
 
-    hideColumn() {
-        this.orderDateHidden = !this.orderDateHidden;
-    }
+    // hideColumn() {
+    //     this.orderDateHidden = !this.orderDateHidden;
+    // }
 
     public updRecord() {
         const newData = 'UPDATED';
@@ -187,6 +187,14 @@ export class GridCellEditingComponent {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public onCellEdit(event: IGridEditEventArgs) {
+        event.cancel = true;
+    }
+
+    public hideColumn() {
+        this.gridWithPK.selectedColumns()[0].hidden = true;
     }
 
     customKeydown(args) {
