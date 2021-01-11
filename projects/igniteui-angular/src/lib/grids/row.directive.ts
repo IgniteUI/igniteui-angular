@@ -410,7 +410,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         if (this.grid.rowSelection === 'none' || this.deleted) { return; }
-        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+        if (event.shiftKey && this.grid.isMultiRowSelectionEnabled) {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
@@ -433,7 +433,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public onRowSelectorClick(event) {
         event.stopPropagation();
-        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+        if (event.shiftKey && this.grid.isMultiRowSelectionEnabled) {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }

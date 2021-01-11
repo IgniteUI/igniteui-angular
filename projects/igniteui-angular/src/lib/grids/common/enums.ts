@@ -34,6 +34,13 @@ export const GridSelectionMode = mkenum({
 });
 export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
+export const HierarchicalGridSelectionMode = mkenum({
+    ...GridSelectionMode,
+    multipleCascade: 'multipleCascade'
+});
+export type HierarchicalGridSelectionMode = GridSelectionMode |
+    (typeof HierarchicalGridSelectionMode)[keyof typeof HierarchicalGridSelectionMode];
+
 export const ColumnDisplayOrder = mkenum({
     Alphabetical: 'Alphabetical',
     DisplayOrder: 'DisplayOrder'

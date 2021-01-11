@@ -25,7 +25,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode } from '../common/enums';
+import { FilterMode, GridSelectionMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 
@@ -113,6 +113,34 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
+
+    protected _rowSelectionMode: GridSelectionMode;
+
+    /**
+     * Gets/Sets row selection mode
+     * @remarks
+     * By default the row selection mode is none
+     * @param selectionMode: FlatGridSelectionMode
+     */
+    @Input()
+    get rowSelection() {
+        return this._rowSelectionMode;
+    }
+
+    set rowSelection(selectionMode: GridSelectionMode) {
+        this._rowSelectionMode = selectionMode;
+        if (this.gridAPI.grid && this.columnList) {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isMultiRowSelectionEnabled(): boolean {
+        return this.rowSelection === GridSelectionMode.multiple;
+    }
 
     /**
      * Gets/Sets the value of the `id` attribute.

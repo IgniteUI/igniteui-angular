@@ -111,7 +111,8 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode
+    GridPagingMode,
+    HierarchicalGridSelectionMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -229,9 +230,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
 
-     /**
-      * @hidden @internal
-      */
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultESFHeaderIcon', { read: TemplateRef, static: true })
     protected defaultESFHeaderIconTemplate: TemplateRef<any>;
 
@@ -2481,7 +2482,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets row selection mode
      * @remarks
      * By default the row selection mode is none
-     * @param selectionMode: GridSelectionMode
+     * @param selectionMode: HierarchicalGridSelectionMode
      */
     @WatchChanges()
     @Input()
@@ -2489,7 +2490,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowSelectionMode;
     }
 
-    set rowSelection(selectionMode: GridSelectionMode) {
+    set rowSelection(selectionMode: HierarchicalGridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
             this.selectionService.clearAllSelectedRows();
@@ -2763,8 +2764,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
     private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
-    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
+
+    /**
+     * TypeScript dosn't allow overriding property with superset
+     * so we use the hierarchical enum in the grid-base and flat-grid overrides with a subset.
+     */
+    protected _rowSelectionMode: HierarchicalGridSelectionMode = HierarchicalGridSelectionMode.none;
 
     private lastAddedRowIndex;
 
@@ -6868,7 +6874,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get isMultiRowSelectionEnabled(): boolean {
-        return this.rowSelection === GridSelectionMode.multiple;
+        return this.rowSelection === HierarchicalGridSelectionMode.multiple
+            || this.rowSelection === HierarchicalGridSelectionMode.multipleCascade;
     }
 
     /**

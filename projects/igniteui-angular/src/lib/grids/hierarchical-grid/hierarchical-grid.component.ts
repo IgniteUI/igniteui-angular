@@ -36,6 +36,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
+import { GridSelectionMode } from '../common/enums';
 
 let NEXT_ID = 0;
 
@@ -170,7 +171,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @Input()
     set expandChildren(value: boolean) {
-        this._defaultExpandState  = value;
+        this._defaultExpandState = value;
         this.expansionStates = new Map<any, boolean>();
     }
 
@@ -183,7 +184,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @memberof IgxHierarchicalGridComponent
      */
     get expandChildren(): boolean {
-        return this._defaultExpandState ;
+        return this._defaultExpandState;
     }
 
     /**
@@ -273,6 +274,34 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     private scrollTop = 0;
     private scrollLeft = 0;
 
+    protected _rowSelectionMode: GridSelectionMode;
+
+    /**
+     * Gets/Sets row selection mode
+     * @remarks
+     * By default the row selection mode is none
+     * @param selectionMode: FlatGridSelectionMode
+     */
+    @Input()
+    get rowSelection() {
+        return this._rowSelectionMode;
+    }
+
+    set rowSelection(selectionMode: GridSelectionMode) {
+        this._rowSelectionMode = selectionMode;
+        if (this.gridAPI.grid && this.columnList) {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get isMultiRowSelectionEnabled(): boolean {
+        return this.rowSelection === GridSelectionMode.multiple;
+    }
+
     /**
      * @hidden
      */
@@ -296,7 +325,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this._transactions = new IgxTransactionService();
         }
         this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
-            const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
+            const res = Array.from(value.entries()).filter(({ 1: v }) => v === true).map(([k]) => k);
         });
         super.ngOnInit();
     }
@@ -349,16 +378,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.dragIndicatorIconTemplate = this.parentIsland ?
             this.parentIsland.dragIndicatorIconTemplate :
             this.dragIndicatorIconTemplate;
-        this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
-        this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
+        this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
+        this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
         this.excelStyleHeaderIconTemplate = this.rootGrid.excelStyleHeaderIconTemplate;
         this.hasChildrenKey = this.parentIsland ?
-         this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
-         this.rootGrid.hasChildrenKey;
-         this.showExpandAll = this.parentIsland ?
-         this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+            this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
+            this.rootGrid.hasChildrenKey;
+        this.showExpandAll = this.parentIsland ?
+            this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
 
         this.excelStyleFilteringComponents = this.parentIsland ?
             this.parentIsland.excelStyleFilteringComponents :
@@ -625,14 +654,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-   toggleAll() {
-    const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
-    if (!expanded && this.showExpandAll) {
-        this.expandAll();
-    } else {
-        this.collapseAll();
+    toggleAll() {
+        const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
+        if (!expanded && this.showExpandAll) {
+            this.expandAll();
+        } else {
+            this.collapseAll();
+        }
     }
-   }
 
 
     /**
@@ -640,14 +669,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @internal
      */
     public hasExpandedRecords() {
-       if (this.expandChildren) {
+        if (this.expandChildren) {
             return true;
-       }
-       let hasExpandedEntry = false;
-       this.expansionStates.forEach((value, key) => {
-           if (value) {
-            hasExpandedEntry = value;
-           }
+        }
+        let hasExpandedEntry = false;
+        this.expansionStates.forEach((value, key) => {
+            if (value) {
+                hasExpandedEntry = value;
+            }
         });
         return hasExpandedEntry;
     }
