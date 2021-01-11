@@ -38,8 +38,7 @@ describe('Row Pinning #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     describe('', () => {
@@ -1187,11 +1186,11 @@ describe('Row Pinning #grid', () => {
     `
 })
 export class GridRowPinningComponent {
-    public data: any[] = SampleTestData.contactInfoDataFull();
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    public data: any[] = SampleTestData.contactInfoDataFull();
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     public createSimpleData(count: number) {
         this.data = Array(count).fill({}).map((x, idx) => x = { idx: idx + 1 });

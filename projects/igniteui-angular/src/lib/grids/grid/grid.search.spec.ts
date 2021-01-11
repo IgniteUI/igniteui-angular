@@ -14,7 +14,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
-import { DebugElement } from '@angular/core';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - search API #grid - ', () => {
@@ -1234,35 +1233,25 @@ describe('IgxGrid - search API #grid - ', () => {
         });
     });
 
-    function isInView(index, state: IForOfState): boolean {
-        return index > state.startIndex && index <= state.startIndex + state.chunkSize;
-    }
+    const isInView = (index, state: IForOfState): boolean => index > state.startIndex && index <= state.startIndex + state.chunkSize;
 
-    function getSpans() {
-        return fixNativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
-    }
+    const getSpans = () => fixNativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
 
-    function getActiveSpan() {
-        return fixNativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
-    }
+    const getActiveSpan = () => fixNativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
 
-    function verifyActiveSpan(expectedActiveSpanIndex: number) {
+    const verifyActiveSpan = (expectedActiveSpanIndex: number) => {
         const spans = getSpans();
         const activeSpan = getActiveSpan();
         expect(activeSpan).toBe(spans[expectedActiveSpanIndex]);
-    }
+    };
 
-    function getActiveHighlight() {
-        return grid.nativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
-    }
+    const getActiveHighlight = () => grid.nativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
 
-    function getHighlights() {
-        return grid.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
-    }
+    const getHighlights = () => grid.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
 
-    function verifyActiveHighlight(expectedActiveHighlightIndex: number) {
+    const verifyActiveHighlight = (expectedActiveHighlightIndex: number) => {
         const highlights = getHighlights();
         const activeHighlight = getActiveHighlight();
         expect(activeHighlight).toBe(highlights[expectedActiveHighlightIndex]);
-    }
+    };
 });

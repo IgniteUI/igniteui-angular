@@ -44,7 +44,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }).compileComponents();
     }));
 
-    function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
+    const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.
         let count = 0;
         const maxLevel = grExpr ? grExpr.length - 1 : 0;
@@ -65,9 +65,9 @@ describe('IgxGrid - GroupBy #grid', () => {
                 expect(rec[field]).toEqual(val);
             }
         }
-    }
+    };
 
-    function checkChips(chips, grExpr, sortExpr) {
+    const checkChips = (chips, grExpr, sortExpr) => {
         for (let i = 0; i < chips.length; i++) {
             const chip = chips[i].querySelector('div.igx-chip__content').innerText;
             const chipDirection = chips[i].querySelector('[igxsuffix]').innerText;
@@ -83,7 +83,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 expect(s.dir).toBe(SortingDirection.Desc);
             }
         }
-    }
+    };
 
     it('should allow grouping by different data types.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1073,7 +1073,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             }
         }));
 
-    it('should select all records for group by pressing space when selectionMode is multiple and not all records within a group are selected and the groupRow is focused',
+    it(`should select all records for group by pressing space when selectionMode is multiple
+        and not all records within a group are selected and the groupRow is focused`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1153,7 +1154,8 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    it('should deselect all records for group by pressing space when selectionMode is multiple and all records within a group are selected and the groupRow is focused',
+    it(`should deselect all records for group by pressing space when selectionMode is multiple
+        and all records within a group are selected and the groupRow is focused`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1472,23 +1474,27 @@ describe('IgxGrid - GroupBy #grid', () => {
             const groupByRowCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(grRow.element.nativeElement);
 
             expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
-            expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
+            expect(groupByRowCheckboxElement.getAttribute('aria-label'))
+                .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
 
             grid.selectRows([grRow.groupRow.records[0]]);
             fix.detectChanges();
 
             expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
-            expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
+            expect(groupByRowCheckboxElement.getAttribute('aria-label'))
+                .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
 
             grid.selectRows([grRow.groupRow.records[1]]);
             fix.detectChanges();
 
             expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('true');
-            expect(groupByRowCheckboxElement.getAttribute('aria-label')).toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
+            expect(groupByRowCheckboxElement.getAttribute('aria-label'))
+                .toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
 
         }));
 
-    it('edit selected row so it goes to another group where all rows are selected as well. The group row checkbox of the new group that the record becomes part of should be checked.',
+    it(`edit selected row so it goes to another group where all rows are selected as well.
+        The group row checkbox of the new group that the record becomes part of should be checked.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1531,7 +1537,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
-    it('edit selected row so it goes to another group where all rows are not selected. The group row checkbox of the new group that the record becomes part of should be in indeterminate state.',
+    it(`edit selected row so it goes to another group where all rows are not selected.
+        The group row checkbox of the new group that the record becomes part of should be in indeterminate state.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1573,7 +1580,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
-    it('edit non-selected row so it goes to another group where all rows are selected. The group row checkbox of the new group that the record becomes part of should become in indeterminate state.',
+    it(`edit non-selected row so it goes to another group where all rows are selected.
+        The group row checkbox of the new group that the record becomes part of should become in indeterminate state.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1615,7 +1623,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
-    it('edit the only non-selected row in a group so that it moves to another group and check whether the current group row checkbox becomes checked.',
+    it(`edit the only non-selected row in a group so that it moves to another group
+        and check whether the current group row checkbox becomes checked.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1657,7 +1666,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
-    it('edit the only selected row in a group so that it moves to another group and check whether the current group row checkbox becomes unchecked.',
+    it(`edit the only selected row in a group so that it moves to another group
+        and check whether the current group row checkbox becomes unchecked.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -3333,7 +3343,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
 
         grid.paging = false;
-        grid.columns[1].groupingComparer = function(a, b) {
+        grid.columns[1].groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
                 return 0;
@@ -3367,17 +3377,17 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(2);
         expect(grid.groupsRecords.length).toEqual(2);
         expect(grid.groupsRecords[1].records.length).toEqual(6);
-        for (let i = 0; i < grid.groupsRecords[1].records.length; i++) {
-            expect(grid.groupsRecords[1].records[i].ReleaseDate.getFullYear().toString()).toEqual(year);
+        for (const record of grid.groupsRecords[1].records) {
+            expect(record.ReleaseDate.getFullYear().toString()).toEqual(year);
         }
     });
 
-    function clickAndSendInputElementValue(element, text, fix) {
+    const clickAndSendInputElementValue = (element, text, fix) => {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
         fix.detectChanges();
         return fix.whenStable();
-    }
+    };
 });
 @Component({
     template: `
@@ -3394,15 +3404,15 @@ describe('IgxGrid - GroupBy #grid', () => {
     `
 })
 export class DefaultGridComponent extends DataParent {
-    public width = '800px';
-    public height = null;
-    public currentDropArea;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
+
+    public width = '800px';
+    public height = null;
+    public currentDropArea;
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -3441,11 +3451,11 @@ export class DefaultGridComponent extends DataParent {
     `
 })
 export class GroupableGridComponent extends DataParent {
-    public width = '800px';
-    public height = '700px';
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    public width = '800px';
+    public height = '700px';
 }
 
 @Component({
@@ -3482,11 +3492,11 @@ export class GroupableGridComponent extends DataParent {
     `
 })
 export class CustomTemplateGridComponent extends DataParent {
-    public width = '800px';
-    public height = null;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    public width = '800px';
+    public height = null;
 }
 
 @Component({
@@ -3501,6 +3511,9 @@ export class CustomTemplateGridComponent extends DataParent {
     `
 })
 export class GroupByDataMoreColumnsComponent extends DataParent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
     public width = '800px';
     public height = null;
     public testData = [];
@@ -3519,9 +3532,6 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'M', width: 100 },
         { field: 'N', width: 100 }
     ];
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
 }
 
 @Component({
@@ -3539,9 +3549,9 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
     `
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
-    public width = '200px';
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+    public width = '200px';
 }
 
 export class CustomSortingStrategy extends DefaultSortingStrategy {
@@ -3570,10 +3580,10 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
     `
 })
 export class GridGroupByRowCustomSelectorsComponent extends DataParent {
-    public width = '800px';
-    public height = '700px';
-
     @ViewChild('gridGroupByRowCustomSelectors', { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    public width = '800px';
+    public height = '700px';
     public onGroupByRowClick(event, context) {}
 }

@@ -26,7 +26,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxGridAPIService;
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
@@ -56,7 +56,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxGridAPIService;
     }
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],

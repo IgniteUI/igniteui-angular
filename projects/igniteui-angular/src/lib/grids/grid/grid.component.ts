@@ -75,7 +75,142 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     templateUrl: './grid.component.html'
 })
 export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
-    private _id = `igx-grid-${NEXT_ID++}`;
+    /**
+     * Emitted when a new chunk of data is loaded from virtualization.
+     *
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     * ```
+     */
+    @Output()
+    public onDataPreLoad = new EventEmitter<IForOfState>();
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
+
+    /**
+     * Emitted when columns are grouped/ungrouped.
+     *
+     * @remarks
+     * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
+     * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
+     * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
+     * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
+     * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
+     * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
+     * columns.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
+
+    /**
+     * Gets/Sets whether created groups are rendered expanded or collapsed.
+     *
+     * @remarks
+     * The default rendered state is expanded.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [groupsExpanded]="false" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Input()
+    public groupsExpanded = true;
+
+    /**
+     * Gets/Sets the template that will be rendered as a GroupBy drop area.
+     *
+     * @remarks
+     * The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * @example
+     * ```html
+     * <igx-grid [dropAreaTemplate]="dropAreaRef">
+     * </igx-grid>
+     * <ng-template #myDropArea>
+     *      <span> Custom drop area! </span>
+     * </ng-template>
+     * ```
+     */
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef, static: false })
+    public detailTemplate: TemplateRef<any> = null;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
+    public defaultDropAreaTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('groupArea')
+    public groupArea: ElementRef;
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('record_template', { read: TemplateRef, static: true })
+    protected recordTemplate: TemplateRef<any>;
+
+    @ViewChild('detail_template_container', { read: TemplateRef, static: true })
+    protected detailTemplateContainer: TemplateRef<any>;
+
+    @ViewChild('group_template', { read: TemplateRef, static: true })
+    protected defaultGroupTemplate: TemplateRef<any>;
+
+    @ViewChild('summary_template', { read: TemplateRef, static: true })
+    protected summaryTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
+    protected groupTemplate: IgxGroupByRowTemplateDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxGridDetailTemplateDirective, { read: IgxGridDetailTemplateDirective, static: false })
+    protected gridDetailsTemplate: IgxGridDetailTemplateDirective;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: false })
+    protected groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
+
+    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
+    private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
+
+    /**
+     * Gets the hierarchical representation of the group by records.
+     *
+     * @example
+     * ```typescript
+     * let groupRecords = this.grid.groupsRecords;
+     * ```
+     */
+    public groupsRecords: IGroupByRecord[] = [];
+
     /**
      * @hidden @internal
      */
@@ -114,6 +249,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
+    private _id = `igx-grid-${NEXT_ID++}`;
 
     /**
      * Gets/Sets the value of the `id` attribute.
@@ -172,17 +308,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     set filteredData(value) {
         this._filteredData = value;
     }
-
-    /**
-     * Emitted when a new chunk of data is loaded from virtualization.
-     *
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
-     * ```
-     */
-    @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Gets/Sets the total number of records in the data source.
@@ -272,12 +397,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @hidden
-     */
-    @Output()
-    public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
-
-    /**
      * Gets/Sets a list of expansion states for group rows.
      *
      * @remarks
@@ -303,35 +422,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.cdr.detectChanges();
         }
     }
-
-    /**
-     * @hidden @internal
-     */
-    @Output()
-    public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
-
-    /**
-     * Gets/Sets whether created groups are rendered expanded or collapsed.
-     *
-     * @remarks
-     * The default rendered state is expanded.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [groupsExpanded]="false" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @Input()
-    public groupsExpanded = true;
-
-    /**
-     * Gets the hierarchical representation of the group by records.
-     *
-     * @example
-     * ```typescript
-     * let groupRecords = this.grid.groupsRecords;
-     * ```
-     */
-    public groupsRecords: IGroupByRecord[] = [];
 
     /**
      * Gets/Sets whether the grouped columns should be hidden.
@@ -384,63 +474,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Gets/Sets the template that will be rendered as a GroupBy drop area.
-     *
-     * @remarks
-     * The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * @example
-     * ```html
-     * <igx-grid [dropAreaTemplate]="dropAreaRef">
-     * </igx-grid>
-     * <ng-template #myDropArea>
-     *      <span> Custom drop area! </span>
-     * </ng-template>
-     * ```
-     */
-    @Input()
-    public dropAreaTemplate: TemplateRef<any>;
-
-    /**
-     * Emitted when columns are grouped/ungrouped.
-     *
-     * @remarks
-     * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
-     * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
-     * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
-     * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
-     * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
-     * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
-     * columns.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @Output()
-    public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
-    protected groupTemplate: IgxGroupByRowTemplateDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxGridDetailTemplateDirective, { read: IgxGridDetailTemplateDirective, static: false })
-    protected gridDetailsTemplate: IgxGridDetailTemplateDirective;
-
-    @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
-    private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
-    public defaultDropAreaTemplate: TemplateRef<any>;
-
-    /**
      * Gets the list of group rows.
      *
      * @example
@@ -453,36 +486,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (!this._groupsRowList) {
             return res;
         }
-        const rList = this._groupsRowList.filter((item) => item.element.nativeElement.parentElement !== null).sort((item1, item2) => item1.index - item2.index);
+        const rList = this._groupsRowList.filter(item => item.element.nativeElement.parentElement !== null)
+                                        .sort((item1, item2) => item1.index - item2.index);
         res.reset(rList);
         return res;
     }
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('groupArea')
-    public groupArea: ElementRef;
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('record_template', { read: TemplateRef, static: true })
-    protected recordTemplate: TemplateRef<any>;
-
-    @ViewChild('detail_template_container', { read: TemplateRef, static: true })
-    protected detailTemplateContainer: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef, static: false })
-    public detailTemplate: TemplateRef<any> = null;
-
-    @ViewChild('group_template', { read: TemplateRef, static: true })
-    protected defaultGroupTemplate: TemplateRef<any>;
-
-    @ViewChild('summary_template', { read: TemplateRef, static: true })
-    protected summaryTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -494,13 +502,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         return null;
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChildren(IgxGroupByRowSelectorDirective, { read: IgxGroupByRowSelectorDirective, descendants: false })
-    protected groupByRowSelectorsTemplates: QueryList<IgxGroupByRowSelectorDirective>;
 
     /**
      * @hidden @internal
@@ -780,15 +781,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._showGroupArea = value;
     }
 
-    private _setGroupColsVisibility(value) {
-        if (this.columnList.length > 0 && !this.hasColumnLayouts) {
-            this.groupingExpressions.forEach((expr) => {
-                const col = this.getColumnByName(expr.fieldName);
-                col.hidden = value;
-            });
-        }
-    }
-
     /**
      * Gets if the grid's group by drop area is visible.
      *
@@ -800,34 +792,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public get dropAreaVisible(): boolean {
         return (this.draggedColumn && this.draggedColumn.groupable) ||
             !this.chipsGoupingExpressions.length;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
-        return this._gridAPI.groupBy_get_expanded_for_group(groupRow);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _toggleGroup(groupRow: IGroupByRecord) {
-        this._gridAPI.groupBy_toggle_group(groupRow);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected _fullyExpandGroup(groupRow: IGroupByRecord) {
-        this._gridAPI.groupBy_fully_expand_group(groupRow);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected _applyGrouping() {
-        this._gridAPI.sort_multiple(this._groupingExpressions);
     }
 
     /**
@@ -905,8 +869,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newGrouping = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const expr = this.groupingExpressions.filter((item) => item.fieldName === event.chipsArray[i].id)[0];
+        for (const chip of event.chipsArray) {
+            const expr = this.groupingExpressions.filter((item) => item.fieldName === chip.id)[0];
 
             if (!this.getColumnByName(expr.fieldName).groupable) {
                 // disallow changing order if there are columns with groupable: false
@@ -954,38 +918,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.sort(columnExpr);
             this.notifyChanges();
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected get defaultTargetBodyHeight(): number {
-        const allItems = this.totalItemCount || this.dataLength;
-        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paging ? Math.min(allItems, this.perPage) : allItems);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected getGroupAreaHeight(): number {
-        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected scrollTo(row: any | number, column: any | number): void {
-        if (this.groupingExpressions && this.groupingExpressions.length
-            && typeof (row) !== 'number') {
-            const rowIndex = this.groupingResult.indexOf(row);
-            const groupByRecord = this.groupingMetadata[rowIndex];
-            if (groupByRecord) {
-                this._fullyExpandGroup(groupByRecord);
-            }
-        }
-
-        super.scrollTo(row, column, this.groupingFlatResult);
     }
 
     /**
@@ -1102,7 +1034,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @inheritdoc
      */
-    getSelectedData(formatters = false, headers = false): any[] {
+    public getSelectedData(formatters = false, headers = false): any[] {
         if (this.groupingExpressions.length || this.hasDetails) {
             const source = [];
 
@@ -1120,6 +1052,66 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else {
             return super.getSelectedData(formatters, headers);
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected get defaultTargetBodyHeight(): number {
+        const allItems = this.totalItemCount || this.dataLength;
+        return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
+            this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getGroupAreaHeight(): number {
+        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected scrollTo(row: any | number, column: any | number): void {
+        if (this.groupingExpressions && this.groupingExpressions.length
+            && typeof (row) !== 'number') {
+            const rowIndex = this.groupingResult.indexOf(row);
+            const groupByRecord = this.groupingMetadata[rowIndex];
+            if (groupByRecord) {
+                this._fullyExpandGroup(groupByRecord);
+            }
+        }
+
+        super.scrollTo(row, column, this.groupingFlatResult);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
+        return this._gridAPI.groupBy_get_expanded_for_group(groupRow);
+    }
+
+    /**
+     * @hidden
+     */
+    protected _toggleGroup(groupRow: IGroupByRecord) {
+        this._gridAPI.groupBy_toggle_group(groupRow);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected _fullyExpandGroup(groupRow: IGroupByRecord) {
+        this._gridAPI.groupBy_fully_expand_group(groupRow);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected _applyGrouping() {
+        this._gridAPI.sort_multiple(this._groupingExpressions);
     }
 
     private _setupNavigationService() {
@@ -1141,4 +1133,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return !expression.fieldName;
     }
 
+    private _setGroupColsVisibility(value) {
+        if (this.columnList.length > 0 && !this.hasColumnLayouts) {
+            this.groupingExpressions.forEach((expr) => {
+                const col = this.getColumnByName(expr.fieldName);
+                col.hidden = value;
+            });
+        }
+    }
 }

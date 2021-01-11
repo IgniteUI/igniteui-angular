@@ -30,11 +30,13 @@ import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
+    @ViewChild('grid1', { static: true })
+    grid1: IgxGridComponent;
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
-                private iconService: IgxIconService,
-                private excelExportService: IgxExcelExporterService) {
-    }
+    @ViewChild('hGrid', { static: true })
+    hGrid: IgxHierarchicalGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     public options = {
@@ -51,20 +53,17 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     };
     public selectionMode;
 
-    @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
-
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
-
-    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
-
     data: any[];
     hierarchicalData: any[];
     columns: any[];
     hColumns: any[];
     treeColumns: any[];
     treeData: any[];
+
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
+                private iconService: IgxIconService,
+                private excelExportService: IgxExcelExporterService) {
+    }
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -192,9 +191,11 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
 
     togglePinRow(index) {
         const rec = this.data[index];
-        this.grid1.isRecordPinned(rec) ?
-            this.grid1.pinRow(this.data[index]) :
+        if (this.grid1.isRecordPinned(rec)) {
+            this.grid1.pinRow(this.data[index]);
+        } else {
             this.grid1.unpinRow(this.data[index]);
+        }
     }
 
     togglePining(row: IgxGridRowComponent, event) {

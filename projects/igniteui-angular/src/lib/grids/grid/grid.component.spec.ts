@@ -168,7 +168,6 @@ describe('IgxGrid Component Tests #grid', () => {
             const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
             const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             let gridBodyHeight;
-            let verticalScrollHeight;
 
             expect(grid.rowList.length).toEqual(1);
             expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('51px');
@@ -191,7 +190,7 @@ describe('IgxGrid Component Tests #grid', () => {
             // no horizontal scr, since columns have no width hence they should
             // distrubute the available width between them
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-            verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
+            const verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
 
             grid.width = '200px';
             fix.detectChanges();
@@ -628,8 +627,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             const rows = fix.componentInstance.grid.rowList.toArray();
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i] as IgxRowDirective<any>;
+            for (const row of rows) {
                 expect(row.cells.length).toEqual(4);
             }
         });
@@ -652,8 +650,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             const rows = fix.componentInstance.grid.dataRowList.toArray();
-            for (let i = 0; i < rows.length; i++) {
-                const row = rows[i] as IgxRowDirective<any>;
+            for (const row of rows) {
                 expect(row.cells.length).toEqual(4);
             }
         });
@@ -2198,7 +2195,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeFilter: ['ng-reflect-value']
             };
             const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84').length === 1;
+                const cellMutated = mutationsList.filter(mutation =>
+                    mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2225,8 +2223,9 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['ng-reflect-value']
             };
-            const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22').length === 1;
+            const callback = mutationsList => {
+                const cellMutated = mutationsList.filter(mutation =>
+                    mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2253,8 +2252,9 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['ng-reflect-value']
             };
-            const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8').length === 1;
+            const callback = mutationsList => {
+                const cellMutated = mutationsList.filter(mutation =>
+                    mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2281,8 +2281,9 @@ describe('IgxGrid Component Tests #grid', () => {
                 attributeOldValue: true,
                 attributeFilter: ['aria-selected']
             };
-            const callback = (mutationsList) => {
-                const cellMutated = mutationsList.filter((mutation) => mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true').length === 1;
+            const callback = mutationsList => {
+                const cellMutated = mutationsList.filter(mutation =>
+                    mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true').length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
@@ -2311,12 +2312,12 @@ describe('IgxGrid Component Tests #grid', () => {
     </div>`
 })
 export class IgxGridTestComponent {
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
     public data: any[] = [{ index: 1, value: 1 }];
     public columns = [
         { field: 'index', header: 'index', dataType: 'number', width: null, hasSummary: false },
         { field: 'value', header: 'value', dataType: 'number', width: null, hasSummary: false }
     ];
-    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
 
     public autoGenerate = false;
 
@@ -2380,13 +2381,13 @@ export class IgxGridTestComponent {
     </igx-grid>`
 })
 export class IgxGridDefaultRenderingComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
     public columns = [];
     public data = [];
 
     public changeInitColumns = false;
-
-    @ViewChild('grid', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
 
     public initColumnsRows(rowsNumber: number, columnsNumber: number): void {
         this.columns = [];
@@ -2463,8 +2464,8 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         </div>`
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
-    public data = SampleTestData.foodProductData();
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public data = SampleTestData.foodProductData();
 }
 @Component({
     template:
@@ -2542,13 +2543,13 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
     `
 })
 export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
     public data = [
         { ID: 1, Name: 'Johny' },
         { ID: 2, Name: 'Sally' },
         { ID: 3, Name: 'Tim' }
     ];
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
 }
 
 @Component({
@@ -2561,9 +2562,9 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
     `
 })
 export class IgxGridEmptyMessage100PercentComponent extends IgxGridTestComponent {
-    public data = [];
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
+    public data = [];
 }
 
 @Injectable()
@@ -2611,9 +2612,9 @@ export class LocalService {
     providers: [LocalService]
 })
 export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewInit {
-    public data;
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+    public data;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
@@ -2649,11 +2650,11 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
     providers: [LocalService]
 })
 export class IgxGridRemoteOnDemandComponent {
-    public data;
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
     @ViewChild('customTemplate', { read: TemplateRef, static: true })
     public customTemaplate: TemplateRef<any>;
+    public data;
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
 
     public bind() {
@@ -2687,8 +2688,8 @@ export class IgxGridRemoteOnDemandComponent {
         </igx-column>`)
 })
 export class IgxGridFormattingComponent extends BasicGridComponent {
-    public data = SampleTestData.foodProductData();
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public data = SampleTestData.foodProductData();
     public width = '600px';
     public height = '400px';
     public value: any;
@@ -2812,9 +2813,9 @@ export class IgxGridInsideIgxTabsComponent {
     `
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
-    public data = SampleTestData.foodProductData();
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
+    public data = SampleTestData.foodProductData();
 }
 
 @Component({
@@ -2829,11 +2830,10 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
 
     public columns = [];
     public data = [];
-
     public startTime;
     public delta;
-
     public groupingExpressions: Array<ISortingExpression> = [];
+    public autoGenerate = false;
 
     public get verticalScroll() {
         return this.grid.verticalScrollContainer.getScroll();

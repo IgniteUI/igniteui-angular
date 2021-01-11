@@ -10,7 +10,7 @@ import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condi
 import { GridFunctions, PAGER_CLASS } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../test-utils/controls-functions.spec';
 
-function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
+const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const grid = fix.componentInstance.grid;
 
     expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
@@ -29,7 +29,7 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
         expect(pagingButtons[2].className.includes(BUTTON_DISABLED_CLASS)).toBe(buttonsVisibility[2]);
         expect(pagingButtons[3].className.includes(BUTTON_DISABLED_CLASS)).toBe(buttonsVisibility[3]);
     }
-}
+};
 
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();

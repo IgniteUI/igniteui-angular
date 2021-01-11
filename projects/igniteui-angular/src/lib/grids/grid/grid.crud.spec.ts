@@ -503,8 +503,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         <igx-grid
             [data]="data"
             [height]="null"
-            (onRowAdded)="rowAdded($event)"
-            (onRowDeleted)="rowDeleted($event)"
+            (onRowAdded)="rowAdded()"
+            (onRowDeleted)="rowDeleted()"
             (cellEdit)="editDone($event)"
             (rowEdit)="editDone($event)"
             [autoGenerate]="true"
@@ -513,6 +513,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
     `
 })
 export class DefaultCRUDGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
 
     public data = [
         { index: 1, value: 1}
@@ -521,14 +523,11 @@ export class DefaultCRUDGridComponent {
     public rowsAdded = 0;
     public rowsDeleted = 0;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
-
-    public rowAdded(event) {
+    public rowAdded() {
         this.rowsAdded++;
     }
 
-    public rowDeleted(event) {
+    public rowDeleted() {
         this.rowsDeleted++;
     }
 

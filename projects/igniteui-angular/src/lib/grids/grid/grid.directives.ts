@@ -80,13 +80,12 @@ export class IgxExcelStyleHeaderIconDirective {
 })
 export class IgxGroupAreaDropDirective extends IgxDropDirective {
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2, private zone: NgZone) {
-        super(elementRef, renderer, zone);
-    }
-
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
+    constructor(private elementRef: ElementRef, private renderer: Renderer2, private zone: NgZone) {
+        super(elementRef, renderer, zone);
+    }
 
     public onDragEnter(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
@@ -94,7 +93,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         if (!this.columnBelongsToGrid(column)) {
             return;
         }
-        const grid = <IgxGridComponent>column.grid;
+        const grid = column.grid as IgxGridComponent;
         const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
         if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
             drag.icon.innerText = 'group_work';
@@ -122,7 +121,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             if (!this.columnBelongsToGrid(column)) {
                 return;
             }
-            const grid = <IgxGridComponent>column.grid;
+            const grid = column.grid as IgxGridComponent;
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
             if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
@@ -143,7 +142,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         if (!column) {
             return false;
         } else {
-            const grid = <IgxGridComponent>column.grid;
+            const grid = column.grid as IgxGridComponent;
             if (!grid || grid.id !== closestGridID) {
                 return false;
             }

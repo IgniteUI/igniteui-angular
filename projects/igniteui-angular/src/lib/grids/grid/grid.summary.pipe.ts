@@ -23,7 +23,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxGridAPIService;
     }
 
     public transform(collection: IGroupByResult,
@@ -56,8 +56,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
             groups.forEach(g => g.skip = true);
             collection.data.splice(0, 0, ...groups);
         }
-        for (let i = 0; i < collection.data.length; i++) {
-            const record = collection.data[i];
+        for (const record of collection.data) {
             let skipAdd = false;
             let recordId;
             let groupByRecord: IGroupByRecord = null;
@@ -85,8 +84,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
             if (summaryPosition === GridSummaryPosition.bottom && lastChildMap.has(recordId)) {
                 const groupRecords = lastChildMap.get(recordId);
 
-                for (let j = 0; j < groupRecords.length; j++) {
-                    const groupRecord = groupRecords[j];
+                for (const groupRecord of groupRecords) {
                     const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
                     const records = this.removeDeletedRecord(grid, groupRecord.records.slice());
                     const summaries = grid.summaryService.calculateSummaries(groupRecordId, records);

@@ -285,11 +285,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public hideActionStrip(event: MouseEvent) {
+    public hideActionStrip() {
         if (!this.parent) {
             // hide child layout actions strips when
             // moving outside root grid.
-            super.hideActionStrip(event);
+            super.hideActionStrip();
             this.allLayoutList.forEach(ri => {
                 ri.actionStrip?.hide();
             });
@@ -671,7 +671,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: () => void = null) {
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
             // remove column layouts
