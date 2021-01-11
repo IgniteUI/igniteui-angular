@@ -9,6 +9,11 @@ import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     templateUrl: 'grid-external-filtering.sample.html'
 })
 export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
+    @ViewChild('grid1', { static: true })
+    public grid1: IgxGridComponent;
+
+    @ViewChild('applyChangesCheckbox', { static: true })
+    public applyChangesCheckbox: IgxCheckboxComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
@@ -16,12 +21,6 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     public filterModes;
     public density = 'comfortable';
     public selectionMode;
-
-    @ViewChild('grid1', { static: true })
-    public grid1: IgxGridComponent;
-
-    @ViewChild('applyChangesCheckbox', { static: true })
-    public applyChangesCheckbox: IgxCheckboxComponent;
 
     constructor(private cdr: ChangeDetectorRef) {
     }

@@ -58,4 +58,5 @@ const filterContains = (items: any[], term: string, exactMatch = false): any[] =
         return exactMatch ? itm === trm : itm.indexOf(trm) > -1;
     });
 
-const filterGroupContains = (groupItems: any[], term = '', exactMatch = false): any[] => groupItems.filter((groupItem) => filterContains(groupItem.countries, term, exactMatch).length > 0);
+const filterGroupContains = (groupItems: any[], term = '', exactMatch = false): any[] =>
+    groupItems.filter((groupItem) => filterContains(groupItem.countries, term, exactMatch).length > 0);

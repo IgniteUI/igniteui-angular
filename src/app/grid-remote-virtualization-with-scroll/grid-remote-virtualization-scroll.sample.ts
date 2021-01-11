@@ -10,14 +10,13 @@ import { RemoteVirtService } from '../shared/remoteProductsData.service';
 })
 
 export class GridVirtualizationScrollSampleComponent implements OnInit, AfterViewInit {
+    @ViewChild('grid1', { static: true })
+    public grid: IgxGridComponent;
 
     public remoteData: any;
     public prevRequest: any;
     public columns: any;
     public loading = true;
-
-    @ViewChild('grid1', { static: true })
-    public grid: IgxGridComponent;
 
     public clipboardOptions = {
         enabled: true,

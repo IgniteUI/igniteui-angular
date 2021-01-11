@@ -9,6 +9,11 @@ import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     templateUrl: 'grid-filtering.sample.html'
 })
 export class GridFilteringComponent implements OnInit {
+    @ViewChild('grid1', { static: true })
+    public grid1: IgxGridComponent;
+
+    @ViewChild('applyChangesCheckbox', { static: true })
+    public applyChangesCheckbox: IgxCheckboxComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
@@ -17,12 +22,6 @@ export class GridFilteringComponent implements OnInit {
     public density = 'comfortable';
     public advancedFilteringTree: FilteringExpressionsTree;
     public selectionMode;
-
-    @ViewChild('grid1', { static: true })
-    public grid1: IgxGridComponent;
-
-    @ViewChild('applyChangesCheckbox', { static: true })
-    public applyChangesCheckbox: IgxCheckboxComponent;
 
     public ngOnInit(): void {
         this.displayDensities = [

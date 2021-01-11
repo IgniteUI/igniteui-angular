@@ -6,13 +6,12 @@ import { IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
     templateUrl: 'grid-percantge-widths.sample.html'
 })
  export class GridColumnPercentageWidthsSampleComponent implements OnInit {
-     public data: Array<any>;
-     public data1: Array<any>;
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
+    public grid1: IgxGridComponent;
+    public data: Array<any>;
+    public data1: Array<any>;
 
-     @ViewChild('grid1', { read: IgxGridComponent, static: true })
-     public grid1: IgxGridComponent;
-
-     public ngOnInit(): void {
+    public ngOnInit(): void {
        this.data1 = [{
         ProductID: 1,
         ProductName: 'Chai',
@@ -255,7 +254,7 @@ import { IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
         OrderDate: new Date('2005-03-17')
       }];
 
-      this.data = [{
+    this.data = [{
             ProductID: 1,
             ProductName: 'Chai',
             QuantityPerUnit: '10 boxes x 20 bags',
@@ -439,15 +438,15 @@ import { IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
         }
 
 
-        public formatDate(val: Date) {
-          return new Intl.DateTimeFormat('en-US').format(val);
-      }
+    public formatDate(val: Date) {
+        return new Intl.DateTimeFormat('en-US').format(val);
+    }
 
-      public formatCurrency(val: string) {
-          return parseInt(val, 10).toFixed(2);
-      }
+    public formatCurrency(val: string) {
+        return parseInt(val, 10).toFixed(2);
+    }
 
-      public filter(term) {
+    public filter(term) {
         this.grid1.filter('ProductName', term, IgxStringFilteringOperand.instance().condition('contains'));
     }
 }

@@ -48,15 +48,6 @@ export class ExpansionPanelSampleComponent implements OnInit {
         const currentScore = this.currentScore;
         return Object.keys(currentScore).sort((a, b) => currentScore[b] - currentScore[a])[0];
     }
-    private generateScore(): void {
-        for (let i = 0; i < this.rounds; i++) {
-            this.data.push({
-                Game: `Game ${i + 1}`,
-                'Player 1': Math.floor(Math.random() * 10) + 1,
-                'Player 2': Math.floor(Math.random() * 10) + 1
-            });
-        }
-    }
 
     ngOnInit() {
         this.generateScore();
@@ -70,9 +61,6 @@ export class ExpansionPanelSampleComponent implements OnInit {
 
     collapsed() {
         return this.igxExpansionPanel && this.igxExpansionPanel.collapsed;
-    }
-
-    constructor() {
     }
 
     handleCollapsed(event) {
@@ -92,5 +80,15 @@ export class ExpansionPanelSampleComponent implements OnInit {
 
     toggleLeftRight() {
         this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right';
+    }
+
+    private generateScore(): void {
+        for (let i = 0; i < this.rounds; i++) {
+            this.data.push({
+                Game: `Game ${i + 1}`,
+                'Player 1': Math.floor(Math.random() * 10) + 1,
+                'Player 2': Math.floor(Math.random() * 10) + 1
+            });
+        }
     }
 }

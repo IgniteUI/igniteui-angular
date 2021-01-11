@@ -10,11 +10,10 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridAutoSizeSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public density = 'comfortable';
     public displayDensities;
     public height = '100%';

@@ -14,6 +14,9 @@ import { IgxGridComponent,
 })
 
 export class GridColumnPinningSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true })
+    grid1: IgxGridComponent;
+
     public get rightPinning() {
         return (this.pinningConfig.columns === ColumnPinningPosition.End);
     }
@@ -27,9 +30,6 @@ export class GridColumnPinningSampleComponent implements OnInit {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
     public selectionMode;
-
-    @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
 
     data: any[];
     columns: any[];
@@ -110,9 +110,11 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     togglePinRow(index) {
         const rec = this.data[index];
-        !this.grid1.isRecordPinned(rec) ?
-         this.grid1.pinRow(rec) :
-         this.grid1.unpinRow(rec);
+        if (this.grid1.isRecordPinned(rec)) {
+            this.grid1.unpinRow(rec);
+        } else {
+            this.grid1.pinRow(rec);
+        }
     }
 
     onSelectionModeChange() {
@@ -120,9 +122,11 @@ export class GridColumnPinningSampleComponent implements OnInit {
     }
 
     doSomeAction(row?: IgxGridRowComponent) {
-        !this.grid1.isRecordPinned(row.rowData) ?
-         this.grid1.pinRow(row.rowData) :
-         this.grid1.unpinRow(row.rowData);
+        if (this.grid1.isRecordPinned(row.rowData)) {
+            this.grid1.unpinRow(row.rowData);
+        } else {
+            this.grid1.pinRow(row.rowData);
+        }
     }
 
 }

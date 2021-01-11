@@ -10,13 +10,11 @@ import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridCellStylingSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
     data2: Array<any>;
     public columns: Array<any>;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
-
     styles = {
         background: 'linear-gradient(180deg, #dd4c4c 0%, firebrick 100%)',
         color: 'white',

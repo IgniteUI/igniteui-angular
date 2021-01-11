@@ -22,6 +22,10 @@ import { LocalService } from '../shared/local.service';
 export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
+    @Output() public selectedDataChanged = new EventEmitter<any>();
+    @Output() public keyDown = new EventEmitter<any>();
+    @Output() public chartColumnKeyDown = new EventEmitter<any>();
+
     public data = [];
     public multiCellSelection: { data: any[] } = { data: [] };
     public selectionMode = 'multiple';
@@ -31,10 +35,6 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     public volume = 1000;
     public frequency = 500;
     private subscription$;
-
-    @Output() public selectedDataChanged = new EventEmitter<any>();
-    @Output() public keyDown = new EventEmitter<any>();
-    @Output() public chartColumnKeyDown = new EventEmitter<any>();
 
     constructor(public finService: LocalService) {
         this.finService.getFinancialData(this.volume);
@@ -68,6 +68,12 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     public ngAfterViewInit() {
         this.grid.hideGroupedColumns = true;
         this.grid.reflow();
+    }
+
+    public ngOnDestroy() {
+        if (this.subscription$) {
+            this.subscription$.unsubscribe();
+        }
     }
 
     /** Event Handlers */
@@ -165,11 +171,5 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
 
     get grouped(): boolean {
         return this.grid.groupingExpressions.length > 0;
-    }
-
-    public ngOnDestroy() {
-        if (this.subscription$) {
-            this.subscription$.unsubscribe();
-        }
     }
 }
