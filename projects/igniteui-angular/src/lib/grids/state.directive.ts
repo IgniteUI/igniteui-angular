@@ -109,7 +109,7 @@ export class IgxGridStateDirective {
     };
     private FEATURES = {
         sorting:  {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const sortingState = context.currGrid.sortingExpressions;
                 sortingState.forEach(s => {
                     delete s.strategy;
@@ -117,12 +117,12 @@ export class IgxGridStateDirective {
                 });
                 return { sorting: sortingState };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: ISortingExpression[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: ISortingExpression[]): void => {
                 context.currGrid.sortingExpressions = state;
             }
         },
         filtering: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const filteringState = context.currGrid.filteringExpressionsTree;
                 if (filteringState) {
                     delete filteringState.owner;
@@ -132,13 +132,13 @@ export class IgxGridStateDirective {
                 }
                 return { filtering: filteringState };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: FilteringExpressionsTree): void => {
                 const filterTree = context.createExpressionsTreeFromObject(state);
                 context.currGrid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
             }
         },
         advancedFiltering: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const filteringState = context.currGrid.advancedFilteringExpressionsTree;
                 let advancedFiltering: any;
                 if (filteringState) {
@@ -152,13 +152,13 @@ export class IgxGridStateDirective {
                 }
                 return { advancedFiltering };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: FilteringExpressionsTree): void => {
                 const filterTree = context.createExpressionsTreeFromObject(state);
                 context.currGrid.advancedFilteringExpressionsTree = filterTree as FilteringExpressionsTree;
             }
         },
         columns: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => ({
                         pinned: c.pinned,
                         sortable: c.sortable,
@@ -183,7 +183,7 @@ export class IgxGridStateDirective {
                     }));
                 return { columns: gridColumns };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: IColumnState[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[]): void => {
                 const newColumns = [];
                 const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
                 state.forEach((colState) => {
@@ -197,7 +197,7 @@ export class IgxGridStateDirective {
             }
         },
         groupBy: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const grid = context.currGrid as IgxGridComponent;
                 const groupingExpressions = grid.groupingExpressions;
                 groupingExpressions.forEach(expr => {
@@ -208,7 +208,7 @@ export class IgxGridStateDirective {
 
                 return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: IGroupingState): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: IGroupingState): void => {
                 const grid = context.currGrid as IgxGridComponent;
                 grid.groupingExpressions = state.expressions as IGroupingExpression[];
                 if (grid.groupsExpanded !== state.defaultExpanded) {
@@ -219,11 +219,11 @@ export class IgxGridStateDirective {
             }
         },
         paging: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const pagingState = context.currGrid.pagingState;
                 return { paging: pagingState };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: IPagingState): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: IPagingState): void => {
                 if (context.currGrid.perPage !== state.recordsPerPage) {
                     context.currGrid.perPage = state.recordsPerPage;
                     context.currGrid.cdr.detectChanges();
@@ -232,20 +232,21 @@ export class IgxGridStateDirective {
             }
         },
         rowSelection: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const selection = context.currGrid.selectedRows;
                 return { rowSelection: selection };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
                 context.currGrid.selectRows(state);
             }
         },
         cellSelection: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
-                const selection = context.currGrid.getSelectedRanges().map(range => ({ rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd }));
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
+                const selection = context.currGrid.getSelectedRanges().map(range =>
+                    ({ rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd }));
                 return { cellSelection: selection };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: GridSelectionRange[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: GridSelectionRange[]): void => {
                 state.forEach(r => {
                     const range = { rowStart: r.rowStart, rowEnd: r.rowEnd, columnStart: r.columnStart, columnEnd: r.columnEnd};
                     context.currGrid.selectRange(range);
@@ -253,40 +254,38 @@ export class IgxGridStateDirective {
             }
         },
         columnSelection: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const selection = context.currGrid.selectedColumns().map(c => c.field);
                 return { columnSelection: selection };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: string[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: string[]): void => {
                 context.currGrid.deselectAllColumns();
                 context.currGrid.selectColumns(state);
             }
         },
         rowPinning: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const pinned = context.currGrid.pinnedRows.map(x => x.rowID);
                 return { rowPinning: pinned };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
                 // clear current state.
                 context.currGrid.pinnedRows.forEach(row => row.unpin());
                 state.forEach(rowID => context.currGrid.pinRow(rowID));
             }
         },
         pinningConfig: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
-                return { pinningConfig: context.currGrid.pinning };
-            },
-            restoreFeatureState(context: IgxGridStateDirective, state: IPinningConfig): void {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => ({ pinningConfig: context.currGrid.pinning }),
+            restoreFeatureState: (context: IgxGridStateDirective, state: IPinningConfig): void => {
                 context.currGrid.pinning = state;
             }
         },
         expansion: {
-            getFeatureState(context: IgxGridStateDirective): IGridState {
+            getFeatureState: (context: IgxGridStateDirective): IGridState => {
                 const expansionStates = Array.from(context.currGrid.expansionStates);
                 return { expansion: expansionStates };
             },
-            restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
+            restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
                 const expansionStates = new Map<any, boolean>(state);
                 context.currGrid.expansionStates = expansionStates;
             }
@@ -331,7 +330,7 @@ export class IgxGridStateDirective {
             /**
              * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
              */
-            getParentRowID(grid: IgxHierarchicalGridComponent) {
+            getParentRowID: (grid: IgxHierarchicalGridComponent) => {
                 let childGrid; let childRow;
                 while (grid.parent) {
                     childRow = grid.childRow;
