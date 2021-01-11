@@ -979,7 +979,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /** @hidden @internal */
     public ngOnDestroy(): void {
         if (this._componentID) {
-            this._overlayService.hide(this._componentID);
+            this._overlayService.detach(this._componentID);
         }
         this._destroy$.next(true);
         this._destroy$.complete();
@@ -1046,7 +1046,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (!this.collapsed || this.disabled) {
             return;
         }
-
+        if (this._componentID) {
+            this._overlayService.detach(this._componentID);
+        }
         switch (this.mode) {
             case InteractionMode.Dialog: {
                 this.hasHeader = true;

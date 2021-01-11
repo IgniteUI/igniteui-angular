@@ -3514,6 +3514,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
+            tick();
             fix.detectChanges();
 
             grid.displayDensity = DisplayDensity.cosy;

@@ -82,7 +82,7 @@ export class IgxFilteringService implements OnDestroy {
                     this._overlayService.attach(classRef, this._filterMenuOverlaySettings, this._moduleRef);
             }
 
-            this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
+            this._overlayService.show(this._componentOverlayId);
         }
     }
 
@@ -122,6 +122,7 @@ export class IgxFilteringService implements OnDestroy {
                 if (instance) {
                     instance.column = null;
                 }
+                this._overlayService.detach(this._componentOverlayId);
                 this._componentOverlayId = null;
                 this.grid.navigation.activeNode = this.lastActiveNode;
                 this.grid.theadRow.nativeElement.focus();

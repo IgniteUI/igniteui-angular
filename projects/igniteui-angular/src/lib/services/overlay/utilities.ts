@@ -137,6 +137,8 @@ export interface Size {
 /** @hidden */
 export interface OverlayInfo {
     id?: string;
+    visible?: boolean;
+    detached?: boolean;
     elementRef?: ElementRef;
     componentRef?: ComponentRef<{}>;
     settings?: OverlaySettings;

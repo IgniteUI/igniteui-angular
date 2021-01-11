@@ -2914,7 +2914,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
-            this.overlayService.hide(overlayID);
+            // this.overlayService.hide(overlayID);
+            this.overlayService.detach(overlayID);
             this.overlayService.onClosed.pipe(
                 filter(o => o.id === overlayID),
                 takeUntil(this.destroy$)).subscribe(() => {
@@ -3107,6 +3108,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
+                this.overlayService.detach(this._advancedFilteringOverlayId);
                 this._advancedFilteringOverlayId = null;
                 return;
             }
@@ -3427,7 +3429,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._destroyed = true;
 
         if (this._advancedFilteringOverlayId) {
-            this.overlayService.hide(this._advancedFilteringOverlayId);
+            this.overlayService.detach(this._advancedFilteringOverlayId);
         }
 
         this.zone.runOutsideAngular(() => {
@@ -6921,7 +6923,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     injector: this.viewRef.injector,
                     componentFactoryResolver: this.resolver
                 });
-            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+            this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
 

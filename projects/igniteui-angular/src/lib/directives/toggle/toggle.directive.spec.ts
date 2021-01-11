@@ -88,7 +88,16 @@ describe('IgxToggle', () => {
         tick();
         fixture.detectChanges();
 
-        expect(toggle.onAppended.emit).toHaveBeenCalled();
+        expect(toggle.onAppended.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onAppended.emit).toHaveBeenCalledTimes(2);
     }));
 
     it('should emit \'onClosing\' and \'onClosed\' events', fakeAsync(() => {
@@ -106,8 +115,8 @@ describe('IgxToggle', () => {
         tick();
         fixture.detectChanges();
 
-        expect(toggle.onClosing.emit).toHaveBeenCalled();
-        expect(toggle.onClosed.emit).toHaveBeenCalled();
+        expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
     }));
 
     it('should propagate IgxOverlay onOpened/onClosed events', fakeAsync(() => {
