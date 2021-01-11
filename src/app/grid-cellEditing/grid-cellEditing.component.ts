@@ -12,13 +12,13 @@ import {
     templateUrl: 'grid-cellEditing.component.html'
 })
 export class GridCellEditingComponent {
-
-    orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public gridWithoutPK: IgxGridComponent;
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+
+    orderDateHidden = false;
     data: any;
     dataWithoutPK: any;
     public density = 'compact';
@@ -37,12 +37,10 @@ export class GridCellEditingComponent {
 
     kk = false;
     pname = 'ProductName';
-    private subscribtion;
     public selectionMode;
     public earliest = EarliestSummary;
 
     constructor() {
-        const date = new Date();
         this.data = data;
         this.dataWithoutPK = dataWithoutPK;
         this.displayDensities = [

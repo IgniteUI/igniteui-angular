@@ -7,10 +7,9 @@ import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPin
     templateUrl: 'grid-column-groups.sample.html'
 })
 export class GridColumnGroupsSampleComponent implements AfterViewInit {
-    public collapse = true;
-
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
+    public collapse = true;
     wid = '250px';
     columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
     s = true;
@@ -92,8 +91,7 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
             const col = columns[1];
             col.hidden = !col.hidden;
         } else if (columnGroup.header === 'Address Information') {
-            for (let i = 0; i < columns.length; i++) {
-                const col = columns[i];
+            for (const col of columns) {
                 col.hidden = !col.hidden;
             }
         }

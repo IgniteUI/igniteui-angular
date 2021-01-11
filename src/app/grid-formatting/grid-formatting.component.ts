@@ -24,8 +24,6 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
     public gridRemote: IgxGridComponent;
     @ViewChild('treeGrid', { read: IgxGridComponent, static: true })
     public treeGrid: IgxGridComponent;
-
-    private _filteringStrategy = new FilteringStrategy();
     public localData: any[];
     public remoteData: Observable<any[]>;
     public treeData: any[];

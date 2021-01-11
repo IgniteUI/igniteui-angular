@@ -165,6 +165,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     }
 
     public updateCollectionLayout() {
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let rowIndex = 0; rowIndex < this.collection.length; rowIndex++) {
             let column = this.collection[rowIndex][0];
             for (let colIndex = 1; colIndex < this.collection[rowIndex].length; colIndex++) {
@@ -345,9 +346,9 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
 
             for (let rowUpdateIndex = rowIndex; rowUpdateIndex < rowEndIndex; rowUpdateIndex++) {
                 const firstHalf = [];
-                for (let m = 0; m < this.collection[rowUpdateIndex].length; m++) {
-                    if (this.collection[rowUpdateIndex][m].colStart < this.curResizedCell.colStart + this.curResizedCell.colSpan) {
-                        firstHalf.push(this.collection[rowUpdateIndex][m]);
+                for (const layout of this.collection[rowUpdateIndex]) {
+                    if (layout.colStart < this.curResizedCell.colStart + this.curResizedCell.colSpan) {
+                        firstHalf.push(layout);
                     } else {
                         break;
                     }
@@ -434,9 +435,9 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
             const rowEndIndex = this.curResizedCell.rowStart - 1 + this.curResizedCell.rowSpan;
             for (let rowUpdateIndex = targetRowIndex; rowUpdateIndex < rowEndIndex; rowUpdateIndex++) {
                 const firstHalf = [];
-                for (let m = 0; m < this.collection[rowUpdateIndex].length; m++) {
-                    if (this.collection[rowUpdateIndex][m].colStart < this.curResizedCell.colStart) {
-                        firstHalf.push(this.collection[rowUpdateIndex][m]);
+                for (const layout of this.collection[rowUpdateIndex]) {
+                    if (layout.colStart < this.curResizedCell.colStart) {
+                        firstHalf.push(layout);
                     } else {
                         break;
                     }
@@ -568,13 +569,13 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.rowSpanIncrease = 0;
     }
 
-    public onCellKey(event, rowIndex, colIndex) {
+    public onCellKey(event, rowIndex) {
         if (event.key === 'Delete') {
             for (let i = rowIndex; i < rowIndex + this.cellSelected.rowSpan; i++) {
                 const rowFirstHalf = [];
-                for (let m = 0; m < this.collection[i].length; m++) {
-                    if (this.collection[i][m].colStart < this.cellSelected.colStart) {
-                        rowFirstHalf.push(this.collection[i][m]);
+                for (const layout of this.collection[i]) {
+                    if (layout.colStart < this.cellSelected.colStart) {
+                        rowFirstHalf.push(layout);
                     } else {
                         break;
                     }

@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, IgxColumnComponent, IFilteringExpressionsTree, GridSelectionMode } from 'igniteui-angular';
-import { SAMPLE_DATA } from '../shared/sample-data';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
 
 @Component({
@@ -9,16 +8,15 @@ import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
   styleUrls: ['./grid-esf-load-on-demand.component.scss']
 })
 export class GridEsfLoadOnDemandComponent implements OnInit {
-
-  private esfService = new GridESFLoadOnDemandService();
+  @ViewChild('grid1', { static: true })
+  public grid1: IgxGridComponent;
 
   public data: Array<any>;
   public density = 'comfortable';
   public displayDensities;
   public selectionMode;
 
-  @ViewChild('grid1', { static: true })
-  public grid1: IgxGridComponent;
+  private esfService = new GridESFLoadOnDemandService();
 
   public columnValuesStrategy = (column: IgxColumnComponent,
                                  columnExprTree: IFilteringExpressionsTree,

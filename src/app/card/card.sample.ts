@@ -1,9 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
-    IgxCardComponent,
-    IgxCardActionsComponent,
-    IgxToggleDirective,
-    IgxExpansionPanelModule,
     IgxExpansionPanelComponent
 } from 'igniteui-angular';
 
@@ -33,37 +29,31 @@ export interface Idetails {
     label: string;
 }
 
-function cardFactory(params: any): ICard {
-    return {
-        title: params.title || 'Card Title',
-        subtitle: params.subtitle || 'Card Subtitle',
-        unit: params.unit || '°C',
-        content: params.content || 'Some card content should be place here.',
-        imageUrl: params.imageUrl || 'images/card/media/placeholder.jpg',
-        avatarUrl: params.avatarUrl || 'images/card/avatars/rupert_stadler.jpg',
-        buttons: params.buttons || ['ACTION1', 'ACTION2'],
-        chip: params.chip || ['ACTION1', 'ACTION2', 'ACTION3'],
-        icons: params.icons || ['favorite', 'bookmark', 'share']
-    };
-}
+const cardFactory = (params: any): ICard => ({
+    title: params.title || 'Card Title',
+    subtitle: params.subtitle || 'Card Subtitle',
+    unit: params.unit || '°C',
+    content: params.content || 'Some card content should be place here.',
+    imageUrl: params.imageUrl || 'images/card/media/placeholder.jpg',
+    avatarUrl: params.avatarUrl || 'images/card/avatars/rupert_stadler.jpg',
+    buttons: params.buttons || ['ACTION1', 'ACTION2'],
+    chip: params.chip || ['ACTION1', 'ACTION2', 'ACTION3'],
+    icons: params.icons || ['favorite', 'bookmark', 'share']
+});
 
-function listFactory(params: any): Ilist {
-    return {
-        isSunny: params.isSunny || '',
-        day: params.day || 'day of the week',
-        icon: params.icon || 'wb_cloudy',
-        tempHeight: params.tempHeight || '°C',
-        tempLow: params.tempLow || '°C',
-    };
-}
+const listFactory = (params: any): Ilist => ({
+    isSunny: params.isSunny || '',
+    day: params.day || 'day of the week',
+    icon: params.icon || 'wb_cloudy',
+    tempHeight: params.tempHeight || '°C',
+    tempLow: params.tempLow || '°C',
+});
 
-function detailsFactory(params: any): Idetails {
-    return {
-        value: params.value || '',
-        icon: params.icon || '',
-        label: params.label || '',
-    };
-}
+const detailsFactory = (params: any): Idetails => ({
+    value: params.value || '',
+    icon: params.icon || '',
+    label: params.label || '',
+});
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -72,11 +62,11 @@ function detailsFactory(params: any): Idetails {
     templateUrl: 'card.sample.html'
 })
 export class CardSampleComponent {
-    public horizontal = false;
-    public volume = 10;
-
     @ViewChild(IgxExpansionPanelComponent, { static: true })
     public panel: IgxExpansionPanelComponent;
+
+    public horizontal = false;
+    public volume = 10;
 
     details = [
         detailsFactory({

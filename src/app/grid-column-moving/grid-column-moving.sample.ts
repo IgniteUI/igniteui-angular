@@ -10,14 +10,13 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridColumnMovingSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
+    @ViewChild('grid', { static: true }) public gridMCH: IgxGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
     public newIndex = 0;
     public gridMCHNewIndex = 0;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
-    @ViewChild('grid', { static: true }) public gridMCH: IgxGridComponent;
     public density = 'comfortable';
     public displayDensities;
 
@@ -111,7 +110,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
-        col.pinned ? col.pinned = false : col.pinned = true;
+        col.pinned = !col.pinned;
     }
 
     onColumnMovingStart(event) {
