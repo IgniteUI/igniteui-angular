@@ -115,9 +115,6 @@ export class DropDownSampleComponent implements OnInit {
         this.items[3]['selected'] = true;
     }
 
-    constructor() {
-    }
-
     public toggleDropDown() {
         const overlaySettings: OverlaySettings = {
             positionStrategy: new ConnectedPositioningStrategy(),

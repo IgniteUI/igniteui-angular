@@ -678,5 +678,5 @@ export const generateDataUneven = (count: number, level: number, parentID: strin
             Col2: i, Col3: i, childData: children, childData2: children });
     }
     return prods;
-}
+};
 /* eslint-enable max-len */

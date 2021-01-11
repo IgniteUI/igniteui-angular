@@ -10,6 +10,21 @@ import {
     templateUrl: 'chips.sample.html'
 })
 export class ChipsSampleComponent {
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
+    public chipsAreaTo: IgxChipsAreaComponent;
+
+    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
+    public chipsAreaCc: IgxChipsAreaComponent;
+
+    @ViewChild('dropTo', { read: ElementRef, static: true })
+    public dropTo: ElementRef;
+
+    @ViewChild('dropCc', { read: ElementRef, static: true })
+    public dropCc: ElementRef;
+
     public chipList = [
         {
             id: 'Country', text: 'Country',
@@ -57,27 +72,12 @@ export class ChipsSampleComponent {
     public draggingElem = false;
     public dragEnteredArea = false;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
-    public chipsAreaTo: IgxChipsAreaComponent;
-
-    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
-    public chipsAreaCc: IgxChipsAreaComponent;
-
-    @ViewChild('dropTo', { read: ElementRef, static: true })
-    public dropTo: ElementRef;
-
-    @ViewChild('dropCc', { read: ElementRef, static: true })
-    public dropCc: ElementRef;
-
     constructor(public cdr: ChangeDetectorRef) { }
 
     chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipList.filter((item) => item.id === event.chipsArray[i].id)[0];
+        for (const chip of event.chipsArray) {
+            const chipItem = this.chipList.filter((item) => item.id === chip.id)[0];
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
@@ -111,8 +111,8 @@ export class ChipsSampleComponent {
 
     chipsOrderChangedTo(event) {
         const newChipListTo = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipListTo.filter((item) => item.id === event.chipsArray[i].id)[0];
+        for (const chip of event.chipsArray) {
+            const chipItem = this.chipListTo.filter((item) => item.id === chip.id)[0];
             newChipListTo.push(chipItem);
         }
         this.chipListTo = newChipListTo;
@@ -121,8 +121,8 @@ export class ChipsSampleComponent {
 
     chipsOrderChangedCc(event) {
         const newChipListCc = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipListCc.filter((item) => item.id === event.chipsArray[i].id)[0];
+        for (const chip of event.chipsArray) {
+            const chipItem = this.chipListCc.filter((item) => item.id === chip.id)[0];
             newChipListCc.push(chipItem);
         }
         this.chipListCc = newChipListCc;

@@ -35,10 +35,11 @@ const complex = [{
     styleUrls: ['combo.sample.css']
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
-    private overlaySettings: OverlaySettings[] = [null, null, null, null];
     @ViewChild('playgroundCombo', { static: true }) public igxCombo: IgxComboComponent;
-    @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
+    @ViewChild('customItemTemplate', { read: TemplateRef, static: true }) private customItemTemplate;
+
     alignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     public filterableFlag = true;
@@ -51,9 +52,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public valueKeyVar = 'field';
     public currentDataType = '';
-    @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
-    private customItemTemplate;
-    private initialItemTemplate: TemplateRef<any> = null;
 
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
@@ -61,6 +59,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public genres = [];
     public user: FormGroup;
+    private overlaySettings: OverlaySettings[] = [null, null, null, null];
+    private initialItemTemplate: TemplateRef<any> = null;
+
     constructor(fb: FormBuilder) {
         this.user = fb.group({
             date: [''],

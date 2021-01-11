@@ -17,12 +17,11 @@ import {
 })
 
 export class GridFilterTemplateSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
     public selectionMode;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public ngOnInit(): void {
         this.columns = [
