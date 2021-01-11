@@ -1009,11 +1009,11 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
-    public data;
-    public selectedCell;
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public selectedCell;
 
     constructor() {
         // 3 level hierarchy

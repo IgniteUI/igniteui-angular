@@ -629,6 +629,11 @@ class HelperFunctions {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
+
     public data;
     public options = {
         filtering: false,
@@ -652,18 +657,13 @@ export class IgxHierarchicalGridTestExpandedBaseComponent {
         /* eslint-enable max-len */
     ];
 
-    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
-    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
-
     constructor() {
         // 3 level hierarchy
         this.data = generateDataUneven(20, 3);
     }
 }
 
-export function generateDataUneven(count: number, level: number, parentID: string = null) {
+export const generateDataUneven = (count: number, level: number, parentID: string = null) => {
     const prods = [];
     const currLevel = level;
     let children;

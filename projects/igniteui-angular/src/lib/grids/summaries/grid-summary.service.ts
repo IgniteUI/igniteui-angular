@@ -233,7 +233,7 @@ export class IgxGridSummaryService {
                    if (id.indexOf(colName) !== -1) {
                        this.summaryCacheMap.delete(id);
                    }
-});
+                });
             });
         }
     }

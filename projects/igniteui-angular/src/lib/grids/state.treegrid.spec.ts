@@ -338,6 +338,8 @@ class HelperFunctions {
     `
 })
 export class IgxTreeGridTreeDataTestComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
     /* eslint-disable max-len */
     public columns: any[] = [
         { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
@@ -346,8 +348,5 @@ export class IgxTreeGridTreeDataTestComponent {
         { field: 'Age', header: 'Age', width: '110px', dataType: 'number', pinned: false, movable: false, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false }
         /* eslint-enable max-len */
     ];
-
-    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
-    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
     public data = SampleTestData.employeeTreeData();
 }

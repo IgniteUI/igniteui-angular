@@ -266,6 +266,21 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.title || this.column.header;
     }
 
+    constructor(private cdr: ChangeDetectorRef,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public element: ElementRef,
+        public colResizingService: IgxColumnResizingService,
+        public filteringService: IgxFilteringService) { }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown', ['$event'])
+    public onMouseDown(event): void {
+        // hack for preventing text selection in IE and Edge while dragging the resizer
+        event.preventDefault();
+    }
+
     /**
      * @hidden
      */
@@ -295,15 +310,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public toggleExpandState(event): void {
         event.stopPropagation();
         this.column.expanded = !this.column.expanded;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mousedown', ['$event'])
-    public onMouseDown(event): void {
-        // hack for preventing text selection in IE and Edge while dragging the resizer
-        event.preventDefault();
     }
 
     /**
@@ -352,10 +358,4 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             colEnd: this.column.colEnd,
             columnVisibleIndex: this.column.visibleIndex} : null };
     }
-
-    constructor(private cdr: ChangeDetectorRef,
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        public element: ElementRef,
-        public colResizingService: IgxColumnResizingService,
-        public filteringService: IgxFilteringService) { }
 }

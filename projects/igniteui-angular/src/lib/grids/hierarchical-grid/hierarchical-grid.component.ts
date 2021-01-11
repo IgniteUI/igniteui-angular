@@ -222,15 +222,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
-    protected hierarchicalRecordTemplate: TemplateRef<any>;
-
-    @ViewChild('child_record_template', { read: TemplateRef, static: true })
-    protected childTemplate: TemplateRef<any>;
-
-    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
-    protected headerHierarchyExpander: ElementRef;
-
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
     public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
 
@@ -247,6 +238,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @ViewChildren(IgxChildGridRowComponent, { read: IgxChildGridRowComponent })
     public hierarchicalRows: QueryList<IgxChildGridRowComponent>;
+
+    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
+    protected hierarchicalRecordTemplate: TemplateRef<any>;
+
+    @ViewChild('child_record_template', { read: TemplateRef, static: true })
+    protected childTemplate: TemplateRef<any>;
+
+    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
+    protected headerHierarchyExpander: ElementRef;
 
     /**
      * @hidden
@@ -374,23 +374,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.excelStyleFilteringComponents;
     }
 
-    private updateSizes() {
-        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
-            this.reflow();
-
-            this.hgridAPI.getChildGrids(false).forEach((grid) => {
-                grid.updateSizes();
-            });
-        }
-    }
-
-    protected _shouldAutoSize(renderedHeight) {
-        if (this.isPercentHeight && this.parent) {
-            return true;
-        }
-        return super._shouldAutoSize(renderedHeight);
-    }
-
     public get outletDirective() {
         return this.rootGrid._outletDirective;
     }
@@ -436,39 +419,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-
-    protected setupColumns() {
-        if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
-            this.createColumnsList(this.parentIsland.childColumns.toArray());
-        }
-        super.setupColumns();
-    }
-
-    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
-        Promise.resolve().then(() => {
-            this.updateColumnList();
-            const cols = change.filter(c => c.gridAPI.grid === this);
-            if (cols.length > 0 || this.autoGenerate) {
-                this.columnList.reset(cols);
-                super.onColumnsChanged(this.columnList);
-            }
-        });
-    }
-
-    private updateColumnList(recalcColSizes = true) {
-        const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
-        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
-        const colsArray = [].concat.apply([], nestedColumns);
-        const colLength = this.columnList.length;
-        if (colsArray.length > 0) {
-            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
-            this.columnList.reset(topCols);
-            if (recalcColSizes && this.columnList.length !== colLength) {
-                this.calculateGridSizes(false);
-            }
-        }
-    }
-
     ngOnDestroy() {
         if (!this.parent) {
             this.hgridAPI.getChildGrids(true).forEach((grid) => {
@@ -482,16 +432,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this._clearSeletionHighlights();
         }
         super.ngOnDestroy();
-    }
-
-    private _clearSeletionHighlights() {
-        [this.rootGrid, ...this.rootGrid.getChildGrids(true)].forEach(grid => {
-            grid.selectionService.clear();
-            grid.selectionService.activeElement = null;
-            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
-            grid.highlightedRowID = null;
-            grid.cdr.markForCheck();
-        });
     }
 
     /**
@@ -597,19 +537,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return this.parentIsland.getDragGhostCustomTemplate();
         }
         return super.getDragGhostCustomTemplate();
-    }
-
-    /**
-     * @hidden
-     */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
-        if (this.hasColumnLayouts) {
-            // invalid configuration - hierarchical grid should not allow column layouts
-            // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
-            this.columnList.reset(nonColumnLayoutColumns);
-        }
-        super.initColumns(collection, cb);
     }
 
     /**
@@ -725,6 +652,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    public onContainerScroll() {
+        this.hideOverlays();
+    }
+
     protected getChildGrids(inDeph?: boolean) {
         return this.hgridAPI.getChildGrids(inDeph);
     }
@@ -737,15 +668,83 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         });
     }
 
+    /**
+     * @hidden
+     */
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: () => void = null) {
+        if (this.hasColumnLayouts) {
+            // invalid configuration - hierarchical grid should not allow column layouts
+            // remove column layouts
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
+            this.columnList.reset(nonColumnLayoutColumns);
+        }
+        super.initColumns(collection, cb);
+    }
+
+
+    protected setupColumns() {
+        if (this.parentIsland && this.parentIsland.childColumns.length > 0 && !this.autoGenerate) {
+            this.createColumnsList(this.parentIsland.childColumns.toArray());
+        }
+        super.setupColumns();
+    }
+
+    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        Promise.resolve().then(() => {
+            this.updateColumnList();
+            const cols = change.filter(c => c.gridAPI.grid === this);
+            if (cols.length > 0 || this.autoGenerate) {
+                this.columnList.reset(cols);
+                super.onColumnsChanged(this.columnList);
+            }
+        });
+    }
+
+    protected _shouldAutoSize(renderedHeight) {
+        if (this.isPercentHeight && this.parent) {
+            return true;
+        }
+        return super._shouldAutoSize(renderedHeight);
+    }
+
+    private updateSizes() {
+        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
+            this.reflow();
+
+            this.hgridAPI.getChildGrids(false).forEach((grid) => {
+                grid.updateSizes();
+            });
+        }
+    }
+
+    private updateColumnList(recalcColSizes = true) {
+        const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
+        const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
+        const colsArray = [].concat.apply([], nestedColumns);
+        const colLength = this.columnList.length;
+        if (colsArray.length > 0) {
+            const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
+            this.columnList.reset(topCols);
+            if (recalcColSizes && this.columnList.length !== colLength) {
+                this.calculateGridSizes(false);
+            }
+        }
+    }
+
+    private _clearSeletionHighlights() {
+        [this.rootGrid, ...this.rootGrid.getChildGrids(true)].forEach(grid => {
+            grid.selectionService.clear();
+            grid.selectionService.activeElement = null;
+            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
+            grid.highlightedRowID = null;
+            grid.cdr.markForCheck();
+        });
+    }
+
 
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
     }
-
-    public onContainerScroll() {
-        this.hideOverlays();
-    }
-
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
     }

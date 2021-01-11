@@ -60,7 +60,7 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
         IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
-    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
+    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -129,6 +129,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
     public islandToolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+
+    @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
+    public actionStrips: QueryList<IgxActionStripComponent>;
 
     /**
      * @hidden
@@ -200,14 +203,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public initialChanges = [];
 
-    private ri_columnListDiffer;
-
     /**
      * @hidden
      */
     public rootGrid = null;
     readonly data: any[];
     readonly filteredData: any[];
+
+    private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
     private isInit = false;
 
@@ -251,11 +254,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             _displayDensityOptions,
             localeId
         );
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
+        this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
-
-    @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
-    public actionStrips: QueryList<IgxActionStripComponent>;
 
     /**
      * @hidden
@@ -264,12 +264,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
-    }
-
-    /**
-     * @hidden
-     */
-    ngDoCheck() {
     }
 
     /**
@@ -311,15 +305,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
          if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
-    }
-
-    protected updateChildren() {
-        if (this.children.first === this) {
-            this.children.reset(this.children.toArray().slice(1));
-        }
-        this.children.forEach(child => {
-            child.parentIsland = this;
-        });
     }
 
     /**
@@ -371,15 +356,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.cleanGridState(this.rootGrid);
         }
     }
-
-    private cleanGridState(grid) {
-        grid.childGridTemplates.forEach((tmpl) => {
-            tmpl.owner.cleanView(tmpl.context.templateID);
-        });
-        grid.childGridTemplates.clear();
-        grid.onRowIslandChange();
-    }
-
     /**
      * @hidden
      */
@@ -417,4 +393,22 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             }
         });
     }
+
+    protected updateChildren() {
+        if (this.children.first === this) {
+            this.children.reset(this.children.toArray().slice(1));
+        }
+        this.children.forEach(child => {
+            child.parentIsland = this;
+        });
+    }
+
+    private cleanGridState(grid) {
+        grid.childGridTemplates.forEach((tmpl) => {
+            tmpl.owner.cleanView(tmpl.context.templateID);
+        });
+        grid.childGridTemplates.clear();
+        grid.onRowIslandChange();
+    }
+
 }

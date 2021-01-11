@@ -450,10 +450,11 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
-    public data;
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+
+    public data;
 
     constructor() {
         // 3 level hierarchy

@@ -619,6 +619,12 @@ class HelperFunctions {
     `
 })
 export class IgxGridStateComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
+
     public data = SampleTestData.foodProductData();
 
     public columns: any[] = [
@@ -629,12 +635,6 @@ export class IgxGridStateComponent {
         { field: 'OrderDate', header: 'Date ordered', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
         /* eslint-enable max-len */
       ];
-
-    @ViewChild('grid', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-
-    @ViewChild(IgxGridStateDirective, { static: true })
-    public state: IgxGridStateDirective;
 }
 
 @Component({
@@ -644,6 +644,12 @@ export class IgxGridStateComponent {
     `
 })
 export class IgxGridStateWithOptionsComponent {
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
+
     public data = SampleTestData.foodProductData();
     public options = {
         filtering: false,
@@ -651,12 +657,6 @@ export class IgxGridStateWithOptionsComponent {
         sorting: false,
         groupBy: false
     };
-
-    @ViewChild('grid', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-
-    @ViewChild(IgxGridStateDirective, { static: true })
-    public state: IgxGridStateDirective;
 }
 
 @Component({
@@ -670,13 +670,13 @@ export class IgxGridStateWithOptionsComponent {
     `
 })
 export class IgxGridStateWithDetailsComponent {
-    public data = SampleTestData.foodProductData();
-
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     @ViewChild(IgxGridStateDirective, { static: true })
     public state: IgxGridStateDirective;
+
+    public data = SampleTestData.foodProductData();
 }
 /* eslint-enable max-len */
 

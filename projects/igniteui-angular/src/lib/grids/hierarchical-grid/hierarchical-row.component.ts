@@ -20,6 +20,29 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
+    @ViewChild('expander', { read: ElementRef })
+    public expander: ElementRef<HTMLElement>;
+
+    @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
+    protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultExpandedTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultEmptyTemplate', { read: TemplateRef, static: true })
+    protected defaultEmptyTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultCollapsedTemplate: TemplateRef<any>;
 
     protected expanderClass = 'igx-grid__hierarchical-expander';
     protected rolActionClass = 'igx-grid__tr-action';
@@ -34,33 +57,9 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         };
     }
 
-    @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
-
-    @ViewChild('expander', { read: ElementRef })
-    public expander: ElementRef<HTMLElement>;
-
     get viewIndex(): number {
         return this.index + this.grid.page * this.grid.perPage;
     }
-
-    /**
-     * @hidden
-     */
-   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandedTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-   @ViewChild('defaultEmptyTemplate', { read: TemplateRef, static: true })
-   protected defaultEmptyTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapsedTemplate: TemplateRef<any>;
 
     /**
      * Returns whether the row is expanded.

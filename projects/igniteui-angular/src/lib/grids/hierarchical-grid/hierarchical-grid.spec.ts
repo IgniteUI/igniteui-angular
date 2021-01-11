@@ -596,8 +596,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const child1Cols = childGrids[0].columnList.toArray();
         const riCols = ri1.columnList.toArray();
         expect(child1Cols.length).toEqual(riCols.length);
-        for (let i = 0; i < riCols.length; i++) {
-            const col = child1Cols.find((c) => c.key === riCols[i].key);
+        for (const column of riCols) {
+            const col = child1Cols.find((c) => c.key === column.key);
             expect(col).not.toBeNull();
         }
         const child2Cols = childGrids[1].columnList.toArray();
@@ -1277,11 +1277,11 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
-    public data;
-    public width = '500px';
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public width = '500px';
 
     constructor() {
         // 3 level hierarchy
@@ -1322,9 +1322,9 @@ export class IgxHierarchicalGridTestBaseComponent {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
-    public height = '100px';
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public height = '100px';
 }
 
 @Component({
@@ -1340,8 +1340,6 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
     `
 })
 export class IgxHGridRemoteOnDemandComponent {
-    public data;
-
     @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent, static: true })
     public instance: IgxHierarchicalGridComponent;
 
@@ -1350,6 +1348,8 @@ export class IgxHGridRemoteOnDemandComponent {
 
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
     public rowIsland2: IgxRowIslandComponent;
+
+    public data;
 
     constructor(public cdr: ChangeDetectorRef) { }
 
@@ -1429,6 +1429,12 @@ export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGr
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridSizingComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+
     public childHeight = '100%';
     public data = [
         {
@@ -1438,12 +1444,6 @@ export class IgxHierarchicalGridSizingComponent {
     ];
     public fullData = Array.from({ length: 100000 }, (_, i) => ({ ID: i, ProductName: 'PN' + i }));
     public semiData = Array.from({ length: 15 }, (_, i) => ({ ID: i, ProductName: 'PN' + i }));
-
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
-    public hgrid: IgxHierarchicalGridComponent;
-
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
-    public rowIsland: IgxRowIslandComponent;
 }
 
 @Component({
