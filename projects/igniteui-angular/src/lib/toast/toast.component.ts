@@ -214,8 +214,13 @@ export class IgxToastComponent extends IgxToggleDirective
     }
 
     public set isVisible(value) {
-        this._isVisible = value;
-        this.isVisibleChange.emit(this._isVisible);
+        if (value !== this._isVisible) {
+            if (value) {
+                this.show();
+            } else {
+                this.hide();
+            }
+        }
     }
 
     /**
@@ -309,8 +314,8 @@ export class IgxToastComponent extends IgxToggleDirective
                     this.position === 'bottom'
                         ? VerticalAlignment.Bottom
                         : this.position === 'middle'
-                        ? VerticalAlignment.Middle
-                        : VerticalAlignment.Top,
+                            ? VerticalAlignment.Middle
+                            : VerticalAlignment.Top,
             }),
             closeOnEscape: false,
             closeOnOutsideClick: false,
@@ -377,13 +382,15 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
+            this._isVisible = true;
+            this.isVisibleChange.emit(true);
             this.onShown.emit(this);
-            this.isVisible = true;
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
+            this._isVisible = false;
+            this.isVisibleChange.emit(false);
             this.onHidden.emit(this);
-            this.isVisible = false;
         });
     }
 
@@ -404,4 +411,4 @@ export class IgxToastComponent extends IgxToggleDirective
     exports: [IgxToastComponent],
     imports: [CommonModule],
 })
-export class IgxToastModule {}
+export class IgxToastModule { }

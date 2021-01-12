@@ -41,8 +41,10 @@ describe('IgxToast', () => {
         expect(domToast.id).toContain('igx-toast-');
         expect(toast.displayTime).toBe(4000);
         expect(toast.autoHide).toBeTruthy();
-        expect(toast.isVisible).toBeTruthy();
 
+        toast.onClosed.subscribe(() => {
+            expect(toast.isVisible).toBeTruthy();
+        });
         toast.id = 'customToast';
         fixture.detectChanges();
 
@@ -81,16 +83,16 @@ describe('IgxToast', () => {
         expect(toast.onHiding.emit).toHaveBeenCalled();
     });
 
-    it('should emit onShown when toggle onOpened is fired', waitForAsync(() => {
+    it('should emit onShown when toggle onOpened is fired', () => {
         spyOn(toast.onShown, 'emit');
         toast.open();
 
         toast.onOpened.subscribe(() => {
             expect(toast.onShown.emit).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should emit onHidden when toggle onClosed is fired', waitForAsync(() => {
+    it('should emit onHidden when toggle onClosed is fired', () => {
         spyOn(toast.onHidden, 'emit');
         toast.isVisible = true;
         toast.close();
@@ -98,9 +100,9 @@ describe('IgxToast', () => {
         toast.onClosed.subscribe(() => {
             expect(toast.onHidden.emit).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('visibility is updated by the toggle() method', waitForAsync((done: DoneFn) => {
+    it('visibility is updated by the toggle() method', () => {
         toast.autoHide = false;
 
         toast.toggle();
@@ -111,9 +113,8 @@ describe('IgxToast', () => {
         toast.toggle();
         toast.onClosed.subscribe(() => {
             expect(toast.isVisible).toEqual(false);
-            done();
         });
-    }));
+    });
 
     it('can set message through show method', fakeAsync(() => {
         toast.displayTime = 100;
@@ -122,8 +123,10 @@ describe('IgxToast', () => {
         toast.show('Custom Message');
         tick(100);
         fixture.detectChanges();
+        toast.onClosed.subscribe(() => {
+            expect(toast.isVisible).toBeTruthy();
+        });
 
-        expect(toast.isVisible).toBeTruthy();
         expect(toast.autoHide).toBeFalsy();
         expect(toast.toastMessage).toBe('Custom Message');
     }));
