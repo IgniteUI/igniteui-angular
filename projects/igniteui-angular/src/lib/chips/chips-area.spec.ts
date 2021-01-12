@@ -16,7 +16,7 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
         <igx-chips-area #chipsArea class="customClass">
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+                <igx-icon igxPrefix>drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
@@ -62,7 +62,7 @@ class TestChipSelectComponent extends TestChipComponent {
         <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)">
             <igx-chip #chipElem *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
                 [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+                <igx-icon igxPrefix>drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>

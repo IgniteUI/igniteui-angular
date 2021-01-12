@@ -184,10 +184,10 @@ class ButtonWithAttribsComponent {
     <button #raised class="raisedBtn" igxButton="raised" [displayDensity]="density">Raised</button>
     <button #outlined class="outlinedBtn" igxButton="outlined" [displayDensity]="density">Outlined</button>
     <button #fab class="fabBtn" igxButton="fab" [displayDensity]="density">
-        <igx-icon fontSet="material">favorite</igx-icon>
+        <igx-icon>favorite</igx-icon>
     </button>
     <button #icon class="iconBtn" igxButton="icon" [displayDensity]="density">
-        <igx-icon fontSet="material">search</igx-icon>
+        <igx-icon>search</igx-icon>
     </button>
     `
 })

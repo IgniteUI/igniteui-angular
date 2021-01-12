@@ -39,7 +39,7 @@
             <igx-card>
                 <igx-card-content style="padding: 0px;">
                     <div class="location">
-                        <igx-icon class="cursorHover" fontSet="material" [color]="'rgb(0,153,255)'" [igxTooltipTarget]="locationTooltip">location_on</igx-icon>
+                        <igx-icon class="cursorHover" [color]="'rgb(0,153,255)'" [igxTooltipTarget]="locationTooltip">location_on</igx-icon>
 
                         <div class="locationTooltip" #locationTooltip="tooltip" igxTooltip>
                             <div class="locationTooltipContent">
@@ -56,10 +56,10 @@
                 <igx-card-actions>
                     <div class="igx-card-actions__igroup--start">
                         <span igxButton="icon" igxRipple igxRippleCentered="true">
-                            <igx-icon fontSet="material">favorite</igx-icon>
+                            <igx-icon>favorite</igx-icon>
                         </span>
                         <span igxButton="icon" igxRipple igxRippleCentered="true">
-                            <igx-icon fontSet="material">share</igx-icon>
+                            <igx-icon>share</igx-icon>
                         </span>
                     </div>
                 </igx-card-actions>
@@ -74,7 +74,7 @@
                 <igx-column [field]="'Model'" dataType="string"></igx-column>
                 <igx-column [field]="'Spec'">
                     <ng-template igxCell let-cell="cell">
-                        <igx-icon class="cursorHover" [igxTooltipTarget]="tp" fontset="material">
+                        <igx-icon class="cursorHover" [igxTooltipTarget]="tp">
                             info
                         </igx-icon>
 

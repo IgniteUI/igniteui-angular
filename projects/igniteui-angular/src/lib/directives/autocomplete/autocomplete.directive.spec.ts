@@ -919,12 +919,12 @@ describe('IgxAutocomplete', () => {
 
 @Component({
     template: `<igx-input-group style="width: 300px;">
-        <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
+        <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
             [igxAutocompleteSettings]='settings' (onItemSelected)="onItemSelected($event)"/>
         <label igxLabel for="towns">Towns</label>
-        <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
+        <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
     <igx-drop-down #townsPanel [width]="ddWidth">
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
@@ -979,12 +979,12 @@ class AutocompleteInputComponent extends AutocompleteComponent {
     template: `
 <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
 <igx-input-group>
-        <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
+        <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" formControlName="towns" type="text" required
             [igxAutocomplete]='townsPanel'
             [igxAutocompleteSettings]='settings' />
         <label igxLabel for="towns">Towns</label>
-        <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
+        <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
     <igx-drop-down #townsPanel>
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">

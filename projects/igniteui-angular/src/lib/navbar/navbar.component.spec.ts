@@ -231,7 +231,7 @@ class NavbarCustomActionIconTestComponent {
                             actionButtonIcon="home"
                             isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                        <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                </igx-navbar>`
 })
@@ -245,7 +245,7 @@ class NavbarCustomIgxIconTestComponent {
                             title="Test Title"
                             actionButtonIcon="home"
                             isActionButtonVisible="true">
-                    <igx-icon igxNavbarAction fontSet="material">arrow_back</igx-icon>
+                    <igx-icon igxNavbarAction>arrow_back</igx-icon>
                </igx-navbar>`
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
@@ -259,7 +259,7 @@ class NavbarCustomIgxIconDirectiveTestComponent {
                            actionButtonIcon="home"
                            isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                        <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                     <igx-navbar-title>Custom Title</igx-navbar-title>
                </igx-navbar>`
@@ -275,7 +275,7 @@ class NavbarCustomTitleTestComponent {
                            actionButtonIcon="home"
                            isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                        <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                     <div igxNavbarTitle>
                         <div>Custom</div>

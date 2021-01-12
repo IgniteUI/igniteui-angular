@@ -306,8 +306,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselIndicator let-slide>
-     *         <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
-     *         <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
+     *         <igx-icon *ngIf="slide.active">brightness_7</igx-icon>
+     *         <igx-icon *ngIf="!slide.active">brightness_5</igx-icon>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -329,7 +329,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
      *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon fontSet="material">add</igx-icon>
+     *                <igx-icon>add</igx-icon>
      *           </button>
      *      </ng-template>
      *  </igx-carousel>
@@ -352,7 +352,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
      *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon fontSet="material">remove</igx-icon>
+     *                <igx-icon>remove</igx-icon>
      *           </button>
      *      </ng-template>
      *  </igx-carousel>
