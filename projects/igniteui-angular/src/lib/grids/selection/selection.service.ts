@@ -363,7 +363,7 @@ export class IgxGridCRUDService {
     /** Clears cell and row editing state and closes row editing template if it is open */
     public endEditMode() {
         this.endCellEdit();
-        if (this.grid.rowEditable) {
+        if (this.grid?.rowEditable) {
             this.endRowEdit();
             this.grid.closeRowEditingOverlay();
         }
