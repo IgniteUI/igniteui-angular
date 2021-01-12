@@ -11,7 +11,9 @@ import {
     ViewChildren,
     Directive,
     Output,
-    EventEmitter
+    EventEmitter,
+    AfterViewInit,
+    OnDestroy
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -21,12 +23,15 @@ import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
-import merge from 'lodash.merge';
+import mergeWith from 'lodash.mergewith';
+import { cloneValue } from '../core/utils';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Directive({
     selector: '[igxRowBaseComponent]'
 })
-export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
+export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck, AfterViewInit, OnDestroy {
 
     protected _rowData: any;
     protected _addRow: boolean;
@@ -52,7 +57,12 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     public get rowData(): any {
         if (this.inEditMode) {
-            return merge({ ...this._rowData }, this.grid.transactions.getAggregatedValue(this.rowID, false));
+            return mergeWith(cloneValue(this._rowData), this.grid.transactions.getAggregatedValue(this.rowID, false),
+                (objValue, srcValue) => {
+                    if (Array.isArray(srcValue)) {
+                        return objValue = srcValue;
+                    }
+                });
         }
         return this._rowData;
     }
@@ -140,8 +150,12 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
-    public virtDirRow: IgxGridForOfDirective<any>;
+    @ViewChildren('igxDirRef', { read: IgxGridForOfDirective })
+    public _virtDirRow: QueryList<IgxGridForOfDirective<any>>;
+
+    public get virtDirRow(): IgxGridForOfDirective<any> {
+        return this._virtDirRow ? this._virtDirRow.first : null;
+    }
 
     /**
      * @hidden
@@ -370,6 +384,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public defaultCssClass = 'igx-grid__tr';
 
+    protected destroy$ = new Subject<any>();
 
     constructor(
         public gridAPI: GridBaseAPIService<T>,
@@ -377,6 +392,16 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
+        this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalForOfs());
+    }
+
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
 
     /**
      * @hidden

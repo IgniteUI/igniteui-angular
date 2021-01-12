@@ -29,6 +29,10 @@
         @extend %igx-drop-down__inner !optional;
     }
 
+    @include e(content) {
+        @extend %igx-drop-down__content !optional;
+    }
+
     @include e(item, $m: cosy) {
         @extend %igx-drop-down__item--cosy !optional;
     }

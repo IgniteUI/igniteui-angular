@@ -68,6 +68,7 @@
     $focus-text-color: null,
     $focus-background: null,
     $focus-border-color: null,
+    $focus-outline-color: null,
 
     $selected-text-color: null,
     $selected-background: null,
@@ -80,6 +81,7 @@
     $focus-selected-text-color: null,
     $focus-selected-background: null,
     $focus-selected-border-color: null,
+    $focus-selected-outline-color: null,
 
     $ghost-shadow: null,
     $remove-icon-color: null,
@@ -226,6 +228,8 @@
         ghost-shadow: $ghost-shadow,
         remove-icon-color: $remove-icon-color,
         remove-icon-color-focus: $remove-icon-color-focus,
+        focus-selected-outline-color: $focus-selected-outline-color,
+        focus-outline-color: $focus-outline-color,
     ));
 }
 
@@ -530,6 +534,10 @@
         border-color: --var($theme, 'focus-border-color');
         outline-style: none;
         box-shadow: $box-shadow;
+
+        @if $variant == 'indigo-design' {
+            box-shadow: 0 0 0 rem(3px) --var($theme, 'focus-outline-color');
+        }
     }
 
     %igx-chip__item--selected {
@@ -550,6 +558,10 @@
         background: --var($theme, 'focus-selected-background');
         border-color: --var($theme, 'focus-selected-border-color');
         transition: $transition;
+
+        @if $variant == 'indigo-design' {
+            box-shadow: 0 0 0 rem(3px) --var($theme, 'focus-selected-outline-color');
+        }
     }
 
     %igx-chip__item--cosy {
@@ -567,6 +579,7 @@
         z-index: 10;
         box-shadow: --var($theme, 'ghost-shadow');
         overflow: hidden;
+        color: --var($theme, 'focus-text-color');
         background: --var($theme, 'ghost-background');
 
         &:hover,

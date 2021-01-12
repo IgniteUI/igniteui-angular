@@ -15,6 +15,16 @@ import { IgxRadioComponent, RadioLabelPosition, IChangeRadioEventArgs } from '..
 import { IgxRippleModule } from '../ripple/ripple.directive';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { mkenum } from '../../core/utils';
+
+/**
+ * Determines the Radio Group alignment
+ */
+export const RadioGroupAlignment = mkenum({
+    horizontal: 'horizontal',
+    vertical: 'vertical'
+});
+export type RadioGroupAlignment = (typeof RadioGroupAlignment)[keyof typeof RadioGroupAlignment];
 
 const noop = () => { };
 let nextId = 0;
@@ -190,6 +200,47 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     public cssClass = 'igx-radio-group';
 
     /**
+     * Sets vertical alignment to the radio group, if `alignment` is set to `vertical`.
+     * By default the alignment is horizontal.
+     *
+     * @example
+     * ```html
+     * <igx-radio-group alignment="vertical"></igx-radio-group>
+     * ```
+     */
+    @HostBinding('class.igx-radio-group--vertical')
+    private vertical = false;
+
+    /**
+     * Returns the alignment of the `igx-radio-group`.
+     * ```typescript
+     * @ViewChild("MyRadioGroup")
+     * public radioGroup: IgxRadioGroupDirective;
+     * ngAfterViewInit(){
+     *    let radioAlignment = this.radioGroup.alignment;
+     * }
+     * ```
+     */
+    @Input()
+    get alignment(): RadioGroupAlignment {
+        return this.vertical ? RadioGroupAlignment.vertical : RadioGroupAlignment.horizontal;
+    }
+    /**
+     * Allows you to set the radio group alignment.
+     * Available options are `RadioGroupAlignment.horizontal` (default) and `RadioGroupAlignment.vertical`.
+     * ```typescript
+     * public alignment = RadioGroupAlignment.vertical;
+     * //..
+     * ```
+     * ```html
+     * <igx-radio-group [alignment]="alignment"></igx-radio-group>
+     * ```
+     */
+    set alignment (value: RadioGroupAlignment) {
+        this.vertical = value === RadioGroupAlignment.vertical;
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -315,13 +366,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * @internal
      */
     private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
-        if (this._selected !== args.radio) {
-            if (this._selected) {
-                this._selected.checked = false;
-            }
-            this._selected = args.radio;
-        }
+        this.radioButtons.forEach(button => {
+            button.checked = button.id === args.radio.id;
+        });
 
+        this._selected = args.radio;
         this._value = args.value;
 
         if (this._isInitialized) {

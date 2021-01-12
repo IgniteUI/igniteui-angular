@@ -28,6 +28,7 @@
 /// @param {Color} $item-selected-background [null] - The background color for a selected item in the button group.
 /// @param {Color} $item-selected-border-color [null] - The border color for a selected item from the button group.
 /// @param {Color} $item-selected-hover-background [null] - The background color for a selected item in hover or focus state in the button group.
+/// @param {Color} $selected-shadow-color [null] - The color for a focused button item in hover or focus state in the button group.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for button-group component.
 ///
@@ -69,7 +70,8 @@
     $item-selected-text-color: null,
     $item-selected-background: null,
     $item-selected-border-color: null,
-    $item-selected-hover-background: null
+    $item-selected-hover-background: null,
+    $selected-shadow-color: null
 ) {
     $name: 'igx-button-group';
     $button-group-schema: ();
@@ -160,6 +162,7 @@
         border: $border,
         shadow: $shadow,
         shadow-color: $shadow-color,
+        selected-shadow-color: $selected-shadow-color,
     ));
 }
 
@@ -181,6 +184,7 @@
 
     $variant: map-get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
+    $indigo-theme: $variant == 'indigo-design';
 
     %igx-group-display {
         display: flex;
@@ -252,7 +256,7 @@
         }
 
         &:focus {
-            @if $bootstrap-theme {
+            @if $bootstrap-theme or $indigo-theme {
                 box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
             }
         }
@@ -290,6 +294,12 @@
         &:focus {
             color: --var($theme, 'item-selected-text-color');
             background: --var($theme, 'item-selected-hover-background');
+        }
+
+        @if $indigo-theme {
+            &:focus {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'selected-shadow-color');
+            }
         }
 
         &%igx-button--disabled {

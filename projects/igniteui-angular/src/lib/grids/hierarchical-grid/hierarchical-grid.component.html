@@ -78,7 +78,7 @@
         <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible"
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
-    <div #loadingOverlay>
+    <div igxToggle #loadingOverlay>
         <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
@@ -232,7 +232,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1)'>
+    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1, $event)'>
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -252,7 +252,7 @@
     <igx-icon role="button" [isActive]='hasExpandedRecords() && hasExpandableChildren' fontSet="material">unfold_less</igx-icon>
 </ng-template>
 
-<div *ngIf="rowEditable" igxToggle>
+<div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
             *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">

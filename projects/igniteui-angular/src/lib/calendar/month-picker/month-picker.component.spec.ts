@@ -61,6 +61,28 @@ describe('IgxMonthPicker', () => {
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2019');
     });
 
+    it('should properly render month picker rowheader elements', () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+        const monthPicker = fixture.componentInstance.monthPicker;
+
+        const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
+        const prev = dom.query(By.css('.igx-calendar-picker__prev'));
+        const next = dom.query(By.css('.igx-calendar-picker__next'));
+
+        expect(prev.nativeElement.getAttribute('aria-label')).toEqual('Previous Year ' + monthPicker.getPreviousYear());
+        expect(prev.nativeElement.getAttribute('role')).toEqual('button');
+        expect(prev.nativeElement.getAttribute('data-action')).toEqual('prev');
+
+        expect(next.nativeElement.getAttribute('aria-label')).toEqual('Next Year ' + monthPicker.getNextYear());
+        expect(next.nativeElement.getAttribute('role')).toEqual('button');
+        expect(next.nativeElement.getAttribute('data-action')).toEqual('next');
+
+        expect(yearBtn.nativeElement.getAttribute('aria-live')).toEqual('polite');
+    });
+
     it('should properly set @Input properties and setters', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
