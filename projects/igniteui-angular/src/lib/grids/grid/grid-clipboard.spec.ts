@@ -169,10 +169,10 @@ describe('IgxGrid - Clipboard #grid', () => {
     }));
 });
 
-function dispatchCopyEventOnGridBody(fixture) {
+const dispatchCopyEventOnGridBody = (fixture) => {
     const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody')).nativeElement;
     const ev = new ClipboardEvent('copy', {clipboardData: new DataTransfer()});
     gridBody.dispatchEvent(ev);
     fixture.detectChanges();
     return  ev.clipboardData.getData('text/plain');
-}
+};

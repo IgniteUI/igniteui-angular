@@ -22,7 +22,6 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-
 describe('IgxGrid - Row Adding #grid', () => {
         const GRID_ROW = 'igx-grid-row';
         const DISPLAY_CONTAINER = 'igx-display-container';
@@ -816,7 +815,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             gridContent = GridFunctions.getGridContent(fixture);
         }));
 
-        it('Should show the action strip "Show" button if added row is in collapsed group and on click should expand the group and scroll to the correct added row', () => {
+        it(`Should show the action strip "Show" button if added row is in collapsed group
+            4and on click should expand the group and scroll to the correct added row`, () => {
             grid.groupBy({
                 fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()

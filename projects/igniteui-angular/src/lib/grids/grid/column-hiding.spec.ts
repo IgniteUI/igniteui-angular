@@ -513,7 +513,8 @@ describe('Column Hiding UI #grid', () => {
             grid.columnList.forEach((col) => {
                 expect(col.width).toBe('0px');
             });
-            fixEl = fix.nativeElement, gridEl = grid.nativeElement;
+            fixEl = fix.nativeElement;
+            gridEl = grid.nativeElement;
 
             tHeadItems = fixEl.querySelector('igx-grid-header-group');
             gridRows = fixEl.querySelector('igx-grid-row');
@@ -827,7 +828,5 @@ describe('Column Hiding UI #grid', () => {
         });
     });
 
-    function getColumnChooserButtonIcon<T>(fixture: ComponentFixture<T>) {
-        return getColumnHidingButton(fixture).querySelector('igx-icon');
-    }
+    const getColumnChooserButtonIcon = <T>(fixture: ComponentFixture<T>) => getColumnHidingButton(fixture).querySelector('igx-icon');
 });

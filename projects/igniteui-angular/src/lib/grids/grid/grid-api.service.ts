@@ -127,14 +127,6 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
             groupRow.records.map(x => x[this.grid.primaryKey]) : groupRow.records);
     }
 
-    protected remove_grouping_expression(fieldName) {
-        const groupingExpressions = this.grid.groupingExpressions;
-        const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
-        if (index !== -1) {
-            groupingExpressions.splice(index, 1);
-        }
-    }
-
     public arrange_sorting_expressions() {
         const groupingState = this.grid.groupingExpressions;
         this.grid.sortingExpressions.sort((a, b) => {
@@ -169,4 +161,11 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         return recordId;
     }
 
+    protected remove_grouping_expression(fieldName) {
+        const groupingExpressions = this.grid.groupingExpressions;
+        const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
+        if (index !== -1) {
+            groupingExpressions.splice(index, 1);
+        }
+    }
 }

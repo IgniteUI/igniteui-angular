@@ -19,7 +19,8 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     ThreeGroupsThreeColumnsGridComponent,
     NestedColGroupsGridComponent, StegosaurusGridComponent,
     OneColPerGroupGridComponent, NestedColumnGroupsGridComponent,
-    DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent, DynamicColGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
+    DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
+    DynamicColGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -1521,7 +1522,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
     });
 });
 
-function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
+const getColGroup = (grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent => {
     const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
     if (colGroups.length === 0) {
         return null;
@@ -1530,11 +1531,11 @@ function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroup
     } else {
         throw new Error('More than one column group found.');
     }
-}
+};
 
 // tests column and column group header rendering
-function testColumnGroupHeaderRendering(column: DebugElement, width: number, height: number,
-    title: string, descendentColumnCssClass?: string, descendentColumnCount?: number) {
+const testColumnGroupHeaderRendering = (column: DebugElement, width: number, height: number,
+    title: string, descendentColumnCssClass?: string, descendentColumnCount?: number) => {
 
     expect(column.nativeElement.offsetHeight).toBe(height);
     expect(column.nativeElement.offsetWidth).toBe(width);
@@ -1551,48 +1552,48 @@ function testColumnGroupHeaderRendering(column: DebugElement, width: number, hei
         });
 
     expect(colGroupDirectChildren.length).toBe(descendentColumnCount);
-}
+};
 
-function testColumnHeaderRendering(column: DebugElement, width: number, height: number,
-    title: string) {
+const testColumnHeaderRendering = (column: DebugElement, width: number, height: number,
+    title: string) => {
     expect(column.nativeElement.offsetHeight).toBe(height);
     expect(column.nativeElement.offsetWidth).toBe(width);
 
     const colHeaderTitle = column.children
         .filter(c => c.nativeElement.classList.contains(GRID_COL_THEAD_TITLE_CLASS))[0];
     expect(colHeaderTitle.nativeElement.textContent.trim()).toBe(title);
-}
+};
 
-function testColumnsOrder(columns: IgxColumnComponent[]) {
+const testColumnsOrder = (columns: IgxColumnComponent[]) => {
     testColumnsIndexes(columns);
     testColumnsVisibleIndexes(columns);
-}
+};
 
-function testColumnsIndexes(columns: IgxColumnComponent[]) {
+const testColumnsIndexes = (columns: IgxColumnComponent[]) => {
     for (let index = 0; index < columns.length; index++) {
         expect(columns[index].index).toBe(index);
     }
-}
+};
 
-function testColumnsVisibleIndexes(columns: IgxColumnComponent[]) {
+const testColumnsVisibleIndexes = (columns: IgxColumnComponent[]) => {
     let visibleIndex = 0;
-    for (let index = 0; index < columns.length; index++) {
-        expect(columns[index].visibleIndex).toBe(visibleIndex);
-        if (!(columns[index] instanceof IgxColumnGroupComponent)) {
+    for (const column of columns) {
+        expect(column.visibleIndex).toBe(visibleIndex);
+        if (!(column instanceof IgxColumnGroupComponent)) {
             visibleIndex++;
         }
     }
-}
+};
 
-function testGroupsAndColumns(groups: number, columns: number, ci) {
+const testGroupsAndColumns = (groups: number, columns: number, ci) => {
     expect(GridFunctions.getColumnGroupHeaders(ci).length).toEqual(groups);
     expect(GridFunctions.getColumnHeaders(ci).length).toEqual(columns);
-}
+};
 
-function testColumnPinning(column: IgxColumnComponent, isPinned: boolean) {
+const testColumnPinning = (column: IgxColumnComponent, isPinned: boolean) => {
     expect(column.pinned).toBe(isPinned);
     expect(column.allChildren.every(c => c.pinned === isPinned)).toEqual(true);
-}
+};
 
 type PinUnpinFunc = (component: ColumnGroupFourLevelTestComponent) => void;
 

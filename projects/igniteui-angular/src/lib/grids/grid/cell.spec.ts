@@ -223,7 +223,7 @@ describe('IgxGrid - Cell component #grid', () => {
                 fix.detectChanges();
 
                 const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
-                lastColumnCells.forEach(function(item) {
+                lastColumnCells.forEach((item) => {
                     expect(item.width).toEqual('30px');
                 });
             });
@@ -239,7 +239,7 @@ describe('IgxGrid - Cell component #grid', () => {
             await wait();
             const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
             fix.detectChanges();
-            lastColumnCells.forEach(function(item) {
+            lastColumnCells.forEach((item) => {
                 expect(item.width).toEqual('500px');
             });
         });
@@ -398,10 +398,10 @@ describe('IgxGrid - Cell component #grid', () => {
     styleUrls: ['../../test-utils/grid-cell-style-testing.scss'],
 })
 export class ConditionalCellStyleTestComponent implements OnInit {
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+
     public data: Array<any>;
     public columns: Array<any>;
-
-    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
 
     cellClasses;
     cellClasses1;
