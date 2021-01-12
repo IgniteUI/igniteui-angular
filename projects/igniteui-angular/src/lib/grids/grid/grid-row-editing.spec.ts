@@ -1132,6 +1132,20 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.endEdit).toHaveBeenCalledTimes(1);
             expect(grid.endEdit).toHaveBeenCalledWith(true);
         });
+
+        it(`Should exit row editing AND DISCARD on DATA CHANGE`, () => {
+            const row = grid.getRowByIndex(0);
+            cell.setEditMode(true);
+            fix.detectChanges();
+            expect(grid.rowEditingOverlay.collapsed).toBeFalsy();
+            expect(grid.crudService.rowInEditMode).toBeTruthy();
+
+            grid.data = [...grid.data];
+            fix.detectChanges();
+
+            expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
+            expect(grid.crudService.rowInEditMode).toBeFalsy();
+        });
     });
 
     describe('Integration', () => {
