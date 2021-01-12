@@ -49,6 +49,39 @@ export enum IgxInputState {
     exportAs: 'igxInput'
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
+    /**
+     * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
+     * Default value is `false`.
+     *
+     * @example
+     * ```typescript
+     * this.igxInput.isInput = true;
+     * ```
+     *
+     * @example
+     * ```typescript
+     * let isCLassAdded = this.igxInput.isInput;
+     * ```
+     */
+    @HostBinding('class.igx-input-group__input')
+    public isInput = false;
+    /**
+     * Sets/gets whether the `"class.igx-input-group__textarea"` class is added to the host element.
+     * Default value is `false`.
+     *
+     * @example
+     * ```typescript
+     * this.igxInput.isTextArea = true;
+     * ```
+     *
+     * @example
+     * ```typescript
+     * let isCLassAdded = this.igxInput.isTextArea;
+     * ```
+     */
+    @HostBinding('class.igx-input-group__textarea')
+    public isTextArea = false;
+
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
 
@@ -145,39 +178,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     public get required() {
         return this.nativeElement.hasAttribute('required');
     }
-
-    /**
-     * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
-     * Default value is `false`.
-     *
-     * @example
-     * ```typescript
-     * this.igxInput.isInput = true;
-     * ```
-     *
-     * @example
-     * ```typescript
-     * let isCLassAdded = this.igxInput.isInput;
-     * ```
-     */
-    @HostBinding('class.igx-input-group__input')
-    public isInput = false;
-    /**
-     * Sets/gets whether the `"class.igx-input-group__textarea"` class is added to the host element.
-     * Default value is `false`.
-     *
-     * @example
-     * ```typescript
-     * this.igxInput.isTextArea = true;
-     * ```
-     *
-     * @example
-     * ```typescript
-     * let isCLassAdded = this.igxInput.isTextArea;
-     * ```
-     */
-    @HostBinding('class.igx-input-group__textarea')
-    public isTextArea = false;
     /**
      * @hidden
      * @internal
@@ -364,18 +364,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Gets whether the igxInput is valid.
-     *
-     * @example
-     * ```typescript
-     * let valid = this.igxInput.isValid;
-     * ```
-     */
-    public get isValid(): boolean {
-        return this.valid !== IgxInputState.INVALID;
-    }
-
-    /**
      * Sets the state of the igxInput.
      *
      * @example
@@ -385,6 +373,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public set valid(value: IgxInputState) {
         this._valid = value;
+    }
+
+    /**
+     * Gets whether the igxInput is valid.
+     *
+     * @example
+     * ```typescript
+     * let valid = this.igxInput.isValid;
+     * ```
+     */
+    public get isValid(): boolean {
+        return this.valid !== IgxInputState.INVALID;
     }
 
     /**
