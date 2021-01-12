@@ -57,7 +57,14 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @memberof IgxYearsViewComponent
      */
     @Input()
-    public date = new Date();
+    public get date() {
+        return this._date;
+    }
+
+    public set date(value: Date) {
+        if (!(value instanceof Date)) { return; }
+        this._date = value;
+    }
 
     /**
      * Gets the year format option of the years view.
@@ -181,6 +188,10 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     private _calendarModel: Calendar;
+    /**
+     * @hidden
+     */
+    private _date = new Date();
 
     /**
      * @hidden
