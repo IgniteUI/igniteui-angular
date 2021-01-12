@@ -16,6 +16,8 @@ import { DisplayDensity } from '../../../core/density';
     templateUrl: './excel-style-date-expression.component.html'
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
+    @Input()
+    public displayDensity: DisplayDensity;
 
     @ViewChild('datePicker', { read: IgxDatePickerComponent, static: true })
     private datePicker: IgxDatePickerComponent;
@@ -23,9 +25,6 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     protected get inputValuesElement() {
         return this.datePicker.getEditElement();
     }
-
-    @Input()
-    public displayDensity: DisplayDensity;
 
     get inputDatePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];

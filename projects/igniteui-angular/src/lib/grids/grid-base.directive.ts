@@ -2682,7 +2682,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _pagingMode = GridPagingMode.local;
+    protected _pagingMode = GridPagingMode.Local;
     /**
      * @hidden
      */

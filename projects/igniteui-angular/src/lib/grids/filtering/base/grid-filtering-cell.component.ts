@@ -27,12 +27,6 @@ import { DisplayDensity } from '../../../core/displayDensity';
     templateUrl: './grid-filtering-cell.component.html'
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
-
-    private baseClass = 'igx-grid__filtering-cell-indicator';
-
-    public expressionsList: ExpressionUI[];
-    public moreFiltersCount = 0;
-
     @Input()
     public column: IgxColumnComponent;
 
@@ -74,6 +68,11 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         }
         return classes;
     }
+
+    public expressionsList: ExpressionUI[];
+    public moreFiltersCount = 0;
+
+    private baseClass = 'igx-grid__filtering-cell-indicator';
 
     constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
         this.filteringService.subscribeToEvents();

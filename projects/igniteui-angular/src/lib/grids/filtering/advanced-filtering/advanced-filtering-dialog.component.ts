@@ -24,39 +24,39 @@ import { DataUtil } from './../../../data-operations/data-util';
  * @hidden
  */
 class ExpressionItem {
+    parent: ExpressionGroupItem;
+    selected: boolean;
     constructor(parent?: ExpressionGroupItem) {
         this.parent = parent;
     }
-    parent: ExpressionGroupItem;
-    selected: boolean;
 }
 
 /**
  * @hidden
  */
 class ExpressionGroupItem extends ExpressionItem {
+    operator: FilteringLogic;
+    children: ExpressionItem[];
     constructor(operator: FilteringLogic, parent?: ExpressionGroupItem) {
         super(parent);
         this.operator = operator;
         this.children = [];
     }
-    operator: FilteringLogic;
-    children: ExpressionItem[];
 }
 
 /**
  * @hidden
  */
 class ExpressionOperandItem extends ExpressionItem {
-    constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
-        super(parent);
-        this.expression = expression;
-    }
     expression: IFilteringExpression;
     inEditMode: boolean;
     inAddMode: boolean;
     hovered: boolean;
     columnHeader: string;
+    constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
+        super(parent);
+        this.expression = expression;
+    }
 }
 
 /**
@@ -75,94 +75,6 @@ class ExpressionOperandItem extends ExpressionItem {
     templateUrl: './advanced-filtering-dialog.component.html'
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
-    /**
-     * @hidden @internal
-     */
-    public inline = true;
-    /**
-     * @hidden @internal
-     */
-    public rootGroup: ExpressionGroupItem;
-
-    /**
-     * @hidden @internal
-     */
-    public selectedExpressions: ExpressionOperandItem[] = [];
-
-    /**
-     * @hidden @internal
-     */
-    public selectedGroups: ExpressionGroupItem[] = [];
-
-    /**
-     * @hidden @internal
-     */
-    public currentGroup: ExpressionGroupItem;
-
-    /**
-     * @hidden @internal
-     */
-    public editedExpression: ExpressionOperandItem;
-
-    /**
-     * @hidden @internal
-     */
-    public addModeExpression: ExpressionOperandItem;
-
-    /**
-     * @hidden @internal
-     */
-    public contextualGroup: ExpressionGroupItem;
-
-    /**
-     * @hidden @internal
-     */
-    public filteringLogics;
-
-    /**
-     * @hidden @internal
-     */
-    public selectedCondition: string;
-
-    /**
-     * @hidden @internal
-     */
-    public searchValue: any;
-
-    /**
-     * @hidden @internal
-     */
-    public lastActiveNode;
-
-    private _positionSettings = {
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalStartPoint: VerticalAlignment.Top
-    };
-    private _overlaySettings: OverlaySettings = {
-        closeOnOutsideClick: false,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-        scrollStrategy: new CloseScrollStrategy()
-    };
-
-    /**
-     * @hidden @internal
-     */
-    public columnSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
-
-    /**
-     * @hidden @internal
-     */
-    public conditionSelectOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false
-    };
-
     /**
      * @hidden @internal
      */
@@ -274,6 +186,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    @HostBinding('style.display')
+    public display = 'block';
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild('expressionsContainer')
     protected expressionsContainer: ElementRef;
 
@@ -281,13 +199,84 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public overlayOutlet: IgxOverlayOutletDirective;
+    protected overlayOutlet: IgxOverlayOutletDirective;
 
     /**
      * @hidden @internal
      */
-    @HostBinding('style.display')
-    display = 'block';
+    public inline = true;
+    /**
+     * @hidden @internal
+     */
+    public rootGroup: ExpressionGroupItem;
+
+    /**
+     * @hidden @internal
+     */
+    public selectedExpressions: ExpressionOperandItem[] = [];
+
+    /**
+     * @hidden @internal
+     */
+    public selectedGroups: ExpressionGroupItem[] = [];
+
+    /**
+     * @hidden @internal
+     */
+    public currentGroup: ExpressionGroupItem;
+
+    /**
+     * @hidden @internal
+     */
+    public editedExpression: ExpressionOperandItem;
+
+    /**
+     * @hidden @internal
+     */
+    public addModeExpression: ExpressionOperandItem;
+
+    /**
+     * @hidden @internal
+     */
+    public contextualGroup: ExpressionGroupItem;
+
+    /**
+     * @hidden @internal
+     */
+    public filteringLogics;
+
+    /**
+     * @hidden @internal
+     */
+    public selectedCondition: string;
+
+    /**
+     * @hidden @internal
+     */
+    public searchValue: any;
+
+    /**
+     * @hidden @internal
+     */
+    public lastActiveNode;
+
+    /**
+     * @hidden @internal
+     */
+    public columnSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false
+    };
+
+    /**
+     * @hidden @internal
+     */
+    public conditionSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false
+    };
 
     private destroy$ = new Subject<any>();
     private _overlayComponentId: string;
@@ -301,6 +290,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _currentGroupButtonsContainer: ElementRef;
     private _grid: GridType;
     private _filteringChange: Subscription;
+
+    private _positionSettings = {
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalStartPoint: VerticalAlignment.Top
+    };
+    private _overlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
+        scrollStrategy: new CloseScrollStrategy()
+    };
 
     constructor(public cdr: ChangeDetectorRef) { }
 
@@ -536,72 +536,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         return expression instanceof ExpressionGroupItem;
     }
 
-    private addGroup(operator: FilteringLogic, parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-        this.cancelOperandAdd();
-
-        const groupItem = new ExpressionGroupItem(operator, parent);
-
-        if (parent) {
-            if (afterExpression) {
-                const index = parent.children.indexOf(afterExpression);
-                parent.children.splice(index + 1, 0, groupItem);
-            } else {
-                parent.children.push(groupItem);
-            }
-        } else {
-            this.rootGroup = groupItem;
-        }
-
-        this.addCondition(groupItem);
-        this.currentGroup = groupItem;
-    }
-
-    private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
-        let groupItem: ExpressionGroupItem;
-        if (expressionTree) {
-            groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
-
-            for (const expr of expressionTree.filteringOperands) {
-                if (expr instanceof FilteringExpressionsTree) {
-                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
-                } else {
-                    const filteringExpr = expr as IFilteringExpression;
-                    const exprCopy: IFilteringExpression = {
-                        fieldName: filteringExpr.fieldName,
-                        condition: filteringExpr.condition,
-                        searchVal: filteringExpr.searchVal,
-                        ignoreCase: filteringExpr.ignoreCase
-                    };
-                    const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
-                    const column = this.grid.getColumnByName(filteringExpr.fieldName);
-                    operandItem.columnHeader = column.header;
-                    groupItem.children.push(operandItem);
-                }
-            }
-        }
-
-        return groupItem;
-    }
-
-    private createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
-        if (!groupItem) {
-            return null;
-        }
-
-        const expressionsTree = new FilteringExpressionsTree(groupItem.operator);
-
-        for (const item of groupItem.children) {
-            if (item instanceof ExpressionGroupItem) {
-                const subTree = this.createExpressionsTreeFromGroupItem((item as ExpressionGroupItem));
-                expressionsTree.filteringOperands.push(subTree);
-            } else {
-                expressionsTree.filteringOperands.push((item as ExpressionOperandItem).expression);
-            }
-        }
-
-        return expressionsTree;
-    }
-
     /**
      * @hidden @internal
      */
@@ -706,97 +640,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    private onToggleExpression(expressionItem: ExpressionOperandItem) {
-        this.exitOperandEdit();
-        this.toggleExpression(expressionItem);
-
-        this.toggleContextMenu();
-    }
-
-    private toggleExpression(expressionItem: ExpressionOperandItem) {
-        expressionItem.selected = !expressionItem.selected;
-
-        if (expressionItem.selected) {
-            this.selectedExpressions.push(expressionItem);
-        } else {
-            const index = this.selectedExpressions.indexOf(expressionItem);
-            this.selectedExpressions.splice(index, 1);
-            this.deselectParentRecursive(expressionItem);
-        }
-    }
-
     /**
      * @hidden @internal
      */
     public contextMenuClosed() {
         this.contextualGroup = null;
-    }
-
-    private toggleContextMenu() {
-        const contextualGroup = this.findSingleSelectedGroup();
-
-        if (contextualGroup || this.selectedExpressions.length > 1) {
-            this.contextualGroup = contextualGroup;
-
-            if (contextualGroup) {
-                this.filteringLogics = [
-                    {
-                        label: this.grid.resourceStrings.igx_grid_filter_operator_and,
-                        selected: contextualGroup.operator === FilteringLogic.And
-                    },
-                    {
-                        label: this.grid.resourceStrings.igx_grid_filter_operator_or,
-                        selected: contextualGroup.operator === FilteringLogic.Or
-                    }
-                ];
-            }
-        } else if (this.contextMenuToggle) {
-            this.contextMenuToggle.close();
-        }
-    }
-
-    private findSingleSelectedGroup(): ExpressionGroupItem {
-        for (const group of this.selectedGroups) {
-            const containsAllSelectedExpressions = this.selectedExpressions.every(op => this.isInsideGroup(op, group));
-
-            if (containsAllSelectedExpressions) {
-                return group;
-            }
-        }
-
-        return null;
-    }
-
-    private isInsideGroup(item: ExpressionItem, group: ExpressionGroupItem): boolean {
-        if (!item) {
-            return false;
-        }
-
-        if (item.parent === group) {
-            return true;
-        }
-
-        return this.isInsideGroup(item.parent, group);
-    }
-
-    private deleteItem(expressionItem: ExpressionItem) {
-        if (!expressionItem.parent) {
-            this.rootGroup = null;
-            this.currentGroup = null;
-            return;
-        }
-
-        if (expressionItem === this.currentGroup) {
-            this.currentGroup = this.currentGroup.parent;
-        }
-
-        const children = expressionItem.parent.children;
-        const index = children.indexOf(expressionItem);
-        children.splice(index, 1);
-
-        if (!children.length) {
-            this.deleteItem(expressionItem.parent);
-        }
     }
 
     /**
@@ -826,26 +674,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.createGroup(FilteringLogic.Or);
     }
 
-    private createGroup(operator: FilteringLogic) {
-        const chips = this.chips.toArray();
-        const minIndex = this.selectedExpressions.reduce((i, e) => Math.min(i, chips.findIndex(c => c.data === e)), Number.MAX_VALUE);
-        const firstExpression = chips[minIndex].data;
-
-        const parent = firstExpression.parent;
-        const groupItem = new ExpressionGroupItem(operator, parent);
-
-        const index = parent.children.indexOf(firstExpression);
-        parent.children.splice(index, 0, groupItem);
-
-        for (const expr of this.selectedExpressions) {
-            this.deleteItem(expr);
-            groupItem.children.push(expr);
-            expr.parent = groupItem;
-        }
-
-        this.clearSelection();
-    }
-
     /**
      * @hidden @internal
      */
@@ -862,79 +690,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public onGroupClick(groupItem: ExpressionGroupItem) {
         this.toggleGroup(groupItem);
-    }
-
-    private toggleGroup(groupItem: ExpressionGroupItem) {
-        this.exitOperandEdit();
-        if (groupItem.children && groupItem.children.length) {
-            this.toggleGroupRecursive(groupItem, !groupItem.selected);
-            if (!groupItem.selected) {
-                this.deselectParentRecursive(groupItem);
-            }
-            this.toggleContextMenu();
-        }
-    }
-
-    private toggleGroupRecursive(groupItem: ExpressionGroupItem, selected: boolean) {
-        if (groupItem.selected !== selected) {
-            groupItem.selected = selected;
-
-            if (groupItem.selected) {
-                this.selectedGroups.push(groupItem);
-            } else {
-                const index = this.selectedGroups.indexOf(groupItem);
-                this.selectedGroups.splice(index, 1);
-            }
-        }
-
-        for (const expr of groupItem.children) {
-            if (expr instanceof ExpressionGroupItem) {
-                this.toggleGroupRecursive(expr, selected);
-            } else {
-                const operandExpression = expr as ExpressionOperandItem;
-                if (operandExpression.selected !== selected) {
-                    this.toggleExpression(operandExpression);
-                }
-            }
-        }
-    }
-
-    private deselectParentRecursive(expressionItem: ExpressionItem) {
-        const parent = expressionItem.parent;
-        if (parent) {
-            if (parent.selected) {
-                parent.selected = false;
-                const index = this.selectedGroups.indexOf(parent);
-                this.selectedGroups.splice(index, 1);
-            }
-            this.deselectParentRecursive(parent);
-        }
-    }
-
-    private calculateContextMenuTarget() {
-        const containerRect = this.expressionsContainer.nativeElement.getBoundingClientRect();
-        const chips = this.chips.filter(c => this.selectedExpressions.indexOf(c.data) !== -1);
-        let minTop = chips.reduce((t, c) =>
-            Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
-        minTop = Math.max(containerRect.top, minTop);
-        minTop = Math.min(containerRect.bottom, minTop);
-        let maxRight = chips.reduce((r, c) =>
-            Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
-        maxRight = Math.max(maxRight, containerRect.left);
-        maxRight = Math.min(maxRight, containerRect.right);
-        this._overlaySettings.target = new Point(maxRight, minTop);
-    }
-
-    private scrollElementIntoView(target: HTMLElement) {
-        const container = this.expressionsContainer.nativeElement;
-        const targetOffset = target.offsetTop - container.offsetTop;
-        const delta = 10;
-
-        if (container.scrollTop + delta > targetOffset) {
-            container.scrollTop = targetOffset - delta;
-        } else if (container.scrollTop + container.clientHeight < targetOffset + target.offsetHeight + delta) {
-            container.scrollTop = targetOffset + target.offsetHeight + delta - container.clientHeight;
-        }
     }
 
     /**
@@ -1063,14 +818,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    private init() {
-        this.clearSelection();
-        this.cancelOperandAdd();
-        this.cancelOperandEdit();
-        this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
-        this.currentGroup = this.rootGroup;
-    }
-
     /**
      * @hidden @internal
      */
@@ -1143,5 +890,258 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                 this.contextMenuToggle.reposition();
             }
         }
+    }
+
+    private onToggleExpression(expressionItem: ExpressionOperandItem) {
+        this.exitOperandEdit();
+        this.toggleExpression(expressionItem);
+
+        this.toggleContextMenu();
+    }
+
+    private toggleExpression(expressionItem: ExpressionOperandItem) {
+        expressionItem.selected = !expressionItem.selected;
+
+        if (expressionItem.selected) {
+            this.selectedExpressions.push(expressionItem);
+        } else {
+            const index = this.selectedExpressions.indexOf(expressionItem);
+            this.selectedExpressions.splice(index, 1);
+            this.deselectParentRecursive(expressionItem);
+        }
+    }
+
+    private addGroup(operator: FilteringLogic, parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
+        this.cancelOperandAdd();
+
+        const groupItem = new ExpressionGroupItem(operator, parent);
+
+        if (parent) {
+            if (afterExpression) {
+                const index = parent.children.indexOf(afterExpression);
+                parent.children.splice(index + 1, 0, groupItem);
+            } else {
+                parent.children.push(groupItem);
+            }
+        } else {
+            this.rootGroup = groupItem;
+        }
+
+        this.addCondition(groupItem);
+        this.currentGroup = groupItem;
+    }
+
+    private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
+        let groupItem: ExpressionGroupItem;
+        if (expressionTree) {
+            groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
+
+            for (const expr of expressionTree.filteringOperands) {
+                if (expr instanceof FilteringExpressionsTree) {
+                    groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
+                } else {
+                    const filteringExpr = expr as IFilteringExpression;
+                    const exprCopy: IFilteringExpression = {
+                        fieldName: filteringExpr.fieldName,
+                        condition: filteringExpr.condition,
+                        searchVal: filteringExpr.searchVal,
+                        ignoreCase: filteringExpr.ignoreCase
+                    };
+                    const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
+                    const column = this.grid.getColumnByName(filteringExpr.fieldName);
+                    operandItem.columnHeader = column.header;
+                    groupItem.children.push(operandItem);
+                }
+            }
+        }
+
+        return groupItem;
+    }
+
+    private createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+        if (!groupItem) {
+            return null;
+        }
+
+        const expressionsTree = new FilteringExpressionsTree(groupItem.operator);
+
+        for (const item of groupItem.children) {
+            if (item instanceof ExpressionGroupItem) {
+                const subTree = this.createExpressionsTreeFromGroupItem((item as ExpressionGroupItem));
+                expressionsTree.filteringOperands.push(subTree);
+            } else {
+                expressionsTree.filteringOperands.push((item as ExpressionOperandItem).expression);
+            }
+        }
+
+        return expressionsTree;
+    }
+
+    private toggleContextMenu() {
+        const contextualGroup = this.findSingleSelectedGroup();
+
+        if (contextualGroup || this.selectedExpressions.length > 1) {
+            this.contextualGroup = contextualGroup;
+
+            if (contextualGroup) {
+                this.filteringLogics = [
+                    {
+                        label: this.grid.resourceStrings.igx_grid_filter_operator_and,
+                        selected: contextualGroup.operator === FilteringLogic.And
+                    },
+                    {
+                        label: this.grid.resourceStrings.igx_grid_filter_operator_or,
+                        selected: contextualGroup.operator === FilteringLogic.Or
+                    }
+                ];
+            }
+        } else if (this.contextMenuToggle) {
+            this.contextMenuToggle.close();
+        }
+    }
+
+    private findSingleSelectedGroup(): ExpressionGroupItem {
+        for (const group of this.selectedGroups) {
+            const containsAllSelectedExpressions = this.selectedExpressions.every(op => this.isInsideGroup(op, group));
+
+            if (containsAllSelectedExpressions) {
+                return group;
+            }
+        }
+
+        return null;
+    }
+
+    private isInsideGroup(item: ExpressionItem, group: ExpressionGroupItem): boolean {
+        if (!item) {
+            return false;
+        }
+
+        if (item.parent === group) {
+            return true;
+        }
+
+        return this.isInsideGroup(item.parent, group);
+    }
+
+    private deleteItem(expressionItem: ExpressionItem) {
+        if (!expressionItem.parent) {
+            this.rootGroup = null;
+            this.currentGroup = null;
+            return;
+        }
+
+        if (expressionItem === this.currentGroup) {
+            this.currentGroup = this.currentGroup.parent;
+        }
+
+        const children = expressionItem.parent.children;
+        const index = children.indexOf(expressionItem);
+        children.splice(index, 1);
+
+        if (!children.length) {
+            this.deleteItem(expressionItem.parent);
+        }
+    }
+
+    private createGroup(operator: FilteringLogic) {
+        const chips = this.chips.toArray();
+        const minIndex = this.selectedExpressions.reduce((i, e) => Math.min(i, chips.findIndex(c => c.data === e)), Number.MAX_VALUE);
+        const firstExpression = chips[minIndex].data;
+
+        const parent = firstExpression.parent;
+        const groupItem = new ExpressionGroupItem(operator, parent);
+
+        const index = parent.children.indexOf(firstExpression);
+        parent.children.splice(index, 0, groupItem);
+
+        for (const expr of this.selectedExpressions) {
+            this.deleteItem(expr);
+            groupItem.children.push(expr);
+            expr.parent = groupItem;
+        }
+
+        this.clearSelection();
+    }
+
+    private toggleGroup(groupItem: ExpressionGroupItem) {
+        this.exitOperandEdit();
+        if (groupItem.children && groupItem.children.length) {
+            this.toggleGroupRecursive(groupItem, !groupItem.selected);
+            if (!groupItem.selected) {
+                this.deselectParentRecursive(groupItem);
+            }
+            this.toggleContextMenu();
+        }
+    }
+
+    private toggleGroupRecursive(groupItem: ExpressionGroupItem, selected: boolean) {
+        if (groupItem.selected !== selected) {
+            groupItem.selected = selected;
+
+            if (groupItem.selected) {
+                this.selectedGroups.push(groupItem);
+            } else {
+                const index = this.selectedGroups.indexOf(groupItem);
+                this.selectedGroups.splice(index, 1);
+            }
+        }
+
+        for (const expr of groupItem.children) {
+            if (expr instanceof ExpressionGroupItem) {
+                this.toggleGroupRecursive(expr, selected);
+            } else {
+                const operandExpression = expr as ExpressionOperandItem;
+                if (operandExpression.selected !== selected) {
+                    this.toggleExpression(operandExpression);
+                }
+            }
+        }
+    }
+
+    private deselectParentRecursive(expressionItem: ExpressionItem) {
+        const parent = expressionItem.parent;
+        if (parent) {
+            if (parent.selected) {
+                parent.selected = false;
+                const index = this.selectedGroups.indexOf(parent);
+                this.selectedGroups.splice(index, 1);
+            }
+            this.deselectParentRecursive(parent);
+        }
+    }
+
+    private calculateContextMenuTarget() {
+        const containerRect = this.expressionsContainer.nativeElement.getBoundingClientRect();
+        const chips = this.chips.filter(c => this.selectedExpressions.indexOf(c.data) !== -1);
+        let minTop = chips.reduce((t, c) =>
+            Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
+        minTop = Math.max(containerRect.top, minTop);
+        minTop = Math.min(containerRect.bottom, minTop);
+        let maxRight = chips.reduce((r, c) =>
+            Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
+        maxRight = Math.max(maxRight, containerRect.left);
+        maxRight = Math.min(maxRight, containerRect.right);
+        this._overlaySettings.target = new Point(maxRight, minTop);
+    }
+
+    private scrollElementIntoView(target: HTMLElement) {
+        const container = this.expressionsContainer.nativeElement;
+        const targetOffset = target.offsetTop - container.offsetTop;
+        const delta = 10;
+
+        if (container.scrollTop + delta > targetOffset) {
+            container.scrollTop = targetOffset - delta;
+        } else if (container.scrollTop + container.clientHeight < targetOffset + target.offsetHeight + delta) {
+            container.scrollTop = targetOffset + target.offsetHeight + delta - container.clientHeight;
+        }
+    }
+
+    private init() {
+        this.clearSelection();
+        this.cancelOperandAdd();
+        this.cancelOperandEdit();
+        this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
+        this.currentGroup = this.rootGroup;
     }
 }

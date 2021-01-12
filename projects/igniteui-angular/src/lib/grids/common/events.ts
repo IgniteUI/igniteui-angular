@@ -107,7 +107,7 @@ export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
 
 export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
-    target: Object;
+    target: any;
     event: Event;
     cancel: boolean;
 }
