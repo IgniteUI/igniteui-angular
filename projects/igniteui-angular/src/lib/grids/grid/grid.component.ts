@@ -143,6 +143,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set data(value: any[]) {
+        this.crudService.endEditMode();
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {

@@ -89,6 +89,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @Input()
     public set data(value: any[]) {
+        this.crudService.endEditMode();
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
