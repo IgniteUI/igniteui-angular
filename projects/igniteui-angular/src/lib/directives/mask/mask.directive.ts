@@ -152,28 +152,12 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         protected renderer: Renderer2) { }
 
     /** @hidden */
-    public ngOnInit(): void {
-        if (!this.nativeElement.placeholder) {
-            this.renderer.setAttribute(this.nativeElement, 'placeholder', this.maskOptions.format);
-        }
-    }
-
-    /**
-     * TODO: Remove after date/time picker integration refactor
-     *
-     * @hidden
-     */
-    public ngAfterViewChecked(): void {
-        this._oldText = this.inputValue;
-    }
-
-    /** @hidden */
     @HostListener('keydown', ['$event'])
     public onKeyDown(event): void {
         const key = event.keyCode || event.charCode;
         if (!key) {
- return;
-}
+            return;
+        }
 
         if (isIE() && this._stopPropagation) {
             this._stopPropagation = false;
@@ -228,8 +212,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
         this.inputValue = replacedData.value;
         if (this._key === KEYCODES.BACKSPACE) {
- replacedData.end = this._start;
-}
+            replacedData.end = this._start;
+        }
         this.setSelectionRange(replacedData.end);
 
         const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
@@ -287,6 +271,48 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden */
+    public ngOnInit(): void {
+        if (!this.nativeElement.placeholder) {
+            this.renderer.setAttribute(this.nativeElement, 'placeholder', this.maskOptions.format);
+        }
+    }
+
+    /**
+     * TODO: Remove after date/time picker integration refactor
+     *
+     * @hidden
+     */
+    public ngAfterViewChecked(): void {
+        this._oldText = this.inputValue;
+    }
+
+    /** @hidden */
+    public writeValue(value: string): void {
+        if (this.promptChar && this.promptChar.length > 1) {
+            this.maskOptions.promptChar = this.promptChar.substring(0, 1);
+        }
+
+        this.inputValue = value ? this.maskParser.applyMask(value, this.maskOptions) : '';
+        if (this.displayValuePipe) {
+            this.inputValue = this.displayValuePipe.transform(this.inputValue);
+        }
+
+        this._dataValue = this.includeLiterals ? this.inputValue : value;
+
+        this.onValueChange.emit({ rawValue: value, formattedValue: this.inputValue });
+    }
+
+    /** @hidden */
+    public registerOnChange(fn: (_: any) => void): void {
+        this._onChangeCallback = fn;
+    }
+
+    /** @hidden */
+    public registerOnTouched(fn: () => void): void {
+        this._onTouchedCallback = fn;
+    }
+
+    /** @hidden */
     protected showMask(value: string) {
         if (this.focusedValuePipe) {
             if (isIE()) {
@@ -322,32 +348,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             this.inputValue = '';
         }
     }
-
-    /** @hidden */
-    public writeValue(value: string): void {
-        if (this.promptChar && this.promptChar.length > 1) {
-            this.maskOptions.promptChar = this.promptChar.substring(0, 1);
-        }
-
-        this.inputValue = value ? this.maskParser.applyMask(value, this.maskOptions) : '';
-        if (this.displayValuePipe) {
-            this.inputValue = this.displayValuePipe.transform(this.inputValue);
-        }
-
-        this._dataValue = this.includeLiterals ? this.inputValue : value;
-
-        this.onValueChange.emit({ rawValue: value, formattedValue: this.inputValue });
-    }
-
-    /** @hidden */
-    public registerOnChange(fn: (_: any) => void): void {
- this._onChangeCallback = fn;
-}
-
-    /** @hidden */
-    public registerOnTouched(fn: () => void): void {
- this._onTouchedCallback = fn;
-}
 }
 
 /**

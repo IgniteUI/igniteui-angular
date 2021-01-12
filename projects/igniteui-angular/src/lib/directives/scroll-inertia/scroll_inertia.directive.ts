@@ -7,10 +7,6 @@ import { CommonModule } from '@angular/common';
 @Directive({ selector: '[igxScrollInertia]' })
 export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
-    constructor(private element: ElementRef, private _zone: NgZone) {
-
-    }
-
     @Input()
     public IgxScrollInertiaDirection: string;
 
@@ -65,6 +61,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private baseDeltaMultiplier = 1 / 120;
     private firefoxDeltaMultiplier = 1 / 30;
 
+    constructor(private element: ElementRef, private _zone: NgZone) { }
+
     ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
             this.parentElement = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
@@ -72,38 +70,31 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 return;
             }
             const targetElem = this.parentElement;
-            targetElem.addEventListener('wheel',
-                    (evt) => {
- this.onWheel(evt);
-});
-            targetElem.addEventListener('touchstart',
-                    (evt) => {
- this.onTouchStart(evt);
-});
-            targetElem.addEventListener('touchmove',
-                    (evt) => {
- this.onTouchMove(evt);
-});
-            targetElem.addEventListener('touchend',
-                    (evt) => {
- this.onTouchEnd(evt);
-});
-            targetElem.addEventListener('pointerdown',
-                    (evt) => {
- this.onPointerDown(evt);
-});
-            targetElem.addEventListener('pointerup',
-                     (evt) => {
- this.onPointerUp(evt);
-});
-            targetElem.addEventListener('MSGestureStart',
-                    (evt) => {
- this.onMSGestureStart(evt);
-});
-            targetElem.addEventListener('MSGestureChange',
-                    (evt) => {
- this.onMSGestureChange(evt);
-});
+            targetElem.addEventListener('wheel', this.onWheel);
+            targetElem.addEventListener('touchstart', this.onTouchStart);
+            targetElem.addEventListener('touchmove', this.onTouchMove);
+            targetElem.addEventListener('touchend', this.onTouchEnd);
+            targetElem.addEventListener('pointerdown', this.onPointerDown);
+            targetElem.addEventListener('pointerup', this.onPointerUp);
+            targetElem.addEventListener('MSGestureStart', this.onMSGestureStart);
+            targetElem.addEventListener('MSGestureChange', this.onMSGestureChange);
+        });
+    }
+
+    ngOnDestroy() {
+        this._zone.runOutsideAngular(() => {
+            const targetElem = this.parentElement;
+            if (!targetElem) {
+                return;
+            }
+            targetElem.removeEventListener('wheel', this.onWheel);
+            targetElem.removeEventListener('touchstart', this.onTouchStart);
+            targetElem.removeEventListener('touchmove', this.onTouchMove);
+            targetElem.removeEventListener('touchend', this.onTouchEnd);
+            targetElem.removeEventListener('pointerdown', this.onPointerDown);
+            targetElem.removeEventListener('pointerup', this.onPointerUp);
+            targetElem.removeEventListener('MSGestureStart', this.onMSGestureStart);
+            targetElem.removeEventListener('MSGestureChange', this.onMSGestureChange);
         });
     }
 
@@ -423,6 +414,54 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         return false;
     }
 
+    protected _inertiaInit(speedX, speedY) {
+        const stepModifer = this.inertiaStep;
+        const inertiaDuration = this.inertiaDuration;
+        let x = 0;
+        this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
+        this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
+
+        // Sets timeout until executing next movement iteration of the inertia
+        const inertiaStep = () => {
+            if (x > 6) {
+                cancelAnimationFrame(this._touchInertiaAnimID);
+                return;
+            }
+
+            if (Math.abs(speedX) > Math.abs(speedY)) {
+                x += 0.05 / (1 * inertiaDuration);
+            } else {
+                x += 0.05 / (1 * inertiaDuration);
+            }
+
+            if (x <= 1) {
+                // We use constant quation to determine the offset without speed falloff befor x reaches 1
+                if (Math.abs(speedY) <= Math.abs(speedX) * this.inertiaDeltaY) {
+                    this._nextX += 1 * speedX * 15 * stepModifer;
+                }
+                if (Math.abs(speedY) >= Math.abs(speedX) * this.inertiaDeltaX) {
+                    this._nextY += 1 * speedY * 15 * stepModifer;
+                }
+            } else {
+                // We use the quation "y = 2 / (x + 0.55) - 0.3" to determine the offset
+                if (Math.abs(speedY) <= Math.abs(speedX) * this.inertiaDeltaY) {
+                    this._nextX += Math.abs(2 / (x + 0.55) - 0.3) * speedX * 15 * stepModifer;
+                }
+                if (Math.abs(speedY) >= Math.abs(speedX) * this.inertiaDeltaX) {
+                    this._nextY += Math.abs(2 / (x + 0.55) - 0.3) * speedY * 15 * stepModifer;
+                }
+            }
+
+            // If we have mixed environment we use the default behaviour. i.e. touchscreen + mouse
+            this._scrollTo(this._nextX, this._nextY);
+
+            this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
+        };
+
+        // Start inertia and continue it recursively
+        this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
+    }
+
     private calcAxisCoords(target, min, max) {
         if (target === undefined || target < min) {
             target = min;
@@ -449,96 +488,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _scrollToY(dest) {
         this.IgxScrollInertiaScrollContainer.scrollTop = dest;
     }
-
-   protected _inertiaInit(speedX, speedY) {
-    const stepModifer = this.inertiaStep;
-        const inertiaDuration = this.inertiaDuration;
-    let x = 0;
-    this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
-    this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
-
-    // Sets timeout until executing next movement iteration of the inertia
-    const inertiaStep = () => {
-        if (x > 6) {
-            cancelAnimationFrame(this._touchInertiaAnimID);
-            return;
-        }
-
-        if (Math.abs(speedX) > Math.abs(speedY)) {
-            x += 0.05 / (1 * inertiaDuration);
-        } else {
-            x += 0.05 / (1 * inertiaDuration);
-        }
-
-        if (x <= 1) {
-            // We use constant quation to determine the offset without speed falloff befor x reaches 1
-            if (Math.abs(speedY) <= Math.abs(speedX) * this.inertiaDeltaY) {
-                this._nextX += 1 * speedX * 15 * stepModifer;
-            }
-            if (Math.abs(speedY) >= Math.abs(speedX) * this.inertiaDeltaX) {
-                this._nextY += 1 * speedY * 15 * stepModifer;
-            }
-        } else {
-            // We use the quation "y = 2 / (x + 0.55) - 0.3" to determine the offset
-            if (Math.abs(speedY) <= Math.abs(speedX) * this.inertiaDeltaY) {
-                this._nextX += Math.abs(2 / (x + 0.55) - 0.3) * speedX * 15 * stepModifer;
-            }
-            if (Math.abs(speedY) >= Math.abs(speedX) * this.inertiaDeltaX) {
-                this._nextY += Math.abs(2 / (x + 0.55) - 0.3) * speedY * 15 * stepModifer;
-            }
-        }
-
-        // If we have mixed environment we use the default behaviour. i.e. touchscreen + mouse
-        this._scrollTo(this._nextX, this._nextY);
-
-        this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
-    };
-
-    // Start inertia and continue it recursively
-    this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
-   }
-
-    ngOnDestroy() {
-        this._zone.runOutsideAngular(() => {
-            const targetElem = this.parentElement;
-            if (!targetElem) {
-                return;
-            }
-            targetElem.removeEventListener('wheel',
-                (evt) => {
- this.onWheel(evt);
-});
-            targetElem.removeEventListener('touchstart',
-                (evt) => {
- this.onTouchStart(evt);
-});
-            targetElem.removeEventListener('touchmove',
-                (evt) => {
- this.onTouchMove(evt);
-});
-            targetElem.removeEventListener('touchend',
-                (evt) => {
- this.onTouchEnd(evt);
-});
-            targetElem.removeEventListener('pointerdown',
-                (evt) => {
- this.onPointerDown(evt);
-});
-            targetElem.removeEventListener('pointerup',
-                (evt) => {
- this.onPointerUp(evt);
-});
-            targetElem.removeEventListener('MSGestureStart',
-                (evt) => {
- this.onMSGestureStart(evt);
-});
-            targetElem.removeEventListener('MSGestureChange',
-                (evt) => {
- this.onMSGestureChange(evt);
-});
-        });
-    }
-
 }
 
 /**

@@ -49,18 +49,8 @@ export interface IActiveHighlightInfo {
     selector: '[igxTextHighlight]'
 })
 export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecked, OnDestroy, OnChanges {
-    private static onActiveElementChanged = new EventEmitter<string>();
     public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
-
-    private _lastSearchInfo: ISearchInfo;
-    private _div = null;
-    private _observer: MutationObserver = null;
-    private _nodeWasRemoved = false;
-    private _forceEvaluation = false;
-    private _activeElementIndex = -1;
-    private _valueChanged: boolean;
-    private _defaultCssClass = 'igx-highlight';
-    private _defaultActiveCssClass = 'igx-highlight--active';
+    private static onActiveElementChanged = new EventEmitter<string>();
 
     /**
      * Determines the `CSS` class of the highlight elements.
@@ -110,8 +100,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     @Input('groupName')
     public groupName = '';
-
-    private _value = '';
 
     /**
      * The underlying value of the element that will be highlighted.
@@ -203,6 +191,27 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     private _container: any;
 
     private destroy$ = new Subject<boolean>();
+    private _value = '';
+    private _lastSearchInfo: ISearchInfo;
+    private _div = null;
+    private _observer: MutationObserver = null;
+    private _nodeWasRemoved = false;
+    private _forceEvaluation = false;
+    private _activeElementIndex = -1;
+    private _valueChanged: boolean;
+    private _defaultCssClass = 'igx-highlight';
+    private _defaultActiveCssClass = 'igx-highlight--active';
+
+    constructor(private element: ElementRef, public renderer: Renderer2) {
+        IgxTextHighlightDirective.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
+            if (this.groupName === groupName) {
+                if (this._activeElementIndex !== -1) {
+                    this.deactivate();
+                }
+                this.activateIfNecessary();
+            }
+        });
+    }
 
     /**
      * Activates the highlight at a given index.
@@ -221,17 +230,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
             index: -1
         });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
-    }
-
-    constructor(private element: ElementRef, public renderer: Renderer2) {
-        IgxTextHighlightDirective.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
-            if (this.groupName === groupName) {
-                if (this._activeElementIndex !== -1) {
-                    this.deactivate();
-                }
-                this.activateIfNecessary();
-            }
-        });
     }
 
     /**

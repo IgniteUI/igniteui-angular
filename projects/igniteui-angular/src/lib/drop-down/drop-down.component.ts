@@ -54,18 +54,6 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
-    protected destroy$ = new Subject<boolean>();
-    protected _scrollPosition: number;
-
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
-    protected virtDir: IgxForOfDirective<any>;
-
-    @ViewChild(IgxToggleDirective, { static: true })
-    protected toggleDirective: IgxToggleDirective;
-
-    @ViewChild('scrollContainer', { static: true })
-    protected scrollContainerRef: ElementRef;
-
     /**
      * @hidden
      * @internal
@@ -133,6 +121,15 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     @Input()
     public allowItemsFocus = false;
+
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
+    protected virtDir: IgxForOfDirective<any>;
+
+    @ViewChild(IgxToggleDirective, { static: true })
+    protected toggleDirective: IgxToggleDirective;
+
+    @ViewChild('scrollContainer', { static: true })
+    protected scrollContainerRef: ElementRef;
 
     /**
      * @hidden @internal
@@ -214,6 +211,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             return this.virtDir.totalItemCount || this.virtDir.igxForOf.length;
         }
     }
+
+    protected destroy$ = new Subject<boolean>();
+    protected _scrollPosition: number;
 
     constructor(
         protected elementRef: ElementRef,
@@ -318,29 +318,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
-    private isIndexOutOfBounds(index: number, direction: Navigate) {
-        const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getScroll().scrollTop;
-        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
-        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
-        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
-        const subRequired = indexOutOfChunk || scrollNeeded;
-        return subRequired;
-    }
-
-    protected skipHeader(direction: Navigate) {
-        if (!this.focusedItem) {
-            return;
-        }
-        if (this.focusedItem.isHeader || this.focusedItem.disabled) {
-            if (direction === Navigate.Up) {
-                this.navigatePrev();
-            } else {
-                this.navigateNext();
-            }
-        }
-    }
-
     /**
      * @hidden @internal
      */
@@ -356,21 +333,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
         this.virtDir.getScroll().scrollTop = targetScroll;
-    }
-
-    protected focusItem(value: boolean) {
-        if (value || this._focusedItem) {
-            this._focusedItem.focused = value;
-        }
-    }
-
-    protected updateItemFocus() {
-        if (this.selectedItem) {
-            this.focusedItem = this.selectedItem;
-            this.focusItem(true);
-        } else if (this.allowItemsFocus) {
-            this.navigateFirst();
-        }
     }
 
     /**
@@ -438,22 +400,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.destroy$.complete();
         this.selection.clear(this.id);
         this.selection.clear(`${this.id}-active`);
-    }
-
-    protected scrollToItem(item: IgxDropDownItemBaseDirective) {
-        const itemPosition = this.calculateScrollPosition(item);
-
-        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
-        //  to appear on screen before animation start. As a result dropdown
-        //  flickers badly. This is why we set scrollTop just a little later
-        //  allowing animation to start and prevent dropdown flickering
-        if (isIE()) {
-            setTimeout(() => {
-                this.scrollContainer.scrollTop = (itemPosition);
-            }, 1);
-        } else {
-            this.scrollContainer.scrollTop = (itemPosition);
-        }
     }
 
     /** @hidden @internal */
@@ -617,6 +563,60 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return selection === null
         || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
         || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
+    }
+
+    protected scrollToItem(item: IgxDropDownItemBaseDirective) {
+        const itemPosition = this.calculateScrollPosition(item);
+
+        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
+        //  to appear on screen before animation start. As a result dropdown
+        //  flickers badly. This is why we set scrollTop just a little later
+        //  allowing animation to start and prevent dropdown flickering
+        if (isIE()) {
+            setTimeout(() => {
+                this.scrollContainer.scrollTop = (itemPosition);
+            }, 1);
+        } else {
+            this.scrollContainer.scrollTop = (itemPosition);
+        }
+    }
+
+    protected focusItem(value: boolean) {
+        if (value || this._focusedItem) {
+            this._focusedItem.focused = value;
+        }
+    }
+
+    protected updateItemFocus() {
+        if (this.selectedItem) {
+            this.focusedItem = this.selectedItem;
+            this.focusItem(true);
+        } else if (this.allowItemsFocus) {
+            this.navigateFirst();
+        }
+    }
+
+    protected skipHeader(direction: Navigate) {
+        if (!this.focusedItem) {
+            return;
+        }
+        if (this.focusedItem.isHeader || this.focusedItem.disabled) {
+            if (direction === Navigate.Up) {
+                this.navigatePrev();
+            } else {
+                this.navigateNext();
+            }
+        }
+    }
+
+    private isIndexOutOfBounds(index: number, direction: Navigate) {
+        const virtState = this.virtDir.state;
+        const currentPosition = this.virtDir.getScroll().scrollTop;
+        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
+        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
+        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
+        const subRequired = indexOutOfChunk || scrollNeeded;
+        return subRequired;
     }
 }
 

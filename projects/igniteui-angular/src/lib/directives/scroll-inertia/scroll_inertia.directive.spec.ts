@@ -300,13 +300,8 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         const msGesture = window['MSGesture'];
         if (!msGesture) {
             // if MSGesture does not exist create a dummy obj to use instead.
-            window['MSGesture'] = function() {
-                return {
-                    addPointer: (arg) => {}
-                };
-            } as any;
+            window['MSGesture'] = (() => ({ addPointer: () => {} })) as any;
         }
-
 
         const evt = {
             pointerType: 2,
@@ -391,6 +386,11 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     `
 })
 export class ScrollInertiaComponent implements OnInit {
+    @ViewChild('container', { static: true }) public container: ElementRef;
+    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
+    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
+    public scrInertiaDir: IgxTestScrollInertiaDirective;
+
     public height = '500px';
     public innerHeight = '5000px';
     public innerWidth = '5000px';
@@ -399,32 +399,23 @@ export class ScrollInertiaComponent implements OnInit {
     public scrLeftArray = [];
     public scrLeftStepArray = [];
 
-    @ViewChild('container', { static: true }) public container: ElementRef;
-    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
-
-    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
-    public scrInertiaDir: IgxTestScrollInertiaDirective;
-
     ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
 
         this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => {
- this.onScroll(evt);
-});
+            this.onScroll(evt);
+        });
     }
 
     public onScroll(evt) {
-        let calcScrollStep; let calcScrollLeftStep;
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
         const prevScrLeft = ind < 0 ? 0 : this.scrLeftArray[ind];
         this.scrTopArray.push(evt.target.scrollTop);
         this.scrLeftArray.push(evt.target.scrollLeft);
-        calcScrollStep = evt.target.scrollTop - prevScrTop;
-        calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
+        const calcScrollStep = evt.target.scrollTop - prevScrTop;
+        const calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
         this.scrTopStepArray.push(calcScrollStep);
         this.scrLeftStepArray.push(calcScrollLeftStep);
     }
-
-
 }

@@ -14,9 +14,6 @@ import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
-import {
-    ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
-} from '../core/utils';
 
 /**
  * @hidden
@@ -202,28 +199,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return args;
     }
 
-    /**
-     * Updates related row of provided grid's data source with provided new row value
-     *
-     * @param grid Grid to update data for
-     * @param rowID ID of the row to update
-     * @param rowValueInDataSource Initial value of the row as it is in data source
-     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
-     * @param rowNewValue New value of the row
-     */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
-        if (grid.transactions.enabled) {
-            const transaction: Transaction = {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: rowNewValue
-            };
-            grid.transactions.add(transaction, rowCurrentValue);
-        } else {
-            mergeObjects(rowValueInDataSource, rowNewValue);
-        }
-    }
-
     _update_row(row: IgxRow, value?: any) {
         const grid = this.grid;
 
@@ -295,12 +270,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
         grid.rowEditDone.emit(doneArgs);
         return args;
-    }
-
-
-    protected update_row_in_array(value: any, rowID: any, index: number) {
-        const grid = this.grid;
-        grid.data[index] = value;
     }
 
     public sort(expression: ISortingExpression): void {
@@ -389,74 +358,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
-        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
-
-        let newExpressionsTree;
-        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
-        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
-        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-            null : conditionOrExpressionsTree as IFilteringOperation;
-        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
-
-        if (oldExpressionsTreeIndex === -1) {
-            // no expressions tree found for this field
-            if (expressionsTree) {
-                if (insertAtIndex > -1) {
-                    filteringState.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
-                } else {
-                    filteringState.filteringOperands.push(expressionsTree);
-                }
-            } else if (condition) {
-                // create expressions tree for this field and add the new expression to it
-                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-                newExpressionsTree.filteringOperands.push(newExpression);
-                filteringState.filteringOperands.push(newExpressionsTree);
-            }
-        }
-    }
-
-    protected prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
-        if (expression.dir === SortingDirection.None) {
-            stateCollections.forEach(state => {
-                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
-            });
-            return;
-        }
-
-        /**
-         * We need to make sure the states in each collection with same fields point to the same object reference.
-         * If the different state collections provided have different sizes we need to get the largest one.
-         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
-         */
-        let maxCollection = stateCollections[0];
-        for (let i = 1; i < stateCollections.length; i++) {
-            if (maxCollection.length < stateCollections[i].length) {
-                maxCollection = stateCollections[i];
-            }
-        }
-        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
-
-        stateCollections.forEach(collection => {
-            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
-            if (!myExpr && !maxExpr) {
-                // Expression with this fieldName is missing from the current and the max collection.
-                collection.push(expression);
-            } else if (!myExpr && maxExpr) {
-                // Expression with this fieldName is missing from the current and but the max collection has.
-                collection.push(maxExpr);
-                Object.assign(maxExpr, expression);
-            } else {
-                // The current collection has the expression so just update it.
-                Object.assign(myExpr, expression);
-            }
-        });
-    }
-
-    protected remove_grouping_expression(fieldName) {
-    }
-
     public clear_groupby(name?: string | Array<string>) {
     }
 
@@ -479,11 +380,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public get_filtered_data(): any[] {
         return this.grid.filteredData;
-    }
-
-    protected getSortStrategyPerColumn(fieldName: string) {
-        return this.get_column_by_name(fieldName) ?
-            this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
     public addRowToData(rowData: any, parentRowID?) {
@@ -543,7 +439,11 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         this.deleteRowFromData(rowId, index);
 
-        grid.selectionService.isRowSelected(rowId) ? grid.selectionService.deselectRow(rowId) : grid.selectionService.clearHeaderCBState();
+        if (grid.selectionService.isRowSelected(rowId)) {
+            grid.selectionService.deselectRow(rowId);
+        } else {
+            grid.selectionService.clearHeaderCBState();
+        }
         (grid as any)._pipeTrigger++;
         grid.notifyChanges();
         // Data needs to be recalculated if transactions are in place
@@ -623,8 +523,104 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return this.grid.expansionStates.get(rowID) !== expanded;
     }
 
-    private isToggleKey(key: string): boolean {
-        return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     *
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
+        if (grid.transactions.enabled) {
+            const transaction: Transaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue: rowNewValue
+            };
+            grid.transactions.add(transaction, rowCurrentValue);
+        } else {
+            mergeObjects(rowValueInDataSource, rowNewValue);
+        }
     }
 
+
+    protected update_row_in_array(value: any, rowID: any, index: number) {
+        const grid = this.grid;
+        grid.data[index] = value;
+    }
+
+    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
+
+        let newExpressionsTree;
+        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
+        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
+        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+            null : conditionOrExpressionsTree as IFilteringOperation;
+        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
+
+        if (oldExpressionsTreeIndex === -1) {
+            // no expressions tree found for this field
+            if (expressionsTree) {
+                if (insertAtIndex > -1) {
+                    filteringState.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
+                } else {
+                    filteringState.filteringOperands.push(expressionsTree);
+                }
+            } else if (condition) {
+                // create expressions tree for this field and add the new expression to it
+                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+                newExpressionsTree.filteringOperands.push(newExpression);
+                filteringState.filteringOperands.push(newExpressionsTree);
+            }
+        }
+    }
+
+    protected prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
+        if (expression.dir === SortingDirection.None) {
+            stateCollections.forEach(state => {
+                state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
+            });
+            return;
+        }
+
+        /**
+         * We need to make sure the states in each collection with same fields point to the same object reference.
+         * If the different state collections provided have different sizes we need to get the largest one.
+         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
+         */
+        let maxCollection = stateCollections[0];
+        for (let i = 1; i < stateCollections.length; i++) {
+            if (maxCollection.length < stateCollections[i].length) {
+                maxCollection = stateCollections[i];
+            }
+        }
+        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
+
+        stateCollections.forEach(collection => {
+            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
+            if (!myExpr && !maxExpr) {
+                // Expression with this fieldName is missing from the current and the max collection.
+                collection.push(expression);
+            } else if (!myExpr && maxExpr) {
+                // Expression with this fieldName is missing from the current and but the max collection has.
+                collection.push(maxExpr);
+                Object.assign(maxExpr, expression);
+            } else {
+                // The current collection has the expression so just update it.
+                Object.assign(myExpr, expression);
+            }
+        });
+    }
+
+    protected remove_grouping_expression(fieldName) {
+    }
+
+    protected getSortStrategyPerColumn(fieldName: string) {
+        return this.get_column_by_name(fieldName) ?
+            this.get_column_by_name(fieldName).sortStrategy : undefined;
+    }
 }

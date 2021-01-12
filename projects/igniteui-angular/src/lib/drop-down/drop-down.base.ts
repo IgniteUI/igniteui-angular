@@ -19,25 +19,6 @@ let NEXT_ID = 0;
  */
 @Directive()
 export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implements IDropDownList {
-    protected _width;
-    protected _height;
-    protected _focusedItem: any = null;
-    protected _id = `igx-drop-down-${NEXT_ID++}`;
-
-    /**
-     * @hidden @internal
-     * Get dropdown's html element of its scroll container
-     */
-    public get scrollContainer(): HTMLElement {
-        return this.element;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public children: QueryList<IgxDropDownItemBaseDirective>;
-
     /**
      * Emitted when item selection is changing, before the selection completes
      *
@@ -170,6 +151,24 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
     public get element() {
         return this.elementRef.nativeElement;
     }
+    /**
+     * @hidden @internal
+     * Get dropdown's html element of its scroll container
+     */
+    public get scrollContainer(): HTMLElement {
+        return this.element;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public children: QueryList<IgxDropDownItemBaseDirective>;
+
+    protected _width;
+    protected _height;
+    protected _focusedItem: any = null;
+    protected _id = `igx-drop-down-${NEXT_ID++}`;
 
     /**
      * Gets if the dropdown is collapsed
@@ -221,30 +220,6 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
      */
     public set focusedItem(item: IgxDropDownItemBaseDirective) {
         this._focusedItem = item;
-    }
-
-    protected navigate(direction: Navigate, currentIndex?: number) {
-        let index = -1;
-        if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this.focusedItem.itemIndex;
-        }
-        const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
-        this.navigateItem(newIndex);
-    }
-
-    protected getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
-        let index = startIndex;
-        const items = this.items;
-        while (items[index + direction] && items[index + direction].disabled) {
-            index += direction;
-        }
-
-        index += direction;
-        if (index >= 0 && index < items.length) {
-            return index;
-        } else {
-            return -1;
-        }
     }
 
     /**
@@ -302,6 +277,30 @@ export abstract class IgxDropDownBaseDirective extends DisplayDensityBase implem
 
         if (parentRect.bottom < elementRect.bottom) {
             this.scrollContainer.scrollTop += (elementRect.bottom - parentRect.bottom);
+        }
+    }
+
+    protected navigate(direction: Navigate, currentIndex?: number) {
+        let index = -1;
+        if (this._focusedItem) {
+            index = currentIndex ? currentIndex : this.focusedItem.itemIndex;
+        }
+        const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
+        this.navigateItem(newIndex);
+    }
+
+    protected getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
+        let index = startIndex;
+        const items = this.items;
+        while (items[index + direction] && items[index + direction].disabled) {
+            index += direction;
+        }
+
+        index += direction;
+        if (index >= 0 && index < items.length) {
+            return index;
+        } else {
+            return -1;
         }
     }
 }

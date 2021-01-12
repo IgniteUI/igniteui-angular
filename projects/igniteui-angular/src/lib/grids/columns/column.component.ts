@@ -337,8 +337,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     set selected(value: boolean) {
         if (this.selectable && value !== this.selected) {
-            value ? this.grid.selectionService.selectColumnsWithNoEvent([this.field]) :
-            this.grid.selectionService.deselectColumnsWithNoEvent([this.field]);
+            if (value) {
+                this.grid.selectionService.selectColumnsWithNoEvent([this.field]);
+            } else {
+                this.grid.selectionService.deselectColumnsWithNoEvent([this.field]);
+            }
             this.grid.notifyChanges();
         }
     }
@@ -418,6 +421,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get width(): string {
         return this.widthSetByUser ? this._width : this.defaultWidth;
     }
+
     /**
      * Sets the `width` of the column.
      * ```html
@@ -450,26 +454,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * @hidden
-     */
-    @Output()
-    public widthChange = new EventEmitter<string>();
-
-    /**
-     * @hidden
-     */
-    public get calcWidth(): any {
-        return this.getCalcWidth();
-    }
-
-    private _calcWidth = null;
-    public calcPixelWidth: number;
-    /**
-     * @hidden
-     */
-    protected _applySelectableClass = false;
-
-    /**
      * Sets/gets the maximum `width` of the column.
      * ```typescript
      * let columnMaxWidth = this.column.width;
@@ -484,69 +468,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     public maxWidth: string;
 
-    /**
-     * @hidden
-     */
-    get maxWidthPx() {
-        const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
-    }
-
-    /**
-     * @hidden
-     */
-    get maxWidthPercent() {
-        const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
-    }
-
-    /**
-     * @hidden
-     */
-    get minWidthPx() {
-        const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
-    }
-
-    /**
-     * @hidden
-     */
-    get minWidthPercent() {
-        const gridAvailableSize = this.grid.calcWidth;
-        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
-    }
-
-
-    /**
-     * Sets/gets the minimum `width` of the column.
-     * Default value is `88`;
-     * ```typescript
-     * let columnMinWidth = this.column.minWidth;
-     * ```
-     * ```html
-     * <igx-column [minWidth] = "'100px'"></igx-column>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @notifyChanges()
-    @WatchColumnChanges()
-    @Input()
-    public set minWidth(value: string) {
-        const minVal = parseFloat(value);
-        if (Number.isNaN(minVal)) {
- return;
-}
-        this._defaultMinWidth = value;
-
-    }
-    public get minWidth(): string {
-        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
-    }
     /**
      * Sets/gets the class selector of the column header.
      * ```typescript
@@ -622,17 +543,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     cellStyles = null;
     /**
-     * Gets the column index.
-     * ```typescript
-     * let columnIndex = this.column.index;
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    get index(): number {
-        return this.grid.columns.indexOf(this);
-    }
-    /**
      * When autogenerating columns, the formatter is used to format the display of the column data
      * without modifying the underlying bound values.
      *
@@ -688,6 +598,22 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     public sortingIgnoreCase = true;
     /**
+     * Sets/gets whether the column is `searchable`.
+     * Default value is `true`.
+     * ```typescript
+     * let isSearchable =  this.column.searchable';
+     * ```
+     * ```html
+     *  <igx-column [searchable] = "false"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public searchable = true;
+    /**
      * Sets/gets the data type of the column values.
      * Default value is `string`.
      * ```typescript
@@ -701,6 +627,185 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @Input()
     public dataType: DataType = DataType.String;
+
+    /** @hidden */
+    @Input()
+    public collapsibleIndicatorTemplate: TemplateRef<any>;
+
+    /**
+     * Row index where the current field should end.
+     * The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [rowEnd]="2" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public rowEnd: number;
+
+    /**
+     * Column index where the current field should end.
+     * The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [colEnd]="3" [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public colEnd: number;
+
+    /**
+     * Row index from which the field is starting.
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [rowStart]="1" [colStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input() rowStart: number;
+
+    /**
+     * Column index from which the field is starting.
+     * ```html
+     * <igx-column-layout>
+     *   <igx-column [colStart]="1" [rowStart]="1"></igx-column>
+     * </igx-column-layout>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input() colStart: number;
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public widthChange = new EventEmitter<string>();
+
+    /**
+     * @hidden
+     */
+    @Output()
+    public pinnedChange = new EventEmitter<boolean>();
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
+    public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
+    protected cellTemplate: IgxCellTemplateDirective;
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, descendants: false })
+    protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
+    protected editorTemplate: IgxCellEditorTemplateDirective;
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
+    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
+
+    /**
+     * @hidden
+     */
+    public get calcWidth(): any {
+        return this.getCalcWidth();
+    }
+
+    public calcPixelWidth: number;
+
+    /**
+     * @hidden
+     */
+    get maxWidthPx() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
+    }
+
+    /**
+     * @hidden
+     */
+    get maxWidthPercent() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
+    }
+
+    /**
+     * @hidden
+     */
+    get minWidthPx() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+    }
+
+    /**
+     * @hidden
+     */
+    get minWidthPercent() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+    }
+
+
+    /**
+     * Sets/gets the minimum `width` of the column.
+     * Default value is `88`;
+     * ```typescript
+     * let columnMinWidth = this.column.minWidth;
+     * ```
+     * ```html
+     * <igx-column [minWidth] = "'100px'"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public set minWidth(value: string) {
+        const minVal = parseFloat(value);
+        if (Number.isNaN(minVal)) {
+            return;
+        }
+        this._defaultMinWidth = value;
+
+    }
+    public get minWidth(): string {
+        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+    }
+
+    /**
+     * Gets the column index.
+     * ```typescript
+     * let columnIndex = this.column.index;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    get index(): number {
+        return this.grid.columns.indexOf(this);
+    }
+
     /**
      * Gets whether the column is `pinned`.
      * ```typescript
@@ -731,7 +836,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public set pinned(value: boolean) {
         if (this._pinned !== value) {
             if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
-                value ? this.pin() : this.unpin();
+                if (value) {
+                    this.pin();
+                } else {
+                    this.unpin();
+                }
                 return;
             }
             /* No grid/width available at initialization. `initPinning` in the grid
@@ -742,12 +851,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this.pinnedChange.emit(this._pinned);
         }
     }
-
-    /**
-     * @hidden
-     */
-    @Output()
-    public pinnedChange = new EventEmitter<boolean>();
 
     /**
      * Gets the column `summaries`.
@@ -780,22 +883,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this.grid.summaryService.resetSummaryHeight();
         }
     }
-    /**
-     * Sets/gets whether the column is `searchable`.
-     * Default value is `true`.
-     * ```typescript
-     * let isSearchable =  this.column.searchable';
-     * ```
-     * ```html
-     *  <igx-column [searchable] = "false"></igx-column>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @notifyChanges()
-    @WatchColumnChanges()
-    @Input()
-    public searchable = true;
     /**
      * Gets the column `filters`.
      * ```typescript
@@ -877,8 +964,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     get defaultMinWidth(): string {
         if (!this.grid) {
- return '80';
-}
+            return '80';
+        }
         switch (this.grid.displayDensity) {
             case DisplayDensity.cosy:
                 return '64';
@@ -1033,9 +1120,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         this._filterCellTemplate = template;
     }
 
-    /** @hidden */
-    @Input()
-    public collapsibleIndicatorTemplate: TemplateRef<any>;
     /**
      * Gets the cells of the column.
      * ```typescript
@@ -1184,58 +1268,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Row index where the current field should end.
-     * The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field
-     * ```html
-     * <igx-column-layout>
-     *   <igx-column [rowEnd]="2" [rowStart]="1" [colStart]="1"></igx-column>
-     * </igx-column-layout>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input()
-    public rowEnd: number;
-
-    /**
-     * Column index where the current field should end.
-     * The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field
-     * ```html
-     * <igx-column-layout>
-     *   <igx-column [colEnd]="3" [rowStart]="1" [colStart]="1"></igx-column>
-     * </igx-column-layout>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input()
-    public colEnd: number;
-
-    /**
-     * Row index from which the field is starting.
-     * ```html
-     * <igx-column-layout>
-     *   <igx-column [rowStart]="1" [colStart]="1"></igx-column>
-     * </igx-column-layout>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input() rowStart: number;
-
-    /**
-     * Column index from which the field is starting.
-     * ```html
-     * <igx-column-layout>
-     *   <igx-column [colStart]="1" [rowStart]="1"></igx-column>
-     * </igx-column-layout>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input() colStart: number;
-
-    /**
      * Indicates whether the column will be visible when its parent is collapsed.
      * ```html
      * <igx-column-group>
@@ -1251,15 +1283,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) {
- this.parent.setExpandCollapseState();
-}
+            this.parent.setExpandCollapseState();
+        }
     }
 
     get visibleWhenCollapsed(): boolean {
         return this._visibleWhenCollapsed;
     }
 
-    private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
     /**
      * @remarks
      * Pass optional parameters for DatePipe and/or DecimalPipe to format the display value for date and numeric columns.
@@ -1295,8 +1326,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @internal
      */
     public get collapsible() {
- return false;
-}
+        return false;
+    }
     public set collapsible(_value: boolean) {}
 
     /**
@@ -1304,8 +1335,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @internal
      */
     public get expanded() {
- return true;
-}
+        return true;
+    }
     public set expanded(_value: boolean) {}
 
     /**
@@ -1340,7 +1371,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    parent = null;
+    public parent = null;
     /**
      * Sets/gets the children columns.
      * ```typescript
@@ -1352,13 +1383,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    children: QueryList<IgxColumnComponent>;
-
-
+    public children: QueryList<IgxColumnComponent>;
     /**
      * @hidden
      */
     public destroy$ = new Subject<any>();
+
+    /**
+     * @hidden
+     */
+    protected _applySelectableClass = false;
+
+    protected _vIndex = NaN;
     /**
      * @hidden
      */
@@ -1449,33 +1485,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     protected get isPrimaryColumn(): boolean {
         return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
     }
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
-    protected cellTemplate: IgxCellTemplateDirective;
-    /**
-     * @hidden
-     */
-    @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, descendants: false })
-    protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
-    protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    protected _vIndex = NaN;
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
-    public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
-    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
+    private _calcWidth = null;
+    private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
@@ -1680,19 +1692,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         // fill the gaps if there are any
         const result: string[] = [];
-        for (let i = 0; i < columnSizes.length; i++) {
-            if (columnSizes[i] && !!columnSizes[i].width) {
-                result.push(columnSizes[i].width + 'px');
+        for (const size of columnSizes) {
+            if (size && !!size.width) {
+                result.push(size.width + 'px');
             } else {
                 result.push(parseInt(this.grid.getPossibleColumnWidth(), 10) + 'px');
             }
         }
         return result;
-    }
-
-    protected getColumnSizesString(children: QueryList<IgxColumnComponent>): string {
-        const res = this.getFilledChildColumnSizes(children);
-        return res.join(' ');
     }
 
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
@@ -1711,11 +1718,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const targetsSquashed: MRLResizeColumnInfo[] = [];
-        for (let j = 0; j < targets.length; j++) {
-            if (targetsSquashed.length && targetsSquashed[targetsSquashed.length - 1].target.field === targets[j].target.field) {
+        for (const target of targets) {
+            if (targetsSquashed.length && targetsSquashed[targetsSquashed.length - 1].target.field === target.target.field) {
                 targetsSquashed[targetsSquashed.length - 1].spanUsed++;
             } else {
-                targetsSquashed.push(targets[j]);
+                targetsSquashed.push(target);
             }
         }
 
@@ -1891,9 +1898,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const grid = (this.grid as IgxGridBaseDirective);
         let columns: Array<IgxColumnComponent | IgxColumnGroupComponent> = grid.columnList.filter(c => c.visibleIndex > -1);
         // grid last visible index
-        const li = columns.map(c => c.visibleIndex).reduce(function(a, b) {
-            return Math.max(a, b);
-        });
+        const li = columns.map(c => c.visibleIndex).reduce((a, b) => Math.max(a, b));
         const parent = this.parent;
         const isPreceding = this.visibleIndex < index;
 
@@ -2136,6 +2141,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     /**
      * @hidden
+     */
+    public populateVisibleIndexes() { }
+
+    protected getColumnSizesString(children: QueryList<IgxColumnComponent>): string {
+        const res = this.getFilledChildColumnSizes(children);
+        return res.join(' ');
+    }
+
+    /**
+     * @hidden
      * @internal
      */
     protected cacheCalcWidth(): any {
@@ -2160,8 +2175,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     protected setExpandCollapseState() {
         this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
             if (!this.collapsible) {
- c.hidden = this.hidden; return;
-}
+                c.hidden = this.hidden; return;
+            }
             c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
         });
     }
@@ -2171,8 +2186,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     protected checkCollapsibleState() {
         if (!this.children) {
- return false;
-}
+            return false;
+        }
         const cols = this.children.map(child => child.visibleWhenCollapsed);
         return (cols.some(c => c === true) && cols.some(c => c === false));
     }
@@ -2184,11 +2199,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get pinnable() {
         return (this.grid as any)._init || !this.pinned;
     }
-
-    /**
-     * @hidden
-     */
-    public populateVisibleIndexes() { }
 
     /**
      * @hidden

@@ -47,9 +47,6 @@ import { ISearchInfo } from './grid/public_api';
     providers: [HammerGesturesManager]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
-    private _vIndex = -1;
-    protected _lastSearchInfo: ISearchInfo;
-
     /**
      * @hidden
      * @internal
@@ -135,34 +132,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public value: any;
 
     /**
-     * Sets/gets the highlight class of the cell.
-     * Default value is `"igx-highlight"`.
-     * ```typescript
-     * let highlightClass = this.cell.highlightClass;
-     * ```
-     * ```typescript
-     * this.cell.highlightClass = 'igx-cell-highlight';
-     * ```
-     *
-     * @memberof IgxGridCellComponent
-     */
-    public highlightClass = 'igx-highlight';
-
-    /**
-     * Sets/gets the active highlight class class of the cell.
-     * Default value is `"igx-highlight__active"`.
-     * ```typescript
-     * let activeHighlightClass = this.cell.activeHighlightClass;
-     * ```
-     * ```typescript
-     * this.cell.activeHighlightClass = 'igx-cell-highlight_active';
-     * ```
-     *
-     * @memberof IgxGridCellComponent
-     */
-    public activeHighlightClass = 'igx-highlight__active';
-
-    /**
      * Gets the cell formatter.
      * ```typescript
      * let cellForamatter = this.cell.formatter;
@@ -171,7 +140,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    formatter: (value: any) => any;
+    public formatter: (value: any) => any;
 
     /**
      * Gets the cell template context object.
@@ -342,6 +311,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return this._cellSelection;
     }
 
+    set cellSelectionMode(value) {
+        if (this._cellSelection === value) {
+            return;
+        }
+         this.zone.runOutsideAngular(() => {
+            if (value === GridSelectionMode.multiple) {
+                this.addPointerListeners(value);
+            } else {
+                this.removePointerListeners(this._cellSelection);
+            }
+        });
+        this._cellSelection = value;
+    }
+
     /**
      * @hidden
      * @internal
@@ -350,17 +333,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     set lastSearchInfo(value: ISearchInfo) {
         this._lastSearchInfo = value;
         this.highlightText(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
-    }
-
-    set cellSelectionMode(value) {
-        if (this._cellSelection === value) {
- return;
-}
-         this.zone.runOutsideAngular(() => {
-            value === GridSelectionMode.multiple ?
-            this.addPointerListeners(value) : this.removePointerListeners(this._cellSelection);
-        });
-        this._cellSelection = value;
     }
 
     /**
@@ -485,7 +457,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     set selected(val: boolean) {
         const node = this.selectionNode;
-        val ? this.selectionService.add(node) : this.selectionService.remove(node);
+        if (val) {
+            this.selectionService.add(node);
+        } else {
+            this.selectionService.remove(node);
+        }
         this.grid.notifyChanges();
     }
 
@@ -589,12 +565,42 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             };
     }
 
+    /**
+     * Sets/gets the highlight class of the cell.
+     * Default value is `"igx-highlight"`.
+     * ```typescript
+     * let highlightClass = this.cell.highlightClass;
+     * ```
+     * ```typescript
+     * this.cell.highlightClass = 'igx-cell-highlight';
+     * ```
+     *
+     * @memberof IgxGridCellComponent
+     */
+    public highlightClass = 'igx-highlight';
+
+    /**
+     * Sets/gets the active highlight class class of the cell.
+     * Default value is `"igx-highlight__active"`.
+     * ```typescript
+     * let activeHighlightClass = this.cell.activeHighlightClass;
+     * ```
+     * ```typescript
+     * this.cell.activeHighlightClass = 'igx-cell-highlight_active';
+     * ```
+     *
+     * @memberof IgxGridCellComponent
+     */
+    public activeHighlightClass = 'igx-highlight__active';
+
     /** @hidden @internal @deprecated */
     public focused = this.active;
     protected compositionStartHandler;
     protected compositionEndHandler;
+    protected _lastSearchInfo: ISearchInfo;
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection = GridSelectionMode.multiple;
+    private _vIndex = -1;
 
     constructor(
         protected selectionService: IgxGridSelectionService,
@@ -606,20 +612,64 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         private touchManager: HammerGesturesManager,
         protected platformUtil: PlatformUtil) { }
 
-    private addPointerListeners(selection) {
-        if (selection !== GridSelectionMode.multiple) {
- return;
-}
-        this.nativeElement.addEventListener('pointerenter', this.pointerenter);
-        this.nativeElement.addEventListener('pointerup', this.pointerup);
+    /**
+     * @deprecated
+     * Gets whether the cell is selected.
+     * ```typescript
+     * let isCellSelected = thid.cell.isCellSelected();
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
+    public isCellSelected() {
+        return this.selectionService.selected(this.selectionNode);
     }
 
-    private  removePointerListeners(selection) {
-        if (selection !== GridSelectionMode.multiple) {
- return;
-}
-        this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
-        this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('dblclick', ['$event'])
+    public onDoubleClick = (event: MouseEvent | HammerInput) => {
+        if (event.type === 'doubletap') {
+            // prevent double-tap to zoom on iOS
+            (event as HammerInput).preventDefault();
+        }
+        if (this.grid.rowEditable && this.row.addRow) {
+            this.crudService.enterEditMode(this, event as Event);
+        }
+        if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.rowEditingBlocked) {
+            this.crudService.enterEditMode(this, event as Event);
+        }
+
+        this.grid.onDoubleClick.emit({
+            cell: this,
+            event
+        });
+    };
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        this.grid.onCellClick.emit({
+            cell: this,
+            event
+        });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('contextmenu', ['$event'])
+    public onContextMenu(event: MouseEvent) {
+        this.grid.onContextMenu.emit({
+            cell: this,
+            event
+        });
     }
 
     /**
@@ -716,19 +766,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.endEdit(true, event);
         }
-    }
-
-    /**
-     * @deprecated
-     * Gets whether the cell is selected.
-     * ```typescript
-     * let isCellSelected = thid.cell.isCellSelected();
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
-    public isCellSelected() {
-        return this.selectionService.selected(this.selectionNode);
     }
 
     /**
@@ -829,8 +866,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (dragMode) {
             this.grid.cdr.detectChanges();
             if (isIE()) {
- this.grid.tbody.nativeElement.focus({ preventScroll: true });
-}
+                this.grid.tbody.nativeElement.focus({ preventScroll: true });
+            }
         }
     };
 
@@ -842,62 +879,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (!isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
         this.grid.navigation.activeNode.gridID !== this.gridID))) {
- return;
-}
+            return;
+        }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
             if (isIE()) {
- this.grid.tbody.nativeElement.focus({ preventScroll: true });
-}
+                this.grid.tbody.nativeElement.focus({ preventScroll: true });
+            }
         }
     };
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('dblclick', ['$event'])
-    public onDoubleClick = (event: MouseEvent | HammerInput) => {
-        if (event.type === 'doubletap') {
-            // prevent double-tap to zoom on iOS
-            (event as HammerInput).preventDefault();
-        }
-        if (this.grid.rowEditable && this.row.addRow) {
-            this.crudService.enterEditMode(this, event as Event);
-        }
-        if (this.editable && !this.editMode && !this.row.deleted && !this.crudService.rowEditingBlocked) {
-            this.crudService.enterEditMode(this, event as Event);
-        }
-
-        this.grid.onDoubleClick.emit({
-            cell: this,
-            event
-        });
-    };
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
-        this.grid.onCellClick.emit({
-            cell: this,
-            event
-        });
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('contextmenu', ['$event'])
-    public onContextMenu(event: MouseEvent) {
-        this.grid.onContextMenu.emit({
-            cell: this,
-            event
-        });
-    }
 
     /**
      * @hidden
@@ -981,5 +971,21 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const meta = new Map<string, any>();
         meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
         return meta;
+    }
+
+    private addPointerListeners(selection) {
+        if (selection !== GridSelectionMode.multiple) {
+            return;
+        }
+        this.nativeElement.addEventListener('pointerenter', this.pointerenter);
+        this.nativeElement.addEventListener('pointerup', this.pointerup);
+    }
+
+    private  removePointerListeners(selection) {
+        if (selection !== GridSelectionMode.multiple) {
+            return;
+        }
+        this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
+        this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
 }

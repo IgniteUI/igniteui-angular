@@ -239,7 +239,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
             }));
             it('#2798 - should allow canceling of open/close through onOpening/onClosing events', fakeAsync(() => {
-                const toggle: IgxToggleDirective = (<any>dropdown).toggleDirective;
+                const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
                 const onOpeningSpy = spyOn(dropdown.onOpening, 'emit').and.callThrough();
                 const onOpenedSpy = spyOn(dropdown.onOpened, 'emit').and.callThrough();
                 spyOn(dropdown.onClosing, 'emit').and.callThrough();
@@ -1004,8 +1004,8 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.items.length).toEqual(9);
                 expect(disabledItems.length).toEqual(3);
                 const disabledGroup = [...items.toArray()].splice(0, 3);
-                for (let i = 0; i < disabledGroup.length; i++) {
-                    expect(disabledGroup[i].disabled).toEqual(true);
+                for (const group of disabledGroup) {
+                    expect(group.disabled).toEqual(true);
                 }
             });
         });
@@ -1435,12 +1435,12 @@ class VirtualizedDropDownComponent {
     @ViewChildren(IgxDropDownItemComponent)
     public dropdownItems: QueryList<IgxDropDownItemComponent>;
     public items = [];
+    public itemsMaxHeight = 400;
+    public itemHeight = 40;
     constructor() {
         this.items = Array.apply(null, { length: 2000 }).map((e, i) => ({
             name: `Item ${i + 1}`,
             id: i
         }));
     }
-    public itemsMaxHeight = 400;
-    public itemHeight = 40;
 }
