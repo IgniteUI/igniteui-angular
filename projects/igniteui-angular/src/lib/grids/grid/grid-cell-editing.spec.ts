@@ -1149,6 +1149,25 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.crudService.cell).toBeNull();
         });
 
+        it('should exit edit mode on data change', () => {
+            const cell = grid.getCellByColumn(0, 'fullName');
+            const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+
+            const editTemplate = cellDom.query(By.css('input'));
+            expect(cell.editMode).toBe(true);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'Rick Gilmore');
+            fixture.detectChanges();
+
+            const data = [...grid.data];
+            grid.data = data;
+            fixture.detectChanges();
+
+            expect(grid.crudService.cell).toBeNull();
+        });
+
         it('should update correct cell when sorting is applied', () => {
             grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
             fixture.detectChanges();
