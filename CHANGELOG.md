@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
 - `IgxRadioGroup`
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
+- `IgxDialog`
+    - Added new `onOpened` and `onClosed` events.
 
 ## 11.0.4
 

@@ -48,7 +48,8 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @memberof IgxMonthsViewComponent
      */
     @Input()
-    public set date(value) {
+    public set date(value: Date) {
+        if (!(value instanceof Date)) { return; }
         this._date = value;
         this.activeMonth = this.date.getMonth();
     }
