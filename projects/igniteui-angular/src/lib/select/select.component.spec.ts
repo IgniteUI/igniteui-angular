@@ -1903,10 +1903,10 @@ describe('igxSelect', () => {
 
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
-                    inputElement.triggerEventHandler('keyup', { key: 'p' });
+                    inputElement.triggerEventHandler('keydown', { key: 'p' });
                     tick();
                     fixture.detectChanges();
-                    inputElement.triggerEventHandler('keyup', { key: 'a' });
+                    inputElement.triggerEventHandler('keydown', { key: 'a' });
                     tick();
                     fixture.detectChanges();
                     verifyFocusedItem(filteredItemsInxs[index]);
@@ -1920,14 +1920,14 @@ describe('igxSelect', () => {
             fixture.detectChanges();
 
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            inputElement.triggerEventHandler('keydown', { key: 'l' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
 
-            inputElement.triggerEventHandler('keyup', { key: 'L' });
+            inputElement.triggerEventHandler('keydown', { key: 'L' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[1]);
@@ -1942,7 +1942,7 @@ describe('igxSelect', () => {
 
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
-                    inputElement.triggerEventHandler('keyup', { key: 'l' });
+                    inputElement.triggerEventHandler('keydown', { key: 'l' });
                     tick();
                     fixture.detectChanges();
                     verifyFocusedItem(filteredItemsInxs[index]);
@@ -1950,7 +1950,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                 }
                 // Navigate back to the first filtered item to verify that selection is wrapped
-                inputElement.triggerEventHandler('keyup', { key: 'l' });
+                inputElement.triggerEventHandler('keydown', { key: 'l' });
                 tick();
                 fixture.detectChanges();
                 verifyFocusedItem(filteredItemsInxs[0]);
@@ -1978,7 +1978,7 @@ describe('igxSelect', () => {
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
             for (let index = 0; index < filteredItemsInxs.length; index++) {
-                inputElement.triggerEventHandler('keyup', { key: 'ü' });
+                inputElement.triggerEventHandler('keydown', { key: 'ü' });
                 tick();
                 fixture.detectChanges();
                 verifyFocusedItem(filteredItemsInxs[index]);
@@ -1989,7 +1989,7 @@ describe('igxSelect', () => {
             // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (let index = 0; index < filteredItemsInxs.length; index++) {
-                inputElement.triggerEventHandler('keyup', { key: 'с' });
+                inputElement.triggerEventHandler('keydown', { key: 'с' });
                 tick();
                 fixture.detectChanges();
                 verifyFocusedItem(filteredItemsInxs[index]);
@@ -2003,7 +2003,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
 
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            inputElement.triggerEventHandler('keydown', { key: 'l' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
@@ -2011,7 +2011,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
 
             // Verify that focus is unchanged
-            inputElement.triggerEventHandler('keyup', { key: 'w' });
+            inputElement.triggerEventHandler('keydown', { key: 'w' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
@@ -2022,10 +2022,10 @@ describe('igxSelect', () => {
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
-                    inputElement.triggerEventHandler('keyup', { key: 'p' });
+                    inputElement.triggerEventHandler('keydown', { key: 'p' });
                     tick();
                     fixture.detectChanges();
-                    inputElement.triggerEventHandler('keyup', { key: 'a' });
+                    inputElement.triggerEventHandler('keydown', { key: 'a' });
                     tick();
                     fixture.detectChanges();
                     verifySelectedItem(filteredItemsInxs[index]);
@@ -2035,14 +2035,14 @@ describe('igxSelect', () => {
             }));
         it('character key navigation when dropdown is closed should be case insensitive', fakeAsync(() => {
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            inputElement.triggerEventHandler('keydown', { key: 'l' });
             tick();
             fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
 
-            inputElement.triggerEventHandler('keyup', { key: 'L' });
+            inputElement.triggerEventHandler('keydown', { key: 'L' });
             tick();
             fixture.detectChanges();
             verifySelectedItem(filteredItemsInxs[1]);
@@ -2053,7 +2053,7 @@ describe('igxSelect', () => {
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
                 for (let index = 0; index < filteredItemsInxs.length; index++) {
-                    inputElement.triggerEventHandler('keyup', { key: 'l' });
+                    inputElement.triggerEventHandler('keydown', { key: 'l' });
                     tick();
                     fixture.detectChanges();
                     verifySelectedItem(filteredItemsInxs[index]);
@@ -2061,7 +2061,7 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                 }
                 // Navigate back to the first filtered item to verify that selection is wrapped
-                inputElement.triggerEventHandler('keyup', { key: 'l' });
+                inputElement.triggerEventHandler('keydown', { key: 'l' });
                 tick();
                 fixture.detectChanges();
                 verifySelectedItem(filteredItemsInxs[0]);
@@ -2086,7 +2086,7 @@ describe('igxSelect', () => {
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
             for (let index = 0; index < filteredItemsInxs.length; index++) {
-                inputElement.triggerEventHandler('keyup', { key: 'ü' });
+                inputElement.triggerEventHandler('keydown', { key: 'ü' });
                 tick();
                 fixture.detectChanges();
                 verifySelectedItem(filteredItemsInxs[index]);
@@ -2097,7 +2097,7 @@ describe('igxSelect', () => {
             // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
             for (let index = 0; index < filteredItemsInxs.length; index++) {
-                inputElement.triggerEventHandler('keyup', { key: 'с' });
+                inputElement.triggerEventHandler('keydown', { key: 'с' });
                 tick();
                 fixture.detectChanges();
                 verifySelectedItem(filteredItemsInxs[index]);
@@ -2107,7 +2107,7 @@ describe('igxSelect', () => {
         }));
         it('should not change selection when pressing non-matching character and dropdown is closed', fakeAsync(() => {
             const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            inputElement.triggerEventHandler('keydown', { key: 'l' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
@@ -2115,14 +2115,14 @@ describe('igxSelect', () => {
             fixture.detectChanges();
 
             // Verify that selection is unchanged
-            inputElement.triggerEventHandler('keyup', { key: 'q' });
+            inputElement.triggerEventHandler('keydown', { key: 'q' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[0]);
             tick(500);
             fixture.detectChanges();
 
-            inputElement.triggerEventHandler('keyup', { key: 'l' });
+            inputElement.triggerEventHandler('keydown', { key: 'l' });
             tick();
             fixture.detectChanges();
             verifyFocusedItem(filteredItemsInxs[1]);

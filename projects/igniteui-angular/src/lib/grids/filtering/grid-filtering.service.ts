@@ -216,9 +216,9 @@ export class IgxFilteringService implements OnDestroy {
                 this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
             }
         }
-
+        const eventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(col.filteringExpressionsTree));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(eventArgs));
     }
 
     /**
