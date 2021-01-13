@@ -65,7 +65,11 @@
                        (click)="expression.condition.isUnary ? null : openDialog(inputGroup.element.nativeElement)"
                        [placeholder]="placeholder"
                        autocomplete="off"
-                       [value]="value | date:column.pipeArgs.format:undefined:filteringService.grid.locale"
+                       [value]="
+                            column.formatter
+                            ? (value | columnFormatter:column.formatter)
+                            : (value | date:column.pipeArgs.format:undefined:filteringService.grid.locale)
+                        "
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
                 <igx-suffix *ngIf="value">

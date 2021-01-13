@@ -24,7 +24,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services/public_api';
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
-import { IBaseEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
 /**
@@ -285,24 +285,44 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public tabindex = -1;
 
     /**
-     * An event that is emitted when the dialog is opened.
+     * An event that is emitted before the dialog is opened.
      * ```html
      * <igx-dialog (onOpen)="onDialogOpenHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
      * </igx-dialog>
      * ```
      */
     @Output()
-    public onOpen = new EventEmitter<IDialogEventArgs>();
+    public onOpen = new EventEmitter<IDialogCancellableEventArgs>();
 
     /**
-     * An event that is emitted when the dialog is closed.
+     * An event that is emitted after the dialog is opened.
+     * ```html
+     * <igx-dialog (onOpened)="onDialogOpenedHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
+     * </igx-dialog>
+     * ```
+     */
+    @Output()
+    public onOpened = new EventEmitter<IDialogEventArgs>();
+
+    /**
+     * An event that is emitted before the dialog is closed.
      * ```html
      * <igx-dialog (onClose)="onDialogCloseHandler($event)" title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
      * </igx-dialog>
      * ```
      */
     @Output()
-    public onClose = new EventEmitter<IDialogEventArgs>();
+    public onClose = new EventEmitter<IDialogCancellableEventArgs>();
+
+    /**
+     * An event that is emitted after the dialog is closed.
+     * ```html
+     * <igx-dialog (onClosed)="onDialogClosedHandler($event)" title="Confirmation" leftButtonLabel="Cancel" rightButtonLabel="OK">
+     * </igx-dialog>
+     * ```
+     */
+    @Output()
+    public onClosed = new EventEmitter<IDialogEventArgs>();
 
     /**
      * An event that is emitted when the left button is clicked.
@@ -376,12 +396,15 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         return !this.toggleRef.collapsed;
     }
     public set isOpen(value: boolean) {
-
-        this.isOpenChange.emit(value);
-        if (value) {
-            this.open();
-        } else {
-            this.close();
+        if (value !== this.isOpen) {
+            this.isOpenChange.emit(value);
+            if (value) {
+                requestAnimationFrame(() => {
+                    this.open();
+                });
+            } else {
+                this.close();
+            }
         }
     }
 
@@ -458,7 +481,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     ngAfterContentInit() {
-        this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
+        this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitCloseFromDialog(eventArgs));
+        this.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitClosedFromDialog(eventArgs));
+        this.toggleRef.onOpened.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitOpenedFromDialog(eventArgs));
     }
 
     /**
@@ -471,10 +496,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
-        this.toggleRef.open(overlaySettings);
-        this.onOpen.emit({ dialog: this, event: null });
-        if (!this.leftButtonLabel && !this.rightButtonLabel) {
-            this.toggleRef.element.focus();
+        const eventArgs: IDialogCancellableEventArgs = { dialog: this, event: null, cancel: false };
+        this.onOpen.emit(eventArgs);
+        if (!eventArgs.cancel) {
+            this.toggleRef.open(overlaySettings);
+            this.isOpenChange.emit(true);
+            if (!this.leftButtonLabel && !this.rightButtonLabel) {
+                this.toggleRef.element.focus();
+            }
         }
     }
 
@@ -555,8 +584,21 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         }
     }
 
-    private emitCloseFromDialog() {
-        this.onClose.emit({ dialog: this, event: null });
+    private emitCloseFromDialog(eventArgs) {
+        const dialogEventsArgs = { dialog: this, event: eventArgs.event, cancel: eventArgs.cancel };
+        this.onClose.emit(dialogEventsArgs);
+        eventArgs.cancel = dialogEventsArgs.cancel;
+        if (!eventArgs.cancel) {
+            this.isOpenChange.emit(false);
+        }
+    }
+
+    private emitClosedFromDialog(eventArgs) {
+        this.onClosed.emit({ dialog: this, event: eventArgs.event });
+    }
+
+    private emitOpenedFromDialog(eventArgs) {
+        this.onOpened.emit({ dialog: this, event: eventArgs.event });
     }
 }
 
@@ -564,6 +606,8 @@ export interface IDialogEventArgs extends IBaseEventArgs {
     dialog: IgxDialogComponent;
     event: Event;
 }
+
+export interface IDialogCancellableEventArgs extends IDialogEventArgs, CancelableEventArgs { }
 
 /**
  * @hidden

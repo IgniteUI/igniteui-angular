@@ -215,9 +215,9 @@ export class IgxFilteringService implements OnDestroy {
                 this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
             }
         }
-
+        const eventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(col.filteringExpressionsTree));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(eventArgs));
     }
 
     /**
@@ -405,7 +405,12 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            const pipeArgs = this.grid.getColumnByName(expression.fieldName).pipeArgs;
+            const column = this.grid.getColumnByName(expression.fieldName);
+            const formatter = column.formatter;
+            if (formatter) {
+                return formatter(expression.searchVal);
+            }
+            const pipeArgs = column.pipeArgs;
             return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);
         } else {
             return expression.searchVal;

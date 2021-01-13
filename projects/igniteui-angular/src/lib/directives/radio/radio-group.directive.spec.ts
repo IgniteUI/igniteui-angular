@@ -12,6 +12,7 @@ describe('IgxRadioGroupDirective', () => {
         TestBed.configureTestingModule({
             declarations: [
                 RadioGroupComponent,
+                RadioGroupSimpleComponent,
                 RadioGroupWithModelComponent,
                 RadioGroupReactiveFormsComponent,
                 RadioGroupDeepProjectionComponent
@@ -193,7 +194,36 @@ describe('IgxRadioGroupDirective', () => {
         expect(radioGroup.value).toEqual(0);
         expect(radioGroup.radioButtons.first.checked).toEqual(true);
     }));
+
+    it('Updates checked radio button correctly', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupSimpleComponent);
+        fixture.detectChanges();
+        tick();
+
+        const radioGroup = fixture.componentInstance.radioGroup;
+        expect(radioGroup.radioButtons.first.checked).toEqual(true);
+        expect(radioGroup.radioButtons.last.checked).toEqual(false);
+
+        radioGroup.radioButtons.last.select();
+        fixture.detectChanges();
+        tick();
+
+        expect(radioGroup.radioButtons.first.checked).toEqual(false);
+        expect(radioGroup.radioButtons.last.checked).toEqual(true);
+    }));
 });
+
+@Component({
+    template: `
+    <igx-radio-group #radioGroup>
+        <igx-radio [checked]="true">Option 1</igx-radio>
+        <igx-radio>Option 2</igx-radio>
+    </igx-radio-group>
+`
+})
+class RadioGroupSimpleComponent {
+    @ViewChild('radioGroup', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+}
 
 @Component({
     template: `<igx-radio-group #radioGroup name="radioGroup" value="Baz" required="true" labelPosition="before">

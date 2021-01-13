@@ -17,6 +17,7 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { IgxIconModule } from '../icon/public_api';
+import { AutoPositionStrategy } from '../services/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -30,6 +31,7 @@ const CSS_CLASS_CALENDAR_TOGGLE = '.igx-toggle';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
+const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -1119,6 +1121,23 @@ describe('IgxDateRangePicker', () => {
                 const result = fixture.componentInstance.formatter({ start: startDate, end: endDate });
                 expect(singleInputElement.nativeElement.value).toEqual(result);
             });
+
+            it('should invoke AutoPositionStrategy by default with proper arguments', fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+                spyOn<any>(AutoPositionStrategy.prototype, 'position');
+
+                dateRange = fixture.componentInstance.dateRange;
+                dateRange.open();
+                tick();
+                fixture.detectChanges();
+
+                const overlayContent = document.getElementsByClassName(CSS_CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(AutoPositionStrategy.prototype.position).toHaveBeenCalledTimes(1);
+                expect(AutoPositionStrategy.prototype.position)
+                    .toHaveBeenCalledWith(overlayContent, jasmine.anything(), document,
+                        jasmine.anything(), dateRange.element.nativeElement);
+            }));
         });
     });
 });
@@ -1129,7 +1148,7 @@ describe('IgxDateRangePicker', () => {
 })
 export class DateRangeTestComponent implements OnInit {
     [x: string]: any;
-    @ViewChild(IgxDateRangePickerComponent, { read: IgxDateRangePickerComponent, static: true })
+    @ViewChild(IgxDateRangePickerComponent, { static: true })
     public dateRange: IgxDateRangePickerComponent;
 
     public doneButtonText: string;

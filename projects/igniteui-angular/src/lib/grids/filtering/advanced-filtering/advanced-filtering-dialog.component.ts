@@ -796,6 +796,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public getFormatter(field: string) {
+        return this.grid.getColumnByName(field).formatter;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public getFormat(field: string) {
         return this.grid.getColumnByName(field).pipeArgs.format;
     }
