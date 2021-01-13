@@ -11,7 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
-    AfterContentInit
+    AfterContentInit,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -49,14 +49,14 @@ export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [
-        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }
+        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
     implements IgxInputGroupBase, AfterContentInit {
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _variant: IgxInputGroupTheme = 'material';
+    private _variant: IgxInputGroupTheme;
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -216,8 +216,14 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
+    @Input()
     public get theme(): IgxInputGroupTheme {
         return this._variant;
+    }
+
+    /** @hidden @internal */
+    public set theme(variant: IgxInputGroupTheme) {
+        this._variant = variant;
     }
 
     /**
@@ -253,11 +259,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     }
 
     ngAfterContentInit() {
-        const variant = this.document.defaultView
-            .getComputedStyle(this.element.nativeElement)
-            .getPropertyValue('--igx-input-group-variant')
-            .trim();
-        this._variant = variant as IgxInputGroupTheme;
+        if (!this.theme) {
+            const variant = this.document.defaultView
+                .getComputedStyle(this.element.nativeElement)
+                .getPropertyValue('--igx-input-group-variant')
+                .trim();
+            this._variant = variant as IgxInputGroupTheme;
+        }
     }
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.
