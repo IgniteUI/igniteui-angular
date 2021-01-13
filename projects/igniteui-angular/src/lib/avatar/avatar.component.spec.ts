@@ -130,7 +130,7 @@ describe('Avatar', () => {
         expect(hostEl.classList).toContain(classes.icon);
     });
 
-    fit('Initializes image avatar', () => {
+    it('Initializes image avatar', () => {
         const fixture = TestBed.createComponent(InitImageAvatarComponent);
         fixture.detectChanges();
         const instance = fixture.componentInstance.avatar;
