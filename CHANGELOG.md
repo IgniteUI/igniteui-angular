@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 ### General
+- `IgxDialog`
+    - The dialog messages template is now moved inside the dialog message container. This means that if you have templated the dialog message by adding something in between the opening and closing tags of the dialog you may have to adjust it a bit since that template is now rendered inside a container that has padding on it.
 - `IgxCalendar`
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
 - `IgxRadioGroup`
