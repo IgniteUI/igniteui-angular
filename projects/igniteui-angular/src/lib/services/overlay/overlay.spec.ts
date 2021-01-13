@@ -3861,6 +3861,7 @@ describe('igxOverlay', () => {
         }));
     });
 });
+
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: `simple - dynamic - component`,
@@ -3901,16 +3902,16 @@ export class SimpleBigSizeComponent {
             <div igxToggle>
                 <div class='scrollableDiv' *ngIf='visible' style ='position: absolute; width: 200px; height: 200px;
         overflow-y: scroll; background-color: red;'>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            </div>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                </div>
             </div>`
 })
 export class SimpleDynamicWithDirectiveComponent {
@@ -4015,6 +4016,7 @@ export class DownRightButtonComponent {
         });
     }
 }
+
 @Component({
     template: `<button class='300_button' #button (click)='click()'>Show Overlay</button>`,
     styles: [`button {

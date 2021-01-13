@@ -634,7 +634,7 @@ export class AppModule { }`);
                 valueTransform: 'some_prop_transform',
                 owner: {
                     selector: 'igx-component',
-                    type: ElementType.component
+                    type: ElementType.Component
                 }
             }]
         };
@@ -706,7 +706,7 @@ export class AppModule { }`);
                 valueTransform: 'prop_transform',
                 owner: {
                     selector: 'igx-component',
-                    type: ElementType.component
+                    type: ElementType.Component
                 }
             }]
         };
