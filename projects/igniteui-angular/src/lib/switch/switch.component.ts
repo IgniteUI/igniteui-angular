@@ -15,6 +15,7 @@ import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALU
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
+import { noop } from 'rxjs';
 
 export const SwitchLabelPosition = mkenum({
     BEFORE: 'before',
@@ -27,7 +28,6 @@ export interface IChangeSwitchEventArgs extends IBaseEventArgs {
     switch: IgxSwitchComponent;
 }
 
-const noop = () => { };
 let nextId = 0;
 /**
  *

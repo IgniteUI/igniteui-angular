@@ -10,6 +10,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
+import { noop } from 'rxjs';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
@@ -24,7 +25,6 @@ export const RadioLabelPosition = mkenum({
 export type RadioLabelPosition = (typeof RadioLabelPosition)[keyof typeof RadioLabelPosition];
 
 let nextId = 0;
-const noop = () => { };
 /**
  * **Ignite UI for Angular Radio Button** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_button.html)

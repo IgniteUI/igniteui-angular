@@ -40,7 +40,7 @@ import {
     IgxInputState,
     IgxLabelDirective
 } from '../input-group/public_api';
-import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
+import { Subject, fromEvent, animationFrameScheduler, interval, Subscription, noop } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
@@ -124,8 +124,6 @@ export const PredefinedFormatOptions = mkenum({
     FullDate: 'fullDate'
 });
 export type PredefinedFormatOptions = (typeof PredefinedFormatOptions)[keyof typeof PredefinedFormatOptions];
-
-const noop = () => { };
 
 /**
  * Date Picker displays a popup calendar that lets users select a single date.
@@ -789,9 +787,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     //#region ControlValueAccessor
 
-    private _onChangeCallback: (_: Date) => void;
-    private _onTouchedCallback: () => void;
-    private _onValidatorChange: () => void;
+    private _onChangeCallback: (_: Date) => void = noop;
+    private _onTouchedCallback: () => void = noop;
+    private _onValidatorChange: () => void = noop;
 
     constructor(@Inject(
         IgxOverlayService) private _overlayService: IgxOverlayService,

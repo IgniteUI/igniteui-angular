@@ -22,7 +22,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
@@ -61,8 +61,6 @@ export class IgxSelectHeaderDirective {
 })
 export class IgxSelectFooterDirective {
 }
-
-const noop = () => { };
 
 /**
  * **Ignite UI for Angular Select** -

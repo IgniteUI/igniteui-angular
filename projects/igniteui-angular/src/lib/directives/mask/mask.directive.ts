@@ -8,8 +8,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { MaskParsingService, MaskOptions } from './mask-parsing.service';
 import { isIE, IBaseEventArgs, KEYCODES } from '../../core/utils';
-
-const noop = () => { };
+import { noop } from 'rxjs';
 
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],

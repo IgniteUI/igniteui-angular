@@ -35,7 +35,7 @@ import {
     IgxTimePickerTemplateDirective,
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
-import { Subject, fromEvent, interval, animationFrameScheduler, Subscription } from 'rxjs';
+import { Subject, fromEvent, interval, animationFrameScheduler, Subscription, noop } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, TimeParts } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
@@ -74,8 +74,6 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     currentValue: Date;
     setThroughUI: boolean;
 }
-
-const noop = () => { };
 
 @Component({
     providers: [

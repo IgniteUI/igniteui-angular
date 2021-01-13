@@ -484,11 +484,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.transform(this.chipAreaScrollOffset);
     }
 
-    /*
-    * noop
-    */
-    public noop() { }
-
     /**
      *  Event handler for date picker's selection.
      */

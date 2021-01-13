@@ -14,9 +14,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRadioComponent, RadioLabelPosition, IChangeRadioEventArgs } from '../../radio/radio.component';
 import { IgxRippleModule } from '../ripple/ripple.directive';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 
-const noop = () => { };
 let nextId = 0;
 
 /**

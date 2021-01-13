@@ -3,7 +3,13 @@ import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl, NgModel } from '@angular/forms';
-import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState, IComboSearchInputEventArgs } from './combo.component';
+import {
+    IgxComboComponent,
+    IgxComboModule,
+    IComboSelectionChangeEventArgs,
+    IgxComboState,
+    IComboSearchInputEventArgs
+} from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboAddItemComponent } from './combo-add-item.component';

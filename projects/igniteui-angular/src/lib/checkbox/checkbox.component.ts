@@ -15,6 +15,7 @@ import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALU
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
+import { noop } from 'rxjs';
 
 export const LabelPosition = mkenum({
     BEFORE: 'before',
@@ -27,7 +28,6 @@ export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
     checkbox: IgxCheckboxComponent;
 }
 
-const noop = () => { };
 let nextId = 0;
 /**
  * Allows users to make a binary choice for a certain condition.
@@ -59,9 +59,12 @@ let nextId = 0;
 })
 export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
     /**
-     * @hidden
+     * An event that is emitted after the checkbox state is changed.
+     * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
      */
-    protected _value: any;
+    // eslint-disable-next-line @angular-eslint/no-output-native
+    @Output()
+    readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
     /**
      * Returns reference to the native checkbox element.
      *
@@ -219,12 +222,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     @Input('aria-label')
     public ariaLabel: string | null = null;
     /**
-     * An event that is emitted after the checkbox state is changed.
-     * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
-     */
-    @Output()
-    readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
-    /**
      * Returns the class of the checkbox component.
      *
      * @example
@@ -319,6 +316,10 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     @Input() public disableTransitions = false;
     /** @hidden @internal */
     public inputId = `${this.id}-input`;
+    /**
+     * @hidden
+     */
+    protected _value: any;
     /**
      * @hidden
      */

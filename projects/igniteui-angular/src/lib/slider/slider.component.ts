@@ -17,7 +17,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
-import { Subject, merge, Observable, timer, pipe } from 'rxjs';
+import { Subject, merge, Observable, timer, noop } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import {
     SliderHandle,
@@ -35,9 +35,6 @@ import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
 import { isIE, resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
-
-const noop = () => {
-};
 
 let NEXT_ID = 0;
 
