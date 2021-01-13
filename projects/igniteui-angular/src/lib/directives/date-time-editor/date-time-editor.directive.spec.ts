@@ -26,7 +26,7 @@ describe('IgxDateTimeEditor', () => {
         let elementRef = { nativeElement: null };
         let inputFormat: string;
         let inputDate: string;
-        function initializeDateTimeEditor(control?: NgControl) {
+        const initializeDateTimeEditor = (control?: NgControl) => {
             // const injector = { get: () => control };
             dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
             dateTimeEditor.inputFormat = inputFormat;
@@ -35,7 +35,7 @@ describe('IgxDateTimeEditor', () => {
             const change: SimpleChange = new SimpleChange(undefined, inputFormat, true);
             const changes: SimpleChanges = { inputFormat: change };
             dateTimeEditor.ngOnChanges(changes);
-        }
+        };
         describe('Properties & Events', () => {
             it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';

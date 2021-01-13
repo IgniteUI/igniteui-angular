@@ -28,17 +28,6 @@ export class IgxDividerDirective {
     @Input()
     public id = `igx-divider-${NEXT_ID++}`;
 
-
-    /**
-     * An @Input property that sets the value of the `inset` attribute.
-     * If not provided it will be set to `'0'`.
-     * ```html
-     * <igx-divider inset="16px"></igx-divider>
-     * ```
-     */
-    @Input('inset')
-    private _inset = '0';
-
     /**
      * An @Input property that sets the value of `role` attribute.
      * If not the default value of `separator` will be used.
@@ -74,16 +63,6 @@ export class IgxDividerDirective {
     @HostBinding('class.igx-divider--inset')
     @Input()
     public middle = false;
-
-    /**
-     * A getter that returns `true` if the type of the divider is `default`;
-     * ```typescript
-     * const isDefault = this.divider.isDefault;
-     * ```
-     */
-    get isSolid() {
-        return this.type === IgxDividerType.SOLID;
-    }
 
     /**
      * An @Input that sets the vertical attribute of the divider.
@@ -129,6 +108,27 @@ export class IgxDividerDirective {
             }
             return `${baseMargin} 0 ${baseMargin} ${this._inset}`;
         }
+    }
+
+
+    /**
+     * An @Input property that sets the value of the `inset` attribute.
+     * If not provided it will be set to `'0'`.
+     * ```html
+     * <igx-divider inset="16px"></igx-divider>
+     * ```
+     */
+    @Input('inset')
+    private _inset = '0';
+
+    /**
+     * A getter that returns `true` if the type of the divider is `default`;
+     * ```typescript
+     * const isDefault = this.divider.isDefault;
+     * ```
+     */
+    get isSolid() {
+        return this.type === IgxDividerType.SOLID;
     }
 }
 

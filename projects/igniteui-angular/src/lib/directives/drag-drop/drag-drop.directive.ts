@@ -170,9 +170,6 @@ export class IgxDragIgnoreDirective {
     selector: '[igxDrag]'
 })
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
-
-    protected ghostContext: any = null;
-
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
      * ```html
@@ -593,6 +590,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     public animInProgress = false;
 
+    protected ghostContext: any = null;
     protected _startX = 0;
     protected _startY = 0;
     protected _lastX = 0;
@@ -1063,6 +1061,52 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * @hidden
+     */
+    public onTransitionEnd(event) {
+        if ((!this._dragStarted && !this.animInProgress) || this._clicked) {
+            // Return if no dragging started and there is no animation in progress.
+            return ;
+        }
+
+        if (this.ghost && this.ghostElement) {
+            this._ghostStartX = this.baseLeft + this.getWindowScrollLeft();
+            this._ghostStartY = this.baseTop + this.getWindowScrollTop();
+
+            const ghostDestroyArgs: IDragGhostBaseEventArgs = {
+                owner: this,
+                ghostElement: this.ghostElement,
+                cancel: false
+            };
+            this.ghostDestroy.emit(ghostDestroyArgs);
+            if (ghostDestroyArgs.cancel) {
+                return;
+            }
+            this.ghostElement.parentNode.removeChild(this.ghostElement);
+            this.ghostElement = null;
+        } else if (!this.ghost) {
+            this.element.nativeElement.style.transitionProperty = '';
+            this.element.nativeElement.style.transitionDuration = '0.0s';
+            this.element.nativeElement.style.transitionTimingFunction = '';
+            this.element.nativeElement.style.transitionDelay = '';
+        }
+        this.animInProgress = false;
+        this._dragStarted = false;
+
+        // Execute transitioned after everything is reset so if the user sets new location on the base now it would work as expected.
+        this.zone.run(() => {
+            this.transitioned.emit({
+                originalEvent: event,
+                owner: this,
+                startX: this._startX,
+                startY: this._startY,
+                pageX: this._startX,
+                pageY: this._startY
+            });
+        });
+    }
+
+    /**
+     * @hidden
      * Create ghost element - if a Node object is provided it creates a clone of that node,
      * otherwise it clones the host element.
      * Bind all needed events.
@@ -1161,10 +1205,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         };
 
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
-        for (let i = 0; i < elementsFromPoint.length; i++) {
-            if (elementsFromPoint[i].getAttribute('droppable') === 'true' &&
-                elementsFromPoint[i] !== this.ghostElement && elementsFromPoint[i] !== this.element.nativeElement) {
-                topDropArea = elementsFromPoint[i];
+        for (const element of elementsFromPoint) {
+            if (element.getAttribute('droppable') === 'true' &&
+                element !== this.ghostElement && element !== this.element.nativeElement) {
+                topDropArea = element;
                 break;
             }
         }
@@ -1206,52 +1250,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
         this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this._lastDropArea = null;
-    }
-
-    /**
-     * @hidden
-     */
-    public onTransitionEnd(event) {
-        if ((!this._dragStarted && !this.animInProgress) || this._clicked) {
-            // Return if no dragging started and there is no animation in progress.
-            return ;
-        }
-
-        if (this.ghost && this.ghostElement) {
-            this._ghostStartX = this.baseLeft + this.getWindowScrollLeft();
-            this._ghostStartY = this.baseTop + this.getWindowScrollTop();
-
-            const ghostDestroyArgs: IDragGhostBaseEventArgs = {
-                owner: this,
-                ghostElement: this.ghostElement,
-                cancel: false
-            };
-            this.ghostDestroy.emit(ghostDestroyArgs);
-            if (ghostDestroyArgs.cancel) {
-                return;
-            }
-            this.ghostElement.parentNode.removeChild(this.ghostElement);
-            this.ghostElement = null;
-        } else if (!this.ghost) {
-            this.element.nativeElement.style.transitionProperty = '';
-            this.element.nativeElement.style.transitionDuration = '0.0s';
-            this.element.nativeElement.style.transitionTimingFunction = '';
-            this.element.nativeElement.style.transitionDelay = '';
-        }
-        this.animInProgress = false;
-        this._dragStarted = false;
-
-        // Execute transitioned after everything is reset so if the user sets new location on the base now it would work as expected.
-        this.zone.run(() => {
-            this.transitioned.emit({
-                originalEvent: event,
-                owner: this,
-                startX: this._startX,
-                startY: this._startY,
-                pageX: this._startX,
-                pageY: this._startY
-            });
-        });
     }
 
     /**
@@ -1346,17 +1344,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     selector: '[igxDrop]'
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
-
-    /**
-     * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
-     * ```html
-     * <div [igxDrop]="{ source: myElement }"></div>
-     * ```
-     *
-     * @memberof IgxDropDirective
-     */
-    @Input('igxDrop')
-    private _data: any;
     public get data(): any {
         return this._data;
     }
@@ -1499,6 +1486,17 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public dragover = false;
 
     /**
+     * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
+     * ```html
+     * <div [igxDrop]="{ source: myElement }"></div>
+     * ```
+     *
+     * @memberof IgxDropDirective
+     */
+    @Input('igxDrop')
+    private _data: any;
+
+    /**
      * @hidden
      */
     protected _destroy = new Subject<boolean>();
@@ -1506,6 +1504,43 @@ export class IgxDropDirective implements OnInit, OnDestroy {
 
     constructor(public element: ElementRef, private _renderer: Renderer2, private _zone: NgZone) {
         this._dropStrategy = new IgxDefaultDropStrategy();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('igxDrop', ['$event'])
+    public onDragDrop(event) {
+        if (!this.isDragLinked(event.detail.owner)) {
+            return;
+        }
+
+        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
+        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
+        const offsetX = event.detail.pageX - elementPosX;
+        const offsetY = event.detail.pageY - elementPosY;
+        const args: IDropDroppedEventArgs = {
+            owner: this,
+            originalEvent: event.detail.originalEvent,
+            drag: event.detail.owner,
+            dragData: event.detail.owner.data,
+            startX: event.detail.startX,
+            startY: event.detail.startY,
+            pageX: event.detail.pageX,
+            pageY: event.detail.pageY,
+            offsetX,
+            offsetY,
+            cancel: false
+        };
+        this._zone.run(() => {
+            this.dropped.emit(args);
+        });
+
+        if (this._dropStrategy && !args.cancel) {
+            const elementsAtPoint = event.detail.owner.getElementsAtPoint(event.detail.pageX, event.detail.pageY);
+            const insertIndex = this.getInsertIndexAt(event.detail.owner, elementsAtPoint);
+            this._dropStrategy.dropAction(event.detail.owner, this, insertIndex);
+        }
     }
 
     /**
@@ -1613,43 +1648,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * @hidden
-     */
-    @HostListener('igxDrop', ['$event'])
-    public onDragDrop(event) {
-        if (!this.isDragLinked(event.detail.owner)) {
-            return;
-        }
-
-        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
-        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
-        const offsetX = event.detail.pageX - elementPosX;
-        const offsetY = event.detail.pageY - elementPosY;
-        const args: IDropDroppedEventArgs = {
-            owner: this,
-            originalEvent: event.detail.originalEvent,
-            drag: event.detail.owner,
-            dragData: event.detail.owner.data,
-            startX: event.detail.startX,
-            startY: event.detail.startY,
-            pageX: event.detail.pageX,
-            pageY: event.detail.pageY,
-            offsetX,
-            offsetY,
-            cancel: false
-        };
-        this._zone.run(() => {
-            this.dropped.emit(args);
-        });
-
-        if (this._dropStrategy && !args.cancel) {
-            const elementsAtPoint = event.detail.owner.getElementsAtPoint(event.detail.pageX, event.detail.pageY);
-            const insertIndex = this.getInsertIndexAt(event.detail.owner, elementsAtPoint);
-            this._dropStrategy.dropAction(event.detail.owner, this, insertIndex);
-        }
-    }
-
     protected getWindowScrollTop() {
         return window.scrollY ? window.scrollY : (window.pageYOffset ? window.pageYOffset : 0);
     }
@@ -1665,25 +1663,25 @@ export class IgxDropDirective implements OnInit, OnDestroy {
         if (!dragLinkArray && !dropLinkArray) {
             return this.dropChannel === drag.dragChannel;
         } else if (!dragLinkArray && dropLinkArray) {
-            const dropLinks = <Array<any>>this.dropChannel;
-            for (let i = 0; i < dropLinks.length; i ++) {
-                if (dropLinks[i] === drag.dragChannel) {
+            const dropLinks = this.dropChannel as any [];
+            for (const link of dropLinks) {
+                if (link === drag.dragChannel) {
                     return true;
                 }
             }
         } else if (dragLinkArray && !dropLinkArray) {
-            const dragLinks = <Array<any>>drag.dragChannel;
-            for (let i = 0; i < dragLinks.length; i ++) {
-                if (dragLinks[i] === this.dropChannel) {
+            const dragLinks = drag.dragChannel as any [];
+            for (const link of dragLinks) {
+                if (link === this.dropChannel) {
                     return true;
                 }
             }
         } else {
-            const dragLinks = <Array<any>>drag.dragChannel;
-            const dropLinks = <Array<any>>this.dropChannel;
-            for (let i = 0; i < dragLinks.length; i ++) {
-                for (let j = 0; j < dropLinks.length; j ++) {
-                    if (dragLinks[i] === dropLinks[j]) {
+            const dragLinks = drag.dragChannel as any [];
+            const dropLinks = this.dropChannel as any [];
+            for (const draglink of dragLinks) {
+                for (const droplink of dropLinks) {
+                    if (draglink === droplink) {
                         return true;
                     }
                 }

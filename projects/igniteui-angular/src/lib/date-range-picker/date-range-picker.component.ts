@@ -371,6 +371,39 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         return `${format}${SingleInputDatesConcatenationString}${format}`;
     }
 
+    /**
+     * Gets calendar state.
+     *
+     * ```typescript
+     * let state = this.dateRange.collapsed;
+     * ```
+     */
+    public get collapsed(): boolean {
+        return this._collapsed;
+    }
+
+    /**
+     * The currently selected value / range from the calendar
+     *
+     * @remarks
+     * The current value is of type `DateRange`
+     *
+     * @example
+     * ```typescript
+     * const newValue: DateRange = { start: new Date("2/2/2012"), end: new Date("3/3/2013")};
+     * this.dateRangePicker.value = newValue;
+     * ```
+     */
+    public get value(): DateRange {
+        return this._value;
+    }
+
+    @Input()
+    public set value(value: DateRange) {
+        this.updateValue(value);
+        this.onChangeCallback(value);
+    }
+
     /** @hidden @internal */
     public get hasProjectedInputs(): boolean {
         return this.projectedInputs?.length > 0;
@@ -411,9 +444,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         closeOnOutsideClick: true,
         modal: false
     };
-    private onChangeCallback = (dateRange: DateRange) => { };
-    private onTouchCallback = () => { };
-    private onValidatorChange = () => { };
+    private onChangeCallback: (dateRange: DateRange) => void;
+    private onTouchCallback: () => void;
+    private onValidatorChange: () => void;
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
@@ -435,8 +468,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      */
     public open(overlaySettings?: OverlaySettings): void {
         if (!this.collapsed || this.disabled) {
- return;
-}
+            return;
+        }
 
         this.updateCalendar();
         const settings = this.mode === InteractionMode.Dialog ? this.dialogOverlaySettings : this.dropdownOverlaySettings;
@@ -475,44 +508,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         } else {
             this.open(overlaySettings);
         }
-    }
-
-    /**
-     * Gets calendar state.
-     *
-     * ```typescript
-     * let state = this.dateRange.collapsed;
-     * ```
-     */
-    public get collapsed(): boolean {
-        return this._collapsed;
-    }
-
-    /**
-     * The currently selected value / range from the calendar
-     *
-     * @remarks
-     * The current value is of type `DateRange`
-     *
-     * @example
-     * ```typescript
-     * const newValue: DateRange = { start: new Date("2/2/2012"), end: new Date("3/3/2013")};
-     * this.dateRangePicker.value = newValue;
-     * ```
-     */
-    public get value(): DateRange {
-        return this._value;
-    }
-
-    @Input()
-    public set value(value: DateRange) {
-        this.updateValue(value);
-        this.onChangeCallback(value);
-    }
-
-    private updateValue(value: DateRange) {
-        this._value = value ? value : null;
-        this.updateInputs();
     }
 
     /**
@@ -706,29 +701,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         }
     }
 
-    private updateValidityOnBlur() {
-        this.onTouchCallback();
-        if (this._ngControl) {
-            if (this.hasProjectedInputs) {
-                this.projectedInputs.forEach(i => {
-                    if (!this._ngControl.valid) {
-                        i.updateInputValidity(IgxInputState.INVALID);
-                    } else {
-                        i.updateInputValidity(IgxInputState.INITIAL);
-                    }
-                });
-            }
-
-            if (this.inputDirective) {
-                if (!this._ngControl.valid) {
-                    this.inputDirective.valid = IgxInputState.INVALID;
-                } else {
-                    this.inputDirective.valid = IgxInputState.INITIAL;
-                }
-            }
-        }
-    }
-
     /** @hidden @internal */
     public handleClosed(): void {
         this._collapsed = true;
@@ -771,12 +743,40 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             } else if (this.hasProjectedInputs) {
                 this.projectedInputs
                     .forEach(i => {
- i.inputDirective.valid = this.getInputState(i.isFocused);
-});
+                        i.inputDirective.valid = this.getInputState(i.isFocused);
+                    });
             }
         }
         this.setRequiredToInputs();
     };
+
+    private updateValue(value: DateRange) {
+        this._value = value ? value : null;
+        this.updateInputs();
+    }
+
+    private updateValidityOnBlur() {
+        this.onTouchCallback();
+        if (this._ngControl) {
+            if (this.hasProjectedInputs) {
+                this.projectedInputs.forEach(i => {
+                    if (!this._ngControl.valid) {
+                        i.updateInputValidity(IgxInputState.INVALID);
+                    } else {
+                        i.updateInputValidity(IgxInputState.INITIAL);
+                    }
+                });
+            }
+
+            if (this.inputDirective) {
+                if (!this._ngControl.valid) {
+                    this.inputDirective.valid = IgxInputState.INVALID;
+                } else {
+                    this.inputDirective.valid = IgxInputState.INITIAL;
+                }
+            }
+        }
+    }
 
     private updateDisabledState() {
         if (this.hasProjectedInputs) {

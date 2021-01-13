@@ -277,6 +277,14 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     /**
+     * The default `tabindex` attribute for the component
+     *
+     * @hidden
+     */
+    @HostBinding('attr.tabindex')
+    public tabindex = -1;
+
+    /**
      * An event that is emitted when the dialog is opened.
      * ```html
      * <igx-dialog (onOpen)="onDialogOpenHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
@@ -323,33 +331,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      */
     @Output() public isOpenChange = new EventEmitter<boolean>();
 
-    private _positionSettings: PositionSettings = {
-        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
-        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
-    };
-
-    private _overlayDefaultSettings: OverlaySettings;
-    private _closeOnOutsideSelect = false;
-    private _closeOnEscape = true;
-    private _isModal = true;
-    protected destroy$ = new Subject<boolean>();
-
     /**
      * @hidden
      */
     public get element() {
         return this.elementRef.nativeElement;
     }
-
-    /**
-     * The default `tabindex` attribute for the component
-     *
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = -1;
-
-    private _titleId: string;
 
     /**
      * Returns the value of state. Possible state values are "open" or "close".
@@ -442,6 +429,19 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         return this._titleId;
     }
 
+    protected destroy$ = new Subject<boolean>();
+
+    private _positionSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
+        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
+    };
+
+    private _overlayDefaultSettings: OverlaySettings;
+    private _closeOnOutsideSelect = false;
+    private _closeOnEscape = true;
+    private _isModal = true;
+    private _titleId: string;
+
     constructor(
         private elementRef: ElementRef,
         @Optional() private navService: IgxNavigationService
@@ -459,10 +459,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     ngAfterContentInit() {
         this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
-    }
-
-    private emitCloseFromDialog() {
-        this.onClose.emit({ dialog: this, event: null });
     }
 
     /**
@@ -507,7 +503,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     public toggle() {
-        this.isOpen ? this.close() : this.open();
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
     }
 
     /**
@@ -553,7 +553,10 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         if (this.navService && this.id) {
             this.navService.remove(this.id);
         }
+    }
 
+    private emitCloseFromDialog() {
+        this.onClose.emit({ dialog: this, event: null });
     }
 }
 

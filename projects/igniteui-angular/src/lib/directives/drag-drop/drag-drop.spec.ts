@@ -1822,7 +1822,7 @@ describe('Linked igxDrag/igxDrop ', () => {
     }));
 });
 
-function getDragDirsRects(dragDirs: QueryList<IgxDragDirective>) {
+const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
     dragDirs.forEach((dragDir) => {
         const dragElem = dragDir.element.nativeElement;
@@ -1830,16 +1830,15 @@ function getDragDirsRects(dragDirs: QueryList<IgxDragDirective>) {
     });
 
     return dragDirsRects;
-}
+};
 
-function getElemRects(nativeElem) {
-    return {
-        top: nativeElem.getBoundingClientRect().top,
-        left: nativeElem.getBoundingClientRect().left,
-        right: nativeElem.getBoundingClientRect().right,
-        bottom: nativeElem.getBoundingClientRect().bottom
-    };
-}
+const getElemRects = (nativeElem) => ({
+    top: nativeElem.getBoundingClientRect().top,
+    left: nativeElem.getBoundingClientRect().left,
+    right: nativeElem.getBoundingClientRect().right,
+    bottom: nativeElem.getBoundingClientRect().bottom
+});
+
 
 const generalStyles = [`
     .container {
