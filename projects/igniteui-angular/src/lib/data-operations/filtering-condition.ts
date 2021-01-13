@@ -33,13 +33,6 @@ export class IgxFilteringOperand {
     }
 
     /**
-     * @hidden
-     */
-    protected findValueInSet(target: any, searchVal: Set<any>) {
-        return searchVal.has(target);
-    }
-
-    /**
      * Returns an array of names of the conditions which are visible in the UI
      */
     public conditionList(): string[] {
@@ -62,6 +55,13 @@ export class IgxFilteringOperand {
      */
     public append(operation: IFilteringOperation) {
         this.operations.push(operation);
+    }
+
+    /**
+     * @hidden
+     */
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(target);
     }
 }
 
@@ -365,17 +365,17 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         return res;
     }
 
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        if (!target) {
+            return false;
+        }
+        return searchVal.has(target.toISOString());
+    }
+
     private validateInputData(target: Date) {
         if (!(target instanceof Date)) {
             throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
         }
-    }
-
-    protected findValueInSet(target: any, searchVal: Set<any>) {
-        if (!target) {
- return false;
-}
-        return searchVal.has(target.toISOString());
     }
 }
 

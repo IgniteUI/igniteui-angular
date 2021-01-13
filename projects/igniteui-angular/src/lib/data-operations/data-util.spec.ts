@@ -21,10 +21,9 @@ import {
 import { IPagingState, PagingError } from './paging-state.interface';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/public_api';
-import { group } from '@angular/animations';
 
 /* Test sorting */
-function testSort() {
+const testSort = () => {
     let data: any[] = [];
     let dataGenerator: DataGenerator;
     beforeEach(waitForAsync(() => {
@@ -89,9 +88,9 @@ function testSort() {
                 .toEqual(dataGenerator.generateArray(4, 0));
         });
     });
-}
+};
 
-function testGroupBy() {
+const testGroupBy = () => {
     let data: any[] = [];
     let dataGenerator: DataGenerator;
     let expr: ISortingExpression;
@@ -318,7 +317,7 @@ function testGroupBy() {
             expect(result[1].groups[1]).toEqual(result[3]);
         });
     });
-}
+};
 /* //Test sorting */
 
 /* Test filtering */
@@ -341,9 +340,9 @@ class CustomFilteringStrategy extends FilteringStrategy {
     }
 }
 
-function testFilter() {
+const testFilter = () => {
     const dataGenerator: DataGenerator = new DataGenerator();
-    const data: object[] = dataGenerator.data;
+    const data: any[] = dataGenerator.data;
     describe('test filtering', () => {
         it('filters \'number\' column greater than 3', () => {
             const state: IFilteringState = {
@@ -440,13 +439,13 @@ function testFilter() {
                 .toEqual([0, 2]);
         });
     });
-}
+};
 /* //Test filtering */
 
 /* Test paging */
-function testPage() {
+const testPage = () => {
     const dataGenerator: DataGenerator = new DataGenerator();
-    const data: object[] = dataGenerator.data;
+    const data: any[] = dataGenerator.data;
 
     describe('test paging', () => {
         it('paginates data', () => {
@@ -480,11 +479,11 @@ function testPage() {
                 .toEqual(dataGenerator.generateArray(0, 4));
         });
     });
-}
+};
 /* //Test paging */
 
 /* Test merging */
-function testMerging() {
+const testMerging = () => {
     describe('Test merging', () => {
         it('Should merge add transactions correctly', () => {
             const data = SampleTestData.personIDNameData();
@@ -613,7 +612,7 @@ function testMerging() {
             expect(data[0].Employees.length).toBe(1);
         });
     });
-}
+};
 /* //Test merging */
 
 describe('DataUtil', () => {

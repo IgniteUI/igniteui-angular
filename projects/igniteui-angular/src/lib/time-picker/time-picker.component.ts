@@ -1004,6 +1004,9 @@ export class IgxTimePickerComponent implements
     public ngOnDestroy(): void {
         this._destroy$.next(true);
         this._destroy$.complete();
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
+        }
     }
 
     /** @hidden @internal */

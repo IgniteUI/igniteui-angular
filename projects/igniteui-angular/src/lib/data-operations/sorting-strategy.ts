@@ -54,8 +54,8 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return a > b ? 1 : a < b ? -1 : 0;
     }
 
-    protected compareObjects(obj1: object,
-                             obj2: object,
+    protected compareObjects(obj1: any,
+                             obj2: any,
                              key: string,
                              reverse: number,
                              ignoreCase: boolean,
@@ -98,67 +98,6 @@ export class IgxSorting implements IGridSortingStrategy {
         return this.sortDataRecursive(data, expressions, 0, grid);
     }
 
-    private groupedRecordsByExpression(data: any[],
-            index: number,
-            expression: IGroupingExpression,
-            isDate: boolean = false): any[] {
-        let i;
-        let groupval;
-        const res = [];
-        const key = expression.fieldName;
-        const len = data.length;
-        res.push(data[index]);
-        groupval = this.getFieldValue(data[index], key, isDate);
-        index++;
-        const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
-        for (i = index; i < len; i++) {
-            if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
-                res.push(data[i]);
-            } else {
-                break;
-            }
-        }
-        return res;
-    }
-    private sortDataRecursive<T>(data: T[],
-                                 expressions: ISortingExpression[],
-                                 expressionIndex: number = 0,
-                                 grid: GridType): T[] {
-        let i;
-        let j;
-        let expr: ISortingExpression;
-        let gbData;
-        let gbDataLen;
-        const exprsLen = expressions.length;
-        const dataLen = data.length;
-        expressionIndex = expressionIndex || 0;
-        if (expressionIndex >= exprsLen || dataLen <= 1) {
-            return data;
-        }
-        expr = expressions[expressionIndex];
-        if (!expr.strategy) {
-            expr.strategy = DefaultSortingStrategy.instance();
-        }
-        const isDate = grid && grid.getColumnByName(expr.fieldName) ?
-            grid.getColumnByName(expr.fieldName).dataType === DATE_TYPE : false;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate);
-        if (expressionIndex === exprsLen - 1) {
-            return data;
-        }
-        // in case of multiple sorting
-        for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
-            gbDataLen = gbData.length;
-            if (gbDataLen > 1) {
-                gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
-            }
-            for (j = 0; j < gbDataLen; j++) {
-                data[i + j] = gbData[j];
-            }
-            i += gbDataLen - 1;
-        }
-        return data;
-    }
     protected groupDataRecursive<T>(data: T[], state: IGroupingState, level: number,
         parent: IGroupByRecord, metadata: IGroupByRecord[], grid: GridType = null,
         groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): T[] {
@@ -214,8 +153,68 @@ export class IgxSorting implements IGridSortingStrategy {
         }
         return result;
     }
+
     protected getFieldValue(obj: any, key: string, isDate: boolean = false): any {
         return isDate ? parseDate(resolveNestedPath(obj, key)) : resolveNestedPath(obj, key);
+    }
+
+    private groupedRecordsByExpression(data: any[],
+            index: number,
+            expression: IGroupingExpression,
+            isDate: boolean = false): any[] {
+        const res = [];
+        const key = expression.fieldName;
+        res.push(data[index]);
+        const groupval = this.getFieldValue(data[index], key, isDate);
+        index++;
+        const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
+        for (const obj of data) {
+            if (comparer(this.getFieldValue(obj, key, isDate), groupval) === 0) {
+                res.push(obj);
+            } else {
+                break;
+            }
+        }
+        return res;
+    }
+
+    private sortDataRecursive<T>(data: T[],
+                                 expressions: ISortingExpression[],
+                                 expressionIndex: number = 0,
+                                 grid: GridType): T[] {
+        let i;
+        let j;
+        let gbData;
+        let gbDataLen;
+        const exprsLen = expressions.length;
+        const dataLen = data.length;
+        expressionIndex = expressionIndex || 0;
+        if (expressionIndex >= exprsLen || dataLen <= 1) {
+            return data;
+        }
+        const expr: ISortingExpression = expressions[expressionIndex];
+        if (!expr.strategy) {
+            expr.strategy = DefaultSortingStrategy.instance();
+        }
+        const isDate = grid && grid.getColumnByName(expr.fieldName) ?
+            grid.getColumnByName(expr.fieldName).dataType === DATE_TYPE : false;
+        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate);
+        if (expressionIndex === exprsLen - 1) {
+            return data;
+        }
+        // in case of multiple sorting
+        for (i = 0; i < dataLen; i++) {
+            gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
+            gbDataLen = gbData.length;
+            if (gbDataLen > 1) {
+                gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);
+            }
+            for (j = 0; j < gbDataLen; j++) {
+                data[i + j] = gbData[j];
+            }
+            i += gbDataLen - 1;
+        }
+        return data;
     }
 }
 

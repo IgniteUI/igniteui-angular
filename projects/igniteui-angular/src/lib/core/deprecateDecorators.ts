@@ -3,21 +3,19 @@ import { isDevMode } from '@angular/core';
 /**
  * @hidden
  */
-export function DeprecateClass(message: string) {
+export const DeprecateClass = (message: string) => {
     let isMessageShown = false;
 
-    return function<T extends new(...args: any[]) => {} >(originalClass: T) {
-        return class extends originalClass {
-            constructor(...args) {
-                const target: any = originalClass;
-                const targetName = typeof target === 'function' ? target.name : target.constructor.name;
-                isMessageShown = showMessage(`${targetName}: ${message}`, isMessageShown);
+    return <T extends new(...args: any[]) => any>(originalClass: T) => class extends originalClass {
+        constructor(...args) {
+            const target: any = originalClass;
+            const targetName = typeof target === 'function' ? target.name : target.constructor.name;
+            isMessageShown = showMessage(`${targetName}: ${message}`, isMessageShown);
 
-                super(...args);
-            }
-        };
+            super(...args);
+        }
     };
-}
+};
 
 /**
  * @hidden
@@ -52,9 +50,8 @@ export function DeprecateProperty(message: string): PropertyDecorator {
         // if the target already has the property defined
         const originalDescriptor = Object.getOwnPropertyDescriptor(target, key);
         if (originalDescriptor) {
-            let getter; let setter;
-            getter = originalDescriptor.get;
-            setter = originalDescriptor.set;
+            const getter = originalDescriptor.get;
+            const setter = originalDescriptor.set;
 
             if (getter) {
                 originalDescriptor.get = function() {
@@ -94,22 +91,22 @@ export function DeprecateProperty(message: string): PropertyDecorator {
 /**
  * @hidden
  */
-function generateUniqueKey(target: any, key: string): string {
+const generateUniqueKey = (target: any, key: string): string => {
     let newKey = '_' + key;
     while (target.hasOwnProperty(newKey)) {
         newKey = '_' + newKey;
     }
 
     return newKey;
-}
+};
 
 /**
  * @hidden
  */
-export function showMessage(message: string, isMessageShown: boolean): boolean {
+export const showMessage = (message: string, isMessageShown: boolean): boolean => {
     if (!isMessageShown && isDevMode()) {
         console.warn(message);
     }
 
     return true;
-}
+};

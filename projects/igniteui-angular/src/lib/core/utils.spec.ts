@@ -88,7 +88,7 @@ describe('Utils', () => {
             const mapClone = cloneValue(mapInput);
             expect(mapInput).toBe(mapClone);
 
-            const setInput: Set<Number> = new Set();
+            const setInput: Set<number> = new Set();
             setInput.add(0);
             setInput.add(1);
             setInput.add(2);

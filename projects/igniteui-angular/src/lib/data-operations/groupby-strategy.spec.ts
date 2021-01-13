@@ -6,7 +6,7 @@ import { IgxGrouping } from './grouping-strategy';
 
 describe('Unit testing GroupingStrategy', () => {
     let dataGenerator: DataGenerator;
-    let data: object[];
+    let data: any[];
     const grouping = new IgxGrouping();
     beforeEach(() => {
         dataGenerator = new DataGenerator();

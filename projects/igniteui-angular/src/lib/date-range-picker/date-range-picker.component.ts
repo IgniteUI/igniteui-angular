@@ -655,6 +655,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.$destroy.complete();
         this.$toggleClickNotifier.next();
         this.$toggleClickNotifier.complete();
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
+        }
     }
 
     /** @hidden @internal */

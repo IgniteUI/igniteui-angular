@@ -1589,8 +1589,8 @@ export class IgxDatePickerWithCustomFormatterComponent {
     `
 })
 export class IgxDatePickerWithWeekStartComponent {
-    public date: Date = new Date(2017, 6, 8);
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date: Date = new Date(2017, 6, 8);
 }
 
 @Component({
@@ -1624,6 +1624,7 @@ export class IgxDatePickerTestComponent {
     `
 })
 export class IgxDatePickerWithPassedDateComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
     public date: Date = new Date(2017, 7, 7);
     public formatOptions = {
         day: 'numeric',
@@ -1631,7 +1632,6 @@ export class IgxDatePickerWithPassedDateComponent {
         weekday: 'short',
         year: 'numeric'
     };
-    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
 }
 
 @Component({
@@ -1640,8 +1640,8 @@ export class IgxDatePickerWithPassedDateComponent {
     `
 })
 export class IgxDatePickerWIthLocaleComponent {
-    public date: Date = new Date(2017, 7, 7);
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date: Date = new Date(2017, 7, 7);
 }
 
 @Component({
@@ -1650,8 +1650,8 @@ export class IgxDatePickerWIthLocaleComponent {
     `
 })
 export class IgxDatePickerNgModelComponent {
-    public val: Date = new Date(2011, 11, 11);
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public val: Date = new Date(2011, 11, 11);
 }
 
 @Component({
@@ -1684,8 +1684,8 @@ export class IgxDatePickerRetemplatedComponent {
     `
 })
 export class IgxDropDownDatePickerRetemplatedComponent {
-    public date: Date = new Date(2020, 9, 20);
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date: Date = new Date(2020, 9, 20);
 }
 
 @Component({
@@ -1694,8 +1694,8 @@ export class IgxDropDownDatePickerRetemplatedComponent {
     `
 })
 export class IgxDatePickerEditableComponent {
-    public date: Date = new Date(2011, 9, 20);
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date: Date = new Date(2011, 9, 20);
 }
 
 @Component({
@@ -1715,8 +1715,8 @@ export class IgxDatePickerEditableComponent {
     `
 })
 export class IgxDatePickerCustomizedComponent {
-    public date: Date = new Date(2019, 9, 20);
     @ViewChild(IgxDatePickerComponent, { static: true }) public customizedDatePicker: IgxDatePickerComponent;
+    public date: Date = new Date(2019, 9, 20);
 }
 
 @Component({

@@ -12,9 +12,9 @@ import {IgxNavigationService} from './nav.service';
  */
 @Directive({ selector: '[igxNavToggle]' })
 export class IgxNavigationToggleDirective {
-    public state: IgxNavigationService;
-
     @Input('igxNavToggle') private target;
+
+    public state: IgxNavigationService;
 
     constructor(nav: IgxNavigationService) {
         this.state = nav;
@@ -37,9 +37,9 @@ export class IgxNavigationToggleDirective {
  */
 @Directive({ selector: '[igxNavClose]' })
 export class IgxNavigationCloseDirective {
-    public state: IgxNavigationService;
-
     @Input('igxNavClose') private target;
+
+    public state: IgxNavigationService;
 
     constructor(nav: IgxNavigationService) {
         this.state = nav;

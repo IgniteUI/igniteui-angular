@@ -29,7 +29,7 @@ import { setImmediate } from './setImmediate';
 /**
  * @hidden
  */
-export function cloneArray(array: any[], deep?: boolean) {
+export const cloneArray = (array: any[], deep?: boolean) => {
     const arr = [];
     if (!array) {
         return arr;
@@ -39,14 +39,14 @@ export function cloneArray(array: any[], deep?: boolean) {
         arr[i] = deep ? cloneValue(array[i]) : array[i];
     }
     return arr;
-}
+};
 
 /**
  * Doesn't clone leaf items
  *
  * @hidden
  */
-export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
+export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] => {
     const result: any[] = [];
     if (!array) {
         return result;
@@ -60,7 +60,7 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
         result.push(clonedItem);
     }
     return result;
-}
+};
 
 /**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
@@ -70,13 +70,11 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
  * @returns Obj1 with merged cloned keys from Obj2
  * @hidden
  */
-export function mergeObjects(obj1: {}, obj2: {}): any {
-    return mergeWith(obj1, obj2, (objValue, srcValue) => {
-        if (Array.isArray(srcValue)) {
-            return objValue = srcValue;
-        }
-    });
-}
+export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue, srcValue) => {
+    if (Array.isArray(srcValue)) {
+        return objValue = srcValue;
+    }
+});
 
 /**
  * Creates deep clone of provided value.
@@ -87,7 +85,7 @@ export function mergeObjects(obj1: {}, obj2: {}): any {
  * @returns Deep copy of provided value
  * @hidden
  */
-export function cloneValue(value: any): any {
+export const cloneValue = (value: any): any => {
     if (isDate(value)) {
         return new Date(value.getTime());
     }
@@ -108,7 +106,7 @@ export function cloneValue(value: any): any {
         return result;
     }
     return value;
-}
+};
 
 /**
  * Parse provided input to Date.
@@ -117,13 +115,13 @@ export function cloneValue(value: any): any {
  * @returns Date if parse succeed or null
  * @hidden
  */
-export function parseDate(value: any): Date | null {
+export const parseDate = (value: any): Date | null => {
     // if value is Invalid Date return null
     if (isDate(value)) {
         return !isNaN(value.getTime()) ? value : null;
     }
     return value ? new Date(value) : null;
-}
+};
 
 /**
  * Returns an array with unique dates only.
@@ -132,15 +130,13 @@ export function parseDate(value: any): Date | null {
  * @returns collection of unique dates.
  * @hidden
  */
-export function uniqueDates(columnValues: any[]) {
-    return columnValues.reduce((a, c) => {
+export const uniqueDates = (columnValues: any[]) => columnValues.reduce((a, c) => {
         if (!a.cache[c.label]) {
- a.result.push(c);
-}
+            a.result.push(c);
+        }
         a.cache[c.label] = true;
         return a;
     }, { result: [], cache: {} }).result;
-}
 
 /**
  * Checks if provided variable is Object
@@ -149,9 +145,7 @@ export function uniqueDates(columnValues: any[]) {
  * @returns true if provided variable is Object
  * @hidden
  */
-export function isObject(value: any): boolean {
-    return value && value.toString() === '[object Object]';
-}
+export const isObject = (value: any): boolean => value && value.toString() === '[object Object]';
 
 /**
  * Checks if provided variable is Date
@@ -160,9 +154,7 @@ export function isObject(value: any): boolean {
  * @returns true if provided variable is Date
  * @hidden
  */
-export function isDate(value: any): boolean {
-    return value instanceof Date;
-}
+export const isDate = (value: any): boolean => value instanceof Date;
 
 /**
  * Checks if the two passed arguments are equal
@@ -173,16 +165,17 @@ export function isDate(value: any): boolean {
  * @returns: `boolean`
  * @hidden
  */
-export function isEqual(obj1, obj2): boolean {
+export const isEqual = (obj1, obj2): boolean => {
     if (isDate(obj1) && isDate(obj2)) {
         return obj1.getTime() === obj2.getTime();
     }
     return obj1 === obj2;
-}
+};
 
 /**
  * @hidden
  */
+/* eslint-disable @typescript-eslint/naming-convention */
 export const enum KEYCODES {
     ENTER = 13,
     SPACE = 32,
@@ -225,6 +218,7 @@ export const enum KEYS {
     HOME = 'Home',
     END = 'End'
 }
+/* eslint-enable @typescript-eslint/naming-convention */
 
 /**
  * @hidden
@@ -236,7 +230,7 @@ export const enum KEYS {
  * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
  * ```
  */
-export function getNodeSizeViaRange(range: Range, node: any): number {
+export const getNodeSizeViaRange = (range: Range, node: any): number => {
     let overflow = null;
     if (!isFirefox()) {
         overflow = node.style.overflow;
@@ -253,7 +247,7 @@ export function getNodeSizeViaRange(range: Range, node: any): number {
     }
 
     return width;
-}
+};
 /**
  * @hidden
  * Returns the actual size of the node content, using Canvas
@@ -275,24 +269,23 @@ export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
 /**
  * @hidden
  */
-export function isIE(): boolean {
-    return navigator.appVersion.indexOf('Trident/') > 0;
-}
-/**
- * @hidden
- */
-export function isEdge(): boolean {
-    const edgeBrowser = /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
-    return edgeBrowser;
-}
+export const isIE = (): boolean => navigator.appVersion.indexOf('Trident/') > 0;
 
 /**
  * @hidden
  */
-export function isFirefox(): boolean {
+export const isEdge = (): boolean => {
+    const edgeBrowser = /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+    return edgeBrowser;
+};
+
+/**
+ * @hidden
+ */
+export const isFirefox = (): boolean => {
     const firefoxBrowser = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     return firefoxBrowser;
-}
+};
 
 /**
  * @hidden
@@ -303,40 +296,36 @@ export class PlatformUtil {
 
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
 
-    constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    constructor(@Inject(PLATFORM_ID) private platformId) {
     }
 }
 
 /**
  * @hidden
  */
-export function isLeftClick(event: PointerEvent) {
-    return event.button === 0;
-}
+export const isLeftClick = (event: PointerEvent) => event.button === 0;
 
 /** @hidden */
-export function isNavigationKey(key: string): boolean {
-    return [
-        'down',
-        'up',
-        'left',
-        'right',
-        'arrowdown',
-        'arrowup',
-        'arrowleft',
-        'arrowright',
-        'home',
-        'end',
-        'space',
-        'spacebar',
-        ' '
-    ].indexOf(key) !== -1;
-}
+export const isNavigationKey = (key: string): boolean => [
+    'down',
+    'up',
+    'left',
+    'right',
+    'arrowdown',
+    'arrowup',
+    'arrowleft',
+    'arrowright',
+    'home',
+    'end',
+    'space',
+    'spacebar',
+    ' '
+].indexOf(key) !== -1;
 
 /**
  * @hidden
  */
-export function flatten(arr: any[]) {
+export const flatten = (arr: any[]) => {
     let result = [];
 
     arr.forEach(el => {
@@ -347,7 +336,7 @@ export function flatten(arr: any[]) {
         }
     });
     return result;
-}
+};
 
 export interface CancelableEventArgs {
     /**
@@ -392,7 +381,8 @@ export const NAVIGATION_KEYS = new Set([
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), ...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS),
+                                    ...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
 export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc', 'l',
     /** This symbol corresponds to the Alt + L combination under MAC. */
     '¬']);
@@ -405,16 +395,14 @@ export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'e
  * Run the resizeObservable outside angular zone, because it patches the MutationObserver which causes an infinite loop.
  * Related issue: https://github.com/angular/angular/issues/31712
  */
-export function resizeObservable(target: HTMLElement): Observable<ResizeObserverEntry[]> {
-    return new Observable((observer) => {
-        const instance = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-            observer.next(entries);
-        });
-        instance.observe(target);
-        const unsubscribe = () => instance.disconnect();
-        return unsubscribe;
+export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => new Observable((observer) => {
+    const instance = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+        observer.next(entries);
     });
-}
+    instance.observe(target);
+    const unsubscribe = () => instance.disconnect();
+    return unsubscribe;
+});
 
 /**
  * @hidden
@@ -422,7 +410,7 @@ export function resizeObservable(target: HTMLElement): Observable<ResizeObserver
  *
  * Compares two maps.
  */
-export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
+export const compareMaps = (map1: Map<any, any>, map2: Map<any, any>): boolean => {
     if (!map2) {
         return !map1 ? true : false;
     }
@@ -442,7 +430,7 @@ export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
         }
     }
     return match;
-}
+};
 
 /**
  *
@@ -452,7 +440,7 @@ export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
  * @hidden
  * @internal
  */
-export function resolveNestedPath(obj: any, path: string) {
+export const resolveNestedPath = (obj: any, path: string) => {
     const parts = path?.split('.') ?? [];
     let current = obj[parts.shift()];
 
@@ -463,7 +451,7 @@ export function resolveNestedPath(obj: any, path: string) {
     });
 
     return current;
-}
+};
 
 /**
  *
@@ -479,7 +467,7 @@ export function resolveNestedPath(obj: any, path: string) {
  * @hidden
  * @internal
  */
-export function reverseMapper(path: string, value: any) {
+export const reverseMapper = (path: string, value: any) => {
     const obj = {};
     const parts = path?.split('.') ?? [];
 
@@ -501,9 +489,9 @@ export function reverseMapper(path: string, value: any) {
     });
 
     return obj;
-}
+};
 
-export function yieldingLoop(count: number, chunkSize: number, callback: (index: number) => void, done: () => void) {
+export const yieldingLoop = (count: number, chunkSize: number, callback: (index: number) => void, done: () => void) => {
     let i = 0;
     const chunk = () => {
         const end = Math.min(i + chunkSize, count);
@@ -517,23 +505,16 @@ export function yieldingLoop(count: number, chunkSize: number, callback: (index:
         }
     };
     chunk();
-}
+};
 
-export function mkenum<T extends { [index: string]: U }, U extends string>(x: T) {
- return x;
-}
+export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
-export function reverseAnimationResolver(animation: AnimationReferenceMetadata): AnimationReferenceMetadata {
-    return oppositeAnimation.get(animation) ?? animation;
-}
+export const reverseAnimationResolver = (animation: AnimationReferenceMetadata): AnimationReferenceMetadata =>
+                                        oppositeAnimation.get(animation) ?? animation;
 
-export function isHorizontalAnimation(animation: AnimationReferenceMetadata): boolean {
-    return horizontalAnimations.includes(animation);
-}
+export const isHorizontalAnimation = (animation: AnimationReferenceMetadata): boolean => horizontalAnimations.includes(animation);
 
-export function isVerticalAnimation(animation: AnimationReferenceMetadata): boolean {
-    return verticalAnimations.includes(animation);
-}
+export const isVerticalAnimation = (animation: AnimationReferenceMetadata): boolean => verticalAnimations.includes(animation);
 
 const oppositeAnimation: Map<AnimationReferenceMetadata, AnimationReferenceMetadata> = new Map([
     [fadeIn, fadeIn],

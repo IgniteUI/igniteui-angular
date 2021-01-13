@@ -669,6 +669,28 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
+    /** @hidden @internal */
+    @ContentChild(IgxLabelDirective)
+    public _labelDirectiveUserTemplate: IgxLabelDirective;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective })
+    public headerTemplate: IgxCalendarHeaderTemplateDirective;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
+    public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
+    public datePickerActionsDirective: IgxDatePickerActionsDirective;
+
     /*
      * @hidden
      */
@@ -690,24 +712,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ContentChild(IgxInputGroupComponent)
     protected _inputGroupUserTemplate: IgxInputGroupComponent;
 
-    @ViewChild(IgxInputDirective, { read: ElementRef })
-    private _inputElementRef: ElementRef;
-
     @ContentChild(IgxInputDirective, { read: ElementRef })
     protected _inputUserTemplateElementRef: ElementRef;
 
-    @ViewChild(IgxInputDirective)
-    private _inputDirective: IgxInputDirective;
-
-    @ContentChildren(IgxInputDirective, { descendants: true })
-    private _inputDirectiveUserTemplates: QueryList<IgxInputDirective>;
-
     @ViewChild(IgxLabelDirective)
     protected _labelDirective: IgxLabelDirective;
-
-    /** @hidden @internal */
-    @ContentChild(IgxLabelDirective)
-    public _labelDirectiveUserTemplate: IgxLabelDirective;
 
     /**
      * @hidden
@@ -715,23 +724,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective })
-    public headerTemplate: IgxCalendarHeaderTemplateDirective;
+    @ViewChild(IgxInputDirective, { read: ElementRef })
+    private _inputElementRef: ElementRef;
 
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
-    public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
+    @ViewChild(IgxInputDirective)
+    private _inputDirective: IgxInputDirective;
 
-    /**
-     * @hidden
-     */
-    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
-    public datePickerActionsDirective: IgxDatePickerActionsDirective;
+    @ContentChildren(IgxInputDirective, { descendants: true })
+    private _inputDirectiveUserTemplates: QueryList<IgxInputDirective>;
 
     /** @hidden @internal */
     public calendar: IgxCalendarComponent;
@@ -802,6 +802,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         private _renderer: Renderer2) {
     }
 
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onSpaceClick(event: KeyboardEvent) {
+        this.openDialog();
+        event.preventDefault();
+    }
+
     /** @hidden @internal */
     public writeValue(value: Date) {
         this._value = value;
@@ -837,16 +847,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return null;
     }
     //#endregion
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.spacebar', ['$event'])
-    @HostListener('keydown.space', ['$event'])
-    public onSpaceClick(event: KeyboardEvent) {
-        this.openDialog();
-        event.preventDefault();
-    }
 
     /** @hidden */
     public getEditElement() {
@@ -985,6 +985,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public ngOnDestroy(): void {
         if (this._componentID) {
             this._overlayService.hide(this._componentID);
+        }
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
         }
         this._destroy$.next(true);
         this._destroy$.complete();

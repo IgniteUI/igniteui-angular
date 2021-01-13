@@ -23,7 +23,7 @@ export interface IDataColumn {
  */
 export class DataGenerator {
     public columns: IDataColumn[] = [];
-    public data: object[] = [];
+    public data: any [] = [];
     constructor(countRows = COUNT_ROWS, countCols = COUNT_COLS) {
         this.columns = this.generateColumns(countCols);
         this.data = this.generateData(countRows);
@@ -44,8 +44,6 @@ export class DataGenerator {
     }
     private generateColumns(countCols): IDataColumn[] {
         let i: number;
-        let len: number;
-        let res;
         const defaultColumns: IDataColumn[] = [
             {
                 fieldName: 'number',
@@ -70,8 +68,8 @@ export class DataGenerator {
         if (countCols <= defaultColumns.length) {
             return defaultColumns.slice(0, countCols);
         }
-        len = countCols - defaultColumns.length;
-        res = defaultColumns;
+        const len = countCols - defaultColumns.length;
+        const res = defaultColumns;
         for (i = 0; i < len; i++) {
             res.push({
                 fieldName: `col${i}`,

@@ -13,12 +13,12 @@ const EVENT_SUFFIX = 'precise';
  */
 @Injectable()
 export class HammerGesturesManager {
-    private platformBrowser: boolean;
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
      */
     protected hammerOptions: HammerOptions = {};
 
+    private platformBrowser: boolean;
     private _hammerManagers: Array<{ element: EventTarget; manager: HammerManager }> = [];
 
     constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any, private platformUtil: PlatformUtil) {
@@ -30,9 +30,7 @@ export class HammerGesturesManager {
                 inputClass: Hammer.TouchInput,
                 recognizers: [
                     [Hammer.Pan, { threshold: 0 }],
-                    [Hammer.Swipe, {
-                        direction: Hammer.DIRECTION_HORIZONTAL
-                    }],
+                    [Hammer.Swipe, { direction: Hammer.DIRECTION_HORIZONTAL }],
                     [Hammer.Tap],
                     [Hammer.Tap, { event: 'doubletap', taps: 2 }, ['tap']]
                 ]
@@ -65,15 +63,9 @@ export class HammerGesturesManager {
                 mc = new Hammer(element, Object.assign(this.hammerOptions, options));
                 this.addManagerForElement(element, mc);
             }
-            const handler = (eventObj) => {
- this._zone.run(() => {
- eventHandler(eventObj);
-});
-};
+            const handler = (eventObj) => this._zone.run(() => eventHandler(eventObj));
             mc.on(eventName, handler);
-            return () => {
- mc.off(eventName, handler);
-};
+            return () => mc.off(eventName, handler);
         });
     }
 

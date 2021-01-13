@@ -662,13 +662,13 @@ describe('IgxDateRangePicker', () => {
                 calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
             });
 
-            function verifyDateRange() {
+            const verifyDateRange = () => {
                 expect(dateRange.value.start).toEqual(startDate);
                 expect(dateRange.value.end).toEqual(endDate);
                 expect(startInput.nativeElement.value).toEqual(ControlsFunction.formatDate(startDate, DEFAULT_FORMAT_OPTIONS));
                 const expectedEndDate = endDate ? ControlsFunction.formatDate(endDate, DEFAULT_FORMAT_OPTIONS) : '';
                 expect(endInput.nativeElement.value).toEqual(expectedEndDate);
-            }
+            };
 
             describe('Selection tests', () => {
                 it('should assign range values correctly when selecting dates from the calendar', () => {

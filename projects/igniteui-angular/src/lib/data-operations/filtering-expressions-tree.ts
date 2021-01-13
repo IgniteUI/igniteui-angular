@@ -143,9 +143,7 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
             return true;
         }
 
-        let expr;
-        for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-            expr = expressionsTree.filteringOperands[i];
+        for (const expr of expressionsTree.filteringOperands) {
             if ((expr instanceof FilteringExpressionsTree)) {
                 return this.isFilteringExpressionsTreeForColumn(expr, fieldName);
             } else {
