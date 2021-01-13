@@ -168,9 +168,10 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     @ContentChildren(IgxChipComponent, { descendants: true })
     public chipsList: QueryList<IgxChipComponent>;
 
+    protected destroy$ = new Subject<boolean>();
+
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
-    protected destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public element: ElementRef,
         private _iterableDiffers: IterableDiffers) {

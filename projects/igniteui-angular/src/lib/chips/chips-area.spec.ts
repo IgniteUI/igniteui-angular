@@ -23,17 +23,16 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
     `
 })
 class TestChipComponent {
-
-    public chipList = [
-        { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: false },
-        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
-    ];
-
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
     public chips: QueryList<IgxChipComponent>;
+
+    public chipList = [
+        { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: false },
+        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
+    ];
 
     constructor(public cdr: ChangeDetectorRef) {}
 }
@@ -69,6 +68,11 @@ class TestChipSelectComponent extends TestChipComponent {
     `
 })
 class TestChipReorderComponent {
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChildren('chipElem', { read: IgxChipComponent})
+    public chips: QueryList<IgxChipComponent>;
 
     public chipList = [
         { id: 'Country', text: 'Country' },
@@ -77,19 +81,12 @@ class TestChipReorderComponent {
         { id: 'FirstName', text: 'First Name' },
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChildren('chipElem', { read: IgxChipComponent})
-    public chips: QueryList<IgxChipComponent>;
-
     constructor(public cdr: ChangeDetectorRef) {}
 
     chipsOrderChanged(event) {
         const newChipList = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipList.filter((item) => item.id === event.chipsArray[i].id)[0];
-            newChipList.push(chipItem);
+        for (const chip of event.chipsArray) {
+            newChipList.push(this.chipList.find((item) => item.id === chip.id));
         }
         this.chipList = newChipList;
     }
@@ -448,42 +445,44 @@ describe('IgxChipsArea ', () => {
             expect(newSecondChipLeft).toEqual(secondChipLeft);
         });
 
-        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async () => {
-            chipArea = fix.componentInstance.chipsArea;
-            const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const targetChip = chipComponents[2].componentInstance;
-            const targetChipElem = targetChip.elementRef.nativeElement;
+        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice',
+            (async () => {
+                chipArea = fix.componentInstance.chipsArea;
+                const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+                const targetChip = chipComponents[2].componentInstance;
+                const targetChipElem = targetChip.elementRef.nativeElement;
 
-            targetChipElem.focus();
-            fix.detectChanges();
+                targetChipElem.focus();
+                fix.detectChanges();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-            targetChip.onChipKeyDown(rightKeyEvent);
-            fix.detectChanges();
+                targetChip.onChipKeyDown(rightKeyEvent);
+                fix.detectChanges();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
 
-            targetChip.onChipKeyDown(leftKeyEvent);
-            fix.detectChanges();
-            await wait();
+                targetChip.onChipKeyDown(leftKeyEvent);
+                fix.detectChanges();
+                await wait();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-            targetChip.onChipKeyDown(leftKeyEvent);
-            fix.detectChanges();
-            await wait();
+                targetChip.onChipKeyDown(leftKeyEvent);
+                fix.detectChanges();
+                await wait();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
-        }));
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+            })
+        );
 
         it('should not reorder chips for shift + leftarrow when the chip is going out of bounds', () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
