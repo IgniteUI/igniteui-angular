@@ -23,8 +23,11 @@ jobs:
       uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
-    - run: npm ci
-    - run: npm run lint:lib
+    - name: Install packages
+       run: npm ci
+    - name: Lint
+      if: matrix.node-version == '14.x'
+      run: npm run lint:lib
     - run: npm run build:lib
     - run: npm run test:lib:others
       env:
