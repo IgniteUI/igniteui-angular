@@ -14,7 +14,7 @@ import {
 } from './toast.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-fdescribe('IgxToast', () => {
+describe('IgxToast', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
