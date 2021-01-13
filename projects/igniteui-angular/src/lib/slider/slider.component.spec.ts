@@ -28,7 +28,7 @@ interface FakeDoc {
     documentElement: { dir?: string };
 }
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -1656,7 +1656,7 @@ describe('IgxSlider', () => {
 
         return new Promise((resolve, reject) => {
             Simulator.gestures.pan(element, panOptions, () => {
-                resolve();
+                resolve(null);
             });
         });
     }

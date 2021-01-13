@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
@@ -7,11 +7,12 @@ registerLocaleData(localeFr);
 import {
     IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
 } from 'igniteui-angular';
+import { fromEvent } from 'rxjs';
 @Component({
     selector: 'app-grid-cellediting',
     templateUrl: 'grid-cellEditing.component.html'
 })
-export class GridCellEditingComponent {
+export class GridCellEditingComponent implements AfterViewInit {
 
     orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
@@ -41,6 +42,7 @@ export class GridCellEditingComponent {
     public selectionMode;
     public earliest = EarliestSummary;
 
+    private node;
     constructor() {
         const date = new Date();
         this.data = data;
@@ -51,6 +53,53 @@ export class GridCellEditingComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.selectionMode = GridSelectionMode.multiple;
+    }
+
+    private subscription;
+    private colIdx = 0;
+    public ngAfterViewInit() {
+        this.node = this.gridWithPK.navigation.activeNode;
+        this.subscription = fromEvent(
+          this.gridWithPK.tbody.nativeElement,
+          'keydown'
+        ).subscribe((args: KeyboardEvent) => {
+          if (args.key.toLowerCase() === 'tab') {
+            if (this.gridWithPK.navigation.activeNode.row !== this.node.row) {
+                this.colIdx = 0;
+            }
+
+            this.node = this.gridWithPK.navigation.activeNode;
+            const columns = this.gridWithPK.columnList.filter(c => !c.columnGroup && c.visibleIndex >= 0);
+            const nextCol = args.shiftKey ?
+                // columns.reverse().find(c => c.index < this.colIdx).visibleIndex :
+                columns.reverse().find(c => c.index < this.colIdx).visibleIndex :
+                columns.find(c => c.index > this.colIdx).visibleIndex;
+            // const nextCol = columns.find(c => c.index > this.colIdx).visibleIndex;
+
+            const cell = this.gridWithPK.getCellByColumnVisibleIndex(this.node.row, nextCol);
+            // const cell = args.shiftKey
+            //   ? this.gridWithPK.getPreviousCell(node.row, node.column)
+            //   : this.gridWithPK.getNextCell(node.row, node.column);
+
+            // console.log(cell);
+            if (
+              cell.rowIndex !== this.node.row ||
+              cell.visibleColumnIndex !== this.colIdx
+            ) {
+              args.preventDefault();
+              this.gridWithPK.navigateTo(cell.rowIndex, nextCol, obj => {
+                this.gridWithPK.clearCellSelection();
+                obj.target.activate(args);
+                if (obj.target.editable) {
+                    this.gridWithPK.crudService.enterEditMode(obj.target);
+                }
+                this.gridWithPK.cdr.detectChanges();
+              });
+            }
+
+            this.colIdx = nextCol;
+         }
+        });
     }
 
     public addRow() {
