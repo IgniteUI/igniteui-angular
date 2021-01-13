@@ -3,7 +3,7 @@
     "changes": [
         {
             "name": "fontSet",
-            "replaceWith": "familly",
+            "replaceWith": "family",
             "owner": {
                 "selector": "igx-icon",
                 "type": "component"
