@@ -15,12 +15,6 @@ export enum CalendarView {
     selector: '[igxMonthPickerBase]'
 })
 export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
-
-    /**
-     * Holds month view index we are operating on.
-     */
-    protected activeViewIdx = 0;
-
     /**
      * @hidden
      */
@@ -70,6 +64,11 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     public get isDecadeView(): boolean {
         return this._activeView === CalendarView.DECADE;
     }
+
+    /**
+     * Holds month view index we are operating on.
+     */
+    protected activeViewIdx = 0;
 
     /**
      * @hidden

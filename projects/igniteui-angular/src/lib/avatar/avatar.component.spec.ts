@@ -130,17 +130,18 @@ describe('Avatar', () => {
         expect(hostEl.classList).toContain(classes.icon);
     });
 
-    it('Initializes image avatar', () => {
+    fit('Initializes image avatar', () => {
         const fixture = TestBed.createComponent(InitImageAvatarComponent);
         fixture.detectChanges();
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
         expect(instance.type).toEqual(IgxAvatarType.IMAGE);
-        expect(instance.image).toBeTruthy();
-        expect(instance.image.nativeElement.style.backgroundImage).toBeDefined();
+        const image = instance.elementRef.nativeElement.children[0];
+        expect(image).toBeTruthy();
+        expect(image.style.backgroundImage).toBeDefined();
 
-        expect(instance.image.nativeElement.classList).toContain(`${baseClass}__image`);
+        expect(image.classList).toContain(`${baseClass}__image`);
         expect(hostEl.classList).toContain(classes.image);
     });
 

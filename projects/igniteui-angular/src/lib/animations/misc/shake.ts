@@ -71,7 +71,7 @@ const baseParams: IAnimationParams = {
     delay: '0s',
     direction: 'X',
     duration: '800ms',
-    easing: EaseInOut.quad,
+    easing: EaseInOut.Quad,
     endAngle: 0,
     endDistance: '8px',
     startAngle: 0,

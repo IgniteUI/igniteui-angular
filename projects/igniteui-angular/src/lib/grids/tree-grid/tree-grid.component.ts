@@ -142,6 +142,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
 
     /**
+     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * ```html
+     * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id  = `igx-tree-grid-${NEXT_ID++}`;
+
+    /**
      * @hidden
      * @internal
      */
@@ -226,28 +238,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public loadingRows = new Set<any>();
 
     protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
-    private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
     private _expansionDepth = Infinity;
     private _filteredData = null;
-
-    /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
-     * ```html
-     * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
-     * ```
-     *
-     * @memberof IgxTreeGridComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public get id(): string {
-        return this._id;
-    }
-    public set id(value: string) {
-        this._id = value;
-    }
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.

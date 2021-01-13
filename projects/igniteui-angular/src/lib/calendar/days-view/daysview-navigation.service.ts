@@ -23,11 +23,11 @@ export class IgxDaysViewNavigationService {
      */
     public focusNextDate(target: HTMLElement, key: string, nextView = false) {
         if (target.childElementCount === 0) {
- target = target.parentElement;
-}
+            target = target.parentElement;
+        }
         if (key.indexOf('Arrow') === -1) {
- key = ARROW.concat(key);
-}
+            key = ARROW.concat(key);
+        }
         const monthView = this.monthView;
         const node = monthView.dates.find((date) => date.nativeElement === target);
         let dates = monthView.dates.toArray();
@@ -35,8 +35,8 @@ export class IgxDaysViewNavigationService {
         const index = dates.indexOf(node);
 
         if (!node) {
- return;
-}
+            return;
+        }
 
         // focus item in current month
         switch (key) {
@@ -131,8 +131,8 @@ export class IgxDaysViewNavigationService {
         // focus item in prev/next month, which is currently out of view
         let dayIsNextMonth: boolean; // determine what we need to check for next date - if it belongs to prev or next month
         if (day) {
- dayIsNextMonth = step > 0 ? day.date.isNextMonth : day.date.isPrevMonth;
-}
+            dayIsNextMonth = step > 0 ? day.date.isNextMonth : day.date.isPrevMonth;
+        }
         if (monthView.changeDaysView && !nextMonthView && ((day && dayIsNextMonth) || !day)) {
             const monthAction = step > 0 ? ScrollMonth.NEXT : ScrollMonth.PREV;
             monthView.onViewChanging.emit({monthAction, key, nextDate});
@@ -171,9 +171,9 @@ export class IgxDaysViewNavigationService {
 
     private focusFirstDay(monthView: IgxDaysViewComponent): boolean {
         const dates = monthView.dates.filter(d => d.isCurrentMonth);
-        for (let i = 0; i < dates.length; i++) {
-            if (dates[i].isFocusable) {
-                dates[i].nativeElement.focus();
+        for (const date of dates) {
+            if (date.isFocusable) {
+                date.nativeElement.focus();
                 return true;
             }
         }

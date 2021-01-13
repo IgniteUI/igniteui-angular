@@ -13,8 +13,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 
-declare let Simulator: any;
-
 describe('Carousel', () => {
     configureTestSuite();
     let fixture;
@@ -889,7 +887,7 @@ class HelperTestFunctions {
             deltaY: 0,
             duration: 100,
             velocity,
-            preventDefault: <any>( ( e: any ) => {  })
+            preventDefault: ( ( e: any ) => {  })
         };
 
         carouselElement.triggerEventHandler(event, panOptions);

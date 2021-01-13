@@ -25,8 +25,6 @@ import { Subject } from 'rxjs';
  * <igx-icon color="#00ff00" isActive="true">home</igx-icon>
  * ```
  */
-let NEXT_ID = 0;
-
 @Component({
     selector: 'igx-icon',
     templateUrl: 'icon.component.html'
@@ -56,18 +54,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      */
     @HostBinding('attr.aria-hidden')
     public ariaHidden = true;
-
-    /**
-     * An @Input property that sets the value of the `id` attribute.
-     *
-     * @example
-     * ```html
-     * <igx-icon id="igx-icon-1" fontSet="material">settings</igx-icon>
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-icon-${NEXT_ID++}`;
 
     /**
      * An @Input property that sets the value of the `fontSet`. By default it's "material".
@@ -122,18 +108,11 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     @ViewChild('svgImage', { read: TemplateRef, static: true })
     private svgImage: TemplateRef<HTMLElement>;
 
-    /**
-     * An ElementRef property of the `igx-icon` component.
-     */
-    public el: ElementRef;
-
     private destroy$ = new Subject<void>();
 
-    constructor(
-            private _el: ElementRef,
-            private iconService: IgxIconService,
-            private ref: ChangeDetectorRef) {
-        this.el = _el;
+    constructor(public el: ElementRef,
+                private iconService: IgxIconService,
+                private ref: ChangeDetectorRef) {
         this.font = this.iconService.defaultFontSet;
         this.iconService.registerFontSetAlias('material', 'material-icons');
         this.iconService.iconLoaded.pipe(

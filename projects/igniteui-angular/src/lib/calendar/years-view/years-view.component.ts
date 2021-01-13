@@ -14,6 +14,7 @@ import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { IgxCalendarYearDirective } from '../calendar.directives';
+import { noop } from 'rxjs';
 
 let NEXT_ID = 0;
 
@@ -202,15 +203,49 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _onTouchedCallback: () => void = () => { };
+    private _onTouchedCallback: () => void = noop;
+
     /**
      * @hidden
      */
-    private _onChangeCallback: (_: Date) => void = () => { };
+    private _onChangeCallback: (_: Date) => void = noop;
 
     constructor(public el: ElementRef) {
         this.initYearFormatter();
         this._calendarModel = new Calendar();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowdown', ['$event'])
+    public onKeydownArrowDown(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.generateYearRange(1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowup', ['$event'])
+    public onKeydownArrowUp(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.generateYearRange(-1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.enter')
+    public onKeydownEnter() {
+        this.onSelection.emit(this.date);
+        this._onChangeCallback(this.date);
     }
 
     /**
@@ -282,39 +317,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         if (value) {
             this.date = value;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(1);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(-1);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.enter')
-    public onKeydownEnter() {
-        this.onSelection.emit(this.date);
-        this._onChangeCallback(this.date);
     }
 
     /**

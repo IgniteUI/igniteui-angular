@@ -1,21 +1,13 @@
-import { takeUntil } from 'rxjs/operators';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { Directive, Inject, Input, AfterViewInit, QueryList, ViewChildren,
-     OnInit, IterableDiffers, IterableChangeRecord, OnDestroy } from '@angular/core';
+import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
-import { Subject } from 'rxjs';
 
 @Directive({
     selector: '[igxGridActionsBase]'
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
-    constructor(protected iconService: IgxIconService,
-        protected differs: IterableDiffers) { }
-
-    public strip: IgxActionStripComponent;
-
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
 
@@ -31,6 +23,8 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     @Input()
     asMenuItems = false;
 
+    public strip: IgxActionStripComponent;
+
     /**
      * @hidden
      * @internal
@@ -38,6 +32,19 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
     get grid() {
         return this.strip.context.grid;
     }
+
+    /**
+     * Getter to be used in template
+     *
+     * @hidden
+     * @internal
+     */
+    get isRowContext(): boolean {
+        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
+    }
+
+    constructor(protected iconService: IgxIconService,
+                protected differs: IterableDiffers) { }
 
     /**
      * @hidden
@@ -49,16 +56,6 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
                         this.strip.cdr.detectChanges();
                 });
         }
-    }
-
-    /**
-     * Getter to be used in template
-     *
-     * @hidden
-     * @internal
-     */
-    get isRowContext(): boolean {
-        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
     }
 
     /**

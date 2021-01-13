@@ -3,38 +3,36 @@ import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '10.2.0';
 
-export default function(): Rule {
-    return (host: Tree, context: SchematicContext) => {
-        context.logger.info(
-            `Applying migration for Ignite UI for Angular to version ${version}`
+export default (): Rule => (host: Tree, context: SchematicContext) => {
+    context.logger.info(
+        `Applying migration for Ignite UI for Angular to version ${version}`
+    );
+
+    const update = new UpdateChanges(__dirname, host, context);
+
+    update.addCondition('type_is_invalid', (
+        matchedOwner: string
+    ): boolean => {
+        if (!matchedOwner) {
+            return true;
+        }
+
+        const attrMatch = matchedOwner.match(
+            new RegExp(`type=(["'])(.+?)${'\\1'}`)
         );
 
-        const update = new UpdateChanges(__dirname, host, context);
+        if (attrMatch?.length > 0) {
+            const attr = attrMatch[0];
 
-        update.addCondition('type_is_invalid', function(
-            matchedOwner: string
-        ): boolean {
-            if (!matchedOwner) {
-                return true;
-            }
-
-            const attrMatch = matchedOwner.match(
-                new RegExp(`type=(["'])(.+?)${'\\1'}`)
+            return (
+                attr.includes('bootstrap') ||
+                attr.includes('fluent') ||
+                attr.includes('indigo')
             );
+        }
 
-            if (attrMatch?.length > 0) {
-                const attr = attrMatch[0];
+        return true;
+    });
 
-                return (
-                    attr.includes('bootstrap') ||
-                    attr.includes('fluent') ||
-                    attr.includes('indigo')
-                );
-            }
-
-            return true;
-        });
-
-        update.applyChanges();
-    };
-}
+    update.applyChanges();
+};

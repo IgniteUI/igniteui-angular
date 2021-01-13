@@ -20,10 +20,6 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     @HostBinding('class.igx-action-strip__editing-actions')
     public cssClass = 'igx-action-strip__editing-actions';
 
-    private isMessageShown = false;
-    private _addRow = false;
-    private iconsRendered = false;
-
     /**
      * An input to enable/disable action strip row adding button
      */
@@ -40,10 +36,47 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * Getter if the row is disabled
+     *
+     * @hidden
+     * @internal
+     */
+    get disabled(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        return this.strip.context.disabled;
+    }
+
+    /**
+     * Getter if the row is root.
+     *
+     * @hidden
+     * @internal
+     */
+    public get isRootRow(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return false;
+        }
+        return this.strip.context.isRoot;
+    }
+
+    public get hasChildren(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return false;
+        }
+        return this.strip.context.hasChildren;
+    }
+
+    /**
      * An input to enable/disable action strip child row adding button
      */
     @Input()
     public addChild = false;
+
+    private isMessageShown = false;
+    private _addRow = false;
+    private iconsRendered = false;
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
@@ -112,39 +145,6 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         grid.beginAddRowByIndex(context.rowID, context.index, asChild, event);
         this.strip.hide();
-    }
-
-    /**
-     * Getter if the row is disabled
-     *
-     * @hidden
-     * @internal
-     */
-    get disabled(): boolean {
-        if (!this.isRow(this.strip.context)) {
-            return;
-        }
-        return this.strip.context.disabled;
-    }
-
-    /**
-     * Getter if the row is root.
-     *
-     * @hidden
-     * @internal
-     */
-    public get isRootRow(): boolean {
-        if (!this.isRow(this.strip.context)) {
-            return false;
-        }
-        return this.strip.context.isRoot;
-    }
-
-    public get hasChildren(): boolean {
-        if (!this.isRow(this.strip.context)) {
-            return false;
-        }
-        return this.strip.context.hasChildren;
     }
 
     /**

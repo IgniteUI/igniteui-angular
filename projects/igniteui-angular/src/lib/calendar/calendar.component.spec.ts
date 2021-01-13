@@ -7,7 +7,7 @@ import {
     Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap,
     monthRange, weekDay, WEEKDAYS
 } from './public_api';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -399,7 +399,9 @@ describe('IgxCalendar - ', () => {
                 ).toEqual(48);
                 expect(
                     dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > span`)).length +
-                    dom.queryAll(By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_LABEL_CLASS}`)).length
+                    dom.queryAll(
+                        By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS} > ${HelperTestFunctions.CALENDAR_WEEK_NUMBER_LABEL_CLASS}`)
+                    ).length
                 ).toEqual(8);
 
             });
@@ -415,9 +417,11 @@ describe('IgxCalendar - ', () => {
                 const maxWeeks = 52;
                 calendarRows.forEach((row, idx) => {
                     const firstRowItem = row.nativeElement.children[0];
-                    idx === 0 ?
-                        expect(firstRowItem.firstChild.innerText).toEqual('Wk') :
+                    if (idx === 0) {
+                        expect(firstRowItem.firstChild.innerText).toEqual('Wk');
+                    } else {
                         expect(firstRowItem.firstChild.innerText).toEqual((idx === 1 ? maxWeeks : idx - 1).toString());
+                    }
                 });
             });
 
@@ -564,8 +568,8 @@ describe('IgxCalendar - ', () => {
                     0
                 );
 
-                for (let index = 0; index < weekDays.length; index++) {
-                    weekDays[index].nativeElement.click();
+                for (const days of weekDays) {
+                    days.nativeElement.click();
                     fixture.detectChanges();
                 }
 
@@ -1991,9 +1995,9 @@ describe('IgxCalendar - ', () => {
     `
 })
 export class IgxCalendarSampleComponent {
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
-    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 @Component({
@@ -2002,8 +2006,8 @@ export class IgxCalendarSampleComponent {
     `
 })
 export class IgxCalendarRangeComponent {
-    public viewDate = new Date(2017, 5, 13);
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    public viewDate = new Date(2017, 5, 13);
 }
 
 @Component({
@@ -2013,11 +2017,11 @@ export class IgxCalendarRangeComponent {
     `
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
     public model: Date | Date[] = new Date(2017, 5, 23);
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }];
     public disabledDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }];
-    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 @Component({
@@ -2026,8 +2030,8 @@ export class IgxCalendarDisabledSpecialDatesComponent {
     `
 })
 export class IgxCalendarValueComponent {
-    public value = new Date(2020, 7, 13);
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    public value = new Date(2020, 7, 13);
 }
 
 class DateTester {
@@ -2109,26 +2113,6 @@ class DateRangesPropertiesTester {
         testRangesFunc: testDatesRange) {
         this.testBetween(assignFunc, testRangesFunc,
             new Date(2017, 5, 20), new Date(2017, 5, 20));
-    }
-
-    private static testBetween(assignFunc: assignDateRangeDescriptors,
-        testRangesFunc: testDatesRange, firstDate: Date, secondDate: Date) {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const betweenMin = firstDate.getTime() > secondDate.getTime() ? secondDate : firstDate;
-        const betweenMax = firstDate.getTime() > secondDate.getTime() ? firstDate : secondDate;
-        dateRangeDescriptors.push(
-            { type: DateRangeType.Between, dateRange: [betweenMax, betweenMin] });
-        assignFunc(calendar, dateRangeDescriptors);
-        fixture.detectChanges();
-
-        const dates = calendar.daysView.dates.toArray();
-        const inRangeDates = dates.filter(d => getDate(d).getTime() >= betweenMin.getTime() &&
-            getDate(d).getTime() <= betweenMax.getTime());
-        const outOfRangeDates = dates.filter(d => getDate(d).getTime() < betweenMin.getTime() &&
-            getDate(d).getTime() > betweenMax.getTime());
-        testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
     static testSpecific(assignFunc: assignDateRangeDescriptors,
@@ -2296,10 +2280,30 @@ class DateRangesPropertiesTester {
         DateTester.testDatesSpeciality(inRange, true);
         DateTester.testDatesSpeciality(outOfRange, false);
     }
+
+    private static testBetween(assignFunc: assignDateRangeDescriptors,
+        testRangesFunc: testDatesRange, firstDate: Date, secondDate: Date) {
+        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+        const calendar = fixture.componentInstance.calendar;
+        const dateRangeDescriptors: DateRangeDescriptor[] = [];
+        const betweenMin = firstDate.getTime() > secondDate.getTime() ? secondDate : firstDate;
+        const betweenMax = firstDate.getTime() > secondDate.getTime() ? firstDate : secondDate;
+        dateRangeDescriptors.push(
+            { type: DateRangeType.Between, dateRange: [betweenMax, betweenMin] });
+        assignFunc(calendar, dateRangeDescriptors);
+        fixture.detectChanges();
+
+        const dates = calendar.daysView.dates.toArray();
+        const inRangeDates = dates.filter(d => getDate(d).getTime() >= betweenMin.getTime() &&
+            getDate(d).getTime() <= betweenMax.getTime());
+        const outOfRangeDates = dates.filter(d => getDate(d).getTime() < betweenMin.getTime() &&
+            getDate(d).getTime() > betweenMax.getTime());
+        testRangesFunc(inRangeDates, outOfRangeDates);
+    }
 }
 
-function getDate(dateDirective: IgxDayItemComponent) {
+const getDate = (dateDirective: IgxDayItemComponent) => {
     const fullDate = dateDirective.date.date;
     const date = new Date(fullDate.getFullYear(), fullDate.getMonth(), fullDate.getDate());
     return date;
-}
+};

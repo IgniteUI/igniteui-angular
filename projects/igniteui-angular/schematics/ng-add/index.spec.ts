@@ -43,10 +43,10 @@ describe('ng-add schematics', () => {
     devDependencies: {}
   };
 
-  function resetJsonConfigs(treeArg: UnitTestTree) {
+  const resetJsonConfigs = (treeArg: UnitTestTree) => {
     treeArg.overwrite('/angular.json', JSON.stringify(ngJsonConfig));
     treeArg.overwrite('/package.json', JSON.stringify(pkgJsonConfig));
-  }
+  };
 
   beforeEach(() => {
     tree = new UnitTestTree(new EmptyTree());

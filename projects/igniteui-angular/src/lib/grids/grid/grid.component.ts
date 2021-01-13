@@ -164,6 +164,21 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     @ViewChild('groupArea')
     public groupArea: ElementRef;
+
+    /**
+     * Gets/Sets the value of the `id` attribute.
+     *
+     * @remarks
+     * If not provided it will be automatically generated.
+     * @example
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-grid-${NEXT_ID++}`;
+
     /**
      * @hidden @internal
      */
@@ -249,26 +264,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
-    private _id = `igx-grid-${NEXT_ID++}`;
-
-    /**
-     * Gets/Sets the value of the `id` attribute.
-     *
-     * @remarks
-     * If not provided it will be automatically generated.
-     * @example
-     * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public get id(): string {
-        return this._id;
-    }
-    public set id(value: string) {
-        this._id = value;
-    }
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.

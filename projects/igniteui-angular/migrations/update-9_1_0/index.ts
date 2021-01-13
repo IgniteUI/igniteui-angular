@@ -7,29 +7,27 @@ import { UpdateChanges, InputPropertyType, BoundPropertyObject } from '../common
 
 const version = '9.1.0';
 
-export default function(): Rule {
-    return (host: Tree, context: SchematicContext) => {
-        context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+export default (): Rule => (host: Tree, context: SchematicContext) => {
+    context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
-        const update = new UpdateChanges(__dirname, host, context);
-        update.addValueTransform('rowSelectable_is_deprecated', (args: BoundPropertyObject): void => {
-            if (args.bindingType === InputPropertyType.EVAL) {
-                switch (args.value) {
-                    case 'true':
-                        args.value = 'multiple';
-                        args.bindingType = InputPropertyType.STRING;
-                        break;
-                    case 'false':
-                        args.value = 'none';
-                        args.bindingType = InputPropertyType.STRING;
-                        break;
-                    default:
-                        args.value += ` ? 'multiple' : 'none' `;
-                }
-            } else {
-                args.value = 'multiple';
+    const update = new UpdateChanges(__dirname, host, context);
+    update.addValueTransform('rowSelectable_is_deprecated', (args: BoundPropertyObject): void => {
+        if (args.bindingType === InputPropertyType.EVAL) {
+            switch (args.value) {
+                case 'true':
+                    args.value = 'multiple';
+                    args.bindingType = InputPropertyType.STRING;
+                    break;
+                case 'false':
+                    args.value = 'none';
+                    args.bindingType = InputPropertyType.STRING;
+                    break;
+                default:
+                    args.value += ` ? 'multiple' : 'none' `;
             }
-        });
-        update.applyChanges();
-    };
-}
+        } else {
+            args.value = 'multiple';
+        }
+    });
+    update.applyChanges();
+};

@@ -293,10 +293,6 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
     templateUrl: 'card-actions.component.html'
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
-    private isVerticalSet = false;
-
-    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
-
     /**
      * An @Input property that sets the layout style of the actions.
      * By default icons and icon buttons, as well as regular buttons
@@ -347,6 +343,10 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     @HostBinding('class.igx-card-actions--reverse')
     @Input()
     public reverse = false;
+
+    private isVerticalSet = false;
+
+    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
 
     ngOnChanges(changes: SimpleChanges) {
         for (const prop in changes) {

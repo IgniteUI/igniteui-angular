@@ -2,7 +2,7 @@ import { Input, Output, EventEmitter, Directive } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
-import { Subject } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import { isDate, mkenum } from '../core/utils';
 import { CalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
@@ -35,9 +35,6 @@ export interface IViewDateChangeEventArgs {
     selector: '[igxCalendarBase]',
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
-    /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
-
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -310,51 +307,32 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
-
-    /**
-     * @hidden
-     */
     public rangeStarted = false;
 
     /**
      * @hidden
      */
-    private _locale = 'en';
+    public monthScrollDirection = ScrollMonth.NONE;
 
     /**
      * @hidden
      */
-    private _viewDate: Date;
+    public scrollMonth$ = new Subject();
 
     /**
      * @hidden
      */
-    private _disabledDates: DateRangeDescriptor[] = null;
+    public stopMonthScroll$ = new Subject<boolean>();
 
     /**
      * @hidden
      */
-    private _specialDates: DateRangeDescriptor[] = null;
+    public startMonthScroll$ = new Subject();
 
     /**
      * @hidden
      */
-    private _formatOptions: IFormattingOptions = {
-        day: 'numeric',
-        month: 'short',
-        weekday: 'short',
-        year: 'numeric'
-    };
-
-    /**
-     * @hidden
-     */
-    private _formatViews: IFormattingViews = {
-        day: false,
-        month: true,
-        year: false
-    };
+    public selectedDates;
 
     /**
      * @hidden
@@ -389,27 +367,11 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    public monthScrollDirection = ScrollMonth.NONE;
-
+    protected _onTouchedCallback: () => void = noop;
     /**
      * @hidden
      */
-    public scrollMonth$ = new Subject();
-
-    /**
-     * @hidden
-     */
-    public stopMonthScroll$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-    public startMonthScroll$ = new Subject();
-
-    /**
-     * @hidden
-     */
-    public selectedDates;
+    protected _onChangeCallback: (_: Date) => void = noop;
 
     /**
      * @hidden
@@ -419,11 +381,48 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    protected _onTouchedCallback: () => void = () => { };
+    private _locale = 'en';
+
     /**
      * @hidden
      */
-    protected _onChangeCallback: (_: Date) => void = () => { };
+    private _viewDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _disabledDates: DateRangeDescriptor[] = null;
+
+    /**
+     * @hidden
+     */
+    private _specialDates: DateRangeDescriptor[] = null;
+
+    /**
+     * @hidden
+     */
+    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+    /** @hidden @internal */
+    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
+
+    /**
+     * @hidden
+     */
+    private _formatOptions: IFormattingOptions = {
+        day: 'numeric',
+        month: 'short',
+        weekday: 'short',
+        year: 'numeric'
+    };
+
+    /**
+     * @hidden
+     */
+    private _formatViews: IFormattingViews = {
+        day: false,
+        month: true,
+        year: false
+    };
 
     /**
      * @hidden
@@ -435,6 +434,137 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
 
         this.calendarModel.firstWeekDay = this.weekStart;
         this.initFormatters();
+    }
+
+    /**
+     * Performs deselection of a single value, when selection is multi
+     * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
+     *
+     * @hidden
+     */
+    public deselectMultipleInMonth(value: Date) {
+        const valueDateOnly = this.getDateOnly(value);
+        this.selectedDates = this.selectedDates.filter(
+            (date: Date) => date.getTime() !== valueDateOnly.getTime()
+        );
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnChange(fn: (v: Date) => void) {
+        this._onChangeCallback = fn;
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnTouched(fn: () => void) {
+        this._onTouchedCallback = fn;
+    }
+
+    /**
+     * @hidden
+     */
+    public writeValue(value: Date | Date[]) {
+        this.selectDate(value as Date);
+    }
+
+    /**
+     * Checks whether a date is disabled.
+     *
+     * @hidden
+     */
+    public isDateDisabled(date: Date) {
+        if (this.disabledDates === null) {
+            return false;
+        }
+
+        return isDateInRanges(date, this.disabledDates);
+    }
+
+    /**
+     * Selects date(s) (based on the selection type).
+     */
+    public selectDate(value: Date | Date[]) {
+        if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
+            return;
+        }
+
+        switch (this.selection) {
+            case CalendarSelection.SINGLE:
+                if (isDate(value) && !this.isDateDisabled(value as Date)) {
+                    this.selectSingle(value as Date);
+                }
+                break;
+            case CalendarSelection.MULTI:
+                this.selectMultiple(value);
+                break;
+            case CalendarSelection.RANGE:
+                this.selectRange(value, true);
+                break;
+        }
+    }
+
+    /**
+     * Deselects date(s) (based on the selection type).
+     */
+    public deselectDate(value?: Date | Date[]) {
+        if (!this.selectedDates || this.selectedDates.length === 0) {
+            return;
+        }
+
+        if (value === null || value === undefined) {
+            this.selectedDates = this.selection === CalendarSelection.SINGLE ? null : [];
+            this.rangeStarted = false;
+            this._onChangeCallback(this.selectedDates);
+            return;
+        }
+
+        switch (this.selection) {
+            case CalendarSelection.SINGLE:
+                this.deselectSingle(value as Date);
+                break;
+            case CalendarSelection.MULTI:
+                this.deselectMultiple(value as Date[]);
+                break;
+            case CalendarSelection.RANGE:
+                this.deselectRange(value as Date[]);
+                break;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public selectDateFromClient(value: Date) {
+        switch (this.selection) {
+            case CalendarSelection.SINGLE:
+            case CalendarSelection.MULTI:
+                this.selectDate(value);
+                break;
+            case CalendarSelection.RANGE:
+                this.selectRange(value, true);
+                break;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected initFormatters() {
+        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
+        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
+        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
+        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
+        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+    }
+
+    /**
+     * @hidden
+     */
+    protected getDateOnly(date: Date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
     /**
@@ -582,19 +712,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     /**
-     * Performs deselection of a single value, when selection is multi
-     * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
-     *
-     * @hidden
-     */
-    public deselectMultipleInMonth(value: Date) {
-        const valueDateOnly = this.getDateOnly(value);
-        this.selectedDates = this.selectedDates.filter(
-            (date: Date) => date.getTime() !== valueDateOnly.getTime()
-        );
-    }
-
-    /**
      * Performs a range deselection.
      *
      * @hidden
@@ -617,124 +734,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.selectedDates = [];
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    protected initFormatters() {
-        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
-        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
-        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
-        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
-        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
-    }
-
-    /**
-     * @hidden
-     */
-    protected getDateOnly(date: Date) {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnChange(fn: (v: Date) => void) {
-        this._onChangeCallback = fn;
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnTouched(fn: () => void) {
-        this._onTouchedCallback = fn;
-    }
-
-    /**
-     * @hidden
-     */
-    public writeValue(value: Date | Date[]) {
-        this.selectDate(value as Date);
-    }
-
-    /**
-     * Checks whether a date is disabled.
-     *
-     * @hidden
-     */
-    public isDateDisabled(date: Date) {
-        if (this.disabledDates === null) {
-            return false;
-        }
-
-        return isDateInRanges(date, this.disabledDates);
-    }
-
-    /**
-     * Selects date(s) (based on the selection type).
-     */
-    public selectDate(value: Date | Date[]) {
-        if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-            return;
-        }
-
-        switch (this.selection) {
-            case CalendarSelection.SINGLE:
-                if (isDate(value) && !this.isDateDisabled(value as Date)) {
-                    this.selectSingle(value as Date);
-                }
-                break;
-            case CalendarSelection.MULTI:
-                this.selectMultiple(value);
-                break;
-            case CalendarSelection.RANGE:
-                this.selectRange(value, true);
-                break;
-        }
-    }
-
-    /**
-     * Deselects date(s) (based on the selection type).
-     */
-    public deselectDate(value?: Date | Date[]) {
-        if (!this.selectedDates || this.selectedDates.length === 0) {
-            return;
-        }
-
-        if (value === null || value === undefined) {
-            this.selectedDates = this.selection === CalendarSelection.SINGLE ? null : [];
-            this.rangeStarted = false;
-            this._onChangeCallback(this.selectedDates);
-            return;
-        }
-
-        switch (this.selection) {
-            case CalendarSelection.SINGLE:
-                this.deselectSingle(value as Date);
-                break;
-            case CalendarSelection.MULTI:
-                this.deselectMultiple(value as Date[]);
-                break;
-            case CalendarSelection.RANGE:
-                this.deselectRange(value as Date[]);
-                break;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public selectDateFromClient(value: Date) {
-        switch (this.selection) {
-            case CalendarSelection.SINGLE:
-            case CalendarSelection.MULTI:
-                this.selectDate(value);
-                break;
-            case CalendarSelection.RANGE:
-                this.selectRange(value, true);
-                break;
         }
     }
 }

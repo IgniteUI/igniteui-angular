@@ -41,7 +41,6 @@ describe('UpdateChanges', () => {
         }));
     });
 
-    /* eslint-disable arrow-parens */
     it('should replace/remove components', done => {
         const selectorsJson: SelectorChanges = {
             changes: [

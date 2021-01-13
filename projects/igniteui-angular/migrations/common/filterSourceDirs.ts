@@ -7,9 +7,7 @@ import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
  *
  * @deprecated Temporary
  */
-export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
-    /* eslint-disable arrow-parens */
-    let config: WorkspaceSchema;
+export const filterSourceDirs = (host: Tree, context: SchematicContext): Rule => {
     const configPath = getWorkspacePath(host);
     let sourcePaths: string[];
     const schematicPosition = context.schematic.collection.listSchematicNames().indexOf(context.schematic.description.name);
@@ -18,7 +16,7 @@ export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
         // assume already filtered
         return tree => tree;
     }
-    config = getWorkspace(host);
+    const config = getWorkspace(host);
     if (config) {
         sourcePaths = getProjectPaths(config);
     } else {
@@ -27,4 +25,4 @@ export function filterSourceDirs(host: Tree, context: SchematicContext): Rule {
     }
 
     return filter(x => !!sourcePaths.find(folder => x.startsWith(folder)));
-}
+};

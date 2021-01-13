@@ -409,12 +409,12 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
     /** @hidden @internal */
     public registerOnChange(fn: (_: any) => void) {
- this._onChangeCallback = fn;
-}
+        this._onChangeCallback = fn;
+    }
     /** @hidden @internal */
     public registerOnTouched(fn: () => void) {
- this._onTouchedCallback = fn;
-}
+        this._onTouchedCallback = fn;
+    }
 
     /** @hidden @internal */
     public getEditElement() {

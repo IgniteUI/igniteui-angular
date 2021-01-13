@@ -160,7 +160,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
      * @hidden
      */
     @Input()
-    public startScroll: (keydown?: boolean) => {};
+    public startScroll: (keydown?: boolean) => void;
 
     /**
      * A callback function to be invoked when month increment/decrement stops.
@@ -168,7 +168,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
      * @hidden
      */
     @Input()
-    public stopScroll: (event: any) => {};
+    public stopScroll: (event: any) => void;
 
     /**
      * @hidden
@@ -176,6 +176,22 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     private destroy$ = new Subject<boolean>();
 
     constructor(private element: ElementRef, private zone: NgZone) { }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown')
+    public onMouseDown() {
+        this.startScroll();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseup', ['$event'])
+    public onMouseUp(event: MouseEvent) {
+        this.stopScroll(event);
+    }
 
     /**
      * @hidden
@@ -214,21 +230,5 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mousedown')
-    public onMouseDown() {
-        this.startScroll();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mouseup', ['$event'])
-    public onMouseUp(event: MouseEvent) {
-        this.stopScroll(event);
     }
 }

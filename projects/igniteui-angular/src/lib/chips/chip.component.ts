@@ -247,13 +247,6 @@ export class IgxChipComponent extends DisplayDensityBase {
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    @Output()
-    public selectedChange = new EventEmitter<boolean>();
-
-    /**
      * Returns if the `IgxChipComponent` is selected.
      *
      * @example
@@ -268,6 +261,13 @@ export class IgxChipComponent extends DisplayDensityBase {
     public get selected() {
         return this._selected;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Output()
+    public selectedChange = new EventEmitter<boolean>();
 
     /**
      * An @Input property that sets the `IgxChipComponent` background color.
@@ -491,52 +491,29 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions);
-        }
+        super(_displayDensityOptions);
+    }
 
     /**
      * @hidden
      * @internal
      */
-    public selectClass(condition: boolean): object {
+    @HostListener('keydown', ['$event'])
+    public keyEvent(event: KeyboardEvent) {
+        this.onChipKeyDown(event);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public selectClass(condition: boolean): any {
         const SELECT_CLASS = 'igx-chip__select';
 
         return {
             [SELECT_CLASS]: condition,
             [`${SELECT_CLASS}--hidden`]: !condition
         };
-    }
-
-    protected changeSelection(newValue: boolean, srcEvent = null) {
-        const onSelectArgs: IChipSelectEventArgs = {
-            originalEvent: srcEvent,
-            owner: this,
-            selected: false,
-            cancel: false
-        };
-
-        fromEvent(this.selectContainer.nativeElement, 'transitionend')
-            .pipe(filter<TransitionEvent>(event => event.propertyName === 'width'), take(1))
-            .subscribe(event => this.onSelectTransitionDone(event));
-
-        if (newValue && !this._selected) {
-            onSelectArgs.selected = true;
-            this.onSelection.emit(onSelectArgs);
-
-            if (!onSelectArgs.cancel) {
-                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-                this.selectedChange.emit(this._selected);
-            }
-        } else if (!newValue && this._selected) {
-            this.onSelection.emit(onSelectArgs);
-
-            if (!onSelectArgs.cancel) {
-                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-                this.selectedChange.emit(this._selected);
-            }
-        }
     }
 
     public onSelectTransitionDone(event) {
@@ -579,15 +556,6 @@ export class IgxChipComponent extends DisplayDensityBase {
         if (event.key !== 'Tab') {
             event.preventDefault();
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('keydown', ['$event'])
-    public keyEvent(event: KeyboardEvent) {
-        this.onChipKeyDown(event);
     }
 
     /**
@@ -743,4 +711,36 @@ export class IgxChipComponent extends DisplayDensityBase {
         event.cancel = true;
     }
     // End chip igxDrop behavior
+
+    protected changeSelection(newValue: boolean, srcEvent = null) {
+        const onSelectArgs: IChipSelectEventArgs = {
+            originalEvent: srcEvent,
+            owner: this,
+            selected: false,
+            cancel: false
+        };
+
+        fromEvent(this.selectContainer.nativeElement, 'transitionend')
+            .pipe(filter<TransitionEvent>(event => event.propertyName === 'width'), take(1))
+            .subscribe(event => this.onSelectTransitionDone(event));
+
+        if (newValue && !this._selected) {
+            onSelectArgs.selected = true;
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+                this.selectedChange.emit(this._selected);
+            }
+        } else if (!newValue && this._selected) {
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+                this.selectedChange.emit(this._selected);
+            }
+        }
+    }
 }

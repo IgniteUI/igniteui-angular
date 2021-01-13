@@ -21,8 +21,6 @@ export enum Direction { NONE, NEXT, PREV }
 })
 
 export class IgxSlideComponent implements OnDestroy {
-    private _active = false;
-    private _destroy$ = new Subject<boolean>();
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
@@ -132,6 +130,9 @@ export class IgxSlideComponent implements OnDestroy {
      * @hidden
      */
     @Output() public activeChange = new EventEmitter<boolean>();
+
+    private _active = false;
+    private _destroy$ = new Subject<boolean>();
 
     constructor(private elementRef: ElementRef) { }
 

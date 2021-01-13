@@ -44,6 +44,12 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 })
 class TestChipComponent {
 
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChildren('chipElem', { read: IgxChipComponent })
+    public chips: QueryList<IgxChipComponent>;
+
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
@@ -52,12 +58,6 @@ class TestChipComponent {
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
-
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChildren('chipElem', { read: IgxChipComponent })
-    public chips: QueryList<IgxChipComponent>;
 
     chipRemoved(event) {
         this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
@@ -77,18 +77,18 @@ class TestChipComponent {
 })
 class TestChipsLabelAndSuffixComponent {
 
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChildren('chipElem', { read: IgxChipComponent })
+    public chips: QueryList<IgxChipComponent>;
+
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true },
         { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true },
     ];
-
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChildren('chipElem', { read: IgxChipComponent })
-    public chips: QueryList<IgxChipComponent>;
 }
 
 

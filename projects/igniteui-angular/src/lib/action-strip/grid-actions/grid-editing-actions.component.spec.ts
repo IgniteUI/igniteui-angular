@@ -49,10 +49,10 @@ describe('igxGridEditingActions #grid ', () => {
         }));
 
         it('should allow editing and deleting row', () => {
-            let editIcon; let deleteIcon;
+            let deleteIcon;
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
-            editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
+            const editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
             expect(editIcon.nativeElement.innerText).toBe('edit');
             editIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();

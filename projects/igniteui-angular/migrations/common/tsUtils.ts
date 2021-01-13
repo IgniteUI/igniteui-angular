@@ -14,7 +14,7 @@ export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
 // }
 
-export function getIdentifierPositions(sourceText: string, name: string): Array<{ start: number; end: number }> {
+export const getIdentifierPositions = (sourceText: string, name: string): Array<{ start: number; end: number }> => {
     const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
     const positions = [];
 
@@ -47,10 +47,10 @@ export function getIdentifierPositions(sourceText: string, name: string): Array<
     };
     source.forEachChild(findIdentifiers);
     return positions;
-}
+};
 
 /** Returns the positions of import from module string literals  */
-export function getImportModulePositions(sourceText: string, startsWith: string): Array<{ start: number; end: number }> {
+export const getImportModulePositions = (sourceText: string, startsWith: string): Array<{ start: number; end: number }> => {
     const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
     const positions = [];
 
@@ -64,7 +64,7 @@ export function getImportModulePositions(sourceText: string, startsWith: string)
         }
     }
     return positions;
-}
+};
 
 /** Filters out statements to named imports (e.g. `import {x, y}`) from PACKAGE_IMPORT */
 const namedImportFilter = (statement: ts.Statement) => {
@@ -77,12 +77,13 @@ const namedImportFilter = (statement: ts.Statement) => {
     return false;
 };
 
-export function getRenamePositions(sourcePath: string, name: string, service: ts.LanguageService):
-    Array<{ start: number; end: number }> {
+export const getRenamePositions = (sourcePath: string, name: string, service: ts.LanguageService):
+    Array<{ start: number; end: number }> => {
 
     const source = service.getProgram().getSourceFile(sourcePath);
     const positions = [];
 
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const imports = source.statements.filter(<(a: ts.Statement) => a is ts.ImportDeclaration>namedImportFilter);
     if (!imports.length) {
         return positions;
@@ -110,9 +111,9 @@ export function getRenamePositions(sourcePath: string, name: string, service: ts
     }
 
     return positions;
-}
+};
 
-export function findMatches(content: string, change: MemberChange): number[] {
+export const findMatches = (content: string, change: MemberChange): number[] => {
     let matches: RegExpExecArray;
     const regex = new RegExp(escapeRegExp(change.member), 'g');
     const matchesPositions = [];
@@ -124,13 +125,12 @@ export function findMatches(content: string, change: MemberChange): number[] {
     } while (matches);
 
     return matchesPositions;
-}
+};
 
-export function replaceMatch(content: string, toReplace: string, replaceWith: string, index: number): string {
-    return content.substring(0, index)
-        + replaceWith
-        + content.substring(index + toReplace.length, content.length);
-}
+export const replaceMatch = (content: string, toReplace: string, replaceWith: string, index: number): string =>
+        content.substring(0, index) +
+        replaceWith +
+        content.substring(index + toReplace.length, content.length);
 
 //#region Language Service
 
@@ -139,7 +139,7 @@ export function replaceMatch(content: string, toReplace: string, replaceWith: st
  *
  * @param serviceHost A TypeScript language service host
  */
-export function getLanguageService(filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageService {
+export const getLanguageService = (filePaths: string[], host: Tree, options: ts.CompilerOptions = {}): ts.LanguageService => {
     const fileVersions = new Map<string, number>();
     patchHostOverwrite(host, fileVersions);
     const servicesHost = {
@@ -162,23 +162,23 @@ export function getLanguageService(filePaths: string[], host: Tree, options: ts.
     };
 
     return ts.createLanguageService(servicesHost, ts.createDocumentRegistry());
-}
+};
 
-function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {
+const patchHostOverwrite = (host: Tree, fileVersions: Map<string, number>) => {
     const original = host.overwrite;
     host.overwrite = (path: string, content: Buffer | string) => {
         const version = fileVersions.get(path) || 0;
         fileVersions.set(path, version + 1);
         original.call(host, path, content);
     };
-}
+};
 
 /**
  * Create a project service singleton that holds all projects within a directory tree
  *
  * @param serverHost Used by the tss to navigate the directory tree
  */
-export function createProjectService(serverHost: tss.server.ServerHost): tss.server.ProjectService {
+export const createProjectService = (serverHost: tss.server.ServerHost): tss.server.ProjectService => {
     // set traceToConsole to true to enable logging
     const logger = new Logger(false, tss.server.LogLevel.verbose);
     const projectService = new tss.server.ProjectService({
@@ -212,7 +212,7 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
     });
 
     return projectService;
-}
+};
 
 /**
  * Get type information about a TypeScript identifier
@@ -221,7 +221,8 @@ export function createProjectService(serverHost: tss.server.ServerHost): tss.ser
  * @param entryPath path to file
  * @param position Index of identifier
  */
-export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null {
+export const getTypeDefinitionAtPosition =
+(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null => {
     const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
     if (!definition) {
         return null;
@@ -254,6 +255,7 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
 
         const classDeclaration = sourceFile
             .statements
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
             .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
             .find(m => m.name.getText() === definition.containerName);
 
@@ -274,11 +276,12 @@ export function getTypeDefinitionAtPosition(langServ: tss.LanguageService, entry
     }
 
     return null;
-}
+};
 
-export function isMemberIgniteUI(change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean {
-    const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
-    return !typeDef ? false : typeDef.fileName.includes(IG_PACKAGE_NAME) && change.definedIn.indexOf(typeDef.name) !== -1;
-}
+export const isMemberIgniteUI =
+    (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
+        const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
+        return !typeDef ? false : typeDef.fileName.includes(IG_PACKAGE_NAME) && change.definedIn.indexOf(typeDef.name) !== -1;
+    };
 
 //#endregion

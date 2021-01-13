@@ -41,7 +41,7 @@ export class UpdateChanges {
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
     protected membersChanges: MemberChanges;
-    protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
+    protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
     private _templateFiles: string[] = [];
@@ -224,7 +224,7 @@ export class UpdateChanges {
         }
     }
 
-    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.output) {
+    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.Output) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
 
@@ -238,7 +238,7 @@ export class UpdateChanges {
             let groups = 1;
             let searchPattern;
 
-            if (type === BindingType.output) {
+            if (type === BindingType.Output) {
                 base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 replace = `(${change.replaceWith})=$1$2$1`;
             } else {
@@ -490,7 +490,7 @@ export class UpdateChanges {
         if (this.inputChanges && this.inputChanges.changes.length) {
             // name change of input
             for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
+                this.updateBindings(entryPath, this.inputChanges, BindingType.Input);
             }
         }
     }
@@ -529,6 +529,6 @@ export class UpdateChanges {
 }
 
 export enum BindingType {
-    output,
-    input
+    Output,
+    Input
 }
