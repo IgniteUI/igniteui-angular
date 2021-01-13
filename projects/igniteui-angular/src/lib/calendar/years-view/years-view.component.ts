@@ -76,7 +76,9 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     public set date(value: Date) {
-        if (!(value instanceof Date)) { return; }
+        if (!(value instanceof Date)) {
+            return;
+        }
         this._date = value;
     }
 

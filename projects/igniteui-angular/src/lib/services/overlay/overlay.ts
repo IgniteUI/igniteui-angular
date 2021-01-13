@@ -665,7 +665,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private onCloseDone(info: OverlayInfo, event?: Event) {
         this.cleanUp(info);
-        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event: event});
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event});
     }
 
     private cleanUp(info: OverlayInfo) {

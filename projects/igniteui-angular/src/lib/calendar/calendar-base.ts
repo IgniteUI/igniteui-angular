@@ -200,7 +200,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the date that will be presented in the default view when the component renders.
      */
     public set viewDate(value: Date) {
-        if (Array.isArray(value)) { return; }
+        if (Array.isArray(value)) {
+            return;
+        }
         if (this._viewDate) {
             this.selectedDatesWithoutFocus = value;
         }
