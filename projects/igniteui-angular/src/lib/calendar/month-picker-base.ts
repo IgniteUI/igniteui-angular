@@ -1,15 +1,27 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { HostBinding, Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
-import { KEYS } from '../core/utils';
+import { Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
+import { KEYS, mkenum } from '../core/utils';
+
+export const IgxCalendarView = mkenum({
+    Month: 'month',
+    Year: 'year',
+    Decade: 'decade'
+});
+
 
 /**
- * Sets the calender view - days, months or years.
+ * @hidden
  */
 export enum CalendarView {
     DEFAULT,
     YEAR,
     DECADE
 }
+
+/**
+ * Determines the Calendar active view - days, months or years.
+ */
+export type IgxCalendarView = (typeof IgxCalendarView)[keyof typeof IgxCalendarView] | CalendarView;
 
 @Directive({
     selector: '[igxMonthPickerBase]'
@@ -34,20 +46,20 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * this.activeView = calendar.activeView;
      * ```
      */
-    public get activeView(): CalendarView {
+    public get activeView(): IgxCalendarView {
         return this._activeView;
     }
 
     /**
      * Sets the current active view.
      * ```html
-     * <igx-calendar [activeView]="1" #calendar></igx-calendar>
+     * <igx-calendar [activeView]="year" #calendar></igx-calendar>
      * ```
      * ```typescript
-     * calendar.activeView = CalendarView.YEAR;
+     * calendar.activeView = IgxCalendarView.YEAR;
      * ```
      */
-    public set activeView(val: CalendarView) {
+    public set activeView(val: IgxCalendarView) {
         this._activeView = val;
     }
 
@@ -55,14 +67,14 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public get isDefaultView(): boolean {
-        return this._activeView === CalendarView.DEFAULT;
+        return this._activeView === CalendarView.DEFAULT || this._activeView === IgxCalendarView.Month;
     }
 
     /**
      * @hidden
      */
     public get isDecadeView(): boolean {
-        return this._activeView === CalendarView.DECADE;
+        return this._activeView === CalendarView.DECADE || this._activeView === IgxCalendarView.Decade;
     }
 
     /**
@@ -73,7 +85,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    private _activeView = CalendarView.DEFAULT;
+    private _activeView: IgxCalendarView = IgxCalendarView.Month;
 
     /**
      * @hidden
@@ -81,7 +93,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     public changeYear(event: Date) {
         this.previousViewDate = this.viewDate;
         this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
-        this.activeView = CalendarView.DEFAULT;
+        this.activeView = IgxCalendarView.Month;
 
         requestAnimationFrame(() => {
             if (this.yearsBtns && this.yearsBtns.length) {
@@ -94,7 +106,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public activeViewDecade(activeViewIdx = 0): void {
-        this.activeView = CalendarView.DECADE;
+        this.activeView = IgxCalendarView.Decade;
         this.activeViewIdx = activeViewIdx;
     }
 

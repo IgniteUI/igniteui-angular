@@ -505,6 +505,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
                 this.toggleRef.element.focus();
             }
         }
+
     }
 
     /**

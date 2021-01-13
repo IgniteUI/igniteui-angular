@@ -16,8 +16,6 @@ import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-br
 import { IgxCalendarYearDirective } from '../calendar.directives';
 import { noop } from 'rxjs';
 
-let NEXT_ID = 0;
-
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
     public overrides = {
@@ -41,23 +39,6 @@ export class CalendarHammerConfig extends HammerGestureConfig {
     templateUrl: 'years-view.component.html'
 })
 export class IgxYearsViewComponent implements ControlValueAccessor {
-
-    /**
-     * Sets/gets the `id` of the years view.
-     * If not set, the `id` will have value `"igx-years-view-0"`.
-     * ```html
-     * <igx-years-view id = "my-years-view"></igx-years-view>
-     * ```
-     * ```typescript
-     * let yearsViewId =  this.yearsView.id;
-     * ```
-     *
-     * @memberof IgxCalendarComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-years-view-${NEXT_ID++}`;
-
     /**
      * Gets/sets the selected date of the years view.
      * By default it is the current date.
