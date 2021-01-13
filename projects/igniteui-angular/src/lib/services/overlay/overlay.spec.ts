@@ -4042,10 +4042,10 @@ export class TopLeftOffsetComponent {
 @Component({
     template: `
     <div>
-        <button class='buttonOne' (click)=\'clickOne($event)\'>Show first Overlay</button>
+        <button class='buttonOne' (click)='clickOne($event)'>Show first Overlay</button>
     </div>
-    <div (click)=\'divClick($event)\'>
-        <button class='buttonTwo' (click)=\'clickTwo($event)\'>Show second Overlay</button>
+    <div (click)='divClick($event)'>
+        <button class='buttonTwo' (click)='clickTwo($event)'>Show second Overlay</button>
     </div>`
 })
 export class TwoButtonsComponent {
@@ -4065,6 +4065,7 @@ export class TwoButtonsComponent {
         ev.stopPropagation();
     }
 }
+
 @Component({
     template: `
     <div style="width: 420px; height: 280px;">
