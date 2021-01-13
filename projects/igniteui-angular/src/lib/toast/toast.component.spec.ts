@@ -14,11 +14,11 @@ import {
 } from './toast.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-describe('IgxToast', () => {
+fdescribe('IgxToast', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ToastInitializeTestComponent],
+            declarations: [ToastInitializeTestComponent, ToastTestBindingComponent],
             imports: [BrowserAnimationsModule, IgxToastModule],
         }).compileComponents();
     }));
@@ -42,7 +42,7 @@ describe('IgxToast', () => {
         expect(toast.displayTime).toBe(4000);
         expect(toast.autoHide).toBeTruthy();
 
-        toast.onClosed.subscribe(() => {
+        toast.onOpened.subscribe(() => {
             expect(toast.isVisible).toBeTruthy();
         });
         toast.id = 'customToast';
@@ -123,13 +123,33 @@ describe('IgxToast', () => {
         toast.show('Custom Message');
         tick(100);
         fixture.detectChanges();
-        toast.onClosed.subscribe(() => {
+        toast.onOpened.subscribe(() => {
             expect(toast.isVisible).toBeTruthy();
         });
 
         expect(toast.autoHide).toBeFalsy();
         expect(toast.toastMessage).toBe('Custom Message');
     }));
+
+    it('should open and close toast when set values to isVisible', () => {
+        const toastFixture = TestBed.createComponent(ToastTestBindingComponent);
+        const component = fixture.componentInstance.toast;
+        toastFixture.detectChanges();
+
+        toastFixture.componentInstance.model = true;
+        toastFixture.detectChanges();
+
+        component.onOpened.subscribe(() => {
+            expect(component.isVisible).toBeTruthy();
+        });
+
+        toastFixture.componentInstance.model = false;
+        toastFixture.detectChanges();
+
+        component.onClosed.subscribe(() => {
+            expect(component.isVisible).toBeFalse();
+        });
+    });
 });
 
 @Component({
@@ -138,4 +158,13 @@ describe('IgxToast', () => {
 class ToastInitializeTestComponent {
     @ViewChild(IgxToastComponent, { static: true })
     public toast: IgxToastComponent;
+}
+
+@Component({
+    template: `<igx-toast #toast [(isVisible)]="model"></igx-toast>`,
+})
+class ToastTestBindingComponent {
+    @ViewChild(IgxToastComponent, { static: true })
+    public toast: IgxToastComponent;
+    public model = false;
 }
