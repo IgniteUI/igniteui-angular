@@ -33,6 +33,7 @@
           }
         ],
         "@angular-eslint/no-input-rename": "off",
+        "@angular-eslint/no-output-on-prefix": "warning",
         "@typescript-eslint/consistent-type-definitions": "error",
         "@typescript-eslint/dot-notation": "off",
         "brace-style": [
