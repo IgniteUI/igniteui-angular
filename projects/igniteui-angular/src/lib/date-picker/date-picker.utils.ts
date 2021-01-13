@@ -61,7 +61,7 @@ export abstract class DatePickerUtil {
     public static parseValueFromMask(inputData: string, dateTimeParts: DatePartInfo[], promptChar?: string): Date | null {
         const parts: { [key in DatePart]: number } = {} as any;
         dateTimeParts.forEach(dp => {
-            let value = parseInt(this.getCleanVal(inputData, dp, promptChar), 10);
+            let value = parseInt(DatePickerUtil.getCleanVal(inputData, dp, promptChar), 10);
             if (!value) {
                 value = dp.type === DatePart.Date || dp.type === DatePart.Month ? 1 : 0;
             }
@@ -78,7 +78,7 @@ export abstract class DatePickerUtil {
             parts[DatePart.Year] += 2000;
         }
 
-        if (parts[DatePart.Date] > this.daysInMonth(parts[DatePart.Year], parts[DatePart.Month])) {
+        if (parts[DatePart.Date] > DatePickerUtil.daysInMonth(parts[DatePart.Year], parts[DatePart.Month])) {
             return null;
         }
 
@@ -100,14 +100,14 @@ export abstract class DatePickerUtil {
      * Parse the mask into date/time and literal parts
      */
     public static parseDateTimeFormat(mask: string, locale: string = DatePickerUtil.DEFAULT_LOCALE): DatePartInfo[] {
-        const format = mask || this.getDefaultInputFormat(locale);
+        const format = mask || DatePickerUtil.getDefaultInputFormat(locale);
         const dateTimeParts: DatePartInfo[] = [];
         const formatArray = Array.from(format);
         let currentPart: DatePartInfo = null;
         let position = 0;
 
         for (let i = 0; i < formatArray.length; i++, position++) {
-            const type = this.determineDatePart(formatArray[i]);
+            const type = DatePickerUtil.determineDatePart(formatArray[i]);
             if (currentPart) {
                 if (currentPart.type === type) {
                     currentPart.format += formatArray[i];
@@ -116,7 +116,7 @@ export abstract class DatePickerUtil {
                     }
                 }
 
-                this.ensureLeadingZero(currentPart);
+                DatePickerUtil.ensureLeadingZero(currentPart);
                 currentPart.end = currentPart.start + currentPart.format.length;
                 position = currentPart.end;
                 dateTimeParts.push(currentPart);
@@ -138,14 +138,14 @@ export abstract class DatePickerUtil {
             // TODO: fallback with Intl.format for IE?
             return DatePickerUtil.SHORT_DATE_MASK;
         }
-        const parts = this.getDefaultLocaleMask(locale);
+        const parts = DatePickerUtil.getDefaultLocaleMask(locale);
         parts.forEach(p => {
             if (p.type !== DatePart.Year && p.type !== DatePickerUtil.SEPARATOR) {
                 p.formatType = FormatDesc.TwoDigits;
             }
         });
 
-        return this.getMask(parts);
+        return DatePickerUtil.getMask(parts);
     }
 
     public static formatDate(value: number | Date, format: string, locale: string, timezone?: string): string {
@@ -153,7 +153,7 @@ export abstract class DatePickerUtil {
         try {
             formattedDate = formatDate(value, format, locale, timezone);
         } catch {
-            this.logMissingLocaleSettings(locale);
+            DatePickerUtil.logMissingLocaleSettings(locale);
             const formatter = new Intl.DateTimeFormat(locale);
             formattedDate = formatter.format(value);
         }
@@ -173,8 +173,8 @@ export abstract class DatePickerUtil {
         try {
             format = getLocaleDateFormat(locale, FormatWidth[targetKey]);
         } catch {
-            this.logMissingLocaleSettings(locale);
-            format = this.getDefaultInputFormat(locale);
+            DatePickerUtil.logMissingLocaleSettings(locale);
+            format = DatePickerUtil.getDefaultInputFormat(locale);
         }
 
         return format;
@@ -185,7 +185,7 @@ export abstract class DatePickerUtil {
     }
 
     public static spinDate(delta: number, newDate: Date, isSpinLoop: boolean): void {
-        const maxDate = this.daysInMonth(newDate.getFullYear(), newDate.getMonth());
+        const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth());
         let date = newDate.getDate() + delta;
         if (date > maxDate) {
             date = isSpinLoop ? date % maxDate : maxDate;
@@ -197,7 +197,7 @@ export abstract class DatePickerUtil {
     }
 
     public static spinMonth(delta: number, newDate: Date, isSpinLoop: boolean): void {
-        const maxDate = this.daysInMonth(newDate.getFullYear(), newDate.getMonth() + delta);
+        const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth() + delta);
         if (newDate.getDate() > maxDate) {
             newDate.setDate(maxDate);
         }
@@ -215,7 +215,7 @@ export abstract class DatePickerUtil {
     }
 
     public static spinYear(delta: number, newDate: Date): void {
-        const maxDate = this.daysInMonth(newDate.getFullYear() + delta, newDate.getMonth());
+        const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear() + delta, newDate.getMonth());
         if (newDate.getDate() > maxDate) {
             // clip to max to avoid leap year change shifting the entire value
             newDate.setDate(maxDate);
@@ -348,7 +348,7 @@ export abstract class DatePickerUtil {
     public static parseDateFormat(maskValue: string, locale: string = DatePickerUtil.DEFAULT_LOCALE): any[] {
         let dateStruct = [];
         if (maskValue === undefined && !isIE()) {
-            dateStruct = this.getDefaultLocaleMask(locale);
+            dateStruct = DatePickerUtil.getDefaultLocaleMask(locale);
         } else {
             const mask = (maskValue) ? maskValue : DatePickerUtil.SHORT_DATE_MASK;
             const maskArray = Array.from(mask);
@@ -360,7 +360,7 @@ export abstract class DatePickerUtil {
                 dateStruct.push({
                     type: DateParts.Year,
                     initialPosition: yearInitPosition,
-                    formatType: this.getYearFormatType(mask)
+                    formatType: DatePickerUtil.getYearFormatType(mask)
                 });
             }
 
@@ -368,7 +368,7 @@ export abstract class DatePickerUtil {
                 dateStruct.push({
                     type: DateParts.Month,
                     initialPosition: monthInitPosition,
-                    formatType: this.getMonthFormatType(mask)
+                    formatType: DatePickerUtil.getMonthFormatType(mask)
                 });
             }
 
@@ -376,12 +376,12 @@ export abstract class DatePickerUtil {
                 dateStruct.push({
                     type: DateParts.Day,
                     initialPosition: dayInitPosition,
-                    formatType: this.getDayFormatType(mask)
+                    formatType: DatePickerUtil.getDayFormatType(mask)
                 });
             }
 
             for (let i = 0; i < maskArray.length; i++) {
-                if (!this.isDateChar(maskArray[i])) {
+                if (!DatePickerUtil.isDateChar(maskArray[i])) {
                     dateStruct.push({
                         type: DatePickerUtil.SEPARATOR,
                         initialPosition: i,
@@ -391,7 +391,7 @@ export abstract class DatePickerUtil {
             }
 
             dateStruct.sort((a, b) => a.initialPosition - b.initialPosition);
-            this.fillDatePartsPositions(dateStruct);
+            DatePickerUtil.fillDatePartsPositions(dateStruct);
         }
         return dateStruct;
     }
@@ -472,10 +472,10 @@ export abstract class DatePickerUtil {
      * @returns object containing a date and its validation state
      */
     public static parseDateArray(dateFormatParts: any[], prevDateValue: Date, inputValue: string): any {
-        const dayStr = this.getDayValueFromInput(dateFormatParts, inputValue);
-        const monthStr = this.getMonthValueFromInput(dateFormatParts, inputValue);
-        const yearStr = this.getYearValueFromInput(dateFormatParts, inputValue);
-        const yearFormat = this.getDateFormatPart(dateFormatParts, DateParts.Year).formatType;
+        const dayStr = DatePickerUtil.getDayValueFromInput(dateFormatParts, inputValue);
+        const monthStr = DatePickerUtil.getMonthValueFromInput(dateFormatParts, inputValue);
+        const yearStr = DatePickerUtil.getYearValueFromInput(dateFormatParts, inputValue);
+        const yearFormat = DatePickerUtil.getDateFormatPart(dateFormatParts, DateParts.Year).formatType;
         const day = (dayStr !== '') ? parseInt(dayStr, 10) : 1;
         const month = (monthStr !== '') ? parseInt(monthStr, 10) - 1 : 0;
 
@@ -500,7 +500,7 @@ export abstract class DatePickerUtil {
             return { state: DateState.Invalid, value: inputValue };
         }
 
-        if ((day < 1) || (day > this.daysInMonth(fullYear, month)) || isNaN(day)) {
+        if ((day < 1) || (day > DatePickerUtil.daysInMonth(fullYear, month)) || isNaN(day)) {
             return { state: DateState.Invalid, value: inputValue };
         }
 
@@ -537,15 +537,15 @@ export abstract class DatePickerUtil {
         position: number,
         delta: number,
         isSpinLoop: boolean): string {
-        const datePart = this.getDatePartOnPosition(dateFormatParts, position);
+        const datePart = DatePickerUtil.getDatePartOnPosition(dateFormatParts, position);
         const datePartType = datePart.type;
         const datePartFormatType = datePart.formatType;
         let newValue;
 
-        const datePartValue = this.getDateValueFromInput(dateFormatParts, datePartType, inputValue);
+        const datePartValue = DatePickerUtil.getDateValueFromInput(dateFormatParts, datePartType, inputValue);
         newValue = parseInt(datePartValue, 10);
 
-        const minMax = this.getMinMaxValue(dateFormatParts, datePart, inputValue);
+        const minMax = DatePickerUtil.getMinMaxValue(dateFormatParts, datePart, inputValue);
         const minValue = minMax.min;
         const maxValue = minMax.max;
 
@@ -582,7 +582,7 @@ export abstract class DatePickerUtil {
         const endIdx = datePart.position[1];
         const start = inputValue.slice(0, startIdx);
         const end = inputValue.slice(endIdx, inputValue.length);
-        const prefix = this.getNumericFormatPrefix(datePartFormatType);
+        const prefix = DatePickerUtil.getNumericFormatPrefix(datePartFormatType);
         const changedPart = (newValue < 10) ? `${prefix}${newValue}` : `${newValue}`;
 
         return `${start}${changedPart}${end}`;
@@ -618,15 +618,15 @@ export abstract class DatePickerUtil {
      * @returns input completeness
      */
     public static checkForCompleteDateInput(dateFormatParts: any[], input: string): string {
-        const dayValue = this.getDayValueFromInput(dateFormatParts, input);
-        const monthValue = this.getMonthValueFromInput(dateFormatParts, input);
-        const yearValue = this.getYearValueFromInput(dateFormatParts, input);
-        const dayStr = this.getDayValueFromInput(dateFormatParts, input, false);
-        const monthStr = this.getMonthValueFromInput(dateFormatParts, input, false);
+        const dayValue = DatePickerUtil.getDayValueFromInput(dateFormatParts, input);
+        const monthValue = DatePickerUtil.getMonthValueFromInput(dateFormatParts, input);
+        const yearValue = DatePickerUtil.getYearValueFromInput(dateFormatParts, input);
+        const dayStr = DatePickerUtil.getDayValueFromInput(dateFormatParts, input, false);
+        const monthStr = DatePickerUtil.getMonthValueFromInput(dateFormatParts, input, false);
 
-        if (this.isFullInput(dayValue, dayStr)
-            && this.isFullInput(monthValue, monthStr)
-            && this.isFullYearInput(dateFormatParts, yearValue)) {
+        if (DatePickerUtil.isFullInput(dayValue, dayStr)
+            && DatePickerUtil.isFullInput(monthValue, monthStr)
+            && DatePickerUtil.isFullYearInput(dateFormatParts, yearValue)) {
             return 'complete';
         } else if (dayValue === '' && monthValue === '' && yearValue === '') {
             return 'empty';
@@ -652,8 +652,8 @@ export abstract class DatePickerUtil {
         }
 
         // if value is Invalid Date we should return null
-        if (this.isDate(value)) {
-            return this.isValidDate(value) ? value : null;
+        if (DatePickerUtil.isDate(value)) {
+            return DatePickerUtil.isValidDate(value) ? value : null;
         }
 
         return value ? new Date(Date.parse(value)) : null;
@@ -676,7 +676,7 @@ export abstract class DatePickerUtil {
      * @returns true if provided input is a valid date
      */
     public static isValidDate(value: any): boolean {
-        if (this.isDate(value)) {
+        if (DatePickerUtil.isDate(value)) {
             return !isNaN(value.getTime());
         }
 
@@ -703,7 +703,7 @@ export abstract class DatePickerUtil {
     }
 
     private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
-        return this.trimEmptyPlaceholders(inputData.substring(datePart.start, datePart.end), promptChar);
+        return DatePickerUtil.trimEmptyPlaceholders(inputData.substring(datePart.start, datePart.end), promptChar);
     }
 
     private static determineDatePart(char: string): DatePart {
@@ -808,7 +808,7 @@ export abstract class DatePickerUtil {
                 }
             }
         }
-        this.fillDatePartsPositions(dateStruct);
+        DatePickerUtil.fillDatePartsPositions(dateStruct);
         return dateStruct;
     }
 
@@ -837,9 +837,9 @@ export abstract class DatePickerUtil {
             }
             case DateParts.Day: {
                 minValue = 1;
-                maxValue = this.daysInMonth(
-                    this.getFullYearFromString(this.getDateFormatPart(dateFormatParts, DateParts.Year), inputValue),
-                    parseInt(this.getMonthValueFromInput(dateFormatParts, inputValue), 10));
+                maxValue = DatePickerUtil.daysInMonth(
+                    DatePickerUtil.getFullYearFromString(DatePickerUtil.getDateFormatPart(dateFormatParts, DateParts.Year), inputValue),
+                    parseInt(DatePickerUtil.getMonthValueFromInput(dateFormatParts, inputValue), 10));
                 break;
             }
             case DateParts.Year: {
@@ -858,21 +858,21 @@ export abstract class DatePickerUtil {
     }
 
     private static getDateValueFromInput(dateFormatParts: any[], type: DateParts, inputValue: string, trim: boolean = true): string {
-        const partPosition = this.getDateFormatPart(dateFormatParts, type).position;
+        const partPosition = DatePickerUtil.getDateFormatPart(dateFormatParts, type).position;
         const result = inputValue.substring(partPosition[0], partPosition[1]);
-        return (trim) ? this.trimEmptyPlaceholders(result) : result;
+        return (trim) ? DatePickerUtil.trimEmptyPlaceholders(result) : result;
     }
 
     private static getDayValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {
-        return this.getDateValueFromInput(dateFormatParts, DateParts.Day, inputValue, trim);
+        return DatePickerUtil.getDateValueFromInput(dateFormatParts, DateParts.Day, inputValue, trim);
     }
 
     private static getMonthValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {
-        return this.getDateValueFromInput(dateFormatParts, DateParts.Month, inputValue, trim);
+        return DatePickerUtil.getDateValueFromInput(dateFormatParts, DateParts.Month, inputValue, trim);
     }
 
     private static getYearValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {
-        return this.getDateValueFromInput(dateFormatParts, DateParts.Year, inputValue, trim);
+        return DatePickerUtil.getDateValueFromInput(dateFormatParts, DateParts.Year, inputValue, trim);
     }
 
     private static getDateFormatPart(dateFormatParts: any[], type: DateParts): any {
@@ -885,7 +885,7 @@ export abstract class DatePickerUtil {
     }
 
     private static isFullYearInput(dateFormatParts: any[], value: any): boolean {
-        switch (this.getDateFormatPart(dateFormatParts, DateParts.Year).formatType) {
+        switch (DatePickerUtil.getDateFormatPart(dateFormatParts, DateParts.Year).formatType) {
             case FormatDesc.Numeric: {
                 return (value !== '' && value.length === 4);
             }

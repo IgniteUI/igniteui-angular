@@ -9,7 +9,10 @@ export type Direction = 'ltr' | 'rtl';
 /**
  * @hidden
  */
-export const DIR_DOCUMENT_FACTORY = (): Document => inject(DOCUMENT);
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function DIR_DOCUMENT_FACTORY(): Document {
+    return inject(DOCUMENT);
+}
 
 /**
  * Injection token is used to inject the document into Directionality
