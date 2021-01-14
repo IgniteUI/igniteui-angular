@@ -32,15 +32,15 @@ You can access all properties of the icon component with the following attribute
 **Setters**
 You can programmatically set all of the icon properties with the following icon setters: 
 
-`family(fontFamily: string)` sets the icon font family
+`family(fontFamily: string)` sets the icon family
 `name(icon: string)` sets the icon name
 `active(state: boolean)` sets the icon style to inactive if set the false
 
 **Getters**
 You can programmatically get all of the icon properties with the following icon getters: 
 
-`getFamily()` returns the icon font 
+`getFamily()` returns the icon family 
 `getColor()` returns the icon color
 `getName()` returns the icon name
 `getActive()` returns the icon active state
-`getSvgKey()` returns the key of a custom SVG icon. The SVG key is a combination between the font-family and icon name
+`getSvgKey()` returns the key of a custom SVG icon. The SVG key is a combination between the family and icon name

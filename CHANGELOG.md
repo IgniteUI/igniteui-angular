@@ -14,7 +14,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDialog`
     - Added new `onOpened` and `onClosed` events.
 - `IgxIcon`
-    - **Breaking Change** - The `color` input property has been deprecated. 
+    - **Deprecated** - The `color` input property has been deprecated. 
     - **Renamed inputs**
         `isActive` to `active`
         `fontSet` to `family`

@@ -18,7 +18,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
  * @remarks
  *
  * The Ignite UI Icon makes it easy for developers to include material design icons directly in their markup. The icons
- * support different font-families and can be marked as active or disabled using the `active` property. This will change the appearance
+ * support different icon families and can be marked as active or disabled using the `active` property. This will change the appearance
  * of the icon.
  *
  * @example
