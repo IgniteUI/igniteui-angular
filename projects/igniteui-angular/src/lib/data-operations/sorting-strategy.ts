@@ -164,13 +164,14 @@ export class IgxSorting implements IGridSortingStrategy {
             isDate: boolean = false): any[] {
         const res = [];
         const key = expression.fieldName;
-        res.push(data[index]);
+        const len = data.length;
         const groupval = this.getFieldValue(data[index], key, isDate);
+        res.push(data[index]);
         index++;
         const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
-        for (const obj of data) {
-            if (comparer(this.getFieldValue(obj, key, isDate), groupval) === 0) {
-                res.push(obj);
+        for (let i = index; i < len; i++) {
+            if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
+                res.push(data[i]);
             } else {
                 break;
             }
