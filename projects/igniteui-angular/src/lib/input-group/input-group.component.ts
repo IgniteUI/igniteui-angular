@@ -215,15 +215,33 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         return this._type || this._inputGroupType || 'line';
     }
 
-    /** @hidden @internal */
+    /**
+     * Sets the theme of the input.
+     * Allowed values of type IgxInputGroupTheme.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = 'fluent';
+     * }
+     */
     @Input()
-    public get theme(): IgxInputGroupTheme {
-        return this._variant;
-    }
-
-    /** @hidden @internal */
     public set theme(variant: IgxInputGroupTheme) {
         this._variant = variant;
+    }
+
+    /**
+     * Returns the theme of the input.
+     * The returned value is of tyep IgxInputGroupType.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = this.inputGroup.theme;
+     * }
+     */
+    public get theme(): IgxInputGroupTheme {
+        return this._variant;
     }
 
     /**
