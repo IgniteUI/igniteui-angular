@@ -877,7 +877,7 @@ class TabsTestComponent {
 @Component({
     template: `
         <div #wrapperDiv style="display: flex;">
-            <igx-tabs (onTabSelected)="tabSelectedHandler($event)">
+            <igx-tabs (onTabSelected)="tabSelectedHandler()">
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
             </igx-tabs>
         </div>`
@@ -887,11 +887,11 @@ class TabsTest2Component {
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
     public collection: any[];
 
-    public constructor() {
+    constructor() {
         this.resetCollectionThreeTabs();
     }
 
-    public tabSelectedHandler(args) {
+    public tabSelectedHandler() {
     }
 
     public resetCollectionOneTab() {
@@ -971,7 +971,7 @@ class TabsTestSelectedTabComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     public collection: any[];
 
-    public constructor() {
+    constructor() {
         this.collection =
             [
                 { name: 'Tab 1' },

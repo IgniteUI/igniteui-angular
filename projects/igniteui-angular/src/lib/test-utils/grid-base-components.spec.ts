@@ -60,10 +60,9 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     public startFromOne = false;
     public columnNamePrefix = 'col';
     public columns = [];
+    public autoGenerate = false;
 
-    autoGenerate = false;
-
-    ngOnInit() {
+    public ngOnInit() {
         this.columns = (this.hasEditableColumns) ?
                                 SampleTestData.generateEditableColumns(this.colsCount, this.columnsType, this.columnNamePrefix)
                                 : SampleTestData.generateColumnsByType(this.colsCount, this.columnsType, this.columnNamePrefix);
@@ -91,8 +90,7 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
     public perPage = 3;
-
-    data = SampleTestData.personJobDataFull();
+    public data = SampleTestData.personJobDataFull();
 }
 
 @Component({
@@ -100,7 +98,7 @@ export class PagingComponent extends GridWithSizeComponent {
         '', ColumnDefinitions.productBasicNumberID)
 })
 export class SelectionComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
+    public data = SampleTestData.generateBigValuesData(100);
 }
 
 @Component({
@@ -115,7 +113,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     public exportExcel = true;
     public exportCsv = true;
 
-    data = SampleTestData.contactInfoData();
+    public data = SampleTestData.contactInfoData();
 }
 
 @Component({
@@ -128,10 +126,11 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
     @ViewChild(IgxColumnActionsComponent)
     public chooser: IgxColumnActionsComponent;
-    width = '500px';
-    height = '500px';
-    showInline = true;
-    hideFilter = false;
+    public width = '500px';
+    public height = '500px';
+    public showInline = true;
+    public hideFilter = false;
+
     constructor(private cdr: ChangeDetectorRef) {
         super();
     }
@@ -140,11 +139,11 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
         return this.chooser.columnItems.filter(c => c.checked).length;
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.productInfoData();
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.cdr.detectChanges();
     }
 }
@@ -156,9 +155,10 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
-    @ViewChild(IgxGridComponent, { static: true }) grid: IgxGridComponent;
-    hasGroupColumns = false;
-    data = SampleTestData.contactInfoDataFull();
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    public hasGroupColumns = false;
+    public data = SampleTestData.contactInfoDataFull();
     constructor(cdr: ChangeDetectorRef) {
         super(cdr);
     }
@@ -168,28 +168,28 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     template: `<div>
         <igx-column-actions igxColumnPinning [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
         ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable,
-            `<igx-grid-toolbar>
-            <igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>
-            </igx-grid-toolbar>`)}
+            '<igx-grid-toolbar>' +
+            '<igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>' +
+            '</igx-grid-toolbar>')}
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
     @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
 
-    height = '500px';
-    width = '500px';
-    showInline = true;
-    hideFilter = false;
+    public height = '500px';
+    public width = '500px';
+    public showInline = true;
+    public hideFilter = false;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.productInfoData();
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.cdr.detectChanges();
     }
 }
@@ -223,7 +223,8 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
+
     constructor(cdr: ChangeDetectorRef) {
         super(cdr);
     }

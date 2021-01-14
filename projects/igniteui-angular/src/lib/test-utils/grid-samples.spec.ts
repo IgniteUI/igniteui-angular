@@ -1115,17 +1115,17 @@ export class IgxGridExternalESFComponent extends BasicGridComponent implements A
 
     public data = SampleTestData.excelFilteringData();
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor() {
         super();
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this.esf.column = this.grid.getColumnByName('ProductName');
     }
 }
 
 export class CustomFilterStrategy extends FilteringStrategy {
-    public constructor() {
+    constructor() {
         super();
     }
 
@@ -1296,11 +1296,11 @@ export class IgxGridExternalESFTemplateComponent extends BasicGridComponent impl
 
     public data = SampleTestData.excelFilteringData();
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor() {
         super();
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.esf.column = this.grid.getColumnByName('Downloads');
     }
 }

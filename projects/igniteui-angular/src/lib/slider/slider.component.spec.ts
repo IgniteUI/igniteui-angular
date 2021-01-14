@@ -1698,7 +1698,7 @@ export class SliderRtlComponent {
 
     public type: IgxSliderType = IgxSliderType.RANGE;
 
-    public constructor(public dir: IgxDirectionality) { }
+    constructor(public dir: IgxDirectionality) { }
 }
 
 @Component({

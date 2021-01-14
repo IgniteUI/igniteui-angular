@@ -10,7 +10,7 @@ import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.comm
 export class TimeDisplayFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
-    transform(value: any): string {
+    public transform(value: any): string {
         let hour; let minutes; let seconds; let amPM;
 
         const maskAmPM = this.timePicker.parseMask();
@@ -107,7 +107,7 @@ export class TimeDisplayFormatPipe implements PipeTransform {
 export class TimeInputFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
-    transform(value: any): string {
+    public transform(value: any): string {
         const prompt = this.timePicker.promptChar;
         const regExp = new RegExp(prompt, 'g');
 

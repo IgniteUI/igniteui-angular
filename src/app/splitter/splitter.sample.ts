@@ -10,19 +10,19 @@ import { IgxGridComponent, SplitterType } from 'igniteui-angular';
 })
 export class SplitterSampleComponent implements AfterViewInit {
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
 
     @ViewChild('grid2', { static: true })
-    grid2: IgxGridComponent;
+    private grid2: IgxGridComponent;
 
     @ViewChild('grid3', { static: true })
-    grid3: IgxGridComponent;
+    private grid3: IgxGridComponent;
 
-    type = SplitterType.Horizontal;
-    data1 = [];
-    data2 = [];
-    data3 = [];
-    primaryKeys = [
+    public type = SplitterType.Horizontal;
+    public data1 = [];
+    public data2 = [];
+    public data3 = [];
+    public primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
         { name: 'OrderID', type: 'number', level: 1 },
         { name: 'EmployeeID', type: 'number', level: 2 },
@@ -55,7 +55,7 @@ export class SplitterSampleComponent implements AfterViewInit {
         return `${this.remoteService.url}${qS}`;
     }
 
-    changeType() {
+    public changeType() {
         if (this.type === SplitterType.Horizontal) {
             this.type = SplitterType.Vertical;
         } else {

@@ -39,7 +39,7 @@ export class TabsSampleComponent {
         { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
     ];
 
-    contacts: any[] = [{
+    public contacts: any[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',

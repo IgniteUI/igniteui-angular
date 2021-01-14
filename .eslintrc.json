@@ -28,7 +28,10 @@
         "@typescript-eslint/explicit-member-accessibility": [
           "warn",
           {
-            "accessibility": "explicit"
+            "accessibility": "explicit",
+            "overrides": {
+              "constructors": "no-public"
+            }
           }
         ],
         "@typescript-eslint/naming-convention": [

@@ -77,7 +77,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instace: FilteringStrategy = null;
 
-    public constructor() {
+    constructor() {
         super();
     }
 

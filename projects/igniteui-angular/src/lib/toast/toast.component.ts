@@ -390,7 +390,7 @@ export class IgxToastComponent extends IgxToggleDirective
     /**
      * @hidden
      */
-    ngOnInit() {
+    public ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
             this.onShown.emit(this);
             this.isVisible = true;
@@ -405,7 +405,7 @@ export class IgxToastComponent extends IgxToggleDirective
     /**
      * @hidden
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.d$.next(true);
         this.d$.complete();
     }

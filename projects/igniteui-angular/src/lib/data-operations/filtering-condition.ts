@@ -8,7 +8,7 @@ export class IgxFilteringOperand {
     protected static _instance: IgxFilteringOperand = null;
     public operations: IFilteringOperation[];
 
-    public constructor() {
+    constructor() {
         this.operations = [{
             name: 'null',
             isUnary: true,
