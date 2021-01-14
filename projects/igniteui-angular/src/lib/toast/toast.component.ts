@@ -68,7 +68,6 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
 export class IgxToastComponent extends IgxToggleDirective
     implements IToggleView, OnInit, OnDestroy {
     private d$ = new Subject<boolean>();
-    private _isVisible = false;
 
     /**
      * @hidden
@@ -210,13 +209,15 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     @Input()
     public get isVisible() {
-        return this._isVisible;
+        return !this.collapsed;
     }
 
     public set isVisible(value) {
-        if (value !== this._isVisible) {
+        if (value !== this.isVisible) {
             if (value) {
-                this.show();
+                requestAnimationFrame(() => {
+                    this.show();
+                });
             } else {
                 this.hide();
             }
@@ -240,8 +241,8 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```
      * @memberof IgxToastComponent
      */
-    @DeprecateProperty(`'message' property is deprecated.
-    You can use place the message in the toast content or pass it as parameter to the show method instead.`)
+        @DeprecateProperty(`'message' property is deprecated.
+        You can use place the message in the toast content or pass it as parameter to the show method instead.`)
     @Input()
     public set message(value: string) {
         this.toastMessage = value;
@@ -382,13 +383,11 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
-            this._isVisible = true;
             this.isVisibleChange.emit(true);
             this.onShown.emit(this);
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
-            this._isVisible = false;
             this.isVisibleChange.emit(false);
             this.onHidden.emit(this);
         });
