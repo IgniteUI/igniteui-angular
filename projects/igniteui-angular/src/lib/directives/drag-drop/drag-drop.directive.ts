@@ -1327,6 +1327,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
 
+    private _data: any;
+
     /**
      * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
      * ```html
@@ -1335,7 +1337,6 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * @memberof IgxDropDirective
      */
     @Input('igxDrop')
-    private _data: any;
     public get data(): any {
         return this._data;
     }
