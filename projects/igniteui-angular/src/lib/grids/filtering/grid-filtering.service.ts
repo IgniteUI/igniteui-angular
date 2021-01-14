@@ -8,7 +8,7 @@ import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
-import { IColumnResizeEventArgs } from '../common/events';
+import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
@@ -200,25 +200,40 @@ export class IgxFilteringService implements OnDestroy {
      */
     public filter(field: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
+
+        const grid = this.grid;
+
         const col = this.gridAPI.get_column_by_name(field);
-        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+        ignoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        const filteringTree = grid.filteringExpressionsTree;
+        const fieldFilterIndex = filteringTree.findIndex(field);
+        if (fieldFilterIndex > -1) {
+            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
+        }
+        this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree, ignoreCase, fieldFilterIndex);
+
+        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: grid.filteringExpressionsTree, cancel: false };
+        this.grid.filtering.emit(eventArgs);
+
+        if (eventArgs.cancel) { return; }
 
         if (conditionOrExpressionTree) {
-            this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
+            this.gridAPI.filter(field, value, conditionOrExpressionTree, ignoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
             } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
+                this.gridAPI.filter(field, value, expressionsTreeForColumn, ignoreCase);
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
+                this.gridAPI.filter(field, value, expressionForColumn.condition, ignoreCase);
             }
         }
-        const eventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
+        const doneEventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(eventArgs));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(doneEventArgs));
     }
 
     /**
@@ -232,12 +247,20 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
-        this.isFiltering = true;
+        const onFilteringEventArgs: IFilteringEventArgs = {
+            owner: this,
+            filteringExpressions: this.grid.filteringExpressionsTree,
+            cancel: false };
 
+        this.grid.filtering.emit(onFilteringEventArgs);
+
+        if (onFilteringEventArgs.cancel) { return; }
+
+        this.isFiltering = true;
         this.gridAPI.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
 
         if (field) {
             const expressions = this.getExpressions(field);
@@ -256,7 +279,27 @@ export class IgxFilteringService implements OnDestroy {
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
-        this.gridAPI.filter_global(value, condition, ignoreCase);
+        if (!condition) {
+            return;
+        }
+
+        const grid = this.grid;
+        const filteringTree = grid.filteringExpressionsTree;
+        filteringTree.filteringOperands = [];
+        for (const column of grid.columns) {
+            this.gridAPI.prepare_filtering_expression(filteringTree, column.field, value,
+                condition, ignoreCase || column.filteringIgnoreCase);
+        }
+
+        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: grid.filteringExpressionsTree, cancel: false };
+        grid.filtering.emit(eventArgs);
+        if (eventArgs.cancel) { return; }
+
+        grid.endEdit(false);
+        if (grid.paging) {
+            grid.page = 0;
+        }
+        grid.filteringExpressionsTree = filteringTree;
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));

@@ -89,6 +89,18 @@ export class IgxColumnResizingService {
         } else if (parseFloat(size) < minWidth) {
             size = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
         }
+
+        const eventArgs = {
+            column: this.column,
+            prevWidth: currentColWidth.toString(),
+            newWidth: size,
+            cancel: false,
+            owner: this
+        };
+        this.column.grid.columnResizing.emit(eventArgs);
+
+        if (eventArgs.cancel) { return; }
+
         this.column.width = size;
 
         this.zone.run(() => {});

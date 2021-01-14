@@ -28,6 +28,7 @@ import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
+import { IColumnVisibilityChangingEventArgs } from '../../common/events';
 
 /**
  * @hidden
@@ -411,6 +412,15 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public onHideToggle() {
+        const eventArgs: IColumnVisibilityChangingEventArgs = {
+            column: this.column,
+            newValue: !this.column.hidden,
+            owner: this,
+            cancel: false };
+        this.grid.onColumnVisibilityChanging.emit(eventArgs);
+
+        if (eventArgs.cancel) { return; }
+
         this.column.hidden = !this.column.hidden;
         this.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: this.column.hidden });
         this.closeDropdown();

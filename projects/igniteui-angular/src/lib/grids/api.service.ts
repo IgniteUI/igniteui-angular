@@ -343,27 +343,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         grid.filteringExpressionsTree = filteringTree;
     }
 
-    public filter_global(term, condition, ignoreCase) {
-        if (!condition) {
-            return;
-        }
-
-        const grid = this.grid;
-        const filteringTree = grid.filteringExpressionsTree;
-        grid.endEdit(false);
-        if (grid.paging) {
-            grid.page = 0;
-        }
-
-        filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
-            this.prepare_filtering_expression(filteringTree, column.field, term,
-                condition, ignoreCase || column.filteringIgnoreCase);
-        }
-
-        grid.filteringExpressionsTree = filteringTree;
-    }
-
     public clear_filter(fieldName: string) {
         const grid = this.grid;
         grid.endEdit(false);
@@ -388,7 +367,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+    public prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
 
         let newExpressionsTree;

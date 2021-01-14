@@ -8,6 +8,8 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxRowDirective } from '../row.directive';
 import { ColumnType } from './column.interface';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -45,10 +47,17 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
     isPinned: boolean;
 }
 
+export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, CancelableEventArgs {
+}
+
 export interface IPageEventArgs extends IBaseEventArgs {
     previous: number;
     current: number;
 }
+
+export interface IPagingEventArgs extends IPageEventArgs, CancelableEventArgs {
+}
+
 
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
@@ -58,6 +67,9 @@ export interface IColumnResizeEventArgs extends IBaseEventArgs {
     column: IgxColumnComponent;
     prevWidth: string;
     newWidth: string;
+}
+
+export interface IColumnResizingEventArgs extends IColumnResizeEventArgs, CancelableEventArgs {
 }
 
 export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -184,3 +196,20 @@ export interface IActiveNodeChangeEventArgs extends IBaseEventArgs {
     level?: number;
     tag: GridKeydownTargetType;
 }
+
+export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
+    sortingExpressions: ISortingExpression | Array<ISortingExpression>;
+}
+
+export interface IFilteringEventArgs extends IBaseEventArgs, CancelableEventArgs {
+    filteringExpressions: IFilteringExpressionsTree;
+}
+
+export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
+    column: any;
+    newValue: boolean;
+}
+
+export interface IColumnVisibilityChangingEventArgs extends IColumnVisibilityChangedEventArgs, CancelableEventArgs {
+}
+
