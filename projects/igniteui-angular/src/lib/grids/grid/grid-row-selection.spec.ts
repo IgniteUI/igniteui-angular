@@ -12,7 +12,8 @@ import {
     SingleRowSelectionComponent,
     RowSelectionWithoutPrimaryKeyComponent,
     SelectionWithTransactionsComponent,
-    GridCustomSelectorsComponent
+    GridCustomSelectorsComponent,
+    RowSelectionWithDisabledSelectRowOnClickComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -32,6 +33,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 RowSelectionComponent,
+                RowSelectionWithDisabledSelectRowOnClickComponent,
                 SelectionWithScrollsComponent,
                 RowSelectionWithoutPrimaryKeyComponent,
                 SingleRowSelectionComponent,
@@ -316,7 +318,11 @@ describe('IgxGrid - Row Selection #grid', () => {
             });
         });
         it('Should select the row only on checkbox click when selectRowOnClick has value false', () => {
-            grid.selectRowOnClick = false;
+            fix = TestBed.createComponent(RowSelectionWithDisabledSelectRowOnClickComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+
+            expect(grid.selectRowOnClick).toBe(false);
             grid.hideRowSelectors = false;
 
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();

@@ -192,6 +192,18 @@ export class RowSelectionComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [selectRowOnClick]="false" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class RowSelectionWithDisabledSelectRowOnClickComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+    public selectedRows = [];
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
             ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
             '', ColumnDefinitions.productBasicNumberID)
 })
