@@ -1349,6 +1349,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * ```html
      * <div [igxDrop]="{ source: myElement }"></div>
      * ```
+     *
      * @memberof IgxDropDirective
      */
     @Input('igxDrop')
