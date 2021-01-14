@@ -1344,11 +1344,20 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     selector: '[igxDrop]'
 })
 export class IgxDropDirective implements OnInit, OnDestroy {
-    public get data(): any {
-        return this._data;
-    }
+    /**
+     * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
+     * ```html
+     * <div [igxDrop]="{ source: myElement }"></div>
+     * ```
+     * @memberof IgxDropDirective
+     */
+    @Input('igxDrop')
     public set data(v: any) {
         this._data = v;
+    }
+
+    public get data(): any {
+        return this._data;
     }
 
     /**
@@ -1486,21 +1495,12 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public dragover = false;
 
     /**
-     * - Save data inside the `igxDrop` directive. This can be set when instancing `igxDrop` on an element.
-     * ```html
-     * <div [igxDrop]="{ source: myElement }"></div>
-     * ```
-     *
-     * @memberof IgxDropDirective
-     */
-    @Input('igxDrop')
-    private _data: any;
-
-    /**
      * @hidden
      */
     protected _destroy = new Subject<boolean>();
     protected _dropStrategy: IDropStrategy;
+
+    private _data: any;
 
     constructor(public element: ElementRef, private _renderer: Renderer2, private _zone: NgZone) {
         this._dropStrategy = new IgxDefaultDropStrategy();
