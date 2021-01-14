@@ -38,16 +38,17 @@ steps:
   env:
     NODE_OPTIONS: "--max_old_space_size=4096"
 
-- script: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
-  displayName: 'Combine coverage results'
-  env:
-    AZURE_PIPELINES: "true"
+## Use only Github actions for publishing coveralls.io status
+# - script: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+#   displayName: 'Combine coverage results'
+#   env:
+#     AZURE_PIPELINES: "true"
 
-- script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-  condition: and(succeeded(), eq(variables['system.teamProject'], 'igniteui-angular'))
-  displayName: 'Code coverage @ Coveralls'
-  env:
-    COVERALLS_REPO_TOKEN: $(coveralls.repoToken)
+# - script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+#   condition: and(succeeded(), eq(variables['system.teamProject'], 'igniteui-angular'))
+#   displayName: 'Code coverage @ Coveralls'
+#   env:
+#     COVERALLS_REPO_TOKEN: $(coveralls.repoToken)
 
 - script: npm run test:schematics
   displayName: 'Run migrations & schematics'
