@@ -236,31 +236,38 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
-        this._overlayAppendedSub = this.overlayService.onAppended.pipe(...this._overlaySubFilter, first()).subscribe(() => {
+        this.unsubscribe();
+
+        this._overlayAppendedSub = this.overlayService.onAppended.pipe(...this._overlaySubFilter).subscribe(() => {
             const appendedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.onAppended.emit(appendedEventArgs);
         });
 
-        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter, first()).subscribe(() => {
+        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
             const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
             this.onOpened.emit(openedEventArgs);
         });
 
-        this._overlayClosingSub = this.overlayService.onClosing.pipe(...this._overlaySubFilter, first())
-        .subscribe((e: OverlayClosingEventArgs) => {
-            const eventArgs: ToggleViewCancelableEventArgs = { cancel: false, event: e.event, owner: this, id: this._overlayId };
-            this.onClosing.emit(eventArgs);
-            e.cancel = eventArgs.cancel;
+        this._overlayClosingSub = this.overlayService
+            .onClosing
+            .pipe(...this._overlaySubFilter)
+            .subscribe((e: OverlayClosingEventArgs) => {
+                const eventArgs: ToggleViewCancelableEventArgs = { cancel: false, event: e.event, owner: this, id: this._overlayId };
+                this.onClosing.emit(eventArgs);
+                e.cancel = eventArgs.cancel;
 
-            //  in case event is not canceled this will close the toggle and we need to unsubscribe.
-            //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
-            //  onClosed was fired we will end with calling onClosing more than once
-            if (!e.cancel) {
-                return;
-            }
-        });
+                //  in case event is not canceled this will close the toggle and we need to unsubscribe.
+                //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
+                //  onClosed was fired we will end with calling onClosing more than once
+                if (!e.cancel) {
+                    this.clearSubscription(this._overlayClosingSub);
+                }
+            });
 
-        this._overlayClosedSub = this.overlayService.onClosed.pipe(...this._overlaySubFilter, first()).subscribe(this.overlayClosed);
+
+        this._overlayClosedSub = this.overlayService.onClosed
+            .pipe(...this._overlaySubFilter)
+            .subscribe(this.overlayClosed);
 
         this.overlayService.show(this._overlayId, overlaySettings);
     }
@@ -353,6 +360,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         if (!this.collapsed && this._overlayId) {
             this.overlayService.hide(this._overlayId);
         }
+        this.unsubscribe();
         this.destroy$.next(true);
         this.destroy$.complete();
     }
@@ -360,8 +368,22 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private overlayClosed = (ev) => {
         this.collapsed = true;
         delete this._overlayId;
+        this.unsubscribe();
         const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId, event: ev.event };
         this.onClosed.emit(closedEventArgs);
+    }
+
+    private unsubscribe() {
+        this.clearSubscription(this._overlayOpenedSub);
+        this.clearSubscription(this._overlayClosingSub);
+        this.clearSubscription(this._overlayClosedSub);
+        this.clearSubscription(this._overlayAppendedSub);
+    }
+
+    private clearSubscription(subscription: Subscription) {
+        if (subscription && !subscription.closed) {
+            subscription.unsubscribe();
+        }
     }
 }
 

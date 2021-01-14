@@ -30,7 +30,6 @@ describe('IgxToast', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(ToastInitializeTestComponent);
         toast = fixture.componentInstance.toast;
-        toast.isVisible = true;
         fixture.detectChanges();
     });
 
@@ -42,9 +41,6 @@ describe('IgxToast', () => {
         expect(toast.displayTime).toBe(4000);
         expect(toast.autoHide).toBeTruthy();
 
-        toast.onOpened.subscribe(() => {
-            expect(toast.isVisible).toBeTruthy();
-        });
         toast.id = 'customToast';
         fixture.detectChanges();
 
@@ -103,16 +99,18 @@ describe('IgxToast', () => {
     });
 
     it('visibility is updated by the toggle() method', () => {
+        spyOn(toast.onShown, 'emit');
+        spyOn(toast.onHidden, 'emit');
         toast.autoHide = false;
 
         toast.toggle();
         toast.onOpened.subscribe(() => {
-            expect(toast.isVisible).toEqual(true);
+            expect(toast.onShown.emit).toHaveBeenCalled();
         });
 
         toast.toggle();
         toast.onClosed.subscribe(() => {
-            expect(toast.isVisible).toEqual(false);
+            expect(toast.onHidden.emit).toHaveBeenCalled();
         });
     });
 
@@ -123,9 +121,7 @@ describe('IgxToast', () => {
         toast.show('Custom Message');
         tick(100);
         fixture.detectChanges();
-        toast.onOpened.subscribe(() => {
-            expect(toast.isVisible).toBeTruthy();
-        });
+        expect(toast.isVisible).toBeTruthy();
 
         expect(toast.autoHide).toBeFalsy();
         expect(toast.toastMessage).toBe('Custom Message');
@@ -135,19 +131,21 @@ describe('IgxToast', () => {
         const toastFixture = TestBed.createComponent(ToastTestBindingComponent);
         const component = fixture.componentInstance.toast;
         toastFixture.detectChanges();
+        spyOn(toast.onShown, 'emit');
+        spyOn(toast.onHidden, 'emit');
 
         toastFixture.componentInstance.model = true;
         toastFixture.detectChanges();
 
         component.onOpened.subscribe(() => {
-            expect(component.isVisible).toBeTruthy();
+            expect(toast.onShown.emit).toHaveBeenCalled();
         });
 
         toastFixture.componentInstance.model = false;
         toastFixture.detectChanges();
 
         component.onClosed.subscribe(() => {
-            expect(component.isVisible).toBeFalse();
+            expect(toast.onHidden.emit).toHaveBeenCalled();
         });
     });
 });
