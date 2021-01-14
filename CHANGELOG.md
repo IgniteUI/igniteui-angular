@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
 - `IgxDialog`
     - Added new `onOpened` and `onClosed` events.
+- `IgxInputGroup`
+    - Added new property `theme` that allows you to set the theme explicitly and at runtime.
 
 ## 11.0.4
 
