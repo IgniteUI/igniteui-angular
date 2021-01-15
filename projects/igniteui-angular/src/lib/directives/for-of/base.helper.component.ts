@@ -38,12 +38,12 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     }
 
     @HostListener('scroll', ['$event'])
-    onScroll(event) {
+    public onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
     }
 
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this._afterViewInit = true;
         if (!this.platformUtil.isBrowser) {
             return;
