@@ -1217,6 +1217,420 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public cancelAddMode = false;
 
     /**
+     * @hidden
+     * @internal
+     */
+    public rowDragging = false;
+
+    /**
+     * Gets the row ID that is being dragged.
+     *
+     * @remarks
+     * The row ID is either the primaryKey value or the data record instance.
+     */
+    public dragRowID = null;
+
+    /**
+     * @hidden @interal
+     */
+    public addRowParent = null;
+
+    /**
+     * Gets/Sets whether the columns should be auto-generated once again after the initialization of the grid
+     *
+     * @remarks
+     * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
+     * Note that after generating the columns, this property would be disabled to avoid re-creating
+     * columns each time a new data is assigned.
+     * @example
+     * ```typescript
+     *  this.grid.shouldGenerate = true;
+     * ```
+     */
+    public shouldGenerate: boolean;
+
+    /**
+     * @hidden @internal
+     */
+    public rowEditMessage;
+
+    /**
+     * @hidden @internal
+     */
+    public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
+
+    /**
+     * @hidden @internal
+     */
+    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
+
+    /**
+     * @hidden @internal
+     */
+    public pagingState;
+    /**
+     * @hidden @internal
+     */
+    public calcWidth: number;
+    /**
+     * @hidden @internal
+     */
+    public calcHeight = 0;
+    /**
+     * @hidden @internal
+     */
+    public tfootHeight: number;
+    /**
+     * @hidden @internal
+     */
+    public chipsGoupingExpressions = [];
+    /**
+     * @hidden @internal
+     */
+    public summariesHeight: number;
+
+    /**
+     * @hidden @internal
+     */
+    public draggedColumn: IgxColumnComponent;
+
+
+    /**
+     * @hidden @internal
+     */
+    public disableTransitions = false;
+
+    /**
+     * @hidden @internal
+     */
+    public lastSearchInfo: ISearchInfo = {
+        searchText: '',
+        caseSensitive: false,
+        exactMatch: false,
+        activeMatchIndex: 0,
+        matchInfoCache: []
+    };
+
+    /**
+     * @hidden @internal
+     */
+    public columnWidthSetByUser = false;
+
+    /**
+     * @hidden @internal
+     */
+    public pinnedRecords: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public unpinnedRecords: any[];
+
+    public rendered$ = this.rendered.asObservable().pipe(shareReplay(1));
+
+    /** @hidden @internal */
+    public resizeNotify = new Subject();
+
+    /**
+     * @hidden @internal
+     */
+    public paginatorSettings: OverlaySettings = null;
+
+    /**
+     * @hidden
+     */
+    public _filteredUnpinnedData;
+    public _destroyed = false;
+
+    /**
+     * @hidden @internal
+     */
+    public decimalPipe: DecimalPipe;
+    /**
+     * @hidden @internal
+     */
+    public datePipe: DatePipe;
+    /**
+     * @hidden @internal
+     */
+    public _totalRecords = -1;
+
+    /**
+     * @hidden @internal
+     */
+    public columnsWithNoSetWidths = null;
+
+    /**
+     * @hidden
+     */
+    protected _perPage = 15;
+    /**
+     * @hidden
+     */
+    protected _page = 0;
+    /**
+     * @hidden
+     */
+    protected _paging = false;
+    /**
+     * @hidden
+     */
+    protected _pagingMode = GridPagingMode.Local;
+    /**
+     * @hidden
+     */
+    protected _hideRowSelectors = false;
+    /**
+     * @hidden
+     */
+    protected _rowDrag = false;
+    /**
+     * @hidden
+     */
+    protected _pipeTrigger = 0;
+    /**
+     * @hidden
+     */
+    protected _filteringPipeTrigger = 0;
+    /**
+     * @hidden
+     */
+    protected _summaryPipeTrigger = 0;
+    /**
+     * @hidden
+     */
+    protected _columns: IgxColumnComponent[] = [];
+    /**
+     * @hidden
+     */
+    protected _pinnedColumns: IgxColumnComponent[] = [];
+    /**
+     * @hidden
+     */
+    protected _unpinnedColumns: IgxColumnComponent[] = [];
+    /**
+     * @hidden
+     */
+    protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+    /**
+     * @hidden
+     */
+    protected _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
+    /**
+     * @hidden
+     */
+    protected _sortingExpressions: Array<ISortingExpression> = [];
+    /**
+     * @hidden
+     */
+    protected _maxLevelHeaderDepth = null;
+    /**
+     * @hidden
+     */
+    protected _columnHiding = false;
+    /**
+     * @hidden
+     */
+    protected _columnPinning = false;
+
+    protected _pinnedRecordIDs = [];
+
+    /**
+     * @hidden
+     */
+    protected destroy$ = new Subject<any>();
+
+    protected _filteredSortedPinnedData: any[];
+    protected _filteredSortedUnpinnedData: any[];
+    protected _filteredPinnedData: any[];
+
+    /**
+     * @hidden
+     */
+    protected _hasVisibleColumns;
+    protected _allowFiltering = false;
+    protected _allowAdvancedFiltering = false;
+    protected _filterMode: FilterMode = FilterMode.quickFilter;
+
+    protected observer: ResizeObserver = new ResizeObserver(() => { });
+
+    protected _defaultTargetRecordNumber = 10;
+    protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
+    protected _defaultExpandState = false;
+    protected _baseFontSize: number;
+    protected _headerFeaturesWidth = NaN;
+    protected _init = true;
+    protected _cdrRequestRepaint = false;
+    protected _userOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden @internal
+     */
+    public get scrollSize() {
+        return this.verticalScrollContainer.getScrollNativeSize();
+    }
+
+    private _columnPinningTitle: string;
+    private _columnHidingTitle: string;
+
+    /* Toolbar related definitions */
+    private _showToolbar = false;
+    private _exportExcel = false;
+    private _exportCsv = false;
+    private _toolbarTitle: string = null;
+    private _exportText: string;
+    private _exportExcelText: string;
+    private _exportCsvText: string;
+    private _rowEditable = false;
+    private _currentRowState: any;
+    private _filteredSortedData = null;
+
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
+    private _cdrRequests = false;
+    private _resourceStrings;
+    private _emptyGridMessage = null;
+    private _emptyFilteredGridMessage = null;
+    private _isLoading = false;
+    private _locale: string;
+    private overlayIDs = [];
+    private _filteringStrategy: IFilteringStrategy;
+    private _sortingStrategy: IGridSortingStrategy;
+    private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+
+    private _hostWidth;
+    private _advancedFilteringOverlayId: string;
+    private _advancedFilteringPositionSettings: PositionSettings = {
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalDirection: HorizontalAlignment.Center,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+
+    private _advancedFilteringOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
+    };
+
+    private columnListDiffer;
+    private rowListDiffer;
+    private _hiddenColumnsText = '';
+    private _pinnedColumnsText = '';
+    private _height = '100%';
+    private _width = '100%';
+    private _rowHeight;
+    private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
+    private _multiRowLayoutRowSize = 1;
+    // Caches
+    private _totalWidth = NaN;
+    private _pinnedVisible = [];
+    private _unpinnedVisible = [];
+    private _pinnedWidth = NaN;
+    private _unpinnedWidth = NaN;
+    private _visibleColumns = [];
+    private _columnGroups = false;
+    private _autoGeneratedCols = [];
+
+    private _columnWidth: string;
+
+    private _summaryPosition: GridSummaryPosition = GridSummaryPosition.bottom;
+    private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _showSummaryOnCollapse = false;
+    private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
+    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
+    private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
+
+    private lastAddedRowIndex;
+
+    private rowEditPositioningStrategy = new RowEditPositionStrategy({
+        horizontalDirection: HorizontalAlignment.Right,
+        verticalDirection: VerticalAlignment.Bottom,
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Bottom,
+        closeAnimation: null
+    });
+
+    private rowEditSettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        outlet: this.rowOutletDirective,
+        positionStrategy: this.rowEditPositioningStrategy
+    };
+
+    /**
+     * @hidden @internal
+     */
+    public abstract id: string;
+    abstract data: any[];
+    abstract filteredData: any[];
+
+    /**
+     * Gets/Sets whether the rows are editable.
+     *
+     * @remarks
+     * By default it is set to false.
+     * @example
+     * ```html
+     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
+     * ```
+     */
+    @WatchChanges()
+    @Input()
+    get rowEditable(): boolean {
+        return this._rowEditable;
+    }
+
+    set rowEditable(val: boolean) {
+        if (!this._init) {
+            this.refreshGridState();
+        }
+        this._rowEditable = val;
+        this.notifyChanges();
+    }
+
+    /**
+     * Get/Sets the message displayed when there are no records.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Input()
+    set emptyGridMessage(value: string) {
+        this._emptyGridMessage = value;
+    }
+    get emptyGridMessage(): string {
+        return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
+    }
+
+    /**
+     * Gets/Sets whether the grid is going to show a loading indicator.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @WatchChanges()
+    @Input()
+    set isLoading(value: boolean) {
+        if (this._isLoading !== value) {
+            this._isLoading = value;
+            this.evaluateLoadingState();
+        }
+        Promise.resolve().then(() => {
+            // wait for the current detection cycle to end before triggering a new one.
+            this.notifyChanges();
+        });
+    }
+
+    get isLoading(): boolean {
+        return this._isLoading;
+    }
+
+    /**
      * Gets/Sets the filtering logic of the `IgxGridComponent`.
      *
      * @remarks
@@ -1482,206 +1896,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._rowDrag = val;
         this.notifyChanges(true);
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public rowDragging = false;
-
-    /**
-     * Gets the row ID that is being dragged.
-     *
-     * @remarks
-     * The row ID is either the primaryKey value or the data record instance.
-     */
-    public dragRowID = null;
-
-    /**
-     * @hidden @interal
-     */
-    public addRowParent = null;
-
-    /**
-     * Gets/Sets whether the rows are editable.
-     *
-     * @remarks
-     * By default it is set to false.
-     * @example
-     * ```html
-     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
-     * ```
-     */
-    @WatchChanges()
-    @Input()
-    get rowEditable(): boolean {
-        return this._rowEditable;
-    }
-
-    set rowEditable(val: boolean) {
-        if (!this._init) {
-            this.refreshGridState();
-        }
-        this._rowEditable = val;
-        this.notifyChanges();
-    }
-
-    /**
-     * Gets/Sets the height.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @WatchChanges()
-    @HostBinding('style.height')
-    @Input()
-    public get height() {
-        return this._height;
-    }
-
-    public set height(value: string) {
-        if (this._height !== value) {
-            this._height = value;
-            this.nativeElement.style.height = value;
-            this.notifyChanges(true);
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('style.width')
-    get hostWidth() {
-        return this._width || this._hostWidth;
-    }
-
-    /**
-     * Gets/Sets the width of the grid.
-     *
-     * @example
-     * ```typescript
-     * let gridWidth = this.grid.width;
-     * ```
-     */
-    @WatchChanges()
-    @Input()
-    get width() {
-        return this._width;
-    }
-
-    set width(value) {
-        if (this._width !== value) {
-            this._width = value;
-            this.nativeElement.style.width = value;
-            this.notifyChanges(true);
-        }
-    }
-
-    /**
-     * Gets the width of the header.
-     *
-     * @example
-     * ```html
-     * let gridHeaderWidth = this.grid.headerWidth;
-     * ```
-     */
-    get headerWidth() {
-        return parseInt(this.width, 10) - 17;
-    }
-
-    /**
-     * Gets/Sets the row height.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @WatchChanges()
-    @Input()
-    public get rowHeight() {
-        return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
-    }
-
-    public set rowHeight(value) {
-        this._rowHeight = parseInt(value, 10);
-    }
-
-    /**
-     * Gets/Sets the default width of the columns.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @WatchChanges()
-    @Input()
-    public get columnWidth(): string {
-        return this._columnWidth;
-    }
-    public set columnWidth(value: string) {
-        this._columnWidth = value;
-        this.columnWidthSetByUser = true;
-        this.notifyChanges(true);
-    }
-
-    /**
-     * Get/Sets the message displayed when there are no records.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @Input()
-    set emptyGridMessage(value: string) {
-        this._emptyGridMessage = value;
-    }
-    get emptyGridMessage(): string {
-        return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
-    }
-
-    /**
-     * Gets/Sets whether the grid is going to show a loading indicator.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @WatchChanges()
-    @Input()
-    set isLoading(value: boolean) {
-        if (this._isLoading !== value) {
-            this._isLoading = value;
-            this.evaluateLoadingState();
-        }
-        Promise.resolve().then(() => {
-            // wait for the current detection cycle to end before triggering a new one.
-            this.notifyChanges();
-        });
-    }
-
-    get isLoading(): boolean {
-        return this._isLoading;
-    }
-
-    /**
-     * Gets/Sets whether the columns should be auto-generated once again after the initialization of the grid
-     *
-     * @remarks
-     * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
-     * Note that after generating the columns, this property would be disabled to avoid re-creating
-     * columns each time a new data is assigned.
-     * @example
-     * ```typescript
-     *  this.grid.shouldGenerate = true;
-     * ```
-     */
-    public shouldGenerate: boolean;
 
     /**
      * Gets/Sets the message displayed when there are no records and the grid is filtered.
@@ -2560,320 +2774,107 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Gets/Sets the height.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
      */
-    public rowEditMessage;
-
-    /**
-     * @hidden @internal
-     */
-    public snackbarActionText = this.resourceStrings.igx_grid_snackbar_addrow_actiontext;
-
-    /**
-     * @hidden @internal
-     */
-    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
-
-    /**
-     * @hidden @internal
-     */
-    public pagingState;
-    /**
-     * @hidden @internal
-     */
-    public calcWidth: number;
-    /**
-     * @hidden @internal
-     */
-    public calcHeight = 0;
-    /**
-     * @hidden @internal
-     */
-    public tfootHeight: number;
-    /**
-     * @hidden @internal
-     */
-    public chipsGoupingExpressions = [];
-    /**
-     * @hidden @internal
-     */
-    public summariesHeight: number;
-
-    /**
-     * @hidden @internal
-     */
-    public draggedColumn: IgxColumnComponent;
-
-
-    /**
-     * @hidden @internal
-     */
-    public disableTransitions = false;
-
-    /**
-     * @hidden @internal
-     */
-    public lastSearchInfo: ISearchInfo = {
-        searchText: '',
-        caseSensitive: false,
-        exactMatch: false,
-        activeMatchIndex: 0,
-        matchInfoCache: []
-    };
-
-    /**
-     * @hidden @internal
-     */
-    public columnWidthSetByUser = false;
-
-    /**
-     * @hidden @internal
-     */
-    public pinnedRecords: any[];
-
-    /**
-     * @hidden @internal
-     */
-    public unpinnedRecords: any[];
-
-    public rendered$ = this.rendered.asObservable().pipe(shareReplay(1));
-
-    /** @hidden @internal */
-    public resizeNotify = new Subject();
-
-    /**
-     * @hidden @internal
-     */
-    public paginatorSettings: OverlaySettings = null;
-
-    /**
-     * @hidden
-     */
-    public _filteredUnpinnedData;
-    public _destroyed = false;
-
-    /**
-     * @hidden @internal
-     */
-    public decimalPipe: DecimalPipe;
-    /**
-     * @hidden @internal
-     */
-    public datePipe: DatePipe;
-    /**
-     * @hidden @internal
-     */
-    public _totalRecords = -1;
-
-    /**
-     * @hidden @internal
-     */
-    public columnsWithNoSetWidths = null;
-
-    /**
-     * @hidden
-     */
-    protected _perPage = 15;
-    /**
-     * @hidden
-     */
-    protected _page = 0;
-    /**
-     * @hidden
-     */
-    protected _paging = false;
-    /**
-     * @hidden
-     */
-    protected _pagingMode = GridPagingMode.Local;
-    /**
-     * @hidden
-     */
-    protected _hideRowSelectors = false;
-    /**
-     * @hidden
-     */
-    protected _rowDrag = false;
-    /**
-     * @hidden
-     */
-    protected _pipeTrigger = 0;
-    /**
-     * @hidden
-     */
-    protected _filteringPipeTrigger = 0;
-    /**
-     * @hidden
-     */
-    protected _summaryPipeTrigger = 0;
-    /**
-     * @hidden
-     */
-    protected _columns: IgxColumnComponent[] = [];
-    /**
-     * @hidden
-     */
-    protected _pinnedColumns: IgxColumnComponent[] = [];
-    /**
-     * @hidden
-     */
-    protected _unpinnedColumns: IgxColumnComponent[] = [];
-    /**
-     * @hidden
-     */
-    protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-    /**
-     * @hidden
-     */
-    protected _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
-    /**
-     * @hidden
-     */
-    protected _sortingExpressions: Array<ISortingExpression> = [];
-    /**
-     * @hidden
-     */
-    protected _maxLevelHeaderDepth = null;
-    /**
-     * @hidden
-     */
-    protected _columnHiding = false;
-    /**
-     * @hidden
-     */
-    protected _columnPinning = false;
-
-    protected _pinnedRecordIDs = [];
-
-    /**
-     * @hidden
-     */
-    protected destroy$ = new Subject<any>();
-
-    protected _filteredSortedPinnedData: any[];
-    protected _filteredSortedUnpinnedData: any[];
-    protected _filteredPinnedData: any[];
-
-    /**
-     * @hidden
-     */
-    protected _hasVisibleColumns;
-    protected _allowFiltering = false;
-    protected _allowAdvancedFiltering = false;
-    protected _filterMode: FilterMode = FilterMode.quickFilter;
-
-    protected observer: ResizeObserver = new ResizeObserver(() => { });
-
-    protected _defaultTargetRecordNumber = 10;
-    protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
-    protected _defaultExpandState = false;
-    protected _baseFontSize: number;
-    protected _headerFeaturesWidth = NaN;
-    protected _init = true;
-    protected _cdrRequestRepaint = false;
-    protected _userOutletDirective: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden @internal
-     */
-    public get scrollSize() {
-        return this.verticalScrollContainer.getScrollNativeSize();
+    @WatchChanges()
+    @HostBinding('style.height')
+    @Input()
+    public get height() {
+        return this._height;
     }
 
-    private _columnPinningTitle: string;
-    private _columnHidingTitle: string;
-
-    /* Toolbar related definitions */
-    private _showToolbar = false;
-    private _exportExcel = false;
-    private _exportCsv = false;
-    private _toolbarTitle: string = null;
-    private _exportText: string;
-    private _exportExcelText: string;
-    private _exportCsvText: string;
-    private _rowEditable = false;
-    private _currentRowState: any;
-    private _filteredSortedData = null;
-
-    private _customDragIndicatorIconTemplate: TemplateRef<any>;
-    private _cdrRequests = false;
-    private _resourceStrings;
-    private _emptyGridMessage = null;
-    private _emptyFilteredGridMessage = null;
-    private _isLoading = false;
-    private _locale: string;
-    private overlayIDs = [];
-    private _filteringStrategy: IFilteringStrategy;
-    private _sortingStrategy: IGridSortingStrategy;
-    private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
-
-    private _hostWidth;
-    private _advancedFilteringOverlayId: string;
-    private _advancedFilteringPositionSettings: PositionSettings = {
-        verticalDirection: VerticalAlignment.Middle,
-        horizontalDirection: HorizontalAlignment.Center,
-        horizontalStartPoint: HorizontalAlignment.Center,
-        verticalStartPoint: VerticalAlignment.Middle
-    };
-
-    private _advancedFilteringOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: false,
-        modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
-    };
-
-    private columnListDiffer;
-    private rowListDiffer;
-    private _hiddenColumnsText = '';
-    private _pinnedColumnsText = '';
-    private _height = '100%';
-    private _width = '100%';
-    private _rowHeight;
-    private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
-    private _multiRowLayoutRowSize = 1;
-    // Caches
-    private _totalWidth = NaN;
-    private _pinnedVisible = [];
-    private _unpinnedVisible = [];
-    private _pinnedWidth = NaN;
-    private _unpinnedWidth = NaN;
-    private _visibleColumns = [];
-    private _columnGroups = false;
-    private _autoGeneratedCols = [];
-
-    private _columnWidth: string;
-
-    private _summaryPosition: GridSummaryPosition = GridSummaryPosition.bottom;
-    private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
-    private _showSummaryOnCollapse = false;
-    private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
-    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
-    private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
-
-    private lastAddedRowIndex;
-
-    private rowEditPositioningStrategy = new RowEditPositionStrategy({
-        horizontalDirection: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Bottom,
-        closeAnimation: null
-    });
-
-    private rowEditSettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false,
-        outlet: this.rowOutletDirective,
-        positionStrategy: this.rowEditPositioningStrategy
-    };
+    public set height(value: string) {
+        if (this._height !== value) {
+            this._height = value;
+            this.nativeElement.style.height = value;
+            this.notifyChanges(true);
+        }
+    }
 
     /**
      * @hidden @internal
      */
-    public abstract id: string;
-    abstract data: any[];
-    abstract filteredData: any[];
+    @HostBinding('style.width')
+    get hostWidth() {
+        return this._width || this._hostWidth;
+    }
+
+    /**
+     * Gets/Sets the width of the grid.
+     *
+     * @example
+     * ```typescript
+     * let gridWidth = this.grid.width;
+     * ```
+     */
+    @WatchChanges()
+    @Input()
+    get width() {
+        return this._width;
+    }
+
+    set width(value) {
+        if (this._width !== value) {
+            this._width = value;
+            this.nativeElement.style.width = value;
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * Gets the width of the header.
+     *
+     * @example
+     * ```html
+     * let gridHeaderWidth = this.grid.headerWidth;
+     * ```
+     */
+    get headerWidth() {
+        return parseInt(this.width, 10) - 17;
+    }
+
+    /**
+     * Gets/Sets the row height.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @WatchChanges()
+    @Input()
+    public get rowHeight() {
+        return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
+    }
+
+    public set rowHeight(value) {
+        this._rowHeight = parseInt(value, 10);
+    }
+
+    /**
+     * Gets/Sets the default width of the columns.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [showToolbar]="true" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @WatchChanges()
+    @Input()
+    public get columnWidth(): string {
+        return this._columnWidth;
+    }
+    public set columnWidth(value: string) {
+        this._columnWidth = value;
+        this.columnWidthSetByUser = true;
+        this.notifyChanges(true);
+    }
+
     /**
      * Returns an array containing the filtered sorted data.
      *
