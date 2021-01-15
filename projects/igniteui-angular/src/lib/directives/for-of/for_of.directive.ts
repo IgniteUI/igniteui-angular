@@ -346,6 +346,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     public get isRemote(): boolean {
+        console.log('virt is remote: ', this.totalItemCount !== null);
         return this.totalItemCount !== null;
     }
 
