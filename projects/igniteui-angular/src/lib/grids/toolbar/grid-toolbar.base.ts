@@ -1,4 +1,4 @@
-import { Directive, Host, Input, EventEmitter, OnDestroy, Output}  from '@angular/core';
+import { Directive, Host, Input, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
