@@ -232,7 +232,7 @@ describe('Dialog', () => {
         dialog.open();
         tick();
         fixture.detectChanges();
-        const buttons = document.getElementsByClassName('custom-sample')[0].nextElementSibling.querySelectorAll('button');
+        const buttons = document.querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
@@ -313,10 +313,10 @@ describe('Dialog', () => {
             fixture.detectChanges();
 
             const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
-            expect(dialogWindow.children.length).toEqual(2);
+            expect(dialogWindow.children.length).toEqual(3);
 
             expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain('TITLE');
-            expect(dialogWindow.children[1].nativeElement.innerText.toString()).toContain('BUTTONS');
+            expect(dialogWindow.children[2].nativeElement.innerText.toString()).toContain('BUTTONS');
 
             dialog.close();
         });
