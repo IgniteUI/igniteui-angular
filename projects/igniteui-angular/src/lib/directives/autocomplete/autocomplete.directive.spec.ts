@@ -622,8 +622,8 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledWith({ value: 'Stara Zagora', cancel: false });
 
             fixture.componentInstance.onItemSelected = (args) => {
- args.cancel = true;
-};
+                args.cancel = true;
+            };
             UIInteractions.setInputElementValue(input, 's', fixture);
             tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);

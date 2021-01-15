@@ -48,6 +48,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * An accessor that returns the resource strings.
      */
     get resourceStrings(): ICalendarResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.CalendarResStrings;
+        }
         return this._resourceStrings;
     }
 
@@ -394,19 +397,19 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _disabledDates: DateRangeDescriptor[] = null;
+    private _disabledDates: DateRangeDescriptor[];
 
     /**
      * @hidden
      */
-    private _specialDates: DateRangeDescriptor[] = null;
+    private _specialDates: DateRangeDescriptor[];
 
     /**
      * @hidden
      */
     private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
     /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
+    private _resourceStrings;
 
     /**
      * @hidden
