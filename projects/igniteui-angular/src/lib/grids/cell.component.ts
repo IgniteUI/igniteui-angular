@@ -244,24 +244,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the visible `index` of the in which the cell is stored.
-     * ```typescript
-     * let visibleColumnIndex = this.cell.visibleColumnIndex;
-     * ```
-     *
-     * @memberof IgxGridCellComponent
-     */
-    @HostBinding('attr.data-visibleIndex')
-    @Input()
-    get visibleColumnIndex() {
-        return this.column.columnLayoutChild ? this.column.visibleIndex : this._vIndex;
-    }
-
-    set visibleColumnIndex(val) {
-        this._vIndex = val;
-    }
-
-    /**
      * Gets the ID of the cell.
      * ```typescript
      * let cellID = this.cell.cellID;
@@ -300,29 +282,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     get nativeElement(): HTMLElement {
         return this.element.nativeElement;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @Input()
-    get cellSelectionMode() {
-        return this._cellSelection;
-    }
-
-    set cellSelectionMode(value) {
-        if (this._cellSelection === value) {
-            return;
-        }
-         this.zone.runOutsideAngular(() => {
-            if (value === GridSelectionMode.multiple) {
-                this.addPointerListeners(value);
-            } else {
-                this.removePointerListeners(this._cellSelection);
-            }
-        });
-        this._cellSelection = value;
     }
 
     /**
@@ -601,6 +560,47 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection = GridSelectionMode.multiple;
     private _vIndex = -1;
+
+    /**
+     * Gets the visible `index` of the in which the cell is stored.
+     * ```typescript
+     * let visibleColumnIndex = this.cell.visibleColumnIndex;
+     * ```
+     *
+     * @memberof IgxGridCellComponent
+     */
+    @HostBinding('attr.data-visibleIndex')
+    @Input()
+    get visibleColumnIndex() {
+        return this.column.columnLayoutChild ? this.column.visibleIndex : this._vIndex;
+    }
+
+    set visibleColumnIndex(val) {
+        this._vIndex = val;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    get cellSelectionMode() {
+        return this._cellSelection;
+    }
+
+    set cellSelectionMode(value) {
+        if (this._cellSelection === value) {
+            return;
+        }
+         this.zone.runOutsideAngular(() => {
+            if (value === GridSelectionMode.multiple) {
+                this.addPointerListeners(value);
+            } else {
+                this.removePointerListeners(this._cellSelection);
+            }
+        });
+        this._cellSelection = value;
+    }
 
     constructor(
         protected selectionService: IgxGridSelectionService,
