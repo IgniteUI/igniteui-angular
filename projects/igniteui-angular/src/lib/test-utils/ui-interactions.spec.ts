@@ -4,19 +4,19 @@ import { DebugElement } from '@angular/core';
 
 export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const waitForGridScroll = grid => new Promise(resolve => grid.onScroll.pipe(first()).subscribe(() => {
+export const waitForGridScroll = grid => new Promise<void>(resolve => grid.onScroll.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
-    resolve(null);
+    resolve();
 }));
 
-export const waitForActiveNodeChange = grid => new Promise(resolve => grid.activeNodeChange.pipe(first()).subscribe(() => {
+export const waitForActiveNodeChange = grid => new Promise<void>(resolve => grid.activeNodeChange.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
-    resolve(null);
+    resolve();
 }));
 
-export const waitForSelectionChange = grid => new Promise(resolve => grid.onSelection.pipe(first()).subscribe(() => {
+export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.onSelection.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
-    resolve(null);
+    resolve();
 }));
 
 declare let Touch: {
@@ -329,9 +329,9 @@ export class UIInteractions {
         Object.defineProperty(event, 'wheelDeltaX', { value: deltaX });
         Object.defineProperty(event, 'wheelDeltaY', { value: deltaY });
 
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             element.dispatchEvent(event);
-            resolve(event);
+            resolve();
         });
     }
 
@@ -344,9 +344,9 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchstart', { touches: [t] });
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             target.dispatchEvent(touchEventObject);
-            resolve(touchEventObject);
+            resolve();
         });
     }
 
@@ -359,9 +359,9 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchmove', { touches: [t] });
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             element.dispatchEvent(touchEventObject);
-            resolve(touchEventObject);
+            resolve();
         });
     }
 
@@ -374,9 +374,9 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchend', { touches: [t] });
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             element.dispatchEvent(touchEventObject);
-            resolve(touchEventObject);
+            resolve();
         });
     }
 

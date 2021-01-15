@@ -799,8 +799,8 @@ describe('List', () => {
             deltaX: factorX * itemWidth, duration: 200
         });
         elementRefObject.triggerEventHandler('panend', null);
-        return new Promise((resolve, reject) => {
-            resolve(null);
+        return new Promise<void>(resolve => {
+            resolve();
         });
     };
 
