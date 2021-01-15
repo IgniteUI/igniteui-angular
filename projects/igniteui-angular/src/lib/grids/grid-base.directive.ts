@@ -1206,6 +1206,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get resourceStrings(): IGridResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.GridResStrings;
+        }
         return this._resourceStrings;
     }
     /**
@@ -2794,7 +2797,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
-    private _resourceStrings = CurrentResourceStrings.GridResStrings;
+    private _resourceStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
     private _isLoading = false;
