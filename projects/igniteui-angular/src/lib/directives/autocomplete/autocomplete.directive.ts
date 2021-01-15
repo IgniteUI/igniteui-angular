@@ -157,7 +157,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Output()
-    onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
+    public onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
 
     /** @hidden @internal */
     get nativeElement(): HTMLInputElement {
@@ -229,7 +229,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     /** @hidden  @internal */
     @HostListener('input')
-    onInput() {
+    public onInput() {
         this.open();
     }
 
@@ -238,7 +238,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     @HostListener('keydown.ArrowUp', ['$event'])
     @HostListener('keydown.Alt.ArrowUp', ['$event'])
-    onArrowDown(event: Event) {
+    public onArrowDown(event: Event) {
         event.preventDefault();
         this.open();
     }
@@ -246,12 +246,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /** @hidden  @internal */
     @HostListener('keydown.Tab')
     @HostListener('keydown.Shift.Tab')
-    onTab() {
+    public onTab() {
         this.close();
     }
 
     /** @hidden  @internal */
-    handleKeyDown(event) {
+    public handleKeyDown(event) {
         if (!this.collapsed) {
             switch (event.key.toLowerCase()) {
                 case 'space':
@@ -267,22 +267,22 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    onArrowDownKeyDown() {
+    public onArrowDownKeyDown() {
         super.onArrowDownKeyDown();
     }
 
     /** @hidden  @internal */
-    onArrowUpKeyDown() {
+    public onArrowUpKeyDown() {
         super.onArrowUpKeyDown();
     }
 
     /** @hidden  @internal */
-    onEndKeyDown() {
+    public onEndKeyDown() {
         super.onEndKeyDown();
     }
 
     /** @hidden  @internal */
-    onHomeKeyDown() {
+    public onHomeKeyDown() {
         super.onHomeKeyDown();
     }
 
