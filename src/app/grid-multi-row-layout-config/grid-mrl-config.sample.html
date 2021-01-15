@@ -93,8 +93,6 @@
      <igx-dialog #jsonDialog title="Multi-row layout result:"
         leftButtonLabel="Cancel" (onLeftButtonSelect)="jsonDialog.close()" rightButtonLabel="Copy" (onRightButtonSelect)="copyToClipboard()"
         backgroundClick="true" [closeOnOutsideSelect]="true">
-        <div class="login-form">
-            <textarea #textArea rows="18" cols="101" readonly style="margin: 10px;">{{jsonCollection}}</textarea>
-        </div>
+        <textarea #textArea rows="18" cols="101" readonly>{{jsonCollection}}</textarea>
     </igx-dialog>
 </section>
