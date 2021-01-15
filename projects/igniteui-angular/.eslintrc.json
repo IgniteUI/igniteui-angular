@@ -1,8 +1,7 @@
 {
   "extends": "../../.eslintrc.json",
   "ignorePatterns": [
-    "!**/*",
-    "migrations/common/**/*"
+    "!**/*"
   ],
   "overrides": [
     {
