@@ -202,7 +202,7 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 
 - [COVID-19 Dashboard](https://github.com/IgniteUI/COVID-19-Dashboard) - This dynamic dashboard was built using Indigo.Design and Ignite UI for Angular leveraging timely reports data from CSSEGISandData/COVID-19 to create an useful and impactful visualization. Built in a matter of hours, it showcases the Ignite UI Category and Data Charts, Map and List components for Angular and the how easy it is to get those quickly configured and populated with data.
 
--[Inventory Management App]([https://github.com/IgniteUI/InventoryManagementApp](https://github.com/IgniteUI/InventoryManagementApp) - The Inventory Management App consists of 2 pages: The Products Page and the Dashboard Page. The Products Page contains a grid with product information and includes a number of useful features
+-[Inventory Management App](https://github.com/IgniteUI/InventoryManagementApp) - The Inventory Management App consists of 2 pages: The Products Page and the Dashboard Page. The Products Page contains a grid with product information and includes a number of useful features
 
 ### Angular apps with ASP.NET Core Web Application
 If you consider Angular client side application with ASP.NET Core application you can check out our [ASP.NET-Core-Samples](https://github.com/IgniteUI/ASP.NET-Core-Samples)
