@@ -13,11 +13,8 @@ module.exports = function (config) {
     ],
     plugins: [
       require('karma-jasmine'),
-      require('karma-coverage'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
-      require('karma-junit-reporter'),
-      require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
@@ -28,25 +25,18 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    preprocessors: {
-      'projects/igniteui-angular/**/*.js': ['coverage']
-    },
-    coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reporters: [
-        { type: 'cobertura' },
-        { type: 'lcovonly' },
-      ]
-    },
-    reporters: ['junit'],
-    junitReporter: {
-      outputDir: ''
-    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromeHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu'],
+        debug: false
+      }
+    },
     singleRun: true
   });
 };
