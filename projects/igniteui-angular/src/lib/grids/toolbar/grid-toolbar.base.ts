@@ -1,4 +1,4 @@
-import { Directive, Host, Input, EventEmitter, OnDestroy, Output, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Directive, Host, Input, EventEmitter, OnDestroy, Output}  from '@angular/core';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
@@ -11,7 +11,6 @@ import {
     VerticalAlignment
 } from '../../services/public_api';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 

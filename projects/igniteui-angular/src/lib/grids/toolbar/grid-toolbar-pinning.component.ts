@@ -1,5 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { Component, ViewChild } from '@angular/core';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnPinningDirective } from '../column-actions/column-pinning.directive';
 import { BaseToolbarColumnActions } from './grid-toolbar.base';

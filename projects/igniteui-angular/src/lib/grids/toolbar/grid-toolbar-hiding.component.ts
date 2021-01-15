@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { read } from 'fs';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxColumnHidingDirective } from '../column-actions/column-hiding.directive';
-import { BaseToolbarColumnActions, BaseToolbarDirective } from './grid-toolbar.base';
+import { BaseToolbarColumnActions } from './grid-toolbar.base';
 
 
 /**
