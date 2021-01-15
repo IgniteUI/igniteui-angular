@@ -268,7 +268,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected destroy$ = new Subject<any>();
 
-    private _totalItemCount: number;
+    private _totalItemCount: number = null;
     private _adjustToIndex;
     // Start properties related to virtual height handling due to browser limitation
     /** Maximum height for an element of the browser. */
