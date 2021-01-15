@@ -70,14 +70,30 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 return;
             }
             const targetElem = this.parentElement;
-            targetElem.addEventListener('wheel', (evt) => { this.onWheel(evt); });
-            targetElem.addEventListener('touchstart', (evt) => { this.onTouchStart(evt); });
-            targetElem.addEventListener('touchmove', (evt) => { this.onTouchMove(evt); });
-            targetElem.addEventListener('touchend', (evt) => { this.onTouchEnd(evt); });
-            targetElem.addEventListener('pointerdown', (evt) => { this.onPointerDown(evt); });
-            targetElem.addEventListener('pointerup', (evt) => { this.onPointerUp(evt); });
-            targetElem.addEventListener('MSGestureStart', (evt) => { this.onMSGestureStart(evt); });
-            targetElem.addEventListener('MSGestureChange', (evt) => { this.onMSGestureChange(evt); });
+            targetElem.addEventListener('wheel', (evt) => {
+                this.onWheel(evt);
+            });
+            targetElem.addEventListener('touchstart', (evt) => {
+                this.onTouchStart(evt);
+            });
+            targetElem.addEventListener('touchmove', (evt) => {
+                this.onTouchMove(evt);
+            });
+            targetElem.addEventListener('touchend', (evt) => {
+                this.onTouchEnd(evt);
+            });
+            targetElem.addEventListener('pointerdown', (evt) => {
+                this.onPointerDown(evt);
+            });
+            targetElem.addEventListener('pointerup', (evt) => {
+                this.onPointerUp(evt);
+            });
+            targetElem.addEventListener('MSGestureStart', (evt) => {
+                this.onMSGestureStart(evt);
+            });
+            targetElem.addEventListener('MSGestureChange', (evt) => {
+                this.onMSGestureChange(evt);
+            });
         });
     }
 
@@ -87,14 +103,30 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             if (!targetElem) {
                 return;
             }
-            targetElem.removeEventListener('wheel', (evt) => { this.onWheel(evt); });
-            targetElem.removeEventListener('touchstart', (evt) => { this.onTouchStart(evt); });
-            targetElem.removeEventListener('touchmove', (evt) => { this.onTouchMove(evt); });
-            targetElem.removeEventListener('touchend', (evt) => { this.onTouchEnd(evt); });
-            targetElem.removeEventListener('pointerdown', (evt) => { this.onPointerDown(evt); });
-            targetElem.removeEventListener('pointerup', (evt) => { this.onPointerUp(evt); });
-            targetElem.removeEventListener('MSGestureStart', (evt) => { this.onMSGestureStart(evt); });
-            targetElem.removeEventListener('MSGestureChange', (evt) => { this.onMSGestureChange(evt); });
+            targetElem.removeEventListener('wheel', (evt) => {
+                this.onWheel(evt);
+            });
+            targetElem.removeEventListener('touchstart', (evt) => {
+                this.onTouchStart(evt);
+            });
+            targetElem.removeEventListener('touchmove', (evt) => {
+                this.onTouchMove(evt);
+            });
+            targetElem.removeEventListener('touchend', (evt) => {
+                this.onTouchEnd(evt);
+            });
+            targetElem.removeEventListener('pointerdown', (evt) => {
+                this.onPointerDown(evt);
+            });
+            targetElem.removeEventListener('pointerup', (evt) => {
+                this.onPointerUp(evt);
+            });
+            targetElem.removeEventListener('MSGestureStart', (evt) => {
+                this.onMSGestureStart(evt);
+            });
+            targetElem.removeEventListener('MSGestureChange', (evt) => {
+                this.onMSGestureChange(evt);
+            });
         });
     }
 
