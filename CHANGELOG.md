@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 11.0.11
+- `IgxDialog`
+    - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
+
 ## 11.0.4
 
 ### General
@@ -17,8 +21,6 @@ All notable changes for each version of this project will be documented in this 
     If you have an active node and go to another tab and then return back the active node and the current scroll position should not be changed;
 
 ## 11.0.0
-- `IgxDialog`
-    - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
