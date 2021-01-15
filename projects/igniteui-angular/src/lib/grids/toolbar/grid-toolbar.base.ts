@@ -24,15 +24,6 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 export abstract class BaseToolbarDirective implements OnDestroy {
 
     private $destroyer = new Subject<boolean>();
-    private _toggle: IgxToggleDirective;
-
-    // @ViewChild(IgxToggleDirective, {static: true})
-    // private set content(content: IgxToggleDirective) {
-    //     if (content) {
-    //         debugger;
-    //         this._setupListeners(content);
-    //     }
-    // }
 
     /**
      * Sets the height of the column list in the dropdown.
