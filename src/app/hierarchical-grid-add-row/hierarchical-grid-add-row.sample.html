@@ -1,5 +1,5 @@
 <igx-hierarchical-grid [showExpandAll]='true' [data]="localData" [autoGenerate]="true" [height]="'600px'"
-[width]="'800px'" #hGrid [cellSelection]="'none'" [rowSelection]="'multiple'" [selectRowOnClick]="false"
+[width]="'800px'" #hGrid [cellSelection]="'none'" 
 [primaryKey]="'ID'"
 [rowEditable]="true">
 <igx-action-strip #actionstrip>
@@ -7,7 +7,7 @@
     <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
 </igx-action-strip>
 <igx-row-island #island [key]="'childData'" [autoGenerate]="true"
-    [allowFiltering]='true' [rowEditable]="true" [primaryKey]="'ID'" [rowSelection]="'multiple'" [selectRowOnClick]="false">
+    [allowFiltering]='true' [rowEditable]="true" [primaryKey]="'ID'">
     
     <igx-row-island [key]="'childData'" [autoGenerate]="true"
         [allowFiltering]='true' [rowSelection]="'multiple'">
@@ -16,5 +16,5 @@
         </igx-action-strip>
     </igx-row-island>
 </igx-row-island>
-<igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true' [rowSelection]="'multiple'"></igx-row-island>
+<igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
 </igx-hierarchical-grid>

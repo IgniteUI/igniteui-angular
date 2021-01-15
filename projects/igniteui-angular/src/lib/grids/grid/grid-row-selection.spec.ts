@@ -345,8 +345,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            grid.selectRowOnClick = true;
-
         });
         it('Should select multiple rows with clicking and holding Ctrl', () => {
             expect(grid.selectRowOnClick).toBe(true);
@@ -406,7 +404,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
             GridSelectionFunctions.verifyRowSelected(thirdRow, false);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            grid.selectRowOnClick = true;
         });
         it('Should select multiple rows with clicking Space on a cell', (async () => {
             grid.tbody.nativeElement.focus();
@@ -514,7 +511,6 @@ describe('IgxGrid - Row Selection #grid', () => {
                 const row = grid.getRowByIndex(index);
                 GridSelectionFunctions.verifyRowSelected(row, false);
             }
-            grid.selectRowOnClick = true;
         });
 
         it('Should hide/show checkboxes when change hideRowSelectors', () => {
@@ -864,7 +860,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             expect(grid.selectedRows).toEqual([]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
-            grid.selectRowOnClick = true;
         });
         it('Should not select multiple rows with clicking and holding Ctrl', () => {
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
@@ -908,7 +903,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
             expect(grid.selectedRows).toEqual([]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
-            grid.selectRowOnClick = true;
         });
         it('Should not select multiple rows with clicking Space on a cell', (async () => {
             grid.tbody.nativeElement.focus();
@@ -1015,7 +1009,6 @@ describe('IgxGrid - Row Selection #grid', () => {
                 const row = grid.getRowByIndex(index);
                 GridSelectionFunctions.verifyRowSelected(row, false);
             }
-            grid.selectRowOnClick = true;
         });
         it('Should hide/show checkboxes when change hideRowSelectors', () => {
             const firstRow = grid.getRowByIndex(1);
