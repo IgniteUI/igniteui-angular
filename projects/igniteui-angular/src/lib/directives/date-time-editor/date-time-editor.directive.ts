@@ -15,6 +15,7 @@ import {
   DatePickerUtil
 } from '../../date-picker/date-picker.utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
+import { noop } from 'rxjs';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -207,9 +208,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private _maxValue: string | Date;
   private _oldValue: Date | string;
   private _inputDateParts: DatePartInfo[];
-  private onTouchCallback: (...args: any[]) => void;
-  private onChangeCallback: (...args: any[]) => void;
-  private onValidatorChange: (...args: any[]) => void;
+  private onTouchCallback: (...args: any[]) => void = noop;
+  private onChangeCallback: (...args: any[]) => void = noop;
+  private onValidatorChange: (...args: any[]) => void = noop;
 
   private get emptyMask(): string {
     return this.maskParser.applyMask(null, this.maskOptions);

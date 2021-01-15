@@ -865,11 +865,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public filteringLogic = FilteringLogic.Or;
     /** @hidden @internal */
     public filterValue = '';
+
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
     protected _groupKey = '';
     protected _displayKey: string;
     protected _prevInputValue = '';
+
     private _dataType = '';
     private _searchValue = '';
     private _type = null;
@@ -885,6 +887,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _overlaySettings: OverlaySettings;
     private _value = '';
     private _valid = IgxComboState.INITIAL;
+
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,

@@ -8,7 +8,7 @@ import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
-import { fromEvent, Subject, Subscription } from 'rxjs';
+import { fromEvent, noop, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
@@ -444,9 +444,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         closeOnOutsideClick: true,
         modal: false
     };
-    private onChangeCallback: (dateRange: DateRange) => void;
-    private onTouchCallback: () => void;
-    private onValidatorChange: () => void;
+    private onChangeCallback: (dateRange: DateRange) => void = noop;
+    private onTouchCallback: () => void = noop;
+    private onValidatorChange: () => void = noop;
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
