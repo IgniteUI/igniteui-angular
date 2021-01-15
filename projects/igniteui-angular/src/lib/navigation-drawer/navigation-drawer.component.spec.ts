@@ -573,12 +573,12 @@ describe('Navigation Drawer', () => {
             pos: [posX, posY]
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>(resolve => {
 
             // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
             Simulator.setType('touch');
             Simulator.gestures.swipe(element, swipeOptions, () => {
-                resolve(null);
+                resolve();
             });
         });
     };
@@ -591,12 +591,12 @@ describe('Navigation Drawer', () => {
             pos: [posX, posY]
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>(resolve => {
 
             // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
             Simulator.setType('touch');
             Simulator.gestures.pan(element, swipeOptions, () => {
-                resolve(null);
+                resolve();
             });
         });
     };
