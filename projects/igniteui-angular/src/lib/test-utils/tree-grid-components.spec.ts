@@ -758,7 +758,7 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = [];
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.treeGrid.isLoading = true;
         setTimeout(() => {
             this.data = SampleTestData.employeePrimaryForeignKeyTreeData();

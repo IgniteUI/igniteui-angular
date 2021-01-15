@@ -61,7 +61,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.data = SampleTestData.generateHGridData(40, 3);
     }
 
-    pinColumn(column: IgxColumnComponent) {
+    public pinColumn(column: IgxColumnComponent) {
         if (column.pinned) {
             column.unpin();
         } else {

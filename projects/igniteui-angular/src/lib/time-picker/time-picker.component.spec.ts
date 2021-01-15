@@ -2380,11 +2380,11 @@ export class IgxTimePickerCustomLabelComponent {
 export class IgxTimePickerDropDownComponent {
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     @ViewChild('dummyInput') public dummyInput: ElementRef;
-    itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
-    format = 'hh:mm tt';
-    isSpinLoop = true;
-    isVertical = true;
-    date = new Date(2018, 10, 27, 17, 45, 0, 0);
+    public itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
+    public format = 'hh:mm tt';
+    public isSpinLoop = true;
+    public isVertical = true;
+    public date = new Date(2018, 10, 27, 17, 45, 0, 0);
 }
 @Component({
     template: `
@@ -2397,9 +2397,9 @@ export class IgxTimePickerDropDownComponent {
 })
 export class IgxTimePickerDropDownSingleHourComponent {
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
-    customDate = new Date(2018, 10, 27, 4, 5);
-    mode = InteractionMode.DropDown;
-    format = 'H:m';
+    public customDate = new Date(2018, 10, 27, 4, 5);
+    public mode = InteractionMode.DropDown;
+    public format = 'H:m';
 }
 @Component({
     template: `
@@ -2411,7 +2411,7 @@ export class IgxTimePickerDropDownSingleHourComponent {
 })
 export class IgxTimePickerDropDownNoValueComponent {
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
-    mode = InteractionMode.DropDown;
+    public mode = InteractionMode.DropDown;
 }
 
 
@@ -2467,7 +2467,7 @@ export class IgxTimePickerReactiveFormComponent {
     @ViewChild('timePickerOnBlur', { read: IgxTimePickerComponent, static: true })
     public timePickerOnBlurComponent: IgxTimePickerComponent;
 
-    reactiveForm: FormGroup;
+    public reactiveForm: FormGroup;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
@@ -2475,7 +2475,7 @@ export class IgxTimePickerReactiveFormComponent {
             timePickerOnBlur: [null, { updateOn: 'blur', validators: Validators.required }]
         });
     }
-    onSubmitReactive() { }
+    public onSubmitReactive() { }
 }
 
 @NgModule({

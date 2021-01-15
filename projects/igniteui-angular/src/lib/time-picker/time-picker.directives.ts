@@ -35,27 +35,27 @@ export class IgxItemListDirective {
     ) { }
 
     @HostBinding('class.igx-time-picker__column')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return true;
     }
 
     @HostBinding('class.igx-time-picker__hourList')
-    get hourCSS(): boolean {
+    public get hourCSS(): boolean {
         return this.type === 'hourList';
     }
 
     @HostBinding('class.igx-time-picker__minuteList')
-    get minuteCSS(): boolean {
+    public get minuteCSS(): boolean {
         return this.type === 'minuteList';
     }
 
     @HostBinding('class.igx-time-picker__secondsList')
-    get secondsCSS(): boolean {
+    public get secondsCSS(): boolean {
         return this.type === 'secondsList';
     }
 
     @HostBinding('class.igx-time-picker__ampmList')
-    get ampmCSS(): boolean {
+    public get ampmCSS(): boolean {
         return this.type === 'ampmList';
     }
 
@@ -243,21 +243,21 @@ export class IgxHourItemDirective {
     public value: string;
 
     @HostBinding('class.igx-time-picker__item')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return true;
     }
 
     @HostBinding('class.igx-time-picker__item--selected')
-    get selectedCSS(): boolean {
+    public get selectedCSS(): boolean {
         return this.isSelectedHour;
     }
 
     @HostBinding('class.igx-time-picker__item--active')
-    get activeCSS(): boolean {
+    public get activeCSS(): boolean {
         return this.isSelectedHour && this.itemList.isActive;
     }
 
-    get isSelectedHour(): boolean {
+    public get isSelectedHour(): boolean {
         return this.timePicker.selectedHour === this.value;
     }
 
@@ -285,21 +285,21 @@ export class IgxMinuteItemDirective {
     public value: string;
 
     @HostBinding('class.igx-time-picker__item')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return true;
     }
 
     @HostBinding('class.igx-time-picker__item--selected')
-    get selectedCSS(): boolean {
+    public get selectedCSS(): boolean {
         return this.isSelectedMinute;
     }
 
     @HostBinding('class.igx-time-picker__item--active')
-    get activeCSS(): boolean {
+    public get activeCSS(): boolean {
         return this.isSelectedMinute && this.itemList.isActive;
     }
 
-    get isSelectedMinute(): boolean {
+    public get isSelectedMinute(): boolean {
         return this.timePicker.selectedMinute === this.value;
     }
 
@@ -327,21 +327,21 @@ export class IgxSecondsItemDirective {
     public value: string;
 
     @HostBinding('class.igx-time-picker__item')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return true;
     }
 
     @HostBinding('class.igx-time-picker__item--selected')
-    get selectedCSS(): boolean {
+    public get selectedCSS(): boolean {
         return this.isSelectedSeconds;
     }
 
     @HostBinding('class.igx-time-picker__item--active')
-    get activeCSS(): boolean {
+    public get activeCSS(): boolean {
         return this.isSelectedSeconds && this.itemList.isActive;
     }
 
-    get isSelectedSeconds(): boolean {
+    public get isSelectedSeconds(): boolean {
         return this.timePicker.selectedSeconds === this.value;
     }
 
@@ -369,21 +369,21 @@ export class IgxAmPmItemDirective {
     public value: string;
 
     @HostBinding('class.igx-time-picker__item')
-    get defaultCSS(): boolean {
+    public get defaultCSS(): boolean {
         return true;
     }
 
     @HostBinding('class.igx-time-picker__item--selected')
-    get selectedCSS(): boolean {
+    public get selectedCSS(): boolean {
         return this.isSelectedAmPm;
     }
 
     @HostBinding('class.igx-time-picker__item--active')
-    get activeCSS(): boolean {
+    public get activeCSS(): boolean {
         return this.isSelectedAmPm && this.itemList.isActive;
     }
 
-    get isSelectedAmPm(): boolean {
+    public get isSelectedAmPm(): boolean {
         return this.timePicker.selectedAmPm === this.value;
     }
 

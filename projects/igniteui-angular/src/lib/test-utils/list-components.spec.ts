@@ -61,8 +61,8 @@ export class ListWithHeaderComponent extends BasicListComponent {
         </div>`
 })
 export class ListWithPanningComponent extends BasicListComponent {
-    allowRightPanning = true;
-    allowLeftPanning = true;
+    public allowRightPanning = true;
+    public allowLeftPanning = true;
 }
 
 @Component({
@@ -96,7 +96,7 @@ export class CustomEmptyListComponent extends BasicListComponent {
         </div>`
 })
 export class ListLoadingComponent extends BasicListComponent {
-    isLoading = true;
+    public isLoading = true;
 }
 
 @Component({
@@ -139,7 +139,7 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
             </igx-list>
         </div>`
 })
-export class TwoHeadersListNoPanningComponent extends ListWithHeaderComponent {
+export class TwoHeadersListNoPanningComponent extends ListWithPanningComponent {
 }
 
 @Component({

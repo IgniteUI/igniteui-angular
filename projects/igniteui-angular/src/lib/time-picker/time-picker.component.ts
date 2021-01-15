@@ -127,7 +127,7 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    set value(value: Date) {
+    public set value(value: Date) {
         if (this._isValueValid(value)) {
             const oldVal = this._value;
 
@@ -164,7 +164,7 @@ export class IgxTimePickerComponent implements
      * }
      * ```
      */
-    get value(): Date {
+    public get value(): Date {
         return this._value;
     }
 
@@ -182,14 +182,14 @@ export class IgxTimePickerComponent implements
      * By default it uses EN resources.
      */
     @Input()
-    set resourceStrings(value: ITimePickerResourceStrings) {
+    public set resourceStrings(value: ITimePickerResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
-    get resourceStrings(): ITimePickerResourceStrings {
+    public get resourceStrings(): ITimePickerResourceStrings {
         return this._resourceStrings;
     }
 
@@ -200,14 +200,14 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    set okButtonLabel(value: string) {
+    public set okButtonLabel(value: string) {
         this._okButtonLabel = value;
     }
 
     /**
      * An accessor that returns the label of ok button.
      */
-    get okButtonLabel(): string {
+    public get okButtonLabel(): string {
         if (this._okButtonLabel === null) {
             return this.resourceStrings.igx_time_picker_ok;
         }
@@ -222,14 +222,14 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    set cancelButtonLabel(value: string) {
+    public set cancelButtonLabel(value: string) {
         this._cancelButtonLabel = value;
     }
 
     /**
      * An accessor that returns the label of cancel button.
      */
-    get cancelButtonLabel(): string {
+    public get cancelButtonLabel(): string {
         if (this._cancelButtonLabel === null) {
             return this.resourceStrings.igx_time_picker_cancel;
         }
@@ -245,11 +245,11 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    set itemsDelta(value) {
+    public set itemsDelta(value) {
         this._itemsDelta = { hours: 1, minutes: 1, seconds: 1, ...value };
     }
 
-    get itemsDelta(): { hours: number; minutes: number; seconds: number } {
+    public get itemsDelta(): { hours: number; minutes: number; seconds: number } {
         return this._itemsDelta;
     }
 
@@ -312,11 +312,11 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    get format() {
+    public get format() {
         return this._format || 'hh:mm tt';
     }
 
-    set format(formatValue: string) {
+    public set format(formatValue: string) {
         this._format = formatValue;
         this.mask = this._format.indexOf('tt') !== -1 ? '00:00:00 LL' : '00:00:00';
 
@@ -591,6 +591,185 @@ export class IgxTimePickerComponent implements
      */
     public selectedAmPm: string;
 
+    /**
+     * @hidden
+     */
+    public get mask(): string {
+        return this._mask || '00:00 LL';
+    }
+
+    public set mask(val: string) {
+        this._mask = val;
+    }
+
+    /**
+     * @hidden
+     */
+    public get displayValue(): string {
+        if (this._displayValue === undefined) {
+            return this._formatTime(this.value, this.format);
+        }
+        return this._displayValue;
+    }
+
+    public set displayValue(value: string) {
+        this._displayValue = value;
+    }
+
+    /**
+     * Returns the current time formatted as string using the `format` option.
+     * If there is no set time the return is an empty string.
+     * ```typescript
+     * @ViewChild("MyChild")
+     * private picker: IgxTimePickerComponent;
+     * ngAfterViewInit(){
+     *    let time = this.picker.displayTime;
+     * }
+     * ```
+     */
+    public get displayTime(): string {
+        if (this.value) {
+            return this._formatTime(this.value, this.format);
+        }
+        return '';
+    }
+
+    /**
+     * @hidden
+     */
+    public get hourView(): string[] {
+        return this._hourView;
+    }
+
+    /**
+     * @hidden
+     */
+    public get minuteView(): string[] {
+        return this._minuteView;
+    }
+
+    /**
+     * @hidden
+     */
+    public get secondsView(): string[] {
+        return this._secondsView;
+    }
+
+    /**
+     * @hidden
+     */
+    public get ampmView(): string[] {
+        return this._ampmView;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showClearButton(): boolean {
+        return (this.displayValue && this.displayValue !== this.parseMask(false)) || this.isNotEmpty;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showHoursList(): boolean {
+        return this.format.indexOf('h') !== - 1 || this.format.indexOf('H') !== - 1;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showMinutesList(): boolean {
+        return this.format.indexOf('m') !== - 1;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showSecondsList(): boolean {
+        return this.format.indexOf('s') !== - 1;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showAmPmList(): boolean {
+        return this.format.indexOf('t') !== - 1;
+    }
+
+    /**
+     * @hidden
+     */
+    public get validSecondsEntries(): any[] {
+        const secondsEntries = [];
+        for (let i = 0; i < 60; i++) {
+            secondsEntries.push(i);
+        }
+        return secondsEntries;
+    }
+
+    /**
+     * @hidden
+     */
+    public get validMinuteEntries(): any[] {
+        const minuteEntries = [];
+        for (let i = 0; i < 60; i++) {
+            minuteEntries.push(i);
+        }
+        return minuteEntries;
+    }
+
+    /**
+     * @hidden
+     */
+    public get validHourEntries(): any[] {
+        const hourEntries = [];
+        const index = this.format.indexOf('h') !== -1 ? 13 : 24;
+        for (let i = 0; i < index; i++) {
+            hourEntries.push(i);
+        }
+        return hourEntries;
+    }
+
+    /**
+     * Gets the input group template.
+     * ```typescript
+     * let template = this.template();
+     * ```
+     *
+     * @memberof IgxTimePickerComponent
+     */
+    public get template(): TemplateRef<any> {
+        if (this.timePickerTemplateDirective) {
+            return this.timePickerTemplateDirective.template;
+        }
+        return this.mode === InteractionMode.Dialog ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
+    }
+
+    /**
+     * Gets the context passed to the input group template.
+     *
+     * @memberof IgxTimePickerComponent
+     */
+    public get context() {
+        return {
+            value: this.value,
+            displayTime: this.displayTime,
+            displayValue: this.displayValue,
+            openDialog: (target?: HTMLElement) => this.openDialog(target)
+        };
+    }
+
+    private get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
+    }
+
     /** @hidden @internal */
     private _value: Date;
     private _overlaySettings: OverlaySettings;
@@ -672,7 +851,7 @@ export class IgxTimePickerComponent implements
     }
 
     /** @hidden @internal */
-    applyDisabledStyleForItem(period: string, value: string) {
+    public applyDisabledStyleForItem(period: string, value: string) {
         if (!this.minValue || !this.maxValue) {
             return false;
         }
@@ -727,185 +906,6 @@ export class IgxTimePickerComponent implements
     }
 
     //#endregion
-
-    /**
-     * @hidden
-     */
-    get mask(): string {
-        return this._mask || '00:00 LL';
-    }
-
-    set mask(val: string) {
-        this._mask = val;
-    }
-
-    /**
-     * @hidden
-     */
-    get displayValue(): string {
-        if (this._displayValue === undefined) {
-            return this._formatTime(this.value, this.format);
-        }
-        return this._displayValue;
-    }
-
-    set displayValue(value: string) {
-        this._displayValue = value;
-    }
-
-    /**
-     * Returns the current time formatted as string using the `format` option.
-     * If there is no set time the return is an empty string.
-     * ```typescript
-     * @ViewChild("MyChild")
-     * private picker: IgxTimePickerComponent;
-     * ngAfterViewInit(){
-     *    let time = this.picker.displayTime;
-     * }
-     * ```
-     */
-    public get displayTime(): string {
-        if (this.value) {
-            return this._formatTime(this.value, this.format);
-        }
-        return '';
-    }
-
-    /**
-     * @hidden
-     */
-    get hourView(): string[] {
-        return this._hourView;
-    }
-
-    /**
-     * @hidden
-     */
-    get minuteView(): string[] {
-        return this._minuteView;
-    }
-
-    /**
-     * @hidden
-     */
-    get secondsView(): string[] {
-        return this._secondsView;
-    }
-
-    /**
-     * @hidden
-     */
-    get ampmView(): string[] {
-        return this._ampmView;
-    }
-
-    /**
-     * @hidden
-     */
-    get showClearButton(): boolean {
-        return (this.displayValue && this.displayValue !== this.parseMask(false)) || this.isNotEmpty;
-    }
-
-    /**
-     * @hidden
-     */
-    get showHoursList(): boolean {
-        return this.format.indexOf('h') !== - 1 || this.format.indexOf('H') !== - 1;
-    }
-
-    /**
-     * @hidden
-     */
-    get showMinutesList(): boolean {
-        return this.format.indexOf('m') !== - 1;
-    }
-
-    /**
-     * @hidden
-     */
-    get showSecondsList(): boolean {
-        return this.format.indexOf('s') !== - 1;
-    }
-
-    /**
-     * @hidden
-     */
-    get showAmPmList(): boolean {
-        return this.format.indexOf('t') !== - 1;
-    }
-
-    /**
-     * @hidden
-     */
-    get validSecondsEntries(): any[] {
-        const secondsEntries = [];
-        for (let i = 0; i < 60; i++) {
-            secondsEntries.push(i);
-        }
-        return secondsEntries;
-    }
-
-    /**
-     * @hidden
-     */
-    get validMinuteEntries(): any[] {
-        const minuteEntries = [];
-        for (let i = 0; i < 60; i++) {
-            minuteEntries.push(i);
-        }
-        return minuteEntries;
-    }
-
-    /**
-     * @hidden
-     */
-    get validHourEntries(): any[] {
-        const hourEntries = [];
-        const index = this.format.indexOf('h') !== -1 ? 13 : 24;
-        for (let i = 0; i < index; i++) {
-            hourEntries.push(i);
-        }
-        return hourEntries;
-    }
-
-    /**
-     * Gets the input group template.
-     * ```typescript
-     * let template = this.template();
-     * ```
-     *
-     * @memberof IgxTimePickerComponent
-     */
-    get template(): TemplateRef<any> {
-        if (this.timePickerTemplateDirective) {
-            return this.timePickerTemplateDirective.template;
-        }
-        return this.mode === InteractionMode.Dialog ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
-    }
-
-    /**
-     * Gets the context passed to the input group template.
-     *
-     * @memberof IgxTimePickerComponent
-     */
-    get context() {
-        return {
-            value: this.value,
-            displayTime: this.displayTime,
-            displayValue: this.displayValue,
-            openDialog: (target?: HTMLElement) => this.openDialog(target)
-        };
-    }
-
-    private get required(): boolean {
-        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
-        }
-
-        return false;
-    }
 
     /**
      * @hidden
@@ -1056,7 +1056,7 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    getEditElement() {
+    public getEditElement() {
         return this._inputElementRef ? this._inputElementRef.nativeElement : null;
     }
 
