@@ -53,28 +53,28 @@ export class IgxForOfContext<T> {
     /**
      * A function that returns whether the element is the first or not
      */
-    get first(): boolean {
+    public get first(): boolean {
         return this.index === 0;
     }
 
     /**
      * A function that returns whether the element is the last or not
      */
-    get last(): boolean {
+    public get last(): boolean {
         return this.index === this.count - 1;
     }
 
     /**
      * A function that returns whether the element is even or not
      */
-    get even(): boolean {
+    public get even(): boolean {
         return this.index % 2 === 0;
     }
 
     /**
      * A function that returns whether the element is odd or not
      */
-    get odd(): boolean {
+    public get odd(): boolean {
         return !this.even;
     }
 
@@ -163,10 +163,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    get igxForTotalItemCount(): number {
+    public get igxForTotalItemCount(): number {
         return this.totalItemCount;
     }
-    set igxForTotalItemCount(value: number) {
+    public set igxForTotalItemCount(value: number) {
         this.totalItemCount = value;
     }
 
@@ -404,7 +404,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.state.chunkSize = this._calculateChunkSize();
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.scrollComponent && !this.scrollComponent.destroyed) {
-                this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache, 0),
+                this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache),
                     this.igxForOf.length - this.state.chunkSize);
             }
             for (let i = this.state.startIndex; i < this.state.startIndex + this.state.chunkSize &&
@@ -620,11 +620,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public scrollNext() {
         const scr = Math.ceil(this.scrollPosition);
-        const endIndex = this.getIndexAt(
-            scr + parseInt(this.igxForContainerSize, 10),
-            this.sizesCache,
-            0
-        );
+        const endIndex = this.getIndexAt(scr + parseInt(this.igxForContainerSize, 10), this.sizesCache);
         this.scrollTo(endIndex);
     }
 
@@ -684,20 +680,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public getItemCountInView() {
-        let startIndex = this.getIndexAt(
-            this.scrollPosition,
-            this.sizesCache,
-            0
-        );
+        let startIndex = this.getIndexAt(this.scrollPosition, this.sizesCache);
         if (this.scrollPosition - this.sizesCache[startIndex] > 0) {
             // fisrt item is not fully in view
             startIndex++;
         }
-        const endIndex = this.getIndexAt(
-            this.scrollPosition + parseInt(this.igxForContainerSize, 10),
-            this.sizesCache,
-            0
-        );
+        const endIndex = this.getIndexAt(this.scrollPosition + parseInt(this.igxForContainerSize, 10), this.sizesCache);
         return endIndex - startIndex;
     }
 
@@ -880,11 +868,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected fixedUpdateAllElements(inScrollTop: number): number {
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        let newStart = this.getIndexAt(
-            inScrollTop,
-            this.sizesCache,
-            0
-        );
+        let newStart = this.getIndexAt(inScrollTop, this.sizesCache);
 
         if (newStart + this.state.chunkSize > count) {
             newStart = count - this.state.chunkSize;
@@ -1036,7 +1020,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    get igxForTrackBy(): TrackByFunction<T> {
+    public get igxForTrackBy(): TrackByFunction<T> {
         return this._trackByFn;
     }
 
@@ -1051,7 +1035,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * };
      * ```
      */
-    set igxForTrackBy(fn: TrackByFunction<T>) {
+    public set igxForTrackBy(fn: TrackByFunction<T>) {
         this._trackByFn = fn;
     }
 
@@ -1227,7 +1211,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected getIndexAt(left, set, index) {
+    protected getIndexAt(left, set) {
         let start = 0;
         let end = set.length - 1;
         if (left === 0) {
@@ -1432,11 +1416,11 @@ export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
 })
 export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
     @Input()
-    set igxGridForOf(value) {
+    public set igxGridForOf(value) {
         this.igxForOf = value;
     }
 
-    get igxGridForOf() {
+    public get igxGridForOf() {
         return this.igxForOf;
     }
 
@@ -1721,11 +1705,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
             } else {
-                startIndex = this.getIndexAt(
-                    this.scrollPosition,
-                    this.sizesCache,
-                    0
-                );
+                startIndex = this.getIndexAt(this.scrollPosition, this.sizesCache);
                 if (startIndex + this.state.chunkSize > this.igxForOf.length) {
                     startIndex = this.igxForOf.length - this.state.chunkSize;
                 }

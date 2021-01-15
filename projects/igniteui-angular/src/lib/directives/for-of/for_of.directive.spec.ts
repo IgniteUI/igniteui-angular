@@ -1303,8 +1303,8 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         return super.getElement(viewref, nodeName);
     }
 
-    public testGetHorizontalIndexAt(left, set, index) {
-        super.getIndexAt(left, set, index);
+    public testGetHorizontalIndexAt(left, set) {
+        super.getIndexAt(left, set);
     }
 }
 
