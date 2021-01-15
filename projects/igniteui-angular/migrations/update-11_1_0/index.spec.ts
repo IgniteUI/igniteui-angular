@@ -62,6 +62,7 @@ describe('Update to 11.1.0', () => {
     });
 
     it('should migrate updated getter names', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/icon-test.component.ts',
             `import { Component, ViewChild } from '@angular/core';
