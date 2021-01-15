@@ -49,11 +49,11 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _lastMovedY;
     private _gestureObject;
     private setPointerCaptureFName = typeof Element.prototype['msSetPointerCapture'] === 'function' ?
-    'msSetPointerCapture' :
-    'setPointerCapture';
+        'msSetPointerCapture' :
+        'setPointerCapture';
     private releasePointerCaptureFName = typeof Element.prototype['msReleasePointerCapture'] === 'function' ?
-    'msReleasePointerCapture' :
-    'releasePointerCapture';
+        'msReleasePointerCapture' :
+        'releasePointerCapture';
     private _pointer;
     private _nextX;
     private _nextY;
@@ -70,14 +70,14 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 return;
             }
             const targetElem = this.parentElement;
-            targetElem.addEventListener('wheel', this.onWheel);
-            targetElem.addEventListener('touchstart', this.onTouchStart);
-            targetElem.addEventListener('touchmove', this.onTouchMove);
-            targetElem.addEventListener('touchend', this.onTouchEnd);
-            targetElem.addEventListener('pointerdown', this.onPointerDown);
-            targetElem.addEventListener('pointerup', this.onPointerUp);
-            targetElem.addEventListener('MSGestureStart', this.onMSGestureStart);
-            targetElem.addEventListener('MSGestureChange', this.onMSGestureChange);
+            targetElem.addEventListener('wheel', (evt) => { this.onWheel(evt); });
+            targetElem.addEventListener('touchstart', (evt) => { this.onTouchStart(evt); });
+            targetElem.addEventListener('touchmove', (evt) => { this.onTouchMove(evt); });
+            targetElem.addEventListener('touchend', (evt) => { this.onTouchEnd(evt); });
+            targetElem.addEventListener('pointerdown', (evt) => { this.onPointerDown(evt); });
+            targetElem.addEventListener('pointerup', (evt) => { this.onPointerUp(evt); });
+            targetElem.addEventListener('MSGestureStart', (evt) => { this.onMSGestureStart(evt); });
+            targetElem.addEventListener('MSGestureChange', (evt) => { this.onMSGestureChange(evt); });
         });
     }
 
@@ -87,14 +87,14 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             if (!targetElem) {
                 return;
             }
-            targetElem.removeEventListener('wheel', this.onWheel);
-            targetElem.removeEventListener('touchstart', this.onTouchStart);
-            targetElem.removeEventListener('touchmove', this.onTouchMove);
-            targetElem.removeEventListener('touchend', this.onTouchEnd);
-            targetElem.removeEventListener('pointerdown', this.onPointerDown);
-            targetElem.removeEventListener('pointerup', this.onPointerUp);
-            targetElem.removeEventListener('MSGestureStart', this.onMSGestureStart);
-            targetElem.removeEventListener('MSGestureChange', this.onMSGestureChange);
+            targetElem.removeEventListener('wheel', (evt) => { this.onWheel(evt); });
+            targetElem.removeEventListener('touchstart', (evt) => { this.onTouchStart(evt); });
+            targetElem.removeEventListener('touchmove', (evt) => { this.onTouchMove(evt); });
+            targetElem.removeEventListener('touchend', (evt) => { this.onTouchEnd(evt); });
+            targetElem.removeEventListener('pointerdown', (evt) => { this.onPointerDown(evt); });
+            targetElem.removeEventListener('pointerup', (evt) => { this.onPointerUp(evt); });
+            targetElem.removeEventListener('MSGestureStart', (evt) => { this.onMSGestureStart(evt); });
+            targetElem.removeEventListener('MSGestureChange', (evt) => { this.onMSGestureChange(evt); });
         });
     }
 
@@ -129,7 +129,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             }
         } else if (evt.deltaX) {
             /* For other browsers that don't provide wheelDelta, use the deltaY to determine direction and pass default values. */
-            const deltaScaledX = evt.deltaX * (evt.deltaMode === 0 ?  this.firefoxDeltaMultiplier : 1);
+            const deltaScaledX = evt.deltaX * (evt.deltaMode === 0 ? this.firefoxDeltaMultiplier : 1);
             scrollDeltaX = this.calcAxisCoords(deltaScaledX, -1, 1);
         }
 
@@ -144,7 +144,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             }
         } else if (evt.deltaY) {
             /* For other browsers that don't provide wheelDelta, use the deltaY to determine direction and pass default values. */
-            const deltaScaledY = evt.deltaY * (evt.deltaMode === 0 ?  this.firefoxDeltaMultiplier : 1);
+            const deltaScaledY = evt.deltaY * (evt.deltaMode === 0 ? this.firefoxDeltaMultiplier : 1);
             scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
         if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
@@ -175,7 +175,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             this.IgxScrollInertiaScrollContainer.offsetHeight;
         if (0 < curScrollTop && curScrollTop < maxScrollTop) {
             if (preventDefault) {
-                 evt.preventDefault();
+                evt.preventDefault();
             }
             if (evt.stopPropagation) {
                 evt.stopPropagation();
@@ -195,7 +195,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         // stops any current ongoing inertia
         cancelAnimationFrame(this._touchInertiaAnimID);
 
-        const touch = event.touches[ 0 ];
+        const touch = event.touches[0];
 
         this._startX = this.IgxScrollInertiaScrollContainer.scrollLeft;
 
@@ -234,7 +234,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             return;
         }
 
-        const touch = event.touches[ 0 ];
+        const touch = event.touches[0];
         const destX = this._startX + (this._touchStartX - touch.pageX) * Math.sign(this.inertiaStep);
         const destY = this._startY + (this._touchStartY - touch.pageY) * Math.sign(this.inertiaStep);
 
@@ -277,7 +277,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             scrolledXY = this._scrollTo(this._startX, destY);
         } else {
             /*	Record the direction the first time we are out of the swipeToleranceX bounds.
-			*	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
+            *	That way we know which direction we apply the offset so it doesn't hickup when moving out of the swipeToleranceX bounds */
             if (!this._offsetRecorded) {
                 this._offsetDirection = Math.sign(destX - this._startX);
                 this._offsetRecorded = true;
@@ -308,16 +308,16 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         // savedSpeedsX and savedSpeedsY have same length
         for (let i = 0; i < this._savedSpeedsX.length; i++) {
-            speedX += this._savedSpeedsX[ i ];
-            speedY += this._savedSpeedsY[ i ];
+            speedX += this._savedSpeedsX[i];
+            speedY += this._savedSpeedsY[i];
         }
         speedX = this._savedSpeedsX.length ? speedX / this._savedSpeedsX.length : 0;
         speedY = this._savedSpeedsX.length ? speedY / this._savedSpeedsY.length : 0;
 
-         // Use the lastMovedX and lastMovedY to determine if the swipe stops without lifting the finger so we don't start inertia
+        // Use the lastMovedX and lastMovedY to determine if the swipe stops without lifting the finger so we don't start inertia
         if ((Math.abs(speedX) > 0.1 || Math.abs(speedY) > 0.1) &&
-                        (Math.abs(this._lastMovedX) > 2 || Math.abs(this._lastMovedY) > 2)) {
-                    this._inertiaInit(speedX, speedY);
+            (Math.abs(this._lastMovedX) > 2 || Math.abs(this._lastMovedY) > 2)) {
+            this._inertiaInit(speedX, speedY);
         }
         if (this.IgxScrollInertiaDirection === 'vertical') {
             this.preventParentScroll(event, false);
@@ -359,7 +359,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             return;
         }
         /* releasePointerCaptureFName is the name of the function that is supported */
-        event.target[ this.releasePointerCaptureFName ](this._pointer);
+        event.target[this.releasePointerCaptureFName](this._pointer);
 
         delete this._pointer;
     }
@@ -395,8 +395,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             return;
         }
         const touchPos = event;
-            const destX = this._startX + this._touchStartX - touchPos.screenX;
-            const destY = this._startY + this._touchStartY - touchPos.screenY;
+        const destX = this._startX + this._touchStartX - touchPos.screenX;
+        const destY = this._startY + this._touchStartY - touchPos.screenY;
         /* Logic regarding x tolerance to prevent accidental horizontal scrolling when scrolling vertically */
         this._totalMovedX = this._touchStartX - touchPos.screenX;
         if (Math.abs(this._totalMovedX) < this.swipeToleranceX && !this._offsetRecorded) {
@@ -476,7 +476,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         const curPosX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         const curPosY = this.IgxScrollInertiaScrollContainer.scrollTop;
 
-         // TODO Trigger scrolling event?
+        // TODO Trigger scrolling event?
         const scrolledX = this._scrollToX(destX);
         const scrolledY = this._scrollToY(destY);
 
