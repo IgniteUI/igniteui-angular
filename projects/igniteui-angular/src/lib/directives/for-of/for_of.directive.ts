@@ -38,6 +38,8 @@ import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
+const MAX_PERF_SCROLL_DIFF = 4;
+
 /**
  *  @publicApi
  */
@@ -52,29 +54,29 @@ export class IgxForOfContext<T> {
      * A function that returns whether the element is the first or not
      */
     get first(): boolean {
- return this.index === 0;
-}
+        return this.index === 0;
+    }
 
     /**
      * A function that returns whether the element is the last or not
      */
     get last(): boolean {
- return this.index === this.count - 1;
-}
+        return this.index === this.count - 1;
+    }
 
     /**
      * A function that returns whether the element is even or not
      */
     get even(): boolean {
- return this.index % 2 === 0;
-}
+        return this.index % 2 === 0;
+    }
 
     /**
      * A function that returns whether the element is odd or not
      */
     get odd(): boolean {
- return !this.even;
-}
+        return !this.even;
+    }
 
 }
 
@@ -244,6 +246,39 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         startIndex: 0,
         chunkSize: 0
     };
+
+    protected func;
+    protected _sizesCache: number[] = [];
+    protected scrollComponent: VirtualHelperBaseDirective;
+    protected _differ: IterableDiffer<T> | null = null;
+    protected _trackByFn: TrackByFunction<T>;
+    protected heightCache = [];
+    /** Internal track for scroll top that is being virtualized */
+    protected _virtScrollTop = 0;
+    /** If the next onScroll event is triggered due to internal setting of scrollTop */
+    protected _bScrollInternal = false;
+    // End properties related to virtual height handling
+    protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
+    protected contentResizeNotify = new Subject();
+    protected contentObserver: ResizeObserver;
+    /** Height that is being virtualized. */
+    protected _virtHeight = 0;
+    /**
+     * @hidden
+     */
+    protected destroy$ = new Subject<any>();
+
+    private _totalItemCount: number;
+    private _adjustToIndex;
+    // Start properties related to virtual height handling due to browser limitation
+    /** Maximum height for an element of the browser. */
+    private _maxHeight;
+    /**
+     * Ratio for height that's being virtualizaed and the one visible
+     * If _virtHeightRatio = 1, the visible height and the virtualized are the same, also _maxHeight > _virtHeight.
+     */
+    private _virtHeightRatio = 1;
+
     /**
      * The total count of the virtual data items, when using remote service.
      * ```typescript
@@ -277,38 +312,34 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this.scrollComponent.nativeElement;
     }
 
-    protected func;
-    protected _sizesCache: number[] = [];
-    protected scrollComponent: VirtualHelperBaseDirective;
-    protected _differ: IterableDiffer<T> | null = null;
-    protected _trackByFn: TrackByFunction<T>;
-    protected heightCache = [];
-    /** Internal track for scroll top that is being virtualized */
-    protected _virtScrollTop = 0;
-    /** If the next onScroll event is triggered due to internal setting of scrollTop */
-    protected _bScrollInternal = false;
-    // End properties related to virtual height handling
-    protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
-    protected contentResizeNotify = new Subject();
-    protected contentObserver: ResizeObserver;
-    /** Height that is being virtualized. */
-    protected _virtHeight = 0;
     /**
      * @hidden
      */
-    protected destroy$ = new Subject<any>();
+    public get isRemote(): boolean {
+        return this.totalItemCount !== null;
+    }
 
-    private _totalItemCount: number = null;
-    private _adjustToIndex;
-    private MAX_PERF_SCROLL_DIFF = 4;
-    // Start properties related to virtual height handling due to browser limitation
-    /** Maximum height for an element of the browser. */
-    private _maxHeight;
     /**
-     * Ratio for height that's being virtualizaed and the one visible
-     * If _virtHeightRatio = 1, the visible height and the virtualized are the same, also _maxHeight > _virtHeight.
+     *
+     * Gets/Sets the scroll position.
+     * ```typescript
+     * const position = directive.scrollPosition;
+     * directive.scrollPosition = value;
+     * ```
      */
-    private _virtHeightRatio = 1;
+    public get scrollPosition(): number {
+        return this.scrollComponent.scrollAmount;
+    }
+    public set scrollPosition(val: number) {
+        if (val === this.scrollComponent.scrollAmount) {
+            return;
+        }
+        if (this.igxForScrollOrientation === 'horizontal' && this.scrollComponent) {
+            this.scrollComponent.nativeElement.scrollLeft = val;
+        } else if (this.scrollComponent) {
+            this.scrollComponent.nativeElement.scrollTop = val;
+        }
+    }
 
     protected get sizesCache(): number[] {
         return this._sizesCache;
@@ -343,35 +374,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         @Inject(DOCUMENT)
         protected document: any,
     ) { }
-
-    /**
-     * @hidden
-     */
-    public get isRemote(): boolean {
-        return this.totalItemCount !== null;
-    }
-
-    /**
-     *
-     * Gets/Sets the scroll position.
-     * ```typescript
-     * const position = directive.scrollPosition;
-     * directive.scrollPosition = value;
-     * ```
-     */
-    public get scrollPosition(): number {
-        return this.scrollComponent.scrollAmount;
-    }
-    public set scrollPosition(val: number) {
-        if (val === this.scrollComponent.scrollAmount) {
-            return;
-        }
-        if (this.igxForScrollOrientation === 'horizontal' && this.scrollComponent) {
-            this.scrollComponent.nativeElement.scrollLeft = val;
-        } else if (this.scrollComponent) {
-            this.scrollComponent.nativeElement.scrollTop = val;
-        }
-    }
 
     public verticalScrollHandler(event) {
         this.onScroll(event);
@@ -458,7 +460,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         if (this.igxForScrollOrientation === 'vertical') {
             this._zone.runOutsideAngular(() => {
                 this.contentObserver = new ResizeObserver(() => this.contentResizeNotify.next());
@@ -897,7 +899,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             if (!this.isRemote) {
 
                 // recalculate and apply page size.
-                if (diff && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
+                if (diff && Math.abs(diff) <= MAX_PERF_SCROLL_DIFF) {
                     if (diff > 0) {
                         this.moveApplyScrollNext(prevStart);
                     } else {
@@ -1481,13 +1483,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         super(_viewContainer, _template, _differs, resolver, cdr, _zone, syncScrollService, _platformUtil, _document);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.syncService.setMaster(this);
         super.ngOnInit();
         this.removeScrollEventListeners();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         const forOf = 'igxGridForOf';
         this.syncService.setMaster(this);
         if (forOf in changes) {
@@ -1523,7 +1525,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.syncService.setMaster(this, true);
     }
 
-    ngDoCheck() {
+    public ngDoCheck() {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
@@ -1552,7 +1554,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
-    onScroll(event) {
+    public onScroll(event) {
         if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
             return;
         }
@@ -1565,11 +1567,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        this._zone.onStable.pipe(first()).subscribe(() => this.recalcUpdateSizes());
+        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
         this.cdr.markForCheck();
     }
 
-    onHScroll(scrollAmount) {
+    public onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
         if (!this.scrollComponent || !parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
             return;

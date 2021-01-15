@@ -13,11 +13,8 @@ module.exports = function (config) {
     ],
     plugins: [
       require('karma-jasmine'),
-      require('karma-coverage'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
-      require('karma-jasmine-html-reporter'),
-      require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
@@ -27,25 +24,6 @@ module.exports = function (config) {
       },
       tagPrefix: '#',
       skipTags: 'perf'
-    },
-    reporters: ['progress'],
-    preprocessors: {
-      'projects/igniteui-angular/**/*.js': ['coverage']
-    },
-    coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reporters: [
-        { type: 'html' },
-        { type: 'lcovonly' },
-      ]
-    },
-    specReporter: {
-      suppressSkipped: true,
-      suppressErrorSummary: false,
-      suppressFailed: false,
-      suppressPassed: false,
-      showSpecTiming: false,
-      failFast: false
     },
     port: 9876,
     colors: true,
