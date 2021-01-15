@@ -1654,9 +1654,9 @@ describe('IgxSlider', () => {
             pos: [element.offsetLeft, elementHeight * 0.5]
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>(resolve => {
             Simulator.gestures.pan(element, panOptions, () => {
-                resolve(null);
+                resolve();
             });
         });
     };
