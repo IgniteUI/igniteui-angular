@@ -41,6 +41,9 @@ export abstract class IgxExporterOptionsBase {
      */
     public ignoreSorting = false;
 
+    // doc
+    public ignoreGrouping = false;
+
     constructor(fileName: string, protected _fileExtension: string) {
         this.setFileName(fileName);
     }
