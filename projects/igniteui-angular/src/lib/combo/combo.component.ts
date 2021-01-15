@@ -185,7 +185,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    get displaySearchInput(): boolean {
+    public get displaySearchInput(): boolean {
         return this.filterable || this.allowCustomValues;
     }
 
@@ -672,10 +672,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    get data(): any[] {
+    public get data(): any[] {
         return this._data;
     }
-    set data(val: any[]) {
+    public set data(val: any[]) {
         this._data = (val) ? val : [];
     }
 
@@ -696,7 +696,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public valueKey: string = null;
 
     @Input()
-    set displayKey(val: string) {
+    public set displayKey(val: string) {
         this._displayKey = val;
     }
 
@@ -717,7 +717,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * <igx-combo [displayKey]='myDisplayKey'></igx-combo>
      * ```
      */
-    get displayKey() {
+    public get displayKey() {
         return this._displayKey ? this._displayKey : this.valueKey;
     }
 
@@ -906,7 +906,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    onArrowDown(event: Event) {
+    public onArrowDown(event: Event) {
         event.preventDefault();
         event.stopPropagation();
         this.open();
@@ -915,7 +915,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    onInputClick(event: Event) {
+    public onInputClick(event: Event) {
         event.stopPropagation();
         event.preventDefault();
         if (!this.disabled) {
@@ -931,7 +931,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let state = this.combo.virtualizationState;
      * ```
      */
-    get virtualizationState(): IForOfState {
+    public get virtualizationState(): IForOfState {
         return this.virtDir.state;
     }
     /**
@@ -942,7 +942,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.virtualizationState(state);
      * ```
      */
-    set virtualizationState(state: IForOfState) {
+    public set virtualizationState(state: IForOfState) {
         this.virtDir.state = state;
     }
 
@@ -954,7 +954,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let count = this.combo.totalItemCount;
      * ```
      */
-    get totalItemCount(): number {
+    public get totalItemCount(): number {
         return this.virtDir.totalItemCount;
     }
     /**
@@ -965,7 +965,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.totalItemCount(remoteService.count);
      * ```
      */
-    set totalItemCount(count: number) {
+    public set totalItemCount(count: number) {
         this.virtDir.totalItemCount = count;
     }
 
@@ -977,7 +977,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let comboValue = this.combo.value;
      * ```
      */
-    get value(): string {
+    public get value(): string {
         return this._value;
     }
 

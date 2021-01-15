@@ -27,14 +27,13 @@ import { IgxForOfScrollSyncService } from './for_of.sync.service';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { PlatformUtil } from '../../core/utils';
 
-describe('IgxForOf directive -', () => {
+fdescribe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     const DISPLAY_CONTAINER = 'igx-display-container';
     const VERTICAL_SCROLLER = 'igx-virtual-helper';
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;
     let horizontalScroller: HTMLElement;
-    let zone: TestNgZone;
 
     let dg: DataGenerator;
 
@@ -73,7 +72,7 @@ describe('IgxForOf directive -', () => {
                     HorizontalVirtualComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -184,7 +183,7 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -338,7 +337,7 @@ describe('IgxForOf directive -', () => {
                     VirtualComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -1106,7 +1105,7 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualDestroyComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -1156,7 +1155,7 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualCreateComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -1565,8 +1564,7 @@ export class VirtualVariableSizeComponent {
         </div>
     `
 })
-export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent implements OnInit {
-    ngOnInit() { }
+export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent {
 }
 
 @Injectable()
@@ -1647,7 +1645,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.parentVirtDir.cdr.detectChanges();
         });
@@ -1692,7 +1690,7 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
         this.localService.getData(this.parentVirtDir.state);
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.parentVirtDir.cdr.detectChanges();
         });

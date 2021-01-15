@@ -157,12 +157,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * this.grid1.totalItemCount = 55;
      * ```
      */
-    set totalItemCount(count) {
+    public set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
     }
 
-    get totalItemCount() {
+    public get totalItemCount() {
         return this.verticalScrollContainer.totalItemCount;
     }
 
@@ -176,7 +176,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @memberof IgxHierarchicalGridComponent
      */
     @Input()
-    set expandChildren(value: boolean) {
+    public set expandChildren(value: boolean) {
         this._defaultExpandState  = value;
         this.expansionStates = new Map<any, boolean>();
     }
@@ -190,7 +190,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      *
      * @memberof IgxHierarchicalGridComponent
      */
-    get expandChildren(): boolean {
+    public get expandChildren(): boolean {
         return this._defaultExpandState ;
     }
 
@@ -251,7 +251,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    get hasExpandableChildren() {
+    public get hasExpandableChildren() {
         return !!this.childLayoutKeys.length;
     }
 
@@ -299,14 +299,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    ngOnInit() {
+    public ngOnInit() {
         if (this._transactions instanceof IgxTransactionService) {
             // transaction service cannot be injected in a derived class in a factory manner
             this._transactions = new IgxTransactionService();
         }
-        this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
-            const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
-        });
+        // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
+        //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
+        // });
         super.ngOnInit();
     }
 
@@ -320,7 +320,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         super.ngAfterViewInit();
         this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
         this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
@@ -381,7 +381,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         this.updateColumnList(false);
         this.childLayoutKeys = this.parent ?
             this.parentIsland.children.map((item) => item.key) :
@@ -419,7 +419,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         if (!this.parent) {
             this.hgridAPI.getChildGrids(true).forEach((grid) => {
                 if (!grid.childRow.cdr.destroyed) {
@@ -557,14 +557,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-   toggleAll() {
-    const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
-    if (!expanded && this.showExpandAll) {
-        this.expandAll();
-    } else {
-        this.collapseAll();
+    public toggleAll() {
+        const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
+        if (!expanded && this.showExpandAll) {
+            this.expandAll();
+        } else {
+            this.collapseAll();
+        }
     }
-   }
 
 
     /**
@@ -576,7 +576,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return true;
        }
        let hasExpandedEntry = false;
-       this.expansionStates.forEach((value, key) => {
+       this.expansionStates.forEach(value => {
            if (value) {
             hasExpandedEntry = value;
            }

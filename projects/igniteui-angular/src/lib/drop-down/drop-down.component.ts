@@ -321,7 +321,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    updateScrollPosition() {
+    public updateScrollPosition() {
         if (!this.virtDir) {
             return;
         }
@@ -423,14 +423,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.id) {
             // temp workaround until fix --> https://github.com/angular/angular/issues/34992
             this.toggleDirective.id = changes.id.currentValue;
         }
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         if (this.virtDir) {
             this.virtDir.igxForItemSize = 28;
         }

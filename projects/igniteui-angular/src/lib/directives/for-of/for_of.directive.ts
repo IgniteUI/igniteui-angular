@@ -155,22 +155,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public igxForItemSize: any;
 
     /**
-     * The total count of the virtual data items, when using remote service.
-     * Similar to the property totalItemCount, but this will allow setting the data count into the template.
-     * ```html
-     * <ng-template igxFor let-item [igxForOf]="data | async" [igxForTotalItemCount]="count | async"
-     *  [igxForContainerSize]="'500px'" [igxForItemSize]="'50px'"></ng-template>
-     * ```
-     */
-    @Input()
-    public get igxForTotalItemCount(): number {
-        return this.totalItemCount;
-    }
-    public set igxForTotalItemCount(value: number) {
-        this.totalItemCount = value;
-    }
-
-    /**
      * An event that is emitted after a new chunk has been loaded.
      * ```html
      * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onChunkLoad)="chunkLoad($event)"></ng-template>
@@ -228,6 +212,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     @Output()
     public onChunkPreload = new EventEmitter<IForOfState>();
+
     /**
      * @hidden
      */
@@ -278,6 +263,22 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * If _virtHeightRatio = 1, the visible height and the virtualized are the same, also _maxHeight > _virtHeight.
      */
     private _virtHeightRatio = 1;
+
+    /**
+     * The total count of the virtual data items, when using remote service.
+     * Similar to the property totalItemCount, but this will allow setting the data count into the template.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data | async" [igxForTotalItemCount]="count | async"
+     *  [igxForContainerSize]="'500px'" [igxForItemSize]="'50px'"></ng-template>
+     * ```
+     */
+    @Input()
+    public get igxForTotalItemCount(): number {
+        return this.totalItemCount;
+    }
+    public set igxForTotalItemCount(value: number) {
+        this.totalItemCount = value;
+    }
 
     /**
      * The total count of the virtual data items, when using remote service.

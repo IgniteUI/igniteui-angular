@@ -296,11 +296,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.filteredData = [...];
      * ```
      */
-    get filteredData() {
+    public get filteredData() {
         return this._filteredData;
     }
 
-    set filteredData(value) {
+    public set filteredData(value) {
         this._filteredData = value;
     }
 
@@ -315,12 +315,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid1.totalItemCount = 55;
      * ```
      */
-    set totalItemCount(count) {
+    public set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
     }
 
-    get totalItemCount() {
+    public get totalItemCount() {
         return this.verticalScrollContainer.totalItemCount;
     }
 
@@ -347,11 +347,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     @Input()
-    get groupingExpressions(): IGroupingExpression[] {
+    public get groupingExpressions(): IGroupingExpression[] {
         return this._groupingExpressions;
     }
 
-    set groupingExpressions(value: IGroupingExpression[]) {
+    public set groupingExpressions(value: IGroupingExpression[]) {
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
@@ -404,11 +404,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     @Input()
-    get groupingExpansionState() {
+    public get groupingExpansionState() {
         return this._groupingExpandState;
     }
 
-    set groupingExpansionState(value) {
+    public set groupingExpansionState(value) {
         if (value !== this._groupingExpandState) {
             this.groupingExpansionStateChange.emit(value);
         }
@@ -459,12 +459,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     @Input()
-    set dropAreaMessage(value: string) {
+    public set dropAreaMessage(value: string) {
         this._dropAreaMessage = value;
         this.notifyChanges();
     }
 
-    get dropAreaMessage(): string {
+    public get dropAreaMessage(): string {
         return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
     }
 
@@ -563,7 +563,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    get groupAreaHostClass(): string {
+    public get groupAreaHostClass(): string {
         return this.getComponentDensityClass('igx-drop-area');
     }
 
@@ -576,11 +576,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.groupRowTemplate = myRowTemplate;
      * ```
      */
-    get groupRowTemplate(): TemplateRef<any> {
+    public get groupRowTemplate(): TemplateRef<any> {
         return this._groupRowTemplate;
     }
 
-    set groupRowTemplate(template: TemplateRef<any>) {
+    public set groupRowTemplate(template: TemplateRef<any>) {
         this._groupRowTemplate = template;
         this.notifyChanges();
     }
@@ -595,11 +595,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * this.grid.groupAreaTemplate = myAreaTemplate.
      * ```
      */
-    get groupAreaTemplate(): TemplateRef<any> {
+    public get groupAreaTemplate(): TemplateRef<any> {
         return this._groupAreaTemplate;
     }
 
-    set groupAreaTemplate(template: TemplateRef<any>) {
+    public set groupAreaTemplate(template: TemplateRef<any>) {
         this._groupAreaTemplate = template;
         this.notifyChanges();
     }
@@ -764,7 +764,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * const groupableGrid = this.grid.hasGroupableColumns;
      * ```
      */
-    get hasGroupableColumns(): boolean {
+    public get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
