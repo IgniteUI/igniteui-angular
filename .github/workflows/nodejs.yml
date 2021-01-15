@@ -28,6 +28,8 @@ jobs:
       - name: Lint
         if: matrix.node-version == '14.x'
         run: npm run lint:lib
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096
       - name: Build
         run: npm run build:lib
       - name: Test

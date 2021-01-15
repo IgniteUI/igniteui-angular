@@ -2,28 +2,22 @@ import { first } from 'rxjs/operators';
 import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
-export const wait = (ms = 0) => new Promise((resolve, reject) => setTimeout(resolve, ms));
+export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const waitForGridScroll = (grid) => new Promise((resolve, reject) => {
-    grid.onScroll.pipe(first()).subscribe(() => {
-        grid.cdr.detectChanges();
-        resolve(null);
-    });
-});
+export const waitForGridScroll = grid => new Promise(resolve => grid.onScroll.pipe(first()).subscribe(() => {
+    grid.cdr.detectChanges();
+    resolve(null);
+}));
 
-export const waitForActiveNodeChange = (grid) => new Promise((resolve, reject) => {
-    grid.activeNodeChange.pipe(first()).subscribe(() => {
-        grid.cdr.detectChanges();
-        resolve(null);
-    });
-});
+export const waitForActiveNodeChange = grid => new Promise(resolve => grid.activeNodeChange.pipe(first()).subscribe(() => {
+    grid.cdr.detectChanges();
+    resolve(null);
+}));
 
-export const waitForSelectionChange = (grid) => new Promise((resolve, reject) => {
-    grid.onSelection.pipe(first()).subscribe(() => {
-        grid.cdr.detectChanges();
-        resolve(null);
-    });
-});
+export const waitForSelectionChange = grid => new Promise(resolve => grid.onSelection.pipe(first()).subscribe(() => {
+    grid.cdr.detectChanges();
+    resolve(null);
+}));
 
 declare let Touch: {
     prototype: Touch;
@@ -86,12 +80,12 @@ export class UIInteractions {
      * @param eventType - name of the event
      * @param keyPressed- pressed key
      */
-    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false): KeyboardEvent {
+    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = {
             key: keyPressed,
             altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -104,11 +98,11 @@ export class UIInteractions {
      *
      * @param eventType - name of the event
      */
-    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false): MouseEvent {
+    public static getMouseEvent(eventType, altKey = false, shiftKey = false, ctrlKey = false) {
         const clickEvent = {
             altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -122,13 +116,13 @@ export class UIInteractions {
      * @param keyPressed - pressed key
      * @param elem - debug element
      */
-    public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+    public static triggerEventHandlerKeyDown(key: string, elem: DebugElement, altKey = false, shiftKey = false, ctrlKey = false) {
         const event = {
             target: elem.nativeElement,
-            key: keyPressed,
+            key,
             altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -142,12 +136,12 @@ export class UIInteractions {
      * @param keyPressed - pressed key
      * @param elem - debug element
      */
-    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+    public static triggerEventHandlerKeyUp(key: string, elem: DebugElement, altKey = false, shiftKey = false, ctrlKey = false) {
         const event = {
-            key: keyPressed,
+            key,
             altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -271,13 +265,13 @@ export class UIInteractions {
         element.dispatchEvent(event);
     }
 
-    public static simulateMouseEvent(eventName: string, element, x, y) {
+    public static simulateMouseEvent(eventName: string, element, clientX, clientY) {
         const options: MouseEventInit = {
             view: window,
             bubbles: true,
             cancelable: true,
-            clientX: x,
-            clientY: y
+            clientX,
+            clientY
         };
         element.dispatchEvent(new MouseEvent(eventName, options));
     }
@@ -309,7 +303,7 @@ export class UIInteractions {
         return pointerEvent;
     }
 
-    public static simulatePointerOverElementEvent(eventName: string, element, shift = false, ctrl = false) {
+    public static simulatePointerOverElementEvent(eventName: string, element, shiftKey = false, ctrlKey = false) {
         const options: PointerEventInit = {
             view: window,
             bubbles: true,
@@ -317,8 +311,8 @@ export class UIInteractions {
             pointerId: 1,
             buttons: 1,
             button: eventName === 'pointerenter' ? -1 : 0,
-            shiftKey: shift,
-            ctrlKey: ctrl
+            shiftKey,
+            ctrlKey
         };
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
@@ -335,23 +329,23 @@ export class UIInteractions {
         Object.defineProperty(event, 'wheelDeltaX', { value: deltaX });
         Object.defineProperty(event, 'wheelDeltaY', { value: deltaY });
 
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             element.dispatchEvent(event);
             resolve(event);
         });
     }
 
-    public static simulateTouchStartEvent(element, pageX, pageY) {
+    public static simulateTouchStartEvent(target, pageX, pageY) {
         const touchInit = {
             identifier: 0,
-            target: element,
+            target,
             pageX,
             pageY
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchstart', { touches: [t] });
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(touchEventObject);
+        return new Promise(resolve => {
+            target.dispatchEvent(touchEventObject);
             resolve(touchEventObject);
         });
     }
@@ -365,7 +359,7 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchmove', { touches: [t] });
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             element.dispatchEvent(touchEventObject);
             resolve(touchEventObject);
         });
@@ -380,7 +374,7 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchend', { touches: [t] });
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             element.dispatchEvent(touchEventObject);
             resolve(touchEventObject);
         });
