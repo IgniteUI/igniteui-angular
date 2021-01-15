@@ -63,70 +63,38 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
     constructor(private element: ElementRef, private _zone: NgZone) { }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
             this.parentElement = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
             if (!this.parentElement) {
                 return;
             }
             const targetElem = this.parentElement;
-            targetElem.addEventListener('wheel', (evt) => {
-                this.onWheel(evt);
-            });
-            targetElem.addEventListener('touchstart', (evt) => {
-                this.onTouchStart(evt);
-            });
-            targetElem.addEventListener('touchmove', (evt) => {
-                this.onTouchMove(evt);
-            });
-            targetElem.addEventListener('touchend', (evt) => {
-                this.onTouchEnd(evt);
-            });
-            targetElem.addEventListener('pointerdown', (evt) => {
-                this.onPointerDown(evt);
-            });
-            targetElem.addEventListener('pointerup', (evt) => {
-                this.onPointerUp(evt);
-            });
-            targetElem.addEventListener('MSGestureStart', (evt) => {
-                this.onMSGestureStart(evt);
-            });
-            targetElem.addEventListener('MSGestureChange', (evt) => {
-                this.onMSGestureChange(evt);
-            });
+            targetElem.addEventListener('wheel', this.onWheel.bind(this));
+            targetElem.addEventListener('touchstart', this.onTouchStart.bind(this));
+            targetElem.addEventListener('touchmove', this.onTouchMove.bind(this));
+            targetElem.addEventListener('touchend', this.onTouchEnd.bind(this));
+            targetElem.addEventListener('pointerdown', this.onPointerDown.bind(this));
+            targetElem.addEventListener('pointerup', this.onPointerUp.bind(this));
+            targetElem.addEventListener('MSGestureStart', this.onMSGestureStart.bind(this));
+            targetElem.addEventListener('MSGestureChange', this.onMSGestureChange.bind(this));
         });
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this._zone.runOutsideAngular(() => {
             const targetElem = this.parentElement;
             if (!targetElem) {
                 return;
             }
-            targetElem.removeEventListener('wheel', (evt) => {
-                this.onWheel(evt);
-            });
-            targetElem.removeEventListener('touchstart', (evt) => {
-                this.onTouchStart(evt);
-            });
-            targetElem.removeEventListener('touchmove', (evt) => {
-                this.onTouchMove(evt);
-            });
-            targetElem.removeEventListener('touchend', (evt) => {
-                this.onTouchEnd(evt);
-            });
-            targetElem.removeEventListener('pointerdown', (evt) => {
-                this.onPointerDown(evt);
-            });
-            targetElem.removeEventListener('pointerup', (evt) => {
-                this.onPointerUp(evt);
-            });
-            targetElem.removeEventListener('MSGestureStart', (evt) => {
-                this.onMSGestureStart(evt);
-            });
-            targetElem.removeEventListener('MSGestureChange', (evt) => {
-                this.onMSGestureChange(evt);
-            });
+            targetElem.removeEventListener('wheel', this.onWheel);
+            targetElem.removeEventListener('touchstart', this.onTouchStart);
+            targetElem.removeEventListener('touchmove', this.onTouchMove);
+            targetElem.removeEventListener('touchend', this.onTouchEnd);
+            targetElem.removeEventListener('pointerdown', this.onPointerDown);
+            targetElem.removeEventListener('pointerup', this.onPointerUp);
+            targetElem.removeEventListener('MSGestureStart', this.onMSGestureStart);
+            targetElem.removeEventListener('MSGestureChange', this.onMSGestureChange);
         });
     }
 
@@ -505,9 +473,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     }
 
     private _scrollTo(destX, destY) {
-        const curPosX = this.IgxScrollInertiaScrollContainer.scrollLeft;
-        const curPosY = this.IgxScrollInertiaScrollContainer.scrollTop;
-
         // TODO Trigger scrolling event?
         const scrolledX = this._scrollToX(destX);
         const scrolledY = this._scrollToY(destY);

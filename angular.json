@@ -144,8 +144,8 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "e2e//**/*.ts",
-              "e2e//**/*.html"
+              "e2e/**/*.ts",
+              "e2e/**/*.html"
             ]
           }
         }
