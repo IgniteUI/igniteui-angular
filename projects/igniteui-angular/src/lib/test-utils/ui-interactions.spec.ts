@@ -251,12 +251,12 @@ export class UIInteractions {
         inputElement.triggerEventHandler('paste', event);
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles = true, altKey = false, shift = false, ctrl = false) {
+    public static triggerKeyDownEvtUponElem(key, elem, bubbles = true, altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyPressed,
+            key,
             bubbles,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            shiftKey,
+            ctrlKey,
             altKey
         });
         elem.dispatchEvent(keyboardEvent);
