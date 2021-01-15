@@ -189,6 +189,22 @@ describe('igxOverlay', () => {
         UIInteractions.clearOverlay();
     });
 
+    const verifyOverlayMargins = (overlaySettings: OverlaySettings, overlay: IgxOverlayService, fix, expectedMargin) => {
+        overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+        tick();
+        fix.detectChanges();
+        const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+        const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+        const overlayElement = overlayContent.children[0];
+        const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
+        const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
+        const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
+        expect(wrapperMargin).toEqual(expectedMargin);
+        expect(contentMargin).toEqual(expectedMargin);
+        expect(elementMargin).toEqual(expectedMargin);
+        overlay.hideAll();
+    };
+
     describe('Pure Unit Test', () => {
         configureTestSuite();
         let mockElement: any;
@@ -1907,13 +1923,13 @@ describe('igxOverlay', () => {
                         hAlignmentArray.forEach(horizontalDirection => {
                             //  do not check Center as we do nothing here
                             if (horizontalDirection === 'Center') {
- return;
-}
+                                return;
+                            }
                             vAlignmentArray.forEach(verticalDirection => {
                                 //  do not check Middle as we do nothing here
                                 if (verticalDirection === 'Middle') {
- return;
-}
+                                    return;
+                                }
                                 const positionSettings: PositionSettings = {};
                                 positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
                                 positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
@@ -2046,14 +2062,6 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const button = fix.componentInstance.buttonElement.nativeElement;
-            const positionSettings: PositionSettings = {};
-            const overlaySettings: OverlaySettings = {
-                target: button,
-                positionStrategy: new AutoPositionStrategy(positionSettings),
-                scrollStrategy: new NoOpScrollStrategy(),
-                modal: false,
-                closeOnOutsideClick: false
-            };
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
@@ -2061,32 +2069,24 @@ describe('igxOverlay', () => {
                 vAlignmentArray.forEach(vDirection => {
                     hAlignmentArray.forEach(hAlignment => {
                         vAlignmentArray.forEach(vAlignment => {
-                            verifyOverlayMargins(hDirection, vDirection, hAlignment, vAlignment);
+                            const positionSettings: PositionSettings = {
+                                horizontalDirection: hDirection as any,
+                                verticalDirection: vDirection as any,
+                                horizontalStartPoint: hAlignment as any,
+                                verticalStartPoint: vAlignment as any
+                            };
+                            const overlaySettings: OverlaySettings = {
+                                target: button,
+                                positionStrategy: new AutoPositionStrategy(positionSettings),
+                                scrollStrategy: new NoOpScrollStrategy(),
+                                modal: false,
+                                closeOnOutsideClick: false
+                            };
+                            verifyOverlayMargins(overlaySettings, overlay, fix, expectedMargin);
                         });
                     });
                 });
             });
-
-            const verifyOverlayMargins = (horizontalDirection, verticalDirection, horizontalAlignment, verticalAlignment) => {
-                positionSettings.horizontalDirection = horizontalDirection;
-                positionSettings.verticalDirection = verticalDirection;
-                positionSettings.horizontalStartPoint = horizontalAlignment;
-                positionSettings.verticalStartPoint = verticalAlignment;
-                overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
-                tick();
-                fix.detectChanges();
-                const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
-                const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                const overlayElement = overlayContent.children[0];
-                const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
-                const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
-                const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
-                expect(wrapperMargin).toEqual(expectedMargin);
-                expect(contentMargin).toEqual(expectedMargin);
-                expect(elementMargin).toEqual(expectedMargin);
-                overlay.hideAll();
-            };
         }));
 
         // When adding more than one component to show in igx-overlay:
@@ -2533,14 +2533,6 @@ describe('igxOverlay', () => {
 
             const overlay = fix.componentInstance.overlay;
             const button = fix.componentInstance.buttonElement.nativeElement;
-            const positionSettings: PositionSettings = {};
-            const overlaySettings: OverlaySettings = {
-                target: button,
-                positionStrategy: new ElasticPositionStrategy(positionSettings),
-                scrollStrategy: new NoOpScrollStrategy(),
-                modal: false,
-                closeOnOutsideClick: false
-            };
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
@@ -2548,32 +2540,24 @@ describe('igxOverlay', () => {
                 vAlignmentArray.forEach(vDirection => {
                     hAlignmentArray.forEach(hAlignment => {
                         vAlignmentArray.forEach(vAlignment => {
-                            verifyOverlayMargins(hDirection, vDirection, hAlignment, vAlignment);
+                            const positionSettings: PositionSettings = {
+                                horizontalDirection: hDirection as any,
+                                verticalDirection: vDirection as any,
+                                horizontalStartPoint: hAlignment as any,
+                                verticalStartPoint: vAlignment as any
+                            };
+                            const overlaySettings: OverlaySettings = {
+                                target: button,
+                                positionStrategy: new ElasticPositionStrategy(positionSettings),
+                                scrollStrategy: new NoOpScrollStrategy(),
+                                modal: false,
+                                closeOnOutsideClick: false
+                            };
+                            verifyOverlayMargins(overlaySettings, overlay, fix, expectedMargin);
                         });
                     });
                 });
             });
-
-            const verifyOverlayMargins = (horizontalDirection, verticalDirection, horizontalAlignment, verticalAlignment) => {
-                positionSettings.horizontalDirection = horizontalDirection;
-                positionSettings.verticalDirection = verticalDirection;
-                positionSettings.horizontalStartPoint = horizontalAlignment;
-                positionSettings.verticalStartPoint = verticalAlignment;
-                overlaySettings.positionStrategy = new ElasticPositionStrategy(positionSettings);
-                overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
-                tick();
-                fix.detectChanges();
-                const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
-                const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                const overlayElement = overlayContent.children[0];
-                const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
-                const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
-                const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
-                expect(wrapperMargin).toEqual(expectedMargin);
-                expect(contentMargin).toEqual(expectedMargin);
-                expect(elementMargin).toEqual(expectedMargin);
-                overlay.hideAll();
-            };
         }));
 
         // When adding more than one component to show in igx-overlay:

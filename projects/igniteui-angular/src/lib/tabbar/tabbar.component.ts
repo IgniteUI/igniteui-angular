@@ -133,6 +133,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      */
     @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
 
+    private readonly _currentBottomNavId = NEXT_ID++;
     /**
      * Sets/gets the `id` of the tab bar.
      * If not set, the `id` of the first tab bar component will be `"igx-bottom-nav-0"`.
@@ -145,9 +146,10 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      *
      * @memberof IgxBottomNavComponent
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-bottom-nav-${NEXT_ID++}`;
+    public id = `igx-bottom-nav-${this._currentBottomNavId}`;
 
     /**
      * Gets the `index` of selected tab/panel in the respective collection.
@@ -157,6 +159,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      *
      * @memberof IgxBottomNavComponent
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public selectedIndex = -1;
 
     /**
@@ -181,7 +184,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    private _itemStyle = 'igx-bottom-nav';
+    private readonly _itemStyle = 'igx-bottom-nav';
     private _panelsChanges$: Subscription;
 
     /**
@@ -198,14 +201,11 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef) {
-    }
-
     /**
      * @hidden
      */
     @HostListener('onTabSelected', ['$event'])
-    public _selectedPanelHandler(args) {
+    public selectedPanelHandler(args) {
         if (this.hasContentTabs) {
             this.selectedIndex = args.tab.index;
             this.contentTabs.forEach((t) => {
@@ -259,14 +259,14 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * @hidden
      */
     public getTabId(index: number): string {
-        return `igx-tab-${NEXT_ID}-${index}`;
+        return `igx-tab-${this._currentBottomNavId}-${index}`;
     }
 
     /**
      * @hidden
      */
     public getTabPanelId(index: number): string {
-        return `igx-tab-panel-${NEXT_ID}-${index}`;
+        return `igx-tab-panel-${this._currentBottomNavId}-${index}`;
     }
 
     private setPanelsAttributes() {
@@ -488,7 +488,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
     /**
      * @hidden
      */
-    private _itemStyle = 'igx-tab-panel';
+    private readonly _itemStyle = 'igx-tab-panel';
 
     /**
      * @hidden
