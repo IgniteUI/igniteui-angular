@@ -40,6 +40,74 @@ export class CalendarHammerConfig extends HammerGestureConfig {
 })
 export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
+     * Gets/sets whether the view should be rendered
+     * according to the locale and yearFormat, if any.
+     */
+    @Input()
+    public formatView: boolean;
+
+    /**
+     * Emits an event when a selection is made in the years view.
+     * Provides reference the `date` property in the `IgxYearsViewComponent`.
+     * ```html
+     * <igx-years-view (onSelection)="onSelection($event)"></igx-years-view>
+     * ```
+     *
+     * @memberof IgxYearsViewComponent
+     */
+    @Output()
+    public onSelection = new EventEmitter<Date>();
+
+    /**
+     * The default css class applied to the component.
+     *
+     * @hidden
+     */
+    @HostBinding('class.igx-calendar')
+    public styleClass = true;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChildren(IgxCalendarYearDirective, { read: IgxCalendarYearDirective })
+    public calendarDir: QueryList<IgxCalendarYearDirective>;
+
+    /**
+     * @hidden
+     */
+    private _formatterYear: any;
+
+    /**
+     * @hidden
+     */
+    private _locale = 'en';
+
+    /**
+     * @hidden
+     */
+    private _yearFormat = 'numeric';
+
+    /**
+     * @hidden
+     */
+    private _calendarModel: Calendar;
+    /**
+     * @hidden
+     */
+    private _date = new Date();
+
+    /**
+     * @hidden
+     */
+    private _onTouchedCallback: () => void = noop;
+
+    /**
+     * @hidden
+     */
+    private _onChangeCallback: (_: Date) => void = noop;
+
+    /**
      * Gets/sets the selected date of the years view.
      * By default it is the current date.
      * ```html
@@ -117,40 +185,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     * Gets/sets whether the view should be rendered
-     * according to the locale and yearFormat, if any.
-     */
-    @Input()
-    public formatView: boolean;
-
-    /**
-     * Emits an event when a selection is made in the years view.
-     * Provides reference the `date` property in the `IgxYearsViewComponent`.
-     * ```html
-     * <igx-years-view (onSelection)="onSelection($event)"></igx-years-view>
-     * ```
-     *
-     * @memberof IgxYearsViewComponent
-     */
-    @Output()
-    public onSelection = new EventEmitter<Date>();
-
-    /**
-     * The default css class applied to the component.
-     *
-     * @hidden
-     */
-    @HostBinding('class.igx-calendar')
-    public styleClass = true;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChildren(IgxCalendarYearDirective, { read: IgxCalendarYearDirective })
-    public calendarDir: QueryList<IgxCalendarYearDirective>;
-
-    /**
      * Returns an array of date objects which are then used to properly
      * render the years.
      *
@@ -158,7 +192,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *
      * @hidden
      */
-    get decade(): number[] {
+    public get decade(): number[] {
         const result = [];
         const start = this.date.getFullYear() - 3;
         const end = this.date.getFullYear() + 4;
@@ -169,40 +203,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
 
         return result;
     }
-
-    /**
-     * @hidden
-     */
-    private _formatterYear: any;
-
-    /**
-     * @hidden
-     */
-    private _locale = 'en';
-
-    /**
-     * @hidden
-     */
-    private _yearFormat = 'numeric';
-
-    /**
-     * @hidden
-     */
-    private _calendarModel: Calendar;
-    /**
-     * @hidden
-     */
-    private _date = new Date();
-
-    /**
-     * @hidden
-     */
-    private _onTouchedCallback: () => void = noop;
-
-    /**
-     * @hidden
-     */
-    private _onChangeCallback: (_: Date) => void = noop;
 
     constructor(public el: ElementRef) {
         this.initYearFormatter();

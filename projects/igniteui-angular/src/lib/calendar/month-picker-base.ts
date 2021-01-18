@@ -38,14 +38,24 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     public previousViewDate: Date;
 
+    /**
+     * Holds month view index we are operating on.
+     */
+    protected activeViewIdx = 0;
 
-    @Input()
+    /**
+     * @hidden
+     */
+    private _activeView: IgxCalendarView = IgxCalendarView.Month;
+
+
     /**
      * Gets the current active view.
      * ```typescript
      * this.activeView = calendar.activeView;
      * ```
      */
+    @Input()
     public get activeView(): IgxCalendarView {
         return this._activeView;
     }
@@ -76,16 +86,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     public get isDecadeView(): boolean {
         return this._activeView === CalendarView.DECADE || this._activeView === IgxCalendarView.Decade;
     }
-
-    /**
-     * Holds month view index we are operating on.
-     */
-    protected activeViewIdx = 0;
-
-    /**
-     * @hidden
-     */
-    private _activeView: IgxCalendarView = IgxCalendarView.Month;
 
     /**
      * @hidden

@@ -293,48 +293,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostHost;
 
     /**
-     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
-     * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
-     * ```html
-     * <div #hostDiv></div>
-     * <div igxDrag [ghostOffsetX]="0">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     *
-     * @memberof IgxDragDirective
-     */
-    @Input()
-    public set ghostOffsetX(value) {
-        this._offsetX = parseInt(value, 10);
-    }
-
-    public get ghostOffsetX() {
-        return this._offsetX !== undefined ? this._offsetX : this._defaultOffsetX;
-    }
-
-    /**
-     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
-     * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
-     * ```html
-     * <div #hostDiv></div>
-     * <div igxDrag [ghostOffsetY]="0">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     *
-     * @memberof IgxDragDirective
-     */
-    @Input()
-    public set ghostOffsetY(value) {
-        this._offsetY = parseInt(value, 10);
-    }
-
-    public get ghostOffsetY() {
-        return this._offsetY !== undefined ? this._offsetY : this._defaultOffsetY ;
-    }
-
-    /**
      * Event triggered when the draggable element drag starts.
      * ```html
      * <div igxDrag (dragStart)="onDragStart()">
@@ -613,6 +571,48 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected _destroy = new Subject<boolean>();
     protected _removeOnDestroy = true;
+
+    /**
+     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
+     * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
+     * ```html
+     * <div #hostDiv></div>
+     * <div igxDrag [ghostOffsetX]="0">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     *
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public set ghostOffsetX(value) {
+        this._offsetX = parseInt(value, 10);
+    }
+
+    public get ghostOffsetX() {
+        return this._offsetX !== undefined ? this._offsetX : this._defaultOffsetX;
+    }
+
+    /**
+     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
+     * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
+     * ```html
+     * <div #hostDiv></div>
+     * <div igxDrag [ghostOffsetY]="0">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     *
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public set ghostOffsetY(value) {
+        this._offsetY = parseInt(value, 10);
+    }
+
+    public get ghostOffsetY() {
+        return this._offsetY !== undefined ? this._offsetY : this._defaultOffsetY ;
+    }
 
     constructor(
         public cdr: ChangeDetectorRef,
