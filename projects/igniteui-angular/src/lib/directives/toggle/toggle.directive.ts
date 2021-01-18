@@ -150,14 +150,6 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * @hidden
-     */
-    public set collapsed(value: boolean) {
-        this._collapsed = value;
-        this.cdr.detectChanges();
-    }
-
-    /**
      * Identifier which is registered into `IgxNavigationService`
      *
      * ```typescript
@@ -222,12 +214,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
         }
 
-        this.collapsed = false;
+        this._collapsed = false;
 
         const openEventArgs: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
         this.onOpening.emit(openEventArgs);
         if (openEventArgs.cancel) {
-            this.collapsed = true;
+            this._collapsed = true;
             return;
         }
 
@@ -353,7 +345,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     private overlayClosed = (ev) => {
-        this.collapsed = true;
+        this._collapsed = true;
         delete this._overlayId;
         const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId, event: ev.event };
         this.onClosed.emit(closedEventArgs);
