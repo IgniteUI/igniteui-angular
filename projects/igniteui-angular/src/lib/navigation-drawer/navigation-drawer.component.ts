@@ -276,14 +276,14 @@ export class IgxNavigationDrawerComponent implements
      *
      * @hidden
      */
-    get element() {
+    public get element() {
         return this.elementRef.nativeElement;
     }
 
     /**
      * @hidden
      */
-    get template() {
+    public get template() {
         if (this.miniTemplate && !this.isOpen) {
             return this.miniTemplate.template;
         } else if (this.contentTemplate) {
@@ -314,7 +314,7 @@ export class IgxNavigationDrawerComponent implements
      * @hidden
      */
     @HostBinding('style.flexBasis')
-    get flexWidth() {
+    public get flexWidth() {
         if (!this.pin) {
             return '0px';
         }
@@ -330,7 +330,7 @@ export class IgxNavigationDrawerComponent implements
 
     /** @hidden */
     @HostBinding('style.order')
-    get isPinnedRight() {
+    public get isPinnedRight() {
         return this.pin && this.position === 'right' ? '1' : '0';
     }
 
@@ -347,21 +347,21 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    get drawer() {
+    public get drawer() {
         return this._drawer.nativeElement;
     }
 
     /**
      * @hidden
      */
-    get overlay() {
+    public get overlay() {
         return this._overlay.nativeElement;
     }
 
     /**
      * @hidden
      */
-    get styleDummy() {
+    public get styleDummy() {
         return this._styleDummy.nativeElement;
     }
 

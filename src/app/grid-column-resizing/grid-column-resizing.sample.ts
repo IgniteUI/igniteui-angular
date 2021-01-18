@@ -10,12 +10,12 @@ import { IgxGridComponent } from 'igniteui-angular';
 
 export class GridColumnResizingSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    public grid1: IgxGridComponent;
 
-    data: any[];
-    columns: any[];
+    public data: any[];
+    public columns: any[];
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             // % width, px min/max width.
             { field: 'ID', width: '10%', resizable: true, maxWidth: 200, minWidth: 120 },
@@ -65,7 +65,7 @@ export class GridColumnResizingSampleComponent implements OnInit {
         ];
     }
 
-    toggleColumn(name: string) {
+    public toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;
     }
