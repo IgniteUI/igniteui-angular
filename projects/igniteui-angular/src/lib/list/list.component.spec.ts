@@ -496,7 +496,6 @@ describe('List', () => {
         let fixture;
         let list: IgxListComponent;
         let item: IgxListItemComponent;
-        let itemNativeElement;
         let elementRefCollection;
 
         TestBed.compileComponents().then(() => {
@@ -508,7 +507,6 @@ describe('List', () => {
         }).then(() => {
 
             item = list.items[0] as IgxListItemComponent;
-            itemNativeElement = item.element;
 
             spyOn(list.onLeftPan, 'emit');
             spyOn(list.onRightPan, 'emit');

@@ -128,201 +128,6 @@ export class IgxListItemComponent implements IListChild {
      */
     private lastPanDir = IgxListPanState.NONE;
 
-    constructor(
-        public list: IgxListBaseDirective,
-        private elementRef: ElementRef,
-        private _renderer: Renderer2) {
-    }
-
-    /**
-     * Gets the `role` attribute of the `list item`.
-     * ```typescript
-     * let itemRole =  this.listItem.role;
-     * ```
-     *
-     * @memberof IgxListItemComponent
-     */
-    @HostBinding('attr.role')
-    public get role() {
-        return this.isHeader ? 'separator' : 'listitem';
-    }
-
-    /**
-     * Indicates whether `list item` should have header style.
-     * ```typescript
-     * let headerStyle =  this.listItem.headerStyle;
-     * ```
-     *
-     * @memberof IgxListItemComponent
-     */
-    @HostBinding('class.igx-list__header')
-    get headerStyle(): boolean {
-        return this.isHeader;
-    }
-
-    /**
-     * Applies the inner style of the `list item` if the item is not counted as header.
-     * ```typescript
-     * let innerStyle =  this.listItem.innerStyle;
-     * ```
-     *
-     * @memberof IgxListItemComponent
-     */
-    @HostBinding('class.igx-list__item-base')
-    get innerStyle(): boolean {
-        return !this.isHeader;
-    }
-
-    /**
-     * Returns string value which describes the display mode of the `list item`.
-     * ```typescript
-     * let isHidden = this.listItem.display;
-     * ```
-     *
-     * @memberof IgxListItemComponent
-     */
-    @HostBinding('style.display')
-    get display(): string {
-        return this.hidden ? 'none' : '';
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('click', ['$event'])
-    clicked(evt) {
-        this.list.onItemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
-        this.lastPanDir = IgxListPanState.NONE;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('panstart', ['$event'])
-    panStart(ev) {
-        if (this.isTrue(this.isHeader)) {
-            return;
-        }
-        if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
-            return;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('panmove', ['$event'])
-    panMove(ev) {
-        if (this.isTrue(this.isHeader)) {
-            return;
-        }
-        if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
-            return;
-        }
-        const isPanningToLeft = ev.deltaX < 0;
-        if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
-            this.showLeftPanTemplate();
-            this.setContentElementLeft(Math.max(this.maxLeft, ev.deltaX));
-        } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
-            this.showRightPanTemplate();
-            this.setContentElementLeft(Math.min(this.maxRight, ev.deltaX));
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('panend', ['$event'])
-    panEnd(ev) {
-        if (this.isTrue(this.isHeader)) {
-            return;
-        }
-        if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
-            return;
-        }
-
-        // the translation offset of the current list item content
-        const relativeOffset = this.panOffset;
-        const widthTriggeringGrip = this.width * this.list.panEndTriggeringThreshold;
-
-        if (relativeOffset === 0) {
-            return; // no panning has occured
-        }
-
-        const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
-        this.lastPanDir = dir;
-
-        const oldPanState = this._panState;
-        if (Math.abs(relativeOffset) < widthTriggeringGrip) {
-            this.setContentElementLeft(0);
-            this._panState = IgxListPanState.NONE;
-            this.hideLeftAndRightPanTemplates();
-            return;
-        }
-
-        const args = { item: this, direction: dir, keepItem: false};
-
-        if (dir === IgxListPanState.LEFT) {
-            this.list.onLeftPan.emit(args);
-        } else {
-            this.list.onRightPan.emit(args);
-        }
-
-        if (args.keepItem === true) {
-            this.setContentElementLeft(0);
-            this._panState = IgxListPanState.NONE;
-        } else {
-            if (dir === IgxListPanState.LEFT) {
-                this.setContentElementLeft(this.maxLeft);
-                this._panState = IgxListPanState.LEFT;
-            } else {
-                this.setContentElementLeft(this.maxRight);
-                this._panState = IgxListPanState.RIGHT;
-            }
-        }
-
-        if (oldPanState !== this._panState) {
-            const args2 = { oldState: oldPanState, newState: this._panState, item: this };
-            this.list.onPanStateChange.emit(args2);
-        }
-        this.hideLeftAndRightPanTemplates();
-    }
-
-    /**
-     * @hidden
-     */
-    private showLeftPanTemplate() {
-        this.setLeftAndRightTemplatesVisibility('visible', 'hidden');
-    }
-
-    /**
-     * @hidden
-     */
-    private showRightPanTemplate() {
-        this.setLeftAndRightTemplatesVisibility('hidden', 'visible');
-    }
-
-    /**
-     * @hidden
-     */
-    private hideLeftAndRightPanTemplates() {
-        setTimeout(() => {
-            this.setLeftAndRightTemplatesVisibility('hidden', 'hidden');
-        }, 500);
-    }
-
-    /**
-     * @hidden
-     */
-    private setLeftAndRightTemplatesVisibility(leftVisibility, rightVisibility) {
-        if (this.leftPanningTemplateElement && this.leftPanningTemplateElement.nativeElement) {
-            this.leftPanningTemplateElement.nativeElement.style.visibility = leftVisibility;
-        }
-        if (this.rightPanningTemplateElement && this.rightPanningTemplateElement.nativeElement) {
-            this.rightPanningTemplateElement.nativeElement.style.visibility = rightVisibility;
-        }
-    }
-
     /**
      * Gets the `panState` of a `list item`.
      * ```typescript
@@ -434,6 +239,201 @@ export class IgxListItemComponent implements IListChild {
      */
     public get maxRight() {
         return this.width;
+    }
+
+    constructor(
+        public list: IgxListBaseDirective,
+        private elementRef: ElementRef,
+        private _renderer: Renderer2) {
+    }
+
+    /**
+     * Gets the `role` attribute of the `list item`.
+     * ```typescript
+     * let itemRole =  this.listItem.role;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('attr.role')
+    public get role() {
+        return this.isHeader ? 'separator' : 'listitem';
+    }
+
+    /**
+     * Indicates whether `list item` should have header style.
+     * ```typescript
+     * let headerStyle =  this.listItem.headerStyle;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('class.igx-list__header')
+    public get headerStyle(): boolean {
+        return this.isHeader;
+    }
+
+    /**
+     * Applies the inner style of the `list item` if the item is not counted as header.
+     * ```typescript
+     * let innerStyle =  this.listItem.innerStyle;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('class.igx-list__item-base')
+    public get innerStyle(): boolean {
+        return !this.isHeader;
+    }
+
+    /**
+     * Returns string value which describes the display mode of the `list item`.
+     * ```typescript
+     * let isHidden = this.listItem.display;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('style.display')
+    public get display(): string {
+        return this.hidden ? 'none' : '';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('click', ['$event'])
+    public clicked(evt) {
+        this.list.onItemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
+        this.lastPanDir = IgxListPanState.NONE;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('panstart')
+    public panStart() {
+        if (this.isTrue(this.isHeader)) {
+            return;
+        }
+        if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
+            return;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('panmove', ['$event'])
+    public panMove(ev) {
+        if (this.isTrue(this.isHeader)) {
+            return;
+        }
+        if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
+            return;
+        }
+        const isPanningToLeft = ev.deltaX < 0;
+        if (isPanningToLeft && this.isTrue(this.list.allowLeftPanning)) {
+            this.showLeftPanTemplate();
+            this.setContentElementLeft(Math.max(this.maxLeft, ev.deltaX));
+        } else if (!isPanningToLeft && this.isTrue(this.list.allowRightPanning)) {
+            this.showRightPanTemplate();
+            this.setContentElementLeft(Math.min(this.maxRight, ev.deltaX));
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('panend')
+    public panEnd() {
+        if (this.isTrue(this.isHeader)) {
+            return;
+        }
+        if (!this.isTrue(this.list.allowLeftPanning) && !this.isTrue(this.list.allowRightPanning)) {
+            return;
+        }
+
+        // the translation offset of the current list item content
+        const relativeOffset = this.panOffset;
+        const widthTriggeringGrip = this.width * this.list.panEndTriggeringThreshold;
+
+        if (relativeOffset === 0) {
+            return; // no panning has occured
+        }
+
+        const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
+        this.lastPanDir = dir;
+
+        const oldPanState = this._panState;
+        if (Math.abs(relativeOffset) < widthTriggeringGrip) {
+            this.setContentElementLeft(0);
+            this._panState = IgxListPanState.NONE;
+            this.hideLeftAndRightPanTemplates();
+            return;
+        }
+
+        const args = { item: this, direction: dir, keepItem: false};
+
+        if (dir === IgxListPanState.LEFT) {
+            this.list.onLeftPan.emit(args);
+        } else {
+            this.list.onRightPan.emit(args);
+        }
+
+        if (args.keepItem === true) {
+            this.setContentElementLeft(0);
+            this._panState = IgxListPanState.NONE;
+        } else {
+            if (dir === IgxListPanState.LEFT) {
+                this.setContentElementLeft(this.maxLeft);
+                this._panState = IgxListPanState.LEFT;
+            } else {
+                this.setContentElementLeft(this.maxRight);
+                this._panState = IgxListPanState.RIGHT;
+            }
+        }
+
+        if (oldPanState !== this._panState) {
+            const args2 = { oldState: oldPanState, newState: this._panState, item: this };
+            this.list.onPanStateChange.emit(args2);
+        }
+        this.hideLeftAndRightPanTemplates();
+    }
+
+    /**
+     * @hidden
+     */
+    private showLeftPanTemplate() {
+        this.setLeftAndRightTemplatesVisibility('visible', 'hidden');
+    }
+
+    /**
+     * @hidden
+     */
+    private showRightPanTemplate() {
+        this.setLeftAndRightTemplatesVisibility('hidden', 'visible');
+    }
+
+    /**
+     * @hidden
+     */
+    private hideLeftAndRightPanTemplates() {
+        setTimeout(() => {
+            this.setLeftAndRightTemplatesVisibility('hidden', 'hidden');
+        }, 500);
+    }
+
+    /**
+     * @hidden
+     */
+    private setLeftAndRightTemplatesVisibility(leftVisibility, rightVisibility) {
+        if (this.leftPanningTemplateElement && this.leftPanningTemplateElement.nativeElement) {
+            this.leftPanningTemplateElement.nativeElement.style.visibility = leftVisibility;
+        }
+        if (this.rightPanningTemplateElement && this.rightPanningTemplateElement.nativeElement) {
+            this.rightPanningTemplateElement.nativeElement.style.visibility = rightVisibility;
+        }
     }
 
     /**

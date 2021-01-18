@@ -130,7 +130,7 @@ export class TwoHeadersListComponent extends ListWithPanningComponent {
 @Component({
     template: `
         <div #wrapper>
-            <igx-list [allowRightPanning]="allowRightPanning" [allowLeftPanning]="allowLeftPanning">
+            <igx-list [allowRightPanning]="false" [allowLeftPanning]="false">
                 <igx-list-item [isHeader]="true">Header 1</igx-list-item>
                 <igx-list-item [isHeader]="false" [hidden]="false">Item 1</igx-list-item>
                 <igx-list-item [isHeader]="true">Header 2</igx-list-item>
