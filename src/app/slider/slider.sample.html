@@ -24,7 +24,7 @@
         <article class="sample-column" class="flex-row">
             <h4 class="sample-title">Range label slider</h4>
             <span class="outer-label">{{getLowerVal}}</span>
-            <igx-slider style="width: 60%;" #slider2 [type]="sliderType" (onValueChange)="valueChange($event)"
+            <igx-slider style="width: 60%;" #slider2 type="range" (onValueChange)="valueChange($event)"
                 [labels]="labels" [continuous]="true">
             </igx-slider>
             <span class="outer-label">{{getUpperVal}}</span>
@@ -90,7 +90,7 @@
         <button igxButton="outlined" (click)="primaryTickLabels = !primaryTickLabels">show/hide primary labels</button>
         <button igxButton="outlined" (click)="secondaryTickLabels = !secondaryTickLabels">show/hide secondary labels</button>
         <button igxButton="outlined" (click)="changeLabels()">change labels</button>
-        <button igxButton="outlined" (click)="sliderType = sliderType === 0 ? 1 : 0">change type</button>
-        <button igxButton="outlined" (click)="sliderType = sliderType === 0 ? 1 : 0">change step</button>
+        <button igxButton="outlined" (click)="sliderType = sliderType === 'slider' ? 'range' : 'slider'">change type</button>
+        <button igxButton="outlined" (click)="sliderType = sliderType === 'slider' ? 'range' : 'slider'">change step</button>
     </div>
 </section>
