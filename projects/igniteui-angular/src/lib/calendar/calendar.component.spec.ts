@@ -2036,7 +2036,7 @@ export class IgxCalendarValueComponent {
 
 class DateTester {
     // tests whether a date is disabled or not
-    static testDatesAvailability(dates: IgxDayItemComponent[], disabled: boolean) {
+    public static testDatesAvailability(dates: IgxDayItemComponent[], disabled: boolean) {
         for (const date of dates) {
             expect(date.isDisabled).toBe(disabled,
                 date.date.date.toLocaleDateString() + ' is not disabled');
@@ -2046,7 +2046,7 @@ class DateTester {
     }
 
     // tests whether a dates is special or not
-    static testDatesSpeciality(dates: IgxDayItemComponent[], special: boolean): void {
+    public static testDatesSpeciality(dates: IgxDayItemComponent[], special: boolean): void {
         for (const date of dates) {
             expect(date.isSpecial).toBe(special);
         }
@@ -2059,7 +2059,7 @@ type testDatesRange = (inRange: IgxDayItemComponent[],
     outOfRange: IgxDayItemComponent[]) => void;
 
 class DateRangesPropertiesTester {
-    static testAfter(assignFunc: assignDateRangeDescriptors,
+    public static testAfter(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2078,7 +2078,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
-    static testBefore(assignFunc: assignDateRangeDescriptors,
+    public static testBefore(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2097,25 +2097,25 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
-    static testBetweenWithMinDateFirst(assignFunc: assignDateRangeDescriptors,
+    public static testBetweenWithMinDateFirst(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         this.testBetween(assignFunc, testRangesFunc,
             new Date(2017, 5, 13), new Date(2017, 5, 20));
     }
 
-    static testBetweenWithMaxDateFirst(assignFunc: assignDateRangeDescriptors,
+    public static testBetweenWithMaxDateFirst(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         this.testBetween(assignFunc, testRangesFunc,
             new Date(2017, 5, 20), new Date(2017, 5, 13));
     }
 
-    static testBetweenWithMinMaxTheSame(assignFunc: assignDateRangeDescriptors,
+    public static testBetweenWithMinMaxTheSame(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         this.testBetween(assignFunc, testRangesFunc,
             new Date(2017, 5, 20), new Date(2017, 5, 20));
     }
 
-    static testSpecific(assignFunc: assignDateRangeDescriptors,
+    public static testSpecific(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2134,7 +2134,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
-    static testWeekdays(assignFunc: assignDateRangeDescriptors,
+    public static testWeekdays(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2151,7 +2151,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
-    static testWeekends(assignFunc: assignDateRangeDescriptors,
+    public static testWeekends(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2168,7 +2168,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
-    static testOverlappingBetweens(assignFunc: assignDateRangeDescriptors,
+    public static testOverlappingBetweens(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2192,7 +2192,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
-    static testMultipleRanges(assignFunc: assignDateRangeDescriptors,
+    public static testMultipleRanges(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2217,7 +2217,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangesDates, outOfRangeDates);
     }
 
-    static testRangeUpdateRuntime(assignFunc: assignDateRangeDescriptors,
+    public static testRangeUpdateRuntime(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2243,7 +2243,7 @@ class DateRangesPropertiesTester {
         testRangesFunc(inRangesDates, outOfRangesDates);
     }
 
-    static testPreviousMonthRange(assignFunc: assignDateRangeDescriptors,
+    public static testPreviousMonthRange(assignFunc: assignDateRangeDescriptors,
         testRangesFunc: testDatesRange) {
         const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
         const calendar = fixture.componentInstance.calendar;
@@ -2259,23 +2259,23 @@ class DateRangesPropertiesTester {
         testRangesFunc(calendar.daysView.dates.toArray(), []);
     }
 
-    static assignDisableDatesDescriptors(component: IgxCalendarComponent,
+    public static assignDisableDatesDescriptors(component: IgxCalendarComponent,
         dateRangeDescriptors: DateRangeDescriptor[]) {
         component.disabledDates = dateRangeDescriptors;
     }
 
-    static testDisabledDates(inRange: IgxDayItemComponent[],
+    public static testDisabledDates(inRange: IgxDayItemComponent[],
         outOfRange: IgxDayItemComponent[]) {
         DateTester.testDatesAvailability(inRange, true);
         DateTester.testDatesAvailability(outOfRange, false);
     }
 
-    static assignSpecialDatesDescriptors(component: IgxCalendarComponent,
+    public static assignSpecialDatesDescriptors(component: IgxCalendarComponent,
         dateRangeDescriptors: DateRangeDescriptor[]) {
         component.specialDates = dateRangeDescriptors;
     }
 
-    static testSpecialDates(inRange: IgxDayItemComponent[],
+    public static testSpecialDates(inRange: IgxDayItemComponent[],
         outOfRange: IgxDayItemComponent[]) {
         DateTester.testDatesSpeciality(inRange, true);
         DateTester.testDatesSpeciality(outOfRange, false);

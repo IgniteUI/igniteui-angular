@@ -62,11 +62,11 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     /**
      * @hidden
      */
-    get selected(): boolean {
+    public get selected(): boolean {
         return this.comboAPI.is_item_selected(this.itemID);
     }
 
-    set selected(value: boolean) {
+    public set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -76,7 +76,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     /**
      * @hidden
      */
-    isVisible(direction: Navigate): boolean {
+    public isVisible(direction: Navigate): boolean {
         const rect = this.element.nativeElement.getBoundingClientRect();
         const parentDiv = this.element.nativeElement.parentElement.parentElement.getBoundingClientRect();
         if (direction === Navigate.Down) {
@@ -88,11 +88,11 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     /**
      * @inheritdoc
      */
-    clicked(event): void {
+    public clicked(event): void {
         this.comboAPI.disableTransitions = false;
         if (!this.isSelectable) {
- return;
-}
+            return;
+        }
         this.dropDown.navigateItem(this.index);
         this.comboAPI.set_selected_item(this.itemID, event);
     }
@@ -106,10 +106,10 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * switching focus to the input it's base on.
      * The toggle happens in an internal handler in the drop-down on the next task queue cycle.
      */
-    disableCheck(event: MouseEvent) {
+    public disableCheck(event: MouseEvent) {
         event.preventDefault();
     }
 
-    ngDoCheck() {
+    public ngDoCheck() {
     }
 }

@@ -137,11 +137,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * ```
      */
     @Input()
-    get monthsViewNumber() {
+    public get monthsViewNumber() {
         return this._monthsViewNumber;
     }
 
-    set monthsViewNumber(val: number) {
+    public set monthsViewNumber(val: number) {
         if (val < 1 ) {
             return;
         }
@@ -176,7 +176,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @internal
      */
     @HostBinding('class.igx-calendar--vertical')
-    get styleVerticalClass(): boolean {
+    public get styleVerticalClass(): boolean {
         return this.vertical;
     }
 
@@ -258,7 +258,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    get isYearView(): boolean {
+    public get isYearView(): boolean {
         return this.activeView === CalendarView.YEAR || this.activeView === IgxCalendarView.Year;
     }
 
@@ -271,7 +271,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * ```
      * @memberof IgxCalendarComponent
      */
-    get headerTemplate(): any {
+    public get headerTemplate(): any {
         if (this.headerTemplateDirective) {
             return this.headerTemplateDirective.template;
         }
@@ -287,7 +287,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * ```
      * @memberof IgxCalendarComponent
      */
-    set headerTemplate(directive: any) {
+    public set headerTemplate(directive: any) {
         this.headerTemplateDirective = directive;
     }
 
@@ -299,7 +299,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * let subheaderTemplate = this.calendar.subheaderTemplate;
      * ```
      */
-    get subheaderTemplate(): any {
+    public get subheaderTemplate(): any {
         if (this.subheaderTemplateDirective) {
             return this.subheaderTemplateDirective.template;
         }
@@ -315,7 +315,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * ```
      * @memberof IgxCalendarComponent
      */
-    set subheaderTemplate(directive: any) {
+    public set subheaderTemplate(directive: any) {
         this.subheaderTemplateDirective = directive;
     }
 
@@ -327,7 +327,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * let headerContext =  this.calendar.headerContext;
      * ```
      */
-    get headerContext() {
+    public get headerContext() {
         const date: Date = this.headerDate;
         return this.generateContext(date);
     }
@@ -341,7 +341,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * let context =  this.calendar.context;
      * ```
      */
-    get context() {
+    public get context() {
         const date: Date = this.viewDate;
         return this.generateContext(date);
     }
@@ -352,7 +352,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    get headerDate(): Date {
+    public get headerDate(): Date {
         return this.selectedDates ? this.selectedDates : new Date();
     }
 
@@ -420,7 +420,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
-        if (this.activeView !== CalendarView.DEFAULT) {
+        if (!this.isDefaultView) {
             return;
         }
 
@@ -500,7 +500,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public onKeydownShiftPageUp(event: KeyboardEvent) {
         event.preventDefault();
 
-        if (this.activeView !== CalendarView.DEFAULT) {
+        if (!this.isDefaultView) {
             return;
         }
 
