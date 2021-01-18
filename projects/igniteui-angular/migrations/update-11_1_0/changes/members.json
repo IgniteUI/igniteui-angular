@@ -2,6 +2,20 @@
     "$schema": "../../common/schema/members-changes.schema.json",
     "changes": [
         {
+            "member": "fontSet",
+            "replaceWith": "family",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
+            "member": "isActive",
+            "replaceWith": "active",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
             "member": "defaultFontSet",
             "replaceWith": "defaultFamily",
             "definedIn": [

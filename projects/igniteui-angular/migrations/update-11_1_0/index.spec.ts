@@ -128,4 +128,62 @@ export class IconTestComponent {
             )
         ).toEqual(expectedContent);
     });
+
+    it('should migrate updated members names', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/icon-test.component.ts',
+            `import { Component } from '@angular/core';
+            import { IgxIconService } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-icon-test',
+    templateUrl: './icon-test.component.html',
+    styleUrls: ['./icon-test.component.scss']
+})
+export class IconTestComponent {
+    constructor(private _iconService: IgxIconService) {
+        const font = this._iconService.defaultFontSet;
+        const className = this._iconService.fontSetClassName('material');
+        const alias = this._iconService.registerFontSetAlias('material', 'material-icons');
+    }
+}
+@NgModule({
+    declarations: [IconTestComponent],
+    exports: [IconTestComponent],
+    imports: [IgxIconModule]
+});
+`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent = `import { Component } from '@angular/core';
+        import { IgxIconService } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-icon-test',
+    templateUrl: './icon-test.component.html',
+    styleUrls: ['./icon-test.component.scss']
+})
+export class IconTestComponent {
+    constructor(private _iconService: IgxIconService) {
+        const font = this._iconService.defaultFamily;
+        const className = this._iconService.familyClassName('material');
+        const alias = this._iconService.registerFamilyAlias('material', 'material-icons');
+    }
+}
+@NgModule({
+    declarations: [IconTestComponent],
+    exports: [IconTestComponent],
+    imports: [IgxIconModule]
+});
+`;
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/icon-test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
 });
