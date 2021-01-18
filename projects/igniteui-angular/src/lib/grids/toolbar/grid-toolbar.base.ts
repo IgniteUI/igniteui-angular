@@ -88,7 +88,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     /** @hidden @internal */
     public toggle(anchorElement: HTMLElement, toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent): void {
         if (actions) {
-            this._setupListeners(toggleRef, actions);
+            this._setupListeners(toggleRef);
             const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
             toggleRef.onOpening.pipe(first()).subscribe(setHeight);
         }
@@ -102,11 +102,15 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         columnActions.querySelector('input')?.focus();
     }
 
-    private _setupListeners(toggleRef: IgxToggleDirective, actions?: IgxColumnActionsComponent) {
-        toggleRef.onOpening.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opening.emit(event));
-        toggleRef.onOpened.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opened.emit(event));
-        toggleRef.onClosing.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closing.emit(event));
-        toggleRef.onClosed.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closed.emit(event));
+    private _setupListeners(toggleRef: IgxToggleDirective) {
+        /** The if statement prevents emitting open and close events twice  */
+        if (toggleRef.collapsed) {
+            toggleRef.onOpening.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opening.emit(event));
+            toggleRef.onOpened.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opened.emit(event));
+        } else {
+            toggleRef.onClosing.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closing.emit(event));
+            toggleRef.onClosed.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.closed.emit(event));
+        }
     }
 }
 
