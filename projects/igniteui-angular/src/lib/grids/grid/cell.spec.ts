@@ -180,7 +180,7 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         });
 
-        it('should fit last cell in the available display container when there is vertical and horizontal scroll.', (async () => {
+        fit('should fit last cell in the available display container when there is vertical and horizontal scroll.', (async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             await wait();
