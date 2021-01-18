@@ -3469,8 +3469,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
+            this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
@@ -3490,7 +3490,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.paginatorSettings = { outlet: this.outlet };
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
-        vertScrDC.addEventListener('scroll', this.preventContainerScroll);
+        vertScrDC.addEventListener('scroll', this.preventContainerScroll.bind(this));
 
         this._pinnedRowList.changes
             .pipe(takeUntil(this.destroy$))
@@ -5658,7 +5658,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
         this.rowEditingOverlay.open(this.rowEditSettings);
-        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler);
+        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
     }
 
     /**
