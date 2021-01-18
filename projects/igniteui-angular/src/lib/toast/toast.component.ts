@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import {
     ChangeDetectorRef,
     Component,
@@ -299,6 +299,64 @@ export class IgxToastComponent extends IgxToggleDirective
         @Inject(IgxOverlayService) overlayService: IgxOverlayService
     ) {
         super(_element, cdr, overlayService, navService);
+    }
+
+    /**
+     * @deprecated
+     * Shows the toast.
+     * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
+     * ```typescript
+     * this.toast.show();
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
+    public show(message?: string): void {
+        clearInterval(this.timeoutId);
+
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy({
+                horizontalDirection: HorizontalAlignment.Center,
+                verticalDirection:
+                    this.position === 'bottom'
+                        ? VerticalAlignment.Bottom
+                        : this.position === 'middle'
+                        ? VerticalAlignment.Middle
+                        : VerticalAlignment.Top,
+            }),
+            closeOnEscape: false,
+            closeOnOutsideClick: false,
+            modal: false,
+            outlet: this.outlet,
+        };
+
+        if (message !== undefined) {
+            this.toastMessage = message;
+        }
+
+        this.onShowing.emit(this);
+        super.open(overlaySettings);
+
+        if (this.autoHide) {
+            this.timeoutId = window.setTimeout(() => {
+                this.hide();
+            }, this.displayTime);
+        }
+    }
+
+    /**
+     * @deprecated
+     * Hides the toast.
+     * ```typescript
+     * this.toast.hide();
+     * ```
+     * @memberof IgxToastComponent
+     */
+    @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
+    public hide(): void {
+        clearInterval(this.timeoutId);
+        this.onHiding.emit(this);
+        super.close();
     }
 
     /**

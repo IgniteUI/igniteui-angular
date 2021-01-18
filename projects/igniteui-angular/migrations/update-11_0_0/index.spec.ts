@@ -162,4 +162,12 @@ describe('Update to 11.0.0', () => {
         `.replace(stripWhitespaceRe, '')
         );
     });
+
+    it('should replace show() with open() in toast ts files', async () => {
+        pending('set up tests for migrations through lang service');
+    });
+
+    it('should replace hide() with close() in toast ts files', async () => {
+        pending('set up tests for migrations through lang service');
+    });
 });
