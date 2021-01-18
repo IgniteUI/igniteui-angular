@@ -5,7 +5,7 @@
     <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
 <button value="hide" (click)="hideColumn()">Hide selected column</button>
-<igx-grid #grid1 (cellEdit)="onCellEdit($event)" [filterMode]="'excelStyleFilter'" columnSelection="single" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true"
+<igx-grid #grid1 [filterMode]="'excelStyleFilter'" columnSelection="single" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true"
     [rowSelection]="selectionMode">
     <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" editable="true" [resizable]="true" [movable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>

@@ -3,7 +3,8 @@ import { IgxGridComponent, FilteringExpressionsTree,
     ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
-    IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs, IColumnVisibilityChangingEventArgs, IColumnResizingEventArgs, IPagingEventArgs } from 'igniteui-angular';
+    IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
+    IColumnVisibilityChangingEventArgs, IColumnResizingEventArgs, IPagingEventArgs } from 'igniteui-angular';
 import { data } from '../grid-cellEditing/data';
 
 @Component({

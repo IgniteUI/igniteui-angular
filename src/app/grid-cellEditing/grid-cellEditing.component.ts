@@ -5,7 +5,7 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, IGridEditEventArgs
+    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
