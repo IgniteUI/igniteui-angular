@@ -29,10 +29,10 @@
         <br>
         <h4 class="sample-title">Drag Handle:</h4>
         <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
-        <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280"
+        <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="320"
              igxDrag [ghost]="false" [dragTolerance]="0" [dragChannel]="'dialog'">
             <div class="igx-dialog__window">
-                <div class="login-form">
+                <div class="igx-dialog__window-content">
                     <div class="dialogHeader">
                         <span [style.margin.px]="10">Sign In</span>
                         <igx-icon igxDragHandle class="dialogHandle">control_camera</igx-icon>
