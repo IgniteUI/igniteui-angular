@@ -341,7 +341,7 @@ export class IgxToastComponent extends IgxToggleDirective
         }
     }
 
-/**
+    /**
      * Hides the toast.
      * ```typescript
      * this.toast.close();
