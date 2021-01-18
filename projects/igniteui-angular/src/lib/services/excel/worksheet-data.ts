@@ -1,4 +1,4 @@
-import { IGridExportRecord } from '../exporter-common/base-export-service';
+import { IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -11,12 +11,12 @@ export class WorksheetData {
     private _keys: string[];
     private _isSpecialData: boolean;
 
-    constructor(private _data: IGridExportRecord[], private _columnWidths: number[], public options: IgxExcelExporterOptions,
+    constructor(private _data: IExportRecord[], private _columnWidths: number[], public options: IgxExcelExporterOptions,
             public indexOfLastPinnedColumn: number, public sort: any) {
             this.initializeData();
     }
 
-    public get data(): IGridExportRecord[] {
+    public get data(): IExportRecord[] {
         return this._data;
     }
 

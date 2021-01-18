@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { IGridExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -71,7 +71,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: IGridExportRecord[], options: IgxExcelExporterOptions): void {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
         const level = data[0]['level'];
 
         if (typeof level !== 'undefined') {
