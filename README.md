@@ -187,7 +187,7 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 
 ## Demo Apps & Documentation
 
-###List of Angular Demo Apps
+### List of Angular Demo Apps
 - [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) - Demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
 
 - [FinTech Grid App]( https://github.com/Infragistics/angular-samples/tree/master/Grid/FinJS) - The Ignite UI for Angular Grid component is able to handle thousands of updates per second, while keeping the grid responsive for any interaction that the user may undertake. This sample demonstrates the Angular Grid handling thousands of updates per second.
