@@ -4506,8 +4506,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const inputText = column.formatter(filteredDate);
             const cellText = column.formatter(filteredDate);
             expect(cell.innerText).toMatch(cellText);
-            // TODO https://github.com/IgniteUI/igniteui-angular/issues/8697
-            // expect(datePickerInput.value).toMatch(inputText);
+            expect(datePickerInput.value).toMatch(inputText);
             expect(grid.filteredData.length).toEqual(1);
         }));
 

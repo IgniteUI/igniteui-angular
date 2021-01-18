@@ -372,8 +372,8 @@ export class IgxOverlayService implements OnDestroy {
      * this.overlay.hide(id);
      * ```
      */
-    hide(id: string) {
-        this._hide(id);
+    hide(id: string, event?: Event) {
+        this._hide(id, event);
     }
 
     /**
@@ -529,9 +529,9 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         if (info.settings.positionStrategy.settings.closeAnimation) {
-            this.playCloseAnimation(info);
+            this.playCloseAnimation(info, event);
         } else {
-            this.onCloseDone(info);
+            this.onCloseDone(info, event);
         }
     }
 
@@ -633,9 +633,9 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private onCloseDone(info: OverlayInfo) {
+    private onCloseDone(info: OverlayInfo, event?: Event) {
         this.cleanUp(info);
-        this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event: event});
     }
 
     private cleanUp(info: OverlayInfo) {
@@ -718,7 +718,7 @@ export class IgxOverlayService implements OnDestroy {
         info.openAnimationPlayer.play();
     }
 
-    private playCloseAnimation(info: OverlayInfo) {
+    private playCloseAnimation(info: OverlayInfo, ev?: Event) {
         if (!info.closeAnimationPlayer) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
             info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
@@ -739,7 +739,7 @@ export class IgxOverlayService implements OnDestroy {
                 if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
                     info.openAnimationPlayer.reset();
                 }
-                this.onCloseDone(info);
+                this.onCloseDone(info, ev);
             });
         }
 
@@ -896,10 +896,10 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings.closeOnEscape && !this._keyPressEventListener) {
             this._keyPressEventListener = fromEvent(this._document, 'keydown').pipe(
                 filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc')
-            ).subscribe(() => {
+            ).subscribe((ev) => {
                 const targetOverlay = this._overlayInfos[this._overlayInfos.length - 1];
                 if (targetOverlay.settings.closeOnEscape) {
-                    this.hide(targetOverlay.id);
+                    this.hide(targetOverlay.id, ev);
                 }
             });
         }
