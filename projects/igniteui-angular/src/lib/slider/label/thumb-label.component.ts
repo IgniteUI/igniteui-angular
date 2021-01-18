@@ -1,6 +1,9 @@
 import { Component, Input, TemplateRef, HostBinding, ElementRef } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-thumb-label',
     templateUrl: 'thumb-label.component.html'
