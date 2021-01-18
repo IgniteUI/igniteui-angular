@@ -52,7 +52,7 @@ describe('IgxToast', () => {
         spyOn(toast.onHiding, 'emit');
         toast.displayTime = 1000;
 
-        toast.show();
+        toast.open();
         tick(1000);
         expect(toast.onHiding.emit).toHaveBeenCalled();
     }));
@@ -62,20 +62,20 @@ describe('IgxToast', () => {
         toast.displayTime = 1000;
         toast.autoHide = false;
 
-        toast.show();
+        toast.open();
         tick(1000);
         expect(toast.onHiding.emit).not.toHaveBeenCalled();
     }));
 
     it('should emit onShowing when toast is shown', () => {
         spyOn(toast.onShowing, 'emit');
-        toast.show();
+        toast.open();
         expect(toast.onShowing.emit).toHaveBeenCalled();
     });
 
     it('should emit onHiding when toast is hidden', () => {
         spyOn(toast.onHiding, 'emit');
-        toast.hide();
+        toast.close();
         expect(toast.onHiding.emit).toHaveBeenCalled();
     });
 
@@ -118,7 +118,7 @@ describe('IgxToast', () => {
         toast.displayTime = 100;
         toast.autoHide = false;
 
-        toast.show('Custom Message');
+        toast.open('Custom Message');
         tick(100);
         fixture.detectChanges();
         expect(toast.isVisible).toBeTruthy();

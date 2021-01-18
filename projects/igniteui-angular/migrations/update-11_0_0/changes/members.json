@@ -1,0 +1,19 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "show",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "hide",
+            "replaceWith": "close",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        }
+    ]
+}
