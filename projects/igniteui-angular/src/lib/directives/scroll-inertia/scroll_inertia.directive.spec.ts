@@ -129,6 +129,55 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         expect (() => scrollInertiaDir.onWheel(evt)).not.toThrow();
     });
 
+
+    it('should change scroll left when shift + wheel is triggered' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        const evt =  {shiftKey: true, wheelDeltaY: -240, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
+    });
+
+    it('should be able to scroll to left/right when shift + wheel is triggered' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        let evt =  {shiftKey: true, wheelDeltaY: -240, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
+
+        evt =  {shiftKey: true, wheelDeltaY: 120, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(-1 * scrollInertiaDir.wheelStep);
+    });
+
+    it('should change scroll left when shift + wheel is called with with deltaY' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        const evt =  {shiftKey: true, deltaY: 1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
+    });
+
+    it('should be able to scroll to left/right when shift + wheel is called with with deltaY' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        let evt =  {shiftKey: true, deltaY: 1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
+
+        evt =  {shiftKey: true, deltaY: -1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(-1 * scrollInertiaDir.wheelStep);
+    });
+
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
     it('should change scroll top for related scrollbar on touch start/move/end', fakeAsync(() => {
         let evt = {
