@@ -28,12 +28,11 @@ export class IgxRowEditActionsDirective { }
 export class IgxRowEditTabStopDirective {
     private currentCellIndex: number;
 
-
-    constructor(public api: GridBaseAPIService<any>, public element: ElementRef) {}
-
-    get grid() {
+    public get grid() {
         return this.api.grid;
     }
+
+    constructor(public api: GridBaseAPIService<any>, public element: ElementRef) {}
 
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
