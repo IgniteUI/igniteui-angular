@@ -65,6 +65,71 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
+     * @hidden
+     */
+    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
+    public childLayoutList: QueryList<IgxRowIslandComponent>;
+
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
+    public allLayoutList: QueryList<IgxRowIslandComponent>;
+
+    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
+    public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+
+    @ViewChild('toolbarOutlet', { read: ViewContainerRef })
+    public toolbarOutlet: ViewContainerRef;
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
+    public templateOutlets: QueryList<any>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxChildGridRowComponent, { read: IgxChildGridRowComponent })
+    public hierarchicalRows: QueryList<IgxChildGridRowComponent>;
+
+    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
+    protected hierarchicalRecordTemplate: TemplateRef<any>;
+
+    @ViewChild('child_record_template', { read: TemplateRef, static: true })
+    protected childTemplate: TemplateRef<any>;
+
+    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
+    protected headerHierarchyExpander: ElementRef;
+
+    /**
+     * @hidden
+     */
+    public childLayoutKeys = [];
+
+    /**
+     * @hidden
+     */
+    public highlightedRowID = null;
+
+    /**
+     * @hidden
+     */
+    public updateOnRender = false;
+
+    /**
+     * @hidden
+     */
+    public parent = null;
+
+    private _data;
+    private _filteredData = null;
+    private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
+    private childGridTemplates: Map<any, any> = new Map();
+    private scrollTop = 0;
+    private scrollLeft = 0;
+
+    /**
      * Gets/Sets the value of the `id` attribute.
      *
      * @remarks
@@ -213,74 +278,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
-    public childLayoutList: QueryList<IgxRowIslandComponent>;
-
-    /**
-     * @hidden
-     */
-    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
-    public allLayoutList: QueryList<IgxRowIslandComponent>;
-
-    @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
-    public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
-
-    @ViewChild('toolbarOutlet', { read: ViewContainerRef })
-    public toolbarOutlet: ViewContainerRef;
-    /**
-     * @hidden
-     */
-    @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
-    public templateOutlets: QueryList<any>;
-
-    /**
-     * @hidden
-     */
-    @ViewChildren(IgxChildGridRowComponent, { read: IgxChildGridRowComponent })
-    public hierarchicalRows: QueryList<IgxChildGridRowComponent>;
-
-    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
-    protected hierarchicalRecordTemplate: TemplateRef<any>;
-
-    @ViewChild('child_record_template', { read: TemplateRef, static: true })
-    protected childTemplate: TemplateRef<any>;
-
-    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
-    protected headerHierarchyExpander: ElementRef;
-
-    /**
-     * @hidden
-     */
     public get hasExpandableChildren() {
         return !!this.childLayoutKeys.length;
     }
-
-    /**
-     * @hidden
-     */
-    public childLayoutKeys = [];
-
-    /**
-     * @hidden
-     */
-    public highlightedRowID = null;
-
-    /**
-     * @hidden
-     */
-    public updateOnRender = false;
-
-    /**
-     * @hidden
-     */
-    public parent = null;
-
-    private _data;
-    private _filteredData = null;
-    private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
-    private childGridTemplates: Map<any, any> = new Map();
-    private scrollTop = 0;
-    private scrollLeft = 0;
 
     /**
      * @hidden
