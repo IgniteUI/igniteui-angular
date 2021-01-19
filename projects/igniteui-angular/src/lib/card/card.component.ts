@@ -243,7 +243,7 @@ export class IgxCardComponent {
 
     /**
      * An @Input property that sets the value of the `type` attribute of the card.
-     * By default the value is set to `default`. You can make the card use the
+     * By default the value is set to `elevated`. You can make the card use the
      * outlined style by setting the value to `outlined`.
      *
      * @example
