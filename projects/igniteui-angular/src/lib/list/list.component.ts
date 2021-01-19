@@ -401,6 +401,8 @@ export class IgxListComponent extends IgxListBaseDirective {
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
+    private _resourceStrings = CurrentResourceStrings.ListResStrings;
+
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -416,8 +418,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     get resourceStrings(): IListResourceStrings {
         return this._resourceStrings;
     }
-
-    private _resourceStrings = CurrentResourceStrings.ListResStrings;
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {

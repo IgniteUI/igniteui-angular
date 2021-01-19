@@ -36,18 +36,187 @@ export interface IViewDateChangeEventArgs {
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
+     * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
+     * Default value is `false`.
+     * ```html
+     * <igx-calendar [hideOutsideDays] = "true"></igx-calendar>
+     * ```
+     * ```typescript
+     * let hideOutsideDays = this.calendar.hideOutsideDays;
+     * ```
+     */
+
+    @Input()
+    public hideOutsideDays = false;
+
+    /**
+     * Emits an event when a date is selected.
+     * Provides reference the `selectedDates` property.
+     */
+    @Output()
+    public onSelection = new EventEmitter<Date | Date[]>();
+
+    /**
+     * Emits an event when the month in view is changed.
+     * ```html
+     * <igx-calendar (viewDateChanged)="viewDateChanged($event)"></igx-calendar>
+     * ```
+     * ```typescript
+     * public viewDateChanged(event: IViewDateChangeEventArgs) {
+     *  let viewDate = event.currentValue;
+     * }
+     * ```
+     */
+    @Output()
+    public viewDateChanged = new EventEmitter<IViewDateChangeEventArgs>();
+
+    /**
+     * Emits an event when the active view is changed.
+     * ```html
+     * <igx-calendar (activeViewChanged)="activeViewChanged($event)"></igx-calendar>
+     * ```
+     * ```typescript
+     * public activeViewChanged(event: CalendarView) {
+     *  let activeView = event;
+     * }
+     * ```
+     */
+    @Output()
+    public activeViewChanged  = new EventEmitter<IgxCalendarView>();
+
+    /**
+     * @hidden
+     */
+    public rangeStarted = false;
+
+    /**
+     * @hidden
+     */
+    public monthScrollDirection = ScrollMonth.NONE;
+
+    /**
+     * @hidden
+     */
+    public scrollMonth$ = new Subject();
+
+    /**
+     * @hidden
+     */
+    public stopMonthScroll$ = new Subject<boolean>();
+
+    /**
+     * @hidden
+     */
+    public startMonthScroll$ = new Subject();
+
+    /**
+     * @hidden
+     */
+    public selectedDates;
+
+    /**
+     * @hidden
+     */
+    protected formatterWeekday;
+
+    /**
+     * @hidden
+     */
+    protected formatterDay;
+
+    /**
+     * @hidden
+     */
+    protected formatterMonth;
+
+    /**
+     * @hidden
+     */
+    protected formatterYear;
+
+    /**
+     * @hidden
+     */
+    protected formatterMonthday;
+
+    /**
+     * @hidden
+     */
+    protected calendarModel: Calendar;
+
+    /**
+     * @hidden
+     */
+    protected _onTouchedCallback: () => void = noop;
+    /**
+     * @hidden
+     */
+    protected _onChangeCallback: (_: Date) => void = noop;
+
+    /**
+     * @hidden
+     */
+    private selectedDatesWithoutFocus;
+
+    /**
+     * @hidden
+     */
+    private _locale = 'en';
+
+    /**
+     * @hidden
+     */
+    private _viewDate: Date;
+
+    /**
+     * @hidden
+     */
+    private _disabledDates: DateRangeDescriptor[];
+
+    /**
+     * @hidden
+     */
+    private _specialDates: DateRangeDescriptor[];
+
+    /**
+     * @hidden
+     */
+    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
+    /** @hidden @internal */
+    private _resourceStrings = CurrentResourceStrings.CalendarResStrings;
+
+    /**
+     * @hidden
+     */
+    private _formatOptions: IFormattingOptions = {
+        day: 'numeric',
+        month: 'short',
+        weekday: 'short',
+        year: 'numeric'
+    };
+
+    /**
+     * @hidden
+     */
+    private _formatViews: IFormattingViews = {
+        day: false,
+        month: true,
+        year: false
+    };
+
+    /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
      */
     @Input()
-    set resourceStrings(value: ICalendarResourceStrings) {
+    public set resourceStrings(value: ICalendarResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
-    get resourceStrings(): ICalendarResourceStrings {
+    public get resourceStrings(): ICalendarResourceStrings {
         if (!this._resourceStrings) {
             this._resourceStrings = CurrentResourceStrings.CalendarResStrings;
         }
@@ -260,175 +429,6 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;
     }
-
-    /**
-     * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
-     * Default value is `false`.
-     * ```html
-     * <igx-calendar [hideOutsideDays] = "true"></igx-calendar>
-     * ```
-     * ```typescript
-     * let hideOutsideDays = this.calendar.hideOutsideDays;
-     * ```
-     */
-
-    @Input()
-    public hideOutsideDays = false;
-
-    /**
-     * Emits an event when a date is selected.
-     * Provides reference the `selectedDates` property.
-     */
-    @Output()
-    public onSelection = new EventEmitter<Date | Date[]>();
-
-    /**
-     * Emits an event when the month in view is changed.
-     * ```html
-     * <igx-calendar (viewDateChanged)="viewDateChanged($event)"></igx-calendar>
-     * ```
-     * ```typescript
-     * public viewDateChanged(event: IViewDateChangeEventArgs) {
-     *  let viewDate = event.currentValue;
-     * }
-     * ```
-     */
-    @Output()
-    public viewDateChanged = new EventEmitter<IViewDateChangeEventArgs>();
-
-    /**
-     * Emits an event when the active view is changed.
-     * ```html
-     * <igx-calendar (activeViewChanged)="activeViewChanged($event)"></igx-calendar>
-     * ```
-     * ```typescript
-     * public activeViewChanged(event: CalendarView) {
-     *  let activeView = event;
-     * }
-     * ```
-     */
-    @Output()
-    public activeViewChanged  = new EventEmitter<IgxCalendarView>();
-
-    /**
-     * @hidden
-     */
-    public rangeStarted = false;
-
-    /**
-     * @hidden
-     */
-    public monthScrollDirection = ScrollMonth.NONE;
-
-    /**
-     * @hidden
-     */
-    public scrollMonth$ = new Subject();
-
-    /**
-     * @hidden
-     */
-    public stopMonthScroll$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-    public startMonthScroll$ = new Subject();
-
-    /**
-     * @hidden
-     */
-    public selectedDates;
-
-    /**
-     * @hidden
-     */
-    protected formatterWeekday;
-
-    /**
-     * @hidden
-     */
-    protected formatterDay;
-
-    /**
-     * @hidden
-     */
-    protected formatterMonth;
-
-    /**
-     * @hidden
-     */
-    protected formatterYear;
-
-    /**
-     * @hidden
-     */
-    protected formatterMonthday;
-
-    /**
-     * @hidden
-     */
-    protected calendarModel: Calendar;
-
-    /**
-     * @hidden
-     */
-    protected _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     */
-    protected _onChangeCallback: (_: Date) => void = noop;
-
-    /**
-     * @hidden
-     */
-    private selectedDatesWithoutFocus;
-
-    /**
-     * @hidden
-     */
-    private _locale = 'en';
-
-    /**
-     * @hidden
-     */
-    private _viewDate: Date;
-
-    /**
-     * @hidden
-     */
-    private _disabledDates: DateRangeDescriptor[];
-
-    /**
-     * @hidden
-     */
-    private _specialDates: DateRangeDescriptor[];
-
-    /**
-     * @hidden
-     */
-    private _selection: CalendarSelection | string = CalendarSelection.SINGLE;
-    /** @hidden @internal */
-    private _resourceStrings;
-
-    /**
-     * @hidden
-     */
-    private _formatOptions: IFormattingOptions = {
-        day: 'numeric',
-        month: 'short',
-        weekday: 'short',
-        year: 'numeric'
-    };
-
-    /**
-     * @hidden
-     */
-    private _formatViews: IFormattingViews = {
-        day: false,
-        month: true,
-        year: false
-    };
 
     /**
      * @hidden

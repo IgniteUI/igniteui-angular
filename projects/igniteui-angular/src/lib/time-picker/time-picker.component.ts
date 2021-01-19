@@ -119,56 +119,6 @@ export class IgxTimePickerComponent implements
     public id = `igx-time-picker-${NEXT_ID++}`;
 
     /**
-     * An accessor that allows you to set a time using the `value` input.
-     * ```html
-     * public date: Date = new Date(Date.now());
-     *  //...
-     * <igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public set value(value: Date) {
-        if (this._isValueValid(value)) {
-            const oldVal = this._value;
-
-            this._value = value;
-            this._onChangeCallback(value);
-
-            const dispVal = this._formatTime(this.value, this.format);
-            if (this.mode === InteractionMode.DropDown && this._displayValue !== dispVal) {
-                this.displayValue = dispVal;
-            }
-
-            const args: IgxTimePickerValueChangedEventArgs = {
-                oldValue: oldVal,
-                newValue: value
-            };
-            this.onValueChanged.emit(args);
-        } else {
-            const args: IgxTimePickerValidationFailedEventArgs = {
-                timePicker: this,
-                currentValue: value,
-                setThroughUI: false
-            };
-            this.onValidationFailed.emit(args);
-        }
-    }
-
-    /**
-     * An accessor that returns the value of `igx-time-picker` component.
-     * ```html
-     * @ViewChild("MyPick")
-     * public pick: IgxTimePickerComponent;
-     * ngAfterViewInit(){
-     *    let pickSelect = this.pick.value;
-     * }
-     * ```
-     */
-    public get value(): Date {
-        return this._value;
-    }
-
-    /**
      * An @Input property that allows you to disable the `igx-time-picker` component. By default `disabled` is set to false.
      * ```html
      * <igx-time-picker [disabled]="'true'" [vertical]="true" format="h:mm tt" ></igx-time-picker>
@@ -176,82 +126,6 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     public disabled = false;
-
-    /**
-     * An accessor that sets the resource strings.
-     * By default it uses EN resources.
-     */
-    @Input()
-    public set resourceStrings(value: ITimePickerResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    /**
-     * An accessor that returns the resource strings.
-     */
-    public get resourceStrings(): ITimePickerResourceStrings {
-        return this._resourceStrings;
-    }
-
-    /**
-     * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
-     * ```html
-     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public set okButtonLabel(value: string) {
-        this._okButtonLabel = value;
-    }
-
-    /**
-     * An accessor that returns the label of ok button.
-     */
-    public get okButtonLabel(): string {
-        if (this._okButtonLabel === null) {
-            return this.resourceStrings.igx_time_picker_ok;
-        }
-        return this._okButtonLabel;
-    }
-
-    /**
-     * An @Input property that renders cancel button with custom text.
-     * By default `cancelButtonLabel` is set to Cancel.
-     * ```html
-     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public set cancelButtonLabel(value: string) {
-        this._cancelButtonLabel = value;
-    }
-
-    /**
-     * An accessor that returns the label of cancel button.
-     */
-    public get cancelButtonLabel(): string {
-        if (this._cancelButtonLabel === null) {
-            return this.resourceStrings.igx_time_picker_cancel;
-        }
-        return this._cancelButtonLabel;
-    }
-
-    /**
-     * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
-     * when the user presses the Up/Down keys.
-     * By default `itemsDelta` is set to `{hours: 1, minutes: 1, seconds: 1}`
-     * ```html
-     * <igx-time-picker [itemsDelta]="{hours:3, minutes:5, seconds:10}" id="time-picker"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public set itemsDelta(value) {
-        this._itemsDelta = { hours: 1, minutes: 1, seconds: 1, ...value };
-    }
-
-    public get itemsDelta(): { hours: number; minutes: number; seconds: number } {
-        return this._itemsDelta;
-    }
 
     /**
      * An @Input property that allows you to set the `minValue` to limit the user input.
@@ -295,47 +169,6 @@ export class IgxTimePickerComponent implements
     public vertical = false;
 
     /**
-     * An @Input property that Gets/Sets format of time while `igxTimePicker` does not have focus. <br>
-     * By default `format` is set to hh:mm tt. <br>
-     * List of time-flags: <br>
-     * `h` : hours field in 12-hours format without leading zero <br>
-     * `hh` : hours field in 12-hours format with leading zero <br>
-     * `H` : hours field in 24-hours format without leading zero <br>
-     * `HH` : hours field in 24-hours format with leading zero <br>
-     * `m` : minutes field without leading zero <br>
-     * `mm` : minutes field with leading zero <br>
-     * `s` : seconds field without leading zero <br>
-     * `ss` : seconds field with leading zero <br>
-     * `tt` : 2 character string which represents AM/PM field <br>
-     * ```html
-     * <igx-time-picker format="HH:m" id="time-picker"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public get format() {
-        return this._format || 'hh:mm tt';
-    }
-
-    public set format(formatValue: string) {
-        this._format = formatValue;
-        this.mask = this._format.indexOf('tt') !== -1 ? '00:00:00 LL' : '00:00:00';
-
-        if (!this.showHoursList || !this.showMinutesList) {
-            this.trimMask();
-        }
-
-        if (!this.showSecondsList) {
-            this.trimMask();
-        }
-
-        if (this.displayValue) {
-            this.displayValue = this._formatTime(this.value, this._format);
-        }
-
-        this.determineCursorPos();
-    }
-
-    /**
      * Sets the character used to prompt the user for input.
      * Default value is "'-'".
      * ```html
@@ -375,31 +208,6 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
-
-    /**
-     * An @Input property that allows you to modify overlay positioning, interaction and scroll behavior.
-     * ```typescript
-     * const settings: OverlaySettings = {
-     *      closeOnOutsideClick: true,
-     *      modal: false
-     *  }
-     * ```
-     * ---
-     * ```html
-     * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
-     * ```
-     *
-     * @memberof IgxTimePickerComponent
-     */
-    @Input()
-    public set overlaySettings(value: OverlaySettings) {
-        this._overlaySettings = value;
-    }
-
-    public get overlaySettings(): OverlaySettings {
-        return this._overlaySettings ? this._overlaySettings :
-            (this.mode === InteractionMode.Dialog ? this._dialogOverlaySettings : this._dropDownOverlaySettings);
-    }
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
@@ -812,6 +620,173 @@ export class IgxTimePickerComponent implements
 
     private _onChangeCallback: (_: Date) => void = noop;
     private _onTouchedCallback: () => void = noop;
+
+    /**
+     * An accessor that allows you to set a time using the `value` input.
+     * ```html
+     * public date: Date = new Date(Date.now());
+     *  //...
+     * <igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public set value(value: Date) {
+        if (this._isValueValid(value)) {
+            const oldVal = this._value;
+
+            this._value = value;
+            this._onChangeCallback(value);
+
+            const dispVal = this._formatTime(this.value, this.format);
+            if (this.mode === InteractionMode.DropDown && this._displayValue !== dispVal) {
+                this.displayValue = dispVal;
+            }
+
+            const args: IgxTimePickerValueChangedEventArgs = {
+                oldValue: oldVal,
+                newValue: value
+            };
+            this.onValueChanged.emit(args);
+        } else {
+            const args: IgxTimePickerValidationFailedEventArgs = {
+                timePicker: this,
+                currentValue: value,
+                setThroughUI: false
+            };
+            this.onValidationFailed.emit(args);
+        }
+    }
+
+    /**
+     * An accessor that returns the value of `igx-time-picker` component.
+     * ```html
+     * @ViewChild("MyPick")
+     * public pick: IgxTimePickerComponent;
+     * ngAfterViewInit(){
+     *    let pickSelect = this.pick.value;
+     * }
+     * ```
+     */
+    public get value(): Date {
+        return this._value;
+    }
+
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: ITimePickerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): ITimePickerResourceStrings {
+        return this._resourceStrings;
+    }
+
+    /**
+     * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
+     * ```html
+     * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public set okButtonLabel(value: string) {
+        this._okButtonLabel = value;
+    }
+
+    /**
+     * An accessor that returns the label of ok button.
+     */
+    public get okButtonLabel(): string {
+        if (this._okButtonLabel === null) {
+            return this.resourceStrings.igx_time_picker_ok;
+        }
+        return this._okButtonLabel;
+    }
+
+    /**
+     * An @Input property that renders cancel button with custom text.
+     * By default `cancelButtonLabel` is set to Cancel.
+     * ```html
+     * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public set cancelButtonLabel(value: string) {
+        this._cancelButtonLabel = value;
+    }
+
+    /**
+     * An accessor that returns the label of cancel button.
+     */
+    public get cancelButtonLabel(): string {
+        if (this._cancelButtonLabel === null) {
+            return this.resourceStrings.igx_time_picker_cancel;
+        }
+        return this._cancelButtonLabel;
+    }
+
+    /**
+     * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
+     * when the user presses the Up/Down keys.
+     * By default `itemsDelta` is set to `{hours: 1, minutes: 1, seconds: 1}`
+     * ```html
+     * <igx-time-picker [itemsDelta]="{hours:3, minutes:5, seconds:10}" id="time-picker"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public set itemsDelta(value) {
+        this._itemsDelta = { hours: 1, minutes: 1, seconds: 1, ...value };
+    }
+
+    public get itemsDelta(): { hours: number; minutes: number; seconds: number } {
+        return this._itemsDelta;
+    }
+
+    /**
+     * An @Input property that Gets/Sets format of time while `igxTimePicker` does not have focus. <br>
+     * By default `format` is set to hh:mm tt. <br>
+     * List of time-flags: <br>
+     * `h` : hours field in 12-hours format without leading zero <br>
+     * `hh` : hours field in 12-hours format with leading zero <br>
+     * `H` : hours field in 24-hours format without leading zero <br>
+     * `HH` : hours field in 24-hours format with leading zero <br>
+     * `m` : minutes field without leading zero <br>
+     * `mm` : minutes field with leading zero <br>
+     * `s` : seconds field without leading zero <br>
+     * `ss` : seconds field with leading zero <br>
+     * `tt` : 2 character string which represents AM/PM field <br>
+     * ```html
+     * <igx-time-picker format="HH:m" id="time-picker"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public get format() {
+        return this._format || 'hh:mm tt';
+    }
+
+    public set format(formatValue: string) {
+        this._format = formatValue;
+        this.mask = this._format.indexOf('tt') !== -1 ? '00:00:00 LL' : '00:00:00';
+
+        if (!this.showHoursList || !this.showMinutesList) {
+            this.trimMask();
+        }
+
+        if (!this.showSecondsList) {
+            this.trimMask();
+        }
+
+        if (this.displayValue) {
+            this.displayValue = this._formatTime(this.value, this._format);
+        }
+
+        this.determineCursorPos();
+    }
 
     constructor(
         private _injector: Injector,

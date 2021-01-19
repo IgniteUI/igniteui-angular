@@ -5051,9 +5051,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return false;
         }
         const isScrollable = this.verticalScrollContainer ? this.verticalScrollContainer.isScrollable() : false;
-        return !!(this.calcWidth && this.dataView &&
-            this.dataView.length > 0 &&
-            isScrollable);
+        return !!(this.calcWidth && this.dataView && this.dataView.length > 0 && isScrollable);
     }
 
     /**
