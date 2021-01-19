@@ -298,8 +298,9 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     /**
      * @hidden
      */
-    public _inputClicked(event: MouseEvent) {
+    public _clicked(event: MouseEvent) {
         event.stopPropagation();
+        this.select();
     }
 
     constructor(private cdr: ChangeDetectorRef) { }
@@ -311,7 +312,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxRadioComponent
      */
-    @HostListener('click')
     public select() {
         if (isIE()) {
             this.nativeRadio.nativeElement.blur();
