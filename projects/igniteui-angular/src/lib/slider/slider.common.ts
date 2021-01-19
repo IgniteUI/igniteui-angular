@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 
 /**
  * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}
@@ -53,36 +53,40 @@ export interface ISliderValueChangeEventArgs {
     value: number | IRangeSliderValue;
 }
 
-export enum IgxSliderType {
+export const IgxSliderType = mkenum({
     /**
      * Slider with single thumb.
      */
-    SLIDER,
+    SLIDER: 'slider',
     /**
      *  Range slider with multiple thumbs, that can mark the range.
      */
-    RANGE
-}
+    RANGE: 'range'
+});
+export type IgxSliderType = (typeof IgxSliderType)[keyof typeof IgxSliderType];
 
-export enum SliderHandle {
-    FROM,
-    TO
-}
+export const SliderHandle = mkenum({
+    FROM: 'from',
+    TO: 'to'
+});
+export type SliderHandle = (typeof SliderHandle)[keyof typeof SliderHandle];
 
 /**
  * Slider Tick labels Orientation
  */
-export enum TickLabelsOrientation {
-    Horizontal,
-    TopToBottom,
-    BottomToTop
-}
+export const TickLabelsOrientation = mkenum({
+    Horizontal: 'horizontal',
+    TopToBottom: 'toptobottom',
+    BottomToTop: 'bottomtotop'
+});
+export type TickLabelsOrientation = (typeof TickLabelsOrientation)[keyof typeof TickLabelsOrientation];
 
 /**
  * Slider Ticks orientation
  */
-export enum TicksOrientation {
-    Top,
-    Bottom,
-    Mirror
-}
+export const TicksOrientation = mkenum({
+    Top: 'top',
+    Bottom: 'bottom',
+    Mirror: 'mirror'
+});
+export type TicksOrientation = (typeof TicksOrientation)[keyof typeof TicksOrientation];
