@@ -9,7 +9,7 @@
     [attr.aria-checked]="checked"
     [attr.aria-labelledby]="ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
-    (click)="_inputClicked($event)"
+    (click)="_clicked($event)"
     (focus)="onFocus()"
     (blur)="onBlur()" />
 
@@ -23,6 +23,7 @@
 </label>
 
 <span #placeholderLabel
+    (click)="_clicked($event)"
     [id]="labelId"
     [class]="labelClass">
     <ng-content></ng-content>
