@@ -670,7 +670,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
             );
             fix.detectChanges();
-            let grid = fix.componentInstance.grid;
+            const grid = fix.componentInstance.grid;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.headerContainer.getScroll().scrollLeft;
 
@@ -703,11 +703,11 @@ describe('IgxGrid Component Tests #grid', () => {
                 { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
             );
             fix.detectChanges();
-            let grid = fix.componentInstance.grid;
+            const grid = fix.componentInstance.grid;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.rowList.first.virtDirRow.getScroll().scrollLeft;
 
-            let cell = grid.getCellByColumn(3, 'value');
+            const cell = grid.getCellByColumn(3, 'value');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
