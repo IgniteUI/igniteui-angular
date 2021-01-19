@@ -69,10 +69,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                 const { startTag, file, node } = offset;
                 const binding = getTemplateBinding(node);
                 const { name, value } = getAttribute(node, prop)[0];
-                const text = `\n<igx-grid-toolbar [grid]="${binding}"
-                                                *igxGridToolbar="let ${binding}"${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>
-                                    ${moveTemplateIfAny(node)}
-                                </igx-grid-toolbar>\n`;
+                // eslint-disable-next-line max-len
+                const text = `\n<igx-grid-toolbar [grid]="${binding}" *igxGridToolbar="let ${binding}"${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node)}</igx-grid-toolbar>\n`;
                 addChange(file.url, new FileChange(startTag.end, text));
             });
     }
@@ -107,9 +105,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             .forEach(offset => {
                 const { startTag, file, node } = offset;
                 const { name, value } = getAttribute(node, prop)[0];
-                const text = `\n<igx-grid-toolbar${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>
-                                    ${moveTemplateIfAny(node)}
-                                </igx-grid-toolbar>\n`;
+                // eslint-disable-next-line max-len
+                const text = `\n<igx-grid-toolbar${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node)}</igx-grid-toolbar>\n`;
                 addChange(file.url, new FileChange(startTag.end, text));
             });
     }
