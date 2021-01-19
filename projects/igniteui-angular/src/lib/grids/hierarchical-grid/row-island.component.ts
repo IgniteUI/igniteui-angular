@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import {
     AfterContentInit,
     AfterViewInit,
@@ -60,7 +61,7 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
         IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
-    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+    implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -260,7 +261,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    ngOnInit() {
+    public ngOnInit() {
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
@@ -269,7 +270,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         this.updateChildren();
         this.children.notifyOnChanges();
         this.children.changes.pipe(takeUntil(this.destroy$))
@@ -310,7 +311,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.rowIslandAPI.register(this);
         if (this.parentIsland) {
             this.parentIsland.rowIslandAPI.registerChildRowIsland(this);
@@ -329,7 +330,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    ngOnChanges(changes) {
+    public ngOnChanges(changes) {
         this.onLayoutChange.emit(changes);
         if (!this.isInit) {
             this.initialChanges.push(changes);
@@ -339,7 +340,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         // Override the base destroy because we don't have rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
@@ -356,15 +357,22 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             this.cleanGridState(this.rootGrid);
         }
     }
-    /**
-     * @hidden
-     */
-    reflow() { }
 
     /**
      * @hidden
      */
-    calculateGridHeight() { }
+    public ngDoCheck() {
+    }
+
+    /**
+     * @hidden
+     */
+    public reflow() { }
+
+    /**
+     * @hidden
+     */
+    public calculateGridHeight() { }
 
     protected updateColumnList() {
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
@@ -410,5 +418,4 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         grid.childGridTemplates.clear();
         grid.onRowIslandChange();
     }
-
 }

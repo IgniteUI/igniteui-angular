@@ -576,8 +576,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         hierarchicalGrid.columnList.forEach((c) => {
             if (c.field !== hierarchicalGrid.primaryKey) {
                 c.editable = true;
-}
-});
+            }
+        });
         fixture.detectChanges();
 
         hierarchicalGrid.rowEditable = true;
@@ -614,8 +614,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         hierarchicalGrid.columnList.forEach((c) => {
             if (c.field !== hierarchicalGrid.primaryKey) {
                 c.editable = true;
-}
-});
+            }
+        });
         fixture.detectChanges();
         hierarchicalGrid.rowEditable = true;
         await wait(50);
