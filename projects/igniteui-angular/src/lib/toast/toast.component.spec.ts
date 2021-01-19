@@ -82,20 +82,14 @@ describe('IgxToast', () => {
     it('should emit onShown when toggle onOpened is fired', () => {
         spyOn(toast.onShown, 'emit');
         toast.open();
-
-        toast.onOpened.subscribe(() => {
-            expect(toast.onShown.emit).toHaveBeenCalled();
-        });
+        expect(toast.onShown.emit).toHaveBeenCalled();
     });
 
     it('should emit onHidden when toggle onClosed is fired', () => {
         spyOn(toast.onHidden, 'emit');
         toast.isVisible = true;
         toast.close();
-
-        toast.onClosed.subscribe(() => {
-            expect(toast.onHidden.emit).toHaveBeenCalled();
-        });
+        expect(toast.onHidden.emit).toHaveBeenCalled();
     });
 
     it('visibility is updated by the toggle() method', () => {
@@ -104,14 +98,10 @@ describe('IgxToast', () => {
         toast.autoHide = false;
 
         toast.toggle();
-        toast.onOpened.subscribe(() => {
-            expect(toast.onShown.emit).toHaveBeenCalled();
-        });
+        expect(toast.onShown.emit).toHaveBeenCalled();
 
         toast.toggle();
-        toast.onClosed.subscribe(() => {
-            expect(toast.onHidden.emit).toHaveBeenCalled();
-        });
+        expect(toast.onHidden.emit).toHaveBeenCalled();
     });
 
     it('can set message through show method', fakeAsync(() => {
@@ -137,16 +127,12 @@ describe('IgxToast', () => {
         toastFixture.componentInstance.model = true;
         toastFixture.detectChanges();
 
-        component.onOpened.subscribe(() => {
-            expect(toast.onShown.emit).toHaveBeenCalled();
-        });
+        expect(component.onShown.emit).toHaveBeenCalled();
 
         toastFixture.componentInstance.model = false;
         toastFixture.detectChanges();
 
-        component.onClosed.subscribe(() => {
-            expect(toast.onHidden.emit).toHaveBeenCalled();
-        });
+        expect(component.onHidden.emit).toHaveBeenCalled();
     });
 });
 
