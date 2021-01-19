@@ -724,7 +724,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
-            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(2 *(initialHorScroll + 50));
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(2 * (initialHorScroll + 50));
         }));
     });
 
