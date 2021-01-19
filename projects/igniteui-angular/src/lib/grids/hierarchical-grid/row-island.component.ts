@@ -141,8 +141,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public rootGrid = null;
-    readonly data: any[];
-    readonly filteredData: any[];
+    public readonly data: any[];
+    public readonly filteredData: any[];
 
     private ri_columnListDiffer;
     private layout_id = `igx-row-island-`;
@@ -161,7 +161,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     @Input()
-    set expandChildren(value: boolean) {
+    public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {
             if (document.body.contains(grid.nativeElement)) {
@@ -183,14 +183,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      *
      * @memberof IgxRowIslandComponent
      */
-    get expandChildren(): boolean {
+    public get expandChildren(): boolean {
         return this._defaultExpandState;
     }
 
     /**
      * @hidden
      */
-    get id() {
+    public get id() {
         const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';
         return this.layout_id + pId + this.key;
     }
@@ -198,14 +198,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    get parentId() {
+    public get parentId() {
         return this.parentIsland ? this.parentIsland.id : null;
     }
 
     /**
      * @hidden
      */
-    get level() {
+    public get level() {
         let ptr = this.parentIsland;
         let lvl = 0;
         while (ptr) {
@@ -274,7 +274,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.updateChildren();
         this.children.notifyOnChanges();
         this.children.changes.pipe(takeUntil(this.destroy$))
-            .subscribe((change) => {
+            .subscribe(() => {
                 this.updateChildren();
                 // update existing grids since their child ri have been changed.
                 this.getGridsForIsland(this.key).forEach(grid => {

@@ -788,6 +788,30 @@ export class IgxTimePickerComponent implements
         this.determineCursorPos();
     }
 
+    /**
+     * An @Input property that allows you to modify overlay positioning, interaction and scroll behavior.
+     * ```typescript
+     * const settings: OverlaySettings = {
+     *      closeOnOutsideClick: true,
+     *      modal: false
+     *  }
+     * ```
+     * ---
+     * ```html
+     * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
+     * ```
+     * @memberof IgxTimePickerComponent
+     */
+    @Input()
+    public set overlaySettings(value: OverlaySettings) {
+        this._overlaySettings = value;
+    }
+
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings ? this._overlaySettings :
+            (this.mode === InteractionMode.Dialog ? this._dialogOverlaySettings : this._dropDownOverlaySettings);
+    }
+
     constructor(
         private _injector: Injector,
         private _cdr: ChangeDetectorRef) { }
