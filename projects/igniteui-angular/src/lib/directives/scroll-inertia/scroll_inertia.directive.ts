@@ -151,7 +151,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 evt.preventDefault();
             }
         } else if (evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'horizontal') {
-            const step = this._startY + scrollDeltaY * scrollStep;
+            const step = this._startX + scrollDeltaY * scrollStep;
             this._scrollToX(step);
         } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
             this._scrollToY(
