@@ -151,7 +151,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
-        expect(scrollContainerMock.scrollLeft).toEqual(-1 * scrollInertiaDir.wheelStep);
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
     });
 
     it('should change scroll left when shift + wheel is called with with deltaY' , () => {
@@ -175,7 +175,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         scrollInertiaDir.onWheel(evt);
 
         expect(scrollContainerMock.scrollTop).toEqual(0);
-        expect(scrollContainerMock.scrollLeft).toEqual(-1 * scrollInertiaDir.wheelStep);
+        expect(scrollContainerMock.scrollLeft).toEqual(0);
     });
 
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
