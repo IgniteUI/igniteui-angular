@@ -800,6 +800,7 @@ export class IgxTimePickerComponent implements
      * ```html
      * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
      * ```
+     *
      * @memberof IgxTimePickerComponent
      */
     @Input()
