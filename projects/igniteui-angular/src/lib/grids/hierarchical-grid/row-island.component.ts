@@ -77,45 +77,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public key: string;
 
     /**
-     * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
-     * ```html
-     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
-     *          <!-- ... -->
-     *      </igx-row-island>
-     * </igx-hierarchical-grid>
-     * ```
-     *
-     * @memberof IgxRowIslandComponent
-     */
-    @Input()
-    set expandChildren(value: boolean) {
-        this._defaultExpandState = value;
-        this.rowIslandAPI.getChildGrids().forEach((grid) => {
-            if (document.body.contains(grid.nativeElement)) {
-                // Detect changes right away if the grid is visible
-                grid.expandChildren = value;
-                grid.markForCheck();
-            } else {
-                // Else defer the detection on changes when the grid gets into view for performance.
-                grid.updateOnRender = true;
-            }
-        });
-    }
-
-    /**
-     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
-     * ```typescript
-     * const expanded = this.rowIsland.expandChildren;
-     * ```
-     *
-     * @memberof IgxRowIslandComponent
-     */
-    get expandChildren(): boolean {
-        return this._defaultExpandState;
-    }
-
-    /**
      * @hidden
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
@@ -173,6 +134,61 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
+    public initialChanges = [];
+
+    /**
+     * @hidden
+     */
+    public rootGrid = null;
+    readonly data: any[];
+    readonly filteredData: any[];
+
+    private ri_columnListDiffer;
+    private layout_id = `igx-row-island-`;
+    private isInit = false;
+
+    /**
+     * Sets if all immediate children of the grids for this `IgxRowIslandComponent` should be expanded/collapsed.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
+     *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
+     *          <!-- ... -->
+     *      </igx-row-island>
+     * </igx-hierarchical-grid>
+     * ```
+     *
+     * @memberof IgxRowIslandComponent
+     */
+    @Input()
+    set expandChildren(value: boolean) {
+        this._defaultExpandState = value;
+        this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            if (document.body.contains(grid.nativeElement)) {
+                // Detect changes right away if the grid is visible
+                grid.expandChildren = value;
+                grid.markForCheck();
+            } else {
+                // Else defer the detection on changes when the grid gets into view for performance.
+                grid.updateOnRender = true;
+            }
+        });
+    }
+
+    /**
+     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
+     * ```typescript
+     * const expanded = this.rowIsland.expandChildren;
+     * ```
+     *
+     * @memberof IgxRowIslandComponent
+     */
+    get expandChildren(): boolean {
+        return this._defaultExpandState;
+    }
+
+    /**
+     * @hidden
+     */
     get id() {
         const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';
         return this.layout_id + pId + this.key;
@@ -197,22 +213,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         }
         return lvl + 1;
     }
-
-    /**
-     * @hidden
-     */
-    public initialChanges = [];
-
-    /**
-     * @hidden
-     */
-    public rootGrid = null;
-    readonly data: any[];
-    readonly filteredData: any[];
-
-    private ri_columnListDiffer;
-    private layout_id = `igx-row-island-`;
-    private isInit = false;
 
     constructor(
         public selectionService: IgxGridSelectionService,
