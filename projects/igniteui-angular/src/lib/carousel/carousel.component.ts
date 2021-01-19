@@ -188,33 +188,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @Input() public pause = true;
 
     /**
-     * Returns the time `interval` in milliseconds before the slide changes.
-     * ```typescript
-     * let timeInterval = this.carousel.interval;
-     * ```
-     *
-     * @memberof IgxCarouselComponent
-     */
-    @Input()
-    get interval(): number {
-        return this._interval;
-    }
-
-    /**
-     * Sets the time `interval` in milliseconds before the slide changes.
-     * If not set, the carousel will not change `slides` automatically.
-     * ```html
-     * <igx-carousel [interval] = "1000"></igx-carousel>
-     * ```
-     *
-     * @memberof IgxCarouselComponent
-     */
-    set interval(value: number) {
-        this._interval = +value;
-        this.restartInterval();
-    }
-
-    /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
      * Default value is `true`.
      * ```html
@@ -281,22 +254,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxSlideComponent
      */
     @Input() public animationType = CarouselAnimationType.slide;
-
-    /**
-     * An accessor that sets the resource strings.
-     * By default it uses EN resources.
-     */
-    @Input()
-    set resourceStrings(value: ICarouselResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    /**
-     * An accessor that returns the resource strings.
-     */
-    get resourceStrings(): ICarouselResourceStrings {
-        return this._resourceStrings;
-    }
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -441,6 +398,39 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    private _interval: number;
+    private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
+    private lastInterval: any;
+    private playing: boolean;
+    private stoppedByInteraction: boolean;
+    private destroyed: boolean;
+    private destroy$ = new Subject<any>();
+    private differ: IterableDiffer<IgxSlideComponent> | null = null;
+    private enterAnimationPlayer?: AnimationPlayer;
+    private leaveAnimationPlayer?: AnimationPlayer;
+    private currentSlide: IgxSlideComponent;
+    private previousSlide: IgxSlideComponent;
+    private animationDuration = 320;
+    private incomingSlide: IgxSlideComponent;
+    private animationPosition = 0;
+    private newDuration = 0;
+
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    set resourceStrings(value: ICarouselResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    get resourceStrings(): ICarouselResourceStrings {
+        return this._resourceStrings;
+    }
+
     /** @hidden */
     public get getIndicatorTemplate(): TemplateRef<any> {
         if (this.indicatorTemplate) {
@@ -544,22 +534,32 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         return this.element.nativeElement;
     }
 
-    private _interval: number;
-    private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
-    private lastInterval: any;
-    private playing: boolean;
-    private stoppedByInteraction: boolean;
-    private destroyed: boolean;
-    private destroy$ = new Subject<any>();
-    private differ: IterableDiffer<IgxSlideComponent> | null = null;
-    private enterAnimationPlayer?: AnimationPlayer;
-    private leaveAnimationPlayer?: AnimationPlayer;
-    private currentSlide: IgxSlideComponent;
-    private previousSlide: IgxSlideComponent;
-    private animationDuration = 320;
-    private incomingSlide: IgxSlideComponent;
-    private animationPosition = 0;
-    private newDuration = 0;
+    /**
+     * Returns the time `interval` in milliseconds before the slide changes.
+     * ```typescript
+     * let timeInterval = this.carousel.interval;
+     * ```
+     *
+     * @memberof IgxCarouselComponent
+     */
+    @Input()
+    get interval(): number {
+        return this._interval;
+    }
+
+    /**
+     * Sets the time `interval` in milliseconds before the slide changes.
+     * If not set, the carousel will not change `slides` automatically.
+     * ```html
+     * <igx-carousel [interval] = "1000"></igx-carousel>
+     * ```
+     *
+     * @memberof IgxCarouselComponent
+     */
+    set interval(value: number) {
+        this._interval = +value;
+        this.restartInterval();
+    }
 
     constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
         private builder: AnimationBuilder, private platformUtil: PlatformUtil) {

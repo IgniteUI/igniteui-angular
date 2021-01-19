@@ -85,8 +85,8 @@ export class IgxGridSummaryService {
             }
         });
         if (this.grid.rootSummariesEnabled) {
-  this.retriggerRootPipe++;
-}
+            this.retriggerRootPipe++;
+        }
     }
 
     public calcMaxSummaryHeight() {
