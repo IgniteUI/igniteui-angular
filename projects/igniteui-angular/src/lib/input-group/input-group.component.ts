@@ -11,7 +11,7 @@ import {
     QueryList,
     Inject,
     Optional,
-    AfterContentInit,
+    AfterContentInit
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
