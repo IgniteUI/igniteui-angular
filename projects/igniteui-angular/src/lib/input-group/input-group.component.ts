@@ -25,7 +25,7 @@ import {
     DisplayDensity,
     IDisplayDensityOptions,
     DisplayDensityToken,
-    DisplayDensityBase,
+    DisplayDensityBase
 } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -180,7 +180,31 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         return this._type || this._inputGroupType || 'line';
     }
 
-    /** @hidden @internal */
+    /**
+     * Sets the theme of the input.
+     * Allowed values of type IgxInputGroupTheme.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = 'fluent';
+     * }
+     */
+    @Input()
+    public set theme(variant: IgxInputGroupTheme) {
+        this._variant = variant;
+    }
+
+    /**
+     * Returns the theme of the input.
+     * The returned value is of tyep IgxInputGroupType.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = this.inputGroup.theme;
+     * }
+     */
     public get theme(): IgxInputGroupTheme {
         return this._variant;
     }
@@ -237,16 +261,18 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         }
     }
 
-    hintClickHandler(event) {
+    public hintClickHandler(event) {
         event.stopPropagation();
     }
 
-    ngAfterContentInit() {
-        const variant = this.document.defaultView
-            .getComputedStyle(this.element.nativeElement)
-            .getPropertyValue('--igx-input-group-variant')
-            .trim();
-        this._variant = variant as IgxInputGroupTheme;
+    public ngAfterContentInit() {
+        if (!this.theme) {
+            const variant = this.document.defaultView
+                .getComputedStyle(this.element.nativeElement)
+                .getPropertyValue('--igx-input-group-variant')
+                .trim();
+            this._variant = variant as IgxInputGroupTheme;
+        }
     }
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.
