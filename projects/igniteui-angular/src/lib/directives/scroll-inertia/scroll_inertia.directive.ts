@@ -1,5 +1,6 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { isIE } from '../../core/utils';
 
 /**
  * @hidden
@@ -103,6 +104,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         // if ctrl key is pressed and the user want to zoom in/out the page
         if (evt.ctrlKey) {
             return;
+        }
+        if (evt.shiftKey && isIE()) {
+            evt.preventDefault();
         }
         let scrollDeltaX;
         let scrollDeltaY;
