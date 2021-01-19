@@ -242,7 +242,7 @@ export class IgxSliderComponent implements
      */
     @Input()
     public get type() {
-        return this._type;
+        return this._type as IgxSliderType;
     }
 
     /**
@@ -1096,7 +1096,7 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public thumbChanged(value: number, thumbType: number) {
+    public thumbChanged(value: number, thumbType: string) {
         const oldValue = this.value;
 
         let newVal: IRangeSliderValue;
@@ -1401,7 +1401,7 @@ export class IgxSliderComponent implements
         return value;
     }
 
-    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: number) => void) {
+    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: string) => void) {
         if (!thumb) {
             return;
         }
