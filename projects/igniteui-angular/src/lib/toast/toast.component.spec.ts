@@ -18,7 +18,7 @@ describe('IgxToast', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [ToastInitializeTestComponent, ToastTestBindingComponent],
+            declarations: [ToastInitializeTestComponent],
             imports: [BrowserAnimationsModule, IgxToastModule],
         }).compileComponents();
     }));
@@ -49,28 +49,28 @@ describe('IgxToast', () => {
     });
 
     it('should auto hide after it\'s open', fakeAsync(() => {
-        spyOn(toast.onHiding, 'emit');
+        spyOn(toast.onClosing, 'emit');
         toast.displayTime = 1000;
 
         toast.open();
         tick(1000);
-        expect(toast.onHiding.emit).toHaveBeenCalled();
+        expect(toast.onClosing.emit).toHaveBeenCalled();
     }));
 
     it('should not auto hide after it\'s open', fakeAsync(() => {
-        spyOn(toast.onHiding, 'emit');
+        spyOn(toast.onClosing, 'emit');
         toast.displayTime = 1000;
         toast.autoHide = false;
 
         toast.open();
         tick(1000);
-        expect(toast.onHiding.emit).not.toHaveBeenCalled();
+        expect(toast.onClosing.emit).not.toHaveBeenCalled();
     }));
 
-    it('should emit onShowing when toast is shown', () => {
-        spyOn(toast.onShowing, 'emit');
+    it('should emit onOpening when toast is shown', () => {
+        spyOn(toast.onOpening, 'emit');
         toast.open();
-        expect(toast.onShowing.emit).toHaveBeenCalled();
+        expect(toast.onOpening.emit).toHaveBeenCalled();
     });
 
     it('should emit onHiding when toast is hidden', () => {
@@ -79,29 +79,18 @@ describe('IgxToast', () => {
         expect(toast.onHiding.emit).toHaveBeenCalled();
     });
 
-    it('should emit onShown when toggle onOpened is fired', () => {
-        spyOn(toast.onShown, 'emit');
+    it('should emit onOpened when toast is opened', () => {
+        expect(toast.isVisible).toBeFalse();
         toast.open();
-        expect(toast.onShown.emit).toHaveBeenCalled();
-    });
-
-    it('should emit onHidden when toggle onClosed is fired', () => {
-        spyOn(toast.onHidden, 'emit');
-        toast.isVisible = true;
-        toast.close();
-        expect(toast.onHidden.emit).toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(toast.isVisible).toBeTrue();
     });
 
     it('visibility is updated by the toggle() method', () => {
-        spyOn(toast.onShown, 'emit');
-        spyOn(toast.onHidden, 'emit');
-        toast.autoHide = false;
-
+        expect(toast.isVisible).toBeFalse();
         toast.toggle();
-        expect(toast.onShown.emit).toHaveBeenCalled();
-
-        toast.toggle();
-        expect(toast.onHidden.emit).toHaveBeenCalled();
+        fixture.detectChanges();
+        expect(toast.isVisible).toBeTrue();
     });
 
     it('can set message through show method', fakeAsync(() => {
@@ -116,24 +105,6 @@ describe('IgxToast', () => {
         expect(toast.autoHide).toBeFalsy();
         expect(toast.toastMessage).toBe('Custom Message');
     }));
-
-    it('should open and close toast when set values to isVisible', () => {
-        const toastFixture = TestBed.createComponent(ToastTestBindingComponent);
-        const component = fixture.componentInstance.toast;
-        toastFixture.detectChanges();
-        spyOn(toast.onShown, 'emit');
-        spyOn(toast.onHidden, 'emit');
-
-        toastFixture.componentInstance.model = true;
-        toastFixture.detectChanges();
-
-        expect(component.onShown.emit).toHaveBeenCalled();
-
-        toastFixture.componentInstance.model = false;
-        toastFixture.detectChanges();
-
-        expect(component.onHidden.emit).toHaveBeenCalled();
-    });
 });
 
 @Component({
@@ -144,11 +115,3 @@ class ToastInitializeTestComponent {
     public toast: IgxToastComponent;
 }
 
-@Component({
-    template: `<igx-toast #toast [(isVisible)]="model"></igx-toast>`,
-})
-class ToastTestBindingComponent {
-    @ViewChild(IgxToastComponent, { static: true })
-    public toast: IgxToastComponent;
-    public model = false;
-}
