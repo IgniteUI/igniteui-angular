@@ -26,6 +26,7 @@
                 [primaryKey]="'ProductID'"
                 [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
                 [paging]="true"
+                columnSelection="single"
                 (onColumnMovingStart)="onColumnMovingStart($event)"
                 (onColumnMoving)="onColumnMoving($event)"
                 (onColumnMovingEnd)="onColumnMovingEnd($event)"
@@ -33,6 +34,7 @@
                 (onSortingDone)="onSortingDone($event)"
                 (filtering)="onFiltering($event)"
                 (onFilteringDone)="onFilteringDone($event)"
+                (onPaging)="onPaging($event)"
                 (onPagingDone)="onPagingDone($event)"
                 (onColumnPinning)="onColumnPinning($event)"
                 (columnPinned)="columnPinned($event)"
@@ -41,6 +43,14 @@
                 (columnResizing)="columnResizing($event)"
                 (onColumnResized)="onColumnResized($event)"
                 (onColumnSelectionChange)="onColumnSelectionChange($event)">
+
+                <igx-grid-toolbar>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                        <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
             
                 <igx-column field="ProductID" width="130px" [dataType]="'number'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
                 </igx-column>

@@ -1545,11 +1545,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Args: { column: any, newValue: boolean }
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnVisibilityChanging = new EventEmitter<IColumnVisibilityChangingEventArgs>();
+    public columnVisibilityChanging = new EventEmitter<IColumnVisibilityChangingEventArgs>();
 
     /**
      * Emitted after column visibility is changed.
@@ -3545,9 +3545,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!col) {
             return;
         }
-
-        col.hidden = args.newValue;
-        this.onColumnVisibilityChanged.emit(args);
+        col.toggleVisibility(args.newValue);
     }
 
     /**

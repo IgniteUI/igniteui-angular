@@ -58,7 +58,7 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public toggleColumn(column: IgxColumnComponent) {
-        column.hidden = !column.hidden;
+        column.toggleVisibility();
     }
 
     public get allChecked() {

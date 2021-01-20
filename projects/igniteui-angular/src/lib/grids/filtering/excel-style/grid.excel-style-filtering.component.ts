@@ -417,7 +417,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             newValue: !this.column.hidden,
             owner: this,
             cancel: false };
-        this.grid.onColumnVisibilityChanging.emit(eventArgs);
+        this.grid.columnVisibilityChanging.emit(eventArgs);
 
         if (eventArgs.cancel) { return; }
 

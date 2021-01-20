@@ -46,7 +46,7 @@ import {
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
-import { IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
+import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_DIGITS_INFO = '1.0-3';
@@ -1681,7 +1681,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return false;
         }
 
-        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, owner: this, cancel: false };
+        // TODO freature-events
+        this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
+        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
+        index = index !== undefined ? index : rootPinnedCols.length;
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
         this.grid.onColumnPinning.emit(args);
 
         if (args.cancel) { return; }
@@ -1690,17 +1694,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
-        this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
-        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
-        index = index !== undefined ? index : rootPinnedCols.length;
-        const targetColumn = grid._pinnedColumns[index];
+        // TODO freature-events
+        // this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
+        // const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
+        // index = index !== undefined ? index : rootPinnedCols.length;
+        const targetColumn = grid._pinnedColumns[args.insertAtIndex];
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
-                grid._pinnedColumns.splice(index, 0, this);
+                grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
             } else {
                 // insert based only on root collection
-                rootPinnedCols.splice(index, 0, this);
+                rootPinnedCols.splice(args.insertAtIndex, 0, this);
                 let allPinned = [];
                 // re-create hierarchy
                 rootPinnedCols.forEach(group => {
@@ -1763,7 +1768,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
 
-        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, owner: this, cancel: false };
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
         this.grid.onColumnPinning.emit(args);
 
         if (args.cancel) { return; }
@@ -1861,6 +1866,20 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public calcChildren(): number {
         const children = this.hidden ? 0 : 1;
         return children;
+    }
+
+    /**
+     * Toggles column vibisility and emits the respective event.
+     * @hidden
+     */
+    public toggleVisibility(value?: boolean) {
+        const newValue = value ?? !this.hidden;
+        const eventArgs: IColumnVisibilityChangingEventArgs = { column: this, newValue, cancel: false };
+        this.grid.columnVisibilityChanging.emit(eventArgs);
+
+        if (eventArgs.cancel) { return; }
+        this.hidden = newValue;
+        this.grid.onColumnVisibilityChanged.emit({ column: this, newValue: newValue });
     }
 
     /**

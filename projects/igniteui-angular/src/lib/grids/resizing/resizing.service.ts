@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
+import { IColumnResizingEventArgs } from '../common/events';
 
 /**
  * @hidden
@@ -90,7 +91,7 @@ export class IgxColumnResizingService {
             size = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
         }
 
-        const eventArgs = {
+        const eventArgs: IColumnResizingEventArgs = {
             column: this.column,
             prevWidth: currentColWidth.toString(),
             newWidth: size,
@@ -112,8 +113,30 @@ export class IgxColumnResizingService {
         });
     }
 
+    public resizeEmitter(event: any) {
+        const column = this.column;
+        const grid = column.grid;
+        const diff = event.clientX - this.startResizePos;
+
+        const colWidth = column.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        let currentColWidth = parseFloat(colWidth);
+        const actualWidth = column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth) : currentColWidth;
+        let eventArgs;
+        if (grid.hasColumnLayouts) {
+            eventArgs = this.resizeColumnLayoutFor(this.column, diff, true);
+        } else if (isPercentageWidth) {
+            eventArgs = this._handlePercentageResize(diff, this.column, true);
+        } else {
+            eventArgs = this._handlePixelResize(diff, this.column, true);
+        }
+
+        grid.columnResizing.emit(eventArgs);
+    }
+
     /**
-     * Resizes the column regaridng to the column minWidth and maxWidth.
+     * Resizes the column, with regards to the column minWidth and maxWidth.
      */
     public resizeColumn(event: MouseEvent) {
         this.showResizer = false;
@@ -133,7 +156,6 @@ export class IgxColumnResizingService {
             this._handlePixelResize(diff, this.column);
         }
 
-
         this.zone.run(() => {});
 
         if (currentColWidth !== parseFloat(this.column.width)) {
@@ -147,20 +169,56 @@ export class IgxColumnResizingService {
         this.isColumnResizing = false;
     }
 
-    protected _handlePixelResize(diff: number, column: IgxColumnComponent) {
+    protected _handlePixelResize(diff: number, column: IgxColumnComponent, justCalulate = false) {
         const currentColWidth = parseFloat(column.width);
         const colMinWidth = column.minWidthPx;
         const colMaxWidth = column.maxWidthPx;
         if (currentColWidth + diff < colMinWidth) {
+            const eventArgs: IColumnResizingEventArgs = {
+                column,
+                prevWidth: column.width,
+                newWidth: colMinWidth + 'px',
+                cancel: false,
+                owner: this
+            };
+            if (justCalulate) {
+                return eventArgs;
+            }
+            // this.column.grid.columnResizing.emit(eventArgs);
+            // if (eventArgs.cancel) { return; }
             column.width = colMinWidth + 'px';
         } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
+            const eventArgs: IColumnResizingEventArgs = {
+                column,
+                prevWidth: column.width,
+                newWidth: colMaxWidth + 'px',
+                cancel: false,
+                owner: this
+            };
+            if (justCalulate) {
+                return eventArgs;
+            }
+            // this.column.grid.columnResizing.emit(eventArgs);
+            // if (eventArgs.cancel) { return; }
             column.width = colMaxWidth + 'px';
         } else {
+            const eventArgs: IColumnResizingEventArgs = {
+                column,
+                prevWidth: column.width,
+                newWidth: (currentColWidth + diff) + 'px',
+                cancel: false,
+                owner: this
+            };
+            if (justCalulate) {
+                return eventArgs;
+            }
+            // this.column.grid.columnResizing.emit(eventArgs);
+            // if (eventArgs.cancel) { return; }
             column.width = (currentColWidth + diff) + 'px';
         }
     }
 
-    protected _handlePercentageResize(diff: number, column: IgxColumnComponent) {
+    protected _handlePercentageResize(diff: number, column: IgxColumnComponent, justCalulate = false) {
         const currentPercentWidth = parseFloat(column.width);
         const gridAvailableSize = column.grid.calcWidth;
 
@@ -169,10 +227,50 @@ export class IgxColumnResizingService {
         const colMaxWidth =  column.maxWidthPercent;
 
         if (currentPercentWidth + diffPercentage < colMinWidth) {
+            const eventArgs: IColumnResizingEventArgs = {
+                column,
+                prevWidth: column.width,
+                newWidth: colMinWidth + '%',
+                cancel: false,
+                owner: this
+            };
+            if (justCalulate) {
+                return eventArgs;
+            }
+            // this.column.grid.columnResizing.emit(eventArgs);
+
+            // if (eventArgs.cancel) { return; }
+
             column.width = colMinWidth + '%';
         } else if (colMaxWidth && (currentPercentWidth + diffPercentage > colMaxWidth)) {
+            const eventArgs: IColumnResizingEventArgs = {
+                column,
+                prevWidth: column.width,
+                newWidth: colMaxWidth + '%',
+                cancel: false,
+                owner: this
+            };
+            if (justCalulate) {
+                return eventArgs;
+            }
+            // this.column.grid.columnResizing.emit(eventArgs);
+            // if (eventArgs.cancel) { return; }
+
             column.width = colMaxWidth + '%';
         } else {
+            const eventArgs: IColumnResizingEventArgs = {
+                column,
+                prevWidth: column.width,
+                newWidth: currentPercentWidth + diffPercentage + '%',
+                cancel: false,
+                owner: this
+            };
+            if (justCalulate) {
+                return eventArgs;
+            }
+            // this.column.grid.columnResizing.emit(eventArgs);
+            // if (eventArgs.cancel) { return; }
+
             column.width = (currentPercentWidth + diffPercentage) + '%';
         }
     }
@@ -186,7 +284,7 @@ export class IgxColumnResizingService {
         return actualMinWidth < currentColWidth ? actualMinWidth : currentColWidth;
     }
 
-    protected resizeColumnLayoutFor(column: IgxColumnComponent, diff: number) {
+    protected resizeColumnLayoutFor(column: IgxColumnComponent, diff: number, justCalulate = false) {
         const relativeColumns = column.getResizableColUnderEnd();
         const combinedSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
 
@@ -211,11 +309,42 @@ export class IgxColumnResizingService {
                 const minWidth = col.target.minWidthPx;
                 const maxWidth = col.target.maxWidthPx;
                 if (currentResizeWidth + resizeScaled < minWidth) {
+
+                    const eventArgs: IColumnResizingEventArgs = {
+                        column: col.target,
+                        prevWidth: colWidth.toString(),
+                        newWidth: (currentResizeWidth + resizeScaled).toString(),
+                        cancel: false,
+                        owner: this
+                    };
+                    // this.column.grid.columnResizing.emit(eventArgs);
+
+                    if (justCalulate) {
+                        return eventArgs;
+                    }
+
+                    // if (eventArgs.cancel) { return; }
+
                     col.target.width = isPercentageWidth ? col.target.minWidthPercent + '%' : minWidth + 'px';
                     updatedDiff += (currentResizeWidth - minWidth);
                     newCombinedSpan -= col.spanUsed;
                     setMinMaxCols = true;
                 } else if (maxWidth && (currentResizeWidth + resizeScaled > maxWidth)) {
+
+                    const eventArgs: IColumnResizingEventArgs = {
+                        column: col.target,
+                        prevWidth: colWidth.toString(),
+                        newWidth: (currentResizeWidth + resizeScaled).toString(),
+                        cancel: false,
+                        owner: this
+                    };
+                    if (justCalulate) {
+                        return eventArgs;
+                    }
+                    // this.column.grid.columnResizing.emit(eventArgs);
+
+                    // if (eventArgs.cancel) { return; }
+
                     col.target.width = isPercentageWidth ? col.target.maxWidthPercent + '%' : col.target.maxWidthPx + 'px';
                     updatedDiff -= (maxWidth - currentResizeWidth);
                     newCombinedSpan -= col.spanUsed;

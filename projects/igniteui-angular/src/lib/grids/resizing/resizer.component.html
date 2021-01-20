@@ -3,5 +3,6 @@
     [style.height.px]="colResizingService.resizerHeight"
     [restrictHResizeMax]="colResizingService.restrictResizeMax"
     [restrictHResizeMin]="colResizingService.restrictResizeMin"
-    (resizeEnd)="colResizingService.resizeColumn($event)">
+    (resizeEnd)="colResizingService.resizeColumn($event)"
+    (resize)="colResizingService.resizeEmitter($event)">
 </div>
