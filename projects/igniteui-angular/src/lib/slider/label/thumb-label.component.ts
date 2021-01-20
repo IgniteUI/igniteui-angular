@@ -2,6 +2,9 @@ import { Component, Input, TemplateRef, HostBinding, ElementRef } from '@angular
 import { SliderHandle } from '../slider.common';
 import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-thumb-label',
     templateUrl: 'thumb-label.component.html'
