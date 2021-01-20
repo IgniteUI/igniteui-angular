@@ -7,17 +7,17 @@ The Toast component shows application messages in a stylized pop-up box position
 ## Simple Toast
 
 ```html
-<button (click)="toast.show()">Show toast</button>
-<button (click)="toast.hide()">Hide toast</button>
+<button (click)="toast.open()">Show toast</button>
+<button (click)="toast.close()">Hide toast</button>
 
 <igx-toast #toast>Well, hi there!</igx-toast>
 ```
 
 You can set the id of the component by setting the attribute `id` on the component (e.g. `id="myToast"`), or it will be automatically generated for you if you don't provide anything;
 
-The toast can be shown by using the `show()` method.
+The toast can be shown by using the `open()` method.
 
-You can hide the toast by using the `hide()` method.
+You can hide the toast by using the `close()` method.
 
 ## Toast Position
 You can set the `positon` property to `top`, `middle`, or `bottom`, which will position the toast near the top, middle, or bottom of the document*.
@@ -25,7 +25,7 @@ You can set the `positon` property to `top`, `middle`, or `bottom`, which will p
 *By default the toast renders inside a global overlay outlet. You can specify a different overlay outlet by setting the `outlet` property on the toast;
 
 ```html
-<button (click)="toast.show()">Show toast</button>
+<button (click)="toast.open()">Show toast</button>
 <igx-toast #toast position="top">Top Positioned Toast</igx-toast>
 ```
 
@@ -43,7 +43,7 @@ You can display various content by placing it between the `igx-toast` tags.
 ## Toast Events
 
 ```html
-<button (click)="toast.show()">Show toast</button>
+<button (click)="toast.open()">Show toast</button>
 
 <igx-toast
     #toast
