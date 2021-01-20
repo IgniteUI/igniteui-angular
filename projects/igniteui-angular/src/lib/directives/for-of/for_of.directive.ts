@@ -231,6 +231,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         chunkSize: 0
     };
 
+    protected func;
     protected _sizesCache: number[] = [];
     protected scrollComponent: VirtualHelperBaseDirective;
     protected _differ: IterableDiffer<T> | null = null;
@@ -425,7 +426,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
             this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
             this._zone.runOutsideAngular(() => {
-                this.scrollComponent.nativeElement.addEventListener('scroll', this.verticalScrollHandler.bind(this));
+                this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
+                this.scrollComponent.nativeElement.addEventListener('scroll', this.verticalScrollHandler);
                 this.dc.instance.scrollContainer = this.scrollComponent.nativeElement;
             });
             const destructor = takeUntil<any>(this.destroy$);
@@ -437,6 +439,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
 
         if (this.igxForScrollOrientation === 'horizontal') {
+            this.func = (evt) => this.onHScroll(evt);
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             if (!this.scrollComponent) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
@@ -445,12 +448,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.scrollComponent.size = totalSize;
                 this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
                 this._zone.runOutsideAngular(() => {
-                    this.scrollComponent.nativeElement.addEventListener('scroll', this.onHScroll.bind(this));
+                    this.scrollComponent.nativeElement.addEventListener('scroll', this.func);
                     this.dc.instance.scrollContainer = this.scrollComponent.nativeElement;
                 });
             } else {
                 this._zone.runOutsideAngular(() => {
-                    this.scrollComponent.nativeElement.addEventListener('scroll', this.onHScroll.bind(this));
+                    this.scrollComponent.nativeElement.addEventListener('scroll', this.func);
                     this.dc.instance.scrollContainer = this.scrollComponent.nativeElement;
                 });
             }
@@ -833,7 +836,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected removeScrollEventListeners() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this._zone.runOutsideAngular(() => this.scrollComponent?.nativeElement?.removeEventListener('scroll', this.onHScroll));
+            this._zone.runOutsideAngular(() => this.scrollComponent?.nativeElement?.removeEventListener('scroll', this.func));
         } else {
             this._zone.runOutsideAngular(() =>
                 this.scrollComponent?.nativeElement?.removeEventListener('scroll', this.verticalScrollHandler)
