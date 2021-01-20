@@ -14,7 +14,7 @@ export class ToastSampleComponent {
 
     showToast(toast: IgxToastComponent, pos: IgxToastPosition) {
         toast.position = pos;
-        toast.show();
+        toast.open();
     }
 
     handleShowing(event) {

@@ -216,7 +216,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @ViewChild("toast")
      * private toast: IgxToastComponent;
      * public onSelect(buttongroup){
-     *     this.toast.show()
+     *     this.toast.open()
      * }
      *  //...
      * ```
@@ -233,7 +233,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *  @ViewChild("toast")
      *  private toast: IgxToastComponent;
      *  public onUnselect(buttongroup){
-     *     this.toast.show()
+     *     this.toast.open()
      * }
      *  //...
      * ```

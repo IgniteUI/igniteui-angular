@@ -20,6 +20,13 @@ All notable changes for each version of this project will be documented in this 
     - **Renamed inputs**
         `isActive` to `active`
         `fontSet` to `family`
+- `IgxToast`
+    - **Breaking Change** - 
+    `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+    `onShowing`,`onShown`,`onHiding` and `onHiden` events have been deprecated. `onOpening`, `onOpened`, `onClosing` and `onClosed`should be used instead.
+- `IgxInputGroup`
+    - Added new property `theme` that allows you to set the theme explicitly and at runtime.
+
 ## 11.0.4
 
 ### General
