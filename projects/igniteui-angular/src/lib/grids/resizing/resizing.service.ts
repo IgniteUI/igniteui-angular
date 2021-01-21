@@ -360,15 +360,30 @@ export class IgxColumnResizingService {
         } while (setMinMaxCols);
 
         // Those left that don't reach min/max size resize them normally.
+        const eventArgs = [];
         columnsToResize.forEach((col) => {
             const resizeScaled = (updatedDiff / updatedCombinedSpan) * col.target.gridColumnSpan;
             const colWidth = col.target.width;
             const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
             if (isPercentageWidth) {
-                this._handlePercentageResize(resizeScaled, col.target);
+                if (justCalulate) {
+                    const colEventArgs = this._handlePercentageResize(resizeScaled, col.target, justCalulate);
+                    eventArgs.push(colEventArgs);
+                } else {
+                    this._handlePercentageResize(resizeScaled, col.target, justCalulate);
+                }
             } else {
-                this._handlePixelResize(resizeScaled, col.target);
+                if (justCalulate) {
+                    const colEventArgs = this._handlePixelResize(resizeScaled, col.target, justCalulate);
+                    eventArgs.push(colEventArgs);
+                } else {
+                    this._handlePixelResize(resizeScaled, col.target, justCalulate);
+                }
             }
         });
+
+        if (justCalulate) {
+            return eventArgs;
+        }
     }
 }

@@ -207,13 +207,16 @@ export class IgxFilteringService implements OnDestroy {
         ignoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         const filteringTree = grid.filteringExpressionsTree;
+        // TODO what if columnFilteringExpressionsTree is acually an columnFilteringExpressionsTree
+        const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(field) as IFilteringExpressionsTree;
+        conditionOrExpressionTree = conditionOrExpressionTree ?? columnFilteringExpressionsTree;
         const fieldFilterIndex = filteringTree.findIndex(field);
         if (fieldFilterIndex > -1) {
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
         this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree, ignoreCase, fieldFilterIndex);
 
-        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: grid.filteringExpressionsTree, cancel: false };
+        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: filteringTree, cancel: false };
         this.grid.filtering.emit(eventArgs);
 
         if (eventArgs.cancel) { return; }

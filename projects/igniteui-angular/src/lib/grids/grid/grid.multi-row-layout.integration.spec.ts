@@ -508,19 +508,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             // should unpin parent and all child cols - 4 child + 1 parent
             expect(allArgs.length).toBe(5);
 
-            expect(allArgs[0].column.field).toBe('PostalCode');
+            expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
             expect(allArgs[0].isPinned).toBeFalsy();
 
-            expect(allArgs[1].column.field).toBe('City');
+            expect(allArgs[1].column.field).toBe('PostalCode');
             expect(allArgs[1].isPinned).toBeFalsy();
 
-            expect(allArgs[2].column.field).toBe('Country');
+            expect(allArgs[2].column.field).toBe('City');
             expect(allArgs[2].isPinned).toBeFalsy();
 
-            expect(allArgs[3].column.field).toBe('Address');
+            expect(allArgs[3].column.field).toBe('Country');
             expect(allArgs[3].isPinned).toBeFalsy();
 
-            expect(allArgs[4].column instanceof IgxColumnLayoutComponent).toBeTruthy();
+            expect(allArgs[4].column.field).toBe('Address');
             expect(allArgs[4].isPinned).toBeFalsy();
 
             allArgs = [];
