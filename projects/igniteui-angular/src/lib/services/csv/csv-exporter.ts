@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { IgxBaseExporter } from '../exporter-common/base-export-service';
+import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
@@ -47,8 +47,8 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     @Output()
     public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
-    protected exportDataImplementation(data: any[], options: IgxCsvExporterOptions) {
-        data = data.map((item) => item.rowData);
+    protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions) {
+        data = data.map((item) => item.data);
         const csvData = new CharSeparatedValueData(data, options.valueDelimiter);
         csvData.prepareDataAsync((r) => {
             this._stringData = r;

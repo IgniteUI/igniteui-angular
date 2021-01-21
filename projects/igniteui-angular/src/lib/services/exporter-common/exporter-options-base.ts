@@ -41,7 +41,14 @@ export abstract class IgxExporterOptionsBase {
      */
     public ignoreSorting = false;
 
-    // doc
+    /**
+     * Specifies whether the exported data should be grouped as in the provided IgxGrid.
+     * ```typescript
+     * let ignoreGrouping = this.exportOptions.ignoreGrouping;
+     * this.exportOptions.ignoreGrouping = true;
+     * ```
+     * @memberof IgxExporterOptionsBase
+     */
     public ignoreGrouping = false;
 
     constructor(fileName: string, protected _fileExtension: string) {

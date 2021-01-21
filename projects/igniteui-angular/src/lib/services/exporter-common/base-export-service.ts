@@ -86,8 +86,6 @@ export abstract class IgxBaseExporter {
     private flatRecords: IExportRecord[] = [];
     private _columnWidthList: number[];
 
-    //protected _isTreeGrid = false;
-    //protected _isGroupedGrid = false;
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
 
@@ -334,8 +332,6 @@ export abstract class IgxBaseExporter {
                 this.addFlatData(grid.filteredSortedData);
             }
         } else {
-
-
             let gridData = grid.data;
 
             if (hasFiltering && !options.ignoreFiltering) {

@@ -153,7 +153,6 @@ export class WorksheetFile implements IExcelFile {
         });
     }
 
-    // DO NOT touch this method, works perfectly fine for all cases.
     private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
         let sheetData = '';
         let cols = '';
@@ -210,7 +209,6 @@ export class WorksheetFile implements IExcelFile {
         }
     }
 
-    // DO NOT touch this method, works perfectly fine for all cases.
     private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
         const rowDataArr = new Array(worksheetData.rowCount - 1);
         const height =  worksheetData.options.rowHeight;
