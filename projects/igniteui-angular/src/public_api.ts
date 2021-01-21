@@ -101,6 +101,7 @@ export * from './lib/date-range-picker/public_api';
 
 export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
+export * from './lib/tree/public_api';
 
 /**
  * Exporter services, classes, interfaces and enums

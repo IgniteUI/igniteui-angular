@@ -1,0 +1,29 @@
+<div class="igx-tree-node__header">
+    <div class="igx-tree-node__indicators">
+        <div class="igx-tree-node__expand-indicator" [ngClass]="{ hidden: !children?.length }"
+            (click)="expanded = !expanded">
+            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
+            </ng-container>
+        </div>
+        <div class="igx-tree-node__select-marker" (click)="selected = !selected">
+            <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
+            </ng-container>
+        </div>
+    </div>
+    <ng-content></ng-content>
+</div>
+<div #childrenContainer *ngIf="expanded"
+    class="igx-tree-node__group" role="group">
+    <ng-content select="igx-tree-node"></ng-content>
+</div>
+
+<ng-template #defaultIndicator let-item>
+    <igx-icon [ngClass]="{ hidden: this.children?.length == 0 }">
+        {{ expanded ? "arrow_drop_down" : "arrow_right" }}
+    </igx-icon>
+</ng-template>
+
+<ng-template #defaultSelect let-item>
+    <igx-checkbox [checked]="selected" [readonly]="true">
+    </igx-checkbox>
+</ng-template>

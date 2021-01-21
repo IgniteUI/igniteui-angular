@@ -85,6 +85,7 @@ import { AnimationsSampleComponent } from './styleguide/animations/animations.sa
 import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { TreeSampleComponent } from './tree/tree.sample';
 
 const appRoutes = [
     {
@@ -340,6 +341,10 @@ const appRoutes = [
     {
         path: 'gridMasterDetail',
         component: GridMasterDetailSampleComponent
+    },
+    {
+        path: 'tree',
+        component: TreeSampleComponent
     },
     {
         path: 'treeGrid',

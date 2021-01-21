@@ -1,0 +1,27 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    padding-left: 16px;
+}
+
+.igx-tree-node__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    user-select: none;
+
+    .igx-tree-node__indicators {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        padding-right: 8px;
+    }
+}
+
+.igx-tree-node__group {
+    overflow: hidden;
+}
+
+.hidden {
+    visibility: hidden;
+}
