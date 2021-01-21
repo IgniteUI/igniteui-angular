@@ -437,7 +437,7 @@ describe('igxOverlay', () => {
             spyOn(overlayInstance.onOpening, 'emit');
             spyOn(overlayInstance.onAnimation, 'emit');
 
-            const firstCallId = overlayInstance.attach(SimpleDynamicComponent)
+            const firstCallId = overlayInstance.attach(SimpleDynamicComponent);
             overlayInstance.show(firstCallId);
             tick();
 
@@ -462,7 +462,8 @@ describe('igxOverlay', () => {
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
+            expect(overlayInstance.onClosed.emit).
+                toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, event: undefined });
 
             const secondCallId = overlayInstance.attach(fix.componentInstance.item);
             overlayInstance.show(secondCallId);
@@ -485,7 +486,7 @@ describe('igxOverlay', () => {
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, event: undefined });
         }));
 
         it('Should properly set style on position method call - GlobalPosition.', () => {
@@ -2958,27 +2959,27 @@ describe('igxOverlay', () => {
             tick();
 
             let overlayWrapper: any = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            expect(overlayWrapper.style.visibility).toEqual('')
+            expect(overlayWrapper.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', document);
             tick();
             overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            expect(overlayWrapper.style.visibility).toEqual('')
+            expect(overlayWrapper.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('a', document);
             tick();
             overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            expect(overlayWrapper.style.visibility).toEqual('')
+            expect(overlayWrapper.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document);
             tick();
             overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            expect(overlayWrapper.style.visibility).toEqual('')
+            expect(overlayWrapper.style.visibility).toEqual('');
 
             UIInteractions.triggerKeyDownEvtUponElem('Escape', document);
             tick();
             overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            expect(overlayWrapper.style.visibility).toEqual('hidden')
+            expect(overlayWrapper.style.visibility).toEqual('hidden');
         }));
 
         // 3.2 Non - Modal
@@ -3651,7 +3652,7 @@ describe('igxOverlay', () => {
                 document.dispatchEvent(new Event('scroll'));
                 tick();
                 expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-                let overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+                const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
                 expect(overlayWrapperElement).toBeDefined();
                 expect((overlayWrapperElement as any).style.visibility).toEqual('');
                 fixture.destroy();

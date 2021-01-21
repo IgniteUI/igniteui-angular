@@ -411,7 +411,7 @@ export class IgxTimePickerComponent implements
      *  @ViewChild("toast")
      * private toast: IgxToastComponent;
      * public onValueChanged(timepicker){
-     *     this.toast.show()
+     *     this.toast.open()
      * }
      *  //...
      *  ```
@@ -431,7 +431,7 @@ export class IgxTimePickerComponent implements
      *  @ViewChild("toast")
      * private toast: IgxToastComponent;
      * public onValidationFailed(timepicker){
-     *     this.toast.show();
+     *     this.toast.open();
      * }
      *  //...
      *  ```

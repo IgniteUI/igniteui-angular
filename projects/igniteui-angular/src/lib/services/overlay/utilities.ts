@@ -109,6 +109,8 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<{}>;
+    /** Will provide the original keyboard event if closed from ESC or click */
+    event?: Event;
 }
 
 export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
@@ -151,6 +153,7 @@ export interface OverlayInfo {
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;
+    event?: Event;
 }
 
 /** @hidden */

@@ -246,7 +246,7 @@ describe('IgxDatePicker', () => {
                 fixture.detectChanges();
 
                 overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
-                let overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+                const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
                 expect(overlayDiv).toBeDefined();
                 expect((overlayDiv as any).style.visibility).toEqual('');
 

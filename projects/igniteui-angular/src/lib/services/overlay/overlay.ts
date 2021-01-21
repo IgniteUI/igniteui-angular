@@ -369,7 +369,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      */
     show(id: string, settings?: OverlaySettings): void {
-        let info: OverlayInfo = this.getOverlayById(id);
+        const info: OverlayInfo = this.getOverlayById(id);
         if (!info) {
             console.warn('igxOverlay.show was called with wrong id: ', id);
             return;
@@ -406,8 +406,8 @@ export class IgxOverlayService implements OnDestroy {
      * this.overlay.hide(id);
      * ```
      */
-    hide(id: string) {
-        this._hide(id);
+    hide(id: string, event?: Event) {
+        this._hide(id, event);
     }
 
     private _hide(id: string, event?: Event) {
@@ -422,12 +422,9 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (info.settings.positionStrategy.settings.closeAnimation) {
-            this.playCloseAnimation(info);
+            this.playCloseAnimation(info, event);
         } else {
-            info.visible = false;
-            //  to eliminate flickering show the element just before animation start
-            info.elementRef.nativeElement.parentElement.parentElement.style.visibility = 'hidden';
-            this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+            this.onCloseDone(info);
         }
     }
 
@@ -591,6 +588,16 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
+    private onCloseDone(info: OverlayInfo) {
+        info.visible = false;
+        if (info.elementRef.nativeElement.parentElement.parentElement) {
+            // to eliminate flickering show the element just before animation start
+            info.elementRef.nativeElement.parentElement.parentElement.style.visibility = 'hidden';
+        }
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
+        delete info.event;
+    }
+
     private cleanUp(info: OverlayInfo) {
         const child: HTMLElement = info.elementRef.nativeElement;
         const outlet = this.getOverlayElement(info);
@@ -649,7 +656,7 @@ export class IgxOverlayService implements OnDestroy {
         info.openAnimationPlayer.play();
     }
 
-    private playCloseAnimation(info: OverlayInfo) {
+    private playCloseAnimation(info: OverlayInfo, event?: Event) {
         //  if there is closing animation already started do nothing
         if (info.closeAnimationPlayer.hasStarted()) {
             return;
@@ -671,6 +678,7 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         this.onAnimation.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
+        info.event = event;
         info.closeAnimationPlayer.play();
     }
 
@@ -804,14 +812,14 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings.closeOnEscape && !this._keyPressEventListener) {
             this._keyPressEventListener = fromEvent(this._document, 'keydown').pipe(
                 filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc')
-            ).subscribe(() => {
+            ).subscribe((ev) => {
                 const visibleOverlays = this._overlayInfos.filter(o => o.visible);
                 if (visibleOverlays.length < 1) {
                     return;
                 }
                 const targetOverlayInfo = visibleOverlays[visibleOverlays.length - 1];
                 if (targetOverlayInfo.visible && targetOverlayInfo.settings.closeOnEscape) {
-                    this.hide(targetOverlayInfo.id);
+                    this.hide(targetOverlayInfo.id, ev);
                 }
             });
         }
@@ -870,12 +878,7 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
 
             info.closeAnimationPlayer.onDone(() => {
-                info.visible = false;
-                if (info.elementRef.nativeElement.parentElement.parentElement) {
-                    // to eliminate flickering show the element just before animation start
-                    info.elementRef.nativeElement.parentElement.parentElement.style.visibility = 'hidden';
-                }
-                this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+                this.onCloseDone(info);
                 if (info.closeAnimationPlayer) {
                     info.closeAnimationPlayer.reset();
                     (info.closeAnimationPlayer as any)._started = false;

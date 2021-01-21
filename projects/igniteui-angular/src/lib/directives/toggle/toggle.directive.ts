@@ -30,6 +30,7 @@ import { CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
 export interface ToggleViewEventArgs extends IBaseEventArgs {
     /** Id of the toggle view */
     id: string;
+    event?: Event;
 }
 
 export interface ToggleViewCancelableEventArgs extends ToggleViewEventArgs, CancelableBrowserEventArgs { }
@@ -326,13 +327,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.destroy$.complete();
     }
 
-    private overlayClosed = () => {
+    private overlayClosed = (ev) => {
         this._collapsed = true;
         this.cdr.detectChanges();
         this.unsubscribe();
         this.overlayService.detach(this.overlayId);
         delete this._overlayId;
-        const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+        const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId, event: ev.event };
         this.onClosed.emit(closedEventArgs);
     }
 

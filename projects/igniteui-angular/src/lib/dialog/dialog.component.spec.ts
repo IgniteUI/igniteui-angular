@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
+import { IDialogCancellableEventArgs, IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { useAnimation } from '@angular/animations';
 import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
@@ -87,7 +87,7 @@ describe('Dialog', () => {
         const expectedMessage = 'message';
 
         dialog.isOpen = true;
-        tick();
+        tick(100);
         fixture.detectChanges();
         expect(dialog.isOpen).toEqual(true);
 
@@ -105,7 +105,7 @@ describe('Dialog', () => {
         fixture.componentInstance.myDialog = true;
 
         fixture.detectChanges();
-        tick();
+        tick(100);
         expect(dialog.isOpen).toEqual(true);
 
 
@@ -198,24 +198,41 @@ describe('Dialog', () => {
         const dialog = fixture.componentInstance.dialog;
         const args: IDialogEventArgs = {
             dialog,
-            event: null
+            event: undefined,
         };
+        let cancellableArgs: IDialogCancellableEventArgs = {
+            dialog,
+            event: null,
+            cancel: false
+        };
+
         spyOn(dialog.onOpen, 'emit');
+        spyOn(dialog.onOpened, 'emit');
+        spyOn(dialog.isOpenChange, 'emit');
+        spyOn(dialog.onClose, 'emit');
+        spyOn(dialog.onClosed, 'emit');
+
         dialog.open();
         tick();
         fixture.detectChanges();
-        expect(dialog.onOpen.emit).toHaveBeenCalledWith(args);
 
-        spyOn(dialog.onClose, 'emit');
+        expect(dialog.onOpen.emit).toHaveBeenCalledWith(cancellableArgs);
+        expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(true);
+        // expect(dialog.onOpened.emit).toHaveBeenCalled();
+
         dialog.close();
         tick();
         fixture.detectChanges();
-        expect(dialog.onClose.emit).toHaveBeenCalledWith(args);
+
+        cancellableArgs = { dialog, event: undefined, cancel: false };
+        expect(dialog.onClose.emit).toHaveBeenCalledWith(cancellableArgs);
+        expect(dialog.onClosed.emit).toHaveBeenCalledWith(args);
+        expect(dialog.isOpenChange.emit).toHaveBeenCalledWith(false);
 
         dialog.open();
         tick();
         fixture.detectChanges();
-        const buttons = document.getElementsByClassName('custom-sample')[0].nextElementSibling.querySelectorAll('button');
+        const buttons = document.querySelectorAll('button');
         const leftButton = buttons[0];
         const rightButton = buttons[1];
 
@@ -283,10 +300,10 @@ describe('Dialog', () => {
 
     it('Should initialize igx-dialog custom title and actions', () => {
         const data = [{
-                component: CustomTemplates1DialogComponent
-            }, {
-                component: CustomTemplates2DialogComponent
-            }];
+            component: CustomTemplates1DialogComponent
+        }, {
+            component: CustomTemplates2DialogComponent
+        }];
 
         data.forEach((item) => {
             const fixture = TestBed.createComponent(item.component);
@@ -296,10 +313,10 @@ describe('Dialog', () => {
             fixture.detectChanges();
 
             const dialogWindow = fixture.debugElement.query(By.css('.igx-dialog__window'));
-            expect(dialogWindow.children.length).toEqual(2);
+            expect(dialogWindow.children.length).toEqual(3);
 
             expect(dialogWindow.children[0].nativeElement.innerText.toString()).toContain('TITLE');
-            expect(dialogWindow.children[1].nativeElement.innerText.toString()).toContain('BUTTONS');
+            expect(dialogWindow.children[2].nativeElement.innerText.toString()).toContain('BUTTONS');
 
             dialog.close();
         });
@@ -338,7 +355,7 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
     }));
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync( () => {
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync(() => {
         const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
@@ -368,7 +385,7 @@ describe('Dialog', () => {
         let fix;
         let dialog;
 
-        beforeEach( fakeAsync(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
             fix.detectChanges();
             dialog = fix.componentInstance.dialog;
@@ -414,7 +431,7 @@ describe('Dialog', () => {
             expect(dialog.isOpen).toEqual(false);
         }));
 
-        it('Set animation settings',  () => {
+        it('Set animation settings', () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
@@ -584,7 +601,7 @@ class PositionSettingsDialogComponent {
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Middle,
         openAnimation: useAnimation(slideInTop, { params: { duration: '200ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '200ms'} })
+        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '200ms' } })
     };
 
     public newPositionSettings: PositionSettings = {
@@ -594,7 +611,7 @@ class PositionSettingsDialogComponent {
 
     public animationSettings: PositionSettings = {
         openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
-        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms'} })
+        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms' } })
     };
 
 }
