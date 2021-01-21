@@ -1175,9 +1175,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set selectedRows(rowIDs: any[]) {
-        rowIDs.length > 0
-            ? this.selectRows(rowIDs, true)
-            : this.deselectAllRows();
+        requestAnimationFrame(() => {
+            rowIDs.length > 0
+                ? this.selectRows(rowIDs, true)
+                : this.deselectAllRows();
+        });
     }
 
     public get selectedRows(): any[] {

@@ -4,6 +4,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { IgxGridBaseDirective } from '../grid/public_api';
+import { IgxTreeGridAPIService } from '../tree-grid/public_api';
 
 export interface GridSelectionRange {
     rowStart: number;
@@ -75,7 +76,7 @@ export class IgxRow {
 
     createDoneEditEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
-        this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
+            this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
@@ -131,7 +132,7 @@ export class IgxCell {
 
     createDoneEditEventArgs(value: any, event?: Event): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
-        this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
+            this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
@@ -228,7 +229,7 @@ export class IgxGridCRUDService {
             }
             /** Changing the reference with the new editable cell */
             const newCell = this.createCell(cell);
-            if (this.rowEditing)  {
+            if (this.rowEditing) {
                 const canceled = this.beginRowEdit(newCell, event);
                 if (!canceled) {
                     this.beginCellEdit(newCell, event);
@@ -394,6 +395,7 @@ export class IgxGridSelectionService {
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
     rowSelection: Set<any> = new Set<any>();
+    indeterminateRows: Set<any> = new Set<any>();
     columnSelection: Set<string> = new Set<string>();
     private allRowsSelected: boolean;
     /**
@@ -743,12 +745,16 @@ export class IgxGridSelectionService {
         return this.rowSelection.size ? Array.from(this.rowSelection.keys()) : [];
     }
 
+    /** Returns array of the rows in indeterminate state. */
+    getIndeterminateRows(): Array<any> {
+        return this.indeterminateRows.size ? Array.from(this.indeterminateRows.keys()) : [];
+    }
+
     /** Clears row selection, if filtering is applied clears only selected rows from filtered data. */
     clearRowSelection(event?): void {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
-
         this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
@@ -757,6 +763,7 @@ export class IgxGridSelectionService {
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
         const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
+        this.indeterminateRows.clear();
         this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
@@ -785,6 +792,10 @@ export class IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
+        if (this.grid.rowSelection === "multipleCascade") {
+            (this.grid.gridAPI as IgxTreeGridAPIService).cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
+            return;
+        }
         if (clearPrevSelection) { this.rowSelection.clear(); }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.allRowsSelected = undefined;
@@ -793,6 +804,10 @@ export class IgxGridSelectionService {
 
     /** Deselect specified rows. No event is emitted. */
     deselectRowsWithNoEvent(rowIDs: any[]): void {
+        if (this.grid.rowSelection === "multipleCascade") {
+            (this.grid.gridAPI as IgxTreeGridAPIService).cascadeDeselectRowsWithNoEvent(rowIDs);
+            return;
+        }
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
@@ -800,6 +815,10 @@ export class IgxGridSelectionService {
 
     isRowSelected(rowID): boolean {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
+    }
+
+    isRowInIndeterminateState(rowID): boolean {
+        return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
     /** Select range from last selected row to the current specified row. */
@@ -843,6 +862,10 @@ export class IgxGridSelectionService {
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
+        if (this.grid.rowSelection === "multipleCascade") {
+            (this.grid.gridAPI as IgxTreeGridAPIService).emitRowSelectionEvent(newSelection, added, removed, event);
+            return;
+        }
         const currSelection = this.getSelectedRows();
         if (this.areEqualCollections(currSelection, newSelection)) { return; }
 
@@ -872,6 +895,7 @@ export class IgxGridSelectionService {
     /** Clear rowSelection and update checkbox state */
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
+        this.indeterminateRows.clear();
         this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
@@ -887,7 +911,7 @@ export class IgxGridSelectionService {
         return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
     }
 
-    private areEqualCollections(first, second): boolean {
+    public areEqualCollections(first, second): boolean {
         return first.length === second.length && new Set(first.concat(second)).size === first.length;
     }
 

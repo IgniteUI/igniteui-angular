@@ -6,9 +6,15 @@ import { HierarchicalTransaction, TransactionType, State } from '../../services/
 import { Injectable } from '@angular/core';
 import { ColumnType } from '../common/column.interface';
 import { mergeObjects } from '../../core/utils';
+import { IgxGridSelectionService } from '../selection/selection.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
+
+    public get selectionService(): IgxGridSelectionService {
+        return this.grid.selectionService;
+    }
 
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;
@@ -33,12 +39,276 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return data;
     }
 
+    private rowsToBeSelected: Set<any>;
+    private rowsToBeIndeterminate: Set<any>;
+
+    /**
+     * @hidden @internal
+     * retrieve the rows which should be added/removed to/from the old selection
+     */
+    private handleAddedAndRemovedArgs(args: any) {
+        args.removed = args.oldSelection.filter(x => args.newSelection.indexOf(x) < 0);
+        args.added = args.newSelection.filter(x => args.oldSelection.indexOf(x) < 0);
+    }
+
+    public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
+        const currSelection = this.selectionService.getSelectedRows();
+        if (this.selectionService.areEqualCollections(currSelection, newSelection)) { return; }
+
+        const args = {
+            oldSelection: currSelection, newSelection: newSelection,
+            added: added, removed: removed, event: event, cancel: false
+        };
+
+        this.calculateRowsNewSelectionState(args);
+
+        args.newSelection = Array.from(this.rowsToBeSelected);
+
+        // retrieve rows/parents/children which has been added/removed from the selection
+        this.handleAddedAndRemovedArgs(args);
+
+        this.grid.onRowSelectionChange.emit(args);
+
+        if (args.cancel) { return; }
+
+        // if args.newSelection hasn't been modified
+        if (this.selectionService.areEqualCollections(Array.from(this.rowsToBeSelected), args.newSelection)) {
+            this.selectionService.rowSelection = new Set(this.rowsToBeSelected);
+            this.selectionService.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+            this.selectionService.clearHeaderCBState();
+            this.selectionService.selectedRowsChange.next();
+        } else {
+            // select the rows within the modified args.newSelection with no event
+            this.cascadeSelectRowsWithNoEvent(args.newSelection, true);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * expects a list of all visibleRowIDs
+     * expects rowsToBeProcessed set of the rows (without their parents/children) to be selected/deselected
+     * returns a new set with all direct parents of the rows within rowsToBeProcessed set
+     * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
+     */
+    private collectRowsChildrenAndDirectParents(rowsToBeProcessed: Set<any>, visibleRowIDs: any[]): Set<any> {
+        let processedRowsParents = new Set<any>();
+        Array.from(rowsToBeProcessed).forEach((rowID) => {
+            rowsToBeProcessed.add(rowID);
+            let rowTreeRecord = this.get_rec_by_id(rowID);
+            const rowAndAllChildren = this.get_all_children(rowTreeRecord);
+            rowAndAllChildren.forEach(row => {
+                if (visibleRowIDs.indexOf(row.rowID) >= 0) {
+                    rowsToBeProcessed.add(row.rowID);
+                }
+            });
+            if (rowTreeRecord && rowTreeRecord.parent) {
+                processedRowsParents.add(rowTreeRecord.parent);
+            }
+        });
+        return processedRowsParents;
+    }
+
+
+    /**
+     * @hidden @internal
+     * populates the rowsToBeSelected and rowsToBeIndeterminate sets
+     * with the rows which will be eventually in selected/indeterminate state
+     */
+    private calculateRowsNewSelectionState(args: any) {
+        this.rowsToBeSelected = new Set<any>();
+        this.rowsToBeIndeterminate = new Set<any>();
+
+        const visibleRowIDs = this.selectionService.getRowIDs(this.selectionService.allData);
+        const oldSelection = args.oldSelection ? args.oldSelection : this.selectionService.getSelectedRows();
+        const oldIndeterminateRows = this.selectionService.getIndeterminateRows();
+
+        const removed = new Set(args.removed);
+        const added = new Set(args.added);
+
+        if (removed && removed.size) {
+            let removedRowsParents = new Set<any>();
+
+            removedRowsParents = this.collectRowsChildrenAndDirectParents(removed, visibleRowIDs);
+
+            oldSelection.forEach(x => {
+                if (!removed.has(x)) {
+                    this.rowsToBeSelected.add(x);
+                }
+            });
+
+            oldIndeterminateRows.forEach(x => {
+                if (!removed.has(x)) {
+                    this.rowsToBeIndeterminate.add(x);
+                }
+            });
+
+            Array.from(removedRowsParents).forEach((parent) => {
+                this.handleParentSelectionState(parent, visibleRowIDs);
+            });
+        }
+
+        if (added && added.size) {
+            let addedRowsParents = new Set<any>();
+
+            addedRowsParents = this.collectRowsChildrenAndDirectParents(added, visibleRowIDs);
+
+            if (!this.rowsToBeSelected.size && !removed.size) {
+                oldSelection.forEach(x => this.rowsToBeSelected.add(x));
+            }
+
+            added.forEach(x => this.rowsToBeSelected.add(x));
+
+            if (!this.rowsToBeIndeterminate.size && !removed.size) {
+                oldIndeterminateRows.forEach(x => {
+                    if (!this.rowsToBeSelected.has(x)) {
+                        this.rowsToBeIndeterminate.add(x)
+                    }
+                });
+            } else {
+                added.forEach(x => {
+                    this.rowsToBeIndeterminate.delete(x);
+                });
+            }
+
+            Array.from(addedRowsParents).forEach((parent) => {
+                this.handleParentSelectionState(parent, visibleRowIDs);
+            });
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * recursively handle the selection state of the direct and indirect parents
+     */
+    private handleParentSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
+        if (!treeRow) {
+            return;
+        }
+        this.handleRowSelectionState(treeRow, visibleRowIDs);
+        if (!treeRow.parent) {
+            return;
+        }
+        else {
+            this.handleParentSelectionState(treeRow.parent, visibleRowIDs);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * Handle the selection state of a given row based the selection states of its direct children
+     */
+    private handleRowSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
+        let visibleChildren = [];
+        if (treeRow && treeRow.children) {
+            treeRow.children.forEach(child => {
+                if (visibleRowIDs.indexOf(child.rowID) >= 0) {
+                    visibleChildren.push(child);
+                }
+            });
+        }
+        if (visibleChildren.length) {
+            if (visibleChildren.every(row => this.rowsToBeSelected.has(row.rowID))) {
+                this.rowsToBeSelected.add(treeRow.rowID);
+                this.rowsToBeIndeterminate.delete(treeRow.rowID);
+            } else if (visibleChildren.some(row => this.rowsToBeSelected.has(row.rowID) || this.rowsToBeIndeterminate.has(row.rowID))) {
+                this.rowsToBeIndeterminate.add(treeRow.rowID);
+                this.rowsToBeSelected.delete(treeRow.rowID);
+            } else {
+                this.rowsToBeIndeterminate.delete(treeRow.rowID);
+                this.rowsToBeSelected.delete(treeRow.rowID);
+            }
+        } else {
+            // if the children of the row has been deleted and the row was selected do not change its state
+            if (this.selectionService.isRowSelected(treeRow.rowID)) {
+                this.rowsToBeSelected.add(treeRow.rowID);
+                this.rowsToBeIndeterminate.delete(treeRow.rowID);
+            }
+            else {
+                this.rowsToBeSelected.delete(treeRow.rowID);
+                this.rowsToBeIndeterminate.delete(treeRow.rowID);
+            }
+        }
+    }
+
+    public handleCascadeSelectionByFilteringAndCRUD(parents: Set<any>, firstExecution: boolean = true, visibleRowIDs?: any[], crudRowID?: any) {
+        if (firstExecution) {
+            // if the tree grid has flat structure, do not explicitly handle the selection state of the rows
+            if (!parents.size) {
+                return;
+            }
+            visibleRowIDs = this.selectionService.getRowIDs(this.selectionService.allData);
+            this.rowsToBeSelected = new Set(this.selectionService.rowSelection);
+            this.rowsToBeIndeterminate = new Set(this.selectionService.indeterminateRows);
+            if (crudRowID) {
+                this.selectionService.rowSelection.delete(crudRowID);
+            }
+        }
+        if (!parents.size) {
+            this.selectionService.rowSelection = new Set(this.rowsToBeSelected);
+            this.selectionService.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+            // TO DO: emit selectionChangeD event, calculate its args through the handleAddedAndRemovedArgs method
+            return;
+        }
+        let newParents = new Set<any>();
+        parents.forEach(parent => {
+            this.handleRowSelectionState(parent, visibleRowIDs);
+            if (parent && parent.parent) {
+                newParents.add(parent.parent);
+            }
+        });
+        this.handleCascadeSelectionByFilteringAndCRUD(newParents, false, visibleRowIDs);
+    }
+
+    cascadeSelectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {
+        if (clearPrevSelection) {
+            this.selectionService.indeterminateRows.clear();
+            this.selectionService.rowSelection.clear();
+            this.calculateRowsNewSelectionState({ added: rowIDs, removed: [] });
+        } else {
+            let oldSelection = this.selectionService.getSelectedRows();
+            let newSelection = [...oldSelection, ...rowIDs];
+            let args = { oldSelection, newSelection };
+
+            // retrieve only the rows without their parents/children which has to be added to the selection
+            this.handleAddedAndRemovedArgs(args);
+
+            this.calculateRowsNewSelectionState(args);
+        }
+        this.selectionService.rowSelection = new Set(this.rowsToBeSelected);
+        this.selectionService.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+        this.selectionService.clearHeaderCBState();
+        this.selectionService.selectedRowsChange.next();
+    }
+
+    cascadeDeselectRowsWithNoEvent(rowIDs: any[]): void {
+        let args = { added: [], removed: rowIDs };
+        this.calculateRowsNewSelectionState(args);
+
+        this.selectionService.rowSelection = new Set(this.rowsToBeSelected);
+        this.selectionService.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+        this.selectionService.clearHeaderCBState();
+        this.selectionService.selectedRowsChange.next();
+    }
+
+    private get_all_children(record: ITreeGridRecord, children?: any[]): any[] {
+        if (!children) {
+            children = [];
+        }
+        if (record && record.children && record.children.length) {
+            for (const child of record.children) {
+                this.get_all_children(child, children);
+                children.push(child);
+            }
+        }
+        return children;
+    }
+
     public allow_expansion_state_change(rowID, expanded): boolean {
         const grid = this.grid;
         const row = grid.records.get(rowID);
         if (row.expanded === expanded ||
             ((!row.children || !row.children.length) && (!grid.loadChildrenOnDemand ||
-            (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
+                (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
             return false;
         }
         return true;
@@ -95,10 +365,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public deleteRowById(rowID: any) {
         const treeGrid = this.grid;
         const flatDataWithCascadeOnDeleteAndTransactions =
-        treeGrid.primaryKey &&
-        treeGrid.foreignKey &&
-        treeGrid.cascadeOnDelete &&
-        treeGrid.transactions.enabled;
+            treeGrid.primaryKey &&
+            treeGrid.foreignKey &&
+            treeGrid.cascadeOnDelete &&
+            treeGrid.transactions.enabled;
 
         if (flatDataWithCascadeOnDeleteAndTransactions) {
             treeGrid.transactions.startPending();
@@ -238,7 +508,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             if (!parentRecord) {
                 throw Error('Invalid parent row ID!');
             }
-            this.grid.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
+            this.grid.summaryService.clearSummaryCache({ rowID: parentRecord.rowID });
             if (this.grid.primaryKey && this.grid.foreignKey) {
                 data[this.grid.foreignKey] = parentRowID;
                 super.addRowToData(data);

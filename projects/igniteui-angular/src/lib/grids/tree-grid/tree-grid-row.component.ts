@@ -134,6 +134,13 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     /**
      * @hidden
      */
+    get indeterminate(): boolean {
+        return this.selectionService.isRowInIndeterminateState(this.rowID);
+    }
+
+    /**
+     * @hidden
+     */
     protected resolveClasses(): string {
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
