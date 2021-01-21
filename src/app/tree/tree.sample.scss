@@ -1,0 +1,26 @@
+.row {
+    display: flex;
+    flex-flow: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.tree-container {
+    width: 50%;
+}
+
+.controls {
+    padding: 40px;
+    .row {
+        border: 2px solid#d1d1d1;
+        padding: 12px;
+        margin: 12px;
+    }
+}
+
+.meduim {
+    width: 400px
+}

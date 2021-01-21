@@ -1,0 +1,56 @@
+<div class="column controls meduim">
+    <div class="row">
+        <igx-input-group class="medium">
+            <label igxLabel for="time">Animation Duration</label>
+            <input igxInput [(ngModel)]="animationDuration" name="time" type="number">
+        </igx-input-group>
+    </div>
+
+    <div class="row">
+        <igx-input-group class="medium" type="search">
+            <label igxLabel for="search">Search By Key</label>
+            <input #searchCriteria igxInput name="search" type="text">
+        </igx-input-group>
+        <button igxButton (click)="customSearch(searchCriteria.value)">Log node</button>
+    </div>
+    <div class="row">
+        <label for="branchExpand"></label>
+        <igx-switch name="branchExpand" [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="column tree-container">
+        <p>IgxTree</p>
+        <igx-tree #tree1 class="medium" [singleBranchExpand]="singleBranchExpand"
+            [animationSettings]="animationSettings">
+            <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
+                {{ node.CompanyName }}
+                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
+                    {{ child.CompanyName }}
+                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
+                        {{ leafchild.CompanyName }}
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree>
+    </div>
+
+
+    <div class="column tree-container">
+        <p>IgxTree 2: The Branchening</p>
+        <igx-tree class="medium">
+            <igx-tree-node *ngFor="let node of data" [data]="node">
+                {{ node.CompanyName }}
+                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
+                    {{ child.CompanyName }}
+                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
+                        {{ leafchild.CompanyName }}
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree>
+    </div>
+</div>

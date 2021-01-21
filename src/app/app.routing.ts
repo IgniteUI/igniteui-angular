@@ -86,6 +86,7 @@ import { GridFormattingComponent } from './grid-formatting/grid-formatting.compo
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
+import { TreeSampleComponent } from './tree/tree.sample';
 
 const appRoutes = [
     {
@@ -341,6 +342,10 @@ const appRoutes = [
     {
         path: 'gridMasterDetail',
         component: GridMasterDetailSampleComponent
+    },
+    {
+        path: 'tree',
+        component: TreeSampleComponent
     },
     {
         path: 'treeGrid',
