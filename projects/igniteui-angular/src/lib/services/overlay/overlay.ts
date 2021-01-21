@@ -635,7 +635,7 @@ export class IgxOverlayService implements OnDestroy {
 
         //  if there is closing animation already started start open animation from where close one has reached
         //  and reset close animation
-        if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
+        if (info?.closeAnimationPlayer.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
             //  the previous has finished we need the amount up to 1, therefore we are subtracting what
@@ -664,7 +664,7 @@ export class IgxOverlayService implements OnDestroy {
 
         //  if there is opening animation already started start close animation from where open one has reached
         //  and remove open animation
-        if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
+        if (info?.openAnimationPlayer.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
             //  the previous has finished we need the amount up to 1, therefore we are subtracting what
@@ -856,12 +856,12 @@ export class IgxOverlayService implements OnDestroy {
                 this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
                 if (info.openAnimationPlayer) {
                     info.openAnimationPlayer.reset();
-                    // calling reset does not change hasStarted to false. This is why we are doing it her via internal field
+                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
                     (info.openAnimationPlayer as any)._started = false;
                 }
                 if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
                     info.closeAnimationPlayer.reset();
-                    // calling reset does not change hasStarted to false. This is why we are doing it her via internal field
+                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
                     (info.closeAnimationPlayer as any)._started = false;
                 }
             });
@@ -881,11 +881,13 @@ export class IgxOverlayService implements OnDestroy {
                 this.onCloseDone(info);
                 if (info.closeAnimationPlayer) {
                     info.closeAnimationPlayer.reset();
+                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
                     (info.closeAnimationPlayer as any)._started = false;
                 }
 
                 if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
                     info.openAnimationPlayer.reset();
+                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
                     (info.openAnimationPlayer as any)._started = false;
                 }
             });

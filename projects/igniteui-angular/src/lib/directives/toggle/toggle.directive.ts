@@ -215,18 +215,20 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             return;
         }
 
+        this._collapsed = false;
+        this.cdr.detectChanges();
+
         if (!info) {
             this.unsubscribe();
             this.subscribe();
             this._overlayId = this.overlayService.attach(this.elementRef, overlaySettings);
         }
 
-        this._collapsed = false;
-        this.cdr.detectChanges();
-
         const openEventArgs: ToggleViewCancelableEventArgs = { cancel: false, owner: this, id: this._overlayId };
         this.onOpening.emit(openEventArgs);
         if (openEventArgs.cancel) {
+            this.unsubscribe();
+            this.overlayService.detach(this._overlayId);
             this._collapsed = true;
             this.cdr.detectChanges();
             return;

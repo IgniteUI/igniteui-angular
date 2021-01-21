@@ -303,30 +303,29 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             fixture.detectChanges();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, {
-                outlet: button,
-                modal: false
-            }));
+            let id = overlay.attach(SimpleDynamicComponent, { outlet: button, modal: false });
+            overlay.show(id);
             tick();
             let wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             expect(wrapper).toBeDefined();
             expect(wrapper.parentNode).toBe(button.nativeElement);
-            overlay.detachAll();
+            overlay.detach(id);
+            tick();
 
-            overlay.show(overlay.attach(SimpleDynamicComponent, { modal: false }));
+            id = overlay.attach(SimpleDynamicComponent, { modal: false });
+            overlay.show(id);
             tick();
             wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             expect(wrapper).toBeDefined();
             expect(wrapper.parentElement.classList).toContain('igx-overlay');
             expect(wrapper.parentElement.parentElement).toBe(document.body);
-            overlay.detachAll();
+            overlay.detach(id);
+            tick();
 
             const outlet = document.createElement('div');
             fixture.debugElement.nativeElement.appendChild(outlet);
-            overlay.show(overlay.attach(SimpleDynamicComponent, {
-                modal: false,
-                outlet: new IgxOverlayOutletDirective(new ElementRef(outlet))
-            }));
+            id = overlay.attach(SimpleDynamicComponent, { modal: false, outlet: new IgxOverlayOutletDirective(new ElementRef(outlet)) });
+            overlay.show(id);
             tick();
             wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             expect(wrapper).toBeDefined();
@@ -1324,14 +1323,16 @@ describe('igxOverlay', () => {
                 for (let j = 0; j < verAl.length; j++) {
                     positionSettings.verticalDirection = VerticalAlignment[verAl[j]];
                     overlaySettings.positionStrategy = new GlobalPositionStrategy(positionSettings);
-                    overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                    const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                    overlay.show(id);
                     tick();
 
                     const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
                     const overlayWrapper = overlayDiv.children[0] as HTMLDivElement;
                     expect(overlayWrapper.style.justifyContent).toBe(cssStyles[i]);
                     expect(overlayWrapper.style.alignItems).toBe(cssStyles[j]);
-                    overlay.detachAll();
+                    overlay.detach(id);
+                    tick();
                 }
             }
         }));
@@ -2097,7 +2098,8 @@ describe('igxOverlay', () => {
                 positionSettings.horizontalStartPoint = horizontalAlignment;
                 positionSettings.verticalStartPoint = verticalAlignment;
                 overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
                 tick();
                 fix.detectChanges();
                 const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
@@ -2109,7 +2111,9 @@ describe('igxOverlay', () => {
                 expect(wrapperMargin).toEqual(expectedMargin);
                 expect(contentMargin).toEqual(expectedMargin);
                 expect(elementMargin).toEqual(expectedMargin);
-                overlay.detachAll();
+                overlay.detach(id);
+                tick();
+                fix.detectChanges();
             }
         }));
 
@@ -2584,7 +2588,8 @@ describe('igxOverlay', () => {
                 positionSettings.horizontalStartPoint = horizontalAlignment;
                 positionSettings.verticalStartPoint = verticalAlignment;
                 overlaySettings.positionStrategy = new ElasticPositionStrategy(positionSettings);
-                overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
+                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+                overlay.show(id);
                 tick();
                 fix.detectChanges();
                 const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
@@ -2596,7 +2601,9 @@ describe('igxOverlay', () => {
                 expect(wrapperMargin).toEqual(expectedMargin);
                 expect(contentMargin).toEqual(expectedMargin);
                 expect(elementMargin).toEqual(expectedMargin);
-                overlay.hideAll();
+                overlay.hide(id);
+                tick();
+                fix.detectChanges();
             }
         }));
 
