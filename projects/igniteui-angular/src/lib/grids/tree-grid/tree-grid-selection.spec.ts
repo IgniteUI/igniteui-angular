@@ -270,9 +270,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         }));
 
-        it('Should bind selectedRows properly', () => {
+        it('Should bind selectedRows properly', fakeAsync(() => {
             fix.componentInstance.selectedRows = [147, 19, 957];
             fix.detectChanges();
+            tick(100);
 
             expect(treeGrid.getRowByIndex(0).selected).toBeTrue();
             expect(treeGrid.getRowByIndex(7).selected).toBeTrue();
@@ -280,11 +281,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             fix.componentInstance.selectedRows = [847, 711];
             fix.detectChanges();
+            tick(100);
 
             expect(treeGrid.getRowByIndex(0).selected).toBeFalse();
             expect(treeGrid.getRowByIndex(4).selected).toBeTrue();
             expect(treeGrid.getRowByIndex(8).selected).toBeTrue();
-        });
+        }));
     });
 
     describe('UI Row Selection', () => {

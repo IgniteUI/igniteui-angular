@@ -1087,19 +1087,22 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
         });
 
-        it('Should bind selectedRows properly', () => {
+        it('Should bind selectedRows properly', fakeAsync(() => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.componentInstance.selectedRows = ['0', '2', '3'];
             fix.detectChanges();
+            tick(100);
+
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
             expect(hierarchicalGrid.getRowByKey('1').selected).toBeFalse();
 
             fix.componentInstance.selectedRows = ['2'];
             fix.detectChanges();
+            tick(100);
 
             expect(hierarchicalGrid.getRowByKey('2').selected).toBeTrue();
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeFalse();
-        });
+        }));
 
         it('Should not clear root selection state when changing selection mode of child grid', () => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
