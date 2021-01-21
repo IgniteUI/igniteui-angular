@@ -459,7 +459,8 @@ describe('igxOverlay', () => {
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
+            expect(overlayInstance.onClosed.emit).
+                toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, event: undefined });
 
             const secondCallId = overlayInstance.show(overlayInstance.attach(fix.componentInstance.item));
             tick();
@@ -481,7 +482,7 @@ describe('igxOverlay', () => {
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, event: undefined });
         }));
 
         it('Should properly set style on position method call - GlobalPosition.', () => {

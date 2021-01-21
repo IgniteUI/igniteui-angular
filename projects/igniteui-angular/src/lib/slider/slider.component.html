@@ -1,7 +1,7 @@
 <div class="igx-slider__track">
     <igx-ticks
         *ngIf="showTicks && showTopTicks"
-        [ticksOrientation]="0"
+        ticksOrientation="top"
         [primaryTicks]="primaryTicks"
         [secondaryTicks]="secondaryTicks"
         [primaryTickLabels]="primaryTickLabels"
@@ -18,7 +18,7 @@
 
     <igx-ticks
         *ngIf="showTicks && showBottomTicks"
-        [ticksOrientation]="1"
+        ticksOrientation="bottom"
         [primaryTicks]="primaryTicks"
         [secondaryTicks]="secondaryTicks"
         [primaryTickLabels]="primaryTickLabels"
@@ -33,7 +33,7 @@
 <div class="igx-slider__thumbs">
     <igx-thumb-label
         *ngIf="isRange"
-        [type]="0"
+        type="from"
         [value]="lowerLabel"
         [templateRef]="thumbFromTemplateRef"
         [continuous]="continuous"
@@ -44,7 +44,7 @@
     <igx-thumb
         *ngIf="isRange"
         #thumbFrom
-        [type]="0"
+        type="from"
         [value]="lowerLabel"
         [disabled]="disabled"
         [continuous]="continuous"
@@ -60,7 +60,7 @@
 
     <igx-thumb-label
         [value]="upperLabel"
-        [type]="1"
+        type="to"
         [templateRef]="thumbToTemplateRef"
         [continuous]="continuous"
         [context]="context"
@@ -69,7 +69,7 @@
 
     <igx-thumb
         #thumbTo
-        [type]="1"
+        type="to"
         [value]="upperLabel"
         [disabled]="disabled"
         [continuous]="continuous"

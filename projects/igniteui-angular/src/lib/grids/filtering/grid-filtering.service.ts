@@ -409,7 +409,12 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            const pipeArgs = this.grid.getColumnByName(expression.fieldName).pipeArgs;
+            const column = this.grid.getColumnByName(expression.fieldName);
+            const formatter = column.formatter;
+            if (formatter) {
+                return formatter(expression.searchVal);
+            }
+            const pipeArgs = column.pipeArgs;
             return this.grid.datePipe.transform(expression.searchVal, pipeArgs.format, undefined, this.grid.locale);
         } else {
             return expression.searchVal;
