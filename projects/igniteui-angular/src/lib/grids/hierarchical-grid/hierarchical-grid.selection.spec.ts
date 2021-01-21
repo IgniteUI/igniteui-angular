@@ -1104,10 +1104,11 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeFalse();
         }));
 
-        it('Should not clear root selection state when changing selection mode of child grid', () => {
+        it('Should not clear root selection state when changing selection mode of child grid', fakeAsync(() => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.componentInstance.selectedRows = ['0', '1'];
             fix.detectChanges();
+            tick(100);
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
 
             const thirdRow = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
@@ -1117,6 +1118,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const childGrid = rowIsland1.rowIslandAPI.getChildGrids()[0];
             childGrid.selectedRows = ['20', '21'];
             fix.detectChanges();
+            tick(100);
             expect(hierarchicalGrid.selectedRows.length).toEqual(2);
             expect(childGrid.selectedRows.length).toEqual(2);
 
@@ -1124,7 +1126,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
             expect(hierarchicalGrid.selectedRows.length).toEqual(2);
             expect(childGrid.selectedRows.length).toEqual(0);
-        });
+        }));
     });
 
     describe('Row Selection CRUD', () => {
