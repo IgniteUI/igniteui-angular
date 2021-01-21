@@ -9,12 +9,6 @@
             [showToolbar]="true" [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true"
             exportText="Export" exportExcelText="Export to Excel" exportCsvText="Export to CSV" [allowFiltering]="true"
             [filterMode]="'excelStyleFilter'">
-            <igx-grid-toolbar>
-                <igx-grid-toolbar-actions>
-                    <igx-grid-toolbar-exporter [exportExcel]="true">
-                    </igx-grid-toolbar-exporter>
-                </igx-grid-toolbar-actions>
-            </igx-grid-toolbar>
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
                 [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
                 [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"

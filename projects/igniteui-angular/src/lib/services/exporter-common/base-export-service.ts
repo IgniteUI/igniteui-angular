@@ -246,7 +246,7 @@ export abstract class IgxBaseExporter {
 
         yieldingLoop(records.length, 100, (i) => {
             const row = records[i];
-            this.exportRow(dataToExport, row, i, isSpecialData);
+            this.exportRow(dataToExport, row, i, isSpecialData, options);
         }, () => {
             this.exportDataImplementation(dataToExport, options);
             this.resetDefaults();
@@ -255,11 +255,15 @@ export abstract class IgxBaseExporter {
 
     protected abstract exportDataImplementation(data: IExportRecord[], options: IgxExporterOptionsBase): void;
 
-    private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
+    private exportRow(data: IExportRecord[], record: IExportRecord, index: number,
+        isSpecialData: boolean, options: IgxExporterOptionsBase) {
+        const isCsv = 'fileType' in options;
+
         if (!isSpecialData) {
             record.data = this._columnList.reduce((a, e) => {
-                if (!e.skip && e.field in record.data) {
-                    let rawValue = resolveNestedPath(record.data, e.field);
+                if (!e.skip && (record.data.hasOwnProperty(e.field) || isCsv)) {
+                    let rawValue = 'fileType' in options ? resolveNestedPath(record, e.field) :
+                        resolveNestedPath(record.data, e.field);
 
                     const shouldApplyFormatter = e.formatter && !e.skipFormatter;
 
@@ -288,7 +292,8 @@ export abstract class IgxBaseExporter {
         this.onRowExport.emit(rowArgs);
 
         if (!rowArgs.cancel) {
-            data.push(record);
+            const recordData = isCsv ? record.data : record;
+            data.push(recordData);
         }
     }
 
