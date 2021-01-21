@@ -308,9 +308,10 @@ export class IgxColumnResizingService {
 
                 const minWidth = col.target.minWidthPx;
                 const maxWidth = col.target.maxWidthPx;
+                let resizingEventArgs: IColumnResizingEventArgs;
                 if (currentResizeWidth + resizeScaled < minWidth) {
 
-                    const eventArgs: IColumnResizingEventArgs = {
+                    resizingEventArgs = {
                         column: col.target,
                         prevWidth: colWidth.toString(),
                         newWidth: (currentResizeWidth + resizeScaled).toString(),
@@ -320,10 +321,8 @@ export class IgxColumnResizingService {
                     // this.column.grid.columnResizing.emit(eventArgs);
 
                     if (justCalulate) {
-                        return eventArgs;
+                        return resizingEventArgs;
                     }
-
-                    // if (eventArgs.cancel) { return; }
 
                     col.target.width = isPercentageWidth ? col.target.minWidthPercent + '%' : minWidth + 'px';
                     updatedDiff += (currentResizeWidth - minWidth);
@@ -331,7 +330,7 @@ export class IgxColumnResizingService {
                     setMinMaxCols = true;
                 } else if (maxWidth && (currentResizeWidth + resizeScaled > maxWidth)) {
 
-                    const eventArgs: IColumnResizingEventArgs = {
+                    resizingEventArgs = {
                         column: col.target,
                         prevWidth: colWidth.toString(),
                         newWidth: (currentResizeWidth + resizeScaled).toString(),
@@ -339,7 +338,7 @@ export class IgxColumnResizingService {
                         owner: this
                     };
                     if (justCalulate) {
-                        return eventArgs;
+                        return resizingEventArgs;
                     }
                     // this.column.grid.columnResizing.emit(eventArgs);
 
