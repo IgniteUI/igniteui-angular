@@ -249,6 +249,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             this.selectionService.rowSelection = new Set(this.rowsToBeSelected);
             this.selectionService.indeterminateRows = new Set(this.rowsToBeIndeterminate);
             // TO DO: emit selectionChangeD event, calculate its args through the handleAddedAndRemovedArgs method
+            this.selectionService.clearHeaderCBState();
+            this.selectionService.selectedRowsChange.next();
             return;
         }
         const newParents = new Set<any>();
