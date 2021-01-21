@@ -7,10 +7,12 @@ import { Injectable } from '@angular/core';
 import { ColumnType } from '../common/column.interface';
 import { mergeObjects } from '../../core/utils';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { ThrowStmt } from '@angular/compiler';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
+
+    private rowsToBeSelected: Set<any>;
+    private rowsToBeIndeterminate: Set<any>;
 
     public get selectionService(): IgxGridSelectionService {
         return this.grid.selectionService;
@@ -38,9 +40,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
         return data;
     }
-
-    private rowsToBeSelected: Set<any>;
-    private rowsToBeIndeterminate: Set<any>;
 
     /**
      * @hidden @internal
@@ -91,10 +90,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
      */
     private collectRowsChildrenAndDirectParents(rowsToBeProcessed: Set<any>, visibleRowIDs: any[]): Set<any> {
-        let processedRowsParents = new Set<any>();
+        const processedRowsParents = new Set<any>();
         Array.from(rowsToBeProcessed).forEach((rowID) => {
             rowsToBeProcessed.add(rowID);
-            let rowTreeRecord = this.get_rec_by_id(rowID);
+            const rowTreeRecord = this.get_rec_by_id(rowID);
             const rowAndAllChildren = this.get_all_children(rowTreeRecord);
             rowAndAllChildren.forEach(row => {
                 if (visibleRowIDs.indexOf(row.rowID) >= 0) {
@@ -161,7 +160,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             if (!this.rowsToBeIndeterminate.size && !removed.size) {
                 oldIndeterminateRows.forEach(x => {
                     if (!this.rowsToBeSelected.has(x)) {
-                        this.rowsToBeIndeterminate.add(x)
+                        this.rowsToBeIndeterminate.add(x);
                     }
                 });
             } else {
@@ -187,8 +186,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         this.handleRowSelectionState(treeRow, visibleRowIDs);
         if (!treeRow.parent) {
             return;
-        }
-        else {
+        } else {
             this.handleParentSelectionState(treeRow.parent, visibleRowIDs);
         }
     }
@@ -198,7 +196,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      * Handle the selection state of a given row based the selection states of its direct children
      */
     private handleRowSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
-        let visibleChildren = [];
+        const visibleChildren = [];
         if (treeRow && treeRow.children) {
             treeRow.children.forEach(child => {
                 if (visibleRowIDs.indexOf(child.rowID) >= 0) {
@@ -222,17 +220,21 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             if (this.selectionService.isRowSelected(treeRow.rowID)) {
                 this.rowsToBeSelected.add(treeRow.rowID);
                 this.rowsToBeIndeterminate.delete(treeRow.rowID);
-            }
-            else {
+            } else {
                 this.rowsToBeSelected.delete(treeRow.rowID);
                 this.rowsToBeIndeterminate.delete(treeRow.rowID);
             }
         }
     }
 
-    public handleCascadeSelectionByFilteringAndCRUD(parents: Set<any>, firstExecution: boolean = true, visibleRowIDs?: any[], crudRowID?: any) {
+    public handleCascadeSelectionByFilteringAndCRUD(
+        parents: Set<any>,
+        firstExecution: boolean = true,
+        visibleRowIDs?: any[],
+        crudRowID?: any) {
         if (firstExecution) {
-            // if the tree grid has flat structure, do not explicitly handle the selection state of the rows
+            // if the tree grid has flat structure
+            // do not explicitly handle the selection state of the rows
             if (!parents.size) {
                 return;
             }
@@ -249,7 +251,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             // TO DO: emit selectionChangeD event, calculate its args through the handleAddedAndRemovedArgs method
             return;
         }
-        let newParents = new Set<any>();
+        const newParents = new Set<any>();
         parents.forEach(parent => {
             this.handleRowSelectionState(parent, visibleRowIDs);
             if (parent && parent.parent) {
@@ -265,9 +267,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             this.selectionService.rowSelection.clear();
             this.calculateRowsNewSelectionState({ added: rowIDs, removed: [] });
         } else {
-            let oldSelection = this.selectionService.getSelectedRows();
-            let newSelection = [...oldSelection, ...rowIDs];
-            let args = { oldSelection, newSelection };
+            const oldSelection = this.selectionService.getSelectedRows();
+            const newSelection = [...oldSelection, ...rowIDs];
+            const args = { oldSelection, newSelection };
 
             // retrieve only the rows without their parents/children which has to be added to the selection
             this.handleAddedAndRemovedArgs(args);
@@ -281,7 +283,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     cascadeDeselectRowsWithNoEvent(rowIDs: any[]): void {
-        let args = { added: [], removed: rowIDs };
+        const args = { added: [], removed: rowIDs };
         this.calculateRowsNewSelectionState(args);
 
         this.selectionService.rowSelection = new Set(this.rowsToBeSelected);

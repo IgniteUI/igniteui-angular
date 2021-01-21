@@ -792,7 +792,7 @@ export class IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
-        if (this.grid.rowSelection === "multipleCascade") {
+        if (this.grid.rowSelection === 'multipleCascade') {
             (this.grid.gridAPI as IgxTreeGridAPIService).cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
             return;
         }
@@ -804,7 +804,7 @@ export class IgxGridSelectionService {
 
     /** Deselect specified rows. No event is emitted. */
     deselectRowsWithNoEvent(rowIDs: any[]): void {
-        if (this.grid.rowSelection === "multipleCascade") {
+        if (this.grid.rowSelection === 'multipleCascade') {
             (this.grid.gridAPI as IgxTreeGridAPIService).cascadeDeselectRowsWithNoEvent(rowIDs);
             return;
         }
@@ -862,7 +862,7 @@ export class IgxGridSelectionService {
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
-        if (this.grid.rowSelection === "multipleCascade") {
+        if (this.grid.rowSelection === 'multipleCascade') {
             (this.grid.gridAPI as IgxTreeGridAPIService).emitRowSelectionEvent(newSelection, added, removed, event);
             return;
         }

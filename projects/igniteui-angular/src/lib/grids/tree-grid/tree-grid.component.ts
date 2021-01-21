@@ -352,25 +352,27 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
 
         this.onRowAdded.subscribe(args => {
-            if (this.rowSelection === "multipleCascade") {
-                let rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
+            if (this.rowSelection === 'multipleCascade') {
+                const rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec.parent) {
-                    (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(new Set([rec.parent]), true, undefined, rec.parent.rowID);
+                    (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(
+                        new Set([rec.parent]), true, undefined, rec.parent.rowID);
                 }
             }
         });
 
         this.onRowDeleted.subscribe(args => {
-            if (this.rowSelection === "multipleCascade") {
+            if (this.rowSelection === 'multipleCascade') {
                 if (args.data) {
-                    let rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
+                    const rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(
+                        this.primaryKey ? args.data[this.primaryKey] : args.data);
                     this.handleCascadeSelection(args, rec);
                 } else {
                     // if a row has been added and before commiting the transaction deleted
-                    let leafRowsDirectParents = new Set<any>();
+                    const leafRowsDirectParents = new Set<any>();
                     this.records.forEach(record => {
                         if (record && !record.children && record.parent) {
-                            leafRowsDirectParents.add(record.parent)
+                            leafRowsDirectParents.add(record.parent);
                         }
                     });
                     requestAnimationFrame(() => {
@@ -382,11 +384,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
 
         this.onFilteringDone.subscribe(() => {
-            if (this.rowSelection === "multipleCascade") {
-                let leafRowsDirectParents = new Set<any>();
+            if (this.rowSelection === 'multipleCascade') {
+                const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
                     if (record && !record.children && record.parent) {
-                        leafRowsDirectParents.add(record.parent)
+                        leafRowsDirectParents.add(record.parent);
                     }
                 });
                 this._gridAPI.handleCascadeSelectionByFilteringAndCRUD(leafRowsDirectParents);
@@ -398,13 +400,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             let actions = [];
             if (event.origin === TransactionEventOrigin.REDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
-                if (this.rowSelection === "multipleCascade") {
+                if (this.rowSelection === 'multipleCascade') {
                     this.handleCascadeSelection(event);
                 }
             } else if (event.origin === TransactionEventOrigin.UNDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
-                if (this.rowSelection === "multipleCascade") {
-                    if (event.actions[0].transaction.type === "add") {
+                if (this.rowSelection === 'multipleCascade') {
+                    if (event.actions[0].transaction.type === 'add') {
                         const rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(event.actions[0].transaction.id);
                         this.handleCascadeSelection(event, rec);
                     } else {
@@ -502,7 +504,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
         requestAnimationFrame(() => {
-            if (this.rowSelection === "multipleCascade") {
+            if (this.rowSelection === 'multipleCascade') {
                 if (this.selectionService.isRowSelected(parentID)) {
                     this.selectionService.rowSelection.delete(parentID);
                     this.selectionService.selectRowsWithNoEvent([parentID]);
