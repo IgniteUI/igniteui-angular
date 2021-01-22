@@ -1,5 +1,6 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { isIE } from '../../core/utils';
 
 /**
  * @hidden
@@ -104,6 +105,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (evt.ctrlKey) {
             return;
         }
+        if (evt.shiftKey && isIE()) {
+            evt.preventDefault();
+        }
         let scrollDeltaX;
         let scrollDeltaY;
         const scrollStep = this.wheelStep;
@@ -150,7 +154,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 // Prevent navigating through pages when scrolling on Mac
                 evt.preventDefault();
             }
-        } else if (scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
+        } else if (evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'horizontal') {
+            const step = this._startX + scrollDeltaY * scrollStep;
+            this._scrollToX(step);
+        } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );

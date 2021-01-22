@@ -49,14 +49,14 @@ export type IgxInputGroupTheme = keyof typeof IgxInputGroupThemeEnum;
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html',
     providers: [
-        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }
+        { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
     ],
 })
 export class IgxInputGroupComponent extends DisplayDensityBase
     implements IgxInputGroupBase, AfterContentInit {
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _variant: IgxInputGroupTheme = 'material';
+    private _variant: IgxInputGroupTheme;
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -215,7 +215,31 @@ export class IgxInputGroupComponent extends DisplayDensityBase
         return this._type || this._inputGroupType || 'line';
     }
 
-    /** @hidden @internal */
+    /**
+     * Sets the theme of the input.
+     * Allowed values of type IgxInputGroupTheme.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = 'fluent';
+     * }
+     */
+    @Input()
+    public set theme(variant: IgxInputGroupTheme) {
+        this._variant = variant;
+    }
+
+    /**
+     * Returns the theme of the input.
+     * The returned value is of tyep IgxInputGroupType.
+     * ```typescript
+     * @ViewChild("MyInputGroup")
+     * public inputGroup: IgxInputGroupComponent;
+     * ngAfterViewInit() {
+     *  let inputTheme = this.inputGroup.theme;
+     * }
+     */
     public get theme(): IgxInputGroupTheme {
         return this._variant;
     }
@@ -253,11 +277,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase
     }
 
     ngAfterContentInit() {
-        const variant = this.document.defaultView
-            .getComputedStyle(this.element.nativeElement)
-            .getPropertyValue('--igx-input-group-variant')
-            .trim();
-        this._variant = variant as IgxInputGroupTheme;
+        if (!this.theme) {
+            const variant = this.document.defaultView
+                .getComputedStyle(this.element.nativeElement)
+                .getPropertyValue('--igx-input-group-variant')
+                .trim();
+            this._variant = variant as IgxInputGroupTheme;
+        }
     }
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.
