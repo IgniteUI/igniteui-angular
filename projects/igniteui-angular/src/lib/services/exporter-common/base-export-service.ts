@@ -15,10 +15,17 @@ import { IgxGridBaseDirective } from '../../grids/public_api';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 
+export enum RecordType {
+    GroupedRecord = 1,
+    TreeGridRecord = 2,
+    DataRecord = 3,
+}
+
 export interface IExportRecord {
     data: any;
     level?: number;
     hidden?: boolean;
+    type: number;
 }
 
 /**
@@ -187,7 +194,8 @@ export abstract class IgxBaseExporter {
 
         const records = data.map(d => {
             const record: IExportRecord = {
-                data: d
+                data: d,
+                type: RecordType.DataRecord
             };
 
             return record;
@@ -202,7 +210,8 @@ export abstract class IgxBaseExporter {
         }
 
         if (!this._columnList || this._columnList.length === 0) {
-            const keys = ExportUtilities.getKeysFromData(records);
+            const actualData = records.map(r => r.data);
+            const keys = ExportUtilities.getKeysFromData(actualData);
             this._columnList = keys.map((k) => ({ header: k, field: k, skip: false }));
             this._columnWidthList = new Array<number>(keys.length).fill(DEFAULT_COLUMN_WIDTH);
         }
@@ -242,11 +251,12 @@ export abstract class IgxBaseExporter {
         this._indexOfLastPinnedColumn -= skippedPinnedColumnsCount;
 
         const dataToExport = new Array<IExportRecord>();
-        const isSpecialData = ExportUtilities.isSpecialData(records);
+        const actualData = records.map(r => r.data);
+        const isSpecialData = ExportUtilities.isSpecialData(actualData);
 
         yieldingLoop(records.length, 100, (i) => {
             const row = records[i];
-            this.exportRow(dataToExport, row, i, isSpecialData, options);
+            this.exportRow(dataToExport, row, i, isSpecialData);
         }, () => {
             this.exportDataImplementation(dataToExport, options);
             this.resetDefaults();
@@ -255,17 +265,13 @@ export abstract class IgxBaseExporter {
 
     protected abstract exportDataImplementation(data: IExportRecord[], options: IgxExporterOptionsBase): void;
 
-    private exportRow(data: IExportRecord[], record: IExportRecord, index: number,
-        isSpecialData: boolean, options: IgxExporterOptionsBase) {
-        const isCsv = 'fileType' in options;
-
+    private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData) {
             record.data = this._columnList.reduce((a, e) => {
-                if (!e.skip && (record.data.hasOwnProperty(e.field) || isCsv)) {
-                    let rawValue = 'fileType' in options ? resolveNestedPath(record, e.field) :
-                        resolveNestedPath(record.data, e.field);
+                if (!e.skip) {
+                    let rawValue = resolveNestedPath(record.data, e.field);
 
-                    const shouldApplyFormatter = e.formatter && !e.skipFormatter;
+                    const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== RecordType.GroupedRecord;
 
                     if (e.dataType === 'date' &&
                         !(rawValue instanceof Date) &&
@@ -292,8 +298,7 @@ export abstract class IgxBaseExporter {
         this.onRowExport.emit(rowArgs);
 
         if (!rowArgs.cancel) {
-            const recordData = isCsv ? record.data : record;
-            data.push(recordData);
+            data.push(record);
         }
     }
 
@@ -414,6 +419,7 @@ export abstract class IgxBaseExporter {
                 data: records[i].data,
                 level: records[i].level,
                 hidden: !parentExpanded,
+                type: RecordType.TreeGridRecord
             };
 
             this.flatRecords.push(hierarchicalRecord);
@@ -427,7 +433,8 @@ export abstract class IgxBaseExporter {
         }
         for (let i = 0; i < records.length; i++) {
             const record: IExportRecord = {
-                data: records[i]
+                data: records[i],
+                type: RecordType.DataRecord
             };
 
             this.flatRecords.push(record);
@@ -452,7 +459,8 @@ export abstract class IgxBaseExporter {
             const groupExpression: IExportRecord = {
                 data: { [firstCol]: `${record.expression.fieldName} - ${record.value}` },
                 level: record.level,
-                hidden: !parentExpanded
+                hidden: !parentExpanded,
+                type: RecordType.GroupedRecord,
             };
 
             this.flatRecords.push(groupExpression);
@@ -466,7 +474,8 @@ export abstract class IgxBaseExporter {
                     const currentRecord: IExportRecord = {
                         data: rowRecords[j],
                         level: record.level + 1,
-                        hidden: !(expanded && parentExpanded)
+                        hidden: !(expanded && parentExpanded),
+                        type: RecordType.DataRecord
                     };
 
                     this.flatRecords.push(currentRecord);
