@@ -95,7 +95,7 @@ export class IgxSummaryCellComponent {
      * @hidden @internal
      */
     public isDateSummary(summaryKey: string): boolean {
-        return summaryKey === "latest" || summaryKey === "earliest";
+        return summaryKey === 'latest' || summaryKey === 'earliest';
     }
 
     public translateSummary(summary: IgxSummaryResult): string {
