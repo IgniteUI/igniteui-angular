@@ -11,12 +11,13 @@ import {
     VerticalAlignment
 } from '../../services/public_api';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { ColumnDisplayOrder } from '../common/enums';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 
 /**
- * Base class for the pinning/hiding column actions.
+ * Base class for the pinning/hiding column and exporter actions.
  * @hidden @internal
  */
 @Directive()
@@ -131,9 +132,35 @@ function _makeOverlaySettings(): OverlaySettings {
     };
 }
 
-export abstract class BaseToolbarColumnActions extends BaseToolbarDirective {
+/**
+ * @hidden @internal
+ * Base class for pinning/hiding column actions
+ */
+@Directive()
+export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective {
 
     protected columnActionsUI: IgxColumnActionsComponent;
+
+    @Input()
+    public hideFilter = false;
+
+    @Input()
+    public filterCriteria = '';
+
+    @Input()
+    public columnDisplayOrder: ColumnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
+
+    @Input()
+    public columnsAreaMaxHeight = '100%';
+
+    @Input()
+    public uncheckAllText: string;
+
+    @Input()
+    public checkAllText: string;
+
+    @Input()
+    public indentetion = 30;
 
     public checkAll() {
         this.columnActionsUI.checkAllColumns();
