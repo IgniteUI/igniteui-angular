@@ -27,6 +27,8 @@ import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeFR from '@angular/common/locales/fr';
 
 describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
@@ -389,6 +391,22 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(emptySummaries[0].summaryResult).toBe('0');
                 expect(emptySummaries[1].summaryResult).toBe(null);
                 expect(emptySummaries[2].summaryResult).toBe(null);
+            });
+
+            it('should display summaries for \'date\' dataType based on column formatter', () => {
+                let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+                registerLocaleData(localeFR);
+                const pipe = new DatePipe('fr-FR');
+
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+
+                grid.getColumnByName('OrderDate').formatter = ((value: any) => {
+                    value = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'mediumDate') : 'No value!';
+                    return value;
+                });
+                fix.detectChanges();
+
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 déc. 2025']);
             });
 
             it('should calc tfoot height according number of summary functions', () => {
