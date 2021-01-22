@@ -604,6 +604,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     get index(): number {
         return this.grid.columns.indexOf(this);
     }
+    private _formatter: (value: any) => any;
     /**
      * When autogenerating columns, the formatter is used to format the display of the column data
      * without modifying the underlying bound values.
@@ -627,7 +628,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    formatter: (value: any) => any;
+    set formatter (value: any) {
+        this._formatter = value;
+        this.grid.summaryService.clearSummaryCache();
+    }
+    get formatter(): any {
+        return this._formatter;
+    }
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.

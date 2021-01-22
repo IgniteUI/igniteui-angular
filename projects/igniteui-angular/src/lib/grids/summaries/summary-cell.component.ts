@@ -91,6 +91,13 @@ export class IgxSummaryCellComponent {
         return (this.column.grid as any);
     }
 
+    /**
+     * @hidden @internal
+     */
+    public isDateSummary(summaryKey: string): boolean {
+        return summaryKey === "latest" || summaryKey === "earliest";
+    }
+
     public translateSummary(summary: IgxSummaryResult): string {
         return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
