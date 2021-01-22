@@ -394,7 +394,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
 
             it('should display summaries for \'date\' dataType based on column formatter', () => {
-                let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+                const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
                 registerLocaleData(localeFR);
                 const pipe = new DatePipe('fr-FR');
 
