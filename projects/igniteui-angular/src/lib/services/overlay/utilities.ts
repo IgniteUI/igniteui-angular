@@ -154,6 +154,7 @@ export interface OverlayInfo {
     transformX?: number;
     transformY?: number;
     event?: Event;
+    wrapperElement?: HTMLElement;
 }
 
 /** @hidden */

@@ -16,28 +16,46 @@ import {
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import {
-    IAnimationParams, slideInTop, slideOutBottom, slideOutTop, slideInBottom, fadeIn, fadeOut,
-    scaleInVerTop, scaleOutVerTop, scaleOutVerBottom, scaleInVerBottom, scaleInHorRight, scaleOutHorRight,
-    scaleOutHorLeft, scaleInHorLeft
+    fadeIn,
+    fadeOut,
+    IAnimationParams,
+    scaleInHorLeft,
+    scaleInHorRight,
+    scaleInVerBottom,
+    scaleInVerTop,
+    scaleOutHorLeft,
+    scaleOutHorRight,
+    scaleOutVerBottom,
+    scaleOutVerTop,
+    slideInBottom,
+    slideInTop,
+    slideOutBottom,
+    slideOutTop
 } from '../../animations/main';
-import { showMessage } from '../../core/deprecateDecorators';
 import { PlatformUtil } from '../../core/utils';
-import { IPositionStrategy } from './position/IPositionStrategy';
+import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
-import { GlobalPositionStrategy } from './position/global-position-strategy';
-import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import {
-    OverlayAnimationEventArgs,
-    OverlayCancelableEventArgs,
-    OverlayClosingEventArgs, OverlayEventArgs,
-    OverlayInfo, OverlaySettings,
-    HorizontalAlignment, VerticalAlignment, Point,
-    PositionSettings, AbsolutePosition, RelativePosition, RelativePositionStrategy
-} from './utilities';
 import { ContainerPositionStrategy } from './position/container-position-strategy';
 import { ElasticPositionStrategy } from './position/elastic-position-strategy';
-import { AutoPositionStrategy } from './position/auto-position-strategy';
-import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { GlobalPositionStrategy } from './position/global-position-strategy';
+import { IPositionStrategy } from './position/IPositionStrategy';
+import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
+import {
+    AbsolutePosition,
+    HorizontalAlignment,
+    OverlayAnimationEventArgs,
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs,
+    OverlayEventArgs,
+    OverlayInfo,
+    OverlaySettings,
+    Point,
+    PositionSettings,
+    RelativePosition,
+    RelativePositionStrategy,
+    VerticalAlignment
+} from './utilities';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-main)
@@ -394,7 +412,7 @@ export class IgxOverlayService implements OnDestroy {
             this.playOpenAnimation(info);
         } else {
             //  to eliminate flickering show the element just before onOpened fire
-            info.elementRef.nativeElement.parentElement.parentElement.style.visibility = '';
+            info.wrapperElement.style.visibility = '';
             info.visible = true;
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
         }
@@ -527,9 +545,9 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private moveElementToOverlay(info: OverlayInfo) {
-        const wrapperElement = this.getWrapperElement();
-        const contentElement = this.getContentElement(wrapperElement, info.settings.modal);
-        this.getOverlayElement(info).appendChild(wrapperElement);
+        info.wrapperElement = this.getWrapperElement();
+        const contentElement = this.getContentElement(info.wrapperElement, info.settings.modal);
+        this.getOverlayElement(info).appendChild(info.wrapperElement);
         contentElement.appendChild(info.elementRef.nativeElement);
     }
 
@@ -590,9 +608,9 @@ export class IgxOverlayService implements OnDestroy {
 
     private onCloseDone(info: OverlayInfo) {
         info.visible = false;
-        if (info.elementRef.nativeElement.parentElement.parentElement) {
+        if (info.wrapperElement) {
             // to eliminate flickering show the element just before animation start
-            info.elementRef.nativeElement.parentElement.parentElement.style.visibility = 'hidden';
+            info.wrapperElement.style.visibility = 'hidden';
         }
         this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         delete info.event;
@@ -610,13 +628,14 @@ export class IgxOverlayService implements OnDestroy {
             this._appRef.detachView(info.componentRef.hostView);
             info.componentRef.destroy();
         }
-
         if (info.hook) {
             info.hook.parentElement.insertBefore(info.elementRef.nativeElement, info.hook);
             info.hook.parentElement.removeChild(info.hook);
             delete info.hook;
         }
-
+        if (info.wrapperElement) {
+            delete info.wrapperElement;
+        }
         const index = this._overlayInfos.indexOf(info);
         this._overlayInfos.splice(index, 1);
 
@@ -629,13 +648,13 @@ export class IgxOverlayService implements OnDestroy {
 
     private playOpenAnimation(info: OverlayInfo) {
         //  if there is opening animation already started do nothing
-        if (info.openAnimationPlayer.hasStarted()) {
+        if (info.openAnimationPlayer == null || info.openAnimationPlayer.hasStarted()) {
             return;
         }
 
         //  if there is closing animation already started start open animation from where close one has reached
         //  and reset close animation
-        if (info?.closeAnimationPlayer.hasStarted()) {
+        if (info.closeAnimationPlayer?.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
             //  the previous has finished we need the amount up to 1, therefore we are subtracting what
@@ -651,20 +670,20 @@ export class IgxOverlayService implements OnDestroy {
         this.onAnimation.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
 
         //  to eliminate flickering show the element just before animation start
-        info.elementRef.nativeElement.parentElement.parentElement.style.visibility = '';
+        info.wrapperElement.style.visibility = '';
         info.visible = true;
         info.openAnimationPlayer.play();
     }
 
     private playCloseAnimation(info: OverlayInfo, event?: Event) {
         //  if there is closing animation already started do nothing
-        if (info.closeAnimationPlayer.hasStarted()) {
+        if (info.closeAnimationPlayer == null || info.closeAnimationPlayer.hasStarted()) {
             return;
         }
 
         //  if there is opening animation already started start close animation from where open one has reached
         //  and remove open animation
-        if (info?.openAnimationPlayer.hasStarted()) {
+        if (info.openAnimationPlayer?.hasStarted()) {
             //  getPosition() returns what part of the animation is passed, e.g. 0.5 if half the animation
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
             //  the previous has finished we need the amount up to 1, therefore we are subtracting what
