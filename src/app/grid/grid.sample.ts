@@ -184,12 +184,12 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.grid1.deleteRow(this.selectedCell.rowIndex);
         this.selectedCell = {};
         this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-        this.snax.show();
+        this.snax.open();
     }
 
     restore() {
         this.grid1.addRow(this.selectedRow.record);
-        this.snax.hide();
+        this.snax.close();
     }
 
     updateRow11() {
