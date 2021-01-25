@@ -479,13 +479,9 @@
 /// @returns {String} - The value of the key in the passed map, or the name of key concatenated with the key name.
 @function --var($map, $key, $fallback: null) {
     $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
-    $css-var: str-slice(#{map-get($map, $key)}, 1, 3) == 'var';
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
-            @if $css-var {
-                @return map-get($map, $key);
-            }
             @if not($fallback) {
                 @return var(--#{map-get($map, 'name')}-#{$key})
             }
@@ -543,10 +539,6 @@
                 @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
                     $result: call(get-function($fn), $extra, $args...);
                 } @else if ($fn == 'hexrgba' or $fn == 'to-opaque') and type-of($args) == 'map' {
-                    // @if $fn == 'hexrgba' or $fn == 'to-opaque' {
-                    //     @debug $result, $args;
-                    // }
-
                     $result: call(get-function($fn), $result, resolve-value($ctx: $args, $extra: $extra));
                 } @else if $result != null {
                     $result: call(get-function($fn), $result, $args...);
