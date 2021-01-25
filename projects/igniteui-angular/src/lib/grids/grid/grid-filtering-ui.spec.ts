@@ -4414,7 +4414,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            
+
             (todayItem as HTMLElement).click();
             tick(100);
             fix.detectChanges();
@@ -4425,7 +4425,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the results. Filtered day is today
             const pipe = new DatePipe(grid.locale);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 0);
+            const filteredDate = SampleTestData.today;
             const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             expect(cell.innerText).toMatch(cellText);
@@ -4478,7 +4478,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify the results. Filtered day is  today
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 0);
+            const filteredDate = SampleTestData.today;
             const inputText = column.formatter(filteredDate);
             const cellText = column.formatter(filteredDate);
             expect(cell.innerText).toMatch(cellText);
