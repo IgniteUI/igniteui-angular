@@ -4417,31 +4417,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const days = calendar.querySelectorAll('igx-day-item');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            let todayIndex;
-            let i = 0;
-            while (!todayIndex) {
-                const item = days[i];
-                if (item === todayItem) {
-                    todayIndex = i;
-                }
-                i++;
-            }
 
-            // find the day 15 days later than today
-            const day = days[todayIndex + 15];
-            (day as HTMLElement).click();
+            (todayItem as HTMLElement).click();
             tick(100);
             fix.detectChanges();
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            // Verify the results. Filtered day is date that is 15 days after today
+            // Verify the results. Filtered day is today
             const pipe = new DatePipe(grid.locale);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15);
+            const filteredDate = SampleTestData.today;
             const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             expect(cell.innerText).toMatch(cellText);
@@ -4483,30 +4471,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const days = calendar.querySelectorAll('igx-day-item');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            let todayIndex;
-            let i = 0;
-            while (!todayIndex) {
-                const item = days[i];
-                if (item === todayItem) {
-                    todayIndex = i;
-                }
-                i++;
-            }
 
-            // find the day 15 days later than today
-            const day = days[todayIndex + 15];
-            (day as HTMLElement).click();
+            (todayItem as HTMLElement).click();
             tick(100);
             fix.detectChanges();
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            // Verify the results. Filtered day is date that is 15 days after today
+            // Verify the results. Filtered day is  today
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15);
+            const filteredDate = SampleTestData.today;
             const inputText = column.formatter(filteredDate);
             const cellText = column.formatter(filteredDate);
             expect(cell.innerText).toMatch(cellText);

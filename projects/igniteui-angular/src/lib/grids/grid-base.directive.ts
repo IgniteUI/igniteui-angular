@@ -3448,7 +3448,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.addRowSnackbar?.onAction.subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
-            this.addRowSnackbar.hide();
+            this.addRowSnackbar.close();
         });
 
         // Keep the stream open for future subscribers
@@ -6080,7 +6080,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public showSnackbarFor(index: number) {
         this.addRowSnackbar.actionText = index === -1 ? '' : this.snackbarActionText;
         this.lastAddedRowIndex = index;
-        this.addRowSnackbar.show();
+        this.addRowSnackbar.open();
     }
 
     /**
