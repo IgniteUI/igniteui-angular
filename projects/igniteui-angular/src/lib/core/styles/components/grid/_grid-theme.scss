@@ -243,7 +243,7 @@
     $rs-bg: if(
         $row-selected-background,
         $row-selected-background,
-        css-var-to-color(
+        igx-color-from-var(
             map-get($theme, 'row-selected-background'), $palette
         )
     );

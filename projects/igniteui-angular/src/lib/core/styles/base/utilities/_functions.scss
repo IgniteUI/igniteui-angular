@@ -137,11 +137,11 @@
 /// @param {Color} $rgba - The rgba color to convert.
 /// @param {Color} $background [#fff] - The background color to convert against.
 /// @return {Color} - The hexidecimal representation of the rgba value.
-@function hexrgba($rgba, $background: #fff, $palette: null) {
-    $rgba: css-var-to-color($rgba, $palette);
-    $background: css-var-to-color($background, $palette);
+@function hexrgba($rgba, $background: #fff, $palette: $default-palette) {
+    $rgba: igx-color-from-var($rgba, $palette);
+    $background: igx-color-from-var($background, $palette);
 
-    @if type-of($rgba) == color {
+    @if type-of($rgba) == color and type-of($background) == color {
         $red: red($rgba);
         $green: green($rgba);
         $blue: blue($rgba);
@@ -154,29 +154,53 @@
     @return $rgba;
 }
 
-// @access private
-// Attempts to convert a CSS variable reference to a color from an igx-palette.
-/// @param {String} $color [] - The CSS variable (e.g var(--igx-primary-300));
-/// @param {Color} $palette [null] - The background color to convert against.
-/// @return {Color | String} - The resolved color or the original CSS variable string.
-@function css-var-to-color($value, $palette: null) {
-    $css-var: str-slice(#{$value}, 1, 4) == 'var(';
+/// Returns a CSS variable string reference as a list of words.
+/// @access private
+/// @param {String} $value [] - The CSS variable reference (e.g. var(--igx-primary-500).
+/// @param {String} $separator ['-'] - The character to split the string by.
+/// @example scss Split a CSS variable reference into Sass list.
+/// $list: var-to-parts(var(--igx-primary-500));
+/// @debug $list; // igx primary 500
+/// @returns {List}
+@function var-to-parts($value, $separator: '-') {
+    @if type-of($value) != 'string' {
+        @return null;
+    }
 
-    @if $css-var {
-        $color: str-replace($value, 'var(');
-        $color: str-replace($color, ')');
-        $color: str-split($color, '-');
+    $parts: str-replace($value, 'var(--');
+    $parts: str-replace($parts, ')');
+    @return str-split($parts, $separator);
+}
 
-        @if length($color) == 5 and nth($color, 3) == 'igx' {
-            $c: nth($color, 4);
-            $v: to-number(nth($color, 5));
+/// @access private
+/// @returns {Color | Map}
+@function igx-color-from-var($value, $palette: $default-palette, $raw: true) {
+    $colors: (
+        'primary',
+        'secondary',
+        'info',
+        'success',
+        'warn',
+        'error',
+        'grays',
+        'surface',
+        'warn',
+    );
 
-            $color: igx-color($palette or $default-palette, $c, $v);
+    $parts: var-to-parts($value);
+    $is-igx: index($parts, 'igx');
 
-            @return $color;
+    @if $parts and $is-igx {
+        @each $color in $colors {
+            $i: index($parts, $color);
+
+            @if $i {
+                $c: nth($parts, $i);
+                $v: to-number(nth($parts, length($parts)));
+                $color: igx-color($palette, $c, $v);
+                @return if($raw, $color, (($c $v): $color));
+            }
         }
-
-        @return $value;
     }
 
     @return $value;
@@ -206,8 +230,12 @@
     $contrast: 'AAA',
     $palette: null
 ) {
-    $background: css-var-to-color($background, $palette);
-    $foreground: css-var-to-color($foreground, $palette);
+    $background: igx-color-from-var($background, $palette, $raw: false);
+    $foreground: igx-color-from-var($foreground, $palette);
+
+    @if type-of($background) == 'map' {
+        @return igx-contrast-color-ref(nth(map-keys($background), 1)...);
+    }
 
     @if type-of($foreground) == 'color' and type-of($background) == 'color' {
         $level: map-get((
@@ -306,6 +334,7 @@
     @return $sign + $result;
 }
 
+/// @access private
 @function to-number($value) {
     @if type-of($value) == 'number' {
         @return $value;
@@ -545,15 +574,13 @@
                 } @else {
                     $result: call(get-function($fn), $args);
                 }
-            } @else {
-                @if $result == null  {
-                    @if $fn == 'igx-color' {
-                        $result: igx-color-ref($args...);
-                    }
+            } @else if $result == null {
+                @if $fn == 'igx-color' {
+                    $result: igx-color-ref($args...);
+                }
 
-                    @if $fn == 'igx-contrast-color' {
-                        $result: igx-contrast-color-ref($args...);
-                    }
+                @if $fn == 'igx-contrast-color' {
+                    $result: igx-contrast-color-ref($args...);
                 }
             }
         }
