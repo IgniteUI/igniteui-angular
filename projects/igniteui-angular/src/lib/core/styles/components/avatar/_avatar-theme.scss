@@ -26,7 +26,7 @@
 ///   // Pass the theme to the igx-avatar component mixin
 ///   @include igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
-    $palette: null,
+    $palette: $default-palette,
     $schema: $light-schema,
     $icon-background: null,
     $icon-color: null,
@@ -45,7 +45,7 @@
         $avatar-schema: $schema;
     }
 
-    $theme: apply-palette($avatar-schema, $palette or $default-palette);
+    $theme: apply-palette($avatar-schema, $palette);
 
     $border-radius-round: round-borders(
         if($border-radius-round, $border-radius-round, map-get($avatar-schema, 'border-radius-round')), 0, 44px

@@ -243,7 +243,9 @@
     $rs-bg: if(
         $row-selected-background,
         $row-selected-background,
-        map-get($theme, 'row-selected-background')
+        css-var-to-color(
+            map-get($theme, 'row-selected-background'), $palette
+        )
     );
 
     $row-selected-cell-background: null;
@@ -254,8 +256,6 @@
         } @else {
             $row-selected-cell-background: darken-color($rs-bg, 8%);
         }
-    } @else {
-        $row-selected-cell-background: $rs-bg;
     }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {

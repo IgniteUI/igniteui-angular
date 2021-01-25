@@ -23,7 +23,7 @@ $_light-action-strip: extend(
 
         actions-background: (
             igx-color: ('grays', 200),
-            hexrgba: #fff,
+            to-opaque: #fff,
             rgba: .9
         ),
 

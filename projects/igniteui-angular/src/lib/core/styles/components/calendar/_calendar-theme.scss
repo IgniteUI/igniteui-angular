@@ -375,7 +375,7 @@
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
-    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
+    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'), $palette: $palette);
 
     $current-color-variant: map-get((
         material: --var($theme, 'date-selected-background'),

@@ -74,7 +74,8 @@ $_light-calendar: extend(
         ),
 
         content-text-color: (
-            igx-contrast-color: 'surface',
+            igx-color: 'surface',
+            text-contrast: (),
             rgba: .87
         ),
 
