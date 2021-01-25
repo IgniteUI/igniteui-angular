@@ -210,8 +210,8 @@ export abstract class IgxBaseExporter {
         }
 
         if (!this._columnList || this._columnList.length === 0) {
-            const actualData = records.map(r => r.data);
-            const keys = ExportUtilities.getKeysFromData(actualData);
+            const recordsData = records.map(r => r.data);
+            const keys = ExportUtilities.getKeysFromData(recordsData);
             this._columnList = keys.map((k) => ({ header: k, field: k, skip: false }));
             this._columnWidthList = new Array<number>(keys.length).fill(DEFAULT_COLUMN_WIDTH);
         }
