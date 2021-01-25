@@ -159,8 +159,7 @@
 /// @param {String} $value [] - The CSS variable reference (e.g. var(--igx-primary-500).
 /// @param {String} $separator ['-'] - The character to split the string by.
 /// @example scss Split a CSS variable reference into Sass list.
-/// $list: var-to-parts(var(--igx-primary-500));
-/// @debug $list; // igx primary 500
+/// $list: var-to-parts(var(--igx-primary-500)); // igx primary 500
 /// @returns {List}
 @function var-to-parts($value, $separator: '-') {
     @if type-of($value) != 'string' {

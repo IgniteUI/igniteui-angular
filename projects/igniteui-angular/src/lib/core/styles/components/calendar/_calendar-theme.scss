@@ -330,6 +330,7 @@
 @mixin igx-calendar($theme) {
     @include igx-root-css-vars($theme);
 
+    $palette: map-get($theme, 'palette');
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);
@@ -375,7 +376,10 @@
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
-    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'), $palette: $palette);
+    $selected-hover-color: text-contrast(
+        map-get($theme, 'date-selected-background'),
+        $palette: $palette
+    );
 
     $current-color-variant: map-get((
         material: --var($theme, 'date-selected-background'),
