@@ -24,6 +24,8 @@ export class SelectSampleComponent implements OnInit {
     @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
     public selectDisplayDensity: IgxSelectComponent;
 
+    public isDisabled = false;
+
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
             'citiesSelect': ['', Validators.required]
@@ -109,11 +111,6 @@ export class SelectSampleComponent implements OnInit {
             // console.log('onClose.....................: ');
             this.selectComponents.first.close();
         }
-    }
-
-    public toggleDisabled() {
-        this.selectComponents.first.disabled = !this.selectComponents.first.disabled;
-        // console.log('toggleDisabled.....................: ');
     }
 
     public openCustomOverlaySettings() {

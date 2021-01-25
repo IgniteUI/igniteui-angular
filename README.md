@@ -186,13 +186,32 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 [General Naming and Coding Guidelines for Ignite UI for Angular](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
 
 ## Demo Apps & Documentation
-The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
 
-The [Crypto Portfolio App](https://github.com/IgniteUI/crypto-portfolio-app) is a web and mobile application, developed with Ignite UI for Angular components and styled with our one of a kind theming engine.
+### List of Angular Demo Apps
+- [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) - Demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
 
+- [FinTech Grid App]( https://github.com/Infragistics/angular-samples/tree/master/Grid/FinJS) - The Ignite UI for Angular Grid component is able to handle thousands of updates per second, while keeping the grid responsive for any interaction that the user may undertake. This sample demonstrates the Angular Grid handling thousands of updates per second.
+
+- [FinTech Tree Grid App](https://github.com/Infragistics/angular-samples/tree/master/TreeGrid/FinJS) - The Ignite UI for Angular Tree Grid component is able to handle thousands of updates per second, while keeping the grid responsive for any interaction that the user may undertake. This sample demonstrates the Tree Grid handling thousands of updates per second.
+
+- [Crypto Portfolio App](https://github.com/IgniteUI/crypto-portfolio-app) - This is a web and mobile application, developed with Ignite UI for Angular components and styled with our one of a kind theming engine.
+
+- [Task Planner Application](https://github.com/IgniteUI/TaskPlanner) – Task Planner is an Angular web application. It provides an effective means for managing projects and related tasks. Thus, it loads data from the Web API endpoint, enabling the user to start managing - filtering and sorting tasks, editing tasks, adding new tasks. It shows nice UX UI perks like ability to Drag and Drop items from and to the List and Data Grid.
+
+- [Dock Manager with Data Analysis Tool](https://github.com/IgniteUI/DockManager-DataAnalysis) - The Data Analysis sample application provides users with the flexibility to customize the data visualization using one of several chart types. Built with Angular UI components, it showcases the Angular Data Grid integrated with an Angular Data Chart, Angular Pie Chart, and an Angular Category Chart, to provide an interactive and engaging visualization. The Dock Manager web component provides a windowing experience, allowing users to customize the layout and view, and make the data more accessible.
+
+- [COVID-19 Dashboard](https://github.com/IgniteUI/COVID-19-Dashboard) - This dynamic dashboard was built using Indigo.Design and Ignite UI for Angular leveraging timely reports data from CSSEGISandData/COVID-19 to create an useful and impactful visualization. Built in a matter of hours, it showcases the Ignite UI Category and Data Charts, Map and List components for Angular and the how easy it is to get those quickly configured and populated with data.
+
+-[Inventory Management App](https://github.com/IgniteUI/InventoryManagementApp) - The Inventory Management App consists of 2 pages: The Products Page and the Dashboard Page. The Products Page contains a grid with product information and includes a number of useful features
+
+### Angular apps with ASP.NET Core Web Application
+If you consider Angular client side application with ASP.NET Core application you can check out our [ASP.NET-Core-Samples](https://github.com/IgniteUI/ASP.NET-Core-Samples)
+
+### Documentation
 To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/grid).
 
 All help, related API documents and walk-throughs can be found for each control [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/getting-started).
+
 
 ## Roadmap
 [Roadmap document](https://github.com/IgniteUI/igniteui-angular/blob/master/ROADMAP.md)

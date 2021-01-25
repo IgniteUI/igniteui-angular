@@ -24,8 +24,17 @@ import { IgxIconModule } from '../icon/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
+import { mkenum } from '../core/utils';
 
-export enum ButtonGroupAlignment { horizontal, vertical }
+/**
+ * Determines the Button Group alignment
+ */
+export const ButtonGroupAlignment = mkenum({
+    horizontal: 'horizontal',
+    vertical: 'vertical'
+});
+export type ButtonGroupAlignment = (typeof ButtonGroupAlignment)[keyof typeof ButtonGroupAlignment];
+
 let NEXT_ID = 0;
 
 /**
@@ -207,7 +216,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @ViewChild("toast")
      * private toast: IgxToastComponent;
      * public onSelect(buttongroup){
-     *     this.toast.show()
+     *     this.toast.open()
      * }
      *  //...
      * ```
@@ -224,7 +233,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *  @ViewChild("toast")
      *  private toast: IgxToastComponent;
      *  public onUnselect(buttongroup){
-     *     this.toast.show()
+     *     this.toast.open()
      * }
      *  //...
      * ```

@@ -14,12 +14,12 @@ The first concept is the one of palettes of colors. As in any visual tool, color
 
 ### Schemas
 
-The second important concept revolves around theme schemas. Theme schemas are like recipes for component themes. They give inidual component themes information about colors, margins, paddings, etc. For instance, a component scheme tells a component theme that the background color for an element should be the `500` variant from the `primary` palette, without caring what palette the user passes to the component theme.
+The second important concept revolves around theme schemas. Theme schemas are like recipes for component themes. They give individual component themes information about colors, margins, paddings, etc. For instance, a component scheme tells a component theme that the background color for an element should be the `500` variant from the `primary` palette, without caring what palette the user passes to the component theme.
 
 
 ### Themes
 
-Finally, we have component themes. Palettes and Schemas wouldn't do much good on their own if they weren't used by a theme. We have themes for inidual component, and a global one, that styles the entire application and every component in it. You simply pass a palette and a schema to the global theme, we take care of the rest. You can, of course, style each component individually to your liking.
+Finally, we have component themes. Palettes and Schemas wouldn't do much good on their own if they weren't used by a theme. We have themes for individual components, and a global one, that styles the entire application and every component in it. You simply pass a palette and a schema to the global theme, we take care of the rest. You can, of course, style each component individually to your liking.
 
 ### Typography
 

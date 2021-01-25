@@ -193,7 +193,7 @@
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
         <igc-trial-watermark></igc-trial-watermark>
     </div>
-    <div #loadingOverlay>
+    <div igxToggle #loadingOverlay>
         <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
@@ -266,7 +266,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1)'>
+    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1, $event)'>
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -297,7 +297,7 @@
 }">unfold_more</igx-icon>
 </ng-template>
 
-<div *ngIf="rowEditable" igxToggle>
+<div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
             *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">

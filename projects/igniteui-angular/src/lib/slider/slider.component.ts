@@ -242,7 +242,7 @@ export class IgxSliderComponent implements
      */
     @Input()
     public get type() {
-        return this._type;
+        return this._type as IgxSliderType;
     }
 
     /**
@@ -403,7 +403,8 @@ export class IgxSliderComponent implements
     /**
      * An @Input property that marks the {@link IgxSliderComponent} as continuous.
      * By default is considered that the {@link IgxSliderComponent} is discrete.
-     * Discrete {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
+     * Discrete {@link IgxSliderComponent} slider has step indicators over the track and visible thumb labels during interaction.
+     * Continuous {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
      * ```html
      * <igx-slider #slider [continuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
@@ -1095,7 +1096,7 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public thumbChanged(value: number, thumbType: number) {
+    public thumbChanged(value: number, thumbType: string) {
         const oldValue = this.value;
 
         let newVal: IRangeSliderValue;
@@ -1400,7 +1401,7 @@ export class IgxSliderComponent implements
         return value;
     }
 
-    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: number) => void) {
+    private subscribeTo(thumb: IgxSliderThumbComponent, callback: (a: number, b: string) => void) {
         if (!thumb) {
             return;
         }

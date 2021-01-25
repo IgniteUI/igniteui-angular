@@ -1,8 +1,44 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 11.0.0
+## 11.1.0
 
+### New Features
+- `IgxDropDown`
+    - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
+### General
+- `IgxDialog`
+    - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
+- `IgxCalendar`
+    - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
+- `IgxRadioGroup`
+    - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
+- `IgxDialog`
+    - Added new `onOpened` and `onClosed` events.
+- `IgxToast`
+    - **Breaking Change** - 
+    `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+    `onShowing`,`onShown`,`onHiding` and `onHiden` events have been deprecated. `onOpening`, `onOpened`, `onClosing` and `onClosed`should be used instead.
+- `IgxInputGroup`
+    - Added new property `theme` that allows you to set the theme explicitly and at runtime.
+- `IgxSnackbar`
+    - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+
+## 11.0.4
+
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - a new property `event` has been introduced to `IGridEditEventArgs` and `IGridEditDoneEventArgs`; the property represents the original DOM event that triggers any of Grid editing events like `rowEditEnter`, `cellEditEnter`, `cellEdit`, `cellEditDone`, `cellEditExit`, `rowEdit`, `rowEditDone`, `rowEditExit`
+    - **Behavioral Change** -
+    When there isn't a previous active node and the user enters the grid using tab or shift + tab key:
+    the first fully visible element is activated: /no scroll bar positioning is reset/changed;
+    If there is a previous active node in the grid - the previously active node is reactivated without resetting the scroll positions;
+    If we follow the default tab navigation and we are currently on a data cell with / rowIndex: -1, columnIndex: 6/ for example
+    when we tab down to the root summaries the summary cell with visible column index 6 should be activated and scroll into the view;
+    The same applies if you shift+tab to the headers header cell with visible index 6 is activated and scrolled into the view;
+    If you have an active node and go to another tab and then return back the active node and the current scroll position should not be changed;
+
+## 11.0.0
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

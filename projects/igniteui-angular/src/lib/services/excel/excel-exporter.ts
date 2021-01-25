@@ -12,7 +12,7 @@ import { IBaseEventArgs } from '../../core/utils';
 import { WorksheetFile } from './excel-files';
 
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
-    xlsx: JSZip;
+    xlsx?: JSZip;
 }
 
 /**

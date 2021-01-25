@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterContentInit } from '@angular/core';
-import { IgxRadioGroupDirective } from 'igniteui-angular';
+import { IgxRadioGroupDirective, RadioGroupAlignment } from 'igniteui-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 class Person {
@@ -37,6 +37,8 @@ export class RadioSampleComponent implements AfterContentInit {
     newPerson: Person;
     personKirk: Person = new Person('Kirk', this.seasons[1]);
     personKirkForm: FormGroup;
+
+    alignment = RadioGroupAlignment.vertical;
 
     constructor(private _formBuilder: FormBuilder) {
         this._createPersonKirkForm();

@@ -365,7 +365,7 @@ export class IgxTimePickerComponent implements
      * @memberof IgxTimePickerComponent
      */
     @Input()
-    public mode = InteractionMode.Dialog;
+    public mode: InteractionMode = InteractionMode.Dialog;
 
     /**
      * Determines the container the popup element should be attached to.
@@ -411,7 +411,7 @@ export class IgxTimePickerComponent implements
      *  @ViewChild("toast")
      * private toast: IgxToastComponent;
      * public onValueChanged(timepicker){
-     *     this.toast.show()
+     *     this.toast.open()
      * }
      *  //...
      *  ```
@@ -431,7 +431,7 @@ export class IgxTimePickerComponent implements
      *  @ViewChild("toast")
      * private toast: IgxToastComponent;
      * public onValidationFailed(timepicker){
-     *     this.toast.show();
+     *     this.toast.open();
      * }
      *  //...
      *  ```

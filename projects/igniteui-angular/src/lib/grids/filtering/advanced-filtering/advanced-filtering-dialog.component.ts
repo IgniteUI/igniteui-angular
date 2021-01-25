@@ -1041,6 +1041,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public getFormatter(field: string) {
+        return this.grid.getColumnByName(field).formatter;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public getFormat(field: string) {
         return this.grid.getColumnByName(field).pipeArgs.format;
     }
@@ -1084,8 +1091,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public onClearButtonClick() {
-        this.grid.endEdit(false);
+    public onClearButtonClick(event?: Event) {
+        this.grid.endEdit(false, event);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -1105,8 +1112,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public applyChanges() {
-        this.grid.endEdit(false);
+    public applyChanges(event?: Event) {
+        this.grid.endEdit(false, event);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }
@@ -1124,8 +1131,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public onApplyButtonClick() {
-        this.applyChanges();
+    public onApplyButtonClick(event?: Event) {
+        this.applyChanges(event);
         this.closeDialog();
     }
 

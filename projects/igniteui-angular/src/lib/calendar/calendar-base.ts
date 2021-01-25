@@ -4,7 +4,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
 import { isDate, mkenum } from '../core/utils';
-import { CalendarView } from './month-picker-base';
+import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
 
@@ -203,6 +203,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the date that will be presented in the default view when the component renders.
      */
     public set viewDate(value: Date) {
+        if (Array.isArray(value)) { return; }
         if (this._viewDate) {
             this.selectedDatesWithoutFocus = value;
         }
@@ -305,7 +306,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * ```
      */
     @Output()
-    public activeViewChanged  = new EventEmitter<CalendarView>();
+    public activeViewChanged  = new EventEmitter<IgxCalendarView>();
 
     /**
      * @hidden

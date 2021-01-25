@@ -360,6 +360,51 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
     }));
 
+    it('should correctly filter with earliest/latest \'date\' values', fakeAsync(() => {
+        const earliest = new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1).getTime() + 7200 * 1000);
+        const latest =  new Date(SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1).getTime() - 7200 * 1000);
+
+        // Before filter
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseDate', earliest, IgxDateFilteringOperand.instance().condition('before'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // After filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', earliest, IgxDateFilteringOperand.instance().condition('after'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(5);
+
+        // DoesNotEqual filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', earliest, IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+
+        // Equals filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', earliest, IgxDateFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Before filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', latest, IgxDateFilteringOperand.instance().condition('before'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(5);
+
+        // After filter
+        grid.clearFilter('ReleaseDate');
+        fix.detectChanges();
+        grid.filter('ReleaseDate', latest, IgxDateFilteringOperand.instance().condition('after'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+    }));
     it('should correctly filter by \'date\' filtering conditions when dates are ISO 8601 strings', fakeAsync(() => {
         const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
@@ -602,6 +647,16 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
+    }));
+
+    it('should exclude null and undefined values when filter by \'false\'', fakeAsync(() => {
+        expect(grid.rowList.length).toEqual(8);
+
+        grid.filter('Released', false, IgxStringFilteringOperand.instance().condition('equals'), true);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+        expect(grid.getCellByColumn(0, 'Released').value).toBe(false);
+        expect(grid.getCellByColumn(1, 'Released').value).toBe(false);
     }));
 
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
@@ -848,6 +903,17 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('NonExistingColumnName');
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
+    }));
+
+    it('Should always emit onFilteringDone with proper eventArgs, even when column does not exist', fakeAsync(() => {
+        spyOn(grid.onFilteringDone, 'emit');
+        grid.filteringLogic = FilteringLogic.Or;
+        grid.filter('Nonexisting', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
+        tick(100);
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(0);
+        const args = grid.filteringExpressionsTree.find('Nonexisting') as FilteringExpressionsTree;
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
     }));
 
     it('Should emit onFilteringDone when filtering globally', fakeAsync(() => {
