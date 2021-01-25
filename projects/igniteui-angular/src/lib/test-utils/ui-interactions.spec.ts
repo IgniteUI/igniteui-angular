@@ -324,8 +324,8 @@ export class UIInteractions {
         nativeElement.dispatchEvent(new DragEvent('drop', { dataTransfer }));
     }
 
-    public static simulateWheelEvent(element, deltaX, deltaY) {
-        const event = new WheelEvent('wheel', { deltaX, deltaY });
+    public static simulateWheelEvent(element, deltaX, deltaY, shiftKey = false) {
+        const event = new WheelEvent('wheel', { deltaX, deltaY, shiftKey });
         Object.defineProperty(event, 'wheelDeltaX', { value: deltaX });
         Object.defineProperty(event, 'wheelDeltaY', { value: deltaY });
 

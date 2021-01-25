@@ -141,7 +141,7 @@ public deleteRow(event) {
     this.grid1.deleteRow(this.selectedCell.rowIndex);
     this.selectedCell = {};
     this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-    this.snax.show();
+    this.snax.open();
 }
 ```
 
