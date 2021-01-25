@@ -174,32 +174,14 @@
 /// @access private
 /// @returns {Color | Map}
 @function igx-color-from-var($value, $palette: $default-palette, $raw: true) {
-    $colors: (
-        'primary',
-        'secondary',
-        'info',
-        'success',
-        'warn',
-        'error',
-        'grays',
-        'surface',
-        'warn',
-    );
-
     $parts: var-to-parts($value);
     $is-igx: index($parts, 'igx');
 
     @if $parts and $is-igx {
-        @each $color in $colors {
-            $i: index($parts, $color);
-
-            @if $i {
-                $c: nth($parts, $i);
-                $v: to-number(nth($parts, length($parts)));
-                $color: igx-color($palette, $c, $v);
-                @return if($raw, $color, (($c $v): $color));
-            }
-        }
+        $c: nth($parts, 2);
+        $v: to-number(nth($parts, 3));
+        $color: igx-color($palette, $c, $v);
+        @return if($raw, $color, (($c $v): $color));
     }
 
     @return $value;
