@@ -4413,20 +4413,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const days = calendar.querySelectorAll('igx-day-item');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            let todayIndex;
-            let i = 0;
-            while (!todayIndex) {
-                const item = days[i];
-                if (item === todayItem) {
-                    todayIndex = i;
-                }
-                i++;
-            }
-
-            const day = days[todayIndex];
-            (day as HTMLElement).click();
+            
+            (todayItem as HTMLElement).click();
             tick(100);
             fix.detectChanges();
 
@@ -4478,20 +4467,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
-            const days = calendar.querySelectorAll('igx-day-item');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
-            let todayIndex;
-            let i = 0;
-            while (!todayIndex) {
-                const item = days[i];
-                if (item === todayItem) {
-                    todayIndex = i;
-                }
-                i++;
-            }
 
-            const day = days[todayIndex];
-            (day as HTMLElement).click();
+            (todayItem as HTMLElement).click();
             tick(100);
             fix.detectChanges();
 
