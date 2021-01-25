@@ -154,8 +154,8 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * <igx-date-picker (selected)="onSelection($event)"></igx-date-picker>
      * ```
      */
-    @Input()
-    public abstract selected: Date | DateRange;
+    @Output()
+    public abstract selected: EventEmitter<Date | DateRange>;
 
     /**
      * Emitted when the calendar starts opening, cancelable.

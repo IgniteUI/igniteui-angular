@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import {
     ChangeDetectorRef,
     Component,
@@ -96,6 +96,7 @@ export class IgxToastComponent extends IgxToggleDirective
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'onShowing' property is deprecated. You can use 'onOpening' instead.`)
     @Output()
     public onShowing = new EventEmitter<IgxToastComponent>();
 
@@ -108,6 +109,7 @@ export class IgxToastComponent extends IgxToggleDirective
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'onShown' property is deprecated. You can use 'onOpened' instead.`)
     @Output()
     public onShown = new EventEmitter<IgxToastComponent>();
 
@@ -120,6 +122,7 @@ export class IgxToastComponent extends IgxToggleDirective
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'onHiding' property is deprecated. You can use 'onClosing' instead.`)
     @Output()
     public onHiding = new EventEmitter<IgxToastComponent>();
 
@@ -132,6 +135,7 @@ export class IgxToastComponent extends IgxToggleDirective
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'onHidden' property is deprecated. You can use 'onClosed' instead.`)
     @Output()
     public onHidden = new EventEmitter<IgxToastComponent>();
 
@@ -216,12 +220,19 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     @Input()
     public get isVisible() {
-        return this._isVisible;
+        return !this.collapsed;
     }
 
     public set isVisible(value) {
-        this._isVisible = value;
-        this.isVisibleChange.emit(this._isVisible);
+        if (value !== this.isVisible) {
+            if (value) {
+                requestAnimationFrame(() => {
+                    this.open();
+                });
+            } else {
+                this.close();
+            }
+        }
     }
 
     /**
@@ -242,7 +253,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * @memberof IgxToastComponent
      */
     @DeprecateProperty(`'message' property is deprecated.
-    You can use place the message in the toast content or pass it as parameter to the show method instead.`)
+        You can use place the message in the toast content or pass it as parameter to the show method instead.`)
     @Input()
     public set message(value: string) {
         this.toastMessage = value;
@@ -290,7 +301,6 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     private timeoutId: number;
     private d$ = new Subject<boolean>();
-    private _isVisible = false;
 
     constructor(
         private _element: ElementRef,
@@ -302,15 +312,45 @@ export class IgxToastComponent extends IgxToggleDirective
     }
 
     /**
+     * @deprecated
      * Shows the toast.
      * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
+     *
      * ```typescript
      * this.toast.show();
      * ```
      *
      * @memberof IgxToastComponent
      */
+    @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
     public show(message?: string): void {
+        this.open(message);
+    }
+
+    /**
+     * @deprecated
+     * Hides the toast.
+     *
+     * ```typescript
+     * this.toast.hide();
+     * ```
+     *
+     * @memberof IgxToastComponent
+     */
+    @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
+    public hide(): void {
+        this.close();
+    }
+
+    /**
+     * Shows the toast.
+     * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
+     *
+     * ```typescript
+     * this.toast.open();
+     * ```
+     */
+    public open(message?) {
         clearInterval(this.timeoutId);
 
         const overlaySettings: OverlaySettings = {
@@ -320,8 +360,8 @@ export class IgxToastComponent extends IgxToggleDirective
                     this.position === 'bottom'
                         ? VerticalAlignment.Bottom
                         : this.position === 'middle'
-                        ? VerticalAlignment.Middle
-                        : VerticalAlignment.Top,
+                            ? VerticalAlignment.Middle
+                            : VerticalAlignment.Top,
             }),
             closeOnEscape: false,
             closeOnOutsideClick: false,
@@ -338,41 +378,22 @@ export class IgxToastComponent extends IgxToggleDirective
 
         if (this.autoHide) {
             this.timeoutId = window.setTimeout(() => {
-                this.hide();
+                this.close();
             }, this.displayTime);
         }
     }
 
     /**
      * Hides the toast.
-     * ```typescript
-     * this.toast.hide();
-     * ```
      *
-     * @memberof IgxToastComponent
+     * ```typescript
+     * this.toast.close();
+     * ```
      */
-    public hide(): void {
+    public close() {
         clearInterval(this.timeoutId);
         this.onHiding.emit(this);
         super.close();
-    }
-
-    /**
-     * Wraps @show() method due @IToggleView interface implementation.
-     *
-     * @hidden
-     */
-    public open() {
-        this.show();
-    }
-
-    /**
-     * Wraps @hide() method due @IToggleView interface implementation.
-     *
-     * @hidden
-     */
-    public close() {
-        this.hide();
     }
 
     /**
@@ -392,13 +413,13 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     public ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
+            this.isVisibleChange.emit(true);
             this.onShown.emit(this);
-            this.isVisible = true;
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
+            this.isVisibleChange.emit(false);
             this.onHidden.emit(this);
-            this.isVisible = false;
         });
     }
 
@@ -419,4 +440,4 @@ export class IgxToastComponent extends IgxToggleDirective
     exports: [IgxToastComponent],
     imports: [CommonModule],
 })
-export class IgxToastModule {}
+export class IgxToastModule { }
