@@ -519,8 +519,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
             return;
         }
+        this.selectionService.clear(true);
 
-        // this.selectionService.clear(true); // TODO is needed ?
         const eventArgs = { previous: this._page, current: val };
         const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
         this.onPaging.emit(cancelableEventArgs);

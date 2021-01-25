@@ -207,7 +207,6 @@ export class IgxFilteringService implements OnDestroy {
         ignoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         const filteringTree = grid.filteringExpressionsTree;
-        // TODO what if columnFilteringExpressionsTree is acually an columnFilteringExpressionsTree
         const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(field) as IFilteringExpressionsTree;
         conditionOrExpressionTree = conditionOrExpressionTree ?? columnFilteringExpressionsTree;
         const fieldFilterIndex = filteringTree.findIndex(field);

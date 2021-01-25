@@ -146,8 +146,7 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(column, false, 0);
         });
 
-        // TODO freature-events
-        xit('onColumnPinning event is fired on toggling checkboxes.', waitForAsync(() => {
+        it('onColumnPinning event is fired on toggling checkboxes.', waitForAsync(() => {
             spyOn(grid.onColumnPinning, 'emit').and.callThrough();
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');

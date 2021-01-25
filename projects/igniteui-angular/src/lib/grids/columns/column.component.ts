@@ -1681,7 +1681,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return false;
         }
 
-        // TODO freature-events
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
         index = index !== undefined ? index : rootPinnedCols.length;
@@ -1694,10 +1693,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
-        // TODO freature-events
-        // this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
-        // const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
-        // index = index !== undefined ? index : rootPinnedCols.length;
         const targetColumn = grid._pinnedColumns[args.insertAtIndex];
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
@@ -1763,6 +1758,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const hasIndex = index !== undefined;
         if (hasIndex && (index < 0 || index >= grid._unpinnedColumns.length)) {
             return false;
+        }
+
+        // correct unpinnedIndex, if it exceeds unpinned columns length
+        if (this._unpinnedIndex > grid._unpinnedColumns.length) {
+            this._unpinnedIndex = grid._unpinnedColumns.length;
         }
 
         index = (index !== undefined ? index :
