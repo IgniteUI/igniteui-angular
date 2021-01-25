@@ -115,12 +115,20 @@
 /// @param {string} $color - The target color from the color palette.
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
-@function igx-color($palette, $color, $variant: 500) {
+@function igx-color($palette, $color, $variant: 500, $ref: false) {
     @if type-of($palette) == 'map' and map-has-key($palette, $color) {
         @return map-get(map-get($palette, $color), $variant);
     }
 
     @return #fff;
+}
+
+@function igx-color-ref($color, $variant: 500) {
+    @return #{var(--igx-#{$color}-#{$variant})};
+}
+
+@function igx-contrast-color-ref($color, $variant: 500) {
+    @return #{var(--igx-#{$color}-#{$variant}-contrast)};
 }
 
 /// Converts a rgba color to a hexidecimal color.
@@ -129,7 +137,23 @@
 /// @param {Color} $rgba - The rgba color to convert.
 /// @param {Color} $background [#fff] - The background color to convert against.
 /// @return {Color} - The hexidecimal representation of the rgba value.
-@function hexrgba($rgba, $background: #fff) {
+@function hexrgba($rgba, $background: #fff, $palette: null) {
+    $legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
+    $css-var: str-slice(#{$rgba}, 1, 3) == 'var';
+    $color: $rgba;
+
+    @if $css-var and not($legacy-support) {
+        $color: str-replace($color, 'var(');
+        $color: str-replace($color, ')');
+        $color: str-split($color, '-');
+
+        @return #fff;
+    }
+
+    // $rgba is solid color;
+    // with legacy support off, it will be a reference to a CSS variable
+    // we need to deconstruct the CSS variable and extract the `color`(primary, etc) and `variant`(500, etc).
+    // If the color cannot be resolved, return $rgba; Throw a warning;
     @if type-of($rgba) == color {
         $red: red($rgba);
         $green: green($rgba);
@@ -186,7 +210,7 @@
             }
         }
     } @else {
-        @warn 'Expected color for $background/$foreground but got #{$background}/#{$foreground}. The contrast color can\'t be calculated automatically.';
+        // @warn 'Expected color for $background/$foreground but got #{$background}/#{$foreground}. The contrast color can\'t be calculated automatically.';
         @return #fff;
     }
 }
@@ -404,9 +428,9 @@
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
-            @if $css-var {
-                @return map-get($map, $key);
-            }
+            // @if $css-var {
+            //     @return map-get($map, $key);
+            // }
             @if not($fallback) {
                 @return var(--#{map-get($map, 'name')}-#{$key})
             }
@@ -454,19 +478,32 @@
 /// // $some-palette is a palette we pass as extra arguments
 /// $resolved-color: resolve-value($instructions, $some-palette);
 ///
-@function resolve-value($ctx, $extra: null) {
+@function resolve-value($ctx, $extra: null, $deep: false) {
+    $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
     $result: null;
 
     @each $fn, $args in $ctx {
         @if function-exists($fn) {
-            @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call(get-function($fn), $extra, $args...);
-            } @else if ($fn == 'hexrgba' or $fn == 'to-opaque') and type-of($args) == 'map' {
-                $result: call(get-function($fn), $result, resolve-value($ctx: $args, $extra: $extra));
-            } @else if $result != null {
-                $result: call(get-function($fn), $result, $args...);
+            @if $igx-legacy-support or $deep {
+                @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
+                    $result: call(get-function($fn), $extra, $args...);
+                } @else if ($fn == 'hexrgba' or $fn == 'to-opaque') and type-of($args) == 'map' {
+                    $result: call(get-function($fn), $result, resolve-value($ctx: $args, $extra: $extra, $deep: length(map-keys($args))));
+                } @else if $result != null {
+                    $result: call(get-function($fn), $result, $args...);
+                } @else {
+                    $result: call(get-function($fn), $args);
+                }
             } @else {
-                $result: call(get-function($fn), $args);
+                @if $result == null  {
+                    @if $fn == 'igx-color' {
+                        $result: igx-color-ref($args...);
+                    }
+
+                    @if $fn == 'igx-contrast-color' {
+                        $result: igx-contrast-color-ref($args...);
+                    }
+                }
             }
         }
     }
@@ -533,7 +570,8 @@
     $result: ();
     @each $key, $value in $schema {
         @if type-of($value) == 'map' {
-            $result: extend($result, (#{$key}: resolve-value($value, $palette)));
+            $length: length(map-keys($value));
+            $result: extend($result, (#{$key}: resolve-value($value, $palette, $length > 1)));
         } @else {
             $result: extend($result, (#{$key}: $value));
         }
@@ -706,3 +744,10 @@
     @return $result;
 }
 
+@function str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+    @if $index {
+        @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+    @return $string;
+}

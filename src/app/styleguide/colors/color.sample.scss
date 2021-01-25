@@ -33,7 +33,7 @@
 }
 
 .color-container {
-    @include igx-color-classes('background', $palette: $palette);
+    // @include igx-color-classes('background', $palette: $palette);
 }
 
 .color-title {

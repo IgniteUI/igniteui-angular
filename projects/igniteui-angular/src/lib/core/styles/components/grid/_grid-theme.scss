@@ -254,6 +254,8 @@
         } @else {
             $row-selected-cell-background: darken-color($rs-bg, 8%);
         }
+    } @else {
+        $row-selected-cell-background: $rs-bg;
     }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {

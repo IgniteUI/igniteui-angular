@@ -18,10 +18,9 @@ body {
 }
 
 @include igx-core($direction: ltr);
-@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: true);
-@include igx-typography($type-scale: $typography);
+@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: false);
 
-@include igx-palette-vars($palette, $contrast: true);
+@include igx-typography($type-scale: $typography);
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {

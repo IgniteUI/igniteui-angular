@@ -38,7 +38,7 @@
 ///   // Theming using css variables (not supported in IE11):
 ///   @include igx-css-vars($my-badge-theme);
 @function igx-badge-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $elevations: $elevations,
 
@@ -61,7 +61,7 @@
         $badge-schema: $schema;
     }
 
-    $theme: apply-palette($badge-schema, $palette);
+    $theme: apply-palette($badge-schema, $palette or $default-palette);
 
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($badge-schema, 'border-radius')), 0, 11px

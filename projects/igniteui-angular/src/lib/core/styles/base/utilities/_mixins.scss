@@ -131,14 +131,14 @@
 /// @param {string} $variant - An additional string to be attached to the main class name.
 /// @param {string} $prefix - A prefix to be attached to the name and variant string.
 /// @param {string} $prefix - A suffix to be attached to the name and variant string.
-@mixin gen-color-class($name, $variant, $prefix, $suffix) {
-    $prefix: if($prefix, '#{$prefix}-', '');
-    $suffix: if($suffix, '-#{$suffix}', '');
+// @mixin gen-color-class($name, $variant, $prefix, $suffix) {
+//     $prefix: if($prefix, '#{$prefix}-', '');
+//     $suffix: if($suffix, '-#{$suffix}', '');
 
-    .#{$prefix}#{$name}-#{$variant}#{$suffix} {
-        @content;
-    }
-}
+//     .#{$prefix}#{$name}-#{$variant}#{$suffix} {
+//         @content;
+//     }
+// }
 
 /// Generates CSS class names for all colors from
 /// for a given property and color palette, with
@@ -157,17 +157,17 @@
 ///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-class
-@mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
-    @each $palette-name, $sub-palette in $palette {
-        @each $variant, $color in $sub-palette {
-            @if type-of($color) != 'map' {
-                @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
-                    #{$prop}: $color;
-                }
-            }
-        }
-    }
-}
+// @mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
+//     @each $palette-name, $sub-palette in $palette {
+//         @each $variant, $color in $sub-palette {
+//             @if type-of($color) != 'map' {
+//                 @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
+//                     #{$prop}: $color;
+//                 }
+//             }
+//         }
+//     }
+// }
 
 /// Generates CSS variables for a given palette.
 /// @access private
@@ -228,9 +228,9 @@
 ///     $suffix: 'bg'
 ///   );
 /// @requires {mixin} gen-color-classes
-@mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
-    @include gen-color-classes($prop, $prefix, $suffix, $palette);
-}
+// @mixin igx-color-classes($prop, $suffix: null, $prefix: 'igx', $palette: $default-palette) {
+//     @include gen-color-classes($prop, $prefix, $suffix, $palette);
+// }
 
 /// Parses a map of key value pairs
 /// from component themes to css variables.
