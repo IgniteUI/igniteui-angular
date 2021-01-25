@@ -226,7 +226,6 @@ export class WorksheetFile implements IExcelFile {
     private processRow(worksheetData: WorksheetData, i: number) {
         const rowData = new Array(worksheetData.columnCount + 2);
         const record = worksheetData.data[i - 1];
-        const dataLength = Object.keys(record.data).length;
         const sHidden = record.hidden ? ` hidden="1"` : '';
         const rowLevel = record.level;
         const outlineLevel = rowLevel > 0 ? ` outlineLevel="${rowLevel}"` : '';
@@ -235,7 +234,7 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        for (let j = 0; j < dataLength; j++) {
+        for (let j = 0; j < worksheetData.columnCount; j++) {
             const cellData = WorksheetFile.getCellData(worksheetData, i, j);
             rowData[j + 1] = cellData;
         }

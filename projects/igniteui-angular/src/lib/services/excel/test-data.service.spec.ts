@@ -623,8 +623,6 @@ export class FileContentData {
     }
 
     public simpleGridSortByNameDesc(isSorted: boolean) {
-        const sortedTag = isSorted ? `<sortState ref="A2:C11"><sortCondition descending="1" ref="B1:B15"/></sortState>` : ``;
-
         this._sharedStringsData = `count="23" uniqueCount="21"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si>` +
             `<si><t>Tanya Bennett</t></si><si><t>Director</t></si><si><t>Leslie Hansen</t></si><si><t>Associate Software Developer</t></si>` +
             `<si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Gilberto Todd</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si>` +
@@ -874,7 +872,7 @@ export class FileContentData {
             `count="19" uniqueCount="18"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si><si><t>Associate Software Developer</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Debra Morton</t></si>`;
 
         this._tableData = `ref="A1:E8" totalsRowShown="0">
-    <autoFilter ref="A1:E8"/><sortState ref="A2:E8"><sortCondition descending="1" ref="C1:C15"/></sortState><tableColumns count="5"><tableColumn id="1" name="ID"/><tableColumn id="2" name="ParentID"/><tableColumn id="3" name="Name"/><tableColumn id="4" name="JobTitle"/><tableColumn id="5" name="Age"/></tableColumns>`;
+    <autoFilter ref="A1:E8"/><tableColumns count="5"><tableColumn id="1" name="ID"/><tableColumn id="2" name="ParentID"/><tableColumn id="3" name="Name"/><tableColumn id="4" name="JobTitle"/><tableColumn id="5" name="Age"/></tableColumns>`;
 
         this._worksheetData = `
 <sheetPr><outlinePr summaryBelow="0" /></sheetPr>
