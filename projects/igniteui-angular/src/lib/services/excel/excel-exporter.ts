@@ -72,7 +72,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
-        const level = data[0]['level'];
+        const level = data[0]?.level;
 
         if (typeof level !== 'undefined') {
             let maxLevel = 0;

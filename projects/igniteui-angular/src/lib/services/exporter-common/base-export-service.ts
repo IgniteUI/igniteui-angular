@@ -23,7 +23,7 @@ export enum RecordType {
 
 export interface IExportRecord {
     data: any;
-    level?: number;
+    level: number;
     hidden?: boolean;
     type: number;
 }
@@ -195,7 +195,8 @@ export abstract class IgxBaseExporter {
         const records = data.map(d => {
             const record: IExportRecord = {
                 data: d,
-                type: RecordType.DataRecord
+                type: RecordType.DataRecord,
+                level: 0
             };
 
             return record;
@@ -434,7 +435,8 @@ export abstract class IgxBaseExporter {
         for (let i = 0; i < records.length; i++) {
             const record: IExportRecord = {
                 data: records[i],
-                type: RecordType.DataRecord
+                type: RecordType.DataRecord,
+                level: 0
             };
 
             this.flatRecords.push(record);

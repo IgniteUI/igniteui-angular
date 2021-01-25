@@ -228,7 +228,7 @@ export class WorksheetFile implements IExcelFile {
         const record = worksheetData.data[i - 1];
         const dataLength = Object.keys(record.data).length;
         const sHidden = record.hidden ? ` hidden="1"` : '';
-        const rowLevel = record.level ? record.level : 0;
+        const rowLevel = record.level;
         const outlineLevel = rowLevel > 0 ? ` outlineLevel="${rowLevel}"` : '';
 
         this.maxOutlineLevel = this.maxOutlineLevel < rowLevel ? rowLevel : this.maxOutlineLevel;
