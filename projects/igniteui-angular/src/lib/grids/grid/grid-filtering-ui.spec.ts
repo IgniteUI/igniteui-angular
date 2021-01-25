@@ -4425,8 +4425,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 i++;
             }
 
-            // find the day 15 days later than today
-            const day = days[todayIndex + 15];
+            const day = days[todayIndex];
             (day as HTMLElement).click();
             tick(100);
             fix.detectChanges();
@@ -4434,10 +4433,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            // Verify the results. Filtered day is date that is 15 days after today
+            // Verify the results. Filtered day is today
             const pipe = new DatePipe(grid.locale);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15);
+            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 0);
             const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
             const cellText = pipe.transform(filteredDate, column.pipeArgs.format, column.pipeArgs.timezone);
             expect(cell.innerText).toMatch(cellText);
@@ -4491,8 +4490,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 i++;
             }
 
-            // find the day 15 days later than today
-            const day = days[todayIndex + 15];
+            const day = days[todayIndex];
             (day as HTMLElement).click();
             tick(100);
             fix.detectChanges();
@@ -4500,9 +4498,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            // Verify the results. Filtered day is date that is 15 days after today
+            // Verify the results. Filtered day is  today
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
-            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15);
+            const filteredDate = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 0);
             const inputText = column.formatter(filteredDate);
             const cellText = column.formatter(filteredDate);
             expect(cell.innerText).toMatch(cellText);
