@@ -1138,7 +1138,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(9);
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 8, 9], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
-        })
+        });
     });
 
     describe('Custom row selectors', () => {
