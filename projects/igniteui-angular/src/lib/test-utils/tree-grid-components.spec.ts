@@ -857,15 +857,20 @@ export class IgxTreeGridEditActionsComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" [rowSelection]="'multipleCascade'"
-     width="900px" height="600px">
+     width="900px" height="600px" [rowEditable]="true">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
     </igx-tree-grid>
     `
 })
 export class IgxTreeGridCascadingSelectionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
 }

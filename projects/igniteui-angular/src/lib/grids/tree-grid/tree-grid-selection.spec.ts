@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent } from './public_api';
+import { IgxTreeGridModule, IgxGridCellComponent, IgxTreeGridRowComponent } from './public_api';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -23,14 +23,22 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxGridSelectionModule } from '../selection/selection.module';
+import { IgxActionStripModule, IgxActionStripComponent } from '../../action-strip/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
+import { By } from '@angular/platform-browser';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
-
+    let actionStrip: IgxActionStripComponent;
+    const endTransition = () => {
+        // transition end needs to be simulated
+        const animationElem = fix.nativeElement.querySelector('.igx-grid__tr--inner');
+        const endEvent = new AnimationEvent('animationend');
+        animationElem.dispatchEvent(endEvent);
+    };
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -42,7 +50,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCustomRowSelectorsComponent,
                 IgxTreeGridCascadingSelectionComponent
             ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule, IgxActionStripModule]
         })
             .compileComponents();
     }));
@@ -1001,6 +1009,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridCascadingSelectionComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            actionStrip = fix.componentInstance.actionStrip;
         }));
 
         it('Should select/deselect all leaf nodes and set the correct state to their checkboxes on parent rows checkbox click', () => {
@@ -1138,6 +1147,66 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(9);
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 8, 9], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+        it('After adding a new child row to a selected parent its checkbox state SHOULD be indeterminate.',  async () => {
+            treeGrid.selectRows([847], true);
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, true, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            const row = treeGrid.getRowByIndex(8);
+            actionStrip.show(row);
+            fix.detectChanges();
+
+            // add new child through the UI
+            const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
+            const addChildBtn = editActions[2].componentInstance;
+            addChildBtn.onActionClick.emit();
+            fix.detectChanges();
+            endTransition();
+
+            const addRow = treeGrid.getRowByIndex(9);
+            expect(addRow.addRow).toBeTrue();
+
+            treeGrid.endEdit(true);
+            await wait(100);
+            fix.detectChanges();
+            const addedRow = treeGrid.getRowByIndex(10);
+            expect(addedRow.rowData.Name).toBe(undefined);
+
+            TreeGridFunctions.verifyDataRowsSelection(fix, [9], true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+        it('After adding child to a selected parent with no children, parent checkbox state SHOULD NOT be selected.', async () => {
+            treeGrid.selectRows([957], true);
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            const row = treeGrid.getRowByIndex(2) as IgxTreeGridRowComponent;
+            actionStrip.show(row);
+            fix.detectChanges();
+
+            // add new child through the API
+            row.beginAddChild();
+            fix.detectChanges();
+            endTransition();
+
+            treeGrid.endEdit(true);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+            const addedRow = treeGrid.getRowByIndex(3);
+            expect(addedRow.rowData.Name).toBe(undefined);
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
     });
 
