@@ -1,7 +1,7 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 import { IgxGridComponent, IDropBaseEventArgs, IgxDialogComponent, IDropDroppedEventArgs, GridSelectionMode} from 'igniteui-angular';
 
-class ColumnConfig {
+interface ColumnConfig {
     key: string;
     width: string;
     colStart: number;
@@ -468,7 +468,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.colSpanIncrease = 0;
     }
 
-    public pointerMoveResizeBottom(event, cellRef, rowIndex, colIndex) {
+    public pointerMoveResizeBottom(event, cellRef, rowIndex) {
         if (this.dragStarted) {
             const curDistance = event.pageY - this.dragStartY;
             const maxIncrease = this.rowsCount - rowIndex - this.curResizedCell.rowSpan;
@@ -477,7 +477,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         }
     }
 
-    public pointerUpResizeBottom(event, cellRef, rowIndex, colIndex) {
+    public pointerUpResizeBottom(event, cellRef, rowIndex) {
         this.dragStarted = false;
         this.resizeVisible = false;
 

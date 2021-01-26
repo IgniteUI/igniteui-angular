@@ -5,10 +5,11 @@ import { FinancialData } from './financialData';
 
 @Injectable()
 export class LocalService {
-    records: Observable<any[]>;
-    url: string;
-    _records: BehaviorSubject<any[]>;
-    dataStore: any[];
+    public records: Observable<any[]>;
+    public url: string;
+    public dataStore: any[];
+
+    private _records: BehaviorSubject<any[]>;
 
     constructor(private http: HttpClient) {
         this.dataStore = [];
@@ -16,14 +17,14 @@ export class LocalService {
         this.records = this._records.asObservable();
     }
 
-    getData() {
+    public getData() {
         return this.http.get(this.url).subscribe(data => {
             this.dataStore = data['value'];
             this._records.next(this.dataStore);
         });
     }
 
-    getFinancialData(count: number = 10) {
+    public getFinancialData(count: number = 10) {
         this._records.next(FinancialData.generateData(count));
     }
 }

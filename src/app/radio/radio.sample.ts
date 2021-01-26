@@ -3,7 +3,7 @@ import { IgxRadioGroupDirective, RadioGroupAlignment } from 'igniteui-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 class Person {
-    favoriteSeason: string;
+    public favoriteSeason: string;
 
     constructor(public name: string, season?: string) {
         if (season) {
@@ -18,55 +18,51 @@ class Person {
     templateUrl: 'radio.sample.html'
 })
 export class RadioSampleComponent implements AfterContentInit {
-    @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+    @ViewChild('radioGroupZZ', { read: IgxRadioGroupDirective, static: true })
+    private radioGroup: IgxRadioGroupDirective;
 
-    selectedValue: any;
-
-    options = [0, 1, 2, 3, 4];
-    initial = this.options[0];
-
-    seasons = [
+    public selectedValue: any;
+    public options = [0, 1, 2, 3, 4];
+    public initial = this.options[0];
+    public seasons = [
         'Winter',
         'Spring',
         'Summer',
         'Autumn',
     ];
-
-    personBob: Person = new Person('Bob', this.seasons[2]);
-
-    newPerson: Person;
-    personKirk: Person = new Person('Kirk', this.seasons[1]);
-    personKirkForm: FormGroup;
-
-    alignment = RadioGroupAlignment.vertical;
+    public personBob: Person = new Person('Bob', this.seasons[2]);
+    public newPerson: Person;
+    public personKirk: Person = new Person('Kirk', this.seasons[1]);
+    public personKirkForm: FormGroup;
+    public alignment = RadioGroupAlignment.vertical;
 
     constructor(private _formBuilder: FormBuilder) {
         this._createPersonKirkForm();
     }
 
-    get diagnostic() {
+    public get diagnostic() {
         return JSON.stringify(this.personBob);
     }
 
-    ngAfterContentInit(): void {
+    public ngAfterContentInit(): void {
         setTimeout(() => this.selectedValue = this.radioGroup.value);
     }
 
-    onBtnClick(evt) {
+    public onBtnClick() {
         this.radioGroup.value = 'Baz';
     }
 
-    onUpdateBtnClick(evt) {
+    public onUpdateBtnClick() {
         const formModel = this.personKirkForm.value;
 
         this.newPerson = new Person(formModel.name as string, formModel.favoriteSeason as string);
     }
 
-    onRadioChange(evt) {
+    public onRadioChange(evt) {
         this.selectedValue = evt.value;
     }
 
-    onSubmit() {
+    public onSubmit() {
         this.personBob.favoriteSeason = this.seasons[1];
     }
 
