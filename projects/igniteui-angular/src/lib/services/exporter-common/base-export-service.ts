@@ -15,6 +15,7 @@ import { IgxGridBaseDirective } from '../../grids/public_api';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 import { DatePipe } from '@angular/common';
+import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
 export enum RecordType {
     GroupedRecord = 1,
@@ -339,7 +340,7 @@ export abstract class IgxBaseExporter {
 
         if (skipOperations) {
             if (hasGrouping) {
-                this.addGroupedData(grid.groupsRecords, groupedGridGroupingState);
+                this.addGroupedData(grid, grid.groupsRecords, groupedGridGroupingState);
             } else {
                 this.addFlatData(grid.filteredSortedData);
             }
@@ -373,7 +374,7 @@ export abstract class IgxBaseExporter {
             }
 
             if (hasGrouping && !options.ignoreGrouping) {
-                this.addGroupedData(gridData, groupedGridGroupingState);
+                this.addGroupedData(grid, gridData, groupedGridGroupingState);
             } else {
                 this.addFlatData(gridData);
             }
@@ -444,7 +445,8 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private addGroupedData(records: any, groupingState: IGroupingState, parentExpanded: boolean = true) {
+    private addGroupedData(grid: IgxGridComponent, records: IGroupByRecord[],
+        groupingState: IGroupingState, parentExpanded: boolean = true) {
         if (!records) {
             return;
         }
@@ -465,12 +467,12 @@ export abstract class IgxBaseExporter {
             if (isDate) {
                 const timeZoneOffset = recordVal.getTimezoneOffset() * 60000;
                 const isoString = (new Date(recordVal - timeZoneOffset)).toISOString();
-                const pipe = new DatePipe('en-US');
-                recordVal = pipe.transform(isoString, 'M/d/yyyy');
+                const pipe = new DatePipe(grid.locale);
+                recordVal = pipe.transform(isoString);
             }
 
             const groupExpression: IExportRecord = {
-                data: { [firstCol]: `${record.expression.fieldName}: ${recordVal}` },
+                data: { [firstCol]: `${record.expression.fieldName}: ${recordVal} (${record.records.length})` },
                 level: record.level,
                 hidden: !parentExpanded,
                 type: RecordType.GroupedRecord,
@@ -479,7 +481,7 @@ export abstract class IgxBaseExporter {
             this.flatRecords.push(groupExpression);
 
             if (record.groups.length > 0) {
-                this.addGroupedData(record.groups, groupingState, expanded && parentExpanded);
+                this.addGroupedData(grid, record.groups, groupingState, expanded && parentExpanded);
             } else {
                 const rowRecords = record.records;
 

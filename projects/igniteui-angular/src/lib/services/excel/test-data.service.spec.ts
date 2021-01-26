@@ -1034,7 +1034,7 @@ export class FileContentData {
 
     get exportGroupedData() {
         this._sharedStringsData =
-            `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW</t></si><si><t>Price: 150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price: 100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla</t></si><si><t>Roadster</t></si><si><t>Price: 75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price: 65000</t></si><si><t>Base</t></si><si><t>Brand: VW</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
+            `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW (2)</t></si><si><t>Price: 150000 (1)</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price: 100000 (1)</t></si><si><t>Performance</t></si><si><t>Brand: Tesla (3)</t></si><si><t>Roadster</t></si><si><t>Price: 75000 (1)</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price: 65000 (1)</t></si><si><t>Base</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
 
         this._tableData =
             `ref="A1:B20" totalsRowShown="0">
@@ -1053,7 +1053,7 @@ export class FileContentData {
 
     get exportGroupedDataWithCollapsedRows() {
         this._sharedStringsData =
-            `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW</t></si><si><t>Price: 150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price: 100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla</t></si><si><t>Roadster</t></si><si><t>Price: 75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price: 65000</t></si><si><t>Base</t></si><si><t>Brand: VW</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
+            `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW (2)</t></si><si><t>Price: 150000 (1)</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price: 100000 (1)</t></si><si><t>Performance</t></si><si><t>Brand: Tesla (3)</t></si><si><t>Roadster</t></si><si><t>Price: 75000 (1)</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price: 65000 (1)</t></si><si><t>Base</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
 
         this._tableData =
             `ref="A1:B20" totalsRowShown="0">
@@ -1072,7 +1072,7 @@ export class FileContentData {
 
     get exportGroupedDataWithIgnoreSorting() {
         this._sharedStringsData =
-            `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: Tesla</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>100000</t></si><si><t>Roadster</t></si><si><t>Performance</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: BMW</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Brand: VW</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
+            `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: Tesla (3)</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>100000</t></si><si><t>Roadster</t></si><si><t>Performance</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: BMW (2)</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
 
         this._tableData =
             `ref="A1:C12" totalsRowShown="0">
@@ -1091,7 +1091,7 @@ export class FileContentData {
 
     get exportGroupedDataWithIgnoreFiltering() {
         this._sharedStringsData =
-            `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Roadster</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: VW</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
+            `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW (2)</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla (3)</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Roadster</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
 
         this._tableData =
             `ref="A1:C12" totalsRowShown="0">
