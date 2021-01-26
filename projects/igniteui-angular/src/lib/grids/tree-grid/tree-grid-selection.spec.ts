@@ -1081,6 +1081,64 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+        it('Should select all children of record on Shift + click even if they are not in the selected range. ', () => {
+            const firstRow = treeGrid.getRowByIndex(1);
+            const secondRow = treeGrid.getRowByIndex(4);
+            const mockEvent = new MouseEvent('click', { shiftKey: true });
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toEqual(1);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [1], true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Click on other row holding Shift key
+            secondRow.nativeElement.dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+        it('Should select only the newly clicked parent row and its children and deselect the previous selection.', () => {
+            treeGrid.selectRows([19, 847], true);
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+
+            const firstRow = treeGrid.getRowByIndex(0);
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+        it('Should add a row and its children to the selected rows collection using Ctrl + click.', () => {
+            treeGrid.selectRows([847], true);
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+
+            // select a child of the first parent and all of its children
+            const firstRow = treeGrid.getRowByIndex(3);
+            UIInteractions.simulateClickEvent(firstRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(6);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [3, 4, 5, 6, 8, 9], true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // select the first parent and all of its children
+            const secondRow = treeGrid.getRowByIndex(0);
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(9);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 8, 9], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        })
     });
 
     describe('Custom row selectors', () => {
