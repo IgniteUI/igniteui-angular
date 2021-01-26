@@ -15,8 +15,14 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
 - `IgxDialog`
     - Added new `onOpened` and `onClosed` events.
+- `IgxToast`
+    - **Breaking Change** - 
+    `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+    `onShowing`,`onShown`,`onHiding` and `onHiden` events have been deprecated. `onOpening`, `onOpened`, `onClosing` and `onClosed`should be used instead.
 - `IgxInputGroup`
     - Added new property `theme` that allows you to set the theme explicitly and at runtime.
+- `IgxSnackbar`
+    - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
 
 ## 11.0.4
 

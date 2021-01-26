@@ -11,11 +11,10 @@ import {
     HostBinding,
     Input,
     NgModule,
-    NgZone,
     Output
 } from '@angular/core';
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from '../animations/main';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -204,14 +203,16 @@ export class IgxSnackbarComponent {
      */
     private timeoutId;
 
-    constructor(private zone: NgZone) { }
+    constructor() { }
 
     /**
+     * @deprecated
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
      * ```typescript
      * this.snackbar.show();
      * ```
      */
+    @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
     public show(message?: string): void {
         clearTimeout(this.timeoutId);
         if (message !== undefined) { this.snackbarMessage = message; }
@@ -226,12 +227,44 @@ export class IgxSnackbarComponent {
     }
 
     /**
+     * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
+     * ```typescript
+     * this.snackbar.open();
+     * ```
+     */
+    public open(message?: string): void {
+        clearTimeout(this.timeoutId);
+        if (message !== undefined) { this.snackbarMessage = message; }
+        setTimeout(this.timeoutId);
+        this.isVisible = true;
+
+        if (this.autoHide) {
+            this.timeoutId = setTimeout(() => {
+                this.close();
+            }, this.displayTime);
+        }
+    }
+
+    /**
+     * @deprecated
      * Hides the snackbar.
      * ```typescript
      * this.snackbar.hide();
      * ```
      */
+    @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
     public hide(): void {
+        this.isVisible = false;
+        clearTimeout(this.timeoutId);
+    }
+
+    /**
+     * Hides the snackbar.
+     * ```typescript
+     * this.snackbar.close();
+     * ```
+     */
+    public close(): void {
         this.isVisible = false;
         clearTimeout(this.timeoutId);
     }
@@ -246,7 +279,7 @@ export class IgxSnackbarComponent {
      * @memberof IgxSnackbarComponent
      */
     public snackbarAnimationStarted(evt: AnimationEvent): void {
-        if (evt.fromState === 'void') {
+        if (evt.phaseName === 'start') {
             this.animationStarted.emit(evt);
         }
     }
@@ -255,7 +288,7 @@ export class IgxSnackbarComponent {
      * @memberof IgxSnackbarComponent
      */
     public snackbarAnimationDone(evt: AnimationEvent): void {
-        if (evt.fromState === 'show') {
+        if (evt.phaseName === 'done') {
             this.animationDone.emit(evt);
         }
     }
