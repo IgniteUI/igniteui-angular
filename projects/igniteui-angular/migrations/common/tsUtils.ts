@@ -5,6 +5,7 @@ import { Tree } from '@angular-devkit/schematics';
 import { MemberChange } from './schema';
 import { escapeRegExp } from './util';
 import { Logger } from './tsLogger';
+import { TSLanguageService } from './tsPlugin/TSLanguageService';
 
 export const IG_PACKAGE_NAME = 'igniteui-angular';
 export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
@@ -230,7 +231,7 @@ function getTypeDefinitions(langServ: tss.LanguageService, entryPath: string, de
         before any other plugins modify it
     */
     return langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start)
-        || (langServ as any).getTypeScriptLanguageService().getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
+        || (langServ as TSLanguageService).getTypeScriptLanguageService().getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
 }
 
 /**
