@@ -13,6 +13,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Get current component selection.
+     *
      * @param componentID ID of the component.
      */
     public get(componentID: string): Set<any> {
@@ -21,6 +22,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Set new component selection.
+     *
      * @param componentID ID of the component.
      * @param newSelection The new component selection to be set.
      */
@@ -33,6 +35,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Clears selection for component.
+     *
      * @param componentID ID of the component.
      */
     public clear(componentID: string) {
@@ -41,6 +44,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Get current component selection length.
+     *
      * @param componentID ID of the component.
      */
     public size(componentID: string): number {
@@ -53,6 +57,7 @@ export class IgxSelectionAPIService {
      * The returned collection is new Set,
      * therefore if you want to update component selection you need to call in addition the set_selection() method
      * or instead use the select_item() one.
+     *
      * @param componentID ID of the component, which we add new item to.
      * @param itemID ID of the item to add to component selection.
      * @param sel Used internally only by the selection (add_items method) to accumulate selection for multiple items.
@@ -78,6 +83,7 @@ export class IgxSelectionAPIService {
      * The returned collection is new Set,
      * therefore if you want to update component selection you need to call in addition the set_selection() method
      * or instead use the select_items() one.
+     *
      * @param componentID ID of the component, which we add new items to.
      * @param itemIDs Array of IDs of the items to add to component selection.
      * @param clearSelection If true it will clear previous selection.
@@ -97,6 +103,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Add item to the current component selection.
+     *
      * @param componentID ID of the component, which we add new item to.
      * @param itemID ID of the item to add to component selection.
      * @param sel Used internally only by the selection (select_items method) to accumulate selection for multiple items.
@@ -107,6 +114,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Add items to the current component selection.
+     *
      * @param componentID ID of the component, which we add new items to.
      * @param itemIDs Array of IDs of the items to add to component selection.
      * @param clearSelection If true it will clear previous selection.
@@ -120,6 +128,7 @@ export class IgxSelectionAPIService {
      * The returned collection is new Set,
      * therefore if you want to update component selection you need to call in addition the set_selection() method
      * or instead use the deselect_item() one.
+     *
      * @param componentID ID of the component, which we remove items from.
      * @param itemID ID of the item to remove from component selection.
      * @param sel Used internally only by the selection (delete_items method) to accumulate deselected items.
@@ -142,6 +151,7 @@ export class IgxSelectionAPIService {
      * The returned collection is new Set,
      * therefore if you want to update component selection you need to call in addition the set_selection() method
      * or instead use the deselect_items() one.
+     *
      * @param componentID ID of the component, which we remove items from.
      * @param itemID ID of the items to remove from component selection.
      *
@@ -155,6 +165,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Remove item from the current component selection.
+     *
      * @param componentID ID of the component, which we remove item from.
      * @param itemID ID of the item to remove from component selection.
      * @param sel Used internally only by the selection (deselect_items method) to accumulate selection for multiple items.
@@ -165,6 +176,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Remove items to the current component selection.
+     *
      * @param componentID ID of the component, which we add new items to.
      * @param itemIDs Array of IDs of the items to add to component selection.
      */
@@ -174,6 +186,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Check if the item is selected in the component selection.
+     *
      * @param componentID ID of the component.
      * @param itemID ID of the item to search.
      *
@@ -191,6 +204,7 @@ export class IgxSelectionAPIService {
      * Get first element in the selection.
      * This is correct when we have only one item in the collection (for single selection purposes)
      * and the method returns that item.
+     *
      * @param componentID ID of the component.
      *
      * @returns First element in the set.
@@ -204,6 +218,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Returns whether all items are selected.
+     *
      * @param componentID ID of the component.
      * @param dataCount: number Number of items in the data.
      *
@@ -215,6 +230,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Returns whether any of the items is selected.
+     *
      * @param componentID ID of the component.
      * @param data Entire data array.
      *
@@ -226,6 +242,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Get all primary key values from a data array. If there isn't a primary key defined that the entire data is returned instead.
+     *
      * @param data Entire data array.
      * @param primaryKey Data primary key.
      *
@@ -238,6 +255,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Returns empty selection collection.
+     *
      * @returns empty set.
      */
     public get_empty() {

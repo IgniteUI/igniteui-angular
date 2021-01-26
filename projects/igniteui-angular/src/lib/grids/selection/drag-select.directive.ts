@@ -19,6 +19,12 @@ export enum DragScrollDirection {
     selector: '[igxGridDragSelect]'
 })
 export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
+    @Output()
+    onDragStop = new EventEmitter<boolean>();
+
+    @Output()
+    onDragScroll = new EventEmitter<DragScrollDirection>();
+
     _activeDrag: boolean;
 
     @Input('igxGridDragSelect')
@@ -32,12 +38,6 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
             this._activeDrag = val;
         }
     }
-
-    @Output()
-    onDragStop = new EventEmitter<boolean>();
-
-    @Output()
-    onDragScroll = new EventEmitter<DragScrollDirection>();
 
     get nativeElement(): HTMLElement {
         return this.ref.nativeElement;
@@ -89,7 +89,7 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
         this.unsubscribe();
         this._sub = this._interval$.subscribe(() => this.onDragScroll.emit(direction));
         this.lastDirection = direction;
-    }
+    };
 
     stopDragSelection = () => {
         if (!this.activeDrag) {
@@ -98,7 +98,7 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
         this.onDragStop.emit(false);
         this.unsubscribe();
         this.lastDirection = DragScrollDirection.NONE;
-    }
+    };
 
     _measureDimensions(x: number, y: number): DragScrollDirection {
         let direction: DragScrollDirection;

@@ -12,8 +12,6 @@ import {
     ViewChild,
     TemplateRef,
     AfterContentInit,
-    IterableDiffers,
-    OnInit,
     ChangeDetectorRef,
     AfterViewInit
 } from '@angular/core';
@@ -58,29 +56,41 @@ export class IgxActionStripMenuItemDirective {
 })
 
 export class IgxActionStripComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit {
-    constructor(
-        private _viewContainer: ViewContainerRef,
-        private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        public cdr: ChangeDetectorRef) {
-        super(_displayDensityOptions);
-    }
-
     /**
-     * Getter for the 'display' property of the current `IgxActionStrip`
+     * Sets the context of an action strip.
+     * The context should be an instance of a @Component, that has element property.
+     * This element will be the placeholder of the action strip.
+     *
+     * @example
+     * ```html
+     * <igx-action-strip [context]="cell"></igx-action-strip>
+     * ```
+     */
+    @Input()
+    public context: any;
+    /**
+     * Menu Items ContentChildren inside the Action Strip
+     *
      * @hidden
      * @internal
      */
-    @HostBinding('style.display')
-    get display(): string {
-        return this._hidden ? 'none' : 'flex';
-    }
+    @ContentChildren(IgxActionStripMenuItemDirective)
+    public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
-    private _hidden = false;
+
+    /**
+     * ActionButton as ContentChildren inside the Action Strip
+     *
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxGridActionsBaseDirective)
+    public actionButtons: QueryList<IgxGridActionsBaseDirective>;
 
     /**
      * An @Input property that set the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
+     *
      * @example
      * ```html
      *  <igx-action-strip [hidden]="false">
@@ -97,14 +107,54 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Host `class.igx-action-strip` binding.
+     *
      * @hidden
      * @internal
      */
     @Input('class')
-    hostClass: string;
+    public hostClass: string;
+
+    /**
+     * Reference to the menu
+     *
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dropdown')
+    public menu: IgxDropDownComponent;
+
+    /**
+     * Getter for menu overlay settings
+     *
+     * @hidden
+     * @internal
+     */
+    public menuOverlaySettings: OverlaySettings  = { scrollStrategy: new CloseScrollStrategy() };
+
+    private _hidden = false;
+
+    constructor(
+        private _viewContainer: ViewContainerRef,
+        private renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        public cdr: ChangeDetectorRef) {
+        super(_displayDensityOptions);
+    }
+
+    /**
+     * Getter for the 'display' property of the current `IgxActionStrip`
+     *
+     * @hidden
+     * @internal
+     */
+    @HostBinding('style.display')
+    get display(): string {
+        return this._hidden ? 'none' : 'flex';
+    }
 
     /**
      * Host `attr.class` binding.
+     *
      * @hidden
      * @internal
      */
@@ -120,42 +170,8 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * Sets the context of an action strip.
-     * The context should be an instance of a @Component, that has element property.
-     * This element will be the placeholder of the action strip.
-     * @example
-     * ```html
-     * <igx-action-strip [context]="cell"></igx-action-strip>
-     * ```
-     */
-    @Input()
-    public context: any;
-    /**
-     * Menu Items ContentChildren inside the Action Strip
-     * @hidden
-     * @internal
-     */
-    @ContentChildren(IgxActionStripMenuItemDirective)
-    public _menuItems: QueryList<IgxActionStripMenuItemDirective>;
-
-
-    /**
-     * ActionButton as ContentChildren inside the Action Strip
-     * @hidden
-     * @internal
-     */
-    @ContentChildren(IgxGridActionsBaseDirective)
-    public actionButtons: QueryList<IgxGridActionsBaseDirective>;
-
-    /**
-     * Getter for menu overlay settings
-     * @hidden
-     * @internal
-     */
-    public menuOverlaySettings: OverlaySettings  = { scrollStrategy: new CloseScrollStrategy() };
-
-    /**
      * Menu Items list.
+     *
      * @hidden
      * @internal
      */
@@ -171,14 +187,6 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
         });
         return [... this._menuItems.toArray(), ... actions];
     }
-
-    /**
-     * Reference to the menu
-     * @hidden
-     * @internal
-     */
-    @ViewChild('dropdown')
-    public menu: IgxDropDownComponent;
 
     /**
      * @hidden
@@ -213,6 +221,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Showing the Action Strip and appending it the specified context element.
+     *
      * @param context
      * @example
      * ```typescript
@@ -237,6 +246,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Hiding the Action Strip and removing it from its current context element.
+     *
      * @example
      * ```typescript
      * this.actionStrip.hide();
@@ -252,6 +262,7 @@ export class IgxActionStripComponent extends DisplayDensityBase implements After
 
     /**
      * Close the menu if opened
+     *
      * @hidden
      * @internal
      */

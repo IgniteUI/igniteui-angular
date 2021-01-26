@@ -17,7 +17,7 @@ const base: AnimationMetadata[] = [
 const baseParams: IAnimationParams = {
     delay: '0s',
     duration: '350ms',
-    easing: EaseOut.sine,
+    easing: EaseOut.Sine,
     endOpacity: 1,
     startOpacity: 0
 };
@@ -30,7 +30,7 @@ const fadeOut: AnimationReferenceMetadata = animation(base, {
     params: {
         delay: '0s',
         duration: '350ms',
-        easing: EaseOut.sine,
+        easing: EaseOut.Sine,
         endOpacity: 0,
         startOpacity: 1
     }

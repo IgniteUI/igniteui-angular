@@ -8,41 +8,28 @@ export class IgxFilteringOperand {
     protected static _instance: IgxFilteringOperand = null;
     public operations: IFilteringOperation[];
 
-    public constructor() {
+    constructor() {
         this.operations = [{
             name: 'null',
             isUnary: true,
             iconName: 'is-null',
-            logic: (target: any) => {
-                return target === null;
-            }
+            logic: (target: any) => target === null
         }, {
             name: 'notNull',
             isUnary: true,
             iconName: 'is-not-null',
-            logic: (target: any) => {
-                return target !== null;
-            }
+            logic: (target: any) => target !== null
         }, {
             name: 'in',
             isUnary: false,
             iconName: 'is-in',
             hidden: true,
-            logic: (target: any, searchVal: Set<any>) => {
-                return this.findValueInSet(target, searchVal);
-            }
+            logic: (target: any, searchVal: Set<any>) => this.findValueInSet(target, searchVal)
         }];
     }
 
     public static instance(): IgxFilteringOperand {
         return this._instance || (this._instance = new this());
-    }
-
-    /**
-     * @hidden
-     */
-    protected findValueInSet(target: any, searchVal: Set<any>) {
-        return searchVal.has(target);
     }
 
     /**
@@ -54,6 +41,7 @@ export class IgxFilteringOperand {
 
     /**
      * Returns an instance of the condition with the specified name.
+     *
      * @param name The name of the condition.
      */
     public condition(name: string): IFilteringOperation {
@@ -62,10 +50,18 @@ export class IgxFilteringOperand {
 
     /**
      * Adds a new condition to the filtering operations.
+     *
      * @param operation The filtering operation.
      */
     public append(operation: IFilteringOperation) {
         this.operations.push(operation);
+    }
+
+    /**
+     * @hidden
+     */
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(target);
     }
 }
 
@@ -81,37 +77,27 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             name: 'all',
             isUnary: true,
             iconName: 'select-all',
-            logic: (target: boolean) => {
-                return true;
-            }
+            logic: (target: boolean) => true
         }, {
             name: 'true',
             isUnary: true,
             iconName: 'is-true',
-            logic: (target: boolean) => {
-                return !!(target && target !== null && target !== undefined);
-            }
+            logic: (target: boolean) => !!(target && target !== null && target !== undefined)
         }, {
             name: 'false',
             isUnary: true,
             iconName: 'is-false',
-            logic: (target: boolean) => {
-                return !target && target !== null && target !== undefined;
-            }
+            logic: (target: boolean) => !target && target !== null && target !== undefined
         }, {
             name: 'empty',
             isUnary: true,
             iconName: 'is-empty',
-            logic: (target: boolean) => {
-                return target === null || target === undefined;
-            }
+            logic: (target: boolean) => target === null || target === undefined
         }, {
             name: 'notEmpty',
             isUnary: true,
             iconName: 'not-empty',
-            logic: (target: boolean) => {
-                return target !== null && target !== undefined;
-            }
+            logic: (target: boolean) => target !== null && target !== undefined
         }].concat(this.operations);
     }
 }
@@ -328,16 +314,12 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
             name: 'empty',
             isUnary: true,
             iconName: 'is-empty',
-            logic: (target: Date) => {
-                return target === null || target === undefined;
-            }
+            logic: (target: Date) => target === null || target === undefined
         }, {
             name: 'notEmpty',
             isUnary: true,
             iconName: 'not-empty',
-            logic: (target: Date) => {
-                return target !== null && target !== undefined;
-            }
+            logic: (target: Date) => target !== null && target !== undefined
         }].concat(this.operations);
     }
 
@@ -383,15 +365,17 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         return res;
     }
 
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        if (!target) {
+            return false;
+        }
+        return searchVal.has(target.toISOString());
+    }
+
     private validateInputData(target: Date) {
         if (!(target instanceof Date)) {
             throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
         }
-    }
-
-    protected findValueInSet(target: any, searchVal: Set<any>) {
-        if (!target) { return false; }
-        return searchVal.has(target.toISOString());
     }
 }
 
@@ -407,58 +391,42 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             name: 'equals',
             isUnary: false,
             iconName: 'equals',
-            logic: (target: number, searchVal: number) => {
-                return target === searchVal;
-            }
+            logic: (target: number, searchVal: number) => target === searchVal
         }, {
             name: 'doesNotEqual',
             isUnary: false,
             iconName: 'not-equal',
-            logic: (target: number, searchVal: number) => {
-                return target !== searchVal;
-            }
+            logic: (target: number, searchVal: number) => target !== searchVal
         }, {
             name: 'greaterThan',
             isUnary: false,
             iconName: 'greater-than',
-            logic: (target: number, searchVal: number) => {
-                return target > searchVal;
-            }
+            logic: (target: number, searchVal: number) => target > searchVal
         }, {
             name: 'lessThan',
             isUnary: false,
             iconName: 'less-than',
-            logic: (target: number, searchVal: number) => {
-                return target < searchVal;
-            }
+            logic: (target: number, searchVal: number) => target < searchVal
         }, {
             name: 'greaterThanOrEqualTo',
             isUnary: false,
             iconName: 'greater-than-or-equal',
-            logic: (target: number, searchVal: number) => {
-                return target >= searchVal;
-            }
+            logic: (target: number, searchVal: number) => target >= searchVal
         }, {
             name: 'lessThanOrEqualTo',
             isUnary: false,
             iconName: 'less-than-or-equal',
-            logic: (target: number, searchVal: number) => {
-                return target <= searchVal;
-            }
+            logic: (target: number, searchVal: number) => target <= searchVal
         }, {
             name: 'empty',
             isUnary: true,
             iconName: 'is-empty',
-            logic: (target: number) => {
-                return target === null || target === undefined || isNaN(target);
-            }
+            logic: (target: number) => target === null || target === undefined || isNaN(target)
         }, {
             name: 'notEmpty',
             isUnary: true,
             iconName: 'not-empty',
-            logic: (target: number) => {
-                return target !== null && target !== undefined && !isNaN(target);
-            }
+            logic: (target: number) => target !== null && target !== undefined && !isNaN(target)
         }].concat(this.operations);
     }
 }
@@ -529,16 +497,12 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
             name: 'empty',
             isUnary: true,
             iconName: 'is-empty',
-            logic: (target: string) => {
-                return target === null || target === undefined || target.length === 0;
-            }
+            logic: (target: string) => target === null || target === undefined || target.length === 0
         }, {
             name: 'notEmpty',
             isUnary: true,
             iconName: 'not-empty',
-            logic: (target: string) => {
-                return target !== null && target !== undefined && target.length > 0;
-            }
+            logic: (target: string) => target !== null && target !== undefined && target.length > 0
         }].concat(this.operations);
     }
 

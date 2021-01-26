@@ -1,12 +1,10 @@
 import { DatePickerUtil } from '../../date-picker/date-picker.utils';
 import { DatePart, DatePartInfo } from './date-time-editor.common';
 
-function reduceToDictionary(parts: DatePartInfo[]) {
-    return parts.reduce((obj, x) => {
-        obj[x.type] = x;
-        return obj;
-    }, {});
-}
+const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
+    obj[x.type] = x;
+    return obj;
+}, {});
 
 describe('Date Time Parsing', () => {
     it('should correctly parse all date time parts (base)', () => {

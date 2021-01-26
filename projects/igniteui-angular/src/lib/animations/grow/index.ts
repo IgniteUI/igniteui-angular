@@ -19,7 +19,7 @@ const base: AnimationMetadata[] = [
 const baseParams: IAnimationParams = {
     delay: '0s',
     duration: '350ms',
-    easing: EaseIn.quad,
+    easing: EaseIn.Quad,
     startOpacity: 0,
     endOpacity: 1,
     startHeight: '',
@@ -29,7 +29,7 @@ const baseParams: IAnimationParams = {
 const growVerIn: AnimationReferenceMetadata = animation(base, {
     params: {
         ...baseParams,
-        easing: EaseOut.quad,
+        easing: EaseOut.Quad,
         startOpacity: 0,
         endOpacity: 1,
         startHeight: '0px',
@@ -40,7 +40,7 @@ const growVerIn: AnimationReferenceMetadata = animation(base, {
 const growVerOut: AnimationReferenceMetadata = animation(base, {
     params: {
         ...baseParams,
-        easing: EaseOut.quad,
+        easing: EaseOut.Quad,
         startOpacity: 1,
         endOpacity: 0,
         startHeight: '*',

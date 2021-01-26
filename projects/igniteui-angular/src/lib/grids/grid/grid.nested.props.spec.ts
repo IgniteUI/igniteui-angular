@@ -16,9 +16,7 @@ import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxInputGroupModule } from '../../input-group/public_api';
 import { IGridEditEventArgs } from '../common/events';
 
-function first<T>(array: T[]): T {
-    return array[0];
-}
+const first = <T>(array: T[]): T => array[0];
 
 const DATA = [
     {
@@ -175,7 +173,7 @@ class NestedPropertyGridComponent {
     combo: IgxComboComponent;
 
     public locations = LOCATIONS;
-    public parseArray(arr: { id: number, shop: string }[]): string {
+    public parseArray(arr: { id: number; shop: string }[]): string {
         return (arr || []).map((e) => e.shop).join(', ');
     }
 }

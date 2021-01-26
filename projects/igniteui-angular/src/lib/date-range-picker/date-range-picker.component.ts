@@ -8,7 +8,7 @@ import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
-import { fromEvent, Subject, Subscription } from 'rxjs';
+import { fromEvent, noop, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
@@ -63,6 +63,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     implements IToggleView, OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
     /**
      * Display calendar in either `dialog` or `dropdown` mode.
+     *
      * @remarks
      * Default mode is `dialog`
      *
@@ -241,6 +242,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /**
      * Enables/Disables the `IgxDateRangePickerComponent`.
+     *
      *  @example
      * ```html
      * <igx-date-range-picker [disabled]="'true'"></igx-date-range-picker>
@@ -251,6 +253,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
+     *
      *   @example
      * ```html
      * <igx-date-range-picker [placeholder]="'Choose your dates'"></igx-date-range-picker>
@@ -368,6 +371,39 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         return `${format}${SingleInputDatesConcatenationString}${format}`;
     }
 
+    /**
+     * Gets calendar state.
+     *
+     * ```typescript
+     * let state = this.dateRange.collapsed;
+     * ```
+     */
+    public get collapsed(): boolean {
+        return this._collapsed;
+    }
+
+    /**
+     * The currently selected value / range from the calendar
+     *
+     * @remarks
+     * The current value is of type `DateRange`
+     *
+     * @example
+     * ```typescript
+     * const newValue: DateRange = { start: new Date("2/2/2012"), end: new Date("3/3/2013")};
+     * this.dateRangePicker.value = newValue;
+     * ```
+     */
+    public get value(): DateRange {
+        return this._value;
+    }
+
+    @Input()
+    public set value(value: DateRange) {
+        this.updateValue(value);
+        this.onChangeCallback(value);
+    }
+
     /** @hidden @internal */
     public get hasProjectedInputs(): boolean {
         return this.projectedInputs?.length > 0;
@@ -408,9 +444,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         closeOnOutsideClick: true,
         modal: false
     };
-    private onChangeCallback = (dateRange: DateRange) => { };
-    private onTouchCallback = () => { };
-    private onValidatorChange = () => { };
+    private onChangeCallback: (dateRange: DateRange) => void = noop;
+    private onTouchCallback: () => void = noop;
+    private onValidatorChange: () => void = noop;
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
@@ -431,7 +467,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     public open(overlaySettings?: OverlaySettings): void {
-        if (!this.collapsed || this.disabled) { return; }
+        if (!this.collapsed || this.disabled) {
+            return;
+        }
 
         this.updateCalendar();
         const settings = this.mode === InteractionMode.Dialog ? this.dialogOverlaySettings : this.dropdownOverlaySettings;
@@ -470,44 +508,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         } else {
             this.open(overlaySettings);
         }
-    }
-
-    /**
-     * Gets calendar state.
-     *
-     * ```typescript
-     * let state = this.dateRange.collapsed;
-     * ```
-     */
-    public get collapsed(): boolean {
-        return this._collapsed;
-    }
-
-    /**
-     * The currently selected value / range from the calendar
-     *
-     * @remarks
-     * The current value is of type `DateRange`
-     *
-     * @example
-     * ```typescript
-     * const newValue: DateRange = { start: new Date("2/2/2012"), end: new Date("3/3/2013")};
-     * this.dateRangePicker.value = newValue;
-     * ```
-     */
-    public get value(): DateRange {
-        return this._value;
-    }
-
-    @Input()
-    public set value(value: DateRange) {
-        this.updateValue(value);
-        this.onChangeCallback(value);
-    }
-
-    private updateValue(value: DateRange) {
-        this._value = value ? value : null;
-        this.updateInputs();
     }
 
     /**
@@ -553,10 +553,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                 const startInput = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
                 const endInput = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
                 if (!startInput.dateTimeEditor.value) {
-                    Object.assign(errors, { 'startValue': true });
+                    Object.assign(errors, { startValue: true });
                 }
                 if (!endInput.dateTimeEditor.value) {
-                    Object.assign(errors, { 'endValue': true });
+                    Object.assign(errors, { endValue: true });
                 }
             }
 
@@ -566,11 +566,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             const end = DatePickerUtil.parseDate(value.end);
             if ((min && start && DatePickerUtil.lessThanMinValue(start, min, false))
                 || (min && end && DatePickerUtil.lessThanMinValue(end, min, false))) {
-                Object.assign(errors, { 'minValue': true });
+                Object.assign(errors, { minValue: true });
             }
             if ((max && start && DatePickerUtil.greaterThanMaxValue(start, max, false))
                 || (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false))) {
-                Object.assign(errors, { 'maxValue': true });
+                Object.assign(errors, { maxValue: true });
             }
         }
 
@@ -655,6 +655,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.$destroy.complete();
         this.$toggleClickNotifier.next();
         this.$toggleClickNotifier.complete();
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
+        }
     }
 
     /** @hidden @internal */
@@ -697,29 +700,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             }
             if (this.inputDirective) {
                 this.inputDirective.focus();
-            }
-        }
-    }
-
-    private updateValidityOnBlur() {
-        this.onTouchCallback();
-        if (this._ngControl) {
-            if (this.hasProjectedInputs) {
-                this.projectedInputs.forEach(i => {
-                    if (!this._ngControl.valid) {
-                        i.updateInputValidity(IgxInputState.INVALID);
-                    } else {
-                        i.updateInputValidity(IgxInputState.INITIAL);
-                    }
-                });
-            }
-
-            if (this.inputDirective) {
-                if (!this._ngControl.valid) {
-                    this.inputDirective.valid = IgxInputState.INVALID;
-                } else {
-                    this.inputDirective.valid = IgxInputState.INITIAL;
-                }
             }
         }
     }
@@ -768,10 +748,40 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                 this.inputDirective.valid = this.getInputState(this.inputGroup.isFocused);
             } else if (this.hasProjectedInputs) {
                 this.projectedInputs
-                    .forEach(i => { i.inputDirective.valid = this.getInputState(i.isFocused); });
+                    .forEach(i => {
+                        i.inputDirective.valid = this.getInputState(i.isFocused);
+                    });
             }
         }
         this.setRequiredToInputs();
+    };
+
+    private updateValue(value: DateRange) {
+        this._value = value ? value : null;
+        this.updateInputs();
+    }
+
+    private updateValidityOnBlur() {
+        this.onTouchCallback();
+        if (this._ngControl) {
+            if (this.hasProjectedInputs) {
+                this.projectedInputs.forEach(i => {
+                    if (!this._ngControl.valid) {
+                        i.updateInputValidity(IgxInputState.INVALID);
+                    } else {
+                        i.updateInputValidity(IgxInputState.INITIAL);
+                    }
+                });
+            }
+
+            if (this.inputDirective) {
+                if (!this._ngControl.valid) {
+                    this.inputDirective.valid = IgxInputState.INVALID;
+                } else {
+                    this.inputDirective.valid = IgxInputState.INITIAL;
+                }
+            }
+        }
     }
 
     private updateDisabledState() {

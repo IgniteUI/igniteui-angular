@@ -18,13 +18,11 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 /**
  * Base class for the pinning/hiding column and exporter actions.
+ *
  * @hidden @internal
  */
 @Directive()
 export abstract class BaseToolbarDirective implements OnDestroy {
-
-    private $destroyer = new Subject<boolean>();
-
     /**
      * Sets the height of the column list in the dropdown.
      */
@@ -73,6 +71,8 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     @Output()
     public columnToggle = new EventEmitter<IColumnToggledEventArgs>();
 
+    private $destroyer = new Subject<boolean>();
+
     /**
      * Returns the grid containing this component.
      */
@@ -115,32 +115,12 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     }
 }
 
-
-function _makeOverlaySettings(): OverlaySettings {
-    const positionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom
-    };
-    return {
-        positionStrategy: new ConnectedPositioningStrategy(positionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnEscape: true,
-        closeOnOutsideClick: true
-    };
-}
-
 /**
  * @hidden @internal
  * Base class for pinning/hiding column actions
  */
 @Directive()
 export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirective {
-
-    protected columnActionsUI: IgxColumnActionsComponent;
-
     @Input()
     public hideFilter = false;
 
@@ -162,6 +142,8 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
     @Input()
     public indentetion = 30;
 
+    protected columnActionsUI: IgxColumnActionsComponent;
+
     public checkAll() {
         this.columnActionsUI.checkAllColumns();
     }
@@ -170,3 +152,19 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
         this.columnActionsUI.uncheckAllColumns();
     }
 }
+
+const _makeOverlaySettings = (): OverlaySettings => {
+    const positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Left,
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalDirection: VerticalAlignment.Bottom,
+        verticalStartPoint: VerticalAlignment.Bottom
+    };
+    return {
+        positionStrategy: new ConnectedPositioningStrategy(positionSettings),
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnEscape: true,
+        closeOnOutsideClick: true
+    };
+};

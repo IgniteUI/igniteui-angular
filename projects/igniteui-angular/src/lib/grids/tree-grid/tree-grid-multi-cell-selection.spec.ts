@@ -919,7 +919,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
     });
 
-    function verifySelectingRegion(fix, treeGrid) {
+    const verifySelectingRegion = (fix, treeGrid) => {
         const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
         const range1 = { rowStart: 0, rowEnd: 6, columnStart: 'ID', columnEnd: 'Age' };
         const range2 = { rowStart: 11, rowEnd: 16, columnStart: 'ID', columnEnd: 'OnPTO' };
@@ -961,9 +961,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         GridSelectionFunctions.verifySelectedRange(treeGrid, 11, 16, 0, 3);
         expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
         expect(treeGrid.getSelectedData()).toEqual(expectedData2);
-    }
+    };
 
-    function verifySelectingExpandCollapse(fix, treeGrid) {
+    const verifySelectingExpandCollapse = (fix, treeGrid) => {
         const range = { rowStart: 1, rowEnd: 6, columnStart: 'ID', columnEnd: 'Age' };
         const expectedData1 = [
             { ID: 475, Name: 'Michael Langdon', Age: 43 },
@@ -1031,9 +1031,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
         GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData1);
-    }
+    };
 
-    function verifySelectingRangeWithMouseDrag(fix, treeGrid, detect) {
+    const verifySelectingRangeWithMouseDrag = (fix, treeGrid, detect) => {
         const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
         const startCell = treeGrid.getCellByColumn(4, 'Name');
         const endCell = treeGrid.getCellByColumn(7, 'Age');
@@ -1102,5 +1102,5 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
         expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         expect(treeGrid.getSelectedData()).toEqual(expectedData);
-    }
+    };
 });

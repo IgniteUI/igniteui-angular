@@ -4,5 +4,5 @@
  */
 export interface IRecordInfo {
     index: number;
-    record: object;
+    record: any;
 }
