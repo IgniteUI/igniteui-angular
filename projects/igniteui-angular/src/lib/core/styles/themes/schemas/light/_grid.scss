@@ -33,6 +33,7 @@
 /// @prop {Map} row-selected-background [igx-color: ('secondary', 50)] - The selected row background color.
 /// @prop {Map} row-selected-text-color [igx-contrast-color: ('secondary', 50)] - The selected row text color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('secondary', 50), darken-color: 2%] - The selected row hover background.
+/// @prop {Map} $row-selected-hover-text-color [igx-contrast-color: ('secondary', 50)] - The selected row hover text color.
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #fff] - The hover row background color.
 /// @prop {Map} row-hover-text-color [igx-contrast-color: ('grays', 200)] - The hover row text color.
 /// @prop {Map} row-border-color [igx-color: ('grays', 300)] - The row bottom border color.
@@ -90,6 +91,9 @@
 /// @prop {number} grid-elevation [2] - The elevation level, between 0-24, to be used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation level, between 0-24, to be used for movable elements (ex. column header).
 /// @prop {Number} drop-area-border-radius [1] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
+///
+/// @prop {Map} $row-col-selected-cell-background [igx-color: ('secondary', 50)] - The background of the selected cell inside the selected row or column.
+/// @prop {Map} $row-col-selected-cell-color [igx-contrast-color: ('secondary', 50)] - The color of the selected cell inside the selected row/column.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-grid
@@ -180,12 +184,16 @@ $_light-grid: extend(
             igx-color: ('secondary', 50),
         ),
 
+        row-selected-text-color: (
+            igx-contrast-color: ('secondary', 50)
+        ),
+
         row-selected-hover-background: (
             igx-color: ('secondary', 50),
             darken-color: 2%
         ),
 
-        row-selected-text-color: (
+        row-selected-hover-text-color: (
             igx-contrast-color: ('secondary', 50)
         ),
 
@@ -197,8 +205,17 @@ $_light-grid: extend(
         row-hover-text-color: (
             igx-contrast-color: ('grays', 200)
         ),
+
         row-border-color: (
             igx-color: ('grays', 300)
+        ),
+
+        row-col-selected-cell-background: (
+            igx-color: ('secondary', 50)
+        ),
+
+        row-col-selected-cell-color: (
+            igx-contrast-color: ('secondary', 50)
         ),
 
         pinned-border-width: 2px,
