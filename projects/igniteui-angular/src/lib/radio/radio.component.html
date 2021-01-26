@@ -9,8 +9,7 @@
     [attr.aria-checked]="checked"
     [attr.aria-labelledby]="ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
-    (click)="_onRadioClick($event)"
-    (change)="_onRadioChange($event)"
+    (click)="_clicked($event)"
     (focus)="onFocus()"
     (blur)="onBlur()" />
 
@@ -24,8 +23,8 @@
 </label>
 
 <span #placeholderLabel
+    (click)="_clicked($event)"
     [id]="labelId"
-    [class]="labelClass"
-    (click)="_onLabelClick()">
+    [class]="labelClass">
     <ng-content></ng-content>
 </span>
