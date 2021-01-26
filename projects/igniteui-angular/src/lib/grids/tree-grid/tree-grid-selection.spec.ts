@@ -9,7 +9,8 @@ import {
     IgxTreeGridSelectionRowEditingComponent,
     IgxTreeGridSelectionWithTransactionComponent,
     IgxTreeGridRowEditingTransactionComponent,
-    IgxTreeGridCustomRowSelectorsComponent
+    IgxTreeGridCustomRowSelectorsComponent,
+    IgxTreeGridCascadingSelectionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -38,7 +39,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridSelectionRowEditingComponent,
                 IgxTreeGridSelectionWithTransactionComponent,
                 IgxTreeGridRowEditingTransactionComponent,
-                IgxTreeGridCustomRowSelectorsComponent
+                IgxTreeGridCustomRowSelectorsComponent,
+                IgxTreeGridCascadingSelectionComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule]
         })
@@ -992,6 +994,93 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(banner).toBeTruthy();
             expect(banner[0]).toBeTruthy();
         }));
+    });
+
+    describe('Cascading Row Selection', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridCascadingSelectionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        }));
+
+        it('Should select/deselect all leaf nodes and set the correct state to their checkboxes on parent rows checkbox click', () => {
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect rows
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+        });
+
+        it('Should select/deselect parent row by selecting/deselecting all its children', () => {
+            treeGrid.selectRows([475, 957, 711, 998, 299], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect rows
+            treeGrid.deselectRows([475, 957, 711, 998, 299]);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+        });
+
+        it('Should select/deselect parent row by selecting/deselecting the last deselected/selected child', () => {
+            treeGrid.selectRows([475, 957, 711, 998], true);
+            fix.detectChanges();
+
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(7);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect rows
+            treeGrid.deselectRows([475, 957, 711, 998]);
+            fix.detectChanges();
+
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+        });
+
+        it('Should set parent row checkbox to indeterminate by selecting/deselecting a child row when all child rows are deselected/selected', () => {
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // Deselect one row
+            treeGrid.selectRows([475, 957, 711, 998, 299], true);
+            fix.detectChanges();
+
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
     });
 
     describe('Custom row selectors', () => {
