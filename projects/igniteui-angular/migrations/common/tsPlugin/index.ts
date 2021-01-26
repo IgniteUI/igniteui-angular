@@ -1,3 +1,5 @@
+import { TSLanguageService } from './TSLanguageService';
+
 function init(modules: { typescript: typeof import('typescript/lib/tsserverlibrary') }) {
     const ts = modules.typescript;
     let tsLanguageService = null;
@@ -10,7 +12,7 @@ function init(modules: { typescript: typeof import('typescript/lib/tsserverlibra
         return tsLanguageService;
     }
 
-    function create(info: ts.server.PluginCreateInfo) {
+    function create(info: ts.server.PluginCreateInfo): TSLanguageService {
         tsLanguageService = info.languageService;
         return {
             ...info.languageService,
