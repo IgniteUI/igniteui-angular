@@ -105,6 +105,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostBinding('attr.role') public role = 'region';
 
+    @HostBinding('attr.aria-roledescription')
+    public roleDescription = 'carousel';
+
+    @HostBinding('attr.aria-labelledby')
+    public labelId = 'igxCarouselLabel';
+
     /**
      * Sets the `id` of the carousel.
      * If not set, the `id` of the first carousel component will be `"igx-carousel-0"`.
@@ -116,17 +122,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-carousel-${NEXT_ID++}`;
-
-    /**
-     * Returns the `aria-label` of the carousel.
-     *
-     * ```typescript
-     * let carousel = this.carousel.ariaLabel;
-     * ```
-     *
-     */
-    @HostBinding('attr.aria-label')
-    public ariaLabel = 'carousel';
 
     /**
      * Returns the `tabIndex` of the carousel component.
@@ -625,6 +620,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
+                slide.total = this.total;
                 this.onSlideAdded.emit({ carousel: this, slide });
                 if (slide.active) {
                     this.currentSlide = slide;
@@ -684,7 +680,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     /** @hidden */
     public setAriaLabel(slide) {
-        return `Item ${slide.index + 1} of ${this.total}`;
+        return `${this.resourceStrings.igx_carousel_slide} ${slide.index + 1} ${this.resourceStrings.igx_carousel_of} ${this.total}`;
+    }
+
+    /** @hidden */
+    public setId(slide) {
+        return `tab-${slide.index + 1}-${this.total}`;
     }
 
     /** @hidden */
@@ -931,7 +932,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -941,7 +942,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -967,7 +968,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -977,7 +978,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
