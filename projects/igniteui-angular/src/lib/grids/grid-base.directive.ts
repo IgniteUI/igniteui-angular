@@ -1243,7 +1243,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted before `IgxColumnComponent` is pinned.
      * @remarks
-     * The index that the column is inserted at may be changed through the `insertAtIndex` property.
+     * The index at which to insert the column may be changed through the `insertAtIndex` property.
      * @example
      * ```typescript
      * public columnPinning(event) {
@@ -1258,8 +1258,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after `IgxColumnComponent` is pinned.
-     * @remarks
-     * The index that the column is inserted at may be changed through the `insertAtIndex` property.
      * @example
      * ```typescript
      * public columnPinning(event) {
@@ -1399,7 +1397,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted before sorting expressions are applied.
      * @remarks
-     * Returns the sorting expression.
+     * Returns the an `ISortingEventArgs` object. `sortingExpressions` key holds the sorting expressions.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (onSorting)="sorting($event)"></igx-grid>
@@ -1423,7 +1421,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted before filtering expressions are applied.
      * @remarks
-     * Returns the filtering expressions tree of the column for which filtering was performed.
+     * Returns an `IFilteringEventArgs` object. `filteringExpressions` key holds the filtering expressions for the column.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onFilteringDone)="filteringDone($event)"></igx-grid>
@@ -1447,7 +1445,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted before paging is performed.
      * @remarks
-     * Returns an object consisting of the previous and next pages.
+     * Returns an object consisting of the previous and current pages.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
@@ -1459,7 +1457,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after paging is performed.
      * @remarks
-     * Returns an object consisting of the previous and next pages.
+     * Returns an object consisting of the previous and current pages.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
@@ -1493,7 +1491,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted when resize handler is dropped, before new column width is applied.
+     * Emitted constantly while moving the resize handler.
      * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
      * @example
@@ -1502,10 +1500,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public columnResizing = new EventEmitter<IColumnResizingEventArgs>();
+    public columnResizing = new EventEmitter<IColumnResizingEventArgs | IColumnResizingEventArgs[]>();
 
     /**
-     * Emitted when column is resized.
+     * Emitted after column is resized.
      * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
      * @example
@@ -1542,7 +1540,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted before column visibility is changed.
      * @remarks
-     * Args: { column: any, newValue: boolean }
+     * Args: { column: IgxColumnComponent, newValue: boolean }
      * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
@@ -1554,7 +1552,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after column visibility is changed.
      * @remarks
-     * Args: { column: any, newValue: boolean }
+     * Args: { column: IgxColumnComponent, newValue: boolean }
      * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnVisibilityChanged)="visibilityChanged($event)"></igx-grid>

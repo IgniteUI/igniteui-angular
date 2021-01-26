@@ -473,11 +473,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             spyOn(grid.onFilteringDone, 'emit');
 
             GridFunctions.resetFilterRow(fix);
-            const eventArgs = {
-                owner: grid,
-                cancel: false,
-                filteringExpressions: grid.filteringExpressionsTree.find(columnName)
-            };
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(1);
             const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -499,7 +494,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.filteringRow.onClearClick();
             tick(100);
             fix.detectChanges();
-            const eventArgs = new FilteringExpressionsTree(FilteringLogic.And);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
         }));
 

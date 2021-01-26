@@ -204,7 +204,7 @@ export class IgxFilteringService implements OnDestroy {
         const grid = this.grid;
 
         const col = this.gridAPI.get_column_by_name(field);
-        ignoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         const filteringTree = grid.filteringExpressionsTree;
         const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(field) as IFilteringExpressionsTree;
@@ -213,24 +213,25 @@ export class IgxFilteringService implements OnDestroy {
         if (fieldFilterIndex > -1) {
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
-        this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree, ignoreCase, fieldFilterIndex);
+        this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree, filteringIgnoreCase,
+            fieldFilterIndex);
 
-        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: filteringTree, cancel: false };
+        const eventArgs: IFilteringEventArgs = { owner: grid, filteringExpressions: filteringTree, cancel: false };
         this.grid.filtering.emit(eventArgs);
 
         if (eventArgs.cancel) { return; }
 
         if (conditionOrExpressionTree) {
-            this.gridAPI.filter(field, value, conditionOrExpressionTree, ignoreCase);
+            this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
             } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(field, value, expressionsTreeForColumn, ignoreCase);
+                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase );
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(field, value, expressionForColumn.condition, ignoreCase);
+                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase );
             }
         }
         const doneEventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
@@ -249,8 +250,9 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
+        // TODO feature-events
         const onFilteringEventArgs: IFilteringEventArgs = {
-            owner: this,
+            owner: this.grid,
             filteringExpressions: this.grid.filteringExpressionsTree,
             cancel: false };
 
