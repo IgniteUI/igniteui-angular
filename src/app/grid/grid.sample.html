@@ -52,8 +52,7 @@
             <igx-card>
                 <igx-column-actions
                 igxColumnHiding
-                [grid]="grid1"
-                [title]="grid1.columnHidingTitle">
+                [grid]="grid1">
                 </igx-column-actions>
             </igx-card>
         </div>
@@ -95,7 +94,7 @@
                     <igx-column-actions
                     igxColumnHiding
                     [grid]="grid2"
-                    [title]="grid2.columnHidingTitle">
+                    >
                     </igx-column-actions>
                 </div>
                 <div class="toggle-group" *ngFor="let col of grid2.columns">
@@ -187,8 +186,7 @@
             <div class="toggle-group" style="min-width: 250px;">
                 <igx-column-actions
                 igxColumnHiding
-                [grid]="grid3"
-                [title]="grid3.columnHidingTitle">
+                [grid]="grid3">
                 </igx-column-actions>
             </div>
         </div>

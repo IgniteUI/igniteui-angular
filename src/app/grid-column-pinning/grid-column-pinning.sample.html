@@ -9,6 +9,12 @@
                 <button igxButton="raised" (click)="togglePinRow(2)">Pin/Unpin third row'</button>
             </div>
         <igx-grid [pinning]="pinningConfig" #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="selectionMode">
+            <igx-grid-toolbar *ngIf="showToolbar">
+                <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-pinning *ngIf="pinningEnabled"></igx-grid-toolbar-pinning>
+                </igx-grid-toolbar-actions>
+            </igx-grid-toolbar>
             <igx-column *ngFor="let c of columns" [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
                 [hidden]='c.hidden'>
             </igx-column>
@@ -25,8 +31,8 @@
             <button igxButton="raised" (click)="toggleVisibility('ContactTitle')">Visibility 'ContactTitle'</button>
         </div>
         <div class="sample-switches">
-            <igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
-            <igx-switch [(ngModel)]="grid1.columnPinning">Column Pinning</igx-switch>
+            <igx-switch [(ngModel)]="showToolbar">Toolbar</igx-switch>
+            <igx-switch [(ngModel)]="pinningEnabled">Column Pinning</igx-switch>
             <igx-switch (change)='onSelectionModeChange()'>Row Selectors</igx-switch>
             <igx-switch (change)='onChange()'>Right/Left Column Pinning toggle</igx-switch>
             <igx-switch (change)='onRowChange()'>Top/Bottom Row Pinning toggle</igx-switch>

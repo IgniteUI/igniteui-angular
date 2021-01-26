@@ -10,7 +10,6 @@ import {
 
 class MySummary extends IgxNumberSummaryOperand {
 
-
     constructor() {
         super();
     }
@@ -36,6 +35,10 @@ export class GridSummaryComponent implements OnInit {
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
+
+    public showToolbar = false;
+    public hidingEnabled = false;
+    public pinningEnabled = false;
 
     mySummary = MySummary;
     w = '1200px';
