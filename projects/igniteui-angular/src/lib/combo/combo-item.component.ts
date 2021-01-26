@@ -20,6 +20,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
 
     /**
      * Gets the height of a list item
+     *
      * @hidden
      */
     @Input()
@@ -89,7 +90,9 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      */
     clicked(event): void {
         this.comboAPI.disableTransitions = false;
-        if (!this.isSelectable) { return; }
+        if (!this.isSelectable) {
+ return;
+}
         this.dropDown.navigateItem(this.index);
         this.comboAPI.set_selected_item(this.itemID, event);
     }

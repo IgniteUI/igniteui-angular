@@ -15,6 +15,9 @@ import { ConnectedFit } from '../utilities';
  * It is possible to either pass a start point or an HTMLElement as a positioning base.
  */
 export class ConnectedPositioningStrategy implements IPositionStrategy {
+  /** @inheritdoc */
+  public settings: PositionSettings;
+
   private _defaultSettings: PositionSettings = {
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
@@ -25,22 +28,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     minSize: { width: 0, height: 0 }
   };
 
-  /** @inheritdoc */
-  public settings: PositionSettings;
-
   constructor(settings?: PositionSettings) {
     this.settings = Object.assign({}, this._defaultSettings, settings);
-  }
-
-  /**
-   * Obtains the ClientRect objects for the required elements - target and element to position
-   * @returns target and element ClientRect objects
-   */
-  protected calculateElementRectangles(contentElement, target: Point | HTMLElement): { targetRect: ClientRect, elementRect: ClientRect } {
-      return {
-          targetRect: Util.getTargetRect(target),
-          elementRect: contentElement.getBoundingClientRect() as ClientRect
-      };
   }
 
   /** @inheritdoc */
@@ -60,8 +49,21 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   /**
+   * Obtains the ClientRect objects for the required elements - target and element to position
+   *
+   * @returns target and element ClientRect objects
+   */
+  protected calculateElementRectangles(contentElement, target: Point | HTMLElement): { targetRect: ClientRect; elementRect: ClientRect } {
+      return {
+          targetRect: Util.getTargetRect(target),
+          elementRect: contentElement.getBoundingClientRect() as ClientRect
+      };
+  }
+
+  /**
    * Sets element's style which effectively positions provided element according
    * to provided position settings
+   *
    * @param element Element to position
    * @param targetRect Bounding rectangle of strategy target
    * @param elementRect Bounding rectangle of the element

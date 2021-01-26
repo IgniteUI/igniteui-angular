@@ -312,12 +312,8 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.columns[1].formatter = ((val: string) => {
-            return val.toUpperCase();
-        });
-        grid.columns[2].formatter = ((val: string) => {
-            return val.toLowerCase();
-        });
+        grid.columns[1].formatter = ((val: string) => val.toUpperCase());
+        grid.columns[2].formatter = ((val: string) => val.toLowerCase());
         grid.cdr.detectChanges();
 
         let wrapper = await getExportedData(grid, options);
@@ -338,7 +334,7 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.simpleGridDataFormatted, 'Columns\' formatter should not be skipped.');
     });
 
-    it('Should honor the Advanced filters when exporting', async() => {
+    it('Should honor the Advanced filters when exporting', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -452,12 +448,10 @@ describe('CSV Grid Exporter', () => {
         });
 
         it('should skip the column formatter when onColumnExporting skipFormatter is true.', async () => {
-            treeGrid.columns[3].formatter = ((val: string) => {
-                return val.toLowerCase();
-            });
-            treeGrid.columns[4].formatter = ((val: number) => {
-                return val * 12; // months
-            });
+            treeGrid.columns[3].formatter = ((val: string) => val.toLowerCase());
+            treeGrid.columns[4].formatter = ((val: number) =>
+                 val * 12 // months
+            );
             treeGrid.cdr.detectChanges();
             let wrapper = await getExportedData(treeGrid, options);
             wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
@@ -475,7 +469,7 @@ describe('CSV Grid Exporter', () => {
             wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
         });
 
-        it('Should honor the Advanced filters when exporting', async() => {
+        it('Should honor the Advanced filters when exporting', async () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
                 fieldName: 'Name',
@@ -499,7 +493,7 @@ describe('CSV Grid Exporter', () => {
         });
     });
 
-    function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
+    const getExportedData = (grid, csvOptions: IgxCsvExporterOptions) => {
         const result = new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
@@ -508,10 +502,10 @@ describe('CSV Grid Exporter', () => {
             exporter.export(grid, csvOptions);
         });
         return result;
-    }
+    };
 
-    async function exportAndVerify(component, csvOptions, expectedData, errorMessage = '') {
+    const exportAndVerify = async (component, csvOptions, expectedData, errorMessage = '') => {
         const wrapper = await getExportedData(component, csvOptions);
         wrapper.verifyData(expectedData, errorMessage);
-    }
+    };
 });

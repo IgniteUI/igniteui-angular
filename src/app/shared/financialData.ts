@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 export const REGIONS: any[] = [
     {
         "Region": "North America",
@@ -48,7 +48,6 @@ export const MOCKFINANCEDATA: any[] = [
     "IndSect": "Consumer, Cyclical",
     "IndSubg": "Airlines",
     "SecType": "PUBLIC",
-    // tslint:disable-next-line:object-literal-sort-keys
     "CpnTyp": "FIXED",
     "IssuerN": "AMERICAN AIRLINES GROUP",
     "Moodys": "WR",
@@ -888,7 +887,7 @@ interface IResponse {
     recordsUpdated: number;
 }
 
-/* tslint:enable */
+/* eslint-enable */
 export class FinancialData {
 
     /** Updates values in every record */

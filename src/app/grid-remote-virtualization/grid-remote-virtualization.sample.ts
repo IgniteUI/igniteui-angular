@@ -8,18 +8,17 @@ import { RemoteService } from '../shared/remote.service';
 })
 
 export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit {
+    @ViewChild('grid1', { static: true })
+    public grid: IgxGridComponent;
 
     public remoteData: any;
     public prevRequest: any;
     public columns: any;
     public loading = true;
 
-    @ViewChild('grid1', { static: true })
-    public grid: IgxGridComponent;
-
     constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (dataState) => {
-            let qS = '?', requiredChunkSize: number;
+            let qS = '?'; let requiredChunkSize: number;
             if (dataState) {
                 const skip = dataState.startIndex;
 

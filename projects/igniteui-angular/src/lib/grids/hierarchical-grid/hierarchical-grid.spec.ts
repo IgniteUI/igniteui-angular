@@ -351,7 +351,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(childGrid.calcWidth - 170).toBeLessThan(3);
     });
 
-    it('should exit edit mode on row expand/collapse through the UI', async() => {
+    it('should exit edit mode on row expand/collapse through the UI', async () => {
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid.rowEditable = true;
         fixture.detectChanges();
@@ -596,8 +596,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const child1Cols = childGrids[0].columnList.toArray();
         const riCols = ri1.columnList.toArray();
         expect(child1Cols.length).toEqual(riCols.length);
-        for (let i = 0; i < riCols.length; i++) {
-            const col = child1Cols.find((c) => c.key === riCols[i].key);
+        for (const column of riCols) {
+            const col = child1Cols.find((c) => c.key === column.key);
             expect(col).not.toBeNull();
         }
         const child2Cols = childGrids[1].columnList.toArray();
@@ -610,7 +610,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     it('should allow setting different height/width in px/percent for row islands and grids should be rendered correctly.',
-    (/** height/width setter + row toggle rAF */async() => {
+    (/** height/width setter + row toggle rAF */async () => {
         const ri1 = fixture.componentInstance.rowIsland1;
 
         // test px
@@ -693,7 +693,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child2._destroyed).toBeTruthy();
     }));
 
-    it('should emit child grid events with the related child grid instance as an event arg.', async() => {
+    it('should emit child grid events with the related child grid instance as an event arg.', async () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
@@ -710,8 +710,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const event = new Event('click');
         cell.nativeElement.dispatchEvent(event);
         const args: IGridCellEventArgs = {
-            cell: cell,
-            event: event,
+            cell,
+            event,
             owner: childGrid
         };
 
@@ -1166,7 +1166,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(row.expander).not.toBe(undefined);
     }));
 
-    it('should allow changing row islands runtime in child grid.', async() => {
+    it('should allow changing row islands runtime in child grid.', async () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
@@ -1224,7 +1224,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
 
-    it(' should allow setting custom template for expand/collapse icons', async() => {
+    it(' should allow setting custom template for expand/collapse icons', async () => {
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
@@ -1277,11 +1277,11 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
-    public data;
-    public width = '500px';
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public width = '500px';
 
     constructor() {
         // 3 level hierarchy
@@ -1298,8 +1298,8 @@ export class IgxHierarchicalGridTestBaseComponent {
                children = this.generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);
             }
             prods.push({
-                ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-                'Col2': i, 'Col3': i, childData: children, childData2: children });
+                ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
+                Col2: i, Col3: i, childData: children, childData2: children });
         }
         return prods;
     }
@@ -1322,9 +1322,9 @@ export class IgxHierarchicalGridTestBaseComponent {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGridTestBaseComponent {
-    public height = '100px';
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public height = '100px';
 }
 
 @Component({
@@ -1340,8 +1340,6 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
     `
 })
 export class IgxHGridRemoteOnDemandComponent {
-    public data;
-
     @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent, static: true })
     public instance: IgxHierarchicalGridComponent;
 
@@ -1351,6 +1349,8 @@ export class IgxHGridRemoteOnDemandComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
     public rowIsland2: IgxRowIslandComponent;
 
+    public data;
+
     constructor(public cdr: ChangeDetectorRef) { }
 
     generateDataUneven(count: number, level: number, parendID: string = null) {
@@ -1359,13 +1359,13 @@ export class IgxHGridRemoteOnDemandComponent {
         for (let i = 0; i < count; i++) {
             const rowID = parendID ? parendID + i : i.toString();
             prods.push({
-                ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-                'Col2': i, 'Col3': i });
+                ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
+                Col2: i, Col3: i });
         }
         return prods;
     }
 
-    bind () {
+    bind() {
         this.data = this.generateDataUneven(20, 3);
     }
 
@@ -1429,6 +1429,12 @@ export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGr
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridSizingComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+
     public childHeight = '100%';
     public data = [
         {
@@ -1436,14 +1442,8 @@ export class IgxHierarchicalGridSizingComponent {
             ProductName: 'Car'
         }
     ];
-    public fullData = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'ProductName': 'PN' + i }));
-    public semiData = Array.from({ length: 15 }, (_, i) => ({ 'ID': i, 'ProductName': 'PN' + i }));
-
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
-    public hgrid: IgxHierarchicalGridComponent;
-
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
-    public rowIsland: IgxRowIslandComponent;
+    public fullData = Array.from({ length: 100000 }, (_, i) => ({ ID: i, ProductName: 'PN' + i }));
+    public semiData = Array.from({ length: 15 }, (_, i) => ({ ID: i, ProductName: 'PN' + i }));
 }
 
 @Component({

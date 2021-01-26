@@ -36,6 +36,34 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, Displa
     selector: '[igxButton]'
 })
 export class IgxButtonDirective extends DisplayDensityBase {
+    /**
+     * Gets or sets whether the button is selected.
+     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
+     *
+     * @example
+     * ```html
+     * <button igxButton="flat" [selected]="button.selected"></button>
+     * ```
+     */
+    @Input() public selected = false;
+
+    /**
+     * Called when the button is clicked.
+     */
+    @Output()
+    public buttonClick = new EventEmitter<any>();
+
+    /**
+     * Sets/gets the `role` attribute.
+     *
+     * @example
+     * ```typescript
+     * this.button.role = 'navbutton';
+     * let buttonRole = this.button.role;
+     * ```
+     */
+    @HostBinding('attr.role')
+    public role = 'button';
 
     /**
      * @hidden
@@ -90,24 +118,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     public get nativeElement() {
         return this.element.nativeElement;
     }
-
-    /**
-     * Called when the button is clicked.
-     */
-    @Output()
-    public buttonClick = new EventEmitter<any>();
-
-    /**
-     * Sets/gets the `role` attribute.
-     *
-     * @example
-     * ```typescript
-     * this.button.role = 'navbutton';
-     * let buttonRole = this.button.role;
-     * ```
-     */
-    @HostBinding('attr.role')
-    public role = 'button';
 
     /**
      * Sets the type of the button.
@@ -248,17 +258,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     public get disabledAttribute() {
         return this._disabled ? this._disabled : null;
     }
-
-    /**
-     * Gets or sets whether the button is selected.
-     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
-     *
-     * @example
-     * ```html
-     * <button igxButton="flat" [selected]="button.selected"></button>
-     * ```
-     */
-    @Input() public selected = false;
 
     /**
      * @hidden

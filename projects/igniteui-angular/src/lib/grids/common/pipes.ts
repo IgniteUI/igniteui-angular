@@ -188,9 +188,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
             return isPinned ? [] : collection;
         }
 
-        return collection.map((rec) => {
-            return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec;
-        });
+        return collection.map((rec) => grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true } : rec);
     }
 }
 
@@ -239,7 +237,9 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
         if (filterCriteria && filterCriteria.length > 0) {
             const filterFunc = (c) => {
                 const filterText = c.header || c.field;
-                if (!filterText) { return false; }
+                if (!filterText) {
+ return false;
+}
                 return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
                     (c.children?.some(filterFunc) ?? false);
             };

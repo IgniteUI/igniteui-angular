@@ -45,14 +45,14 @@ export class AnimationsSampleComponent {
         'pulsate'
     ];
 
-    public animations: { name: string, animation: AnimationReferenceMetadata }[];
+    public animations: { name: string; animation: AnimationReferenceMetadata }[];
 
-    private fadeAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private fadeAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'fadeIn', animation: fadeIn },
         { name: 'fadeOut', animation: fadeOut },
     ];
 
-    private flipAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private flipAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'flipTop', animation: flipTop },
         { name: 'flipRight', animation: flipRight },
         { name: 'flipBottom', animation: flipBottom },
@@ -63,12 +63,12 @@ export class AnimationsSampleComponent {
         { name: 'flipVerBck', animation: flipVerBck }
     ];
 
-    private growAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private growAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'growVerIn', animation: growVerIn },
         { name: 'growVerOut', animation: growVerOut },
     ];
 
-    private rotateAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private rotateAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'rotateInCenter', animation: rotateInCenter },
         { name: 'rotateInTop', animation: rotateInTop },
         { name: 'rotateInRight', animation: rotateInRight },
@@ -97,7 +97,7 @@ export class AnimationsSampleComponent {
         { name: 'rotateOutVer', animation: rotateOutVer }
     ];
 
-    private scaleAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private scaleAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'scaleInTop', animation: scaleInTop },
         { name: 'scaleInRight', animation: scaleInRight },
         { name: 'scaleInBottom', animation: scaleInBottom },
@@ -130,7 +130,7 @@ export class AnimationsSampleComponent {
         { name: 'scaleOutHorRight', animation: scaleOutHorRight }
     ];
 
-    private slideAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private slideAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'slideInTop', animation: slideInTop },
         { name: 'slideInRight', animation: slideInRight },
         { name: 'slideInBottom', animation: slideInBottom },
@@ -149,7 +149,7 @@ export class AnimationsSampleComponent {
         { name: 'slideOutTl', animation: slideOutTl }
     ];
 
-    private swingAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private swingAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'swingInTopFwd', animation: swingInTopFwd },
         { name: 'swingInRightFwd', animation: swingInRightFwd },
         { name: 'swingInLeftFwd', animation: swingInLeftFwd },
@@ -168,7 +168,7 @@ export class AnimationsSampleComponent {
         { name: 'swingOutLeftBck', animation: swingOutLeftBck }
     ];
 
-    private shakeAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private shakeAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'shakeHor', animation: shakeHor },
         { name: 'shakeVer', animation: shakeVer },
         { name: 'shakeTop', animation: shakeTop },
@@ -182,7 +182,7 @@ export class AnimationsSampleComponent {
         { name: 'shakeTl', animation: shakeTl }
     ];
 
-    private pulsateAnimations: { name: string, animation: AnimationReferenceMetadata }[] = [
+    private pulsateAnimations: { name: string; animation: AnimationReferenceMetadata }[] = [
         { name: 'heartbeat', animation: heartbeat },
         { name: 'pulsateFwd', animation: pulsateFwd },
         { name: 'pulsateBck', animation: pulsateBck },

@@ -9,7 +9,6 @@ import {
     VerticalAlignment,
     IgxDropDownComponent,
     IgxButtonDirective,
-    IgxColumnComponent,
     FilterMode
 } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
@@ -22,6 +21,14 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridColumnSelectionSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+
+    @ViewChild('columnSelectionDropdown', { read: IgxDropDownComponent })
+    public columnSelectionDropdown: IgxDropDownComponent;
+
+    @ViewChild('columnSelectionButton', { read: IgxButtonDirective })
+    public columnSelectionButton: IgxButtonDirective;
     public searchSelectedColumn = '';
     public data: Array<any>;
     public columns: Array<any>;
@@ -40,6 +47,9 @@ export class GridColumnSelectionSampleComponent implements OnInit {
             togglable: true
         }
     ];
+    public density = 'comfortable';
+    public displayDensities;
+
     private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -52,18 +62,6 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         modal: false,
         closeOnOutsideClick: true
     };
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
-    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
-
-    @ViewChild('columnSelectionDropdown', { read: IgxDropDownComponent })
-    public columnSelectionDropdown: IgxDropDownComponent;
-
-    @ViewChild('columnSelectionButton', { read: IgxButtonDirective })
-    public columnSelectionButton: IgxButtonDirective;
-
-    public density = 'comfortable';
-    public displayDensities;
 
     log(event) {
         console.log(event);

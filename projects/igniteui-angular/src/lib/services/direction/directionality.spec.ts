@@ -9,13 +9,11 @@ interface FakeDoc {
 }
 
 describe('IgxDirectionality DI', () => {
-    beforeEach(waitForAsync(() => {
-        return TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
             declarations: [
                 InjectsIgxDirectionalityComponent
             ],
-        }).compileComponents();
-    }));
+        }).compileComponents()));
 
     it('should inject the document through the injectionToken properly', () => {
         const injectionToken = TestBed.inject(DIR_DOCUMENT);

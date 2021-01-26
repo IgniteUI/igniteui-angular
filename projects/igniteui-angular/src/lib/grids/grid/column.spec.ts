@@ -5,7 +5,12 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent, GridAddColumnComponent } from '../../test-utils/grid-samples.spec';
+import {
+    ColumnHiddenFromMarkupComponent,
+    ColumnCellFormatterComponent,
+    DynamicColumnsComponent,
+    GridAddColumnComponent
+} from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -315,9 +320,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }
 
         // Apply formatter to the last column
-        col.formatter = (val: string) => {
-            return val.toLowerCase();
-        };
+        col.formatter = (val: string) => val.toLowerCase();
         fix.detectChanges();
 
         expect(col.formatter).toBeTruthy();
@@ -432,27 +435,24 @@ describe('IgxGrid - Column properties #grid', () => {
     template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.iterableComponent)
 })
 export class ColumnsFromIterableComponent {
-    public data = SampleTestData.personIDNameData();
-    public columns = ['ID', 'Name'];
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    public data = SampleTestData.personIDNameData();
+    public columns = ['ID', 'Name'];
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.columnTemplates) + `
-        <ng-template #newHeader>
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.columnTemplates) +
+        `<ng-template #newHeader>
             <span class="new-header">New header text</span>
         </ng-template>
 
         <ng-template #newCell>
             <span class="new-cell">New cell text</span>
-        </ng-template>
-    `
+        </ng-template>`
 })
 export class TemplatedColumnsComponent {
-    public data = SampleTestData.personIDNameData();
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
@@ -461,6 +461,8 @@ export class TemplatedColumnsComponent {
 
     @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
+
+    public data = SampleTestData.personIDNameData();
 }
 
 @Component({
@@ -486,12 +488,11 @@ export class TemplatedColumnsComponent {
     `
 })
 export class TemplatedInputColumnsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
 
     data = SampleTestData.personIDNameRegionData();
     columns = Object.keys(this.data[0]);
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
 }
 
 @Component({
@@ -510,10 +511,10 @@ export class TemplatedInputColumnsComponent {
     styles: [`.headerAlignSyle {text-align: right !important;}`]
 })
 export class ColumnHaederClassesComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
     public data = [
         { ProductId: 1, Number1: 11, Number2: 10, Number3: 5, Number4: 3, Number5: 4, Number6: 6, Number7: 7 }
     ];
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
 }

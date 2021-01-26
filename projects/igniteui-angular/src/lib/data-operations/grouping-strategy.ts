@@ -10,7 +10,7 @@ export class IgxGrouping extends IgxSorting {
         const grouping = this.groupDataRecursive(data, state, 0, null, metadata, grid, groupsRecords, fullResult);
         return {
             data: grouping,
-            metadata: metadata
+            metadata
         };
     }
 }

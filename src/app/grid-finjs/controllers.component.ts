@@ -80,6 +80,10 @@ export class ControllerComponent implements OnInit, OnDestroy {
         this.switchChanged.emit({action, value: event.checked });
     }
 
+    public ngOnDestroy() {
+        this.volumeChanged$.unsubscribe();
+    }
+
     private disableOtherButtons(ind: number, disableButtons: boolean) {
         if (this.subscription) {
             this.subscription.unsubscribe();
@@ -88,7 +92,9 @@ export class ControllerComponent implements OnInit, OnDestroy {
         this.intervalSlider.disabled = disableButtons;
         this.selectedButton = ind;
         this.playButtons.buttons.forEach((button, index) => {
-            if (index === 2) { button.disabled = !disableButtons; } else {
+            if (index === 2) {
+                button.disabled = !disableButtons;
+            } else {
                 this.playButtons.buttons[0].disabled = disableButtons;
                 this.playButtons.buttons[1].disabled = disableButtons;
             }
@@ -97,9 +103,5 @@ export class ControllerComponent implements OnInit, OnDestroy {
 
     get buttonSelected(): number {
         return this.selectedButton || this.selectedButton === 0 ? this.selectedButton : -1;
-    }
-
-    public ngOnDestroy() {
-        this.volumeChanged$.unsubscribe();
     }
 }

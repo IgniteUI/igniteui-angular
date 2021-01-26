@@ -65,6 +65,7 @@ export class IgxSplitBarComponent {
 
     /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
+     *
      * @memberof SplitBarComponent
      */
     @Input()

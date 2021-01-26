@@ -72,17 +72,13 @@ export class RemoteService {
 
         this.http
             .get(`${this.urlPaging + qS}`).pipe(
-                map((data: any) => {
-                    return data;
-                })
+                map((data: any) => data)
             ).subscribe((data) => this.remotePagingData.next(data));
     }
 
     public getPagingDataLength(): any {
         return this.http.get(this.urlPaging).pipe(
-            map((data: any) => {
-                return data.length;
-            })
+            map((data: any) => data.length)
         );
     }
 }

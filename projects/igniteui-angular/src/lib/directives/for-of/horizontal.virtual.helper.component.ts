@@ -12,7 +12,9 @@ import { PlatformUtil } from '../../core/utils';
 })
 export class HVirtualHelperComponent extends VirtualHelperBaseDirective {
     @ViewChild('horizontal_container', { read: ViewContainerRef, static: true }) public _vcr;
+
     @Input() public width: number;
+
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--horizontal';
 
