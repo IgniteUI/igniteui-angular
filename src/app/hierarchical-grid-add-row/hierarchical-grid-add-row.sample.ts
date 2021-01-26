@@ -1,18 +1,11 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import {
-    IgxHierarchicalGridComponent,
-} from 'igniteui-angular';
+import { Component, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 
 @Component({
     selector: 'app-hierarchical-grid-add-row-sample',
     templateUrl: 'hierarchical-grid-add-row.sample.html'
 })
 export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
-
-    localData = [];
-
+    public localData = [];
     public columns;
     public childColumns;
 
@@ -24,11 +17,11 @@ export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
         this.localData[2].childData[1].hasChild = false;
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.cdr.detectChanges();
     }
 
-    generateDataUneven(count: number, level: number, parendID: string = null) {
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
         let children;
@@ -53,7 +46,7 @@ export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
         return prods;
     }
 
-    onMouseOver(event,  hierarchicalGrid, actionStrip) {
+    public onMouseOver(event,  hierarchicalGrid, actionStrip) {
         const target = event.target;
         if (target.nodeName.toLowerCase() === 'igx-hierarchical-grid-cell') {
             const gridId = target.parentNode.parentNode.attributes['ng-reflect-grid-i-d'].value;
@@ -65,7 +58,7 @@ export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
         }
     }
 
-    onMouseLeave(actionstrip, event?) {
+    public onMouseLeave(actionstrip, event?) {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }

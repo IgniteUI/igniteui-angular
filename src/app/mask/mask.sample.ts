@@ -13,13 +13,12 @@ interface IPerson {
     templateUrl: './mask.sample.html'
 })
 export class MaskSampleComponent {
-    person: IPerson;
-
-    value = '1255';
-    mask = '##.##';
-    placeholder = '-##.## %';
-    displayFormat = new DisplayFormatPipe();
-    inputFormat = new InputFormatPipe();
+    public person: IPerson;
+    public value = '1255';
+    public mask = '##.##';
+    public placeholder = '-##.## %';
+    public displayFormat = new DisplayFormatPipe();
+    public inputFormat = new InputFormatPipe();
 
     constructor() {
         this.person = {
@@ -28,39 +27,39 @@ export class MaskSampleComponent {
           socialSecurityNumber: '',
           phone: ''
         };
-      }
+    }
 
-      validateDate(dateInput, snackbar) {
+    public validateDate(dateInput, snackbar) {
         if (!this.isDateValid(dateInput.value)) {
-          this.notify(snackbar, 'Invalid Date', dateInput);
+            this.notify(snackbar, 'Invalid Date');
         }
-      }
+    }
 
-      validateSSN(ssnInput, snackbar) {
+    public validateSSN(ssnInput, snackbar) {
         if (!this.isSSNValid(ssnInput.value)) {
-          this.notify(snackbar, 'Invalid SSN', ssnInput);
+            this.notify(snackbar, 'Invalid SSN');
         }
-      }
+    }
 
-      isDateValid(date) {
+    public isDateValid(date) {
         return (new Date(date).toLocaleString() !== 'Invalid Date');
-      }
+    }
 
-      isSSNValid(ssn) {
+    public isSSNValid(ssn) {
         const ssnPattern = /^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/;
         return (ssn.match(ssnPattern));
-      }
+    }
 
-      notify(snackbar, message, input) {
+    public notify(snackbar, message) {
         snackbar.message = message;
         snackbar.actionText = 'Dismiss';
         snackbar.show();
-      }
+    }
 }
 
 @Pipe({ name: 'displayFormat' })
 export class DisplayFormatPipe implements PipeTransform {
-    transform(value: any): string {
+    public transform(value: any): string {
         let val = value;
 
         if (val === '__.__') {
@@ -85,7 +84,7 @@ export class DisplayFormatPipe implements PipeTransform {
 
 @Pipe({ name: 'inputFormat' })
 export class InputFormatPipe implements PipeTransform {
-    transform(value: any): string {
+    public transform(value: any): string {
         let val = value;
 
         if (!val) {
