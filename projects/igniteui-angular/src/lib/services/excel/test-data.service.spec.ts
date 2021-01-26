@@ -1091,7 +1091,7 @@ export class FileContentData {
 
     get exportGroupedDataWithIgnoreFiltering() {
         this._sharedStringsData =
-            `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Roadster</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: VW</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si></sst>`;
+            `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Roadster</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: VW</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
 
         this._tableData =
             `ref="A1:C12" totalsRowShown="0">
