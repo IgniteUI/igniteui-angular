@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export enum Direction { NONE, NEXT, PREV }
@@ -20,7 +20,7 @@ export enum Direction { NONE, NEXT, PREV }
     templateUrl: 'slide.component.html'
 })
 
-export class IgxSlideComponent implements OnDestroy {
+export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
     private _active = false;
     private _destroy$ = new Subject<boolean>();
     /**
@@ -70,6 +70,12 @@ export class IgxSlideComponent implements OnDestroy {
         return this.active;
     }
 
+    @HostBinding('attr.aria-labelledby')
+    public ariaLabelledBy;
+
+    @Input()
+    public total: number;
+
     /**
      * Returns the `aria-live` of the slide.
      *
@@ -82,6 +88,9 @@ export class IgxSlideComponent implements OnDestroy {
     public get ariaLive() {
         return this.active ? 'polite' : null;
     }
+
+    @HostBinding('attr.role')
+    public tab = 'tabpanel';
 
     /**
      * Returns the class of the slide component.
@@ -146,6 +155,10 @@ export class IgxSlideComponent implements OnDestroy {
      */
     public get isDestroyed(): Subject<boolean> {
     return this._destroy$;
+    }
+
+    public ngAfterContentChecked() {
+        this.ariaLabelledBy = `tab-${this.index + 1}-${this.total}`;
     }
 
     /**
