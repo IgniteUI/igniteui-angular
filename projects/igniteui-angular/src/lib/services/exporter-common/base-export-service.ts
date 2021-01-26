@@ -14,6 +14,7 @@ import { IFilteringState } from '../../data-operations/filtering-state.interface
 import { IgxGridBaseDirective } from '../../grids/public_api';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/public_api';
+import { DatePipe } from '@angular/common';
 
 export enum RecordType {
     GroupedRecord = 1,
@@ -448,18 +449,28 @@ export abstract class IgxBaseExporter {
             return;
         }
 
-        const firstCol = this._columnList[0].header;
+        const firstCol = this._columnList[0].header ?? this._columnList[0].field;
 
         for (let i = 0; i < records.length; i++) {
             const record = records[i];
+            let recordVal = record.value;
 
             const hierarchy = getHierarchy(record);
             const expandState: IGroupByExpandState = groupingState.expansion.find((s) =>
-                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: record.value }], hierarchy));
+                isHierarchyMatch(s.hierarchy || [{ fieldName: record.expression.fieldName, value: recordVal }], hierarchy));
             const expanded = expandState ? expandState.expanded : groupingState.defaultExpanded;
 
+            const isDate = recordVal instanceof Date;
+
+            if (isDate) {
+                const timeZoneOffset = recordVal.getTimezoneOffset() * 60000;
+                const isoString = (new Date(recordVal - timeZoneOffset)).toISOString();
+                const pipe = new DatePipe('en-US');
+                recordVal = pipe.transform(isoString, 'M/d/yyyy');
+            }
+
             const groupExpression: IExportRecord = {
-                data: { [firstCol]: `${record.expression.fieldName} - ${record.value}` },
+                data: { [firstCol]: `${record.expression.fieldName}: ${recordVal}` },
                 level: record.level,
                 hidden: !parentExpanded,
                 type: RecordType.GroupedRecord,
