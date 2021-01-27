@@ -1187,16 +1187,12 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
-            const row = treeGrid.getRowByIndex(2) as IgxTreeGridRowComponent;
-            actionStrip.show(row);
-            fix.detectChanges();
-
-            // add new child through the API
-            row.beginAddChild();
-            fix.detectChanges();
-            endTransition();
-
-            treeGrid.endEdit(true);
+            treeGrid.addRow({
+                ID: -1,
+                Name: undefined,
+                HireDate: undefined,
+                Age: undefined
+            }, 957);
             fix.detectChanges();
             await wait(100);
             fix.detectChanges();
