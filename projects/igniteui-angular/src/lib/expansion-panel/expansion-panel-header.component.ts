@@ -33,25 +33,6 @@ export type ICON_POSITION = (typeof ICON_POSITION)[keyof typeof ICON_POSITION];
     templateUrl: 'expansion-panel-header.component.html'
 })
 export class IgxExpansionPanelHeaderComponent {
-     // properties section
-    private _iconTemplate = false;
-    /**
-     * Sets/gets the `id` of the expansion panel header.
-     * ```typescript
-     * let panelHeaderId =  this.panel.header.id;
-     * ```
-     * @memberof IgxExpansionPanelComponent
-     */
-    public id = '';
-
-    /** @hidden @internal */
-    @ContentChild(IgxExpansionPanelIconDirective, { read: ElementRef })
-    private customIconRef: ElementRef;
-
-    /** @hidden @internal */
-    @ViewChild(IgxIconComponent, { read: ElementRef })
-    public defaultIconRef: ElementRef;
-
     /**
      * Returns a reference to the `igx-expansion-panel-icon` element;
      * If `iconPosition` is `NONE` - return null;
@@ -65,14 +46,14 @@ export class IgxExpansionPanelHeaderComponent {
      * @hidden
      */
     @ContentChild(IgxExpansionPanelIconDirective)
-    public set iconTemplate(val: any) {
-        this._iconTemplate = <boolean>val;
+    public set iconTemplate(val: boolean) {
+        this._iconTemplate = val;
     }
 
     /**
      * @hidden
      */
-    public get iconTemplate(): any {
+    public get iconTemplate(): boolean {
         return this._iconTemplate;
     }
 
@@ -115,7 +96,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * @hidden
      */
-    public get controls (): string {
+    public get controls(): string {
         return this.panel.id;
     }
 
@@ -155,16 +136,16 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * @hidden
      */
-     @HostBinding('class.igx-expansion-panel__header')
-     public cssClass = 'igx-expansion-panel__header';
+    @HostBinding('class.igx-expansion-panel__header')
+    public cssClass = 'igx-expansion-panel__header';
 
-     /**
-      * @hidden
-      */
-     @HostBinding('class.igx-expansion-panel__header--expanded')
-     public get isExpanded () {
-            return !this.panel.collapsed;
-         }
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-expansion-panel__header--expanded')
+    public get isExpanded() {
+        return !this.panel.collapsed;
+    }
 
     /**
      * Gets/sets the whether the header is disabled
@@ -187,31 +168,52 @@ export class IgxExpansionPanelHeaderComponent {
     @HostBinding('class.igx-expansion-panel--disabled')
     public disabled = false;
 
-    constructor(@Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase, public cdr: ChangeDetectorRef,
-     public elementRef: ElementRef) {
-         this.id = `${this.panel.id}-header`;
-     }
+    /** @hidden @internal */
+    @ContentChild(IgxExpansionPanelIconDirective, { read: ElementRef })
+    private customIconRef: ElementRef;
 
-     /**
-      * @hidden
-      */
-     @HostListener('keydown.Enter', ['$event'])
-     @HostListener('keydown.Space', ['$event'])
-     @HostListener('keydown.Spacebar', ['$event'])
-     @HostListener('click', ['$event'])
-     public onAction(evt?: Event) {
-         if (this.disabled) {
-            evt.stopPropagation();
+    /** @hidden @internal */
+    @ViewChild(IgxIconComponent, { read: ElementRef })
+    private defaultIconRef: ElementRef;
+
+    /**
+     * Sets/gets the `id` of the expansion panel header.
+     * ```typescript
+     * let panelHeaderId =  this.panel.header.id;
+     * ```
+     *
+     * @memberof IgxExpansionPanelComponent
+     */
+    public id = '';
+
+    // properties section
+    private _iconTemplate = false;
+
+    constructor(@Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase, public cdr: ChangeDetectorRef,
+                public elementRef: ElementRef) {
+        this.id = `${this.panel.id}-header`;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.Enter', ['$event'])
+    @HostListener('keydown.Space', ['$event'])
+    @HostListener('keydown.Spacebar', ['$event'])
+    @HostListener('click', ['$event'])
+    public onAction(evt?: Event) {
+        if (this.disabled) {
+        evt.stopPropagation();
+        return;
+        }
+        const eventArgs: IExpansionPanelCancelableEventArgs  = { event: evt, panel: this.panel, owner: this.panel, cancel: false };
+        this.onInteraction.emit(eventArgs);
+        if (eventArgs.cancel === true) {
             return;
-         }
-         const eventArgs: IExpansionPanelCancelableEventArgs  = { event: evt, panel: this.panel, owner: this.panel, cancel: false };
-         this.onInteraction.emit(eventArgs);
-         if (eventArgs.cancel === true) {
-             return;
-         }
-         this.panel.toggle(evt);
-         evt.preventDefault();
-     }
+        }
+        this.panel.toggle(evt);
+        evt.preventDefault();
+    }
 
     /** @hidden @internal */
     @HostListener('keydown.Alt.ArrowDown', ['$event'])

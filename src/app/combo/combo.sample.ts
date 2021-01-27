@@ -29,16 +29,17 @@ const complex = [{
     value: 6
 }];
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.css']
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
-    private overlaySettings: OverlaySettings[] = [null, null, null, null];
     @ViewChild('playgroundCombo', { static: true }) public igxCombo: IgxComboComponent;
-    @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
+    @ViewChild('customItemTemplate', { read: TemplateRef, static: true }) private customItemTemplate;
+
     alignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     public filterableFlag = true;
@@ -51,9 +52,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public valueKeyVar = 'field';
     public currentDataType = '';
-    @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
-    private customItemTemplate;
-    private initialItemTemplate: TemplateRef<any> = null;
 
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
@@ -61,6 +59,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
 
     public genres = [];
     public user: FormGroup;
+    private overlaySettings: OverlaySettings[] = [null, null, null, null];
+    private initialItemTemplate: TemplateRef<any> = null;
+
     constructor(fb: FormBuilder) {
         this.user = fb.group({
             date: [''],
@@ -75,7 +76,6 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.genres = [
             { type: 'Action' , movies: ['The Matrix', 'Kill Bill: Vol.1', 'The Dark Knight Rises']},
             { type: 'Adventure' , movies: ['Interstellar', 'Inglourious Basterds', 'Inception']},
-            // tslint:disable-next-line:object-literal-sort-keys
             { type: 'Comedy' , movies: ['Wild Tales', 'In Bruges', 'Three Billboards Outside Ebbing, Missouri',
                 'Untouchable', '3 idiots']},
             { type: 'Crime' , movies: ['Training Day', 'Heat', 'American Gangster']},
@@ -102,7 +102,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
             'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
-            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            Mountain: ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
             'Pacific 01': ['Alaska', 'California'],
             'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
         };

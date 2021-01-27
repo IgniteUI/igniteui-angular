@@ -22,6 +22,10 @@ import { LocalService } from '../shared/local.service';
 export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
+    @Output() public selectedDataChanged = new EventEmitter<any>();
+    @Output() public keyDown = new EventEmitter<any>();
+    @Output() public chartColumnKeyDown = new EventEmitter<any>();
+
     public data = [];
     public multiCellSelection: { data: any[] } = { data: [] };
     public selectionMode = 'multiple';
@@ -31,10 +35,6 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     public volume = 1000;
     public frequency = 500;
     private subscription$;
-
-    @Output() public selectedDataChanged = new EventEmitter<any>();
-    @Output() public keyDown = new EventEmitter<any>();
-    @Output() public chartColumnKeyDown = new EventEmitter<any>();
 
     constructor(public finService: LocalService) {
         this.finService.getFinancialData(this.volume);
@@ -68,6 +68,12 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     public ngAfterViewInit() {
         this.grid.hideGroupedColumns = true;
         this.grid.reflow();
+    }
+
+    public ngOnDestroy() {
+        if (this.subscription$) {
+            this.subscription$.unsubscribe();
+        }
     }
 
     /** Event Handlers */
@@ -138,26 +144,14 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /** Grid CellStyles and CellClasses */
-    private negative = (rowData: any): boolean => {
-        return rowData['Change(%)'] < 0;
-    }
-    private positive = (rowData: any): boolean => {
-        return rowData['Change(%)'] > 0;
-    }
-    private changeNegative = (rowData: any): boolean => {
-        return rowData['Change(%)'] < 0 && rowData['Change(%)'] > -1;
-    }
-    private changePositive = (rowData: any): boolean => {
-        return rowData['Change(%)'] > 0 && rowData['Change(%)'] < 1;
-    }
-    private strongPositive = (rowData: any): boolean => {
-        return rowData['Change(%)'] >= 1;
-    }
-    private strongNegative = (rowData: any, key: string): boolean => {
-        return rowData['Change(%)'] <= -1;
-    }
+    private negative = (rowData: any): boolean => rowData['Change(%)'] < 0;
+    private positive = (rowData: any): boolean => rowData['Change(%)'] > 0;
+    private changeNegative = (rowData: any): boolean => rowData['Change(%)'] < 0 && rowData['Change(%)'] > -1;
+    private changePositive = (rowData: any): boolean => rowData['Change(%)'] > 0 && rowData['Change(%)'] < 1;
+    private strongPositive = (rowData: any): boolean => rowData['Change(%)'] >= 1;
+    private strongNegative = (rowData: any, key: string): boolean => rowData['Change(%)'] <= -1;
 
-    // tslint:disable:member-ordering
+    /* eslint-disable @typescript-eslint/member-ordering */
     public trends = {
         changeNeg: this.changeNegative,
         changePos: this.changePositive,
@@ -173,15 +167,9 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
         strongNegative2: this.strongNegative,
         strongPositive2: this.strongPositive
     };
-    // tslint:enable:member-ordering
+    /* eslint-enable @typescript-eslint/member-ordering */
 
     get grouped(): boolean {
         return this.grid.groupingExpressions.length > 0;
-    }
-
-    public ngOnDestroy() {
-        if (this.subscription$) {
-            this.subscription$.unsubscribe();
-        }
     }
 }

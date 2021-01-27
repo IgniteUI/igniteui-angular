@@ -16,7 +16,7 @@ export class GridToolbarCustomSampleComponent {
     csv = true;
     excel = true;
 
-    data = [
+    public data = [
         {
             Name: 'Alice',
             Age: 25

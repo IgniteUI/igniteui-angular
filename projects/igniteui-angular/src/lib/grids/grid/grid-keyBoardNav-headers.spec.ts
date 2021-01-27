@@ -1219,7 +1219,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('Features Integration: should nor be possible to sort, filter or groupBy column group', () => {
             grid.allowAdvancedFiltering = true;
-            grid.columns.forEach(c => {c.sortable = true; c.groupable = true; });
+            grid.columns.forEach(c => {
+c.sortable = true; c.groupable = true;
+});
             fix.detectChanges();
 
             const header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);

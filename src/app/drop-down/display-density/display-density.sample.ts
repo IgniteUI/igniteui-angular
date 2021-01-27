@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { DisplayDensity } from 'igniteui-angular';
 
-const data = Array.apply(null, { length: 57 }).map((e, i) => {
-    return {
+const data = Array.apply(null, { length: 57 }).map((e, i) => ({
         valueKey: i,
         textKey: `Option ${i + 1}`,
         isHeader: i % 7 === 0
-    };
-});
+    }));
 @Component({
     selector: 'app-display-density',
     templateUrl: 'display-density.sample.html',

@@ -23,16 +23,6 @@ import { takeUntil } from 'rxjs/operators';
     templateUrl: './child-grid-row.component.html'
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
-private resolver;
-
-    /**
-     * Returns whether the row is expanded.
-     * ```typescript
-     * const RowExpanded = this.grid1.rowList.first.expanded;
-     * ```
-     */
-    public expanded = false;
-
     @Input()
     layout: IgxRowIslandComponent;
 
@@ -119,6 +109,16 @@ private resolver;
     get nativeElement() {
         return this.element.nativeElement;
     }
+
+    /**
+     * Returns whether the row is expanded.
+     * ```typescript
+     * const RowExpanded = this.grid1.rowList.first.expanded;
+     * ```
+     */
+    public expanded = false;
+
+    private resolver;
 
     constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
         public element: ElementRef,

@@ -33,20 +33,20 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/gr
     templateUrl: './grid-header.component.html'
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
-
-    private _destroy$ = new Subject<boolean>();
-
-    /**
-     * @hidden
-     */
-   @ViewChild('defaultESFHeaderIconTemplate', { read: TemplateRef, static: true })
-   protected defaultESFHeaderIconTemplate: TemplateRef<any>;
+    @HostBinding('attr.role')
+    public hostRole = 'columnheader';
 
     @Input()
     public column: IgxColumnComponent;
 
     @Input()
     public gridID: string;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultESFHeaderIconTemplate', { read: TemplateRef, static: true })
+    protected defaultESFHeaderIconTemplate: TemplateRef<any>;
 
     /**
      * Returns the `aria-selected` of the header.
@@ -65,8 +65,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
         const classList = {
             'igx-grid__th': !this.column.columnGroup,
-            'asc': this.ascending,
-            'desc': this.descending,
+            asc: this.ascending,
+            desc: this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
             'igx-grid__th--selectable': this.selectable,
@@ -139,15 +139,14 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.column.title || this.column.header || this.column.field;
     }
 
-    @HostBinding('attr.role')
-    public hostRole = 'columnheader';
-
     @HostBinding('attr.id')
     get headerID() {
         return `${this.gridID}_${this.column.field}`;
     }
 
     protected sortDirection = SortingDirection.None;
+
+    private _destroy$ = new Subject<boolean>();
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
@@ -156,17 +155,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         public elementRef: ElementRef,
         public zone: NgZone
     ) { }
-
-    public ngDoCheck() {
-        this.getSortDirection();
-        this.cdr.markForCheck();
-    }
-
-    ngOnDestroy(): void {
-        this._destroy$.next(true);
-        this._destroy$.complete();
-        this.grid.filteringService.hideExcelFiltering();
-    }
 
     @HostListener('click', ['$event'])
     public onClick(event) {
@@ -196,39 +184,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         this.grid.theadRow.nativeElement.focus();
     }
 
-
-    public onFilteringIconClick(event) {
-        event.stopPropagation();
-        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
-    }
-
-    get grid(): any {
-        return this.gridAPI.grid;
-    }
-
-    protected getSortDirection() {
-        const expr = this.gridAPI.grid.sortingExpressions.find((x) => x.fieldName === this.column.field);
-        this.sortDirection = expr ? expr.dir : SortingDirection.None;
-    }
-
-    public onSortingIconClick(event) {
-        event.stopPropagation();
-        this.triggerSort();
-    }
-
-    private triggerSort() {
-        const groupingExpr = this.grid.groupingExpressions ?
-            this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
-        const sortDir = groupingExpr ?
-            this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
-            : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
-        this.sortDirection = sortDir;
-        this.grid.sort({
-            fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
-            strategy: this.column.sortStrategy
-        });
-    }
-
     /**
      * @hidden
      */
@@ -243,5 +198,49 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     @HostListener('pointerleave')
     public onPointerLeave() {
         this.column.applySelectableClass = false;
+    }
+
+    public ngDoCheck() {
+        this.getSortDirection();
+        this.cdr.markForCheck();
+    }
+
+    ngOnDestroy(): void {
+        this._destroy$.next(true);
+        this._destroy$.complete();
+        this.grid.filteringService.hideExcelFiltering();
+    }
+
+
+    public onFilteringIconClick(event) {
+        event.stopPropagation();
+        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
+    }
+
+    get grid(): any {
+        return this.gridAPI.grid;
+    }
+
+    public onSortingIconClick(event) {
+        event.stopPropagation();
+        this.triggerSort();
+    }
+
+    protected getSortDirection() {
+        const expr = this.gridAPI.grid.sortingExpressions.find((x) => x.fieldName === this.column.field);
+        this.sortDirection = expr ? expr.dir : SortingDirection.None;
+    }
+
+    private triggerSort() {
+        const groupingExpr = this.grid.groupingExpressions ?
+            this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
+        const sortDir = groupingExpr ?
+            this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
+            : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
+        this.sortDirection = sortDir;
+        this.grid.sort({
+            fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
+            strategy: this.column.sortStrategy
+        });
     }
 }

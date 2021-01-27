@@ -1,4 +1,3 @@
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortingDirection } from 'igniteui-angular';
@@ -98,9 +97,8 @@ export class RemoteVirtService {
         }
 
         if (virtualizationArgs) {
-            let requiredChunkSize: number;
             const skip = virtualizationArgs.startIndex;
-            requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize;
+            const requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize;
             const top = requiredChunkSize;
             scrollingQuery = `$skip=${skip}&$top=${top}`;
         }

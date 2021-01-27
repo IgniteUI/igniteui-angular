@@ -18,6 +18,13 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
     }
 
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
+        const hierarchicalRecord = rec as ITreeGridRecord;
+        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
+        value = value && isDate ? parseDate(value) : value;
+        return value;
+    }
+
     private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord, grid?: GridType): ITreeGridRecord[] {
         let i: number;
@@ -44,13 +51,6 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         }
         return res;
     }
-
-    protected getFieldValue(rec: object, fieldName: string, isDate: boolean = false): any {
-        const hierarchicalRecord = <ITreeGridRecord>rec;
-        let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
-        value = value && isDate ? parseDate(value) : value;
-        return value;
-    }
 }
 
 /** @hidden */
@@ -62,7 +62,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
      }
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
@@ -71,7 +71,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         pipeTrigger: number, filteringPipeTrigger: number, pinned?): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const state: IFilteringState = {
-            expressionsTree: expressionsTree,
+            expressionsTree,
             advancedExpressionsTree: advancedFilteringExpressionsTree,
             strategy: new TreeGridFilteringStrategy()
         };
@@ -97,15 +97,14 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
 
     private resetFilteredOutProperty(map: Map<any, ITreeGridRecord>) {
         const keys = Array.from(map.keys());
-        for (let i = 0; i < keys.length; i++) {
-            map.get(keys[i]).isFilteredOutParent = undefined;
+        for (const key of keys) {
+            map.get(key).isFilteredOutParent = undefined;
         }
     }
 
     private expandAllRecursive(grid: IgxTreeGridComponent, data: ITreeGridRecord[],
         expandedStates: Map<any, boolean>, filteredData: any[]) {
-        for (let i = 0; i < data.length; i++) {
-            const rec: any = data[i];
+        for (const rec of data) {
             filteredData.push(rec.data);
             this.updateNonProcessedRecord(grid, rec);
 

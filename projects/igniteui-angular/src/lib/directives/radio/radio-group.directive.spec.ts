@@ -251,14 +251,14 @@ class Person {
 `
 })
 class RadioGroupWithModelComponent {
+    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
+
     seasons = [
         'Winter',
         'Spring',
         'Summer',
         'Autumn',
     ];
-
-    @ViewChild('radioGroupSeasons', { read: IgxRadioGroupDirective, static: true }) public radioGroup: IgxRadioGroupDirective;
 
     personBob: Person = { name: 'Bob', favoriteSeason: 'Summer' };
 }

@@ -100,6 +100,56 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
+    @HostListener('keydown.pageup', ['$event'])
+    public previousYear(event?: KeyboardEvent) {
+        event?.preventDefault();
+        if (event && this.yearAction === 'next') {
+            return;
+        }
+        this.yearAction = 'prev';
+        this.previousViewDate = this.viewDate;
+        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.pagedown', ['$event'])
+    public nextYear(event?: KeyboardEvent) {
+        event?.preventDefault();
+        if (event && this.yearAction === 'prev') {
+            return;
+        }
+        this.yearAction = 'next';
+        this.previousViewDate = this.viewDate;
+        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.home', ['$event'])
+    public onKeydownHome(event: KeyboardEvent) {
+        if (this.monthsView) {
+            this.monthsView.el.nativeElement.focus();
+            this.monthsView.onKeydownHome(event);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.end', ['$event'])
+    public onKeydownEnd(event: KeyboardEvent) {
+        if (this.monthsView) {
+            this.monthsView.el.nativeElement.focus();
+            this.monthsView.onKeydownEnd(event);
+        }
+    }
+
+    /**
+     * @hidden
+     */
     public animationDone(event) {
         if ((event.fromState === 'void' && event.toState === '') ||
         (event.fromState === '' && (event.toState === ScrollMonth.PREV || event.toState === ScrollMonth.NEXT))) {
@@ -132,7 +182,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         }
 
         requestAnimationFrame(() => {
-            if (this.dacadeView) { this.dacadeView.el.nativeElement.focus(); }
+            if (this.dacadeView) {
+                this.dacadeView.el.nativeElement.focus();
+            }
         });
     }
 
@@ -153,7 +205,11 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public changeYearKB(event, next = true) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.stopPropagation();
-            next ? this.nextYear() :  this.previousYear();
+            if (next) {
+                this.nextYear();
+            } else {
+                this.previousYear();
+            }
         }
     }
 
@@ -166,7 +222,9 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         this.activeView = IgxCalendarView.Month;
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
+            if (this.yearsBtn) {
+                this.yearsBtn.nativeElement.focus();
+            }
         });
     }
 
@@ -213,51 +271,5 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public getPreviousYear() {
         return this.calendarModel.getPrevYear(this.viewDate).getFullYear();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.pageup', ['$event'])
-    public previousYear(event?: KeyboardEvent) {
-        event?.preventDefault();
-        if (event && this.yearAction === 'next') { return; }
-        this.yearAction = 'prev';
-        this.previousViewDate = this.viewDate;
-        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.pagedown', ['$event'])
-    public nextYear(event?: KeyboardEvent) {
-        event?.preventDefault();
-        if (event && this.yearAction === 'prev') { return; }
-        this.yearAction = 'next';
-        this.previousViewDate = this.viewDate;
-        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.home', ['$event'])
-    public onKeydownHome(event: KeyboardEvent) {
-        if (this.monthsView) {
-            this.monthsView.el.nativeElement.focus();
-            this.monthsView.onKeydownHome(event);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.end', ['$event'])
-    public onKeydownEnd(event: KeyboardEvent) {
-        if (this.monthsView) {
-            this.monthsView.el.nativeElement.focus();
-            this.monthsView.onKeydownEnd(event);
-        }
     }
 }
