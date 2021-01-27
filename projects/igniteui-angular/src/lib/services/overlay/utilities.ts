@@ -178,9 +178,10 @@ export class Util {
      * @hidden
      * Calculates the rectangle of target for provided overlay settings. Defaults to 0,0,0,0,0,0 rectangle
      * if no target is provided
+     *
      * @param settings Overlay settings for which to calculate target rectangle
      */
-    static getTargetRect(target?: Point | HTMLElement): ClientRect {
+    public static getTargetRect(target?: Point | HTMLElement): ClientRect {
         let targetRect: ClientRect = {
             bottom: 0,
             height: 0,
@@ -208,7 +209,7 @@ export class Util {
     }
 
     /** @hidden @internal */
-    static getViewportRect(document: Document): ClientRect {
+    public static getViewportRect(document: Document): ClientRect {
         const width = document.documentElement.clientWidth;
         const height = document.documentElement.clientHeight;
         const scrollPosition = Util.getViewportScrollPosition(document);
@@ -224,7 +225,7 @@ export class Util {
     }
 
     /** @hidden @internal */
-    static getViewportScrollPosition(document: Document): Point {
+    public static getViewportScrollPosition(document: Document): Point {
         const documentElement = document.documentElement;
         const documentRect = documentElement.getBoundingClientRect();
 
@@ -236,7 +237,7 @@ export class Util {
     }
 
     /** @hidden @internal */
-    static cloneInstance(object) {
+    public static cloneInstance(object) {
         const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
         clonedObj.settings = cloneValue(clonedObj.settings);
         return clonedObj;

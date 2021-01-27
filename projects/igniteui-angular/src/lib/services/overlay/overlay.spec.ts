@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, inject, waitForAsync } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
 import { IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './../../directives/toggle/toggle.directive';
@@ -223,18 +223,18 @@ describe('igxOverlay', () => {
                 classList: { add: () => { }, remove: () => { } },
                 appendChild: () => { },
                 removeChild: () => { },
-                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                addEventListener: () => { },
+                removeEventListener: () => { },
                 getBoundingClientRect: () => ({ width: 10, height: 10 }),
-                insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
+                insertBefore: () => { },
                 contains: () => { }
             };
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
             mockElementRef = { nativeElement: mockElement };
             mockFactoryResolver = {
-                resolveComponentFactory: (c: any) => ({
-                        create: (i: any) => ({
+                resolveComponentFactory: () => ({
+                    create: () => ({
                                 hostView: '',
                                 location: mockElementRef,
                                 changeDetectorRef: { detectChanges: () => { } },
@@ -242,7 +242,7 @@ describe('igxOverlay', () => {
                             })
                     })
             };
-            mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
+            mockApplicationRef = { attachView: () => { }, detachView: () => { } };
             mockInjector = {};
             mockAnimationBuilder = {};
             mockDocument = {
@@ -250,8 +250,8 @@ describe('igxOverlay', () => {
                 defaultView: mockElement,
                 createElement: () => mockElement,
                 appendChild: () => { },
-                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
+                addEventListener: () => { },
+                removeEventListener: () => { }
             };
             mockNgZone = {};
             mockPlatformUtil = { isIOS: false };
@@ -3966,12 +3966,12 @@ export class SimpleDynamicWithDirectiveComponent {
         return this._overlay;
     }
 
-    show(overlaySettings?: OverlaySettings) {
+    public show(overlaySettings?: OverlaySettings) {
         this.visible = true;
         this.overlay.open(overlaySettings);
     }
 
-    hide() {
+    public hide() {
         this.visible = false;
         this.overlay.close();
     }
@@ -3994,12 +3994,12 @@ export class SimpleDynamicWithDirectiveComponent {
     }`]
 })
 export class EmptyPageComponent {
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
-    @ViewChild('div', { static: true }) divElement: ElementRef;
+    @ViewChild('button', { static: true }) public buttonElement: ElementRef;
+    @ViewChild('div', { static: true }) public divElement: ElementRef;
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    click() {
+    public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
     }
 }
@@ -4012,8 +4012,8 @@ export class EmptyPageComponent {
     encapsulation: ViewEncapsulation.ShadowDom
 })
 export class EmptyPageInShadowDomComponent {
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
-    @ViewChild('outlet', { static: true }) outletElement: ElementRef;
+    @ViewChild('button', { static: true }) public buttonElement: ElementRef;
+    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 }
@@ -4032,7 +4032,7 @@ export class EmptyPageInShadowDomComponent {
     }`]
 })
 export class DownRightButtonComponent {
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('button', { static: true }) public buttonElement: ElementRef;
 
     public positionStrategy: IPositionStrategy;
 
@@ -4047,7 +4047,7 @@ export class DownRightButtonComponent {
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    click() {
+    public click() {
         this.positionStrategy.settings = this.ButtonPositioningSettings;
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent, {
             target: this.target,
@@ -4072,11 +4072,11 @@ export class DownRightButtonComponent {
 })
 export class TopLeftOffsetComponent {
 
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('button', { static: true }) public buttonElement: ElementRef;
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    click() {
+    public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
     }
 }
@@ -4095,15 +4095,15 @@ export class TwoButtonsComponent {
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    clickOne() {
+    public clickOne() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.settings);
     }
 
-    clickTwo() {
+    public clickTwo() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.settings);
     }
 
-    divClick(ev: Event) {
+    public divClick(ev: Event) {
         ev.stopPropagation();
     }
 }
@@ -4127,8 +4127,8 @@ export class TwoButtonsComponent {
 })
 export class WidthTestOverlayComponent {
 
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
-    @ViewChild('myCustomComponent', { static: true }) customComponent: ElementRef;
+    @ViewChild('button', { static: true }) public buttonElement: ElementRef;
+    @ViewChild('myCustomComponent', { static: true }) public customComponent: ElementRef;
     public overlaySettings: OverlaySettings = {};
 
     constructor(
@@ -4136,7 +4136,7 @@ export class WidthTestOverlayComponent {
         public elementRef: ElementRef
     ) { }
 
-    click(event) {
+    public click() {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
         this.overlaySettings.scrollStrategy = new NoOpScrollStrategy();
         this.overlaySettings.closeOnOutsideClick = true;
@@ -4173,17 +4173,16 @@ export class ScrollableComponent {
         return this._toggle;
     }
 
-    show() {
+    public show() {
         this.visible = true;
         const settings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
         this.toggle.open(settings);
     }
 
-    hide() {
+    public hide() {
         this.toggle.close();
         this.visible = false;
     }
-
 }
 
 @Component({
@@ -4196,12 +4195,12 @@ export class ScrollableComponent {
     `
 })
 export class FlexContainerComponent {
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('button', { static: true }) public buttonElement: ElementRef;
     public overlaySettings: OverlaySettings = {};
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    click() {
+    public click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.overlaySettings);
     }
 }
