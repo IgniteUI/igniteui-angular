@@ -38,12 +38,12 @@ export class GridSummaryComponent {
     public showToolbar = false;
     public hidingEnabled = false;
     public pinningEnabled = false;
-  
+
     public mySummary = MySummary;
     public w = '1200px';
     public h = '500px';
     public cw = '200px';
-  
+
     public groupable = false;
     public filterable = true;
     public disableHiding = false;
