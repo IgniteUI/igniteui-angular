@@ -6,18 +6,8 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class IgxComboAPIService {
-    protected combo: IgxComboBase;
-
     public disableTransitions = false;
-
-    public register(combo: IgxComboBase) {
-        this.combo = combo;
-    }
-
-
-    public clear(): void {
-        this.combo = null;
-    }
+    protected combo: IgxComboBase;
 
     public get valueKey() {
         return this.combo.valueKey !== null && this.combo.valueKey !== undefined ? this.combo.valueKey : null;
@@ -30,15 +20,23 @@ export class IgxComboAPIService {
         return this.combo.isRemote;
     }
 
+    public get comboID(): string {
+        return this.combo.id;
+    }
+
+    public register(combo: IgxComboBase) {
+        this.combo = combo;
+    }
+
+    public clear(): void {
+        this.combo = null;
+    }
+
     public add_custom_item(): void {
         if (!this.combo) {
             return;
         }
         this.combo.addItemToCollection();
-    }
-
-    public get comboID(): string {
-        return this.combo.id;
     }
 
     public set_selected_item(itemID: any, event?: Event): void {

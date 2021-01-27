@@ -24,7 +24,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-            ${GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`, '', ColumnDefinitions.indexAndValue)}</div>`
+            ${GridTemplateStrings.declareGrid('[autoGenerate]="autoGenerate"', '', ColumnDefinitions.indexAndValue)}</div>`
 })
 export class GridInDivComponent extends GridAutoGenerateComponent {
     data = SampleTestData.oneItemNumberData();
@@ -105,13 +105,13 @@ export class ColumnsFromIterableComponent extends BasicGridComponent {
                 ColumnDefinitions.columnTemplates)
 })
 export class TemplatedColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameData();
-
     @ViewChild('newHeader', { read: TemplateRef, static: true })
     public newHeaderTemplate: TemplateRef<any>;
 
     @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
+
+    data = SampleTestData.personIDNameData();
 }
 
 @Component({
@@ -570,9 +570,9 @@ export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idFirstLastNameSortable)
 })
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameRegionData();
-
     @ViewChild('nameColumn', { static: true }) public nameColumn;
+
+    data = SampleTestData.personIDNameRegionData();
 }
 
 @Component({
@@ -1017,14 +1017,12 @@ export class SelectionWithTransactionsComponent extends BasicGridComponent {
 }
 
 export class CustomFilter extends IgxFilteringOperand {
-    private constructor () {
+    private constructor() {
         super();
         this.operations = [{
             name: 'custom',
             isUnary: false,
-            logic: (target: string): boolean => {
-                return target === 'custom';
-            },
+            logic: (target: string): boolean => target === 'custom',
             iconName: 'custom'
         }];
     }
@@ -1108,14 +1106,14 @@ export class IgxGridDatesFilteringComponent extends BasicGridComponent {
     </igx-grid>`
 })
 export class IgxGridExternalESFComponent extends BasicGridComponent implements AfterViewInit {
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
 
     public data = SampleTestData.excelFilteringData();
-
-    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
-    public esf: IgxGridExcelStyleFilteringComponent;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();
@@ -1127,9 +1125,11 @@ export class IgxGridExternalESFComponent extends BasicGridComponent implements A
 }
 
 export class CustomFilterStrategy extends FilteringStrategy {
-    public constructor() { super(); }
+    public constructor() {
+        super();
+    }
 
-    public findMatchByExpression(rec: object, expr): boolean {
+    public findMatchByExpression(rec, expr): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName);
         const ignoreCase = expr.fieldName === 'JobTitle' ? false : true;
@@ -1140,7 +1140,7 @@ export class CustomFilterStrategy extends FilteringStrategy {
         return super.filter(data, expressionsTree, null, null);
     }
 
-    public getFieldValue(rec: object, fieldName: string): any {
+    public getFieldValue(rec, fieldName: string): any {
         return fieldName === 'Name' ?  rec[fieldName]['FirstName'] :  rec[fieldName];
     }
  }
@@ -1176,9 +1176,10 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
     </igx-grid>`
 })
 export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
-    private _filteringStrategy = new FilteringStrategy();
     public data = SampleTestData.excelFilteringData();
     public doneCallbackCounter = 0;
+
+    private _filteringStrategy = new FilteringStrategy();
 
     public columnValuesStrategy = (column: IgxColumnComponent,
                                    columnExprTree: IFilteringExpressionsTree,
@@ -1189,7 +1190,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
             done(columnValues);
             this.doneCallbackCounter++;
         }, 1000);
-    }
+    };
 }
 
 @Component({
@@ -1286,14 +1287,14 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
     </igx-grid>`
 })
 export class IgxGridExternalESFTemplateComponent extends BasicGridComponent implements OnInit {
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
 
     public data = SampleTestData.excelFilteringData();
-
-    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
-    public esf: IgxGridExcelStyleFilteringComponent;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();
@@ -1415,9 +1416,7 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
                 name: 'equals',
                 isUnary: false,
                 iconName: 'equals',
-                logic: (target: Date, searchVal: Date) => {
-                    return true;
-                }
+                logic: (target: Date, searchVal: Date) => true
             },
         };
 
@@ -1564,13 +1563,21 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     public onRowCheckboxClick(event, rowContext) {
         event.stopPropagation();
         event.preventDefault();
-        rowContext.selected ? this.grid.deselectRows([rowContext.rowID]) : this.grid.selectRows([rowContext.rowID]);
+        if (rowContext.selected) {
+            this.grid.deselectRows([rowContext.rowID]);
+        } else {
+            this.grid.selectRows([rowContext.rowID]);
+        }
     }
 
     public onHeaderCheckboxClick(event, headContext) {
         event.stopPropagation();
         event.preventDefault();
-        headContext.selected ? this.grid.deselectAllRows() : this.grid.selectAllRows();
+        if (headContext.selected) {
+            this.grid.deselectAllRows();
+        } else {
+            this.grid.selectAllRows();
+        }
     }
 }
 
@@ -1671,11 +1678,11 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
     `
 })
 export class IgxGridCustomOverlayComponent extends BasicGridComponent {
-    public data = SampleTestData.foodProductData();
     @ViewChildren(IgxRowEditTabStopDirective) public buttons: QueryList<IgxRowEditTabStopDirective>;
+    public data = SampleTestData.foodProductData();
 
     public get gridAPI() {
-        return (<any>this.grid).gridAPI;
+        return this.grid.gridAPI;
     }
 
     public get cellInEditMode() {
@@ -1745,14 +1752,14 @@ export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
     `
 })
 export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
-    public width = '800px';
-    public height = null;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
+
+    public width = '800px';
+    public height = null;
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -1790,14 +1797,14 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     `
 })
 export class IgxGridGroupByComponent extends DataParent implements OnInit {
-    public width = '600px';
-    public height = '600px';
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
+
+    public width = '600px';
+    public height = '600px';
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -2052,7 +2059,7 @@ export class CollapsibleGroupsDynamicColComponent {
     }
 
     public addColumnToGroup(groupIndex = 0, visibleWhenCollapsed = false) {
-        this.columnGroups[groupIndex].columns.push({ field: 'Missing', type: 'string' , visibleWhenCollapsed: visibleWhenCollapsed });
+        this.columnGroups[groupIndex].columns.push({ field: 'Missing', type: 'string' , visibleWhenCollapsed });
     }
 }
 
@@ -2186,15 +2193,13 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
      public sort(data: any[], fieldName: string, dir: SortingDirection) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => {
-            return this.compareObjects(obj1, obj2, key, reverse);
-        };
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse);
         return data.sort(cmpFunc);
     }
      protected sortByParity(a: any, b: any) {
         return a % 2 === 0 ? -1 : b % 2 === 0 ? 1 : 0;
     }
-     protected compareObjects(obj1: object, obj2: object, key: string, reverse: number) {
+     protected compareObjects(obj1, obj2, key: string, reverse: number) {
         const a = obj1[key];
         const b = obj2[key];
         return reverse * this.sortByParity(a, b);
@@ -2279,35 +2284,35 @@ export class IgxAddRowComponent implements OnInit {
         ];
 
         this.data = [
-            // tslint:disable:max-line-length
-            { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative'},
-            { 'ID': 'ANATR', 'CompanyName': 'Ana Trujillo Emparedados y helados', 'ContactName': 'Ana Trujillo', 'ContactTitle': 'Owner'},
-            { 'ID': 'ANTON', 'CompanyName': 'Antonio Moreno Taquería', 'ContactName': 'Antonio Moreno', 'ContactTitle': 'Owner'},
-            { 'ID': 'AROUT', 'CompanyName': 'Around the Horn', 'ContactName': 'Thomas Hardy', 'ContactTitle': 'Sales Representative'},
-            { 'ID': 'BERGS', 'CompanyName': 'Berglunds snabbköp', 'ContactName': 'Christina Berglund', 'ContactTitle': 'Order Administrator' },
-            { 'ID': 'BLAUS', 'CompanyName': 'Blauer See Delikatessen', 'ContactName': 'Hanna Moos', 'ContactTitle': 'Sales Representative'},
-            { 'ID': 'BLONP', 'CompanyName': 'Blondesddsl père et fils', 'ContactName': 'Frédérique Citeaux', 'ContactTitle': 'Marketing Manager'},
-            { 'ID': 'BOLID', 'CompanyName': 'Bólido Comidas preparadas', 'ContactName': 'Martín Sommer', 'ContactTitle': 'Owner'},
-            { 'ID': 'BONAP', 'CompanyName': 'Bon app\'', 'ContactName': 'Laurence Lebihan', 'ContactTitle': 'Owner'},
-            { 'ID': 'BOTTM', 'CompanyName': 'Bottom-Dollar Markets', 'ContactName': 'Elizabeth Lincoln', 'ContactTitle': 'Accounting Manager' },
-            { 'ID': 'BSBEV', 'CompanyName': 'B\'s Beverages', 'ContactName': 'Victoria Ashworth', 'ContactTitle': 'Sales Representative', 'Address': 'Fauntleroy Circus', 'City': 'London', 'Region': null, 'PostalCode': 'EC2 5NT', 'Country': 'UK', 'Phone': '(171) 555-1212', 'Fax': null },
-            { 'ID': 'CACTU', 'CompanyName': 'Cactus Comidas para llevar', 'ContactName': 'Patricio Simpson', 'ContactTitle': 'Sales Agent', 'Address': 'Cerrito 333', 'City': 'Buenos Aires', 'Region': null, 'PostalCode': '1010', 'Country': 'Argentina', 'Phone': '(1) 135-5555', 'Fax': '(1) 135-4892' },
-            { 'ID': 'CENTC', 'CompanyName': 'Centro comercial Moctezuma', 'ContactName': 'Francisco Chang', 'ContactTitle': 'Marketing Manager', 'Address': 'Sierras de Granada 9993', 'City': 'México D.F.', 'Region': null, 'PostalCode': '05022', 'Country': 'Mexico', 'Phone': '(5) 555-3392', 'Fax': '(5) 555-7293' },
-            { 'ID': 'CHOPS', 'CompanyName': 'Chop-suey Chinese', 'ContactName': 'Yang Wang', 'ContactTitle': 'Owner', 'Address': 'Hauptstr. 29', 'City': 'Bern', 'Region': null, 'PostalCode': '3012', 'Country': 'Switzerland', 'Phone': '0452-076545', 'Fax': null },
-            { 'ID': 'COMMI', 'CompanyName': 'Comércio Mineiro', 'ContactName': 'Pedro Afonso', 'ContactTitle': 'Sales Associate', 'Address': 'Av. dos Lusíadas, 23', 'City': 'Sao Paulo', 'Region': 'SP', 'PostalCode': '05432-043', 'Country': 'Brazil', 'Phone': '(11) 555-7647', 'Fax': null },
-            { 'ID': 'CONSH', 'CompanyName': 'Consolidated Holdings', 'ContactName': 'Elizabeth Brown', 'ContactTitle': 'Sales Representative', 'Address': 'Berkeley Gardens 12 Brewery', 'City': 'London', 'Region': null, 'PostalCode': 'WX1 6LT', 'Country': 'UK', 'Phone': '(171) 555-2282', 'Fax': '(171) 555-9199' },
-            { 'ID': 'DRACD', 'CompanyName': 'Drachenblut Delikatessen', 'ContactName': 'Sven Ottlieb', 'ContactTitle': 'Order Administrator', 'Address': 'Walserweg 21', 'City': 'Aachen', 'Region': null, 'PostalCode': '52066', 'Country': 'Germany', 'Phone': '0241-039123', 'Fax': '0241-059428' },
-            { 'ID': 'DUMON', 'CompanyName': 'Du monde entier', 'ContactName': 'Janine Labrune', 'ContactTitle': 'Owner', 'Address': '67, rue des Cinquante Otages', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.67.88.88', 'Fax': '40.67.89.89' },
-            { 'ID': 'EASTC', 'CompanyName': 'Eastern Connection', 'ContactName': 'Ann Devon', 'ContactTitle': 'Sales Agent', 'Address': '35 King George', 'City': 'London', 'Region': null, 'PostalCode': 'WX3 6FW', 'Country': 'UK', 'Phone': '(171) 555-0297', 'Fax': '(171) 555-3373' },
-            { 'ID': 'ERNSH', 'CompanyName': 'Ernst Handel', 'ContactName': 'Roland Mendel', 'ContactTitle': 'Sales Manager', 'Address': 'Kirchgasse 6', 'City': 'Graz', 'Region': null, 'PostalCode': '8010', 'Country': 'Austria', 'Phone': '7675-3425', 'Fax': '7675-3426' },
-            { 'ID': 'FAMIA', 'CompanyName': 'Familia Arquibaldo', 'ContactName': 'Aria Cruz', 'ContactTitle': 'Marketing Assistant', 'Address': 'Rua Orós, 92', 'City': 'Sao Paulo', 'Region': 'SP', 'PostalCode': '05442-030', 'Country': 'Brazil', 'Phone': '(11) 555-9857', 'Fax': null },
-            { 'ID': 'FISSA', 'CompanyName': 'FISSA Fabrica Inter. Salchichas S.A.', 'ContactName': 'Diego Roel', 'ContactTitle': 'Accounting Manager', 'Address': 'C/ Moralzarzal, 86', 'City': 'Madrid', 'Region': null, 'PostalCode': '28034', 'Country': 'Spain', 'Phone': '(91) 555 94 44', 'Fax': '(91) 555 55 93' },
-            { 'ID': 'FOLIG', 'CompanyName': 'Folies gourmandes', 'ContactName': 'Martine Rancé', 'ContactTitle': 'Assistant Sales Agent', 'Address': '184, chaussée de Tournai', 'City': 'Lille', 'Region': null, 'PostalCode': '59000', 'Country': 'France', 'Phone': '20.16.10.16', 'Fax': '20.16.10.17' },
-            { 'ID': 'FOLKO', 'CompanyName': 'Folk och fä HB', 'ContactName': 'Maria Larsson', 'ContactTitle': 'Owner', 'Address': 'Åkergatan 24', 'City': 'Bräcke', 'Region': null, 'PostalCode': 'S-844 67', 'Country': 'Sweden', 'Phone': '0695-34 67 21', 'Fax': null },
-            { 'ID': 'FRANK', 'CompanyName': 'Frankenversand', 'ContactName': 'Peter Franken', 'ContactTitle': 'Marketing Manager', 'Address': 'Berliner Platz 43', 'City': 'München', 'Region': null, 'PostalCode': '80805', 'Country': 'Germany', 'Phone': '089-0877310', 'Fax': '089-0877451' },
-            { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
-            { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
+            /* eslint-disable max-len */
+            { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative'},
+            { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner'},
+            { ID: 'ANTON', CompanyName: 'Antonio Moreno Taquería', ContactName: 'Antonio Moreno', ContactTitle: 'Owner'},
+            { ID: 'AROUT', CompanyName: 'Around the Horn', ContactName: 'Thomas Hardy', ContactTitle: 'Sales Representative'},
+            { ID: 'BERGS', CompanyName: 'Berglunds snabbköp', ContactName: 'Christina Berglund', ContactTitle: 'Order Administrator' },
+            { ID: 'BLAUS', CompanyName: 'Blauer See Delikatessen', ContactName: 'Hanna Moos', ContactTitle: 'Sales Representative'},
+            { ID: 'BLONP', CompanyName: 'Blondesddsl père et fils', ContactName: 'Frédérique Citeaux', ContactTitle: 'Marketing Manager'},
+            { ID: 'BOLID', CompanyName: 'Bólido Comidas preparadas', ContactName: 'Martín Sommer', ContactTitle: 'Owner'},
+            { ID: 'BONAP', CompanyName: 'Bon app\'', ContactName: 'Laurence Lebihan', ContactTitle: 'Owner'},
+            { ID: 'BOTTM', CompanyName: 'Bottom-Dollar Markets', ContactName: 'Elizabeth Lincoln', ContactTitle: 'Accounting Manager' },
+            { ID: 'BSBEV', CompanyName: 'B\'s Beverages', ContactName: 'Victoria Ashworth', ContactTitle: 'Sales Representative', Address: 'Fauntleroy Circus', City: 'London', Region: null, PostalCode: 'EC2 5NT', Country: 'UK', Phone: '(171) 555-1212', Fax: null },
+            { ID: 'CACTU', CompanyName: 'Cactus Comidas para llevar', ContactName: 'Patricio Simpson', ContactTitle: 'Sales Agent', Address: 'Cerrito 333', City: 'Buenos Aires', Region: null, PostalCode: '1010', Country: 'Argentina', Phone: '(1) 135-5555', Fax: '(1) 135-4892' },
+            { ID: 'CENTC', CompanyName: 'Centro comercial Moctezuma', ContactName: 'Francisco Chang', ContactTitle: 'Marketing Manager', Address: 'Sierras de Granada 9993', City: 'México D.F.', Region: null, PostalCode: '05022', Country: 'Mexico', Phone: '(5) 555-3392', Fax: '(5) 555-7293' },
+            { ID: 'CHOPS', CompanyName: 'Chop-suey Chinese', ContactName: 'Yang Wang', ContactTitle: 'Owner', Address: 'Hauptstr. 29', City: 'Bern', Region: null, PostalCode: '3012', Country: 'Switzerland', Phone: '0452-076545', Fax: null },
+            { ID: 'COMMI', CompanyName: 'Comércio Mineiro', ContactName: 'Pedro Afonso', ContactTitle: 'Sales Associate', Address: 'Av. dos Lusíadas, 23', City: 'Sao Paulo', Region: 'SP', PostalCode: '05432-043', Country: 'Brazil', Phone: '(11) 555-7647', Fax: null },
+            { ID: 'CONSH', CompanyName: 'Consolidated Holdings', ContactName: 'Elizabeth Brown', ContactTitle: 'Sales Representative', Address: 'Berkeley Gardens 12 Brewery', City: 'London', Region: null, PostalCode: 'WX1 6LT', Country: 'UK', Phone: '(171) 555-2282', Fax: '(171) 555-9199' },
+            { ID: 'DRACD', CompanyName: 'Drachenblut Delikatessen', ContactName: 'Sven Ottlieb', ContactTitle: 'Order Administrator', Address: 'Walserweg 21', City: 'Aachen', Region: null, PostalCode: '52066', Country: 'Germany', Phone: '0241-039123', Fax: '0241-059428' },
+            { ID: 'DUMON', CompanyName: 'Du monde entier', ContactName: 'Janine Labrune', ContactTitle: 'Owner', Address: '67, rue des Cinquante Otages', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.67.88.88', Fax: '40.67.89.89' },
+            { ID: 'EASTC', CompanyName: 'Eastern Connection', ContactName: 'Ann Devon', ContactTitle: 'Sales Agent', Address: '35 King George', City: 'London', Region: null, PostalCode: 'WX3 6FW', Country: 'UK', Phone: '(171) 555-0297', Fax: '(171) 555-3373' },
+            { ID: 'ERNSH', CompanyName: 'Ernst Handel', ContactName: 'Roland Mendel', ContactTitle: 'Sales Manager', Address: 'Kirchgasse 6', City: 'Graz', Region: null, PostalCode: '8010', Country: 'Austria', Phone: '7675-3425', Fax: '7675-3426' },
+            { ID: 'FAMIA', CompanyName: 'Familia Arquibaldo', ContactName: 'Aria Cruz', ContactTitle: 'Marketing Assistant', Address: 'Rua Orós, 92', City: 'Sao Paulo', Region: 'SP', PostalCode: '05442-030', Country: 'Brazil', Phone: '(11) 555-9857', Fax: null },
+            { ID: 'FISSA', CompanyName: 'FISSA Fabrica Inter. Salchichas S.A.', ContactName: 'Diego Roel', ContactTitle: 'Accounting Manager', Address: 'C/ Moralzarzal, 86', City: 'Madrid', Region: null, PostalCode: '28034', Country: 'Spain', Phone: '(91) 555 94 44', Fax: '(91) 555 55 93' },
+            { ID: 'FOLIG', CompanyName: 'Folies gourmandes', ContactName: 'Martine Rancé', ContactTitle: 'Assistant Sales Agent', Address: '184, chaussée de Tournai', City: 'Lille', Region: null, PostalCode: '59000', Country: 'France', Phone: '20.16.10.16', Fax: '20.16.10.17' },
+            { ID: 'FOLKO', CompanyName: 'Folk och fä HB', ContactName: 'Maria Larsson', ContactTitle: 'Owner', Address: 'Åkergatan 24', City: 'Bräcke', Region: null, PostalCode: 'S-844 67', Country: 'Sweden', Phone: '0695-34 67 21', Fax: null },
+            { ID: 'FRANK', CompanyName: 'Frankenversand', ContactName: 'Peter Franken', ContactTitle: 'Marketing Manager', Address: 'Berliner Platz 43', City: 'München', Region: null, PostalCode: '80805', Country: 'Germany', Phone: '089-0877310', Fax: '089-0877451' },
+            { ID: 'FRANR', CompanyName: 'France restauration', ContactName: 'Carine Schmitt', ContactTitle: 'Marketing Manager', Address: '54, rue Royale', City: 'Nantes', Region: null, PostalCode: '44000', Country: 'France', Phone: '40.32.21.21', Fax: '40.32.21.20' },
+            { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
         ];
-        // tslint:enable:max-line-length
+        /* eslint-enable max-len */
     }
 }

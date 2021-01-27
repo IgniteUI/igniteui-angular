@@ -33,7 +33,7 @@ export class ListSampleComponent implements OnInit {
     fruitsSearch: string;
     search1: string;
     search2: string;
-    options: object = {};
+    options = {};
     fruitsFilteredItemsCount = undefined;
 
     density = 'comfortable';
@@ -60,7 +60,7 @@ export class ListSampleComponent implements OnInit {
         position: 'Graphic designer',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??'
     }];
-    navItems: object[] = [{
+    navItems = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -159,9 +159,7 @@ export class ListSampleComponent implements OnInit {
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
 
-        _fo.get_value = (item: any) => {
-            return item.element.nativeElement.textContent.trim();
-        };
+        _fo.get_value = (item: any) => item.element.nativeElement.textContent.trim();
 
         _fo.metConditionFn = (item: any) => {
             item.hidden = false;

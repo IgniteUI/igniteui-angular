@@ -1,5 +1,6 @@
 /**
  * Used for editor control components
+ *
  * @hidden
  */
 export interface EditorProvider {

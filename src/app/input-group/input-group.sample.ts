@@ -17,7 +17,7 @@ interface Selection {
 }
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-input-group-sample',
     styleUrls: ['input-group.sample.scss'],
     templateUrl: 'input-group.sample.html',
@@ -87,7 +87,8 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        console.log('The InputGroupToken set for all material themed components(that have no explicit type set on component OR sample lv) is: ',
+        console.log(`The InputGroupToken set for all material themed components
+            (that have no explicit type set on component OR sample lv) is: `,
         this.TOKEN);
     }
 

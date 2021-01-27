@@ -1,8 +1,20 @@
-import { Component, Output, EventEmitter, Input, HostBinding, HostListener, ElementRef, Injectable, ViewChildren, QueryList} from '@angular/core';
+import {
+    Component,
+    Output,
+    EventEmitter,
+    Input,
+    HostBinding,
+    HostListener,
+    ElementRef,
+    Injectable,
+    ViewChildren,
+    QueryList
+} from '@angular/core';
 import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { IgxCalendarYearDirective } from '../calendar.directives';
+import { noop } from 'rxjs';
 
 let NEXT_ID = 0;
 
@@ -39,6 +51,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let yearsViewId =  this.yearsView.id;
      * ```
+     *
      * @memberof IgxCalendarComponent
      */
     @HostBinding('attr.id')
@@ -54,6 +67,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let date =  this.yearsView.date;
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Input()
@@ -62,7 +76,9 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     public set date(value: Date) {
-        if (!(value instanceof Date)) { return; }
+        if (!(value instanceof Date)) {
+            return;
+        }
         this._date = value;
     }
 
@@ -82,6 +98,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-years-view [yearFormat]="numeric"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     public set yearFormat(value: string) {
@@ -95,6 +112,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let locale =  this.yearsView.locale;
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Input()
@@ -109,6 +127,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-years-view [locale]="de"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     public set locale(value: string) {
@@ -129,6 +148,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-years-view (onSelection)="onSelection($event)"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Output()
@@ -196,15 +216,49 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _onTouchedCallback: () => void = () => { };
+    private _onTouchedCallback: () => void = noop;
+
     /**
      * @hidden
      */
-    private _onChangeCallback: (_: Date) => void = () => { };
+    private _onChangeCallback: (_: Date) => void = noop;
 
     constructor(public el: ElementRef) {
         this.initYearFormatter();
         this._calendarModel = new Calendar();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowdown', ['$event'])
+    public onKeydownArrowDown(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.generateYearRange(1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowup', ['$event'])
+    public onKeydownArrowUp(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.generateYearRange(-1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.enter')
+    public onKeydownEnter() {
+        this.onSelection.emit(this.date);
+        this._onChangeCallback(this.date);
     }
 
     /**
@@ -276,39 +330,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         if (value) {
             this.date = value;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(1);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(-1);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.enter')
-    public onKeydownEnter() {
-        this.onSelection.emit(this.date);
-        this._onChangeCallback(this.date);
     }
 
     /**

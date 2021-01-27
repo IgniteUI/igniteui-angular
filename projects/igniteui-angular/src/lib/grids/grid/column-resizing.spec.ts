@@ -845,10 +845,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     template: GridTemplateStrings.declareGrid(`width="500px" height="300px"`, ``, ColumnDefinitions.resizableThreeOfFour)
 })
 export class ResizableColumnsComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personIDNameRegionData();
-
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
@@ -869,13 +868,12 @@ export class ResizableColumnsComponent {
     )
 })
 export class LargePinnedColGridComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     timeGenerator: Calendar = new Calendar();
     today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
     data = [];
     value: any;
-
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(75);
@@ -890,23 +888,22 @@ export class LargePinnedColGridComponent implements OnInit {
     template: GridTemplateStrings.declareGrid(``, ``, ColumnDefinitions.gridFeatures)
 })
 export class GridFeaturesComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
     public data = SampleTestData.productInfoDataFull();
-
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(`height="800px"`, ``, ColumnDefinitions.resizableColsComponent)
 })
 export class NullColumnsComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     public data = [];
     public columns = [];
-
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
     public ngOnInit(): void {
         this.columns = [
@@ -937,9 +934,9 @@ export class NullColumnsComponent implements OnInit {
     )
 })
 export class ColGridComponent implements OnInit {
-    data = [];
-
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    data = [];
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
@@ -955,9 +952,9 @@ export class ColGridComponent implements OnInit {
     )
 })
 export class ColPercentageGridComponent implements OnInit {
-    data = [];
-
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+
+    data = [];
 
     ngOnInit() {
         this.data = SampleTestData.generateProductData(10);

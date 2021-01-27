@@ -26,20 +26,6 @@ import { GridType } from '../common/grid.interface';
     providers: [HammerGesturesManager]
 })
 export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
-
-    constructor(
-                selectionService: IgxGridSelectionService,
-                crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                protected zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                protected platformUtil: PlatformUtil) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, platformUtil);
-    }
-
     /**
      * @hidden
      */
@@ -52,17 +38,29 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     @ViewChild('indentationDiv', { read: ElementRef })
     public indentationDiv: ElementRef;
 
-   /**
-    * @hidden
-    */
-   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandedTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultExpandedTemplate: TemplateRef<any>;
 
-   /**
-    * @hidden
-    */
-   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapsedTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultCollapsedTemplate: TemplateRef<any>;
+
+    constructor(selectionService: IgxGridSelectionService,
+                crudService: IgxGridCRUDService,
+                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+                cdr: ChangeDetectorRef,
+                element: ElementRef,
+                protected zone: NgZone,
+                touchManager: HammerGesturesManager,
+                @Inject(DOCUMENT) public document,
+                protected platformUtil: PlatformUtil) {
+        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, platformUtil);
+    }
 
     /**
      * @hidden

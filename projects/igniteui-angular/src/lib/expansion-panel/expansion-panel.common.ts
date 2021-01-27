@@ -8,7 +8,7 @@ export interface IgxExpansionPanelBase {
     /** @hidden @internal */
     headerId: string;
     collapsed: boolean;
-    animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata };
+    animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata };
     onCollapsed: EventEmitter<any>;
     onExpanded: EventEmitter<any>;
     collapse(evt?: Event);

@@ -44,25 +44,8 @@ import { Subject } from 'rxjs';
     templateUrl: './excel-style-custom-dialog.component.html'
 })
 export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
-    private destroy$ = new Subject<boolean>();
-
     @Input()
     public expressionsList = new Array<ExpressionUI>();
-
-    private _customDialogPositionSettings: PositionSettings = {
-        verticalDirection: VerticalAlignment.Middle,
-        horizontalDirection: HorizontalAlignment.Center,
-        horizontalStartPoint: HorizontalAlignment.Center,
-        verticalStartPoint: VerticalAlignment.Middle
-    };
-
-    private _customDialogOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy()
-    };
-
     @Input()
     public column: IgxColumnComponent;
 
@@ -81,12 +64,6 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @Input()
     public displayDensity: DisplayDensity;
 
-    @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
-    private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
-
-    @ViewChildren(IgxExcelStyleDateExpressionComponent)
-    private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
-
     @ViewChild('toggle', { read: IgxToggleDirective, static: true })
     public toggle: IgxToggleDirective;
 
@@ -98,6 +75,27 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     @ViewChild('expressionsContainer', { static: true })
     protected expressionsContainer: ElementRef;
+
+    @ViewChildren(IgxExcelStyleDefaultExpressionComponent)
+    private expressionComponents: QueryList<IgxExcelStyleDefaultExpressionComponent>;
+
+    @ViewChildren(IgxExcelStyleDateExpressionComponent)
+    private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
+
+    private _customDialogPositionSettings: PositionSettings = {
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalDirection: HorizontalAlignment.Center,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+
+    private _customDialogOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
+        scrollStrategy: new AbsoluteScrollStrategy()
+    };
+
 
     constructor(private cdr: ChangeDetectorRef) {}
 
