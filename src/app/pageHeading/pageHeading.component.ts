@@ -6,7 +6,6 @@ import { Component, Input } from '@angular/core';
     templateUrl: './pageHeading.template.html'
 })
 export class PageHeaderComponent {
-
     @Input()
-    title: string;
+    public title: string;
 }

@@ -48,9 +48,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
     describe('Basic Tests - ', () => {
         let fixture: ComponentFixture<DefaultToolbarComponent>;
 
-        const $ = (selector: string) => {
-            return fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
-        };
+        const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(DefaultToolbarComponent);
@@ -116,9 +114,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         let fixture: ComponentFixture<ToolbarActionsComponent>;
         let instance: ToolbarActionsComponent;
 
-        const $ = (selector: string) => {
-            return fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
-        };
+        const $ = (selector: string) => fixture.debugElement.nativeElement.querySelector(selector) as HTMLElement;
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ToolbarActionsComponent);

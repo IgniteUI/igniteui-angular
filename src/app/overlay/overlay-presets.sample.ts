@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import {
     IgxDropDownComponent,
     OverlaySettings,
@@ -8,34 +8,40 @@ import {
 import { RelativePositionStrategy, AbsolutePosition, RelativePosition } from 'projects/igniteui-angular/src/lib/services/overlay/utilities';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'overlay-presets-sample',
     templateUrl: './overlay-presets.sample.html',
     styleUrls: ['overlay-presets.sample.scss']
 })
 export class OverlayPresetsSampleComponent implements OnInit {
-    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('button', { static: true }) public button: ElementRef;
-    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
-    @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
+    @ViewChild(IgxDropDownComponent, { static: true })
+    private igxDropDown: IgxDropDownComponent;
+    @ViewChild('button', { static: true })
+    private button: ElementRef;
+    @ViewChild('outlet', { static: true })
+    private outletElement: ElementRef;
+    @ViewChild(IgxDragDirective, { static: true })
+    private igxDrag: IgxDragDirective;
 
-    private _overlaySettings: OverlaySettings;
-    private xAddition = 0;
-    private yAddition = 0;
-    items = [];
-    itemsCount = 10;
-    relStrategies = [RelativePositionStrategy.Auto, RelativePositionStrategy.Connected, RelativePositionStrategy.Elastic];
-    absStrategies = ['Global', 'Container'];
-    positionStrategy = 'Global';
-    absPosition: AbsolutePosition = AbsolutePosition.Center;
-    absPositions = [AbsolutePosition.Center, AbsolutePosition.Top, AbsolutePosition.Bottom];
-    relPosition: RelativePosition;
-    relPositions = [
+    public items = [];
+    public itemsCount = 10;
+    public relStrategies = [RelativePositionStrategy.Auto, RelativePositionStrategy.Connected, RelativePositionStrategy.Elastic];
+    public absStrategies = ['Global', 'Container'];
+    public positionStrategy = 'Global';
+    public absPosition: AbsolutePosition = AbsolutePosition.Center;
+    public absPositions = [AbsolutePosition.Center, AbsolutePosition.Top, AbsolutePosition.Bottom];
+    public relPosition: RelativePosition;
+    public relPositions = [
         RelativePosition.Above,
         RelativePosition.Below,
         RelativePosition.Before,
         RelativePosition.After,
-        RelativePosition.Default];
+        RelativePosition.Default
+    ];
+
+    private _overlaySettings: OverlaySettings;
+    private xAddition = 0;
+    private yAddition = 0;
 
     constructor(
     ) {
@@ -44,11 +50,11 @@ export class OverlayPresetsSampleComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this._overlaySettings = IgxOverlayService.createAbsoluteOverlaySettings(this.absPosition);
     }
 
-    onChange() {
+    public onChange() {
         switch (this.positionStrategy) {
             case RelativePositionStrategy.Auto:
             case RelativePositionStrategy.Connected:
@@ -90,7 +96,7 @@ export class OverlayPresetsSampleComponent implements OnInit {
 
     public onDragStart(e) {
         const originalEvent: PointerEvent = e.originalEvent;
-        const buttonRect = (<any>originalEvent.target).getBoundingClientRect();
+        const buttonRect = (originalEvent.target as HTMLElement).getBoundingClientRect();
         this.xAddition = originalEvent.clientX - buttonRect.left;
         this.yAddition = originalEvent.clientY - buttonRect.top;
     }

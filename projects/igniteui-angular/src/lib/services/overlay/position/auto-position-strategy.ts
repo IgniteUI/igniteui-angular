@@ -15,7 +15,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
-                this.flipAnimation(FlipDirection.horizontal);
+                this.flipAnimation(FlipDirection.Horizontal);
             } else {
                 const horizontalPush = this.horizontalPush(connectedFit);
                 transformString.push(`translateX(${horizontalPush}px)`);
@@ -25,7 +25,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
-                this.flipAnimation(FlipDirection.vertical);
+                this.flipAnimation(FlipDirection.Vertical);
             } else {
                 const verticalPush = this.verticalPush(connectedFit);
                 transformString.push(`translateY(${verticalPush}px)`);
@@ -37,6 +37,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Checks if element can be flipped without get off the viewport
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns true if element can be flipped and stain in viewport
      */
@@ -59,6 +60,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Checks if element can be flipped without get off the viewport
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns true if element can be flipped and stain in viewport
      */
@@ -118,6 +120,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Calculates necessary horizontal push according to provided connectedFit
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns amount of necessary translation which will push the element into viewport
      */
@@ -140,6 +143,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Calculates necessary vertical push according to provided connectedFit
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      * @returns amount of necessary translation which will push the element into viewport
      */
@@ -157,6 +161,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Changes open and close animation with reverse animation if one exists
+     *
      * @param flipDirection direction for which to change the animations
      */
     private flipAnimation(flipDirection: FlipDirection): void {
@@ -170,18 +175,19 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 
     /**
      * Tries to find the reverse animation according to provided direction
+     *
      * @param animation animation to update
      * @param direction required animation direction
      * @returns reverse animation in given direction if one exists
      */
     private updateAnimation(animation: AnimationReferenceMetadata, direction: FlipDirection): AnimationReferenceMetadata {
         switch (direction) {
-            case FlipDirection.horizontal:
+            case FlipDirection.Horizontal:
                 if (isHorizontalAnimation(animation)) {
                     return reverseAnimationResolver(animation);
                 }
                 break;
-            case FlipDirection.vertical:
+            case FlipDirection.Vertical:
                 if (isVerticalAnimation(animation)) {
                     return reverseAnimationResolver(animation);
                 }
@@ -193,6 +199,6 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
 }
 
 enum FlipDirection {
-    horizontal,
-    vertical
+    Horizontal,
+    Vertical
 }

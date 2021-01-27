@@ -4,9 +4,9 @@
 @import 'mixins';
 @import 'app-layout';
 
-$palette: $light-material-palette;
-$schema: $light-material-schema;
-$typography: $default-type-scale;
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
+$typography: $indigo-type-scale;
 
 /* autoprefixer grid: on */
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
@@ -21,6 +21,23 @@ body {
 @include igx-theme($palette: $palette, $schema: $schema, $legacy-support: false);
 
 @include igx-typography($type-scale: $typography);
+
+// :root {
+//     --primary: #09f;
+// }
+
+// $avatar: igx-avatar-theme(
+//     $icon-background: var(--primary)
+// );
+
+// @include igx-css-vars($avatar);
+
+// $avatar: igx-avatar-theme(
+//     $palette: $palette,
+//     $icon-background: green
+// );
+
+// @include igx-avatar($avatar);
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {

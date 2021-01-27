@@ -13,6 +13,15 @@ import {
     templateUrl: 'hierarchical-grid.sample.html'
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
+    @ViewChild('layout1', { static: true })
+    layout1: IgxRowIslandComponent;
+
+    @ViewChild('hGrid', { static: true })
+    hGrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('hGrid2', { static: true })
+    hGrid2: IgxHierarchicalGridComponent;
+
     localData = [];
     localData1 = [];
     data1 = [];
@@ -27,15 +36,6 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
 
     public columns;
     public childColumns;
-
-    @ViewChild('layout1', { static: true })
-    layout1: IgxRowIslandComponent;
-
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
-
-    @ViewChild('hGrid2', { static: true })
-    hGrid2: IgxHierarchicalGridComponent;
 
     constructor(private cdr: ChangeDetectorRef) {
         // this.localData.push({ ID: -1, Name: ''});

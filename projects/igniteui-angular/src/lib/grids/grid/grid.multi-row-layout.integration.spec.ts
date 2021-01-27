@@ -191,7 +191,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
 
-        it('should work with horizontal virtualization when some groups are hidden/shown.', async() => {
+        it('should work with horizontal virtualization when some groups are hidden/shown.', async () => {
             const uniqueGroups: ColGroupsType[] = [
                 {
                 group: 'group1',
@@ -546,7 +546,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
         });
 
-        it('should work with horizontal virtualization on the unpinned groups.', async() => {
+        it('should work with horizontal virtualization on the unpinned groups.', async () => {
             const uniqueGroups = [
                 {
                 group: 'group1',
@@ -745,7 +745,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(column.pinned).toBeFalsy();
         }));
 
-        it('should work when pinning group with columns that do not have and the unpinned group has width in percentages.', async() => {
+        it('should work when pinning group with columns that do not have and the unpinned group has width in percentages.', async () => {
             const uniqueGroups = [
                 {
                     group: 'group1',
@@ -853,7 +853,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             colGroups = fixture.componentInstance.colGroups;
         }));
 
-        it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async() => {
+        it('should render rows correctly when grouped by a column and scrolling to bottom should not leave empty space.', async () => {
             grid.height = '600px';
             grid.groupBy({
                 dir: SortingDirection.Desc,
@@ -923,7 +923,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             colGroups = fixture.componentInstance.colGroups;
         }));
 
-        it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async() => {
+        it('should correctly resize column on upper level with 3 spans and the two cols below it with span 1 that have width', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -963,7 +963,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 150px 100px 100px 200px');
         });
 
-        it('should correctly resize column with span 2 and the ones below it that have span 1 with width set', async() => {
+        it('should correctly resize column with span 2 and the ones below it that have span 1 with width set', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1003,7 +1003,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('250px 250px 100px 100px 100px 200px');
         });
 
-        it('should correctly resize column that spans 1 column that is used to size the column templates', async() => {
+        it('should correctly resize column that spans 1 column that is used to size the column templates', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1043,7 +1043,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 300px 100px 100px 100px 200px');
         });
 
-        it('should correctly resize column with span 1 and bigger columns that start with same colStart with bigger span', async() => {
+        it('should correctly resize column with span 1 and bigger columns that start with same colStart with bigger span', async () => {
             grid.width = '1500px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1083,7 +1083,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 100px 100px 100px 200px');
         });
 
-        it('should correctly resize column while there is another column that does not have width set', async() => {
+        it('should correctly resize column while there is another column that does not have width set', async () => {
             grid.width = 1500 + grid.scrollSize + 'px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1125,7 +1125,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('300px 200px 600px 100px 100px 200px');
         });
 
-        it('should correctly resize column that does not have width set, but is intersected by a column with width set', async() => {
+        it('should correctly resize column that does not have width set, but is intersected by a column with width set', async () => {
             grid.width = 1500 + grid.scrollSize + 'px';
             fixture.detectChanges();
             fixture.componentInstance.colGroups = [{

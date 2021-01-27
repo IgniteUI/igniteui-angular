@@ -601,7 +601,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(countryCol.visibleIndex).toBe(6);
         });
 
-        it('Search: search when a group is expanded', async() => {
+        it('Search: search when a group is expanded', async () => {
             const highlightClass = '.igx-highlight';
             grid.findNext('Mexico');
             await wait(30);

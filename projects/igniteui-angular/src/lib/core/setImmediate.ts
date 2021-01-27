@@ -25,7 +25,7 @@ const queue = {};
 let counter = 0;
 let eventListenerAdded = false;
 
-const run = function (id) {
+const run = (id) => {
     if (queue.hasOwnProperty(id)) {
         const fn = queue[id];
         delete queue[id];
@@ -33,11 +33,9 @@ const run = function (id) {
     }
 };
 
-const listener = function (event) {
-    run(event.data);
-};
+const listener = (event) => run(event.data);
 
-export function setImmediate(cb: any) {
+export const setImmediate = (cb: () => void, ...args) => {
     if (window.setImmediate) {
         return window.setImmediate(cb);
     }
@@ -47,27 +45,20 @@ export function setImmediate(cb: any) {
         window.addEventListener('message', listener, false);
     }
 
-    const args = [];
-    let i = 1;
-
-    while (arguments.length > i) {
-        args.push(arguments[i++]);
-    }
-
-    queue[++counter] = function () {
-        (typeof cb === 'function' ? cb : Function(cb)).apply(undefined, args);
+    queue[++counter] = () => {
+        cb.apply(undefined, args);
     };
 
     const windowLocation = window.location;
     window.postMessage(counter + '', windowLocation.protocol + '//' + windowLocation.host);
 
     return counter;
-}
+};
 
-export function clearImmediate(id: any) {
+export const clearImmediate = (id: any) => {
     if (window.clearImmediate) {
         return window.clearImmediate(id);
     }
 
     delete queue[id];
-}
+};

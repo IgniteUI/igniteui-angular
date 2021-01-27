@@ -88,7 +88,7 @@ describe('Utils', () => {
             const mapClone = cloneValue(mapInput);
             expect(mapInput).toBe(mapClone);
 
-            const setInput: Set<Number> = new Set();
+            const setInput: Set<number> = new Set();
             setInput.add(0);
             setInput.add(1);
             setInput.add(2);
@@ -108,8 +108,8 @@ describe('Utils', () => {
         });
 
         it('Should create shallow copy of array', () => {
-            const input: { Number: any, String: any, Boolean: any, Date: any }[] = SampleTestData.differentTypesData();
-            const clone: { Number: any, String: any, Boolean: any, Date: any }[] = cloneValue(input);
+            const input: { Number: any; String: any; Boolean: any; Date: any }[] = SampleTestData.differentTypesData();
+            const clone: { Number: any; String: any; Boolean: any; Date: any }[] = cloneValue(input);
             expect(clone).not.toBe(input);
             expect(clone.length).toBe(input.length);
             expect(clone).toEqual(input);

@@ -11,6 +11,7 @@ export class IgxGridActionButtonComponent {
 
     /**
      * Event emitted when action button is clicked.
+     *
      * @example
      * ```html
      *  <igx-grid-action-button (onActionClick)="startEdit($event)"></igx-grid-action-button>
@@ -21,6 +22,7 @@ export class IgxGridActionButtonComponent {
 
     /**
      * Reference to the current template.
+     *
      * @hidden
      * @internal
      */
