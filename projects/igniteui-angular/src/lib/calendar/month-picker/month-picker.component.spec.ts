@@ -466,6 +466,8 @@ describe('IgxMonthPicker', () => {
                 </igx-month-picker>`
 })
 export class IgxMonthPickerSampleComponent {
+    @ViewChild(IgxMonthPickerComponent, { static: true }) public monthPicker: IgxMonthPickerComponent;
+
     public model: Date = new Date(2019, 1, 7);
     public viewDate = new Date(2019, 1, 7);
     public locale = 'en';
@@ -476,6 +478,4 @@ export class IgxMonthPickerSampleComponent {
         weekday: 'short',
         year: 'numeric'
     };
-
-    @ViewChild(IgxMonthPickerComponent, { static: true }) public monthPicker: IgxMonthPickerComponent;
 }

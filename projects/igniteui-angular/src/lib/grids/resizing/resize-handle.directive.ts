@@ -47,6 +47,24 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
+    @HostListener('mouseover')
+    public onMouseOver() {
+        this.colResizingService.resizeCursor = 'col-resize';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('dblclick')
+    public onDoubleClick() {
+        this._dblClick = true;
+        this.colResizingService.column = this.column;
+        this.colResizingService.autosizeColumnOnDblClick();
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
@@ -84,24 +102,6 @@ export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
                 this.column.grid.cdr.detectChanges();
             });
         }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mouseover')
-    public onMouseOver() {
-        this.colResizingService.resizeCursor = 'col-resize';
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('dblclick')
-    public onDoubleClick() {
-        this._dblClick = true;
-        this.colResizingService.column = this.column;
-        this.colResizingService.autosizeColumnOnDblClick();
     }
 
     /**

@@ -55,12 +55,10 @@ export class DateRangeSampleComponent {
         });
     }
 }
-function minDateValidator(minValue: Date): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-        if (control.value && (control.value as DateRange).start.getTime() < minValue.getTime()) {
-            return { minValue: true };
-        }
+const minDateValidator = (minValue: Date): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
+    if (control.value && (control.value as DateRange).start.getTime() < minValue.getTime()) {
+        return { minValue: true };
+    }
 
-        return null;
-    };
-}
+    return null;
+};

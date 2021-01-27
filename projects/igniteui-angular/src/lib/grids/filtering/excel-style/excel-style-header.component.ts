@@ -10,8 +10,6 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
     templateUrl: './excel-style-header.component.html'
 })
 export class IgxExcelStyleHeaderComponent {
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
-
     /**
      * Sets whether the column pinning icon should be shown in the header.
      * Default value is `false`.
@@ -47,4 +45,6 @@ export class IgxExcelStyleHeaderComponent {
      */
     @Input()
     showHiding: boolean;
+
+    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
 }

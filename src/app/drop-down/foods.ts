@@ -1,9 +1,9 @@
 export const foods: {
-    name: string,
+    name: string;
     entries: {
-        name: string,
-        refNo: string
-    }[]
+        name: string;
+        refNo: string;
+    }[];
 }[] = [{
     name: 'Vegetables',
     entries: [{

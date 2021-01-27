@@ -28,6 +28,7 @@ export class IgxSummaryOperand {
      * ```typescript
      * IgxSummaryOperand.count(dataSource);
      * ```
+     *
      * @memberof IgxSummaryOperand
      */
     public static count(data: any[]): number {
@@ -60,6 +61,7 @@ export class IgxSummaryOperand {
      * }
      * this.grid.getColumnByName('ColumnName').summaries = CustomSummary;
      * ```
+     *
      * @memberof IgxSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US'): IgxSummaryResult[] {
@@ -80,6 +82,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```typescript
      * IgxNumberSummaryOperand.min(data);
      * ```
+     *
      * @memberof IgxNumberSummaryOperand
      */
     public static min(data: any[]): number {
@@ -91,6 +94,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```typescript
      * IgxNumberSummaryOperand.max(data);
      * ```
+     *
      * @memberof IgxNumberSummaryOperand
      */
     public static max(data: any[]): number {
@@ -102,6 +106,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```typescript
      * IgxNumberSummaryOperand.sum(data);
      * ```
+     *
      * @memberof IgxNumberSummaryOperand
      */
     public static sum(data: any[]): number {
@@ -113,6 +118,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```typescript
      * IgxSummaryOperand.average(data);
      * ```
+     *
      * @memberof IgxNumberSummaryOperand
      */
     public static average(data: any[]): number {
@@ -151,11 +157,11 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * }
      * this.grid.getColumnByName('ColumnName').summaries = CustomNumberSummary;
      * ```
+     *
      * @memberof IgxNumberSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
-        pipeArgs: IColumnPipeArgs = {}):
-    IgxSummaryResult[] {
+        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
         const pipe = new DecimalPipe(locale);
         result.push({
@@ -190,6 +196,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```typescript
      * IgxDateSummaryOperand.latest(data);
      * ```
+     *
      * @memberof IgxDateSummaryOperand
      */
     public static latest(data: any[]) {
@@ -202,6 +209,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```typescript
      * IgxDateSummaryOperand.earliest(data);
      * ```
+     *
      * @memberof IgxDateSummaryOperand
      */
     public static earliest(data: any[]) {
@@ -239,6 +247,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * }
      * this.grid.getColumnByName('ColumnName').summaries = CustomDateSummary;
      * ```
+     *
      * @memberof IgxDateSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en-US',

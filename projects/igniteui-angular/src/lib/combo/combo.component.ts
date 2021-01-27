@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, Type
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -30,7 +30,7 @@ import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy, AutoPositionStrategy } from '../services/public_api';
-import { Subject } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
@@ -55,9 +55,9 @@ enum DataTypes {
  * @hidden
  */
 const ItemHeights = {
-    'comfortable': 40,
-    'cosy': 32,
-    'compact': 28,
+    comfortable: 40,
+    cosy: 32,
+    compact: 28,
 };
 
 /**
@@ -118,9 +118,10 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs {
 
 /**
  * When called with sets A & B, returns A - B (as array);
+ *
  * @hidden
  */
-function diffInSets(set1: Set<any>, set2: Set<any>): any[] {
+const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     const results = [];
     set1.forEach(entry => {
         if (!set2.has(entry)) {
@@ -128,10 +129,9 @@ function diffInSets(set1: Set<any>, set2: Set<any>): any[] {
         }
     });
     return results;
-}
+};
 
 let NEXT_ID = 0;
-const noop = () => { };
 
 @Component({
     selector: 'igx-combo',
@@ -144,58 +144,6 @@ const noop = () => { };
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
     OnDestroy, EditorProvider {
-    /**
-     * @hidden @internal
-     */
-    public customValueFlag = true;
-    /**
-     * @hidden @internal
-     */
-    public defaultFallbackGroup = 'Other';
-    /**
-     * @hidden @internal
-     */
-    public filteringOptions: IComboFilteringOptions = {
-        caseSensitive: false
-    };
-    /** @hidden @internal */
-    public filterValue = '';
-    protected stringFilters = IgxStringFilteringOperand;
-    protected booleanFilters = IgxBooleanFilteringOperand;
-    protected _groupKey = '';
-    protected _displayKey: string;
-    protected _prevInputValue = '';
-    private _dataType = '';
-    private _searchValue = '';
-    private _type = null;
-    private ngControl: NgControl = null;
-    private destroy$ = new Subject<any>();
-    private _data = [];
-    private _filteredData = [];
-    private _itemHeight = null;
-    private _itemsMaxHeight = null;
-    private _remoteSelection = {};
-    private _onChangeCallback: (_: any) => void = noop;
-    private _onTouchedCallback: () => void = noop;
-    private _overlaySettings: OverlaySettings;
-    private _value = '';
-    private _valid = IgxComboState.INITIAL;
-    constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
-        protected comboAPI: IgxComboAPIService,
-        private _iconService: IgxIconService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
-        @Optional() private _injector: Injector) {
-        super(_displayDensityOptions);
-        this.comboAPI.register(this);
-    }
-
-    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
-    protected virtDir: IgxForOfDirective<any>;
-
     /**
      * Set custom overlay settings that control how the combo's list of items is displayed.
      * Set:
@@ -237,7 +185,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    get displaySearchInput(): boolean {
+    public get displaySearchInput(): boolean {
         return this.filterable || this.allowCustomValues;
     }
 
@@ -420,20 +368,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
     public clearIconTemplate: TemplateRef<any> = null;
 
-    @ViewChild('primitive', { read: TemplateRef, static: true })
-    protected primitiveTemplate: TemplateRef<any>;
-
-    @ViewChild('complex', { read: TemplateRef, static: true })
-    protected complexTemplate: TemplateRef<any>;
-
     /**
      * @hidden @internal
      */
     @ViewChild(IgxForOfDirective, { static: true })
     public virtualScrollContainer: IgxForOfDirective<any>;
-
-    @ViewChild('dropdownItemContainer', { static: true })
-    protected dropdownContainer: ElementRef = null;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -668,11 +607,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden @internal
-     */
-    public filteringLogic = FilteringLogic.Or;
-
-    /**
      * Defines the placeholder value for the combo value field
      *
      * ```typescript
@@ -738,10 +672,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    get data(): any[] {
+    public get data(): any[] {
         return this._data;
     }
-    set data(val: any[]) {
+    public set data(val: any[]) {
         this._data = (val) ? val : [];
     }
 
@@ -762,7 +696,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public valueKey: string = null;
 
     @Input()
-    set displayKey(val: string) {
+    public set displayKey(val: string) {
         this._displayKey = val;
     }
 
@@ -783,7 +717,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * <igx-combo [displayKey]='myDisplayKey'></igx-combo>
      * ```
      */
-    get displayKey() {
+    public get displayKey() {
         return this._displayKey ? this._displayKey : this.valueKey;
     }
 
@@ -863,6 +797,18 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @Input()
     public autoFocusSearch = true;
 
+    @ViewChild('dropdownItemContainer', { static: true })
+    protected dropdownContainer: ElementRef = null;
+
+    @ViewChild('primitive', { read: TemplateRef, static: true })
+    protected primitiveTemplate: TemplateRef<any>;
+
+    @ViewChild('complex', { read: TemplateRef, static: true })
+    protected complexTemplate: TemplateRef<any>;
+
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
+    protected virtDir: IgxForOfDirective<any>;
+
     /**
      * Gets if control is valid, when used in a form
      *
@@ -899,13 +845,68 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.filterValue = val;
         this._searchValue = val;
     }
+    /**
+     * @hidden @internal
+     */
+    public customValueFlag = true;
+    /**
+     * @hidden @internal
+     */
+    public defaultFallbackGroup = 'Other';
+    /**
+     * @hidden @internal
+     */
+    public filteringOptions: IComboFilteringOptions = {
+        caseSensitive: false
+    };
+    /**
+     * @hidden @internal
+     */
+    public filteringLogic = FilteringLogic.Or;
+    /** @hidden @internal */
+    public filterValue = '';
+
+    protected stringFilters = IgxStringFilteringOperand;
+    protected booleanFilters = IgxBooleanFilteringOperand;
+    protected _groupKey = '';
+    protected _displayKey: string;
+    protected _prevInputValue = '';
+
+    private _dataType = '';
+    private _searchValue = '';
+    private _type = null;
+    private ngControl: NgControl = null;
+    private destroy$ = new Subject<any>();
+    private _data = [];
+    private _filteredData = [];
+    private _itemHeight = null;
+    private _itemsMaxHeight = null;
+    private _remoteSelection = {};
+    private _onChangeCallback: (_: any) => void = noop;
+    private _onTouchedCallback: () => void = noop;
+    private _overlaySettings: OverlaySettings;
+    private _value = '';
+    private _valid = IgxComboState.INITIAL;
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selection: IgxSelectionAPIService,
+        protected comboAPI: IgxComboAPIService,
+        private _iconService: IgxIconService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
+        @Optional() private _injector: Injector) {
+        super(_displayDensityOptions);
+        this.comboAPI.register(this);
+    }
 
     /**
      * @hidden @internal
      */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    onArrowDown(event: Event) {
+    public onArrowDown(event: Event) {
         event.preventDefault();
         event.stopPropagation();
         this.open();
@@ -914,7 +915,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    onInputClick(event: Event) {
+    public onInputClick(event: Event) {
         event.stopPropagation();
         event.preventDefault();
         if (!this.disabled) {
@@ -930,7 +931,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let state = this.combo.virtualizationState;
      * ```
      */
-    get virtualizationState(): IForOfState {
+    public get virtualizationState(): IForOfState {
         return this.virtDir.state;
     }
     /**
@@ -941,7 +942,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.virtualizationState(state);
      * ```
      */
-    set virtualizationState(state: IForOfState) {
+    public set virtualizationState(state: IForOfState) {
         this.virtDir.state = state;
     }
 
@@ -953,7 +954,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let count = this.combo.totalItemCount;
      * ```
      */
-    get totalItemCount(): number {
+    public get totalItemCount(): number {
         return this.virtDir.totalItemCount;
     }
     /**
@@ -964,7 +965,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.totalItemCount(remoteService.count);
      * ```
      */
-    set totalItemCount(count: number) {
+    public set totalItemCount(count: number) {
         this.virtDir.totalItemCount = count;
     }
 
@@ -976,7 +977,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let comboValue = this.combo.value;
      * ```
      */
-    get value(): string {
+    public get value(): string {
         return this._value;
     }
 
@@ -1018,16 +1019,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-    private checkMatch(): void {
-        const displayKey = this.displayKey;
-        const matchFn = (e) => {
-            const value = displayKey ? e[displayKey] : e;
-            return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
-        };
-        const itemMatch = this.filteredData.some(matchFn);
-        this.customValueFlag = this.allowCustomValues && !itemMatch;
-    }
-
     /**
      * @hidden @internal
      */
@@ -1065,34 +1056,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.dataType === DataTypes.COMPLEX;
     }
 
-    /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
-    private registerRemoteEntries(ids: any[], add = true) {
-        if (add) {
-            const selection = this.getValueDisplayPairs(ids);
-            for (const entry of selection) {
-                this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
-            }
-        } else {
-            for (const entry of ids) {
-                delete this._remoteSelection[entry];
-            }
-        }
-    }
-
-    /**
-     * For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`
-     */
-    private getValueDisplayPairs(ids: any[]) {
-        return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => {
-            return {
-                [this.valueKey]: e[this.valueKey],
-                [this.displayKey]: e[this.displayKey]
-            };
-        });
-    }
-
     /**
      * Returns if the specified itemID is selected
+     *
      * @hidden
      * @internal
      */
@@ -1172,26 +1138,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
                 this.comboInput.nativeElement.focus();
                 this.toggle();
             }
-        }
-    }
-
-    protected onStatusChanged = () => {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            if (!this.collapsed || this.inputGroup.isFocused) {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
-            } else {
-                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
-            }
-        }
-        this.manageRequiredAsterisk();
-    }
-
-    protected manageRequiredAsterisk(): void {
-        if (this.ngControl && this.ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this.ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
         }
     }
 
@@ -1382,6 +1328,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Get current selection state
+     *
      * @returns Array of selected items
      * ```typescript
      * let selectedItems = this.combo.selectedItems();
@@ -1394,6 +1341,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Select defined items
+     *
      * @param newItems new items to be selected
      * @param clearCurrentSelection if true clear previous selected items
      * ```typescript
@@ -1409,6 +1357,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Deselect defined items
+     *
      * @param items items to deselected
      * ```typescript
      * this.combo.deselectItems(["New York", "New Jersey"]);
@@ -1423,6 +1372,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Select all (filtered) items
+     *
      * @param ignoreFilter if set to true, selects all items, otherwise selects only the filtered ones.
      * ```typescript
      * this.combo.selectAllItems();
@@ -1436,6 +1386,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Deselect all (filtered) items
+     *
      * @param ignoreFilter if set to true, deselects all items, otherwise deselects only the filtered ones.
      * ```typescript
      * this.combo.deselectAllItems();
@@ -1451,6 +1402,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /**
      * Selects/Deselects a single item
+     *
      * @param itemID the itemID of the specific item
      * @param select If the item should be selected (true) or deselected (false)
      *
@@ -1477,77 +1429,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.deselectItems([itemID], event);
         }
     }
-
-    protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const removed = diffInSets(this.selection.get(this.id), newSelection);
-        const added = diffInSets(newSelection, this.selection.get(this.id));
-        const newSelectionAsArray = Array.from(newSelection);
-        const oldSelectionAsArray = Array.from(this.selection.get(this.id) || []);
-        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
-        const args: IComboSelectionChangeEventArgs = {
-            newSelection: newSelectionAsArray,
-            oldSelection: oldSelectionAsArray,
-            added,
-            removed,
-            event,
-            owner: this,
-            displayText,
-            cancel: false
-        };
-        this.onSelectionChange.emit(args);
-        if (!args.cancel) {
-            this.selection.select_items(this.id, args.newSelection, true);
-            if (displayText !== args.displayText) {
-                this._value = args.displayText;
-            } else {
-                this._value = this.createDisplayText(args.newSelection, args.oldSelection);
-            }
-            this._onChangeCallback(args.newSelection);
-        }
-    }
-
-    /** Returns a string that should be populated in the combo's text box */
-    private concatDisplayText(selection: any[]): string {
-        const value = this.displayKey !== null && this.displayKey !== undefined ?
-            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
-            selection.join(', ');
-        return value;
-    }
-
-    /**
-     * Constructs the combo display value
-     * If remote, caches the key displayText
-     * If not, just combine the object.displayKeys
-     */
-    private createDisplayText(newSelection: any[], oldSelection: any[]) {
-        let value = '';
-        if (this.isRemote) {
-            if (newSelection.length) {
-                const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
-                const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
-                this.registerRemoteEntries(addedItems);
-                this.registerRemoteEntries(removedItems, false);
-                value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
-            } else {
-                // If new selection is empty, clear all items
-                this.registerRemoteEntries(oldSelection, false);
-            }
-        } else {
-            value = this.concatDisplayText(newSelection);
-        }
-        return value;
-    }
-
-    /** if there is a valueKey - map the keys to data items, else - just return the keys */
-    private convertKeysToItems(keys: any[]) {
-        if (this.comboAPI.valueKey === null) {
-            return keys;
-        }
-        // map keys vs. filter data to retain the order of the selected items
-        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
-    }
     /**
      * Event handlers
+     *
      * @hidden
      * @internal
      */
@@ -1600,6 +1484,129 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public toggleCaseSensitive() {
         this.filteringOptions = { caseSensitive: !this.filteringOptions.caseSensitive };
+    }
+
+    protected setSelection(newSelection: Set<any>, event?: Event): void {
+        const removed = diffInSets(this.selection.get(this.id), newSelection);
+        const added = diffInSets(newSelection, this.selection.get(this.id));
+        const newSelectionAsArray = Array.from(newSelection);
+        const oldSelectionAsArray = Array.from(this.selection.get(this.id) || []);
+        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
+        const args: IComboSelectionChangeEventArgs = {
+            newSelection: newSelectionAsArray,
+            oldSelection: oldSelectionAsArray,
+            added,
+            removed,
+            event,
+            owner: this,
+            displayText,
+            cancel: false
+        };
+        this.onSelectionChange.emit(args);
+        if (!args.cancel) {
+            this.selection.select_items(this.id, args.newSelection, true);
+            if (displayText !== args.displayText) {
+                this._value = args.displayText;
+            } else {
+                this._value = this.createDisplayText(args.newSelection, args.oldSelection);
+            }
+            this._onChangeCallback(args.newSelection);
+        }
+    }
+
+    protected onStatusChanged = () => {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            if (!this.collapsed || this.inputGroup.isFocused) {
+                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.VALID;
+            } else {
+                this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
+            }
+        }
+        this.manageRequiredAsterisk();
+    };
+
+    protected manageRequiredAsterisk(): void {
+        if (this.ngControl && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = error && error.required;
+        }
+    }
+
+    /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
+    private registerRemoteEntries(ids: any[], add = true) {
+        if (add) {
+            const selection = this.getValueDisplayPairs(ids);
+            for (const entry of selection) {
+                this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
+            }
+        } else {
+            for (const entry of ids) {
+                delete this._remoteSelection[entry];
+            }
+        }
+    }
+
+    /**
+     * For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`
+     */
+    private getValueDisplayPairs(ids: any[]) {
+        return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => ({
+                [this.valueKey]: e[this.valueKey],
+                [this.displayKey]: e[this.displayKey]
+            }));
+    }
+
+    private checkMatch(): void {
+        const displayKey = this.displayKey;
+        const matchFn = (e) => {
+            const value = displayKey ? e[displayKey] : e;
+            return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+        };
+        const itemMatch = this.filteredData.some(matchFn);
+        this.customValueFlag = this.allowCustomValues && !itemMatch;
+    }
+
+    /** Returns a string that should be populated in the combo's text box */
+    private concatDisplayText(selection: any[]): string {
+        const value = this.displayKey !== null && this.displayKey !== undefined ?
+            this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+            selection.join(', ');
+        return value;
+    }
+
+    /**
+     * Constructs the combo display value
+     * If remote, caches the key displayText
+     * If not, just combine the object.displayKeys
+     */
+    private createDisplayText(newSelection: any[], oldSelection: any[]) {
+        let value = '';
+        if (this.isRemote) {
+            if (newSelection.length) {
+                const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
+                const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
+                this.registerRemoteEntries(addedItems);
+                this.registerRemoteEntries(removedItems, false);
+                value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+            } else {
+                // If new selection is empty, clear all items
+                this.registerRemoteEntries(oldSelection, false);
+            }
+        } else {
+            value = this.concatDisplayText(newSelection);
+        }
+        return value;
+    }
+
+    /** if there is a valueKey - map the keys to data items, else - just return the keys */
+    private convertKeysToItems(keys: any[]) {
+        if (this.comboAPI.valueKey === null) {
+            return keys;
+        }
+        // map keys vs. filter data to retain the order of the selected items
+        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
     }
 }
 

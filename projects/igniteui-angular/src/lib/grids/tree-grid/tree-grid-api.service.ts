@@ -75,19 +75,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    protected update_row_in_array(value: any, rowID: any, index: number) {
-        const grid = this.grid;
-        if (grid.primaryKey && grid.foreignKey) {
-            super.update_row_in_array(value, rowID, index);
-        } else {
-            const record = grid.records.get(rowID);
-            const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
-            index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
-                childData.indexOf(rowID);
-            childData[index] = value;
-        }
-    }
-
     public should_apply_number_style(column: ColumnType): boolean {
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
@@ -122,9 +109,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             super.deleteRowFromData(rowID, index);
 
             if (treeGrid.cascadeOnDelete) {
-                if (record && record.children && record.children.length > 0) {
-                    for (let i = 0; i < record.children.length; i++) {
-                        const child = record.children[i];
+                if (record && record.children) {
+                    for (const child of record.children) {
                         super.deleteRowById(child.rowID);
                     }
                 }
@@ -147,41 +133,13 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                     id: rowID,
                     type: TransactionType.DELETE,
                     newValue: null,
-                    path: path
+                    path
                 },
                     collection[index]
                 );
             } else {
                 collection.splice(index, 1);
             }
-        }
-    }
-
-    /**
-     * Updates related row of provided grid's data source with provided new row value
-     * @param grid Grid to update data for
-     * @param rowID ID of the row to update
-     * @param rowValueInDataSource Initial value of the row as it is in data source
-     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
-     * @param rowNewValue New value of the row
-     */
-    protected updateData(
-        grid: IgxTreeGridComponent,
-        rowID: any,
-        rowValueInDataSource: any,
-        rowCurrentValue: any,
-        rowNewValue: { [x: string]: any }) {
-        if (grid.transactions.enabled) {
-            const path = grid.generateRowPath(rowID);
-            const transaction: HierarchicalTransaction = {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: rowNewValue,
-                path: path
-            };
-            grid.transactions.add(transaction, rowCurrentValue);
-        } else {
-            mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
 
@@ -204,24 +162,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     public get_rec_by_id(rowID) {
         return this.grid.records.get(rowID);
-    }
-
-    private row_deleted_parent(rowID: any): boolean {
-        const grid = this.grid;
-        if (!grid) {
-            return false;
-        }
-        if ((grid.cascadeOnDelete && grid.foreignKey) || grid.childDataKey) {
-            let node = grid.records.get(rowID);
-            while (node) {
-                const state: State = grid.transactions.getState(node.rowID);
-                if (state && state.type === TransactionType.DELETE) {
-                    return true;
-                }
-                node = node.parent;
-            }
-        }
-        return false;
     }
 
     public addRowToData(data: any, parentRowID?: any) {
@@ -252,7 +192,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                     path.push(parentRowID);
                     this.grid.transactions.add({
                         id: rowId,
-                        path: path,
+                        path,
                         newValue: data,
                         type: TransactionType.ADD
                     } as HierarchicalTransaction,
@@ -267,5 +207,65 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         } else {
             super.addRowToData(data);
         }
+    }
+
+    protected update_row_in_array(value: any, rowID: any, index: number) {
+        const grid = this.grid;
+        if (grid.primaryKey && grid.foreignKey) {
+            super.update_row_in_array(value, rowID, index);
+        } else {
+            const record = grid.records.get(rowID);
+            const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
+            index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
+                childData.indexOf(rowID);
+            childData[index] = value;
+        }
+    }
+
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     *
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(
+        grid: IgxTreeGridComponent,
+        rowID: any,
+        rowValueInDataSource: any,
+        rowCurrentValue: any,
+        rowNewValue: { [x: string]: any }) {
+        if (grid.transactions.enabled) {
+            const path = grid.generateRowPath(rowID);
+            const transaction: HierarchicalTransaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue: rowNewValue,
+                path
+            };
+            grid.transactions.add(transaction, rowCurrentValue);
+        } else {
+            mergeObjects(rowValueInDataSource, rowNewValue);
+        }
+    }
+
+    private row_deleted_parent(rowID: any): boolean {
+        const grid = this.grid;
+        if (!grid) {
+            return false;
+        }
+        if ((grid.cascadeOnDelete && grid.foreignKey) || grid.childDataKey) {
+            let node = grid.records.get(rowID);
+            while (node) {
+                const state: State = grid.transactions.getState(node.rowID);
+                if (state && state.type === TransactionType.DELETE) {
+                    return true;
+                }
+                node = node.parent;
+            }
+        }
+        return false;
     }
 }

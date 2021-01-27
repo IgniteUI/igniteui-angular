@@ -7,51 +7,51 @@ import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositio
     templateUrl: 'time-picker.sample.html'
 })
 export class TimePickerSampleComponent implements AfterViewInit {
-    max = '19:00';
-    min = '09:00';
-
-    itemsDelta = { hours: 1, minutes: 5 };
-    format = 'hh:mm:ss tt';
-    isSpinLoop = true;
-    isVertical = true;
-    mode = InteractionMode.DropDown;
-
-    date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
-    date = new Date(2018, 10, 27, 9, 45, 0, 0);
-    val = new Date(0, 0, 0, 19, 35, 30, 0);
-    today = new Date(Date.now());
-
-    isRequired = true;
-
-    myOverlaySettings: OverlaySettings = {
-        modal: false,
-        closeOnOutsideClick: true,
-        positionStrategy: new AutoPositionStrategy()
-    };
-
     @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
     public tp: IgxTimePickerComponent;
 
     @ViewChild('target')
     public target: IgxInputDirective;
 
-    ngAfterViewInit() {
+    public max = '19:00';
+    public min = '09:00';
+
+    public itemsDelta = { hours: 1, minutes: 5 };
+    public format = 'hh:mm:ss tt';
+    public isSpinLoop = true;
+    public isVertical = true;
+    public mode = InteractionMode.DropDown;
+
+    public date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
+    public date = new Date(2018, 10, 27, 9, 45, 0, 0);
+    public val = new Date(0, 0, 0, 19, 35, 30, 0);
+    public today = new Date(Date.now());
+
+    public isRequired = true;
+
+    public myOverlaySettings: OverlaySettings = {
+        modal: false,
+        closeOnOutsideClick: true,
+        positionStrategy: new AutoPositionStrategy()
+    };
+
+    public ngAfterViewInit() {
         this.myOverlaySettings.target = this.target.nativeElement;
     }
 
-    showDate(date) {
+    public showDate(date) {
         return date ? date.toLocaleString() : 'Value is null.';
     }
 
-    change() {
+    public change() {
         this.isRequired = !this.isRequired;
     }
 
-    valueChanged(event) {
+    public valueChanged(event) {
         console.log(event);
     }
 
-    validationFailed(event) {
+    public validationFailed(event) {
         console.log(event);
     }
 

@@ -33,7 +33,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
             .compileComponents();
     }));
 
-    let fix, grid;
+    let fix; let grid;
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
@@ -999,7 +999,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
             .compileComponents();
     }));
 
-    let fix, grid: IgxGridComponent;
+    let fix; let grid: IgxGridComponent;
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringBindingComponent);
         fix.detectChanges();
@@ -1027,9 +1027,9 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     }));
 });
 
-function verifyExpressionUI(expressionUI: ExpressionUI, expression: IFilteringExpression,
-    afterOperator: FilteringLogic, beforeOperator: FilteringLogic) {
+const verifyExpressionUI = (expressionUI: ExpressionUI, expression: IFilteringExpression,
+    afterOperator: FilteringLogic, beforeOperator: FilteringLogic) => {
     expect(expressionUI.expression).toBe(expression);
     expect(expressionUI.afterOperator).toBe(afterOperator);
     expect(expressionUI.beforeOperator).toBe(beforeOperator);
-}
+};

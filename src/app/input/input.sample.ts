@@ -6,9 +6,8 @@ import { Component } from '@angular/core';
     templateUrl: 'input.sample.html'
 })
 export class InputSampleComponent {
-    placeholder = 'Please enter a value';
-
-    user = {
+    public placeholder = 'Please enter a value';
+    public user = {
         comment: '',
         firstName: 'John',
         gender: 'Male',
@@ -18,8 +17,7 @@ export class InputSampleComponent {
         subscribed: false,
         dateOfBirth: new Date('07 July, 1987')
     };
-
-    user2 = {
+    public user2 = {
         comment: '',
         firstName: 'John',
         gender: 'Male',
@@ -29,9 +27,7 @@ export class InputSampleComponent {
         subscribed: false,
         dateOfBirth: new Date('01 July, 1954')
     };
-
-
-    settings = [{
+    public settings = [{
         name: 'WiFi',
         icon: 'wifi',
         active: true,
@@ -49,11 +45,11 @@ export class InputSampleComponent {
         disabled: true
     }];
 
-    onClick(event) {
+    public onClick(event) {
         console.log(event);
     }
 
-    onChange(event) {
+    public onChange(event) {
         console.log(event);
     }
 }

@@ -1,4 +1,3 @@
-
 import {
     ChangeDetectionStrategy,
     Component,
@@ -39,6 +38,75 @@ import { HammerGesturesManager } from '../core/touch';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxListItemComponent implements IListChild {
+    /**
+     * Provides a reference to the template's base element shown when left panning a list item.
+     * ```typescript
+     * const leftPanTmpl = this.listItem.leftPanningTemplateElement;
+     * ```
+     */
+    @ViewChild('leftPanningTmpl')
+    public leftPanningTemplateElement;
+
+    /**
+     * Provides a reference to the template's base element shown when right panning a list item.
+     * ```typescript
+     * const rightPanTmpl = this.listItem.rightPanningTemplateElement;
+     * ```
+     */
+    @ViewChild('rightPanningTmpl')
+    public rightPanningTemplateElement;
+
+    /**
+     * Sets/gets whether the `list item` is a header.
+     * ```html
+     * <igx-list-item [isHeader] = "true">Header</igx-list-item>
+     * ```
+     * ```typescript
+     * let isHeader =  this.listItem.isHeader;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @Input()
+    public isHeader: boolean;
+
+    /**
+     * Sets/gets whether the `list item` is hidden.
+     * By default the `hidden` value is `false`.
+     * ```html
+     * <igx-list-item [hidden] = "true">Hidden Item</igx-list-item>
+     * ```
+     * ```typescript
+     * let isHidden =  this.listItem.hidden;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @Input()
+    public hidden = false;
+
+    /**
+     * Sets/gets the `aria-label` attribute of the `list item`.
+     * ```typescript
+     * this.listItem.ariaLabel = "Item1";
+     * ```
+     * ```typescript
+     * let itemAriaLabel = this.listItem.ariaLabel;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @HostBinding('attr.aria-label')
+    public ariaLabel: string;
+
+    /**
+     * Gets the `touch-action` style of the `list item`.
+     * ```typescript
+     * let touchAction = this.listItem.touchAction;
+     * ```
+     */
+    @HostBinding('style.touch-action')
+    public touchAction = 'pan-y';
 
     /**
      * @hidden
@@ -61,22 +129,117 @@ export class IgxListItemComponent implements IListChild {
     private lastPanDir = IgxListPanState.NONE;
 
     /**
-     * Provides a reference to the template's base element shown when left panning a list item.
+     * Gets the `panState` of a `list item`.
      * ```typescript
-     * const leftPanTmpl = this.listItem.leftPanningTemplateElement;
+     * let itemPanState =  this.listItem.panState;
      * ```
+     *
+     * @memberof IgxListItemComponent
      */
-    @ViewChild('leftPanningTmpl')
-    public leftPanningTemplateElement;
+    public get panState(): IgxListPanState {
+        return this._panState;
+    }
 
     /**
-     * Provides a reference to the template's base element shown when right panning a list item.
+     * Gets the `index` of a `list item`.
      * ```typescript
-     * const rightPanTmpl = this.listItem.rightPanningTemplateElement;
+     * let itemIndex =  this.listItem.index;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    @Input()
+    public get index(): number {
+        return this._index !== null ? this._index : this.list.children.toArray().indexOf(this);
+    }
+
+    /**
+     * Sets the `index` of the `list item`.
+     * ```typescript
+     * this.listItem.index = index;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    public set index(value: number) {
+        this._index = value;
+    }
+
+    /**
+     * Returns an element reference to the list item.
+     * ```typescript
+     * let listItemElement =  this.listItem.element.
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
+
+    /**
+     * Returns a reference container which contains the list item's content.
+     * ```typescript
+     * let listItemContainer =  this.listItem.contentElement.
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    public get contentElement() {
+        const candidates = this.element.getElementsByClassName('igx-list__item-content');
+        return (candidates && candidates.length > 0) ? candidates[0] : null;
+    }
+
+    /**
+     * Returns the `context` object which represents the `template context` binding into the `list item container`
+     * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
+     * ```typescript
+     * let listItemComponent = this.listItem.context;
      * ```
      */
-    @ViewChild('rightPanningTmpl')
-    public rightPanningTemplateElement;
+    public get context(): any {
+        return {
+            $implicit: this
+        };
+    }
+
+    /**
+     * Gets the width of a `list item`.
+     * ```typescript
+     * let itemWidth = this.listItem.width;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    public get width() {
+        if (this.element) {
+            return this.element.offsetWidth;
+        }
+    }
+
+    /**
+     * Gets the maximum left position of the `list item`.
+     * ```typescript
+     * let maxLeft = this.listItem.maxLeft;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    public get maxLeft() {
+        return -this.width;
+    }
+
+    /**
+     * Gets the maximum right position of the `list item`.
+     * ```typescript
+     * let maxRight = this.listItem.maxRight;
+     * ```
+     *
+     * @memberof IgxListItemComponent
+     */
+    public get maxRight() {
+        return this.width;
+    }
 
     constructor(
         public list: IgxListBaseDirective,
@@ -85,37 +248,11 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     * Sets/gets whether the `list item` is a header.
-     * ```html
-     * <igx-list-item [isHeader] = "true">Header</igx-list-item>
-     * ```
-     * ```typescript
-     * let isHeader =  this.listItem.isHeader;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    @Input()
-    public isHeader: boolean;
-
-    /**
-     * Sets/gets whether the `list item` is hidden.
-     * By default the `hidden` value is `false`.
-     * ```html
-     * <igx-list-item [hidden] = "true">Hidden Item</igx-list-item>
-     * ```
-     * ```typescript
-     * let isHidden =  this.listItem.hidden;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    @Input()
-    public hidden = false;
-
-    /**
      * Gets the `role` attribute of the `list item`.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('attr.role')
@@ -124,36 +261,15 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     * Sets/gets the `aria-label` attribute of the `list item`.
-     * ```typescript
-     * this.listItem.ariaLabel = "Item1";
-     * ```
-     * ```typescript
-     * let itemAriaLabel = this.listItem.ariaLabel;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    @HostBinding('attr.aria-label')
-    public ariaLabel: string;
-
-    /**
-     * Gets the `touch-action` style of the `list item`.
-     * ```typescript
-     * let touchAction = this.listItem.touchAction;
-     * ```
-     */
-    @HostBinding('style.touch-action')
-    public touchAction = 'pan-y';
-
-    /**
      * Indicates whether `list item` should have header style.
      * ```typescript
      * let headerStyle =  this.listItem.headerStyle;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('class.igx-list__header')
-    get headerStyle(): boolean {
+    public get headerStyle(): boolean {
         return this.isHeader;
     }
 
@@ -162,10 +278,11 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let innerStyle =  this.listItem.innerStyle;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('class.igx-list__item-base')
-    get innerStyle(): boolean {
+    public get innerStyle(): boolean {
         return !this.isHeader;
     }
 
@@ -174,10 +291,11 @@ export class IgxListItemComponent implements IListChild {
      * ```typescript
      * let isHidden = this.listItem.display;
      * ```
+     *
      * @memberof IgxListItemComponent
      */
     @HostBinding('style.display')
-    get display(): string {
+    public get display(): string {
         return this.hidden ? 'none' : '';
     }
 
@@ -185,7 +303,7 @@ export class IgxListItemComponent implements IListChild {
      * @hidden
      */
     @HostListener('click', ['$event'])
-    clicked(evt) {
+    public clicked(evt) {
         this.list.onItemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
         this.lastPanDir = IgxListPanState.NONE;
     }
@@ -193,8 +311,8 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panstart', ['$event'])
-    panStart(ev) {
+    @HostListener('panstart')
+    public panStart() {
         if (this.isTrue(this.isHeader)) {
             return;
         }
@@ -207,7 +325,7 @@ export class IgxListItemComponent implements IListChild {
      * @hidden
      */
     @HostListener('panmove', ['$event'])
-    panMove(ev) {
+    public panMove(ev) {
         if (this.isTrue(this.isHeader)) {
             return;
         }
@@ -227,8 +345,8 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
-    @HostListener('panend', ['$event'])
-    panEnd(ev) {
+    @HostListener('panend')
+    public panEnd() {
         if (this.isTrue(this.isHeader)) {
             return;
         }
@@ -316,111 +434,6 @@ export class IgxListItemComponent implements IListChild {
         if (this.rightPanningTemplateElement && this.rightPanningTemplateElement.nativeElement) {
             this.rightPanningTemplateElement.nativeElement.style.visibility = rightVisibility;
         }
-    }
-
-    /**
-     * Gets the `panState` of a `list item`.
-     * ```typescript
-     * let itemPanState =  this.listItem.panState;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public get panState(): IgxListPanState {
-        return this._panState;
-    }
-
-    /**
-     * Gets the `index` of a `list item`.
-     * ```typescript
-     * let itemIndex =  this.listItem.index;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    @Input()
-    public get index(): number {
-        return this._index !== null ? this._index : this.list.children.toArray().indexOf(this);
-    }
-
-    /**
-     * Sets the `index` of the `list item`.
-     * ```typescript
-     * this.listItem.index = index;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public set index(value: number) {
-        this._index = value;
-    }
-
-    /**
-     * Returns an element reference to the list item.
-     * ```typescript
-     * let listItemElement =  this.listItem.element.
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public get element() {
-        return this.elementRef.nativeElement;
-    }
-
-    /**
-     * Returns a reference container which contains the list item's content.
-     * ```typescript
-     * let listItemContainer =  this.listItem.contentElement.
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public get contentElement() {
-        const candidates = this.element.getElementsByClassName('igx-list__item-content');
-        return (candidates && candidates.length > 0) ? candidates[0] : null;
-    }
-
-    /**
-     * Returns the `context` object which represents the `template context` binding into the `list item container`
-     * by providing the `$implicit` declaration which is the `IgxListItemComponent` itself.
-     * ```typescript
-     * let listItemComponent = this.listItem.context;
-     * ```
-     */
-    public get context(): any {
-        return {
-            $implicit: this
-        };
-    }
-
-    /**
-     * Gets the width of a `list item`.
-     * ```typescript
-     * let itemWidth = this.listItem.width;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public get width() {
-        if (this.element) {
-            return this.element.offsetWidth;
-        }
-    }
-
-    /**
-     * Gets the maximum left position of the `list item`.
-     * ```typescript
-     * let maxLeft = this.listItem.maxLeft;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public get maxLeft() {
-        return -this.width;
-    }
-
-    /**
-     * Gets the maximum right position of the `list item`.
-     * ```typescript
-     * let maxRight = this.listItem.maxRight;
-     * ```
-     * @memberof IgxListItemComponent
-     */
-    public get maxRight() {
-        return this.width;
     }
 
     /**
