@@ -8,15 +8,14 @@ import { Observable } from 'rxjs';
     templateUrl: 'grid-remote-paging.sample.html'
 })
 export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, OnDestroy {
+    @ViewChild('customPager', { read: TemplateRef, static: true }) public remotePager: TemplateRef<any>;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public page = 0;
     public totalCount = 0;
     public pages = [];
     public data: Observable<any[]>;
     public selectOptions = [5, 10, 15, 25, 50];
-
-    @ViewChild('customPager', { read: TemplateRef, static: true }) public remotePager: TemplateRef<any>;
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     private _perPage = 10;
     private _dataLengthSubscriber;

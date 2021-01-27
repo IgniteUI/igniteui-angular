@@ -36,7 +36,7 @@ export class TreeGridFunctions {
     public static getCell(fix, rowIndex, columnKey) {
         const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
         const rowCells = [TreeGridFunctions.getTreeCell(rowDOM)].concat(TreeGridFunctions.getNormalCells(rowDOM));
-        return rowCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey)[0];
+        return rowCells.filter(domCell => domCell.componentInstance.column.field === columnKey)[0];
     }
 
     public static getTreeCells(fix) {
@@ -51,7 +51,7 @@ export class TreeGridFunctions {
         const allTreeCells = fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
         const allNormalCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
         const allDOMCells = allTreeCells.concat(allNormalCells);
-        return allDOMCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey);
+        return allDOMCells.filter(domCell => domCell.componentInstance.column.field === columnKey);
     }
 
     public static getAllCells(fix) {
@@ -63,7 +63,7 @@ export class TreeGridFunctions {
     public static getCellValue(fix, rowIndex, columnKey) {
         const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
         const rowCells = [TreeGridFunctions.getTreeCell(rowDOM)].concat(TreeGridFunctions.getNormalCells(rowDOM));
-        const cell = rowCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey)[0];
+        const cell = rowCells.filter(domCell => domCell.componentInstance.column.field === columnKey)[0];
         const valueDiv = cell.query(By.css(CELL_VALUE_DIV_CSS_CLASS));
         return valueDiv.nativeElement.textContent;
     }
@@ -132,10 +132,10 @@ export class TreeGridFunctions {
             const normalCells = TreeGridFunctions.getNormalCells(row);
             expect(1 + normalCells.length).toBe(expectedColumnsCount, 'incorrect cell count for a row');
 
-            const treeCellRectRight = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect().right;
+            const treeCellRectRight = treeCell.nativeElement.getBoundingClientRect().right;
             normalCells.forEach((normalCell) => {
                 // Verify that the treeCell is the first cell (on the left of all the other cells)
-                const normalCellRectLeft = (<HTMLElement>normalCell.nativeElement).getBoundingClientRect().left;
+                const normalCellRectLeft = normalCell.nativeElement.getBoundingClientRect().left;
                 expect(treeCellRectRight <= normalCellRectLeft).toBe(true, 'TreeCell is not on the left of a normal cell.');
             });
         });
@@ -191,9 +191,9 @@ export class TreeGridFunctions {
         TreeGridFunctions.verifyCellsPosition(rows, expectedColumnsCount);
 
         // Verify the tree cells are exactly under the respective header cell.
-        const headerCellRect = (<HTMLElement>headerCell.nativeElement).getBoundingClientRect();
+        const headerCellRect = headerCell.nativeElement.getBoundingClientRect();
         treeCells.forEach(treeCell => {
-            const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
+            const treeCellRect = treeCell.nativeElement.getBoundingClientRect();
             expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not on top of a treeCell');
             expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
             expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
@@ -215,9 +215,9 @@ export class TreeGridFunctions {
         // Verify the tree cells are first (on the left) in comparison to the rest of the cells.
         TreeGridFunctions.verifyCellsPosition(rows, expectedColumnsCount);
         // Verify the tree cells are exactly under the respective header cell.
-        const headerCellRect = (<HTMLElement>headerCell.nativeElement).getBoundingClientRect();
+        const headerCellRect = headerCell.nativeElement.getBoundingClientRect();
         treeCells.forEach(treeCell => {
-            const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
+            const treeCellRect = treeCell.nativeElement.getBoundingClientRect();
             expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not above a treeCell');
             expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
             expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
@@ -231,7 +231,7 @@ export class TreeGridFunctions {
 
     public static sortElementsVertically(arr) {
         return arr.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+            a.nativeElement.getBoundingClientRect().top - b.nativeElement.getBoundingClientRect().top);
     }
 
     public static sortElementsHorizontally(arr) {
@@ -258,18 +258,18 @@ export class TreeGridFunctions {
 
     public static verifyTreeRowIconPosition(treeRowDOM, indentationLevel) {
         const treeCell = TreeGridFunctions.getTreeCell(treeRowDOM);
-        const treeCellPaddingLeft = parseInt(window.getComputedStyle(<HTMLElement>treeCell.nativeElement).paddingLeft, 10);
-        const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
+        const treeCellPaddingLeft = parseInt(window.getComputedStyle(treeCell.nativeElement).paddingLeft, 10);
+        const treeCellRect = treeCell.nativeElement.getBoundingClientRect();
 
         let indentation = 0;
         if (indentationLevel !== 0) {
             const indentationDiv = treeCell.query(By.css(TREE_CELL_DIV_INDENTATION_CSS_CLASS + indentationLevel));
-            const indentationDivRect = (<HTMLElement>indentationDiv.nativeElement).getBoundingClientRect();
+            const indentationDivRect = indentationDiv.nativeElement.getBoundingClientRect();
             indentation = indentationDivRect.width;
         }
 
         const iconDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
-        const iconDivRect = (<HTMLElement>iconDiv.nativeElement).getBoundingClientRect();
+        const iconDivRect = iconDiv.nativeElement.getBoundingClientRect();
         expect((iconDivRect.left - (treeCellRect.left + treeCellPaddingLeft + indentation)) < 2)
             .toBe(true, 'TreeRow icon has incorrect position');
     }
@@ -300,7 +300,7 @@ export class TreeGridFunctions {
 
         // Verify selection of row
         expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
-        expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
+        expect(rowDOM.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
         // Verify selection of row through treeGrid
         const selectedRows = (treeGridComponent as IgxTreeGridComponent).selectedRows;
@@ -353,18 +353,19 @@ export class TreeGridFunctions {
 
             // Verify selection of row
             expect(rowComponent.selected).toBe(false, 'Incorrect row selection state');
-            expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(false);
+            expect((rowDOM.nativeElement as HTMLElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(false);
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
             expect(selectedRows.includes(rowComponent.rowID)).toBe(false);
         }  else {
             expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
-            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedCheckboxState, 'Incorrect native checkbox selection state');
+            expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(
+                expectedCheckboxState, 'Incorrect native checkbox selection state');
 
             // Verify selection of row
             expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
-            expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
+            expect((rowDOM.nativeElement as HTMLElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
@@ -460,10 +461,10 @@ export class TreeGridFunctions {
 
 
     public static moveGridCellWithTab =
-        (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+        (fix, cell: IgxGridCellComponent) => new Promise<void>(async resolve => {
             UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
-        })
+        });
 }

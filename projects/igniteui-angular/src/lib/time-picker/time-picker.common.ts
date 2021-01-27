@@ -9,7 +9,7 @@ export enum TimeParts {
     Hour = 'hour',
     Minute = 'minute',
     Seconds = 'seconds',
-    amPM = 'ampm'
+    AMPM = 'ampm'
 }
 
 /** @hidden */

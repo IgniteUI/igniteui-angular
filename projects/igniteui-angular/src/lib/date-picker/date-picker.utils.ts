@@ -46,8 +46,6 @@ export abstract class DatePickerUtil {
     private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
 
-
-
     /**
      *  TODO: (in issue #6483) Unit tests and docs for all public methods.
      */
@@ -56,13 +54,14 @@ export abstract class DatePickerUtil {
 
     /**
      * Parse a Date value from masked string input based on determined date parts
+     *
      * @param inputData masked value to parse
      * @param dateTimeParts Date parts array for the mask
      */
     public static parseValueFromMask(inputData: string, dateTimeParts: DatePartInfo[], promptChar?: string): Date | null {
         const parts: { [key in DatePart]: number } = {} as any;
         dateTimeParts.forEach(dp => {
-            let value = parseInt(this.getCleanVal(inputData, dp, promptChar), 10);
+            let value = parseInt(DatePickerUtil.getCleanVal(inputData, dp, promptChar), 10);
             if (!value) {
                 value = dp.type === DatePart.Date || dp.type === DatePart.Month ? 1 : 0;
             }
@@ -126,7 +125,7 @@ export abstract class DatePickerUtil {
             currentPart = {
                 start: position,
                 end: position + formatArray[i].length,
-                type: type,
+                type,
                 format: formatArray[i]
             };
         }
@@ -154,7 +153,7 @@ export abstract class DatePickerUtil {
         try {
             formattedDate = formatDate(value, format, locale, timezone);
         } catch {
-            this.logMissingLocaleSettings(locale);
+            DatePickerUtil.logMissingLocaleSettings(locale);
             const formatter = new Intl.DateTimeFormat(locale);
             formattedDate = formatter.format(value);
         }
@@ -174,7 +173,7 @@ export abstract class DatePickerUtil {
         try {
             format = getLocaleDateFormat(locale, FormatWidth[targetKey]);
         } catch {
-            this.logMissingLocaleSettings(locale);
+            DatePickerUtil.logMissingLocaleSettings(locale);
             format = DatePickerUtil.getDefaultInputFormat(locale);
         }
 
@@ -281,6 +280,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Determines whether the provided value is greater than the provided max value.
+     *
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
      * @returns true if provided value is greater than provided maxValue
@@ -310,6 +310,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Determines whether the provided value is less than the provided min value.
+     *
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
      * @returns true if provided value is less than provided minValue
@@ -337,57 +338,9 @@ export abstract class DatePickerUtil {
         return _value.getTime() < _minValue.getTime();
     }
 
-    private static logMissingLocaleSettings(locale: string): void {
-        console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
-        console.warn('Using default browser locale settings.');
-    }
-
-    private static ensureLeadingZero(part: DatePartInfo) {
-        switch (part.type) {
-            case DatePart.Date:
-            case DatePart.Month:
-            case DatePart.Hours:
-            case DatePart.Minutes:
-            case DatePart.Seconds:
-                if (part.format.length === 1) {
-                    part.format = part.format.repeat(2);
-                }
-                break;
-        }
-    }
-
-    private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
-        return DatePickerUtil.trimEmptyPlaceholders(inputData.substring(datePart.start, datePart.end), promptChar);
-    }
-
-    private static determineDatePart(char: string): DatePart {
-        switch (char) {
-            case 'd':
-            case 'D':
-                return DatePart.Date;
-            case 'M':
-                return DatePart.Month;
-            case 'y':
-            case 'Y':
-                return DatePart.Year;
-            case 'h':
-            case 'H':
-                return DatePart.Hours;
-            case 'm':
-                return DatePart.Minutes;
-            case 's':
-            case 'S':
-                return DatePart.Seconds;
-            case 't':
-            case 'T':
-                return DatePart.AmPm;
-            default:
-                return DatePart.Literal;
-        }
-    }
-
     /**
      * This method generates date parts structure based on editor mask and locale.
+     *
      * @param maskValue: string
      * @param locale: string
      * @returns array containing information about date parts - type, position, format
@@ -445,18 +398,19 @@ export abstract class DatePickerUtil {
 
     /**
      * This method generates input mask based on date parts.
+     *
      * @param dateStruct array
      * @returns input mask
      */
     public static getInputMask(dateStruct: any[]): string {
         const inputMask = [];
-        for (let i = 0; i < dateStruct.length; i++) {
-            if (dateStruct[i].type === DatePickerUtil.SEPARATOR) {
-                inputMask.push(dateStruct[i].value);
-            } else if (dateStruct[i].type === DateParts.Day || dateStruct[i].type === DateParts.Month) {
+        for (const part of dateStruct) {
+            if (part.type === DatePickerUtil.SEPARATOR) {
+                inputMask.push(part.value);
+            } else if (part.type === DateParts.Day || part.type === DateParts.Month) {
                 inputMask.push('00');
-            } else if (dateStruct[i].type === DateParts.Year) {
-                switch (dateStruct[i].formatType) {
+            } else if (part.type === DateParts.Year) {
+                switch (part.formatType) {
                     case FormatDesc.Numeric: {
                         inputMask.push('0000');
                         break;
@@ -473,17 +427,18 @@ export abstract class DatePickerUtil {
 
     /**
      * This method generates editor mask.
+     *
      * @param dateStruct
      * @returns editor mask
      */
     public static getMask(dateStruct: any[]): string {
         const mask = [];
-        for (let i = 0; i < dateStruct.length; i++) {
-            switch (dateStruct[i].formatType) {
+        for (const part of dateStruct) {
+            switch (part.formatType) {
                 case FormatDesc.Numeric: {
-                    if (dateStruct[i].type === DateParts.Day) {
+                    if (part.type === DateParts.Day) {
                         mask.push('d');
-                    } else if (dateStruct[i].type === DateParts.Month) {
+                    } else if (part.type === DateParts.Month) {
                         mask.push('M');
                     } else {
                         mask.push('yyyy');
@@ -491,9 +446,9 @@ export abstract class DatePickerUtil {
                     break;
                 }
                 case FormatDesc.TwoDigits: {
-                    if (dateStruct[i].type === DateParts.Day) {
+                    if (part.type === DateParts.Day) {
                         mask.push('dd');
-                    } else if (dateStruct[i].type === DateParts.Month) {
+                    } else if (part.type === DateParts.Month) {
                         mask.push('MM');
                     } else {
                         mask.push('yy');
@@ -501,8 +456,8 @@ export abstract class DatePickerUtil {
                 }
             }
 
-            if (dateStruct[i].type === DatePickerUtil.SEPARATOR) {
-                mask.push(dateStruct[i].value);
+            if (part.type === DatePickerUtil.SEPARATOR) {
+                mask.push(part.value);
             }
         }
 
@@ -510,6 +465,7 @@ export abstract class DatePickerUtil {
     }
     /**
      * This method parses an input string base on date parts and returns a date and its validation state.
+     *
      * @param dateFormatParts
      * @param prevDateValue
      * @param inputValue
@@ -540,11 +496,11 @@ export abstract class DatePickerUtil {
         }
         const fullYear = (yearFormat === FormatDesc.TwoDigits) ? yearPrefix.concat(year) : year;
 
-        if ((month < 0) || (month > 11) || (month === NaN)) {
+        if ((month < 0) || (month > 11) || isNaN(month)) {
             return { state: DateState.Invalid, value: inputValue };
         }
 
-        if ((day < 1) || (day > DatePickerUtil.daysInMonth(fullYear, month)) || (day === NaN)) {
+        if ((day < 1) || (day > DatePickerUtil.daysInMonth(fullYear, month)) || isNaN(day)) {
             return { state: DateState.Invalid, value: inputValue };
         }
 
@@ -558,6 +514,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method replaces prompt chars with empty string.
+     *
      * @param value
      */
     public static trimEmptyPlaceholders(value: string, promptChar?: string): string {
@@ -567,6 +524,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method is used for spinning date parts.
+     *
      * @param dateFormatParts
      * @param inputValue
      * @param position
@@ -587,10 +545,9 @@ export abstract class DatePickerUtil {
         const datePartValue = DatePickerUtil.getDateValueFromInput(dateFormatParts, datePartType, inputValue);
         newValue = parseInt(datePartValue, 10);
 
-        let maxValue, minValue;
         const minMax = DatePickerUtil.getMinMaxValue(dateFormatParts, datePart, inputValue);
-        minValue = minMax.min;
-        maxValue = minMax.max;
+        const minValue = minMax.min;
+        const maxValue = minMax.max;
 
         if (isNaN(newValue)) {
             if (minValue === 'infinite') {
@@ -625,16 +582,15 @@ export abstract class DatePickerUtil {
         const endIdx = datePart.position[1];
         const start = inputValue.slice(0, startIdx);
         const end = inputValue.slice(endIdx, inputValue.length);
-        let changedPart: string;
-
         const prefix = DatePickerUtil.getNumericFormatPrefix(datePartFormatType);
-        changedPart = (newValue < 10) ? `${prefix}${newValue}` : `${newValue}`;
+        const changedPart = (newValue < 10) ? `${prefix}${newValue}` : `${newValue}`;
 
         return `${start}${changedPart}${end}`;
     }
 
     /**
      * This method returns date input with prompt chars.
+     *
      * @param dateFormatParts
      * @param date
      * @param inputValue
@@ -642,11 +598,11 @@ export abstract class DatePickerUtil {
      */
     public static addPromptCharsEditMode(dateFormatParts: any[], date: Date, inputValue: string): string {
         const dateArray = Array.from(inputValue);
-        for (let i = 0; i < dateFormatParts.length; i++) {
-            if (dateFormatParts[i].formatType === FormatDesc.Numeric) {
-                if ((dateFormatParts[i].type === DateParts.Day && date.getDate() < 10)
-                    || (dateFormatParts[i].type === DateParts.Month && date.getMonth() + 1 < 10)) {
-                    dateArray.splice(dateFormatParts[i].position[0], 0, DatePickerUtil.PROMPT_CHAR);
+        for (const part of dateFormatParts) {
+            if (part.formatType === FormatDesc.Numeric) {
+                if ((part.type === DateParts.Day && date.getDate() < 10)
+                    || (part.type === DateParts.Month && date.getMonth() + 1 < 10)) {
+                    dateArray.splice(part.position[0], 0, DatePickerUtil.PROMPT_CHAR);
                     dateArray.join('');
                 }
             }
@@ -656,6 +612,7 @@ export abstract class DatePickerUtil {
 
     /**
      * This method checks if date input is done.
+     *
      * @param dateFormatParts
      * @param input
      * @returns input completeness
@@ -685,6 +642,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Parse provided input to Date.
+     *
      * @param value input to parse
      * @returns Date if parse succeed or null
      */
@@ -694,8 +652,8 @@ export abstract class DatePickerUtil {
         }
 
         // if value is Invalid Date we should return null
-        if (this.isDate(value)) {
-            return this.isValidDate(value) ? value : null;
+        if (DatePickerUtil.isDate(value)) {
+            return DatePickerUtil.isValidDate(value) ? value : null;
         }
 
         return value ? new Date(Date.parse(value)) : null;
@@ -703,6 +661,7 @@ export abstract class DatePickerUtil {
 
     /**
      * Returns whether provided input is date
+     *
      * @param value input to check
      * @returns true if provided input is date
      */
@@ -712,15 +671,65 @@ export abstract class DatePickerUtil {
 
     /**
      * Returns whether the input is valid date
+     *
      * @param value input to check
      * @returns true if provided input is a valid date
      */
     public static isValidDate(value: any): boolean {
-        if (this.isDate(value)) {
+        if (DatePickerUtil.isDate(value)) {
             return !isNaN(value.getTime());
         }
 
         return false;
+    }
+
+    private static logMissingLocaleSettings(locale: string): void {
+        console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
+        console.warn('Using default browser locale settings.');
+    }
+
+    private static ensureLeadingZero(part: DatePartInfo) {
+        switch (part.type) {
+            case DatePart.Date:
+            case DatePart.Month:
+            case DatePart.Hours:
+            case DatePart.Minutes:
+            case DatePart.Seconds:
+                if (part.format.length === 1) {
+                    part.format = part.format.repeat(2);
+                }
+                break;
+        }
+    }
+
+    private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
+        return DatePickerUtil.trimEmptyPlaceholders(inputData.substring(datePart.start, datePart.end), promptChar);
+    }
+
+    private static determineDatePart(char: string): DatePart {
+        switch (char) {
+            case 'd':
+            case 'D':
+                return DatePart.Date;
+            case 'M':
+                return DatePart.Month;
+            case 'y':
+            case 'Y':
+                return DatePart.Year;
+            case 'h':
+            case 'H':
+                return DatePart.Hours;
+            case 'm':
+                return DatePart.Minutes;
+            case 's':
+            case 'S':
+                return DatePart.Seconds;
+            case 't':
+            case 'T':
+                return DatePart.AmPm;
+            default:
+                return DatePart.Literal;
+        }
     }
 
     private static getYearFormatType(format: string): string {
@@ -770,31 +779,31 @@ export abstract class DatePickerUtil {
         const dateStruct = [];
         const formatter = new Intl.DateTimeFormat(locale);
         const formatToParts = formatter.formatToParts(new Date());
-        for (let i = 0; i < formatToParts.length; i++) {
-            if (formatToParts[i].type === DatePickerUtil.SEPARATOR) {
+        for (const part of formatToParts) {
+            if (part.type === DatePickerUtil.SEPARATOR) {
                 dateStruct.push({
                     type: DatePickerUtil.SEPARATOR,
-                    value: formatToParts[i].value
+                    value: part.value
                 });
             } else {
                 dateStruct.push({
-                    type: formatToParts[i].type
+                    type: part.type
                 });
             }
         }
         const formatterOptions = formatter.resolvedOptions();
-        for (let i = 0; i < dateStruct.length; i++) {
-            switch (dateStruct[i].type) {
+        for (const part of dateStruct) {
+            switch (part.type) {
                 case DateParts.Day: {
-                    dateStruct[i].formatType = formatterOptions.day;
+                    part.formatType = formatterOptions.day;
                     break;
                 }
                 case DateParts.Month: {
-                    dateStruct[i].formatType = formatterOptions.month;
+                    part.formatType = formatterOptions.month;
                     break;
                 }
                 case DateParts.Year: {
-                    dateStruct[i].formatType = formatterOptions.year;
+                    part.formatType = formatterOptions.year;
                     break;
                 }
             }
@@ -819,7 +828,7 @@ export abstract class DatePickerUtil {
     }
 
     private static getMinMaxValue(dateFormatParts: any[], datePart, inputValue: string): any {
-        let maxValue, minValue;
+        let maxValue; let minValue;
         switch (datePart.type) {
             case DateParts.Month: {
                 minValue = 1;
@@ -902,31 +911,31 @@ export abstract class DatePickerUtil {
     private static fillDatePartsPositions(dateArray: any[]): void {
         let currentPos = 0;
 
-        for (let i = 0; i < dateArray.length; i++) {
+        for (const part of dateArray) {
             // Day|Month part positions
-            if (dateArray[i].type === DateParts.Day || dateArray[i].type === DateParts.Month) {
+            if (part.type === DateParts.Day || part.type === DateParts.Month) {
                 // Offset 2 positions for number
-                dateArray[i].position = [currentPos, currentPos + 2];
+                part.position = [currentPos, currentPos + 2];
                 currentPos += 2;
-            } else if (dateArray[i].type === DateParts.Year) {
+            } else if (part.type === DateParts.Year) {
                 // Year part positions
-                switch (dateArray[i].formatType) {
+                switch (part.formatType) {
                     case FormatDesc.Numeric: {
                         // Offset 4 positions for full year
-                        dateArray[i].position = [currentPos, currentPos + 4];
+                        part.position = [currentPos, currentPos + 4];
                         currentPos += 4;
                         break;
                     }
                     case FormatDesc.TwoDigits: {
                         // Offset 2 positions for short year
-                        dateArray[i].position = [currentPos, currentPos + 2];
+                        part.position = [currentPos, currentPos + 2];
                         currentPos += 2;
                         break;
                     }
                 }
-            } else if (dateArray[i].type === DatePickerUtil.SEPARATOR) {
+            } else if (part.type === DatePickerUtil.SEPARATOR) {
                 // Separator positions
-                dateArray[i].position = [currentPos, currentPos + 1];
+                part.position = [currentPos, currentPos + 1];
                 currentPos++;
             }
         }

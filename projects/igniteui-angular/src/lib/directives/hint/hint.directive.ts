@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, Input, OnInit } from '@angular/core';
+import { Directive, HostBinding, Input, OnInit } from '@angular/core';
 
 enum IgxHintPosition {
     START,
@@ -9,7 +9,6 @@ enum IgxHintPosition {
     selector: 'igx-hint,[igxHint]'
 })
 export class IgxHintDirective implements OnInit {
-    private _position: IgxHintPosition = IgxHintPosition.START;
     /**
      * Sets/gets whether the hint position is at the start.
      * Default value is `false`.
@@ -21,6 +20,7 @@ export class IgxHintDirective implements OnInit {
      * ```typescript
      * let isHintPositionStart = this.igxHint.isPositionStart;
      * ```
+     *
      * @memberof IgxHintDirective
      */
     @HostBinding('class.igx-input-group__hint-item--start')
@@ -36,13 +36,13 @@ export class IgxHintDirective implements OnInit {
      * ```typescript
      * let isHintPositionEnd = this.igxHint.isPositionEnd;
      * ```
+     *
      * @memberof IgxHintDirective
      */
     @HostBinding('class.igx-input-group__hint-item--end')
     public isPositionEnd = false;
 
-    constructor(private _element: ElementRef) {
-    }
+    private _position: IgxHintPosition = IgxHintPosition.START;
     /**
      * Sets the position of the hint.
      * ```html
@@ -51,6 +51,7 @@ export class IgxHintDirective implements OnInit {
      *  <igx-hint #hint [position]="'start'">IgxHint displayed at the start</igx-hint>
      * </igx-input-group>
      * ```
+     *
      * @memberof IgxHintDirective
      */
     @Input('position')
@@ -68,6 +69,7 @@ export class IgxHintDirective implements OnInit {
      * public igxHint: IgxHintDirective;
      * let hintPosition =  this.igxHint.position;
      * ```
+     *
      * @memberof IgxHintDirective
      */
     get position() {

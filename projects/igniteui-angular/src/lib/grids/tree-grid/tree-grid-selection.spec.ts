@@ -1347,7 +1347,5 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 });
 
 
-function getVisibleSelectedRows(fix) {
-    return TreeGridFunctions.getAllRows(fix).filter(
+const getVisibleSelectedRows = (fix) => TreeGridFunctions.getAllRows(fix).filter(
         (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
-}

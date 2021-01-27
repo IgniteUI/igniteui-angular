@@ -117,10 +117,8 @@ export class ColumnGroupTestComponent {
 export class ColumnGroupFourLevelTestComponent implements OnInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
-
     @ViewChild('idCol', { read: IgxColumnComponent, static: true })
     idCol: IgxColumnComponent;
-
     @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     genInfoColGroup: IgxColumnGroupComponent;
     @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
@@ -131,9 +129,6 @@ export class ColumnGroupFourLevelTestComponent implements OnInit {
     contactNameCol: IgxColumnComponent;
     @ViewChild('contactTitleCol', { read: IgxColumnComponent, static: true })
     contactTitleCol: IgxColumnComponent;
-
-    public genInfoColsAndGroups = [];
-
     @ViewChild('addrInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     addrInfoColGroup: IgxColumnGroupComponent;
     @ViewChild('locationColGroup', { read: IgxColumnGroupComponent, static: true })
@@ -159,6 +154,7 @@ export class ColumnGroupFourLevelTestComponent implements OnInit {
     @ViewChild('postalCodeCol', { read: IgxColumnComponent, static: true })
     postalCodeCol: IgxColumnComponent;
 
+    public genInfoColsAndGroups = [];
     public addressColsAndGroups = [];
     public colsAndGroupsNaturalOrder = [];
 

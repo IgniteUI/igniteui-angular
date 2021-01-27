@@ -15,9 +15,6 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
-      require('karma-junit-reporter'),
-      require('karma-coverage-istanbul-reporter'),
-      require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
@@ -28,20 +25,18 @@ module.exports = function (config) {
       tagPrefix: '#',
       skipTags: 'perf'
     },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reports: ['lcovonly', 'cobertura'],
-      fixWebpackSourcePaths: true
-    },
-    reporters: ['junit'],
-    junitReporter: {
-      outputDir: ''
-    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromeHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu'],
+        debug: false
+      }
+    },
     singleRun: true
   });
 };

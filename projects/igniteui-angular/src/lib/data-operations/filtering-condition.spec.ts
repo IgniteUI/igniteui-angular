@@ -84,8 +84,12 @@ describe('Unit testing FilteringCondition', () => {
         const now = new Date();
         const cnow = new Date();
         const yesterday = ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
-        const lastMonth = ((d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1)); })(new Date());
-        const nextMonth = ((d) => { d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1)); })(new Date());
+        const lastMonth = ((d) => {
+ d.setDate(1); return new Date(d.setMonth(d.getMonth() - 1));
+})(new Date());
+        const nextMonth = ((d) => {
+ d.setDate(1); return new Date(d.setMonth(d.getMonth() + 1));
+})(new Date());
         const lastYear = ((d) => new Date(d.setFullYear(d.getFullYear() - 1)))(new Date());
         const nextYear = ((d) => new Date(d.setFullYear(d.getFullYear() + 1)))(new Date());
 
@@ -151,9 +155,7 @@ class CustomFilter extends IgxFilteringOperand {
         super();
         this.append({
             name: 'Custom',
-            logic: (value: any, searchVal: any, ignoreCase: boolean) => {
-                return value === searchVal;
-            },
+            logic: (value: any, searchVal: any, ignoreCase: boolean) => value === searchVal,
             isUnary: false,
             iconName: 'starts-with'
         });

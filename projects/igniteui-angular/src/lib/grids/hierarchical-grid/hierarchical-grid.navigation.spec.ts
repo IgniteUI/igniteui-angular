@@ -41,7 +41,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     // simple tests
-    it('should allow navigating down from parent row into child grid.', (async() => {
+    it('should allow navigating down from parent row into child grid.', (async () => {
         hierarchicalGrid.expandChildren = false;
         hierarchicalGrid.height = '600px';
         hierarchicalGrid.width = '800px';
@@ -575,7 +575,9 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     it('should navigate to Cancel button when there is row in edit mode', async () => {
         hierarchicalGrid.columnList.forEach((c) => {
             if (c.field !== hierarchicalGrid.primaryKey) {
-                c.editable = true; }});
+                c.editable = true;
+            }
+        });
         fixture.detectChanges();
 
         hierarchicalGrid.rowEditable = true;
@@ -611,7 +613,9 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     it('should navigate to row edit button "Done" on shift + tab', async () => {
         hierarchicalGrid.columnList.forEach((c) => {
             if (c.field !== hierarchicalGrid.primaryKey) {
-                c.editable = true; }});
+                c.editable = true;
+            }
+        });
         fixture.detectChanges();
         hierarchicalGrid.rowEditable = true;
         await wait(50);
@@ -1005,11 +1009,11 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
-    public data;
-    public selectedCell;
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public selectedCell;
 
     constructor() {
         // 3 level hierarchy
@@ -1029,8 +1033,8 @@ export class IgxHierarchicalGridTestBaseComponent {
                children = this.generateData(count / 2 , currLevel - 1);
            }
            prods.push({
-            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-            'Col2': i, 'Col3': i, childData: children, childData2: children });
+            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
+            Col2: i, Col3: i, childData: children, childData2: children });
         }
         return prods;
     }

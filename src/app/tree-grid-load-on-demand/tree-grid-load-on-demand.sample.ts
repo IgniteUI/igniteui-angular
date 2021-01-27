@@ -25,20 +25,19 @@ export class MySummaryOperand extends IgxSummaryOperand {
     templateUrl: 'tree-grid-load-on-demand.sample.html'
 })
 export class TreeGridLoadOnDemandSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
     public data1: Array<any>;
     public data2: Array<any>;
     public columns: Array<any>;
-    private nextRow = 1;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
     public selectionMode;
 
-    @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
-
     public density = '';
     public displayDensities;
     private dataService = new TreeGridLoadOnDemandService();
+    private nextRow = 1;
 
     constructor(private excelExporterService: IgxExcelExporterService,
                 private csvExporterService: IgxCsvExporterService) {
@@ -74,15 +73,15 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
 
     public loadChildren = (parentID: any, done: (children: any[]) => void) => {
         this.dataService.getData(parentID, children => done(children));
-    }
+    };
 
     public addRow() {
         this.grid1.addRow({
-            'employeeID': this.data1.length + this.nextRow++,
-            'PID': -1,
-            'firstName': 'John',
-            'lastName': 'Doe',
-            'Title': 'Junior Sales Representative'
+            employeeID: this.data1.length + this.nextRow++,
+            PID: -1,
+            firstName: 'John',
+            lastName: 'Doe',
+            Title: 'Junior Sales Representative'
         });
     }
 
@@ -96,10 +95,10 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
 
         this.grid1.addRow(
             {
-                'employeeID': this.data1.length + this.nextRow++,
-                'firstName': `Added `,
-                'lastName': 'Added',
-                'Title': 'Sales Manager'
+                employeeID: this.data1.length + this.nextRow++,
+                firstName: `Added `,
+                lastName: 'Added',
+                Title: 'Sales Manager'
             },
             selectedRowId);
     }

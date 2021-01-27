@@ -42,7 +42,7 @@ describe('IgxDateRangePicker', () => {
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
-            'get': mockNgControl
+            get: mockNgControl
         });
         it('should set range dates correctly through selectRange method', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
@@ -191,7 +191,7 @@ describe('IgxDateRangePicker', () => {
         let calendar: DebugElement;
         let calendarDays: DebugElement[];
 
-        function selectDateRangeFromCalendar(startDateDay: number, dayRange: number) {
+        const selectDateRangeFromCalendar = (startDateDay: number, dayRange: number) => {
             const startDateDayElIndex = startDateDay - 1;
             const endDateDayElIndex = startDateDayElIndex + dayRange;
             dateRange.open();
@@ -203,7 +203,7 @@ describe('IgxDateRangePicker', () => {
             fixture.detectChanges();
             dateRange.close();
             fixture.detectChanges();
-        }
+        };
 
         describe('Single Input', () => {
             let singleInputElement: DebugElement;
@@ -232,13 +232,13 @@ describe('IgxDateRangePicker', () => {
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
             }));
 
-            function verifyDateRangeInSingleInput() {
+            const verifyDateRangeInSingleInput = () => {
                 expect(dateRange.value.start).toEqual(startDate);
                 expect(dateRange.value.end).toEqual(endDate);
                 const inputStartDate = [startDate.getMonth() + 1, startDate.getDate(), startDate.getFullYear()].join('/');
                 const inputEndDate = endDate ? [endDate.getMonth() + 1, endDate.getDate(), endDate.getFullYear()].join('/') : '';
                 expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
-            }
+            };
 
             describe('Selection tests', () => {
                 it('should assign range dates to the input when selecting a range from the calendar', () => {
@@ -664,13 +664,13 @@ describe('IgxDateRangePicker', () => {
                 calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
             });
 
-            function verifyDateRange() {
+            const verifyDateRange = () => {
                 expect(dateRange.value.start).toEqual(startDate);
                 expect(dateRange.value.end).toEqual(endDate);
                 expect(startInput.nativeElement.value).toEqual(ControlsFunction.formatDate(startDate, DEFAULT_FORMAT_OPTIONS));
                 const expectedEndDate = endDate ? ControlsFunction.formatDate(endDate, DEFAULT_FORMAT_OPTIONS) : '';
                 expect(endInput.nativeElement.value).toEqual(expectedEndDate);
-            }
+            };
 
             describe('Selection tests', () => {
                 it('should assign range values correctly when selecting dates from the calendar', () => {
@@ -1148,14 +1148,14 @@ describe('IgxDateRangePicker', () => {
 })
 export class DateRangeTestComponent implements OnInit {
     [x: string]: any;
+    @ViewChild(IgxDateRangePickerComponent, { static: true })
+    public dateRange: IgxDateRangePickerComponent;
+
     public doneButtonText: string;
     public mode: InteractionMode;
     public disabled = false;
-    public minValue: Date | String;
-    public maxValue: Date | String;
-
-    @ViewChild(IgxDateRangePickerComponent, { static: true })
-    public dateRange: IgxDateRangePickerComponent;
+    public minValue: Date | string;
+    public maxValue: Date | string;
 
     public ngOnInit(): void {
         this.doneButtonText = 'Done';
@@ -1175,17 +1175,21 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [disabled]="disabled" [(ngModel)]="range" [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
-            <igx-date-range-start>
-                <igx-picker-toggle igxPrefix>
-                    <igx-icon>calendar_view_day</igx-icon>
-                </igx-picker-toggle>
-                <input igxInput igxDateTimeEditor type="text">
-            </igx-date-range-start>
-            <igx-date-range-end>
-                <input igxInput igxDateTimeEditor type="text">
-            </igx-date-range-end>
-        </igx-date-range-picker>
+    <igx-date-range-picker [mode]="mode"
+                           [disabled]="disabled"
+                           [(ngModel)]="range"
+                           [inputFormat]="inputFormat"
+                           [displayFormat]="displayFormat" required>
+        <igx-date-range-start>
+            <igx-picker-toggle igxPrefix>
+                <igx-icon>calendar_view_day</igx-icon>
+            </igx-picker-toggle>
+            <input igxInput igxDateTimeEditor type="text">
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput igxDateTimeEditor type="text">
+        </igx-date-range-end>
+    </igx-date-range-picker>
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
@@ -1226,7 +1230,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         const startDate = `${this.monthFormatter.format(date.start)} ${date.start.getDate()}, ${date.start.getFullYear()}`;
         const endDate = `${this.monthFormatter.format(date.end)} ${date.end.getDate()}, ${date.end.getFullYear()}`;
         return `You selected ${startDate}-${endDate}`;
-    }
+    };
 }
 @Component({
     selector: 'igx-date-range-templates-test',

@@ -1,8 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
@@ -30,6 +26,18 @@ import { takeUntil } from 'rxjs/operators';
     templateUrl: './excel-style-conditional-filter.component.html'
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
+    public customDialog: IgxExcelStyleCustomDialogComponent;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('subMenu', { read: IgxDropDownComponent })
+    public subMenu: IgxDropDownComponent;
+
     private shouldOpenSubMenu = true;
     private destroy$ = new Subject<boolean>();
 
@@ -43,18 +51,6 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
-    public customDialog: IgxExcelStyleCustomDialogComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('subMenu', { read: IgxDropDownComponent })
-    public subMenu: IgxDropDownComponent;
 
     constructor(public esf: IgxGridExcelStyleFilteringComponent) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {

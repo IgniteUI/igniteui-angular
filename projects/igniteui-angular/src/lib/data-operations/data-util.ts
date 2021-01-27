@@ -132,6 +132,7 @@ export class DataUtil {
 
     /**
      * Merges all changes from provided transactions into provided data collection
+     *
      * @param data Collection to merge
      * @param transactions Transactions to merge into data
      * @param primaryKey Primary key of the collection, if any
@@ -167,6 +168,7 @@ export class DataUtil {
 
     /**
      * Merges all changes from provided transactions into provided hierarchical data collection
+     *
      * @param data Collection to merge
      * @param transactions Transactions to merge into data
      * @param childDataKey Data key of child collections
