@@ -19,17 +19,6 @@ let warningShown = false;
 })
 export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
-     * @hidden
-     */
-    protected _focused = false;
-    protected _selected = false;
-    protected _index = null;
-    protected _disabled = false;
-    protected get hasIndex(): boolean {
-        return this._index !== null && this._index !== undefined;
-    }
-
-    /**
      * Sets/gets the `id` of the item.
      * ```html
      * <igx-drop-down-item [id] = 'igx-drop-down-item-0'></igx-drop-down-item>
@@ -37,6 +26,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * ```typescript
      * let itemId =  this.item.id;
      * ```
+     *
      * @memberof IgxSelectItemComponent
      */
     @HostBinding('attr.id')
@@ -256,6 +246,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Gets item index
+     *
      * @hidden @internal
      */
     public get itemIndex(): number {
@@ -264,6 +255,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Gets item element height
+     *
      * @hidden @internal
      */
     public get elementHeight(): number {
@@ -272,11 +264,24 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
 
     /**
      * Get item html element
+     *
      * @hidden @internal
      */
     public get element(): ElementRef {
         return this.elementRef;
     }
+
+    protected get hasIndex(): boolean {
+        return this._index !== null && this._index !== undefined;
+    }
+
+    /**
+     * @hidden
+     */
+    protected _focused = false;
+    protected _selected = false;
+    protected _index = null;
+    protected _disabled = false;
 
     constructor(
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
@@ -284,6 +289,14 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         @Optional() protected group: IgxDropDownGroupComponent,
         @Optional() @Inject(IgxSelectionAPIService) protected selection?: IgxSelectionAPIService
     ) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    clicked(event): void {
+    }
 
     ngDoCheck(): void {
         if (this._selected) {
@@ -307,16 +320,10 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     protected ensureItemFocus() {
         if (this.dropDown.allowItemsFocus) {
             const focusedItem = this.dropDown.items.find((item) => item.focused);
-            if (!focusedItem) { return; }
+            if (!focusedItem) {
+                return;
+            }
             focusedItem.element.nativeElement.focus({ preventScroll: true });
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    clicked(event): void {
     }
 }

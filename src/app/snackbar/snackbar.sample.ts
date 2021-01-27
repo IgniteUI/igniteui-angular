@@ -7,18 +7,18 @@ import { IgxSnackbarComponent } from 'igniteui-angular';
     templateUrl: 'snackbar.sample.html'
 })
 export class SnackbarSampleComponent implements OnInit {
-    color: string;
-    message: string;
-    actionName: string;
-    _colors: string[];
+    public color: string;
+    public message: string;
+    public actionName: string;
+    private _colors: string[];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.color = 'mediumpurple';
         this.actionName = 'Undo';
         this._colors = [];
     }
 
-    changeColor(snackbar: IgxSnackbarComponent) {
+    public changeColor(snackbar: IgxSnackbarComponent) {
         const characters = '0123456789ABCDEF';
         let color = '#';
 
@@ -33,13 +33,9 @@ export class SnackbarSampleComponent implements OnInit {
         snackbar.open();
     }
 
-    undoColorChange(snackbar) {
+    public undoColorChange(snackbar) {
         this.color = this._colors.pop();
 
         snackbar.close();
-    }
-
-    onAnimation(evt) {
-        const message = evt.fromState === 'void' ? 'Sliding snackbar IN' : 'Sliding snackbar OUT';
     }
 }

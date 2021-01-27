@@ -3,7 +3,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { IgxGridBaseDirective } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_api';
 
-export function resizeObserverIgnoreError() {
+export const resizeObserverIgnoreError = () => {
     jasmine.getEnv().allowRespy(true);
     const spy = spyOn(window, 'onerror').and.callFake((...args) => {
         if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
@@ -12,14 +12,14 @@ export function resizeObserverIgnoreError() {
         spy.and.callThrough().withArgs(...args);
     });
     return spy;
-}
+};
 
-export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: IgxGridBaseDirective) => {
     grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
     grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());
-}
+};
 
-export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) {
+export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {
     setupGridScrollDetection(fixture, hierarchicalGrid);
 
     const existingChildren = hierarchicalGrid.hgridAPI.getChildGrids(true);
@@ -31,7 +31,7 @@ export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<a
             setupGridScrollDetection(fixture, evt.grid);
         });
     });
-}
+};
 
 @Injectable()
 export class TestNgZone extends NgZone {
@@ -41,11 +41,11 @@ export class TestNgZone extends NgZone {
         super({enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false});
     }
 
-    run(fn: Function): any {
+    run(fn: () => void): any {
         return fn();
     }
 
-    runOutsideAngular(fn: Function): any {
+    runOutsideAngular(fn: () => void): any {
         return fn();
     }
 

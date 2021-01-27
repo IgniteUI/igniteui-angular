@@ -7,6 +7,14 @@ import { DOCUMENT } from '@angular/common';
 export type Direction = 'ltr' | 'rtl';
 
 /**
+ * @hidden
+ */
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function DIR_DOCUMENT_FACTORY(): Document {
+    return inject(DOCUMENT);
+}
+
+/**
  * Injection token is used to inject the document into Directionality
  * which factory could be faked for testing purposes.
  *
@@ -20,13 +28,6 @@ export const DIR_DOCUMENT = new InjectionToken<Document>('dir-doc', {
     providedIn: 'root',
     factory: DIR_DOCUMENT_FACTORY
 });
-
-/**
- * @hidden
- */
-export function DIR_DOCUMENT_FACTORY(): Document {
-    return inject(DOCUMENT);
-}
 
 /**
  * @hidden
@@ -55,7 +56,7 @@ export class IgxDirectionality {
     }
 
     constructor(@Inject(DIR_DOCUMENT) document) {
-        this._document = <Document>document;
+        this._document = document;
         const bodyDir = this._document.body ? this._document.body.dir : null;
         const htmlDir = this._document.documentElement ? this._document.documentElement.dir : null;
         const extractedDir = bodyDir || htmlDir;

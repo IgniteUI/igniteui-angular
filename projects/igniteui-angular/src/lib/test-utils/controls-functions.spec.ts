@@ -2,7 +2,6 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { UIInteractions } from './ui-interactions.spec';
-import { IgxChipComponent } from '../chips/chip.component';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 const CHIP_REMOVE_BUTTON = '.igx-chip__remove';
@@ -84,11 +83,12 @@ export class ControlsFunction {
 
     /**
      * Formats a date according to the provided formatting options
+     *
      * @param date Date to be formatted
      * @param formatOptions DateTime formatting options
      * @param locale Date language
      */
-    public static formatDate(date: Date, formatOptions: object, locale = 'en-US'): string {
+    public static formatDate(date: Date, formatOptions, locale = 'en-US'): string {
         const dateFormatter = new Intl.DateTimeFormat(locale, formatOptions);
         return `${dateFormatter.format(date)}`;
     }

@@ -13,7 +13,7 @@ export const scssImport =
     + `@import '~minireset.css/minireset';\n`;
 
 
-export function addResetCss(host: Tree): boolean {
+export const addResetCss = (host: Tree): boolean => {
     const config = getWorkspace(host);
     const project = config.projects[config.defaultProject] as WorkspaceProject<ProjectType.Application>;
     let addPackage;
@@ -61,4 +61,4 @@ export function addResetCss(host: Tree): boolean {
         return addPackageToPkgJson(host, name, resetPackage[name], 'dependencies');
     }
     return false;
-}
+};

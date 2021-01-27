@@ -10,8 +10,6 @@ import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
     templateUrl: 'thumb-label.component.html'
 })
 export class IgxThumbLabelComponent {
-    private _active: boolean;
-
     @Input()
     public value: number;
 
@@ -58,6 +56,8 @@ export class IgxThumbLabelComponent {
     public get labelPressedClass() {
         return this.thumb?.thumbPressedClass;
     }
+
+    private _active: boolean;
 
     constructor(private _elementRef: ElementRef) { }
 

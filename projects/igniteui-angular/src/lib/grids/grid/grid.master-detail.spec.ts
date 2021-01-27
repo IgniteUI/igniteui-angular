@@ -933,7 +933,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it('Should be able to expand detail view of newly added row.', async () => {
-                grid.addRow({ 'ID': '123', 'CompanyName': 'Test', 'ContactName': 'Test', 'Address': 'Test Address' });
+                grid.addRow({ ID: '123', CompanyName: 'Test', ContactName: 'Test', Address: 'Test Address' });
                 fix.detectChanges();
                 // scroll to bottom
                 grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
@@ -1210,6 +1210,8 @@ describe('IgxGrid Master Detail #grid', () => {
     `
 })
 export class DefaultGridMasterDetailComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 
     public width = '800px';
     public height = '500px';
@@ -1221,9 +1223,6 @@ export class DefaultGridMasterDetailComponent {
     public paging = false;
     public perPage = 15;
     public rowSelectable = GridSelectionMode.none;
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
 }
 
 @Component({
@@ -1289,6 +1288,4 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
 })
 export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 
-function getDetailAddressText(detailElem) {
-    return detailElem.querySelector('.addressArea').innerText;
-}
+const getDetailAddressText = (detailElem) => detailElem.querySelector('.addressArea').innerText;

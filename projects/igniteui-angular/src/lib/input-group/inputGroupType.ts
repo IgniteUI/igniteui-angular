@@ -1,11 +1,12 @@
 import { InjectionToken } from '@angular/core';
+import { mkenum } from '../core/utils';
 
-enum IgxInputGroupEnum {
-    line,
-    box,
-    border,
-    search,
-}
+const IgxInputGroupEnum = mkenum({
+    Line: 'line',
+    Box: 'box',
+    Border: 'border',
+    Search: 'search'
+});
 
 /**
  * Defines the InputGroupType DI token.
@@ -16,4 +17,4 @@ enum IgxInputGroupEnum {
  /**
   * Determines the InputGroupType.
   */
- export type IgxInputGroupType = keyof typeof IgxInputGroupEnum;
+ export type IgxInputGroupType = (typeof IgxInputGroupEnum)[keyof typeof IgxInputGroupEnum];

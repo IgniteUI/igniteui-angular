@@ -10,30 +10,28 @@ import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridCellStylingSampleComponent implements OnInit {
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public data: Array<any>;
     data2: Array<any>;
     public columns: Array<any>;
-
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
-
     styles = {
-        'background': 'linear-gradient(180deg, #dd4c4c 0%, firebrick 100%)',
-        'color': 'white',
+        background: 'linear-gradient(180deg, #dd4c4c 0%, firebrick 100%)',
+        color: 'white',
         'text-shadow': '1px 1px 2px rgba(25,25,25,.25)',
-        'animation': '0.25s ease-in-out forwards alternate popin'
+        animation: '0.25s ease-in-out forwards alternate popin'
     };
 
     cellClasses1 = {
-        'test1': this.condition1,
-        'test2': this.condition2,
-        'test3': this.condition3
+        test1: this.condition1,
+        test2: this.condition2,
+        test3: this.condition3
     };
 
     cellClasses2 = {
-        'test1': this.condition4,
-        'test2': this.condition5,
-        'test3': this.condition6
+        test1: this.condition4,
+        test2: this.condition5,
+        test3: this.condition6
     };
 
     condition(rowData: any): boolean {

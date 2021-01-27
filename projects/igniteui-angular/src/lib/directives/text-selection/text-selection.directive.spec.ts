@@ -50,7 +50,7 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Shouldn\'t make a selection when the state is set to false', async() => {
+    it('Shouldn\'t make a selection when the state is set to false', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionFalseOnClickComponent);
         fix.detectChanges();
 

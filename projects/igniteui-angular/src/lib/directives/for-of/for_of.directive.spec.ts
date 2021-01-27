@@ -34,7 +34,6 @@ describe('IgxForOf directive -', () => {
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;
     let horizontalScroller: HTMLElement;
-    let zone: TestNgZone;
 
     let dg: DataGenerator;
 
@@ -73,7 +72,7 @@ describe('IgxForOf directive -', () => {
                     HorizontalVirtualComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -184,7 +183,7 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -226,7 +225,7 @@ describe('IgxForOf directive -', () => {
 
             spyOn(fix.componentInstance.parentVirtDir.onChunkLoad, 'emit');
 
-            fix.componentInstance.data = [{ '1': 1, '2': 2, '3': 3, '4': 4 }];
+            fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
 
             expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
@@ -235,6 +234,7 @@ describe('IgxForOf directive -', () => {
 
         it('should apply the changes when itemSize is changed.', () => {
             const firstRecChildren = displayContainer.children[0].children;
+            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
@@ -242,6 +242,7 @@ describe('IgxForOf directive -', () => {
 
             fix.componentInstance.itemSize = '100px';
             fix.detectChanges();
+            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
@@ -289,16 +290,16 @@ describe('IgxForOf directive -', () => {
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
             fix.componentInstance.data = [
-                { '1': '1', height: '100px' },
-                { '1': '2', height: '1800px' },
-                { '1': '3', height: '200px' },
-                { '1': '4', height: '200px' },
-                { '1': '5', height: '300px' },
-                { '1': '6', height: '100px' },
-                { '1': '7', height: '100px' },
-                { '1': '8', height: '100px' },
-                { '1': '9', height: '150px' },
-                { '1': '10', height: '150px' }
+                { 1: '1', height: '100px' },
+                { 1: '2', height: '1800px' },
+                { 1: '3', height: '200px' },
+                { 1: '4', height: '200px' },
+                { 1: '5', height: '300px' },
+                { 1: '6', height: '100px' },
+                { 1: '7', height: '100px' },
+                { 1: '8', height: '100px' },
+                { 1: '9', height: '150px' },
+                { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
             await wait();
@@ -307,16 +308,16 @@ describe('IgxForOf directive -', () => {
 
             fix.componentInstance.height = '1900px';
             fix.componentInstance.data = [
-                { '1': '1', height: '1800px' },
-                { '1': '2', height: '100px' },
-                { '1': '3', height: '200px' },
-                { '1': '4', height: '200px' },
-                { '1': '5', height: '300px' },
-                { '1': '6', height: '100px' },
-                { '1': '7', height: '100px' },
-                { '1': '8', height: '100px' },
-                { '1': '9', height: '150px' },
-                { '1': '10', height: '150px' }
+                { 1: '1', height: '1800px' },
+                { 1: '2', height: '100px' },
+                { 1: '3', height: '200px' },
+                { 1: '4', height: '200px' },
+                { 1: '5', height: '300px' },
+                { 1: '6', height: '100px' },
+                { 1: '7', height: '100px' },
+                { 1: '8', height: '100px' },
+                { 1: '9', height: '150px' },
+                { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
             await wait();
@@ -336,7 +337,7 @@ describe('IgxForOf directive -', () => {
                     VirtualComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -1104,7 +1105,7 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualDestroyComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -1154,7 +1155,7 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualCreateComponent
                 ],
                 imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                providers: [{ provide: NgZone, useFactory: () => new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -1233,7 +1234,7 @@ class DataGenerator {
             instance.cols = cols;
             instance.data = dummyData;
         } else {
-            return { data: dummyData, cols: cols };
+            return { data: dummyData, cols };
         }
     }
 
@@ -1255,6 +1256,8 @@ class DataGenerator {
 /** igxFor for testing */
 @Directive({ selector: '[igxForTest]' })
 export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
+    public scrStepArray = [];
+    public scrTopArray = [];
     constructor(
         public viewContainer: ViewContainerRef,
         public template: TemplateRef<NgForOfContext<T>>,
@@ -1266,14 +1269,11 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         platformUtil: PlatformUtil) {
         super(viewContainer, template, differs, fResolver, changeDet, zone, syncService, platformUtil, document);
     }
-    public scrStepArray = [];
-    public scrTopArray = [];
     public onScroll(evt) {
-        let calcScrollStep;
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
         this.scrTopArray.push(evt.target.scrollTop);
-        calcScrollStep = evt.target.scrollTop - prevScrTop;
+        const calcScrollStep = evt.target.scrollTop - prevScrTop;
         this.scrStepArray.push(calcScrollStep);
         super.onScroll(evt);
     }
@@ -1302,8 +1302,8 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         return super.getElement(viewref, nodeName);
     }
 
-    public testGetHorizontalIndexAt(left, set, index) {
-        super.getIndexAt(left, set, index);
+    public testGetHorizontalIndexAt(left, set) {
+        super.getIndexAt(left, set);
     }
 }
 
@@ -1316,9 +1316,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     `
 })
 export class EmptyVirtualComponent {
-    public data = [];
 
     @ViewChild('container', { static: true }) public container;
+    public data = [];
 }
 
 
@@ -1343,12 +1343,6 @@ export class EmptyVirtualComponent {
     `
 })
 export class VirtualComponent {
-
-    public width = '800px';
-    public height = '400px';
-    public cols = [];
-    public data = [];
-
     @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
@@ -1357,6 +1351,11 @@ export class VirtualComponent {
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
     public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
+
+    public width = '800px';
+    public height = '400px';
+    public cols = [];
+    public data = [];
 
     public scrollTop(newScrollTop) {
         const verticalScrollbar = this.container.element.nativeElement.querySelector('igx-virtual-helper');
@@ -1481,10 +1480,10 @@ export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
     `
 })
 export class VerticalVirtualCreateComponent extends VerticalVirtualComponent {
-    public exists = false;
-
     @ViewChild('scrollContainer2', { read: IgxForOfDirective, static: false })
     public secondForOfDir: IgxForOfDirective<any>;
+
+    public exists = false;
 }
 
 /** Only horizontally virtualized component */
@@ -1532,14 +1531,14 @@ export class HorizontalVirtualComponent extends VirtualComponent {
     `
 })
 export class VirtualVariableSizeComponent {
-    public height = '0px';
-    public data = [];
-
     @ViewChild('container', { static: true })
     public container;
 
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
+
+    public height = '0px';
+    public data = [];
 
     public generateData(count) {
         const dummyData = [];
@@ -1565,17 +1564,15 @@ export class VirtualVariableSizeComponent {
         </div>
     `
 })
-export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent implements OnInit {
-    ngOnInit() { }
+export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent {
 }
 
 @Injectable()
 export class LocalService {
     public records: Observable<any[]>;
+    public count: Observable<number>;
     private _records: BehaviorSubject<any[]>;
     private dataStore: any[];
-
-    public count: Observable<number>;
     private _count: BehaviorSubject<number>;
 
     constructor() {
@@ -1628,14 +1625,14 @@ export class LocalService {
     providers: [LocalService]
 })
 export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
-    public height = '500px';
-    public data;
-
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
+
+    public height = '500px';
+    public data;
 
     constructor(private localService: LocalService) { }
     public ngOnInit(): void {
@@ -1648,7 +1645,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.parentVirtDir.cdr.detectChanges();
         });
@@ -1672,15 +1669,15 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     providers: [LocalService]
 })
 export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
-    public height = '500px';
-    public data;
-    public count: Observable<number>;
-
     @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
+
+    public height = '500px';
+    public data;
+    public count: Observable<number>;
 
     constructor(private localService: LocalService) { }
     public ngOnInit(): void {
@@ -1693,7 +1690,7 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
         this.localService.getData(this.parentVirtDir.state);
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.parentVirtDir.cdr.detectChanges();
         });
@@ -1727,13 +1724,13 @@ export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
 })
 
 export class NoWidthAndHeightComponent {
+    @ViewChildren('child')
+    public childVirtDirs: QueryList<any>;
+
     public items = [];
     public width = '300px';
     public itemSize = 60;
     public height = '300px';
-
-    @ViewChildren('child')
-    public childVirtDirs: QueryList<any>;
 
     constructor() {
         for (let i = 0; i < 100; i++) {

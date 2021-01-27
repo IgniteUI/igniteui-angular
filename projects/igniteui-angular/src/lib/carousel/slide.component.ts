@@ -21,8 +21,6 @@ export enum Direction { NONE, NEXT, PREV }
 })
 
 export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
-    private _active = false;
-    private _destroy$ = new Subject<boolean>();
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
@@ -30,6 +28,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      *  <igx-slide index = "1"></igx-slide>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public index: number;
@@ -41,6 +40,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      *  <igx-slide direction="NEXT"></igx-slide>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public direction: Direction;
@@ -50,6 +50,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      * ```typescript
      * let tabIndex =  this.carousel.tabIndex;
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('attr.tabindex')
@@ -97,6 +98,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      * ```typescript
      * let class =  this.slide.cssClass;
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide')
@@ -116,6 +118,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      *  <igx-slide [(active)] ="model.isActive"></igx-slide>
      * <igx-carousel>
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.igx-slide--current')
@@ -137,6 +140,9 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      */
     @Output() public activeChange = new EventEmitter<boolean>();
 
+    private _active = false;
+    private _destroy$ = new Subject<boolean>();
+
     constructor(private elementRef: ElementRef) { }
 
     /**
@@ -144,6 +150,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      * ```typescript
      * let nativeElement =  this.slide.nativeElement;
      * ```
+     *
      * @memberof IgxSlideComponent
      */
     public get nativeElement() {

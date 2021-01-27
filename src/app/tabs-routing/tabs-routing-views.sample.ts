@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     template: `
@@ -14,7 +14,7 @@ import { Component, NgModule } from '@angular/core';
     `
 })
 export class TabsRoutingView1Component {
-    contacts = [{
+    public contacts = [{
         avatar: 'assets/images/avatar/1.jpg',
         phone: '770-504-2217',
         text: 'Terrance Orta'

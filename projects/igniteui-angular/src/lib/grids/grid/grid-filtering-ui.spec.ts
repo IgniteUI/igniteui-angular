@@ -640,7 +640,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'Downloads');
 
             const columnProductName = GridFunctions.getColumnHeader('ProductName', fix);
-            columnProductName.triggerEventHandler('click', { stopPropagation: <any>((e: any) => { }) });
+            columnProductName.triggerEventHandler('click', { stopPropagation: (e: any) => { } });
             fix.detectChanges();
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -1869,14 +1869,18 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toBe(2);
 
             let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
-            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            expect(() => {
+ filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
+})
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
             await wait(500);
             fix.detectChanges();
 
             chipToRemove = filterUIRow.componentInstance.expressionsList[2];
-            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            expect(() => {
+ filterUIRow.componentInstance.onChipRemoved(null, chipToRemove);
+})
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
             await wait(100);
@@ -2182,8 +2186,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             filteringCells = GridFunctions.getFilteringCells(fix);
             expect(filteringCells.length).toEqual(4);
 
-            for (let i = 0; i < filteringCells.length; i++) {
-                expect(GridFunctions.getChipText(filteringCells[i])).toEqual('Filter');
+            for (const filterCell of filteringCells) {
+                expect(GridFunctions.getChipText(filterCell)).toEqual('Filter');
             }
         }));
 
@@ -2508,7 +2512,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 
     describe(null, () => {
-        let fix, grid;
+        let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
@@ -2516,9 +2520,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should correctly update empty filter cells when scrolling horizontally.', async () => {
-            let emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => {
-                return cell.nativeElement.children.length === 0;
-            });
+            let emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent))
+                                    .filter((cell) => cell.nativeElement.children.length === 0);
             expect(emptyFilterCells.length).toEqual(1);
 
             let emptyFilterHeader = emptyFilterCells[0].parent.query(By.directive(IgxGridHeaderComponent));
@@ -2529,9 +2532,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             await wait();
             fix.detectChanges();
 
-            emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => {
-                return cell.nativeElement.children.length === 0;
-            });
+            emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent))
+                                    .filter((cell) => cell.nativeElement.children.length === 0);
             expect(emptyFilterCells.length).toEqual(1);
 
             emptyFilterHeader = emptyFilterCells[0].parent.query(By.directive(IgxGridHeaderComponent));
@@ -3273,7 +3275,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith({
-                column: column,
+                column,
                 newValue: true
             });
         }));
@@ -3714,9 +3716,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Scroll the search list to the middle.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const displayContainer = searchComponent.querySelector('igx-display-container');
+            const displayContainer = searchComponent.querySelector('igx-display-container') as HTMLElement;
             const scrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
-            scrollbar.scrollTop = (<HTMLElement>displayContainer).getBoundingClientRect().height / 2;
+            scrollbar.scrollTop = displayContainer.getBoundingClientRect().height / 2;
             await wait(200);
             fix.detectChanges();
 
@@ -3755,9 +3757,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
-            grid.columns[4].formatter = (val: Date) => {
-                return new Intl.DateTimeFormat('bg-BG').format(val);
-            };
+            grid.columns[4].formatter = (val: Date) => new Intl.DateTimeFormat('bg-BG').format(val);
             grid.cdr.detectChanges();
 
             // Open excel style filtering component
@@ -5071,7 +5071,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 
     describe('Templates: ', () => {
-        let fix, grid;
+        let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
@@ -5633,7 +5633,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 
     describe('External Excel Style Filtering', () => {
-        let fix, grid;
+        let fix; let grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalESFComponent);
             grid = fix.componentInstance.grid;
@@ -5843,24 +5843,24 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     }));
 });
 
-function verifyFilterRowUI(input, closeButton, resetButton, buttonResetDisabled = true) {
+const verifyFilterRowUI = (input, closeButton, resetButton, buttonResetDisabled = true) => {
     ControlsFunction.verifyButtonIsDisabled(closeButton.nativeElement, false);
     ControlsFunction.verifyButtonIsDisabled(resetButton.nativeElement, buttonResetDisabled);
     expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-}
+};
 
-function verifyFilterUIPosition(filterUIContainer, grid) {
+const verifyFilterUIPosition = (filterUIContainer, grid) => {
     const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
         filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
     expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
-}
+};
 
-function isExcelSearchScrollBarVisible(fix) {
+const isExcelSearchScrollBarVisible = (fix) => {
     const searchScrollbar = GridFunctions.getExcelStyleSearchComponentScrollbar(fix);
     return searchScrollbar.offsetHeight < searchScrollbar.children[0].offsetHeight;
-}
+};
 
-function checkUIForType(type: string, elem: DebugElement) {
+const checkUIForType = (type: string, elem: DebugElement) => {
     let expectedConditions;
     let expectedInputType;
     const isReadOnly = type === 'bool' ? true : false;
@@ -5900,9 +5900,9 @@ function checkUIForType(type: string, elem: DebugElement) {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
     }
-}
+};
 
-function verifyExcelStyleFilteringDisplayDensity(fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) {
+const verifyExcelStyleFilteringDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -5938,9 +5938,9 @@ function verifyExcelStyleFilteringDisplayDensity(fix: ComponentFixture<any>, exp
     // Verify column sorting and column moving buttons are positioned either on right of their
     // respective header or under it, based on the expected display density.
     verifySortMoveDisplayDensity(fix, expectedDisplayDensity);
-}
+};
 
-function verifyPinningHidingDisplayDensity(fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) {
+const verifyPinningHidingDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
     // Get excel style dialog
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -5987,9 +5987,9 @@ function verifyPinningHidingDisplayDensity(fix: ComponentFixture<any>, expectedD
         expect(columnHidingRect.left > headerTitleRect.right).toBe(true,
             'columnHiding icon is NOT on the right of top header');
     }
-}
+};
 
-function verifySortMoveDisplayDensity(fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) {
+const verifySortMoveDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
     // Get excel style dialog.
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
@@ -6024,9 +6024,9 @@ function verifySortMoveDisplayDensity(fix: ComponentFixture<any>, expectedDispla
         'incorrect move button vertical position based on the sort title');
     expect(moveHeaderRect.bottom <= moveButtons[1].getBoundingClientRect().top).toBe(!isCompact,
         'incorrect move button vertical position based on the sort title');
-}
+};
 
-function verifyExcelCustomFilterDisplayDensity(fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) {
+const verifyExcelCustomFilterDisplayDensity = (fix: ComponentFixture<any>, expectedDisplayDensity: DisplayDensity) => {
     // Excel style filtering custom filter dialog
     const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
 
@@ -6053,9 +6053,9 @@ function verifyExcelCustomFilterDisplayDensity(fix: ComponentFixture<any>, expec
         expect(inputGroup.classList.contains(getInputGroupDensityClass(expectedDisplayDensity))).toBe(true,
             'incorrect inputGroup density in custom filter dialog');
     });
-}
+};
 
-function verifyGridSubmenuDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
+const verifyGridSubmenuDisplayDensity = (gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) => {
     const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
     const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
     const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
@@ -6064,9 +6064,9 @@ function verifyGridSubmenuDisplayDensity(gridNativeElement: HTMLElement, expecte
         expect(dropdownItem.classList.contains(getDropdownItemDensityClass(expectedDisplayDensity))).toBe(true,
             'incorrect dropdown item density');
     });
-}
+};
 
-function getListDensityClass(displayDensity: DisplayDensity) {
+const getListDensityClass = (displayDensity: DisplayDensity) => {
     let densityClass;
     switch (displayDensity) {
         case DisplayDensity.compact: densityClass = 'igx-list--compact'; break;
@@ -6074,9 +6074,9 @@ function getListDensityClass(displayDensity: DisplayDensity) {
         default: densityClass = 'igx-list'; break;
     }
     return densityClass;
-}
+};
 
-function getInputGroupDensityClass(displayDensity: DisplayDensity) {
+const getInputGroupDensityClass = (displayDensity: DisplayDensity) => {
     let densityClass;
     switch (displayDensity) {
         case DisplayDensity.compact: densityClass = 'igx-input-group--compact'; break;
@@ -6084,13 +6084,13 @@ function getInputGroupDensityClass(displayDensity: DisplayDensity) {
         default: densityClass = 'igx-input-group--comfortable'; break;
     }
     return densityClass;
-}
+};
 
 /**
  * Gets the corresponding class that a flat/raised/outlined button
  * has added to it additionally based on displayDensity input.
  */
-function getButtonDensityClass(displayDensity: DisplayDensity) {
+const getButtonDensityClass = (displayDensity: DisplayDensity) => {
     let densityClass;
     switch (displayDensity) {
         case DisplayDensity.compact: densityClass = 'igx-button--compact'; break;
@@ -6098,9 +6098,9 @@ function getButtonDensityClass(displayDensity: DisplayDensity) {
         default: densityClass = ''; break;
     }
     return densityClass;
-}
+};
 
-function getDropdownItemDensityClass(displayDensity: DisplayDensity) {
+const getDropdownItemDensityClass = (displayDensity: DisplayDensity) => {
     let densityClass;
     switch (displayDensity) {
         case DisplayDensity.compact: densityClass = 'igx-drop-down__item--compact'; break;
@@ -6108,15 +6108,15 @@ function getDropdownItemDensityClass(displayDensity: DisplayDensity) {
         default: densityClass = 'igx-drop-down__item'; break;
     }
     return densityClass;
-}
+};
 
-function verifyFilteringExpression(operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) {
+const verifyFilteringExpression = (operand: IFilteringExpression, fieldName: string, conditionName: string, searchVal: any) => {
     expect(operand.fieldName).toBe(fieldName);
     expect(operand.condition.name).toBe(conditionName);
     expect(operand.searchVal).toEqual(searchVal);
-}
+};
 
-function verifyExcelStyleFilterAvailableOptions(fix, labels: string[], checked: boolean[]) {
+const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: boolean[]) => {
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
     const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(fix, excelMenu));
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
@@ -6129,9 +6129,9 @@ function verifyExcelStyleFilterAvailableOptions(fix, labels: string[], checked: 
     checked.forEach((c, index) => {
         expect(checkboxElements[index].indeterminate ? null : checkboxElements[index].checked).toEqual(c);
     });
-}
+};
 
-function toggleExcelStyleFilteringItems(fix, shouldApply: boolean, ...itemIndices: number[]) {
+const toggleExcelStyleFilteringItems = (fix, shouldApply: boolean, ...itemIndices: number[]) => {
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
     const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu);
 
@@ -6146,23 +6146,23 @@ function toggleExcelStyleFilteringItems(fix, shouldApply: boolean, ...itemIndice
         tick();
         fix.detectChanges();
     }
-}
+};
 
 /**
  * Verfiy multiple condition chips on their respective indices (asc order left to right)
  * are whether fully visible or not.
  */
-function verifyMultipleChipsVisibility(fix, expectedVisibilities: boolean[]) {
+const verifyMultipleChipsVisibility = (fix, expectedVisibilities: boolean[]) => {
     for (let index = 0; index < expectedVisibilities.length; index++) {
         verifyChipVisibility(fix, index, expectedVisibilities[index]);
     }
-}
+};
 
 /**
  * Verfiy that the condition chip on the respective index (asc order left to right)
  * is whether fully visible or not.
  */
-function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean) {
+const verifyChipVisibility = (fix, index: number, shouldBeFullyVisible: boolean) => {
     const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
     const visibleChipArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));
     const visibleChipAreaRect = visibleChipArea.nativeElement.getBoundingClientRect();
@@ -6172,4 +6172,4 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
 
     expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
-}
+};

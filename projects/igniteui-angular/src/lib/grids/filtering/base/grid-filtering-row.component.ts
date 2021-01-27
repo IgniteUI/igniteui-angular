@@ -38,37 +38,6 @@ import { DisplayDensity } from '../../../core/displayDensity';
     templateUrl: './grid-filtering-row.component.html'
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit {
-
-    private _positionSettings = {
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Bottom
-    };
-
-    private _conditionsOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
-    };
-
-    private _operatorsOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
-    };
-
-    private chipsAreaWidth: number;
-    private chipAreaScrollOffset = 0;
-    private _column = null;
-    private isKeyPressed = false;
-    private isComposing = false;
-    private _cancelChipClick = false;
-
-    public showArrows: boolean;
-    public expression: IFilteringExpression;
-    public expressionsList: Array<ExpressionUI>;
-
     @Input()
     get column(): IgxColumnComponent {
         return this._column;
@@ -142,7 +111,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected operand: ElementRef;
 
     @ViewChild('closeButton', { static: true })
-    public closeButton: ElementRef;
+    protected closeButton: ElementRef;
 
     @HostBinding('class')
     get styleClasses(): string {
@@ -159,7 +128,47 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         return classes;
     }
 
+    public showArrows: boolean;
+    public expression: IFilteringExpression;
+    public expressionsList: Array<ExpressionUI>;
+
+    private _positionSettings = {
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Bottom
+    };
+
+    private _conditionsOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+    };
+
+    private _operatorsOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+    };
+
+    private chipsAreaWidth: number;
+    private chipAreaScrollOffset = 0;
+    private _column = null;
+    private isKeyPressed = false;
+    private isComposing = false;
+    private _cancelChipClick = false;
+
     constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
+
+    @HostListener('keydown', ['$event'])
+    public onKeydownHandler(evt) {
+        if (evt.key === KEYS.ESCAPE || evt.key === KEYS.ESCAPE_IE ||
+            evt.ctrlKey && evt.shiftKey && evt.key.toLowerCase() === 'l') {
+                evt.preventDefault();
+                evt.stopPropagation();
+                this.close();
+        }
+    }
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outlet;
@@ -171,16 +180,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         this.input.nativeElement.focus();
-    }
-
-    @HostListener('keydown', ['$event'])
-    public onKeydownHandler(evt) {
-        if (evt.key === KEYS.ESCAPE || evt.key === KEYS.ESCAPE_IE ||
-            evt.ctrlKey && evt.shiftKey && evt.key.toLowerCase() === 'l') {
-                evt.preventDefault();
-                evt.stopPropagation();
-                this.close();
-        }
     }
 
     get disabled(): boolean {
@@ -485,11 +484,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.transform(this.chipAreaScrollOffset);
     }
 
-    /*
-    * noop
-    */
-    public noop() { }
-
     /**
      *  Event handler for date picker's selection.
      */
@@ -626,8 +620,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         const containerRect = this.container.nativeElement.getBoundingClientRect();
 
         if (arrowPosition === 'right') {
-            for (let index = 0; index < chipAraeChildren.length; index++) {
-                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.right)) {
+            for (const chip of chipAraeChildren) {
+                if (Math.ceil(chip.getBoundingClientRect().right) < Math.ceil(containerRect.right)) {
                     count++;
                 }
             }
@@ -640,8 +634,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         if (arrowPosition === 'left') {
-            for (let index = 0; index < chipAraeChildren.length; index++) {
-                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
+            for (const chip of chipAraeChildren) {
+                if (Math.ceil(chip.getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
                     count++;
                 }
             }
@@ -654,6 +648,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
+    /**
+     * @hidden
+     * Resets the chips area
+     * @memberof IgxGridFilteringRowComponent
+     */
+    public resetChipsArea() {
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+        this.showHideArrowButtons();
+    }
+
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
             if (this.filteringService.isFilterRowVisible) {
@@ -664,7 +669,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 if (!(this.cdr as ViewRef).destroyed) {
-                this.cdr.detectChanges(); }
+                this.cdr.detectChanges();
+}
             }
         });
     }
@@ -736,17 +742,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
-    /**
-     * @hidden
-     * Resets the chips area
-     * @memberof IgxGridFilteringRowComponent
-     */
-    public resetChipsArea() {
-        this.chipAreaScrollOffset = 0;
-        this.transform(this.chipAreaScrollOffset);
-        this.showHideArrowButtons();
-    }
-
     private transform(offset: number) {
         requestAnimationFrame(() => {
             this.chipsArea.element.nativeElement.style.transform = `translate(${offset}px)`;
@@ -758,8 +753,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         const chipAraeChildren = this.chipsArea.element.nativeElement.children;
         const containerRect = this.container.nativeElement.getBoundingClientRect();
 
-        for (let index = 0; index < chipAraeChildren.length; index++) {
-            if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.left)) {
+        for (const chip of chipAraeChildren) {
+            if (Math.ceil(chip.getBoundingClientRect().right) < Math.ceil(containerRect.left)) {
                 count++;
             }
         }

@@ -32,19 +32,17 @@ import { takeUntil } from 'rxjs/operators';
     selector: '[igxRowBaseComponent]'
 })
 export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck, AfterViewInit, OnDestroy {
-
-    protected _rowData: any;
-    protected _addRow: boolean;
-    /**
-     * @hidden
-     */
-    public animateAdd = false;
-
     /**
      * @hidden
      */
     @Output()
     onAnimationEnd = new EventEmitter<IgxRowDirective<T>>();
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.role')
+    public role = 'row';
 
     /**
      *  The data passed to the row component.
@@ -94,6 +92,21 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public disabled = false;
 
     /**
+     * Sets whether the row is pinned.
+     * Default value is `false`.
+     * ```typescript
+     * this.grid.selectedRows[0].pinned = true;
+     * ```
+     */
+    public set pinned(value: boolean) {
+        if (value) {
+            this.grid.pinRow(this.rowID);
+        } else {
+            this.grid.unpinRow(this.rowID);
+        }
+    }
+
+    /**
      * Gets whether the row is pinned.
      * ```typescript
      * let isPinned = row.pinned;
@@ -124,21 +137,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     get cellHeight() {
         return this.addRow && !this.inEditMode ? null : this.grid.rowHeight || 32;
-    }
-
-    /**
-     * Sets whether the row is pinned.
-     * Default value is `false`.
-     * ```typescript
-     * this.grid.selectedRows[0].pinned = true;
-     * ```
-     */
-    public set pinned(value: boolean) {
-        if (value) {
-            this.grid.pinRow(this.rowID);
-        } else {
-            this.grid.unpinRow(this.rowID);
-        }
     }
 
     /**
@@ -189,12 +187,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     }
 
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.role')
-    public role = 'row';
-
     @HostBinding('attr.data-rowIndex')
     get dataRowIndex() {
         return this.index;
@@ -218,8 +210,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     set selected(value: boolean) {
-        value ? this.selectionService.selectRowsWithNoEvent([this.rowID]) :
+        if (value) {
+            this.selectionService.selectRowsWithNoEvent([this.rowID]);
+        } else {
             this.selectionService.deselectRowsWithNoEvent([this.rowID]);
+        }
         this.grid.cdr.markForCheck();
     }
 
@@ -383,8 +378,14 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @internal
      */
     public defaultCssClass = 'igx-grid__tr';
+    /**
+     * @hidden
+     */
+    public animateAdd = false;
 
     protected destroy$ = new Subject<any>();
+    protected _rowData: any;
+    protected _addRow: boolean;
 
     constructor(
         public gridAPI: GridBaseAPIService<T>,
@@ -392,6 +393,33 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        if (this.grid.rowSelection === 'none' || this.deleted) {
+            return;
+        }
+        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+            return;
+        }
+        this.selectionService.selectRowById(this.rowID, !event.ctrlKey, event);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('mouseenter')
+    public showActionStrip() {
+        if (this.grid.actionStrip) {
+            this.grid.actionStrip.show(this);
+        }
+    }
 
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
@@ -405,31 +433,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
-        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
-        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
-            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
-            return;
-        }
-        this.selectionService.selectRowById(this.rowID, !event.ctrlKey, event);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('mouseenter', ['$event'])
-    public showActionStrip(event: MouseEvent) {
-        if (this.grid.actionStrip) {
-            this.grid.actionStrip.show(this);
-        }
-    }
-
-    /**
-     * @hidden
      */
     public onRowSelectorClick(event) {
         event.stopPropagation();
@@ -437,8 +440,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
-        this.selected ? this.selectionService.deselectRow(this.rowID, event) :
+        if (this.selected) {
+            this.selectionService.deselectRow(this.rowID, event);
+        } else {
             this.selectionService.selectRowById(this.rowID, false, event);
+        }
     }
 
     /**
@@ -533,6 +539,19 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     /**
+     * Spawns the add row UI for the specific row.
+     *
+     * @example
+     * ```typescript
+     * const row = this.grid1.getRowByIndex(1);
+     * row.beginAddRow();
+     * ```
+     */
+    public beginAddRow() {
+        this.grid.beginAddRowByIndex(this.rowID, this.index);
+    }
+
+    /**
      * @hidden
      */
     protected resolveClasses(): string {
@@ -554,17 +573,5 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const defaultDragIndicatorCssClass = 'igx-grid__drag-indicator';
         const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
         return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
-    }
-
-    /**
-     * Spawns the add row UI for the specific row.
-     * @example
-     * ```typescript
-     * const row = this.grid1.getRowByIndex(1);
-     * row.beginAddRow();
-     * ```
-     */
-    public beginAddRow() {
-        this.grid.beginAddRowByIndex(this.rowID, this.index);
     }
 }
