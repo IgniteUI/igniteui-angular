@@ -987,6 +987,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
+        }
         this._destroy$.next(true);
         this._destroy$.complete();
     }

@@ -51,13 +51,13 @@ const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper--modal';
 const CLASS_OVERLAY_MAIN = 'igx-overlay';
 
 // Utility function to get all applied to element css from all sources.
-function css(element) {
-    const sheets = document.styleSheets, ret = [];
+const css = (element) => {
+    const sheets = document.styleSheets; const ret = [];
     element.matches = element.matches || element.webkitMatchesSelector || element.mozMatchesSelector
         || element.msMatchesSelector || element.oMatchesSelector;
     for (const key in sheets) {
         if (sheets.hasOwnProperty(key)) {
-            const sheet = <CSSStyleSheet>sheets[key];
+            const sheet = sheets[key];
             const rules: any = sheet.rules || sheet.cssRules;
 
             for (const r in rules) {
@@ -68,9 +68,9 @@ function css(element) {
         }
     }
     return ret;
-}
+};
 
-function addScrollDivToElement(parent) {
+const addScrollDivToElement = (parent) => {
     const scrollDiv = document.createElement('div');
     scrollDiv.style.width = '100px';
     scrollDiv.style.height = '100px';
@@ -79,22 +79,23 @@ function addScrollDivToElement(parent) {
     scrollDiv.style.position = 'absolute';
     parent.appendChild(scrollDiv);
 
-}
+};
 
 /**
  * Returns the top left location of the shown element
+ *
  * @param positionSettings Overlay setting to get location for
  * @param targetRect Rectangle of overlaySettings.target
  * @param wrapperRect Rectangle of shown element
  * @param screenRect Rectangle of the visible area
  * @param elastic Is elastic position strategy, defaults to false
  */
-function getOverlayWrapperLocation(
+const getOverlayWrapperLocation = (
     positionSettings: PositionSettings,
     targetRect: ClientRect,
     wrapperRect: ClientRect,
     screenRect: ClientRect,
-    elastic = false): Point {
+    elastic = false): Point => {
     const location: Point = new Point(0, 0);
 
     location.x =
@@ -162,19 +163,18 @@ function getOverlayWrapperLocation(
         }
     }
     return location;
-}
+};
 
 /**
  * Formats a string according to the given formatters
+ *
  * @param inputString String to be formatted
  * @param formatters Each formatter should include regex expressions and replacements to be applied on the inputString
  */
-function formatString(inputString: string, formatters: any[]) {
-    formatters.forEach(function (formatter) {
-        inputString = inputString.replace(formatter.pattern, formatter.replacement);
-    });
+const formatString = (inputString: string, formatters: any[]) => {
+    formatters.forEach(formatter => inputString = inputString.replace(formatter.pattern, formatter.replacement));
     return inputString;
-}
+};
 
 describe('igxOverlay', () => {
     const formatters = [
@@ -188,6 +188,22 @@ describe('igxOverlay', () => {
     afterAll(() => {
         UIInteractions.clearOverlay();
     });
+
+    const verifyOverlayMargins = (overlaySettings: OverlaySettings, overlay: IgxOverlayService, fix, expectedMargin) => {
+        overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+        tick();
+        fix.detectChanges();
+        const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
+        const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+        const overlayElement = overlayContent.children[0];
+        const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
+        const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
+        const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
+        expect(wrapperMargin).toEqual(expectedMargin);
+        expect(contentMargin).toEqual(expectedMargin);
+        expect(elementMargin).toEqual(expectedMargin);
+        overlay.hideAll();
+    };
 
     describe('Pure Unit Test', () => {
         configureTestSuite();
@@ -217,18 +233,14 @@ describe('igxOverlay', () => {
             mockElement.parentElement = mockElement;
             mockElementRef = { nativeElement: mockElement };
             mockFactoryResolver = {
-                resolveComponentFactory: (c: any) => {
-                    return {
-                        create: (i: any) => {
-                            return {
+                resolveComponentFactory: (c: any) => ({
+                        create: (i: any) => ({
                                 hostView: '',
                                 location: mockElementRef,
                                 changeDetectorRef: { detectChanges: () => { } },
                                 destroy: () => { }
-                            };
-                        }
-                    };
-                }
+                            })
+                    })
             };
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = {};
@@ -524,17 +536,13 @@ describe('igxOverlay', () => {
             const right = 200;
             const bottom = 200;
             const mockElement = document.createElement('div');
-            spyOn(mockElement, 'getBoundingClientRect').and.callFake(() => {
-                return {
+            spyOn(mockElement, 'getBoundingClientRect').and.callFake(() => ({
                     left, top, width, height, right, bottom
-                } as DOMRect;
-            });
+                } as DOMRect));
 
             const mockItem = document.createElement('div');
             mockElement.append(mockItem);
-            spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
-                return new DOMRect(top, left, width, height);
-            });
+            spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => new DOMRect(top, left, width, height));
 
             const mockPositioningSettings1: PositionSettings = {
                 horizontalDirection: HorizontalAlignment.Right,
@@ -573,7 +581,7 @@ describe('igxOverlay', () => {
             expect(mockItem.style.left).toEqual('0px');
 
             // If target is not point or html element, should fallback to new Point(0,0)
-            connectedStrat1.position(mockItem, { width, height }, null, false, <any>'g');
+            connectedStrat1.position(mockItem, { width, height }, null, false, 'g' as any);
             expect(mockItem.style.top).toEqual('0px');
             expect(mockItem.style.left).toEqual('0px');
         });
@@ -630,7 +638,7 @@ describe('igxOverlay', () => {
             const component = document.getElementsByClassName('simpleRef')[0];
             const contentRectOverlay = overlayContent.getBoundingClientRect();
             const componentRectOverlay = component.getBoundingClientRect();
-            let overlayContentTransform = (<any>overlayContent).style.transform;
+            let overlayContentTransform = (overlayContent as any).style.transform;
             const firstTransform = 'translate(40px, 40px)';
             const secondTransform = 'translate(30px, 60px)';
 
@@ -644,7 +652,7 @@ describe('igxOverlay', () => {
             tick();
             const contentRectOverlayNew = overlayContent.getBoundingClientRect();
             const componentRectOverlayNew = component.getBoundingClientRect();
-            overlayContentTransform = (<any>overlayContent).style.transform;
+            overlayContentTransform = (overlayContent as any).style.transform;
 
             expect(contentRectOverlayNew.top).toEqual(componentRectOverlayNew.top);
             expect(contentRectOverlayNew.left).toEqual(componentRectOverlayNew.left);
@@ -851,7 +859,7 @@ describe('igxOverlay', () => {
             expect((overlayDiv.children[0] as any).style.visibility).toEqual('');
             expect((overlayDiv.children[1] as any).style.visibility).toEqual('');
 
-            (<any>overlay)._overlayInfos[0].elementRef.nativeElement.click();
+            (overlay as any)._overlayInfos[0].elementRef.nativeElement.click();
             fix.detectChanges();
             tick();
 
@@ -877,7 +885,7 @@ describe('igxOverlay', () => {
             wrapperElement.appendChild(contentElement);
             document.body.appendChild(wrapperElement);
 
-            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
+            const targetEl: HTMLElement = document.getElementsByClassName('300_button')[0] as HTMLElement;
 
             fixture.detectChanges();
             const positionSettings: PositionSettings = {
@@ -1019,7 +1027,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: true,
                 positionStrategy: new ConnectedPositioningStrategy(),
                 target: button.nativeElement,
-                outlet: outlet
+                outlet
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
@@ -1764,7 +1772,7 @@ describe('igxOverlay', () => {
 
             const horAl = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const verAl = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
+            const targetEl: HTMLElement = document.getElementsByClassName('300_button')[0] as HTMLElement;
 
             fixture.detectChanges();
 
@@ -1931,14 +1939,18 @@ describe('igxOverlay', () => {
 
                 const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
                 const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-                hAlignmentArray.forEach(function (horizontalStartPoint) {
-                    vAlignmentArray.forEach(function (verticalStartPoint) {
-                        hAlignmentArray.forEach(function (horizontalDirection) {
+                hAlignmentArray.forEach(horizontalStartPoint => {
+                    vAlignmentArray.forEach(verticalStartPoint => {
+                        hAlignmentArray.forEach(horizontalDirection => {
                             //  do not check Center as we do nothing here
-                            if (horizontalDirection === 'Center') { return; }
-                            vAlignmentArray.forEach(function (verticalDirection) {
+                            if (horizontalDirection === 'Center') {
+                                return;
+                            }
+                            vAlignmentArray.forEach(verticalDirection => {
                                 //  do not check Middle as we do nothing here
-                                if (verticalDirection === 'Middle') { return; }
+                                if (verticalDirection === 'Middle') {
+                                    return;
+                                }
                                 const positionSettings: PositionSettings = {};
                                 positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
                                 positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
@@ -1956,7 +1968,7 @@ describe('igxOverlay', () => {
                                 tick();
                                 fix.detectChanges();
 
-                                const targetRect: ClientRect = (<HTMLElement>overlaySettings.target).getBoundingClientRect() as ClientRect;
+                                const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect() as ClientRect;
                                 const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
                                 const overlayWrapperRect: ClientRect =
                                     overlayWrapperElement.firstElementChild.getBoundingClientRect() as ClientRect;
@@ -2027,7 +2039,7 @@ describe('igxOverlay', () => {
                                     tick();
                                     fix.detectChanges();
 
-                                    const targetRect = (<HTMLElement>overlaySettings.target).getBoundingClientRect() as ClientRect;
+                                    const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect() as ClientRect;
                                     const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
                                     const overlayWrapperRect =
                                         overlayWrapperElement.getBoundingClientRect() as ClientRect;
@@ -2071,50 +2083,31 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const button = fix.componentInstance.buttonElement.nativeElement;
-            const positionSettings: PositionSettings = {};
-            const overlaySettings: OverlaySettings = {
-                target: button,
-                positionStrategy: new AutoPositionStrategy(positionSettings),
-                scrollStrategy: new NoOpScrollStrategy(),
-                modal: false,
-                closeOnOutsideClick: false
-            };
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
-            hAlignmentArray.forEach(function (hDirection) {
-                vAlignmentArray.forEach(function (vDirection) {
-                    hAlignmentArray.forEach(function (hAlignment) {
-                        vAlignmentArray.forEach(function (vAlignment) {
-                            verifyOverlayMargins(hDirection, vDirection, hAlignment, vAlignment);
+            hAlignmentArray.forEach(hDirection => {
+                vAlignmentArray.forEach(vDirection => {
+                    hAlignmentArray.forEach(hAlignment => {
+                        vAlignmentArray.forEach(vAlignment => {
+                            const positionSettings: PositionSettings = {
+                                horizontalDirection: hDirection as any,
+                                verticalDirection: vDirection as any,
+                                horizontalStartPoint: hAlignment as any,
+                                verticalStartPoint: vAlignment as any
+                            };
+                            const overlaySettings: OverlaySettings = {
+                                target: button,
+                                positionStrategy: new AutoPositionStrategy(positionSettings),
+                                scrollStrategy: new NoOpScrollStrategy(),
+                                modal: false,
+                                closeOnOutsideClick: false
+                            };
+                            verifyOverlayMargins(overlaySettings, overlay, fix, expectedMargin);
                         });
                     });
                 });
             });
-
-            function verifyOverlayMargins(horizontalDirection, verticalDirection, horizontalAlignment, verticalAlignment) {
-                positionSettings.horizontalDirection = horizontalDirection;
-                positionSettings.verticalDirection = verticalDirection;
-                positionSettings.horizontalStartPoint = horizontalAlignment;
-                positionSettings.verticalStartPoint = verticalAlignment;
-                overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
-                overlay.show(id);
-                tick();
-                fix.detectChanges();
-                const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
-                const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                const overlayElement = overlayContent.children[0];
-                const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
-                const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
-                const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
-                expect(wrapperMargin).toEqual(expectedMargin);
-                expect(contentMargin).toEqual(expectedMargin);
-                expect(elementMargin).toEqual(expectedMargin);
-                overlay.detach(id);
-                tick();
-                fix.detectChanges();
-            }
         }));
 
         // When adding more than one component to show in igx-overlay:
@@ -2211,7 +2204,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: false,
-                scrollStrategy: scrollStrategy,
+                scrollStrategy,
                 positionStrategy: new GlobalPositionStrategy()
             };
 
@@ -2246,7 +2239,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false,
                 modal: false,
                 positionStrategy: new GlobalPositionStrategy(),
-                scrollStrategy: scrollStrategy
+                scrollStrategy
             };
 
             spyOn(scrollStrategy, 'initialize').and.callThrough();
@@ -2397,10 +2390,10 @@ describe('igxOverlay', () => {
 
                 const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
                 const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-                hAlignmentArray.forEach(function (horizontalStartPoint) {
-                    vAlignmentArray.forEach(function (verticalStartPoint) {
-                        hAlignmentArray.forEach(function (horizontalDirection) {
-                            vAlignmentArray.forEach(function (verticalDirection) {
+                hAlignmentArray.forEach(horizontalStartPoint => {
+                    vAlignmentArray.forEach(verticalStartPoint => {
+                        hAlignmentArray.forEach(horizontalDirection => {
+                            vAlignmentArray.forEach(verticalDirection => {
                                 const positionSettings: PositionSettings = {};
                                 positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
                                 positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
@@ -2419,18 +2412,18 @@ describe('igxOverlay', () => {
                                 tick();
                                 fix.detectChanges();
 
-                                const targetRect: ClientRect = (<HTMLElement>overlaySettings.target).getBoundingClientRect() as ClientRect;
+                                const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect() as ClientRect;
                                 //  we need original rect of the wrapper element. After it was shown in overlay elastic may
                                 //  set width and/or height. To get original rect remove width and height, get the rect and
                                 //  restore width and height;
-                                const overlayWrapperElement: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                const width = (<any>overlayWrapperElement).style.width;
-                                (<any>overlayWrapperElement).style.width = '';
-                                const height = (<any>overlayWrapperElement).style.height;
-                                (<any>overlayWrapperElement).style.height = '';
+                                const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                                const width = overlayWrapperElement.style.width;
+                                overlayWrapperElement.style.width = '';
+                                const height = overlayWrapperElement.style.height;
+                                overlayWrapperElement.style.height = '';
                                 let overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
-                                (<any>overlayWrapperElement).style.width = width;
-                                (<any>overlayWrapperElement).style.height = height;
+                                overlayWrapperElement.style.width = width;
+                                overlayWrapperElement.style.height = height;
                                 const screenRect: ClientRect = {
                                     left: 0,
                                     top: 0,
@@ -2508,18 +2501,18 @@ describe('igxOverlay', () => {
                                     tick();
                                     fix.detectChanges();
 
-                                    const targetRect = (<HTMLElement>overlaySettings.target).getBoundingClientRect() as ClientRect;
+                                    const targetRect = (overlaySettings.target as HTMLElement).getBoundingClientRect() as ClientRect;
                                     //  we need original rect of the wrapper element. After it was shown in overlay elastic may
                                     //  set width and/or height. To get original rect remove width and height, get the rect and
                                     //  restore width and height;
-                                    const overlayWrapperElement: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                                    const width = (<any>overlayWrapperElement).style.width;
-                                    (<any>overlayWrapperElement).style.width = '';
-                                    const height = (<any>overlayWrapperElement).style.height;
-                                    (<any>overlayWrapperElement).style.height = '';
+                                    const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
+                                    const width = overlayWrapperElement.style.width;
+                                    overlayWrapperElement.style.width = '';
+                                    const height = overlayWrapperElement.style.height;
+                                    overlayWrapperElement.style.height = '';
                                     let overlayWrapperRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
-                                    (<any>overlayWrapperElement).style.width = width;
-                                    (<any>overlayWrapperElement).style.height = height;
+                                    overlayWrapperElement.style.width = width;
+                                    overlayWrapperElement.style.height = height;
                                     const screenRect: ClientRect = {
                                         left: 0,
                                         top: 0,
@@ -2561,50 +2554,31 @@ describe('igxOverlay', () => {
 
             const overlay = fix.componentInstance.overlay;
             const button = fix.componentInstance.buttonElement.nativeElement;
-            const positionSettings: PositionSettings = {};
-            const overlaySettings: OverlaySettings = {
-                target: button,
-                positionStrategy: new ElasticPositionStrategy(positionSettings),
-                scrollStrategy: new NoOpScrollStrategy(),
-                modal: false,
-                closeOnOutsideClick: false
-            };
             const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
             const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
 
-            hAlignmentArray.forEach(function (hDirection) {
-                vAlignmentArray.forEach(function (vDirection) {
-                    hAlignmentArray.forEach(function (hAlignment) {
-                        vAlignmentArray.forEach(function (vAlignment) {
-                            verifyOverlayMargins(hDirection, vDirection, hAlignment, vAlignment);
+            hAlignmentArray.forEach(hDirection => {
+                vAlignmentArray.forEach(vDirection => {
+                    hAlignmentArray.forEach(hAlignment => {
+                        vAlignmentArray.forEach(vAlignment => {
+                            const positionSettings: PositionSettings = {
+                                horizontalDirection: hDirection as any,
+                                verticalDirection: vDirection as any,
+                                horizontalStartPoint: hAlignment as any,
+                                verticalStartPoint: vAlignment as any
+                            };
+                            const overlaySettings: OverlaySettings = {
+                                target: button,
+                                positionStrategy: new ElasticPositionStrategy(positionSettings),
+                                scrollStrategy: new NoOpScrollStrategy(),
+                                modal: false,
+                                closeOnOutsideClick: false
+                            };
+                            verifyOverlayMargins(overlaySettings, overlay, fix, expectedMargin);
                         });
                     });
                 });
             });
-
-            function verifyOverlayMargins(horizontalDirection, verticalDirection, horizontalAlignment, verticalAlignment) {
-                positionSettings.horizontalDirection = horizontalDirection;
-                positionSettings.verticalDirection = verticalDirection;
-                positionSettings.horizontalStartPoint = horizontalAlignment;
-                positionSettings.verticalStartPoint = verticalAlignment;
-                overlaySettings.positionStrategy = new ElasticPositionStrategy(positionSettings);
-                const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
-                overlay.show(id);
-                tick();
-                fix.detectChanges();
-                const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
-                const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                const overlayElement = overlayContent.children[0];
-                const wrapperMargin = window.getComputedStyle(overlayWrapper, null).getPropertyValue('margin');
-                const contentMargin = window.getComputedStyle(overlayContent, null).getPropertyValue('margin');
-                const elementMargin = window.getComputedStyle(overlayElement, null).getPropertyValue('margin');
-                expect(wrapperMargin).toEqual(expectedMargin);
-                expect(contentMargin).toEqual(expectedMargin);
-                expect(elementMargin).toEqual(expectedMargin);
-                overlay.hide(id);
-                tick();
-                fix.detectChanges();
-            }
         }));
 
         // When adding more than one component to show in igx-overlay:
@@ -2702,7 +2676,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 modal: false,
-                scrollStrategy: scrollStrategy,
+                scrollStrategy,
                 positionStrategy: new ElasticPositionStrategy()
             };
 
@@ -2737,7 +2711,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false,
                 modal: false,
                 positionStrategy: new ElasticPositionStrategy(),
-                scrollStrategy: scrollStrategy
+                scrollStrategy
             };
 
             spyOn(scrollStrategy, 'initialize').and.callThrough();
@@ -2775,7 +2749,7 @@ describe('igxOverlay', () => {
 
             fixture.detectChanges();
             const overlaySettings: OverlaySettings = {
-                outlet: outlet,
+                outlet,
                 positionStrategy: new ContainerPositionStrategy()
             };
 
@@ -2822,7 +2796,7 @@ describe('igxOverlay', () => {
 
             // Utility handler meant for later detachment
             // TO DO replace Spies with css class and/or getBoundingClientRect.
-            function _handler(event) {
+            const _handler = event => {
                 if (event.which === 1) {
                     fixture.detectChanges();
                     tick();
@@ -2831,9 +2805,9 @@ describe('igxOverlay', () => {
                     document.removeEventListener('click', _handler);
                     dummy.remove();
                 }
-
                 return event;
-            }
+            };
+
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -3009,15 +2983,14 @@ describe('igxOverlay', () => {
         it('Should not close when esc key is pressed and is not modal (DropDown, Dialog, etc.).', fakeAsync(() => {
 
             // Utility handler meant for later detachment
-            function _handler(event) {
+            const _handler = event => {
                 if (event.key === targetButton) {
                     overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
                     expect(overlayWrapper).toBeTruthy();
                     document.removeEventListener(targetEvent, _handler);
                 }
-
                 return event;
-            }
+            };
 
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
@@ -3094,7 +3067,7 @@ describe('igxOverlay', () => {
                 'width:60px; height:60px; color:green; position: absolute; top: 3000px; left: 3000px;');
             document.body.appendChild(dummy);
 
-            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('button')[0];
+            const targetEl = document.getElementsByClassName('button')[0] as HTMLElement;
 
             const overlaySettings: OverlaySettings = {
                 target: targetEl,
@@ -3602,7 +3575,7 @@ describe('igxOverlay', () => {
                 const overlay = fixture.componentInstance.overlay;
                 const overlaySettings: OverlaySettings = {
                     positionStrategy: new GlobalPositionStrategy(),
-                    scrollStrategy: scrollStrategy,
+                    scrollStrategy,
                     modal: false,
                 };
 
@@ -3646,7 +3619,7 @@ describe('igxOverlay', () => {
                 const overlay = fixture.componentInstance.overlay;
                 const overlaySettings: OverlaySettings = {
                     positionStrategy: new GlobalPositionStrategy(),
-                    scrollStrategy: scrollStrategy,
+                    scrollStrategy,
                     closeOnOutsideClick: false,
                     modal: false,
                 };
@@ -3683,7 +3656,7 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
                 positionStrategy: new GlobalPositionStrategy(),
-                scrollStrategy: scrollStrategy,
+                scrollStrategy,
                 modal: false,
             };
 
@@ -3727,7 +3700,7 @@ describe('igxOverlay', () => {
                 const overlay = fixture.componentInstance.overlay;
                 const overlaySettings: OverlaySettings = {
                     modal: false,
-                    scrollStrategy: scrollStrategy,
+                    scrollStrategy,
                     positionStrategy: new GlobalPositionStrategy()
                 };
 
@@ -3769,7 +3742,7 @@ describe('igxOverlay', () => {
                 closeOnOutsideClick: false,
                 modal: false,
                 positionStrategy: new ConnectedPositioningStrategy(),
-                scrollStrategy: scrollStrategy
+                scrollStrategy
             };
 
             overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
@@ -3930,8 +3903,9 @@ describe('igxOverlay', () => {
         }));
     });
 });
+
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: `simple - dynamic - component`,
     template: `<div style='width:100px; height: 100px; background-color: red'></div>`
 })
@@ -3970,23 +3944,23 @@ export class SimpleBigSizeComponent {
             <div igxToggle>
                 <div class='scrollableDiv' *ngIf='visible' style ='position: absolute; width: 200px; height: 200px;
         overflow-y: scroll; background-color: red;'>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            <p> AAAAA </p>
-            </div>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                    <p> AAAAA </p>
+                </div>
             </div>`
 })
 export class SimpleDynamicWithDirectiveComponent {
-    public visible = false;
-
     @ViewChild(IgxToggleDirective, { static: true })
     private _overlay: IgxToggleDirective;
+
+    public visible = false;
 
     public get overlay(): IgxToggleDirective {
         return this._overlay;
@@ -4020,10 +3994,10 @@ export class SimpleDynamicWithDirectiveComponent {
     }`]
 })
 export class EmptyPageComponent {
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
-
     @ViewChild('button', { static: true }) buttonElement: ElementRef;
     @ViewChild('div', { static: true }) divElement: ElementRef;
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
     click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
@@ -4038,14 +4012,14 @@ export class EmptyPageComponent {
     encapsulation: ViewEncapsulation.ShadowDom
 })
 export class EmptyPageInShadowDomComponent {
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
-
     @ViewChild('button', { static: true }) buttonElement: ElementRef;
     @ViewChild('outlet', { static: true }) outletElement: ElementRef;
+
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 }
 
 @Component({
-    template: `<button #button (click)='click($event)'>Show Overlay</button>`,
+    template: `<button #button (click)='click()'>Show Overlay</button>`,
     styles: [`button {
         position: absolute;
         bottom: 0px;
@@ -4058,11 +4032,9 @@ export class EmptyPageInShadowDomComponent {
     }`]
 })
 export class DownRightButtonComponent {
-    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
 
     public positionStrategy: IPositionStrategy;
-
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
 
     public ButtonPositioningSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Right,
@@ -4073,7 +4045,9 @@ export class DownRightButtonComponent {
 
     public target: Point | HTMLElement = null;
 
-    click(event) {
+    constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
+
+    click() {
         this.positionStrategy.settings = this.ButtonPositioningSettings;
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent, {
             target: this.target,
@@ -4084,6 +4058,7 @@ export class DownRightButtonComponent {
         }));
     }
 }
+
 @Component({
     template: `<button class='300_button' #button (click)='click()'>Show Overlay</button>`,
     styles: [`button {
@@ -4097,9 +4072,10 @@ export class DownRightButtonComponent {
 })
 export class TopLeftOffsetComponent {
 
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
     click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent));
     }
@@ -4108,10 +4084,10 @@ export class TopLeftOffsetComponent {
 @Component({
     template: `
     <div>
-        <button class='buttonOne' (click)=\'clickOne($event)\'>Show first Overlay</button>
+        <button class='buttonOne' (click)='clickOne($event)'>Show first Overlay</button>
     </div>
-    <div (click)=\'divClick($event)\'>
-        <button class='buttonTwo' (click)=\'clickTwo($event)\'>Show second Overlay</button>
+    <div (click)='divClick($event)'>
+        <button class='buttonTwo' (click)='clickTwo($event)'>Show second Overlay</button>
     </div>`
 })
 export class TwoButtonsComponent {
@@ -4131,6 +4107,7 @@ export class TwoButtonsComponent {
         ev.stopPropagation();
     }
 }
+
 @Component({
     template: `
     <div style="width: 420px; height: 280px;">
@@ -4150,14 +4127,15 @@ export class TwoButtonsComponent {
 })
 export class WidthTestOverlayComponent {
 
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('myCustomComponent', { static: true }) customComponent: ElementRef;
+    public overlaySettings: OverlaySettings = {};
+
     constructor(
         @Inject(IgxOverlayService) public overlay: IgxOverlayService,
         public elementRef: ElementRef
     ) { }
 
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
-    @ViewChild('myCustomComponent', { static: true }) customComponent: ElementRef;
-    public overlaySettings: OverlaySettings = {};
     click(event) {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
         this.overlaySettings.scrollStrategy = new NoOpScrollStrategy();
@@ -4186,10 +4164,10 @@ export class WidthTestOverlayComponent {
     </div>`
 })
 export class ScrollableComponent {
-    public visible = false;
-
     @ViewChild(IgxToggleDirective, { static: true })
     private _toggle: IgxToggleDirective;
+
+    public visible = false;
 
     public get toggle(): IgxToggleDirective {
         return this._toggle;
@@ -4218,10 +4196,11 @@ export class ScrollableComponent {
     `
 })
 export class FlexContainerComponent {
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
     public overlaySettings: OverlaySettings = {};
+
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button', { static: true }) buttonElement: ElementRef;
     click() {
         this.overlay.show(this.overlay.attach(SimpleDynamicComponent), this.overlaySettings);
     }
