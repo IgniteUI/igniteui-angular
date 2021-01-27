@@ -171,6 +171,9 @@
     @return str-split($parts, $separator);
 }
 
+/// Detects if the passed value is a CSS variable and retrieves the
+/// referenced color from the passed palette.
+/// If the value is not a CSS variable it's simply passed through.
 /// @access private
 /// @returns {Color | Map}
 @function igx-color-from-var($value, $palette: $default-palette, $raw: true) {
