@@ -3,7 +3,7 @@ import { UpdateChanges } from '../common/UpdateChanges';
 
 const version = '11.1.0';
 
-export default function (): Rule {
+export default function(): Rule {
     return (host: Tree, context: SchematicContext) => {
         context.logger.info(
             `Applying migration for Ignite UI for Angular to version ${version}`

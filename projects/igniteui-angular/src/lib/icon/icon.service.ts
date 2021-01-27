@@ -169,7 +169,7 @@ export class IgxIconService {
                 const request = event.target as XMLHttpRequest;
                 if (request.status === 200) {
                     instance.cacheSvgIcon(name, request.responseText, family);
-                    instance._iconLoaded.next({ name: name, value: request.responseText, family });
+                    instance._iconLoaded.next({ name, value: request.responseText, family });
                 } else {
                     throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
                 }

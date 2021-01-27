@@ -103,9 +103,9 @@ describe('Icon Service', () => {
         spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send').and.callFake(() => {
             (iconService as any)._iconLoaded.next({
-                name: name,
+                name,
                 value: svgText,
-                family: family
+                family
             });
         });
 

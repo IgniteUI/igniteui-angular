@@ -4,6 +4,8 @@ import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
+let NEXT_ID = 0;
+
 /**
  * Icon provides a way to include material icons to markup
  *
@@ -58,6 +60,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that sets the value of the `id` attribute.
+     *
      * @example
      * ```html
      * <igx-icon id="igx-icon-1" family="material">settings</igx-icon>
@@ -69,6 +72,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that sets the value of the `family`. By default it's "material".
+     *
      * @example
      * ```html
      * <igx-icon family="material">settings</igx-icon>
@@ -79,6 +83,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An @Input property that allows you to disable the `active` property. By default it's applied.
+     *
      * @example
      * ```html
      * <igx-icon [active]="false">settings</igx-icon>
@@ -103,6 +108,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An @Input property that allows you to set the `name` of the icon.
+     *
      *  @example
      * ```html
      * <igx-icon name="contains" family="filter-icons"></igx-icon>
@@ -153,6 +159,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An accessor that returns the value of the family property.
+     *
      * @example
      * ```typescript
      *  @ViewChild("MyIcon")
@@ -201,6 +208,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An accessor that returns the opposite value of the `color` property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -234,6 +242,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     /**
      *  An accessor that returns the key of the SVG image.
      *  The key consists of the font-family and the name separated by underscore.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
