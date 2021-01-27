@@ -12,6 +12,7 @@ import {
 import { Calendar } from '../calendar';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxCalendarMonthDirective } from '../calendar.directives';
+import { noop } from 'rxjs';
 
 let NEXT_ID = 0;
 
@@ -30,6 +31,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let monthsViewId =  this.monthsView.id;
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @HostBinding('attr.id')
@@ -45,11 +47,14 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let date =  this.monthsView.date;
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @Input()
     public set date(value: Date) {
-        if (!(value instanceof Date)) { return; }
+        if (!(value instanceof Date)) {
+            return;
+        }
         this._date = value;
         this.activeMonth = this.date.getMonth();
     }
@@ -74,6 +79,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-months-view> [monthFormat] = "short'"</igx-months-view>
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     public set monthFormat(value: string) {
@@ -87,6 +93,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```typescript
      * let locale =  this.monthsView.locale;
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @Input()
@@ -101,6 +108,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-months-view [locale]="de"></igx-months-view>
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     public set locale(value: string) {
@@ -121,6 +129,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```html
      * <igx-months-view (onSelection)="onSelection($event)"></igx-months-view>
      * ```
+     *
      * @memberof IgxMonthsViewComponent
      */
     @Output()
@@ -190,75 +199,15 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _onTouchedCallback: () => void = () => { };
+    private _onTouchedCallback: () => void = noop;
     /**
      * @hidden
      */
-    private _onChangeCallback: (_: Date) => void = () => { };
+    private _onChangeCallback: (_: Date) => void = noop;
 
     constructor(public el: ElementRef) {
         this.initMonthFormatter();
         this._calendarModel = new Calendar();
-    }
-
-    /**
-     * Returns the locale representation of the month in the months view.
-     *
-     * @hidden
-     */
-    public formattedMonth(value: Date): string {
-        if (this.formatView) {
-            return this._formatterMonth.format(value);
-        }
-        return `${value.getMonth()}`;
-    }
-
-    /**
-     * @hidden
-     */
-    public selectMonth(event) {
-        this.onSelection.emit(event);
-
-        this.date = event;
-        this.activeMonth = this.date.getMonth();
-        this._onChangeCallback(this.date);
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnChange(fn: (v: Date) => void) {
-        this._onChangeCallback = fn;
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnTouched(fn: () => void) {
-        this._onTouchedCallback = fn;
-    }
-
-    /**
-     * @hidden
-     */
-    public writeValue(value: Date) {
-        if (value) {
-            this.date = value;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public monthTracker(index, item): string {
-        return `${item.getMonth()}}`;
-    }
-
-    /**
-     * @hidden
-     */
-    private initMonthFormatter() {
-        this._formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });
     }
 
     /**
@@ -326,7 +275,9 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) { return; }
+        if (!node) {
+            return;
+        }
 
         const months = this.monthsRef.toArray();
         if (months.indexOf(node) + 1 < months.length) {
@@ -345,7 +296,9 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.stopPropagation();
 
         const node = this.monthsRef.find((date) => date.nativeElement === event.target);
-        if (!node) { return; }
+        if (!node) {
+            return;
+        }
 
         const months = this.monthsRef.toArray();
         if (months.indexOf(node) - 1 >= 0) {
@@ -397,5 +350,65 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     @HostListener('focusout', ['$event'])
     public resetActiveMonth(event) {
         this.activeMonth = this.date.getMonth();
+    }
+
+    /**
+     * Returns the locale representation of the month in the months view.
+     *
+     * @hidden
+     */
+    public formattedMonth(value: Date): string {
+        if (this.formatView) {
+            return this._formatterMonth.format(value);
+        }
+        return `${value.getMonth()}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public selectMonth(event) {
+        this.onSelection.emit(event);
+
+        this.date = event;
+        this.activeMonth = this.date.getMonth();
+        this._onChangeCallback(this.date);
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnChange(fn: (v: Date) => void) {
+        this._onChangeCallback = fn;
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnTouched(fn: () => void) {
+        this._onTouchedCallback = fn;
+    }
+
+    /**
+     * @hidden
+     */
+    public writeValue(value: Date) {
+        if (value) {
+            this.date = value;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public monthTracker(index, item): string {
+        return `${item.getMonth()}}`;
+    }
+
+    /**
+     * @hidden
+     */
+    private initMonthFormatter() {
+        this._formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });
     }
 }

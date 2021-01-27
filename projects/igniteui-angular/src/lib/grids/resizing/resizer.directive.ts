@@ -33,6 +33,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     @Output()
     public resizeStart = new Subject<any>();
 
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
     public resize = new Subject<any>();
 

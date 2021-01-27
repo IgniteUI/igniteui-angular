@@ -84,7 +84,7 @@
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.amPM, ampm)}"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.AMPM, ampm)}"
                 *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>

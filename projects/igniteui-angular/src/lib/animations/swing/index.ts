@@ -22,7 +22,7 @@ const swingParams: IAnimationParams = {
     delay: '0s',
     direction: 'X',
     duration: '.5s',
-    easing: EaseOut.back,
+    easing: EaseOut.Back,
     endAngle: 0,
     endOpacity: 1,
     startAngle: -100,
@@ -34,7 +34,7 @@ const swingParams: IAnimationParams = {
 const swingOutParams: IAnimationParams = {
     ...swingParams,
     duration: '.55s',
-    easing: EaseIn.back,
+    easing: EaseIn.Back,
     endAngle: 70,
     endOpacity: 0,
     startAngle: 0,

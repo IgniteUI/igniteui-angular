@@ -192,19 +192,19 @@ class ButtonWithAttribsComponent {
     `
 })
 class ButtonsWithDisplayDensityComponent {
-    public density: DisplayDensity = DisplayDensity.comfortable;
-
     @ViewChild('flat', { read: IgxButtonDirective, static: true }) flatButton: IgxButtonDirective;
     @ViewChild('raised', { read: IgxButtonDirective, static: true }) raisedButton: IgxButtonDirective;
     @ViewChild('outlined', { read: IgxButtonDirective, static: true }) outlinedButton: IgxButtonDirective;
     @ViewChild('fab', { read: IgxButtonDirective, static: true }) fabButton: IgxButtonDirective;
     @ViewChild('icon', { read: IgxButtonDirective, static: true }) iconButton: IgxButtonDirective;
+
+    public density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 /**
  * Verifies the display density of the igxButton based on its type.
  */
-function verifyDisplayDensity(buttonDirective, buttonDebugEl, buttonType, expectedDisplayDensity: DisplayDensity) {
+const verifyDisplayDensity = (buttonDirective, buttonDebugEl, buttonType, expectedDisplayDensity: DisplayDensity) => {
     let expectedButtonDensityClass = '';
 
     switch (expectedDisplayDensity) {
@@ -245,4 +245,4 @@ function verifyDisplayDensity(buttonDirective, buttonDebugEl, buttonType, expect
         }
     }
     expect(buttonDirective.displayDensity).toBe(expectedDisplayDensity);
-}
+};

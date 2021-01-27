@@ -9,13 +9,13 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    public urlString: string;
-
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     navdrawer;
 
     @HostBinding('attr.id')
     appId = 'igniteui-demo-app';
+
+    public urlString: string;
 
     drawerState = {
         enableGestures: true,

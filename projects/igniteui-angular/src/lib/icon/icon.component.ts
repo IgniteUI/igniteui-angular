@@ -26,24 +26,11 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
  * <igx-icon family="filter-icons" active="true">home</igx-icon>
  * ```
  */
-let NEXT_ID = 0;
-
 @Component({
     selector: 'igx-icon',
     templateUrl: 'icon.component.html'
 })
 export class IgxIconComponent implements OnInit, OnDestroy {
-    @ViewChild('noLigature', { read: TemplateRef, static: true })
-    private noLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
-    private explicitLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('svgImage', { read: TemplateRef, static: true })
-    private svgImage: TemplateRef<HTMLElement>;
-
-    private destroy$ = new Subject<void>();
-
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
      *
@@ -55,6 +42,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon") public icon: IgxIconComponent;
@@ -123,16 +111,20 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     @Input('name')
     public name: string;
 
-    /**
-     * An ElementRef property of the `igx-icon` component.
-     */
-    public el: ElementRef;
+    @ViewChild('noLigature', { read: TemplateRef, static: true })
+    private noLigature: TemplateRef<HTMLElement>;
 
-    constructor(
-            private _el: ElementRef,
-            private iconService: IgxIconService,
-            private ref: ChangeDetectorRef) {
-        this.el = _el;
+    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
+    private explicitLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild('svgImage', { read: TemplateRef, static: true })
+    private svgImage: TemplateRef<HTMLElement>;
+
+    private destroy$ = new Subject<void>();
+
+    constructor(public el: ElementRef,
+                private iconService: IgxIconService,
+                private ref: ChangeDetectorRef) {
         this.family = this.iconService.defaultFamily;
         this.iconService.registerFamilyAlias('material', 'material-icons');
         this.iconService.iconLoaded.pipe(
@@ -176,6 +168,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An accessor that returns the value of the active property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -191,6 +184,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  An accessor that returns inactive property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -223,6 +217,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      * An accessor that returns the value of the iconName property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -258,6 +253,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")

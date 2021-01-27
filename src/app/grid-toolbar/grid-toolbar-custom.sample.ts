@@ -8,8 +8,7 @@ import { IgxColumnComponent } from 'igniteui-angular';
     templateUrl: 'grid-toolbar-custom.sample.html'
 })
 export class GridToolbarCustomSampleComponent {
-
-    data = [
+    public data = [
         {
             Name: 'Alice',
             Age: 25

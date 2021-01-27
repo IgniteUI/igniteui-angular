@@ -42,11 +42,10 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
 
-function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
+const logIncludingDependency = (context: SchematicContext, pkg: string, version: string): void =>
     context.logger.info(`Including ${pkg} - Version: ${version}`);
-}
 
-function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string) {
+const getTargetedProjectOptions = (project: WorkspaceProject<ProjectType>, target: string) => {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
@@ -60,9 +59,9 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
     }
 
     throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
-}
+};
 
-export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
+export const getConfigFile = (project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string => {
     const options = getTargetedProjectOptions(project, configSection);
     if (!options) {
         throw new SchematicsException(`Could not find matching ${configSection} section` +
@@ -74,45 +73,42 @@ export function getConfigFile(project: WorkspaceProject<ProjectType>, option: st
     }
     return options[option];
 
-}
-export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
+};
+
+export const overwriteJsonFile = (tree: Tree, targetFile: string, data: any) =>
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
-}
 
-export function logSuccess(options: Options): Rule {
-    return (tree: Tree, context: SchematicContext) => {
-        context.logger.info('');
-        context.logger.warn('Ignite UI for Angular installed');
-        context.logger.info('Learn more: https://www.infragistics.com/products/ignite-ui-angular');
-        context.logger.info('');
-    };
-}
 
-export function addDependencies(options: Options): Rule {
-    return (tree: Tree, context: SchematicContext) => {
-        const pkgJson = require('../../package.json');
+export const logSuccess = (options: Options): Rule => (tree: Tree, context: SchematicContext) => {
+    context.logger.info('');
+    context.logger.warn('Ignite UI for Angular installed');
+    context.logger.info('Learn more: https://www.infragistics.com/products/ignite-ui-angular');
+    context.logger.info('');
+};
 
-        includeDependencies(pkgJson, context, tree);
+export const addDependencies = (options: Options): Rule => (tree: Tree, context: SchematicContext) => {
+    const pkgJson = require('../../package.json');
 
-        // Add web-animations-js to dependencies
-        Object.keys(pkgJson.peerDependencies).forEach(pkg => {
-            if (pkg.includes('web-animations')) {
-                const version = pkgJson.peerDependencies[pkg];
-                addPackageToPkgJson(tree, pkg, version, PackageTarget.REGULAR);
-                logIncludingDependency(context, pkg, version);
-                return;
-            }
-        });
+    includeDependencies(pkgJson, context, tree);
 
-        addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
-        return tree;
-    };
-}
+    // Add web-animations-js to dependencies
+    Object.keys(pkgJson.peerDependencies).forEach(pkg => {
+        if (pkg.includes('web-animations')) {
+            const version = pkgJson.peerDependencies[pkg];
+            addPackageToPkgJson(tree, pkg, version, PackageTarget.REGULAR);
+            logIncludingDependency(context, pkg, version);
+            return;
+        }
+    });
+
+    addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
+    return tree;
+};
 
 /**
  * Recursively search for the first property that matches targetProp within a json file.
  */
-export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): { key: string, value: any } {
+export const getPropertyFromWorkspace = (targetProp: string, workspace: any, curKey = ''): { key: string; value: any } => {
     if (workspace.hasOwnProperty(targetProp)) {
         return { key: targetProp, value: workspace[targetProp] };
     }
@@ -137,9 +133,9 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     }
 
     return null;
-}
+};
 
-function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, config: string) {
+const addHammerToConfig = (project: WorkspaceProject<ProjectType>, tree: Tree, config: string) => {
     const projectOptions = getTargetedProjectOptions(project, config);
     const tsPath = getConfigFile(project, 'main', config);
     const hammerImport = 'import \'hammerjs\';\n';
@@ -151,9 +147,9 @@ function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, c
         const mainContents = hammerImport + tsContent;
         tree.overwrite(tsPath, mainContents);
     }
-}
+};
 
-function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree) {
+const includeDependencies = (pkgJson: any, context: SchematicContext, tree: Tree) => {
     Object.keys(pkgJson.dependencies).forEach(pkg => {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
@@ -175,9 +171,9 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
                 break;
         }
     });
-}
+};
 
-export function addPackageToPkgJson(tree: Tree, pkg: string, version: string, target: string): boolean {
+export const addPackageToPkgJson = (tree: Tree, pkg: string, version: string, target: string): boolean => {
     const targetFile = 'package.json';
     if (tree.exists(targetFile)) {
         const sourceText = tree.read(targetFile).toString();
@@ -200,4 +196,4 @@ export function addPackageToPkgJson(tree: Tree, pkg: string, version: string, ta
     }
 
     return false;
-}
+};

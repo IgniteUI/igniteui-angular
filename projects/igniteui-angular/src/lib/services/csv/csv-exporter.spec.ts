@@ -127,7 +127,7 @@ describe('CSV exporter', () => {
         }
     });
 
-    function getExportedData(data: any[], csvOptions: IgxCsvExporterOptions) {
+    const getExportedData = (data: any[], csvOptions: IgxCsvExporterOptions) => {
         const result = new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
@@ -136,5 +136,5 @@ describe('CSV exporter', () => {
             exporter.exportData(data, csvOptions);
         });
         return result;
-    }
+    };
 });

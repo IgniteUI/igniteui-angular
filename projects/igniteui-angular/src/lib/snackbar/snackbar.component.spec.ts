@@ -21,7 +21,7 @@ describe('IgxSnackbar', () => {
         }).compileComponents();
     }));
 
-    let fixture, domSnackbar, snackbar;
+    let fixture; let domSnackbar; let snackbar;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
         fixture.detectChanges();
@@ -48,7 +48,7 @@ describe('IgxSnackbar', () => {
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
-        snackbar.show();
+        snackbar.open();
 
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
@@ -64,7 +64,7 @@ describe('IgxSnackbar', () => {
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
 
-        snackbar.show();
+        snackbar.open();
 
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
@@ -104,7 +104,7 @@ describe('IgxSnackbar with custom content', () => {
         }).compileComponents();
     }));
 
-    let fixture, domSnackbar, snackbar;
+    let fixture; let domSnackbar; let snackbar;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarCustomContentComponent);
         fixture.detectChanges();
@@ -114,7 +114,7 @@ describe('IgxSnackbar with custom content', () => {
 
     it('should display a message, a custom content element and a button', () => {
         fixture.componentInstance.text = 'Undo';
-        snackbar.show('Item shown');
+        snackbar.open('Item shown');
         fixture.detectChanges();
 
         const messageEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
@@ -124,13 +124,13 @@ describe('IgxSnackbar with custom content', () => {
         expect(customContent).toBeTruthy('Custom content is not found');
 
         // Verify the message is displayed on the left side of the custom content
-        const messageElRect = (<HTMLElement>messageEl.nativeElement).getBoundingClientRect();
-        const customContentRect = (<HTMLElement>customContent.nativeElement).getBoundingClientRect();
+        const messageElRect = messageEl.nativeElement.getBoundingClientRect();
+        const customContentRect = customContent.nativeElement.getBoundingClientRect();
         expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
 
         // Verify the custom content element is on the left side of the button
         const button = fixture.debugElement.query(By.css('.igx-snackbar__button'));
-        const buttonRect = (<HTMLElement>button.nativeElement).getBoundingClientRect();
+        const buttonRect = button.nativeElement.getBoundingClientRect();
         expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
         expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
     });
@@ -140,13 +140,13 @@ describe('IgxSnackbar with custom content', () => {
         fixture.componentInstance.text = 'Retry';
         fixture.detectChanges();
 
-        snackbar.show('The message was not send. Would you like to retry?');
+        snackbar.open('The message was not send. Would you like to retry?');
         fixture.detectChanges();
 
         expect(fixture.nativeElement.querySelector('.igx-snackbar__message').innerText)
         .toBe('The message was not send. Would you like to retry? Custom content');
 
-        snackbar.show('Another Message?!');
+        snackbar.open('Another Message?!');
         fixture.detectChanges();
 
         expect(snackbar.isVisible).toBe(true);
@@ -160,8 +160,8 @@ describe('IgxSnackbar with custom content', () => {
                </igx-snackbar>`
 })
 class SnackbarInitializeTestComponent {
-    public text: string;
     @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
+    public text: string;
 }
 
 @Component({
@@ -170,6 +170,6 @@ class SnackbarInitializeTestComponent {
                </igx-snackbar>`
 })
 class SnackbarCustomContentComponent {
-    public text: string;
     @ViewChild(IgxSnackbarComponent, { static: true }) public snackbar: IgxSnackbarComponent;
+    public text: string;
 }

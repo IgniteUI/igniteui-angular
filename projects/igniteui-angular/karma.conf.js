@@ -15,9 +15,6 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
-      require('karma-jasmine-html-reporter'),
-      require('karma-coverage-istanbul-reporter'),
-      require('karma-spec-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
@@ -27,20 +24,6 @@ module.exports = function (config) {
       },
       tagPrefix: '#',
       skipTags: 'perf'
-    },
-    coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage'),
-      reports: ['html', 'lcovonly'],
-      fixWebpackSourcePaths: true
-    },
-    reporters: ['spec'],
-    specReporter: {
-      suppressSkipped: true,
-      suppressErrorSummary: false,
-      suppressFailed: false,
-      suppressPassed: false,
-      showSpecTiming: false,
-      failFast: false
     },
     port: 9876,
     colors: true,

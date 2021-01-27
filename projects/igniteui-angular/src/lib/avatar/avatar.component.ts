@@ -56,34 +56,6 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
     templateUrl: 'avatar.component.html'
 })
 export class IgxAvatarComponent implements OnInit {
-
-    /**
-     * This is a reference to the avatar image element in the DOM.
-     *
-     * @example
-     * ```typescript
-     *  let image = this.avatar.image;
-     * ```
-     */
-    @ViewChild('image')
-    public image: ElementRef;
-
-    /** @hidden @internal */
-    @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
-    protected defaultTemplate: TemplateRef<any>;
-
-    /** @hidden @internal */
-    @ViewChild('imageTemplate', { read: TemplateRef, static: true })
-    protected imageTemplate: TemplateRef<any>;
-
-    /** @hidden @internal */
-    @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
-    protected initialsTemplate: TemplateRef<any>;
-
-    /** @hidden @internal */
-    @ViewChild('iconTemplate', { read: TemplateRef, static: true })
-    protected iconTemplate: TemplateRef<any>;
-
     /**
      * Returns the `aria-label` attribute of the avatar.
      *
@@ -219,6 +191,22 @@ export class IgxAvatarComponent implements OnInit {
     @Input()
     public src: string;
 
+    /** @hidden @internal */
+    @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
+    protected defaultTemplate: TemplateRef<any>;
+
+    /** @hidden @internal */
+    @ViewChild('imageTemplate', { read: TemplateRef, static: true })
+    protected imageTemplate: TemplateRef<any>;
+
+    /** @hidden @internal */
+    @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
+    protected initialsTemplate: TemplateRef<any>;
+
+    /** @hidden @internal */
+    @ViewChild('iconTemplate', { read: TemplateRef, static: true })
+    protected iconTemplate: TemplateRef<any>;
+
     /**
      * @hidden
      * @internal
@@ -335,6 +323,16 @@ export class IgxAvatarComponent implements OnInit {
 
     constructor(public elementRef: ElementRef) { }
 
+    /**
+     * Returns the css url of the image.
+     *
+     * @hidden
+     * @internal
+     */
+    public getSrcUrl() {
+        return `url(${this.src})`;
+    }
+
     /** @hidden @internal */
     public ngOnInit() {
         this.roleDescription = this.getRole();
@@ -352,16 +350,6 @@ export class IgxAvatarComponent implements OnInit {
             default:
                 return 'custom avatar';
         }
-    }
-
-    /**
-     * Returns the css url of the image.
-     *
-     * @hidden
-     * @internal
-     */
-    public getSrcUrl() {
-        return `url(${this.src})`;
     }
 }
 

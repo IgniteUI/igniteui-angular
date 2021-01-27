@@ -23,19 +23,6 @@ import { IgxDirectionality } from '../../services/direction/directionality';
     templateUrl: 'thumb-slider.component.html',
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
-
-    private _isActive = false;
-    private _isPressed = false;
-    private _destroy$ = new Subject<boolean>();
-
-    private get thumbPositionX() {
-        const thumbBounderies = this.nativeElement.getBoundingClientRect();
-        const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
-        return thumbBounderies.left + thumbCenter;
-    }
-
-    public isActive = false;
-
     @Input()
     public value: number;
 
@@ -109,6 +96,8 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this.isActive && this._isPressed;
     }
 
+    public isActive = false;
+
     public get nativeElement() {
         return this._elementRef.nativeElement;
     }
@@ -117,26 +106,17 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this._destroy$;
     }
 
+    private _isActive = false;
+    private _isPressed = false;
+    private _destroy$ = new Subject<boolean>();
+
+    private get thumbPositionX() {
+        const thumbBounderies = this.nativeElement.getBoundingClientRect();
+        const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
+        return thumbBounderies.left + thumbCenter;
+    }
+
     constructor(private _elementRef: ElementRef, private _dir: IgxDirectionality) { }
-
-    /**
-     * @hidden
-     */
-    public ngOnInit() {
-        this.onPan
-            .pipe(takeUntil(this._destroy$))
-            .subscribe(mouseX =>
-                this.updateThumbValue(mouseX)
-            );
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this._destroy$.next(true);
-        this._destroy$.complete();
-    }
 
     @HostListener('pointerenter')
     public onPinterEnter() {
@@ -177,6 +157,25 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public onFocusListener() {
         this.isActive = true;
         this.zIndex = 1;
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnInit() {
+        this.onPan
+            .pipe(takeUntil(this._destroy$))
+            .subscribe(mouseX =>
+                this.updateThumbValue(mouseX)
+            );
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this._destroy$.next(true);
+        this._destroy$.complete();
     }
 
     /**

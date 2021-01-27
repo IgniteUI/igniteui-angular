@@ -96,7 +96,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Selection', () => {
-        it('should allow only one cell to be selected in the whole hierarchical grid.', (async() => {
+        it('should allow only one cell to be selected in the whole hierarchical grid.', (async () => {
             let firstRow = hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent;
             hierarchicalGrid.expandRow(firstRow.rowID);
             expect(firstRow.expanded).toBeTruthy();
@@ -378,9 +378,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElements: HTMLElement[] = Array.from(childGrid.nativeElement.children);
-            const elementsHeight = childElements.map(elem => elem.offsetHeight).reduce((total, height) => {
-                return total + height;
-            }, 0);
+            const elementsHeight = childElements.map(elem => elem.offsetHeight).reduce((total, height) => total + height, 0);
 
             // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
             expect(elementsHeight).toEqual(gridHeight);
@@ -1003,7 +1001,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
         });
 
-        it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', async() => {
+        it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', async () => {
             hierarchicalGrid.pinRow('1');
             fixture.detectChanges();
 

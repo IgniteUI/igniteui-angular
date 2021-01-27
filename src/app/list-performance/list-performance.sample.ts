@@ -7,11 +7,11 @@ import { IgxFilterOptions } from 'igniteui-angular';
     templateUrl: 'list-performance.sample.html'
 })
 export class ListPerformanceSampleComponent {
-    search1: string;
-    options = {};
-    showList = true;
+    public search1: string;
+    public options = {};
+    public showList = true;
 
-    data = [{
+    public data = [{
         key: 1,
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
@@ -83,6 +83,12 @@ export class ListPerformanceSampleComponent {
         text: 'Ward Riley'
     }];
 
+    public get fo1() {
+        const _fo = new IgxFilterOptions();
+        _fo.key = 'text';
+        _fo.inputValue = this.search1;
+        return _fo;
+    }
 
     constructor() {
         for (let i = 10; i < 1e5; i++) {
@@ -90,12 +96,5 @@ export class ListPerformanceSampleComponent {
             obj['key'] = i;
             this.data.push(obj);
         }
-    }
-
-    get fo1() {
-        const _fo = new IgxFilterOptions();
-        _fo.key = 'text';
-        _fo.inputValue = this.search1;
-        return _fo;
     }
 }

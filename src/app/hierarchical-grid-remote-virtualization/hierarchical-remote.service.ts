@@ -3,19 +3,19 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { IgxGridHierarchicalPipe } from 'projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.pipes';
-import { IgxHierarchicalGridAPIService, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxHierarchicalGridComponent } from 'igniteui-angular';
 
 @Injectable()
 export class HierarchicalRemoteService {
 
     public remotePagingData: BehaviorSubject<any[]>;
     public cachedData = [];
-    requestStartIndex = 0;
-    totalCount: number;
-    remoteData: Observable<any[]>;
-    _remoteData: BehaviorSubject<any[]>;
-    url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
-    urlBuilder;
+    public requestStartIndex = 0;
+    public totalCount: number;
+    public remoteData: Observable<any[]>;
+    public _remoteData: BehaviorSubject<any[]>;
+    public url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
+    public urlBuilder;
 
     constructor(private http: HttpClient, private hierarchyPipe: IgxGridHierarchicalPipe) {
         this._remoteData = new BehaviorSubject([]);
@@ -23,11 +23,11 @@ export class HierarchicalRemoteService {
     }
 
 
-    nullData() {
+    public nullData() {
         this._remoteData.next(null);
     }
 
-    undefinedData() {
+    public undefinedData() {
         this._remoteData.next(undefined);
     }
 
@@ -42,16 +42,7 @@ export class HierarchicalRemoteService {
         return dataResult;
     }
 
-    private _updateCachedData (data: any, startIndex: number, lastChunk: boolean) {
-        for (let i = 0; i < data.length; i++) {
-            this.cachedData[i + startIndex] = data[i];
-        }
-        if (lastChunk) {
-            this.cachedData.splice(startIndex + data.length);
-        }
-    }
-
-    getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
+    public getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
         return this.http.get(this.buildUrl(virtualizationState, grid)).pipe(
             map(response => response),
         )
@@ -82,15 +73,23 @@ export class HierarchicalRemoteService {
     public buildUrl(virtualizationArgs, grid) {
         let qS = '';
         if (virtualizationArgs) {
-            let requiredChunkSize: number;
             const childRecsBeforeIndex = this.cachedData
             .filter((x, index) => grid.isChildGridRecord(x) && index <= virtualizationArgs.startIndex);
             const skip = virtualizationArgs.startIndex - childRecsBeforeIndex.length;
             this.requestStartIndex = skip;
-            requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;
+            const requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;
             const top = requiredChunkSize;
             qS = `&$skip=${skip}&$top=${top}&$count=true`;
         }
         return `${this.url}${qS}`;
+    }
+
+    private _updateCachedData(data: any, startIndex: number, lastChunk: boolean) {
+        for (let i = 0; i < data.length; i++) {
+            this.cachedData[i + startIndex] = data[i];
+        }
+        if (lastChunk) {
+            this.cachedData.splice(startIndex + data.length);
+        }
     }
 }

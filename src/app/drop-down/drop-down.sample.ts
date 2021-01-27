@@ -9,7 +9,7 @@ import {
 import { foods } from './foods';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'drop-down-sample',
     templateUrl: './drop-down.sample.html',
     styleUrls: ['drop-down.sample.scss']
@@ -113,9 +113,6 @@ export class DropDownSampleComponent implements OnInit {
         }
 
         this.items[3]['selected'] = true;
-    }
-
-    constructor() {
     }
 
     public toggleDropDown() {

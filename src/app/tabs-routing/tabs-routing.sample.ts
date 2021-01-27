@@ -7,11 +7,7 @@ import { Router } from '@angular/router';
     templateUrl: 'tabs-routing.sample.html'
 })
 export class TabsRoutingSampleComponent {
-
-    constructor(private router: Router) {
-    }
-
-    contacts: any[] = [{
+    public contacts: any[] = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -40,6 +36,9 @@ export class TabsRoutingSampleComponent {
         phone: '901-747-3428',
         text: 'Lisa Landers'
     }];
+
+    constructor(private router: Router) {
+    }
 
     public clickHandler0() {
         this.router.navigateByUrl('/tabs-routing');

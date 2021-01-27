@@ -34,14 +34,10 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 @Directive({
     selector: '[igxDisplayDensityBase]'
 })
-// tslint:disable-next-line: directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
-    protected _displayDensity: DisplayDensity;
-
-    /**
-     * @hidden
-     */
-    public initialDensity: DisplayDensity;
+    @Output()
+    public onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
      * Returns the theme of the component.
@@ -74,10 +70,13 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         }
     }
 
-    @Output()
-    public onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
+    /**
+     * @hidden
+     */
+    public initialDensity: DisplayDensity;
 
     protected oldDisplayDensityOptions: IDisplayDensityOptions = { displayDensity: DisplayDensity.comfortable };
+    protected _displayDensity: DisplayDensity;
 
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected displayDensityOptions: IDisplayDensityOptions) {

@@ -1,7 +1,7 @@
 import { Injectable, SecurityContext, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Event emitted when a SVG icon is loaded through
@@ -32,23 +32,26 @@ export interface IgxIconLoadedEvent {
     providedIn: 'root'
 })
 export class IgxIconService {
+    /**
+     * Observable that emits when an icon is successfully loaded
+     * through a HTTP request.
+     *
+     * @example
+     * ```typescript
+     * this.service.iconLoaded.subscribe((ev: IgxIconLoadedEvent) => ...);
+     * ```
+     */
+    public iconLoaded: Observable<IgxIconLoadedEvent>;
+
     private _family = 'material-icons';
     private _familyAliases = new Map<string, string>();
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
 
-    /**
-     * Observable that emits when an icon is successfully loaded
-     * through a HTTP request.
-     * @example
-     * ```typescript
-     * this.service.iconLoaded.subscribe((ev: IgxIconLoadedEvent) => ...);
-     * ```
-     */
-    public iconLoaded = this._iconLoaded.asObservable();
-
-    constructor(private _sanitizer: DomSanitizer, @Inject(DOCUMENT) private _document: any) { }
+    constructor(private _sanitizer: DomSanitizer, @Inject(DOCUMENT) private _document: any) {
+        this.iconLoaded = this._iconLoaded.asObservable();
+    }
 
     /**
      *  Returns the default font-family.
@@ -161,7 +164,7 @@ export class IgxIconService {
         httpRequest.responseType = 'text';
 
         // load – when the result is ready, that includes HTTP errors like 404.
-        httpRequest.onload = function (event: ProgressEvent) {
+        httpRequest.onload = (event: ProgressEvent) => {
             if (event) {
                 const request = event.target as XMLHttpRequest;
                 if (request.status === 200) {
@@ -176,7 +179,7 @@ export class IgxIconService {
         };
 
         // error – when the request couldn’t be made, e.g.network down or invalid URL.
-        httpRequest.onerror = function (event: ProgressEvent) {
+        httpRequest.onerror = (event: ProgressEvent) => {
             if (event) {
                 const request = event.target as XMLHttpRequest;
                 throw new Error(`Could not fetch SVG from url: ${url}; error status code: ${request.status} (${request.statusText})`);

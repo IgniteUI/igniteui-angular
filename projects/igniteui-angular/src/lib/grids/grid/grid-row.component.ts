@@ -19,7 +19,7 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
     getContext(col, row) {
         return {
             $implicit: col,
-            row: row
+            row
         };
     }
 
@@ -32,7 +32,7 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
     getContextMRL(pinnedCols, row) {
         return {
             $implicit: pinnedCols,
-            row: row
+            row
         };
     }
 

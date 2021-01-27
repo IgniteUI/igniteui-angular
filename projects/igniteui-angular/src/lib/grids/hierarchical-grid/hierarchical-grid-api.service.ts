@@ -73,7 +73,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return rowID;
     }
 
-    registerChildGrid(parentRowID: string|object, rowIslandKey: string, grid: IgxHierarchicalGridComponent) {
+    registerChildGrid(parentRowID: any, rowIslandKey: string, grid: IgxHierarchicalGridComponent) {
         let childrenForLayout = this.childGrids.get(rowIslandKey);
         if (!childrenForLayout) {
             this.childGrids.set(rowIslandKey, new Map<any, IgxHierarchicalGridComponent>());
