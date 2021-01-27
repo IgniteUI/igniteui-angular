@@ -123,11 +123,11 @@ export class IgxHierarchicalGridRowSelectionComponent {
     providers: [IgxHierarchicalTransactionServiceFactory]
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
-    public data;
-    public selectedRows = [];
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public selectedRows = [];
 
     constructor() {
         // 3 level hierarchy
