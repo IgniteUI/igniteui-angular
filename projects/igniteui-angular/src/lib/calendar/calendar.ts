@@ -11,7 +11,7 @@ enum TimeDeltaInterval {
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
 
-export function range(start = 0, stop, step = 1) {
+export const range = (start = 0, stop, step = 1) => {
     const res = [];
     const cur = (stop === undefined) ? 0 : start;
     const max = (stop === undefined) ? start : stop;
@@ -19,7 +19,7 @@ export function range(start = 0, stop, step = 1) {
         res.push(i);
     }
     return res;
-}
+};
 
 /**
  * Returns true for leap years, false for non-leap years.
@@ -28,13 +28,9 @@ export function range(start = 0, stop, step = 1) {
  * @param year
  * @returns
  */
-export function isLeap(year: number): boolean {
-    return (year % 4 === 0) && ((year % 100 !== 0) || (year % 400 === 0));
-}
+export const isLeap = (year: number): boolean => (year % 4 === 0) && ((year % 100 !== 0) || (year % 400 === 0));
 
-export function weekDay(year: number, month: number, day: number): number {
-    return new Date(year, month, day).getDay();
-}
+export const weekDay = (year: number, month: number, day: number): number => new Date(year, month, day).getDay();
 
 /**
  * Return weekday and number of days for year, month.
@@ -44,7 +40,7 @@ export function weekDay(year: number, month: number, day: number): number {
  * @param month
  * @returns
  */
-export function monthRange(year: number, month: number): number[] {
+export const monthRange = (year: number, month: number): number[] => {
     if ((month < 0) || (month > 11)) {
         throw new Error('Invalid month specified');
     }
@@ -54,9 +50,9 @@ export function monthRange(year: number, month: number): number[] {
         nDays++;
     }
     return [day, nDays];
-}
+};
 
-export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
+export const isDateInRanges = (date: Date, ranges: DateRangeDescriptor[]): boolean => {
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const dateInMs = date.getTime();
 
@@ -118,7 +114,7 @@ export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boole
     }
 
     return false;
-}
+};
 
 export interface ICalendarDate {
     date: Date;

@@ -12,6 +12,7 @@ export interface IPositionStrategy {
 
     /**
      * Position the element based on the PositionStrategy implementing this interface.
+     *
      * @param contentElement The HTML element to be positioned
      * @param size Size of the element
      * @param document reference to the Document object

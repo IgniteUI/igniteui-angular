@@ -252,6 +252,22 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.getExporterService().exportData(this.grid3.data, this.getOptions('Data'));
     }
 
+    onSearchChange(text: string) {
+        this.grid3.findNext(text);
+    }
+
+    onSearch(ev) {
+        if (ev.key === 'Enter' || ev.key === 'ArrowDown'  || ev.key === 'ArrowRight') {
+            this.grid3.findNext(ev.target.value);
+        } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
+            this.grid3.findPrev(ev.target.value);
+        }
+    }
+
+    onColumnInit(column: IgxColumnComponent) {
+        column.editable = true;
+    }
+
     private getExporterService(): IgxBaseExporter {
         return this.exportFormat === 'XLSX' ? this.excelExporterService : this.csvExporterService;
     }
@@ -268,22 +284,6 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
                 return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB);
         }
     }
-
-    onSearchChange(text: string) {
-        this.grid3.findNext(text);
-    }
-
-    onSearch(ev) {
-        if (ev.key === 'Enter' || ev.key === 'ArrowDown'  || ev.key === 'ArrowRight') {
-            this.grid3.findNext(ev.target.value);
-        } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
-            this.grid3.findPrev(ev.target.value);
-        }
-    }
-
-    onColumnInit(column: IgxColumnComponent) {
-        column.editable = true;
-    }
 }
 
 export class CustomStringFilter extends IgxStringFilteringOperand {
@@ -292,9 +292,7 @@ export class CustomStringFilter extends IgxStringFilteringOperand {
         super();
         this.append({
             name: 'Custom',
-            logic: (value: any, searchVal: any, ignoreCase: boolean) => {
-                return value === searchVal;
-            },
+            logic: (value: any, searchVal: any, ignoreCase: boolean) => value === searchVal,
             isUnary: false,
             iconName: 'starts_with'
         });

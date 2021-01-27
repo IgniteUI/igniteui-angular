@@ -15,31 +15,25 @@ interface Employee {
     encapsulation: ViewEncapsulation.None
 })
 export class ListSampleComponent implements OnInit {
-    @ViewChild('contactsList', { static: true })
-    contactsList: IgxListComponent;
-
     @ViewChild('fruitList', { static: true })
-    fruitList: IgxListComponent;
-
-    @ViewChild('checkbox', { static: true })
-    checkbox: any;
+    private fruitList: IgxListComponent;
 
     @ViewChild('declarativeList', { static: true })
-    declarativeList: any;
+    private declarativeList: any;
 
     @ViewChild('addFruitDialog', { static: true })
-    addFruitDialog: IgxDialogComponent;
+    private addFruitDialog: IgxDialogComponent;
 
-    fruitsSearch: string;
-    search1: string;
-    search2: string;
-    options: object = {};
-    fruitsFilteredItemsCount = undefined;
+    public fruitsSearch: string;
+    public search1: string;
+    public search2: string;
+    public options = {};
+    public fruitsFilteredItemsCount = undefined;
 
-    density = 'comfortable';
-    displayDensities;
+    public density = 'comfortable';
+    public displayDensities;
 
-    employeeItems: Employee[] = [{
+    public employeeItems: Employee[] = [{
         imageURL: 'assets/images/avatar/18.jpg',
         name: 'Marin Popov',
         position: 'Web designer',
@@ -60,7 +54,7 @@ export class ListSampleComponent implements OnInit {
         position: 'Graphic designer',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??'
     }];
-    navItems: object[] = [{
+    public navItems = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -132,7 +126,7 @@ export class ListSampleComponent implements OnInit {
         text: 'Ward Riley'
     }];
 
-    fruits: Fruit[] = [];
+    public fruits: Fruit[] = [];
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -146,22 +140,20 @@ export class ListSampleComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    get fo1() {
+    public get fo1() {
         const _fo = new IgxFilterOptions();
         _fo.key = 'text';
         _fo.inputValue = this.search1;
         return _fo;
     }
 
-    get fo2() {
+    public get fo2() {
         const _fo = new IgxFilterOptions();
 
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
 
-        _fo.get_value = (item: any) => {
-            return item.element.nativeElement.textContent.trim();
-        };
+        _fo.get_value = (item: any) => item.element.nativeElement.textContent.trim();
 
         _fo.metConditionFn = (item: any) => {
             item.hidden = false;
@@ -174,7 +166,7 @@ export class ListSampleComponent implements OnInit {
         return _fo;
     }
 
-    get fruitsFilterOptions() {
+    public get fruitsFilterOptions() {
         const fruitsFilterOpts = new IgxFilterOptions();
         fruitsFilterOpts.items = this.fruits;
         fruitsFilterOpts.key = 'name';
@@ -182,28 +174,28 @@ export class ListSampleComponent implements OnInit {
         return fruitsFilterOpts;
     }
 
-    filteringHandler = function(args) {
+    public filteringHandler = function(args) {
         args.cancel = !this.checkbox.checked;
     };
 
-    filteredHandler = (args) => { };
+    public filteredHandler = () => { };
 
-    onAddFruitButtonClicked(fruitName) {
+    public onAddFruitButtonClicked(fruitName) {
         this.addFruit(fruitName);
         this.addFruitDialog.close();
     }
 
-    addFruit(fruitName) {
+    public addFruit(fruitName) {
         this.fruits.push({ id: this.fruits.length, name: fruitName });
     }
 
-    addFruits(fruits: string[]) {
+    public addFruits(fruits: string[]) {
         fruits.forEach((fruit) => {
             this.addFruit(fruit);
         });
     }
 
-    deleteFruit(fruitId) {
+    public deleteFruit(fruitId) {
         let fruitIndex = -1;
         for (let i = 0; i < this.fruits.length; i++) {
             if (fruitId === this.fruits[i].id) {
@@ -215,11 +207,11 @@ export class ListSampleComponent implements OnInit {
         this.fruits.splice(fruitIndex, 1);
     }
 
-    fruitsFiltered(args) {
+    public fruitsFiltered(args) {
         this.fruitsFilteredItemsCount = args.filteredItems.length;
     }
 
-    loadFruits() {
+    public loadFruits() {
         this.fruitList.isLoading = true;
         setTimeout(() => {
             this.addFruits([

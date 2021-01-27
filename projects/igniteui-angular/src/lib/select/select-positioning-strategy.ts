@@ -7,6 +7,8 @@ import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-p
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
+    /** @inheritdoc */
+    public settings: PositionSettings;
 
     private _selectDefaultSettings = {
         horizontalDirection: HorizontalAlignment.Right,
@@ -17,18 +19,15 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         closeAnimation: fadeOut
     };
 
-    /** @inheritdoc */
-    public settings: PositionSettings;
+    // Global variables required for cases of !initialCall (page scroll/overlay repositionAll)
+    private global_yOffset = 0;
+    private global_xOffset = 0;
+    private global_styles: SelectStyles = {};
 
     constructor(public select: IgxSelectBase, settings?: PositionSettings) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
-
-    // Global variables required for cases of !initialCall (page scroll/overlay repositionAll)
-    private global_yOffset = 0;
-    private global_xOffset = 0;
-    private global_styles: SelectStyles = {};
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
@@ -71,25 +70,26 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     /**
-     * Calculate selected item scroll position.
+     * Obtain the selected item if there is such one or otherwise use the first one
      */
-    private calculateScrollAmount(selectFit: SelectFit): number {
-        const itemElementRect = selectFit.itemRect;
-        const scrollContainer = selectFit.scrollContainer;
-        const scrollContainerRect = selectFit.scrollContainerRect;
-        const scrollDelta = scrollContainerRect.top - itemElementRect.top;
-        let scrollPosition = scrollContainer.scrollTop - scrollDelta;
-
-        const dropDownHeight = scrollContainer.clientHeight;
-        scrollPosition -= dropDownHeight / 2;
-        scrollPosition += itemElementRect.height / 2;
-
-        return Math.round(Math.min(Math.max(0, scrollPosition), scrollContainer.scrollHeight - scrollContainerRect.height));
+    public getInteractionItemElement(): HTMLElement {
+        let itemElement;
+        if (this.select.selectedItem) {
+            itemElement = this.select.selectedItem.element.nativeElement;
+            // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
+            if (isIE()) {
+                this.select.scrollContainer.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
+            }
+        } else {
+            itemElement = this.select.getFirstItemElement();
+        }
+        return itemElement;
     }
 
     /**
      * Position the items outer container so selected item text is positioned over input text and if header
      * And/OR footer - both header/footer are visible
+     *
      * @param selectFit selectFit to use for computation.
      */
     protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
@@ -124,6 +124,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
     /**
      * Sets element's style which effectively positions the provided element
+     *
      * @param element Element to position
      * @param selectFit selectFit to use for computation.
      * @param initialCall should be true if this is the initial call to the position method calling setStyles
@@ -135,8 +136,26 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     /**
+     * Calculate selected item scroll position.
+     */
+    private calculateScrollAmount(selectFit: SelectFit): number {
+        const itemElementRect = selectFit.itemRect;
+        const scrollContainer = selectFit.scrollContainer;
+        const scrollContainerRect = selectFit.scrollContainerRect;
+        const scrollDelta = scrollContainerRect.top - itemElementRect.top;
+        let scrollPosition = scrollContainer.scrollTop - scrollDelta;
+
+        const dropDownHeight = scrollContainer.clientHeight;
+        scrollPosition -= dropDownHeight / 2;
+        scrollPosition += itemElementRect.height / 2;
+
+        return Math.round(Math.min(Math.max(0, scrollPosition), scrollContainer.scrollHeight - scrollContainerRect.height));
+    }
+
+    /**
      * Calculate the necessary input and selected item styles to be used for positioning item text over input text.
      * Calculate & Set default items container width.
+     *
      * @param selectFit selectFit to use for computation.
      */
     private calculateStyles(selectFit: SelectFit, target: Point | HTMLElement): SelectStyles  {
@@ -163,23 +182,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         styles.contentElementNewWidth = selectFit.targetRect.width + 24 + numericLeftPadding * 2;
 
         return styles;
-    }
-
-    /**
-     * Obtain the selected item if there is such one or otherwise use the first one
-     */
-    public getInteractionItemElement(): HTMLElement {
-        let itemElement;
-        if (this.select.selectedItem) {
-            itemElement = this.select.selectedItem.element.nativeElement;
-            // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
-            if (isIE()) {
-                this.select.scrollContainer.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
-            }
-        } else {
-            itemElement = this.select.getFirstItemElement();
-        }
-        return itemElement;
     }
 
     /**

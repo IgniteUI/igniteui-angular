@@ -38,8 +38,7 @@ describe('Row Pinning #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     describe('', () => {
@@ -159,8 +158,8 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
-                row: row,
-                rowID: rowID,
+                row,
+                rowID,
                 insertAtIndex: undefined,
                 isPinned: true
             });
@@ -452,7 +451,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         }));
 
-        it('should be in view when expanded and pinning row to bottom of the grid.', async() => {
+        it('should be in view when expanded and pinning row to bottom of the grid.', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             fix.detectChanges();
             // pin 1st row
@@ -641,7 +640,7 @@ describe('Row Pinning #grid', () => {
 
         it('should allow pinning added row.', () => {
 
-            grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test' });
+            grid.addRow({ ID: 'Test', CompanyName: 'Test' });
             fix.detectChanges();
 
             grid.pinRow('Test');
@@ -941,7 +940,7 @@ describe('Row Pinning #grid', () => {
             gridContent = GridFunctions.getGridContent(fix);
         }));
 
-        it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async() => {
+        it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async () => {
             grid.getRowByIndex(5).pin();
             fix.detectChanges();
 
@@ -962,7 +961,7 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(27);
         });
 
-        it('should navigate and scroll to first unpinned row from top pinned row using ArrowDown', async() => {
+        it('should navigate and scroll to first unpinned row from top pinned row using ArrowDown', async () => {
             grid.getRowByIndex(5).pin();
             fix.detectChanges();
 
@@ -987,7 +986,7 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(1);
         });
 
-        it('should navigate to top pinned row from bottom unpinned row without scrolling using Ctrl+ArrowUp', async() => {
+        it('should navigate to top pinned row from bottom unpinned row without scrolling using Ctrl+ArrowUp', async () => {
             grid.getRowByIndex(5).pin();
             fix.detectChanges();
 
@@ -1017,7 +1016,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
         });
 
-        it('should navigate to top pinned row from first unpinned row using ArrowUp', async() => {
+        it('should navigate to top pinned row from first unpinned row using ArrowUp', async () => {
             grid.getRowByIndex(5).pin();
             grid.getRowByIndex(1).pin();
             fix.detectChanges();
@@ -1040,7 +1039,7 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(1);
         });
 
-        it('should navigate and scroll to top from bottom pinned row using Ctrl+ArrowUp', async() => {
+        it('should navigate and scroll to top from bottom pinned row using Ctrl+ArrowUp', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.getRowByIndex(5).pin();
             fix.detectChanges();
@@ -1071,7 +1070,7 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(0);
         });
 
-        it('should navigate to last unpinned row from bottom pinned row using ArrowUp', async() => {
+        it('should navigate to last unpinned row from bottom pinned row using ArrowUp', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.getRowByIndex(5).pin();
             fix.detectChanges();
@@ -1093,7 +1092,7 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(26);
         });
 
-        it('should navigate to bottom pinned row from top unpinned row without scrolling using Ctrl+ArrowDown', async() => {
+        it('should navigate to bottom pinned row from top unpinned row without scrolling using Ctrl+ArrowDown', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.getRowByIndex(5).pin();
             fix.detectChanges();
@@ -1118,7 +1117,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
         });
 
-        it('should navigate to bottom pinned row from last unpinned row using ArrowDown', async() => {
+        it('should navigate to bottom pinned row from last unpinned row using ArrowDown', async () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.getRowByIndex(5).pin();
             grid.getRowByIndex(1).pin();
@@ -1149,7 +1148,7 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(27);
         });
 
-        it('should navigate down from pinned to unpinned row when there are filtered out pinned rows', async() => {
+        it('should navigate down from pinned to unpinned row when there are filtered out pinned rows', async () => {
             grid.getRowByIndex(5).pin();
             grid.getRowByIndex(1).pin();
             fix.detectChanges();
@@ -1187,14 +1186,14 @@ describe('Row Pinning #grid', () => {
     `
 })
 export class GridRowPinningComponent {
-    public data: any[] = SampleTestData.contactInfoDataFull();
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
+    public data: any[] = SampleTestData.contactInfoDataFull();
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
+
     public createSimpleData(count: number) {
-        this.data = Array(count).fill({}).map((x, idx) => x = { 'idx': idx + 1 });
+        this.data = Array(count).fill({}).map((x, idx) => x = { idx: idx + 1 });
     }
 }
 

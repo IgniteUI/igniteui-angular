@@ -34,7 +34,7 @@ const baseRecipe: AnimationMetadata[] = [
 const baseParams: IAnimationParams = {
     delay: '0s',
     duration: '600ms',
-    easing: EaseOut.quad,
+    easing: EaseOut.Quad,
     endAngle: 180,
     endDistance: '0px',
     rotateX: 1,

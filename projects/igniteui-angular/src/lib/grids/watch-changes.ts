@@ -10,10 +10,14 @@ export function WatchChanges(): PropertyDecorator {
             configurable: true,
             enumerable: true,
         };
-        propDesc.get = propDesc.get || (function (this: any) { return this[privateKey]; });
-        const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
+        propDesc.get = propDesc.get || (function(this: any) {
+ return this[privateKey];
+});
+        const originalSetter = propDesc.set || (function(this: any, val: any) {
+ this[privateKey] = val;
+});
 
-        propDesc.set = function (this: any, val: any) {
+        propDesc.set = function(this: any, val: any) {
             const init = this._init;
             const oldValue = this[key];
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
@@ -38,10 +42,14 @@ export function WatchColumnChanges(): PropertyDecorator {
             configurable: true,
             enumerable: true,
         };
-        propDesc.get = propDesc.get || (function (this: any) { return this[privateKey]; });
-        const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
+        propDesc.get = propDesc.get || (function(this: any) {
+ return this[privateKey];
+});
+        const originalSetter = propDesc.set || (function(this: any, val: any) {
+ this[privateKey] = val;
+});
 
-        propDesc.set = function (this: any, val: any) {
+        propDesc.set = function(this: any, val: any) {
             const oldValue = this[key];
             originalSetter.call(this, val);
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
@@ -67,7 +75,9 @@ export function notifyChanges(repaint = false) {
 
         const originalSetter = propDesc ? propDesc.set : null;
 
-        propDesc.get = propDesc.get || (function(this) { return this[privateKey]; });
+        propDesc.get = propDesc.get || (function(this) {
+ return this[privateKey];
+});
 
         propDesc.set = function(this, newValue) {
             if (originalSetter) {
@@ -76,7 +86,9 @@ export function notifyChanges(repaint = false) {
                     this.grid.notifyChanges(repaint);
                 }
             } else {
-                if (newValue === this[key]) { return; }
+                if (newValue === this[key]) {
+ return;
+}
                 this[privateKey] = newValue;
                 if (this.grid) {
                     this.grid.notifyChanges(repaint);

@@ -10,9 +10,9 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridFlexSampleComponent implements OnInit, AfterViewInit {
-    public localData;
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+    public localData;
     columns;
 
     constructor() {

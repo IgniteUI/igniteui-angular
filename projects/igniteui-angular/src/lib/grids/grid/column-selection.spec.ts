@@ -14,8 +14,8 @@ const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const SELECTED_FILTER_CELL_CLASS = 'igx-grid__filtering-cell--selected';
 
-function selectedData() {
-    return [{ ProductID: 1, ProductName: 'Chai' },
+const selectedData = () => ([
+    { ProductID: 1, ProductName: 'Chai' },
     { ProductID: 2, ProductName: 'Aniseed Syrup' },
     { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning' },
     { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread' },
@@ -24,8 +24,8 @@ function selectedData() {
     { ProductID: 7, ProductName: 'Queso Cabrales' },
     { ProductID: 8, ProductName: 'Tofu' },
     { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits' },
-    { ProductID: 10, ProductName: 'Chocolate' }];
-}
+    { ProductID: 10, ProductName: 'Chocolate' }
+]);
 
 describe('IgxGrid - Column Selection #grid', () => {
     configureTestSuite();

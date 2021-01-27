@@ -23,13 +23,13 @@ export class IgxTooltipSingleTargetComponent {
     public cancelShowing = false;
     public cancelHiding = false;
 
-    showing(args: ITooltipShowEventArgs) {
+    public showing(args: ITooltipShowEventArgs) {
         if (this.cancelShowing) {
             args.cancel = true;
         }
     }
 
-    hiding(args: ITooltipHideEventArgs) {
+    public hiding(args: ITooltipHideEventArgs) {
         if (this.cancelHiding) {
             args.cancel = true;
         }

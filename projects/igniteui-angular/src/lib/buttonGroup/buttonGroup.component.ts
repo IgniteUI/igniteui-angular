@@ -63,14 +63,6 @@ let NEXT_ID = 0;
 })
 
 export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
-
-    private _disabled = false;
-    protected buttonClickNotifier$ = new Subject<boolean>();
-    protected queryListNotifier$ = new Subject<boolean>();
-
-    @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
-    @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
-
     /**
      * A collection containing all buttons inside the button group.
      */
@@ -178,11 +170,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     * @hidden
-     */
-    public selectedIndexes: number[] = [];
-
-    /**
      * Allows you to set the button group alignment.
      * Available options are `ButtonGroupAlignment.horizontal` (default) and `ButtonGroupAlignment.vertical`.
      * ```typescript
@@ -244,6 +231,10 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      */
     @Output() public onUnselect = new EventEmitter<IButtonGroupEventArgs>();
 
+    @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
+    @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
+
+
     /**
      * Returns true if the `igx-buttongroup` alignment is vertical.
      * Note that in order for the accessor to work correctly the property should be set explicitly.
@@ -262,8 +253,18 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public get isVertical(): boolean {
         return this._isVertical;
     }
+
+    /**
+     * @hidden
+     */
+    public selectedIndexes: number[] = [];
+
+    protected buttonClickNotifier$ = new Subject<boolean>();
+    protected queryListNotifier$ = new Subject<boolean>();
+
     private _isVertical: boolean;
     private _itemContentCssClass: string;
+    private _disabled = false;
 
     constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -281,9 +282,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     get selectedButtons(): IgxButtonDirective[] {
-        return this.buttons.filter((b, i) => {
-            return this.selectedIndexes.indexOf(i) !== -1;
-        });
+        return this.buttons.filter((b, i) => this.selectedIndexes.indexOf(i) !== -1);
 
     }
 
@@ -297,6 +296,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *    this.cdr.detectChanges();
      * }
      * ```
+     *
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
@@ -313,7 +313,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'true');
         this._renderer.addClass(buttonElement, 'igx-button-group__item--selected');
 
-        this.onSelect.emit({ button: button, index: index });
+        this.onSelect.emit({ button, index });
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
         if (indexInViewButtons !== -1) {
@@ -340,6 +340,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *    this.cdr.detectChanges();
      * }
      * ```
+     *
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public deselectButton(index: number) {
@@ -356,7 +357,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'false');
         this._renderer.removeClass(buttonElement, 'igx-button-group__item--selected');
 
-        this.onUnselect.emit({ button: button, index: index });
+        this.onUnselect.emit({ button, index });
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
         if (indexInViewButtons !== -1) {

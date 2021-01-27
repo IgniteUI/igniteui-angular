@@ -4,6 +4,7 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
  * Destroy fixtures after each, reset testing module after all
+ *
  * @hidden
  */
 export const configureTestSuite = () => {
@@ -16,13 +17,15 @@ export const configureTestSuite = () => {
     resizeObserverIgnoreError();
   });
 
-  function clearStyles() {
-    const head: HTMLHeadElement = document.getElementsByTagName('head')[0];
-    const styles: HTMLCollectionOf<HTMLStyleElement> | [] = head.getElementsByTagName('style');
+  const clearStyles = () => {
+    const head = document.getElementsByTagName('head')[0];
+    const styles = head.getElementsByTagName('style');
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let index = 0; index < styles.length; index++) {
       head.removeChild(styles[index]);
     }
-  }
+  };
+
   afterEach(() => {
     const testBedApi: any = getTestBed();
     testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => {

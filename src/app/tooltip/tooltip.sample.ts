@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {
-    IgxTooltipTargetDirective, OverlaySettings,
-    ITooltipShowEventArgs, ITooltipHideEventArgs,
+    IgxTooltipTargetDirective, OverlaySettings
 } from 'igniteui-angular';
 
 @Component({
@@ -11,7 +10,8 @@ import {
 })
 export class TooltipSampleComponent implements OnInit, AfterViewInit {
 
-    @ViewChild('target', { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild('target', { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
 
     public settings: OverlaySettings = {
         // positionStrategy: new AutoPositionStrategy(),
@@ -25,7 +25,7 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
     constructor() {
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = [
             {
                 Brand: 'Samsung',
@@ -86,23 +86,23 @@ export class TooltipSampleComponent implements OnInit, AfterViewInit {
         ];
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         // this.settings.positionStrategy.settings.target = this.tooltipTarget.nativeElement;
         // this.settings.positionStrategy.settings.openAnimation = null;
         // this.settings.positionStrategy.settings.closeAnimation = null;
     }
 
-    showTooltip() {
+    public showTooltip() {
         this.tooltipTarget.showTooltip();
     }
 
-    hideTooltip() {
+    public hideTooltip() {
         this.tooltipTarget.hideTooltip();
     }
 
-    showing(args: ITooltipShowEventArgs) {
+    public showing() {
     }
 
-    hiding(args: ITooltipHideEventArgs) {
+    public hiding() {
     }
 }

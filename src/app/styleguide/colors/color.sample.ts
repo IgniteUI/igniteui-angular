@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     templateUrl: 'color.sample.html'
 })
 export class ColorsSampleComponent {
-    colors = [
+    public colors = [
         {
             name: 'primary',
             variants: [
