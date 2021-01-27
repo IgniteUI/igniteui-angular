@@ -444,11 +444,11 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class DefMaskComponent {
-    public mask;
-    public value;
 
     @ViewChild('input', { static: true })
     public input: ElementRef;
+    public mask;
+    public value;
 }
 
 @Component({
@@ -456,11 +456,11 @@ class DefMaskComponent {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class MaskComponent {
-    mask = '(000) 0000-000';
-    value = '1234567890';
 
     @ViewChild('input', { static: true })
     public input: ElementRef;
+    mask = '(000) 0000-000';
+    value = '1234567890';
 }
 
 @Component({
@@ -471,7 +471,6 @@ class MaskComponent {
                             <input #input1 igxInput [ngModel]="value"/>
                         </igx-input-group>` })
 class IncludeLiteralsComponent {
-    public mask = '(000) 0000-000';
     @Input() public value = '55555';
 
     @ViewChild('input', { static: true })
@@ -479,6 +478,7 @@ class IncludeLiteralsComponent {
 
     @ViewChild('input1', { static: true })
     public input1: ElementRef;
+    public mask = '(000) 0000-000';
 }
 
 @Component({
@@ -486,11 +486,11 @@ class IncludeLiteralsComponent {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class DigitSpaceMaskComponent {
-    public mask = '999999';
-    public value = '555 555';
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    public mask = '999999';
+    public value = '555 555';
 }
 
 @Component({
@@ -498,11 +498,11 @@ class DigitSpaceMaskComponent {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class DigitPlusMinusMaskComponent {
-    public mask = '####-### ## ## ##';
-    public value = '+359884190854';
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    public mask = '####-### ## ## ##';
+    public value = '+359884190854';
 }
 
 @Component({
@@ -510,11 +510,11 @@ class DigitPlusMinusMaskComponent {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class LetterSpaceMaskComponent {
-    public mask = 'LL??LL??';
-    public value = 'AB 2CD E';
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    public mask = 'LL??LL??';
+    public value = 'AB 2CD E';
 }
 
 @Component({
@@ -522,11 +522,11 @@ class LetterSpaceMaskComponent {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class AlphanumSpaceMaskComponent {
-    public mask = 'AAAaaa';
-    public value = '7c  8u';
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    public mask = 'AAAaaa';
+    public value = '7c  8u';
 }
 
 @Component({
@@ -534,11 +534,11 @@ class AlphanumSpaceMaskComponent {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class AnyCharMaskComponent {
-    public mask = '&&&.CCC';
-    public value = ' =% p]';
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    public mask = '&&&.CCC';
+    public value = ' =% p]';
 }
 
 @Component({
@@ -547,13 +547,13 @@ class AnyCharMaskComponent {
                             (onValueChange)="handleValueChange($event)"/>
                         </igx-input-group>` })
 class EventFiringComponent {
+
+    @ViewChild('input', { static: true })
+    public input: ElementRef;
     myValue = '';
     myMask = '(000) 0000-000';
     raw: string;
     formatted: string;
-
-    @ViewChild('input', { static: true })
-    public input: ElementRef;
 
     handleValueChange(event) {
         this.raw = event.rawValue;
@@ -570,11 +570,11 @@ class EventFiringComponent {
                                    [promptChar]="'* @#'"/>
                         </igx-input-group>` })
 class OneWayBindComponent {
-    myMask = 'AAAAAAAA';
-    value = 3456;
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    myMask = 'AAAAAAAA';
+    value = 3456;
 }
 
 @Component({
@@ -585,11 +585,11 @@ class OneWayBindComponent {
                                 [igxMask]="mask"/>
                         </igx-input-group>` })
 class PlaceholderMaskComponent {
-    public mask = '(00) (00)';
-    public value = null;
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    public mask = '(00) (00)';
+    public value = null;
 }
 
 @Component({
@@ -601,14 +601,15 @@ class PlaceholderMaskComponent {
                                 [igxMask]="mask"/>
                         </igx-input-group>` })
 class PipesMaskComponent {
+
+    @ViewChild('input', { static: true })
+    public input: ElementRef;
+
     public mask = 'CCC';
     public value = 'SSS';
 
     public displayFormat = new DisplayFormatPipe();
     public inputFormat = new InputFormatPipe();
-
-    @ViewChild('input', { static: true })
-    public input: ElementRef;
 }
 
 @Component({

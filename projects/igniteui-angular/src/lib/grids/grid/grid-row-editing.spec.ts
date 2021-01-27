@@ -947,7 +947,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on filter`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
@@ -970,7 +970,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on sort`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
             spyOn(grid, 'endEdit').and.callThrough();
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
@@ -1083,7 +1083,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
@@ -1103,7 +1103,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
@@ -1247,7 +1247,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
                 cell.setEditMode(true);
 
-                (<any>grid).crudService.cell.editValue = 'IG';
+                grid.crudService.cell.editValue = 'IG';
                 // cell.update('IG');
                 // Do not exit edit mode
                 fix.detectChanges();
@@ -1336,7 +1336,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`GroupBy: Should exit edit mode when Grouping`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
@@ -1512,8 +1512,6 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Hiding: Should exit edit mode when hiding a column`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
-
             cell.setEditMode(true);
 
             fix.detectChanges();

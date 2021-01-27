@@ -7,6 +7,9 @@ import { fadeIn, fadeOut } from '../../../animations/main';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class GlobalPositionStrategy implements IPositionStrategy {
+    /** @inheritdoc */
+    public settings: PositionSettings;
+
     protected _defaultSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Middle,
@@ -17,9 +20,6 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         minSize: { width: 0, height: 0 }
     };
 
-    /** @inheritdoc */
-    public settings: PositionSettings;
-
     constructor(settings?: PositionSettings) {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
@@ -29,6 +29,11 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
         this.setPosition(contentElement, this.settings);
+    }
+
+    /** @inheritdoc */
+    clone(): IPositionStrategy {
+        return Util.cloneInstance(this);
     }
 
     protected setPosition(contentElement: HTMLElement, settings: PositionSettings) {
@@ -59,11 +64,6 @@ export class GlobalPositionStrategy implements IPositionStrategy {
             default:
                 break;
         }
-    }
-
-    /** @inheritdoc */
-    clone(): IPositionStrategy {
-        return Util.cloneInstance(this);
     }
 }
 

@@ -6,6 +6,8 @@ import { Component, DoCheck, Input } from '@angular/core';
     template: '<span class="igx-drop-down__inner"><ng-content></ng-content></span>'
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
+    /** @hidden @internal */
+    public isHeader: boolean;
 
     private _text: any;
 
@@ -58,9 +60,6 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
             this.dropDown.selectItem(this);
         }
     }
-
-    /** @hidden @internal */
-    public isHeader: boolean;
 
     ngDoCheck(): void {
     }

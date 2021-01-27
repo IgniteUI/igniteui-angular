@@ -30,50 +30,6 @@ import { GridSelectionMode } from '../common/enums';
     templateUrl: './groupby-row.component.html'
 })
 export class IgxGridGroupByRowComponent implements OnDestroy {
-
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        public gridSelection: IgxGridSelectionService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef,
-        public filteringService: IgxFilteringService) {
-        this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.cdr.markForCheck();
-        });
-    }
-
-    /**
-     * @hidden
-     */
-    protected destroy$ = new Subject<any>();
-
-    /**
-     * @hidden
-     */
-    protected defaultCssClass = 'igx-grid__group-row';
-
-    /**
-     * @hidden
-     */
-    protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
-
-    /**
-     * @hidden
-     */
-    @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
-    protected defaultGroupByExpandedTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
-    protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @Input()
-    protected isFocused = false;
-
     /**
      * @hidden
      */
@@ -85,16 +41,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     @Input()
     public rowDraggable: boolean;
-
-    /**
-     * Returns whether the row is focused.
-     * ```
-     * let gridRowFocused = this.grid1.rowList.first.focused;
-     * ```
-     */
-    get focused(): boolean {
-        return this.isActive();
-    }
 
     /**
      * An @Input property that sets the index of the row.
@@ -131,6 +77,65 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     @ViewChild('groupContent', { static: true })
     public groupContent: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @Input()
+    protected isFocused = false;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByExpandedTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    protected destroy$ = new Subject<any>();
+
+    /**
+     * @hidden
+     */
+    protected defaultCssClass = 'igx-grid__group-row';
+
+    /**
+     * @hidden
+     */
+    protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
+
+    /**
+     * Returns whether the row is focused.
+     * ```
+     * let gridRowFocused = this.grid1.rowList.first.focused;
+     * ```
+     */
+    get focused(): boolean {
+        return this.isActive();
+    }
+
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public gridSelection: IgxGridSelectionService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef,
+        public filteringService: IgxFilteringService) {
+        this.gridSelection.selectedRowsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.markForCheck();
+        });
+    }
+
+
+    @HostListener('pointerdown')
+    public activate() {
+        this.grid.navigation.setActiveNode({ row: this.index });
+    }
 
     /**
      * @hidden
@@ -197,12 +202,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
         return this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row === this.index : false;
     }
 
-
-    @HostListener('pointerdown')
-    public activate() {
-        this.grid.navigation.setActiveNode({ row: this.index });
-    }
-
     /**
      * @hidden @internal
      */
@@ -214,7 +213,9 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public onGroupSelectorClick(event) {
-        if (!this.grid.isMultiRowSelectionEnabled) { return; }
+        if (!this.grid.isMultiRowSelectionEnabled) {
+            return;
+        }
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
             this.groupRow.records.forEach(row => {

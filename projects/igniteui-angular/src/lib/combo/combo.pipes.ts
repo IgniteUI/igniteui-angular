@@ -25,7 +25,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
             const searchTerm = filteringOptions.caseSensitive ? searchValue.trim() : searchValue.toLowerCase().trim();
             if (displayKey != null) {
                 return collection.filter(e => filteringOptions.caseSensitive ? e[displayKey].includes(searchTerm) :
-                                         e[displayKey].toLowerCase().includes(searchTerm));
+                                         e[displayKey].toString().toLowerCase().includes(searchTerm));
             } else {
                 return collection.filter(e => filteringOptions.caseSensitive ? e.includes(searchTerm) :
                                          e.toLowerCase().includes(searchTerm));

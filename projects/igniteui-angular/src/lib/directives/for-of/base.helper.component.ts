@@ -1,6 +1,4 @@
 import {
-    EventEmitter,
-    Output,
     HostListener,
     ElementRef,
     ChangeDetectorRef,
@@ -20,18 +18,32 @@ import { resizeObservable, isIE, PlatformUtil } from '../../core/utils';
 })
 export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     public scrollAmount = 0;
-
     public _size = 0;
-
     public destroyed;
+
+    protected destroy$ = new Subject<any>();
 
     private _afterViewInit = false;
     private _scrollNativeSize: number;
     private _detached = false;
-    protected destroy$ = new Subject<any>();
+
+    constructor(
+        public elementRef: ElementRef,
+        public cdr: ChangeDetectorRef,
+        protected _zone: NgZone,
+        @Inject(DOCUMENT) public document: any,
+        protected platformUtil: PlatformUtil,
+    ) {
+        this._scrollNativeSize = this.calculateScrollNativeSize();
+    }
+
+    @HostListener('scroll', ['$event'])
+    public onScroll(event) {
+        this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
+    }
 
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this._afterViewInit = true;
         if (!this.platformUtil.isBrowser) {
             return;
@@ -44,20 +56,6 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         });
     }
 
-    @HostListener('scroll', ['$event'])
-    onScroll(event) {
-        this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
-    }
-    constructor(
-        public elementRef: ElementRef,
-        public cdr: ChangeDetectorRef,
-        protected _zone: NgZone,
-        @Inject(DOCUMENT) public document: any,
-        protected platformUtil: PlatformUtil,
-    ) {
-        this._scrollNativeSize = this.calculateScrollNativeSize();
-    }
-
     get nativeElement() {
         return this.elementRef.nativeElement;
     }
@@ -66,6 +64,21 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         this.destroyed = true;
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+
+    public calculateScrollNativeSize() {
+        const div = this.document.createElement('div');
+        const style = div.style;
+        style.width = '100px';
+        style.height = '100px';
+        style.position = 'absolute';
+        style.top = '-10000px';
+        style.top = '-10000px';
+        style.overflow = 'scroll';
+        this.document.body.appendChild(div);
+        const scrollWidth = div.offsetWidth - div.clientWidth;
+        this.document.body.removeChild(div);
+        return scrollWidth ? scrollWidth + 1 : 1;
     }
 
     public set size(value) {
@@ -102,19 +115,4 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     }
 
     protected restoreScroll() {}
-
-    public calculateScrollNativeSize() {
-        const div = this.document.createElement('div');
-        const style = div.style;
-        style.width = '100px';
-        style.height = '100px';
-        style.position = 'absolute';
-        style.top = '-10000px';
-        style.top = '-10000px';
-        style.overflow = 'scroll';
-        this.document.body.appendChild(div);
-        const scrollWidth = div.offsetWidth - div.clientWidth;
-        this.document.body.removeChild(div);
-        return scrollWidth ? scrollWidth + 1 : 1;
-    }
 }

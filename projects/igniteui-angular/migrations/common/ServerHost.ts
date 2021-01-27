@@ -18,6 +18,7 @@ export class ServerHost implements ts.server.ServerHost {
         try {
             content = this.host.read(path).toString(encoding);
         } finally {
+            // eslint-disable-next-line no-unsafe-finally
             return content || ts.sys.readFile(path, encoding);
         }
     }
@@ -49,6 +50,7 @@ export class ServerHost implements ts.server.ServerHost {
         try {
             exists = this.host.getDir(path) !== void 0;
         } finally {
+            // eslint-disable-next-line no-unsafe-finally
             return exists || this.fileExists(path);
         }
     }

@@ -25,27 +25,21 @@ export class NoopFilteringStrategy implements IFilteringStrategy {
 }
 
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
-    public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
-        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
-
-    protected abstract getFieldValue(rec: object, fieldName: string, isDate: boolean): any;
-
-    public findMatchByExpression(rec: object, expr: IFilteringExpression, isDate?: boolean): boolean {
+    public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
-    public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
+    public matchRecord(rec: any, expressions: IFilteringExpressionsTree | IFilteringExpression, grid?: GridType): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
                 const expressionsTree = expressions as IFilteringExpressionsTree;
                 const operator = expressionsTree.operator as FilteringLogic;
-                let matchOperand, operand;
+                let matchOperand;
 
                 if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
-                    for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                        operand = expressionsTree.filteringOperands[i];
+                    for (const operand of expressionsTree.filteringOperands) {
                         matchOperand = this.matchRecord(rec, operand, grid);
 
                         // Return false if at least one operand does not match and the filtering logic is And
@@ -73,12 +67,19 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
         return true;
     }
+
+    public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
+        advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
+
+    protected abstract getFieldValue(rec: any, fieldName: string, isDate: boolean): any;
 }
 
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instace: FilteringStrategy = null;
 
-    public constructor() { super(); }
+    constructor() {
+        super();
+    }
 
     public static instance() {
         return this._instace || (this._instace = new this());
@@ -102,7 +103,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: object, fieldName: string, isDate: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
         let value = resolveNestedPath(rec, fieldName);
         value = value && isDate ? parseDate(value) : value;
         return value;

@@ -26,7 +26,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxGridAPIService;
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
@@ -56,7 +56,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxGridAPIService;
     }
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
@@ -100,7 +100,7 @@ export class IgxGridPagingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
-        if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.local) {
+        if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
         const state = {
@@ -138,9 +138,9 @@ export class IgxGridFilteringPipe implements PipeTransform {
         advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number, pinned?) {
         const grid = this.gridAPI.grid;
         const state = {
-            expressionsTree: expressionsTree,
+            expressionsTree,
             strategy: filterStrategy,
-            advancedExpressionsTree: advancedExpressionsTree
+            advancedExpressionsTree
         };
 
         if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {

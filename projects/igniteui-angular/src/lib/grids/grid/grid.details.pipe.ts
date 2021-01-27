@@ -12,7 +12,7 @@ import { IgxGridAPIService } from './grid-api.service';
 export class IgxGridDetailsPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxGridAPIService;
     }
     public transform(collection: any[], hasDetails: boolean, expansionStates:  Map<any, boolean>, pipeTrigger: number) {
         if (!hasDetails) {

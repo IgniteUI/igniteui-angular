@@ -51,6 +51,6 @@ export enum RowPinningPosition {
 }
 
 export enum GridPagingMode {
-    local,
-    remote
+    Local,
+    Remote
 }
