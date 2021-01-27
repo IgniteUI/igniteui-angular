@@ -1286,6 +1286,51 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
+
+        it(`If there is only one selected leaf row for a particular parent and we filter it out parent's checkbox state -> non-selected.
+        All non-direct parents’ checkbox states should be set correctly as well`, async () => {
+            treeGrid.selectRows([711], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+
+            treeGrid.filter('ID', 711, IgxNumberFilteringOperand.instance().condition('doesNotEqual'));
+            fix.detectChanges();
+
+            await wait(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+        });
+
+        it(`If there is only one non-selected row for a particular parent and we filter it out parent's checkbox state -> selected.
+        All non-direct parents’ checkbox states should be set correctly as well`, async () => {
+            treeGrid.selectRows([711, 998], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, false, false);
+
+            treeGrid.filter('ID', 299, IgxNumberFilteringOperand.instance().condition('doesNotEqual'));
+            fix.detectChanges();
+
+            await wait(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
+        });
     });
 
     describe('Custom row selectors', () => {
