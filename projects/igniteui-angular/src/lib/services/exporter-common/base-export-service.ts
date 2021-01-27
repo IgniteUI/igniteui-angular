@@ -17,7 +17,7 @@ import { IgxGridComponent } from '../../grids/grid/public_api';
 import { DatePipe } from '@angular/common';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
-export enum RecordType {
+export enum ExportRecordType {
     GroupedRecord = 1,
     TreeGridRecord = 2,
     DataRecord = 3,
@@ -27,7 +27,7 @@ export interface IExportRecord {
     data: any;
     level: number;
     hidden?: boolean;
-    type: number;
+    type: ExportRecordType;
 }
 
 /**
@@ -197,7 +197,7 @@ export abstract class IgxBaseExporter {
         const records = data.map(d => {
             const record: IExportRecord = {
                 data: d,
-                type: RecordType.DataRecord,
+                type: ExportRecordType.DataRecord,
                 level: 0
             };
 
@@ -224,8 +224,11 @@ export abstract class IgxBaseExporter {
         this._columnList.forEach((column, index) => {
             if (!column.skip) {
                 const columnExportArgs = {
-                    header: ExportUtilities.isNullOrWhitespaces(column.header) ?
-                        'Column' + columnsWithoutHeaderCount++ : column.header,
+                    header: !ExportUtilities.isNullOrWhitespaces(column.header) ?
+                        column.header :
+                        !ExportUtilities.isNullOrWhitespaces(column.field) ?
+                            column.field :
+                            'Column' + columnsWithoutHeaderCount++,
                     field: column.field,
                     columnIndex: index,
                     cancel: false,
@@ -274,7 +277,7 @@ export abstract class IgxBaseExporter {
                 if (!e.skip) {
                     let rawValue = resolveNestedPath(record.data, e.field);
 
-                    const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== RecordType.GroupedRecord;
+                    const shouldApplyFormatter = e.formatter && !e.skipFormatter && record.type !== ExportRecordType.GroupedRecord;
 
                     if (e.dataType === 'date' &&
                         !(rawValue instanceof Date) &&
@@ -422,7 +425,7 @@ export abstract class IgxBaseExporter {
                 data: records[i].data,
                 level: records[i].level,
                 hidden: !parentExpanded,
-                type: RecordType.TreeGridRecord
+                type: ExportRecordType.TreeGridRecord
             };
 
             this.flatRecords.push(hierarchicalRecord);
@@ -437,7 +440,7 @@ export abstract class IgxBaseExporter {
         for (let i = 0; i < records.length; i++) {
             const record: IExportRecord = {
                 data: records[i],
-                type: RecordType.DataRecord,
+                type: ExportRecordType.DataRecord,
                 level: 0
             };
 
@@ -451,7 +454,7 @@ export abstract class IgxBaseExporter {
             return;
         }
 
-        const firstCol = this._columnList[0].header ?? this._columnList[0].field;
+        const firstCol = this._columnList[0].field;
 
         for (let i = 0; i < records.length; i++) {
             const record = records[i];
@@ -475,7 +478,7 @@ export abstract class IgxBaseExporter {
                 data: { [firstCol]: `${record.expression.fieldName}: ${recordVal} (${record.records.length})` },
                 level: record.level,
                 hidden: !parentExpanded,
-                type: RecordType.GroupedRecord,
+                type: ExportRecordType.GroupedRecord,
             };
 
             this.flatRecords.push(groupExpression);
@@ -490,7 +493,7 @@ export abstract class IgxBaseExporter {
                         data: rowRecords[j],
                         level: record.level + 1,
                         hidden: !(expanded && parentExpanded),
-                        type: RecordType.DataRecord
+                        type: ExportRecordType.DataRecord
                     };
 
                     this.flatRecords.push(currentRecord);
