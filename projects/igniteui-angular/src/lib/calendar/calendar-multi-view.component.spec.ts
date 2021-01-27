@@ -10,7 +10,7 @@ import { DateRangeType } from '../core/dates';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
 describe('Multi-View Calendar - ', () => {
-    let fixture, calendar;
+    let fixture; let calendar;
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -797,7 +797,7 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(monthDates[10]);
         }));
 
-        it('Verify that months increment/decrement continuously on enter keydown', (async() => {
+        it('Verify that months increment/decrement continuously on enter keydown', (async () => {
             calendar.monthsViewNumber = 2;
             await wait(100);
             fixture.detectChanges();

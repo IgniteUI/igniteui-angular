@@ -16,17 +16,16 @@ import { debounceTime } from 'rxjs/operators';
     providers: [RemoteService]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
-
-    public selectionMode;
-    remoteData = [];
-    gridData = [];
-    totalCount: number;
-
     @ViewChild('rowIsland1', { static: true })
     rowIsland1: IgxRowIslandComponent;
 
     @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
+
+    public selectionMode;
+    remoteData = [];
+    gridData = [];
+    totalCount: number;
 
     public isExpanding = false;
 

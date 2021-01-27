@@ -1,22 +1,20 @@
 import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-    ISelectionEventArgs, CancelableEventArgs, OverlaySettings,
+    ISelectionEventArgs, CancelableEventArgs,
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy,
     IgxSelectComponent,
-    DisplayDensity,
     IButtonGroupEventArgs
 } from 'igniteui-angular';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-select-sample',
     styleUrls: ['./select.sample.scss'],
     templateUrl: './select.sample.html'
 })
 export class SelectSampleComponent implements OnInit {
-    @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     @ViewChild('model', { read: IgxSelectComponent, static: true })
@@ -24,13 +22,9 @@ export class SelectSampleComponent implements OnInit {
     @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
     public selectDisplayDensity: IgxSelectComponent;
 
-    public isDisabled = false;
+    @ViewChildren(IgxSelectComponent) private selectComponents: QueryList<IgxSelectComponent>;
 
-    constructor(fb: FormBuilder) {
-        this.reactiveForm = fb.group({
-            'citiesSelect': ['', Validators.required]
-        });
-    }
+    public isDisabled = false;
 
     public items: any[] = [];
     public value: 'opt1';
@@ -39,7 +33,7 @@ export class SelectSampleComponent implements OnInit {
     public selected: string;
     public selectRequired = true;
 
-    reactiveForm: FormGroup;
+    public reactiveForm: FormGroup;
     public cities: string[] = [
         'Sofia',
         'Varna',
@@ -50,8 +44,14 @@ export class SelectSampleComponent implements OnInit {
     ];
 
     public validationType = {
-        'citiesSelect': [Validators.required]
+        citiesSelect: [Validators.required]
     };
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            citiesSelect: ['', Validators.required]
+        });
+    }
 
     public ngOnInit() {
         for (let i = 1; i < 10; i++) {
@@ -72,11 +72,11 @@ export class SelectSampleComponent implements OnInit {
     }
 
     public testOnSelection(evt: ISelectionEventArgs) {
-        //  console.log('testOnSelection.....................' + evt.cancel);
+        console.log('testOnSelection.....................' + evt.cancel);
     }
 
     public testOnOpening(evt: CancelableEventArgs) {
-        // console.log('testOnOpening.....................: ' + evt.cancel);
+        console.log('testOnOpening.....................: ' + evt.cancel);
     }
 
     public testOnOpened() {
@@ -84,7 +84,7 @@ export class SelectSampleComponent implements OnInit {
     }
 
     public testOnClosing(evt: CancelableEventArgs) {
-        // console.log('testOnClosing.....................: ' + evt.cancel);
+        console.log('testOnClosing.....................: ' + evt.cancel);
     }
 
     public testOnClosed() {
@@ -138,25 +138,25 @@ export class SelectSampleComponent implements OnInit {
         }
     }
 
-    setDensity(event: IButtonGroupEventArgs) {
+    public setDensity(event: IButtonGroupEventArgs) {
         this.selectDisplayDensity.displayDensity = event.button.nativeElement.value;
     }
 
-    btnClick() {
+    public btnClick() {
         // console.log('clicked');
     }
 
-    headerFootedClick(event) {
-        // console.log('Header/Footer clicked', event);
+    public headerFootedClick(event) {
+        console.log('Header/Footer clicked', event);
     }
 
-    btnAddBr() {
+    public btnAddBr() {
         const brContainer = document.getElementsByClassName('sampleWrapper')[0];
         const br = document.createElement('br');
         brContainer.prepend(br);
     }
 
-    btnRemoveBr() {
+    public btnRemoveBr() {
         const brContainer = document.getElementsByClassName('sampleWrapper')[0];
         const firstEl =  brContainer.firstElementChild;
         if (firstEl.tagName === 'BR') {

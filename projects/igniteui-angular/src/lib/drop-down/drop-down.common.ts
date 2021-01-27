@@ -20,6 +20,7 @@ export type DropDownActionKey = (typeof DropDownActionKey)[keyof typeof DropDown
 
 /**
  * Interface that encapsulates onSelection event arguments - old selection, new selection and cancel selection.
+ *
  * @export
  */
 export interface ISelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -29,6 +30,7 @@ export interface ISelectionEventArgs extends CancelableEventArgs, IBaseEventArgs
 
 /**
  * Interface for an instance of IgxDropDownNavigationDirective
+ *
  * @export
  */
 export interface IDropDownNavigationDirective {

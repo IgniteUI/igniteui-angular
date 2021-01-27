@@ -42,8 +42,6 @@ let NEXT_TABS_ID = 0;
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-    private _currentTabsId = NEXT_TABS_ID++;
-
     /**
      * Provides an observable collection of all `IgxTabsGroupComponent`s.
      * ```typescript
@@ -110,22 +108,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @Input('type')
     public type: string | IgxTabsType = 'contentfit';
-
-    /**
-     * Sets/gets the `id` of the tabs.
-     *
-     * @remarks
-     * If not set, the `id` will have value `"igx-tabs-0"`.
-     *
-     * @example
-     * ```html
-     * <igx-tabs id="my-first-tabs"></igx-tabs>
-     * ```
-     * @memberof IgxTabsComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-tabs-${this._currentTabsId}`;
 
     /**
      * @hidden
@@ -215,6 +197,33 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public viewTabs: QueryList<IgxTabItemComponent>;
 
     /**
+     * Enables/disables the transition animation of the tabs' content. Set to `false` by default.
+     * ````html
+     * <igx-tabs [disableAnimation]="true"></igx-tabs>
+     */
+    @Input()
+    public disableAnimation = false;
+
+    private readonly _currentTabsId = NEXT_TABS_ID++;
+
+    /**
+     * Sets/gets the `id` of the tabs.
+     *
+     * @remarks
+     * If not set, the `id` will have value `"igx-tabs-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-tabs id="my-first-tabs"></igx-tabs>
+     * ```
+     * @memberof IgxTabsComponent
+     */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-tabs-${this._currentTabsId}`;
+
+    /**
      * Provides an observable collection of all `IgxTabItemComponent`s.
      * First try to get them as content children if not available get them as view children.
      * ```typescript
@@ -238,24 +247,19 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public calculatedWidth: number;
 
     /**
      * @hidden
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public visibleItemsWidth: number;
-
-    /**
-     * Enables/disables the transition animation of the tabs' content. Set to `false` by default.
-     * ````html
-     * <igx-tabs [disableAnimation]="true"></igx-tabs>
-     */
-    @Input()
-    public disableAnimation = false;
 
     /**
      * @hidden
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public offset = 0;
 
     private _groupChanges$: Subscription;
@@ -292,17 +296,19 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         return `${css} ${this.class}`;
     }
 
+    constructor(private _ngZone: NgZone, private platformUtil: PlatformUtil) { }
+
     /**
      * @hidden
      */
-    public scrollLeft(event): void {
+    public scrollLeft(): void {
         this.scroll(false);
     }
 
     /**
      * @hidden
      */
-    public scrollRight(event): void {
+    public scrollRight(): void {
         this.scroll(true);
     }
 
@@ -327,8 +333,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             return this.tabs.toArray()[this.selectedIndex];
         }
     }
-
-    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) { }
 
     /**
      * @hidden
@@ -372,6 +376,65 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this.setGroupsAttributes();
             this.resetSelectionOnCollectionChanged();
         });
+    }
+
+    /**
+     * @hidden
+     */
+    public performSelectionChange(newTab: IgxTabItemBase): void {
+        const oldTab = this.selectedTabItem;
+        if (oldTab) {
+            this.performDeselection(oldTab);
+        }
+        if (newTab) {
+            this.performSelection(newTab);
+        } else {
+            // if there is no new selected tab hide the selection indicator
+            this.hideIndicator();
+        }
+        this.selectedIndexChange.emit(this._selectedIndex);
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabItemId(index: number): string {
+        return `igx-tab-item-${this._currentTabsId}-${index}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabsGroupId(index: number): string {
+        return `igx-tabs-group-${this._currentTabsId}-${index}`;
+    }
+
+    /**
+     * @hidden
+     */
+    // animation for the new panel/group (not needed for tab only mode)
+    public transformContentAnimation(tab: IgxTabItemBase, duration: number): void {
+        const contentOffset = this.tabsContainer.nativeElement.offsetWidth * tab.index;
+        this.contentsContainer.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
+        this.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+    }
+
+    /**
+     * @hidden
+     */
+    public transformIndicatorAnimation(element: HTMLElement, duration = 0.3): void {
+        if (this.selectedIndicator) {
+            this.selectedIndicator.nativeElement.style.visibility = 'visible';
+            this.selectedIndicator.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
+            this.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
+            this.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
+        }
+    }
+
+    public hideIndicator(): void {
+        if (this.selectedIndicator) {
+            this.selectedIndicator.nativeElement.style.visibility = 'hidden';
+        }
     }
 
     /**
@@ -428,23 +491,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * @hidden
-     */
-    public performSelectionChange(newTab: IgxTabItemBase): void {
-        const oldTab = this.selectedTabItem;
-        if (oldTab) {
-            this.performDeselection(oldTab);
-        }
-        if (newTab) {
-            this.performSelection(newTab);
-        } else {
-            // if there is no new selected tab hide the selection indicator
-            this.hideIndicator();
-        }
-        this.selectedIndexChange.emit(this._selectedIndex);
-    }
-
     private performDeselection(oldTab: IgxTabItemBase): void {
         oldTab.setSelectedInternal(false);
         const oldTabRelatedGroup = this.groups.toArray()[oldTab.index];
@@ -499,49 +545,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this.scrollElement(tabNativeElement, true);
         }
     }
-
-    /**
-     * @hidden
-     */
-    public getTabItemId(index: number): string {
-        return `igx-tab-item-${this._currentTabsId}-${index}`;
-    }
-
-    /**
-     * @hidden
-     */
-    public getTabsGroupId(index: number): string {
-        return `igx-tabs-group-${this._currentTabsId}-${index}`;
-    }
-
-    /**
-     * @hidden
-     */
-    // animation for the new panel/group (not needed for tab only mode)
-    public transformContentAnimation(tab: IgxTabItemBase, duration: number): void {
-        const contentOffset = this.tabsContainer.nativeElement.offsetWidth * tab.index;
-        this.contentsContainer.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
-        this.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
-    }
-
-    /**
-     * @hidden
-     */
-    public transformIndicatorAnimation(element: HTMLElement, duration = 0.3): void {
-        if (this.selectedIndicator) {
-            this.selectedIndicator.nativeElement.style.visibility = 'visible';
-            this.selectedIndicator.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
-            this.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
-            this.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
-        }
-    }
-
-    public hideIndicator(): void {
-        if (this.selectedIndicator) {
-            this.selectedIndicator.nativeElement.style.visibility = 'hidden';
-        }
-    }
-
 }
 
 /**

@@ -64,8 +64,7 @@ export class GridPerformanceSampleComponent implements OnInit {
             this.localData.splice(0, 1);
         } else {
             const obj = {};
-            for (let j = 0; j < this.columns.length; j++) {
-                const col = this.columns[j].field;
+            for (const col of this.columns) {
                 obj[col] = 0;
             }
             this.localData.unshift(obj);

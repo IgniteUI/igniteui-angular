@@ -36,6 +36,12 @@ export class ExpressionUI {
  */
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
+    public isFilterRowVisible = false;
+    public filteredColumn: IgxColumnComponent = null;
+    public selectedExpression: IFilteringExpression = null;
+    public columnToMoreIconHidden = new Map<string, boolean>();
+    public activeFilterCell = 0;
+    public grid: IgxGridBaseDirective;
 
     private columnsWithComplexFilter = new Set<string>();
     private areEventsSubscribed = false;
@@ -48,13 +54,6 @@ export class IgxFilteringService implements OnDestroy {
     private _filterMenuOverlaySettings: OverlaySettings;
     private column;
     private lastActiveNode;
-
-    public isFilterRowVisible = false;
-    public filteredColumn: IgxColumnComponent = null;
-    public selectedExpression: IFilteringExpression = null;
-    public columnToMoreIconHidden = new Map<string, boolean>();
-    public activeFilterCell = 0;
-    grid: IgxGridBaseDirective;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
         private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
@@ -343,11 +342,8 @@ export class IgxFilteringService implements OnDestroy {
         const expressionsList = expressionUIList ? expressionUIList : this.getExpressions(columnId);
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, columnId);
         let currAndBranch: FilteringExpressionsTree;
-        let currExpressionUI: ExpressionUI;
 
-        for (let i = 0; i < expressionsList.length; i++) {
-            currExpressionUI = expressionsList[i];
-
+        for (const currExpressionUI of expressionsList) {
             if (!currExpressionUI.expression.condition.isUnary && currExpressionUI.expression.searchVal === null) {
                 if (currExpressionUI.afterOperator === FilteringLogic.And && !currAndBranch) {
                     currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
@@ -436,6 +432,35 @@ export class IgxFilteringService implements OnDestroy {
         return this.grid.filteredData;
     }
 
+    public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
+        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
+
+        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
+        if (expressionsUIs.length) {
+            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        }
+    }
+
+    public isFilteringExpressionsTreeEmpty(expressionTree: IFilteringExpressionsTree): boolean {
+        if (FilteringExpressionsTree.empty(expressionTree)) {
+            return true;
+        }
+
+        for (const expr of expressionTree.filteringOperands) {
+            if ((expr instanceof FilteringExpressionsTree)) {
+                const exprTree = expr as FilteringExpressionsTree;
+                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (!expressions) {
             return false;
@@ -451,8 +476,8 @@ export class IgxFilteringService implements OnDestroy {
             }
 
             let isComplex = false;
-            for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                isComplex = isComplex || this.isFilteringTreeComplex(expressionsTree.filteringOperands[i]);
+            for (const operand of expressionsTree.filteringOperands) {
+                isComplex = isComplex || this.isFilteringTreeComplex(operand);
             }
 
             return isComplex;
@@ -478,17 +503,6 @@ export class IgxFilteringService implements OnDestroy {
         return count;
     }
 
-    public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
-        operator: FilteringLogic,
-        expressionsUIs: ExpressionUI[]): void {
-        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
-
-        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
-        if (expressionsUIs.length) {
-            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
-        }
-    }
-
     private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
         operator: FilteringLogic,
         expressionsUIs: ExpressionUI[]): void {
@@ -498,8 +512,8 @@ export class IgxFilteringService implements OnDestroy {
 
         if (expressions instanceof FilteringExpressionsTree) {
             const expressionsTree = expressions as FilteringExpressionsTree;
-            for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                this.generateExpressionsListRecursive(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+            for (const operand of expressionsTree.filteringOperands) {
+                this.generateExpressionsListRecursive(operand, expressionsTree.operator, expressionsUIs);
             }
             if (expressionsUIs.length) {
                 expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
@@ -516,27 +530,5 @@ export class IgxFilteringService implements OnDestroy {
 
             expressionsUIs.push(exprUI);
         }
-    }
-
-    public isFilteringExpressionsTreeEmpty(expressionTree: IFilteringExpressionsTree): boolean {
-        if (FilteringExpressionsTree.empty(expressionTree)) {
-            return true;
-        }
-
-        let expr: any;
-
-        for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
-            expr = expressionTree.filteringOperands[i];
-
-            if ((expr instanceof FilteringExpressionsTree)) {
-                const exprTree = expr as FilteringExpressionsTree;
-                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -643,9 +643,9 @@ export class IgxToggleTestComponent {
     `
 })
 export class IgxToggleActionTestComponent {
-    public settings: OverlaySettings = {};
     @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
     @ViewChild(IgxToggleActionDirective, { static: true }) public toggleAction: IgxToggleActionDirective;
+    public settings: OverlaySettings = {};
     constructor() {
         this.settings.closeOnOutsideClick = true;
     }

@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
-    IgxColumnComponent,
     IgxGridComponent,
     IgxNumberSummaryOperand,
     IgxSummaryResult,
@@ -9,13 +8,11 @@ import {
 } from 'igniteui-angular';
 
 class MySummary extends IgxNumberSummaryOperand {
-
-
     constructor() {
         super();
     }
 
-    operate(data: any[], allData = [], fieldName?): IgxSummaryResult[] {
+    public operate(data: any[], allData = [], fieldName?): IgxSummaryResult[] {
         fieldName = fieldName === 'Sum' ? 'ReorderLevel' : fieldName;
         const result = super.operate(allData.map(r => r[fieldName]));
             result.push({
@@ -32,15 +29,15 @@ class MySummary extends IgxNumberSummaryOperand {
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html'
 })
-export class GridSummaryComponent implements OnInit {
+export class GridSummaryComponent {
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
-    public grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
 
-    mySummary = MySummary;
-    w = '1200px';
-    h = '500px';
-    cw = '200px';
+    public mySummary = MySummary;
+    public w = '1200px';
+    public h = '500px';
+    public cw = '200px';
     public groupable = false;
     public filterable = true;
     public disableHiding = false;
@@ -51,7 +48,7 @@ export class GridSummaryComponent implements OnInit {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
 
-    data = [{
+    public data = [{
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(1)',
             type: 'NorthwindModel.Product'
@@ -374,7 +371,7 @@ export class GridSummaryComponent implements OnInit {
     }
     ];
 
-    data2 = [{
+    public data2 = [{
         __metadata: {
             uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(1)',
             type: 'NorthwindModel.Product'
@@ -707,16 +704,14 @@ export class GridSummaryComponent implements OnInit {
         }
     }
 
-    ngOnInit() { }
-
-    updateData() {
+    public updateData() {
         const d = [].concat(this.data).concat(this.data2);
         this.data = d;
     }
 
-    viewRecord(aRecord) { }
+    public viewRecord() { }
 
-    initColumn(po: IgxColumnComponent) { }
+    public initColumn() { }
 
     public enableSummary() {
         for (const name of ['ReorderLevel', 'ProductID']) {
@@ -781,7 +776,7 @@ export class GridSummaryComponent implements OnInit {
         }, 1);
     }
 
-    pin() {
+    public pin() {
         for (const name of ['UnitsInStock', 'Discontinued']) {
             if (this.grid1.getColumnByName(name).pinned) {
                 this.grid1.unpinColumn(name);
@@ -791,12 +786,12 @@ export class GridSummaryComponent implements OnInit {
         }
     }
 
-    disableSummary() {
+    public disableSummary() {
         this.grid1.getColumnByName('UnitsInStock').hasSummary = false;
         // this.grid1.recalculateSummaries();
     }
 
-    hide() {
+    public hide() {
         if (this.grid1.getColumnByName('UnitsInStock').hidden) {
             this.grid1.getColumnByName('UnitsInStock').hidden = false;
         } else {
@@ -808,7 +803,7 @@ export class GridSummaryComponent implements OnInit {
         this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }
 
-    onChange() {
+    public onChange() {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
             this.pinningConfig = { columns: ColumnPinningPosition.Start };
         } else {

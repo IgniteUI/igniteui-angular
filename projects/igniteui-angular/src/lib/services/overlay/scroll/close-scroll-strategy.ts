@@ -89,5 +89,5 @@ export class CloseScrollStrategy extends ScrollStrategy {
             this._document.removeEventListener('scroll', this.onScroll, true);
             this._overlayService.hide(this._id);
         }
-    }
+    };
 }

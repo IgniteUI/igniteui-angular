@@ -84,6 +84,6 @@ export interface ImportsChanges {
 }
 
 export enum ElementType {
-    directive = 'directive',
-    component = 'component'
+    Directive = 'directive',
+    Component = 'component'
 }

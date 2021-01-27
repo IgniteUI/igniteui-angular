@@ -5,7 +5,6 @@ import { Directive, ElementRef, HostListener, Input, NgModule } from '@angular/c
     selector: '[igxTextSelection]'
 })
 export class IgxTextSelectionDirective {
-
     private selectionState = true;
 
     /**
@@ -75,6 +74,8 @@ export class IgxTextSelectionDirective {
         return this.element.nativeElement;
     }
 
+    constructor(private element: ElementRef) { }
+
     /**
      * @hidden
      */
@@ -82,8 +83,6 @@ export class IgxTextSelectionDirective {
     onFocus() {
         this.trigger();
     }
-
-    constructor(private element: ElementRef) { }
 
     /**
      * Triggers the selection of the element if it is marked as selectable.

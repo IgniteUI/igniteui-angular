@@ -5,6 +5,11 @@ import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
+    /**
+     * @inheritdoc
+     */
+    public onStateUpdate = new EventEmitter<StateUpdateEvent>();
+
     protected _transactions: T[] = [];
     protected _redoStack: Action<T>[][] = [];
     protected _undoStack: Action<T>[][] = [];
@@ -27,29 +32,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public onStateUpdate = new EventEmitter<StateUpdateEvent>();
-
-    /**
-     * @inheritdoc
-     */
     public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
         this.addTransaction(transaction, states, recordRef);
-    }
-
-    protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
-        this.updateState(states, transaction, recordRef);
-
-        const transactions = this._isPending ? this._pendingTransactions : this._transactions;
-        transactions.push(transaction);
-
-        if (!this._isPending) {
-            const actions = [{ transaction, recordRef }];
-            this._undoStack.push(actions);
-            this._redoStack = [];
-            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions });
-        }
     }
 
     /**
@@ -198,8 +184,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      */
     public redo(): void {
         if (this._redoStack.length > 0) {
-            let actions: Action<T>[];
-            actions = this._redoStack.pop();
+            const actions: Action<T>[] = this._redoStack.pop();
             for (const action of actions) {
                 this.updateState(this._states, action.transaction, action.recordRef);
                 this._transactions.push(action.transaction);
@@ -210,8 +195,23 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         }
     }
 
+    protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
+        this.updateState(states, transaction, recordRef);
+
+        const transactions = this._isPending ? this._pendingTransactions : this._transactions;
+        transactions.push(transaction);
+
+        if (!this._isPending) {
+            const actions = [{ transaction, recordRef }];
+            this._undoStack.push(actions);
+            this._redoStack = [];
+            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions });
+        }
+    }
+
     /**
      * Verifies if the passed transaction is correct. If not throws an exception.
+     *
      * @param transaction Transaction to be verified
      */
     protected verifyAddedTransaction(states: Map<any, S>, transaction: T, recordRef?: any): void {
@@ -240,6 +240,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
     /**
      * Updates the provided states collection according to passed transaction and recordRef
+     *
      * @param states States collection to apply the update to
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
@@ -279,7 +280,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type } as S;
+            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
@@ -292,6 +293,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * Compares the state with recordRef and clears all duplicated values. If any state ends as
      * empty object removes it from states.
+     *
      * @param state State to clean
      */
     protected cleanState(id: any, states: Map<any, S>): void {
@@ -326,6 +328,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
     /**
      * Updates state related record in the provided data
+     *
      * @param data Data source to update
      * @param state State to update data from
      */

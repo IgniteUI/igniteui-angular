@@ -9,8 +9,8 @@ import { IgxColumnResizerDirective } from './resizer.directive';
     templateUrl: './resizer.component.html'
 })
 export class IgxGridColumnResizerComponent {
-    constructor(public colResizingService: IgxColumnResizingService) { }
-
     @ViewChild(IgxColumnResizerDirective, { static: true })
     public resizer: IgxColumnResizerDirective;
+
+    constructor(public colResizingService: IgxColumnResizingService) { }
 }

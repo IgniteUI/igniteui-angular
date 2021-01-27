@@ -4,7 +4,7 @@ import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs, mkenum } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -108,7 +108,7 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
-    componentRef?: ComponentRef<{}>;
+    componentRef?: ComponentRef<any>;
     /** Will provide the original keyboard event if closed from ESC or click */
     event?: Event;
 }
@@ -142,7 +142,7 @@ export interface OverlayInfo {
     visible?: boolean;
     detached?: boolean;
     elementRef?: ElementRef;
-    componentRef?: ComponentRef<{}>;
+    componentRef?: ComponentRef<any>;
     settings?: OverlaySettings;
     initialSize?: Size;
     hook?: HTMLElement;
@@ -218,8 +218,8 @@ export class Util {
             left: scrollPosition.x,
             right: scrollPosition.x + width,
             bottom: scrollPosition.y + height,
-            width: width,
-            height: height,
+            width,
+            height,
         };
     }
 
