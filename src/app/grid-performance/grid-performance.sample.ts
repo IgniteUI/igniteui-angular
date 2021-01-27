@@ -9,12 +9,13 @@ import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 export class GridPerformanceSampleComponent implements OnInit {
 
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
 
-    localData: any[] = [];
-    columns;
+    public localData: any[] = [];
+    public columns;
     public selectionMode;
-    ngOnInit() {
+
+    public ngOnInit() {
         this.selectionMode = GridSelectionMode.none;
         const cols = [];
         cols.push({
@@ -43,7 +44,7 @@ export class GridPerformanceSampleComponent implements OnInit {
         }
     }
 
-    ToggleCol() {
+    public ToggleCol() {
         if (this.columns[0].field === 'new column') {
             this.columns.splice(0, 1);
         } else {
@@ -55,11 +56,11 @@ export class GridPerformanceSampleComponent implements OnInit {
         this.grid1.markForCheck();
     }
 
-    toggleVis() {
+    public toggleVis() {
         this.grid1.columnList.forEach(c => c.hidden = !c.hidden);
     }
 
-    ToggleRow() {
+    public ToggleRow() {
         if (this.localData[0][1] === 0) {
             this.localData.splice(0, 1);
         } else {
@@ -71,6 +72,7 @@ export class GridPerformanceSampleComponent implements OnInit {
         }
         this.grid1.markForCheck();
     }
+
     public scrollTo(grid, index) {
         grid.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }
