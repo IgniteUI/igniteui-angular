@@ -18,7 +18,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-        !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) { return; }
+            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) {
+            return;
+        }
 
         const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
         if (targetGrid !== this.grid.nativeElement) {
@@ -35,7 +37,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         super.dispatchEvent(event);
     }
 
-    public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
+    public navigateInBody(rowIndex, visibleColIndex, cb: (arg: any) => void = null): void {
         const rec = this.grid.dataView[rowIndex];
         if (rec && this.grid.isChildGridRecord(rec)) {
              // target is child grid
@@ -132,11 +134,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Handles scrolling in child grid and ensures target child row is in main grid view port.
+     *
      * @param rowIndex The row index which should be in view.
      * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
      * @param cb  Optional.Callback function called when operation is complete.
      */
-    protected _handleScrollInChild(rowIndex: number, isNext?: boolean, cb?: Function) {
+    protected _handleScrollInChild(rowIndex: number, isNext?: boolean, cb?: () => void) {
         const shouldScroll = this.shouldPerformVerticalScroll(rowIndex, -1, isNext);
         if (shouldScroll) {
             this.grid.navigation.performVerticalScrollToCell(rowIndex, -1, () => {
@@ -153,7 +156,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param isNext  Whether we are navigating to next. Used to determine scroll direction.
      * @param cb  Optional.Callback function called when operation is complete.
      */
-    protected positionInParent(rowIndex, isNext, cb?: Function) {
+    protected positionInParent(rowIndex, isNext, cb?: () => void) {
         const rowObj = this.grid.getRowByIndex(rowIndex);
         if (!rowObj) {
             if (cb) {
@@ -183,10 +186,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Moves navigation to child grid.
+     *
      * @param parentRowIndex The parent row index, at which the child grid is rendered.
      * @param childLayoutIndex Optional. The index of the child row island to which the child grid belongs to. Uses first if not set.
      */
-    protected _moveToChild(parentRowIndex: number, visibleColIndex: number, isNext: boolean, childLayoutIndex?: number, cb?: Function) {
+    protected _moveToChild(parentRowIndex: number, visibleColIndex: number, isNext: boolean, childLayoutIndex?: number,
+                            cb?: (arg: any) => void) {
         const ri = typeof childLayoutIndex !== 'number' ?
          this.grid.childLayoutList.first : this.grid.childLayoutList.toArray()[childLayoutIndex];
         const rowId = this.grid.dataView[parentRowIndex].rowID;
@@ -227,6 +232,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Moves navigation back to parent grid.
+     *
      * @param rowIndex
      */
     protected _moveToParent(isNext: boolean, columnIndex, cb?) {
@@ -251,6 +257,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     /**
      * Gets information on the row position relative to the root grid view port.
      * Returns whether the row is in view and its offset.
+     *
      * @param rowObj
      * @param isNext
      */
@@ -278,6 +285,23 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return { inView: isInView, offset: calcOffset };
     }
 
+    /**
+     * Gets closest element by its tag name.
+     *
+     * @param sourceElem The element from which to start the search.
+     * @param targetTag The target element tag name, for which to search.
+     */
+    protected getClosestElemByTag(sourceElem, targetTag) {
+        let result = sourceElem;
+        while (result !== null && result.nodeType === 1) {
+            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {
+                return result;
+            }
+            result = result.parentNode;
+        }
+        return null;
+    }
+
     private clearActivation() {
         // clear if previous activation exists.
         if (this.activeNode) {
@@ -301,23 +325,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     /**
-     * Gets closest element by its tag name.
-     * @param sourceElem The element from which to start the search.
-     * @param targetTag The target element tag name, for which to search.
-     */
-    protected getClosestElemByTag(sourceElem, targetTag) {
-        let result = sourceElem;
-        while (result !== null && result.nodeType === 1) {
-            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {
-                return result;
-            }
-            result = result.parentNode;
-        }
-        return null;
-    }
-
-    /**
      * Gets the max top view in the current grid hierarchy.
+     *
      * @param grid
      */
     private _getMaxTop(grid) {
@@ -333,6 +342,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Gets the min bottom view in the current grid hierarchy.
+     *
      * @param grid
      */
     private _getMinBottom(grid) {
@@ -348,12 +358,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     /**
      * Finds the next grid that allows scrolling down.
+     *
      * @param grid The grid from which to begin the search.
      */
     private getNextScrollableDown(grid) {
         let currGrid = grid.parent;
         if (!currGrid) {
-            return { grid: grid, prev: null };
+            return { grid, prev: null };
         }
         let scrollTop = currGrid.verticalScrollContainer.scrollPosition;
         let scrollHeight = currGrid.verticalScrollContainer.getScroll().scrollHeight;
@@ -368,17 +379,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             nonScrollable = scrollHeight === 0 ||
                 Math.round(scrollTop + currGrid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
         }
-        return { grid: currGrid, prev: prev };
+        return { grid: currGrid, prev };
     }
 
     /**
      * Finds the next grid that allows scrolling up.
+     *
      * @param grid The grid from which to begin the search.
      */
     private getNextScrollableUp(grid) {
         let currGrid = grid.parent;
         if (!currGrid) {
-            return { grid: grid, prev: null };
+            return { grid, prev: null };
         }
         let nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
         let prev = grid;
@@ -387,6 +399,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             currGrid = currGrid.parent;
             nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
         }
-        return { grid: currGrid, prev: prev };
+        return { grid: currGrid, prev };
     }
 }

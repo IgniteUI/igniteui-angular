@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
 import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective } from 'igniteui-angular';
@@ -66,13 +66,13 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
     this.loadingToast.message = 'Loading Remote Data...';
     this.loadingToast.position = 'middle';
     this.loadingToast.autoHide = false;
-    this.loadingToast.show();
+    this.loadingToast.open();
     this.cdr.detectChanges();
     this.prevRequest = this.remoteService.getData(
         evt,
         (data) => {
           this.remoteVirtDir.totalItemCount = data['@odata.count'];
-          this.loadingToast.hide();
+          this.loadingToast.close();
           this.cdr.detectChanges();
     });
   }

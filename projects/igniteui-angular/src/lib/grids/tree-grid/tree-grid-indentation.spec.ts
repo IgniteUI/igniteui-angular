@@ -139,7 +139,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
 
             // Verify before resizing width
-            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(225);
+            expect(header.nativeElement.getBoundingClientRect().width).toBe(225);
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 225, 5);
@@ -151,7 +151,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             fix.detectChanges();
 
             // Verify after resizing width and row indentation
-            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(370);
+            expect(header.nativeElement.getBoundingClientRect().width).toBe(370);
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
@@ -296,7 +296,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
 
             // Verify before resizing width
-            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(180);
+            expect(header.nativeElement.getBoundingClientRect().width).toBe(180);
 
             // Resize the tree column
             UIInteractions.simulateMouseEvent('mousedown', resizer, 180, 5);
@@ -308,7 +308,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             fix.detectChanges();
 
             // Verify after resizing width and row indentation
-            expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(370);
+            expect(header.nativeElement.getBoundingClientRect().width).toBe(370);
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
@@ -344,7 +344,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
     });
 });
 
-function verifyCellsContentAlignment(fix, columnKey, shouldBeLeftAligned: boolean) {
+const verifyCellsContentAlignment = (fix, columnKey, shouldBeLeftAligned: boolean) => {
     const cells = TreeGridFunctions.getColumnCells(fix, columnKey);
     if (shouldBeLeftAligned) {
         cells.forEach((cell) => {
@@ -365,4 +365,4 @@ function verifyCellsContentAlignment(fix, columnKey, shouldBeLeftAligned: boolea
             expect(cellDivChildren.length === 1).toBe(true);
         });
     }
-}
+};

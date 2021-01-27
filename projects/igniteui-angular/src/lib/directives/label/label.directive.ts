@@ -9,9 +9,9 @@ export class IgxLabelDirective {
     @HostBinding('class.igx-input-group__label')
     public defaultClass = true;
 
-/**
- * @hidden
- */
+    /**
+     * @hidden
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-label-${NEXT_ID++}`;

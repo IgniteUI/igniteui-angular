@@ -49,5 +49,5 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
         this._sourceElement.scrollTop = this._initialScrollTop;
         this._sourceElement.scrollLeft = this._initialScrollLeft;
-    }
+    };
 }

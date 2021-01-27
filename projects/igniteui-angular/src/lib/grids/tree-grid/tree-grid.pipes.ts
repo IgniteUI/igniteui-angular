@@ -22,7 +22,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
@@ -88,8 +88,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     }
 
     private setIndentationLevels(id: string, collection: ITreeGridRecord[], indentationLevel: number, flatData: any[]) {
-        for (let i = 0; i < collection.length; i++) {
-            const record = collection[i];
+        for (const record of collection) {
             record.level = indentationLevel;
             record.expanded = this.gridAPI.get_row_expansion_state(record);
             flatData.push(record.data);
@@ -104,12 +103,11 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         parent: ITreeGridRecord, flatData: any[], indentationLevel: number, map: Map<any, ITreeGridRecord>): ITreeGridRecord[] {
         const result: ITreeGridRecord[] = [];
 
-        for (let i = 0; i < collection.length; i++) {
-            const item = collection[i];
+        for (const item of collection) {
             const record: ITreeGridRecord = {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
-                parent: parent,
+                parent,
                 level: indentationLevel
             };
             record.expanded = this.gridAPI.get_row_expansion_state(record);
@@ -136,7 +134,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     public transform(collection: ITreeGridRecord[], id: string,
@@ -163,9 +161,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         }
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
-        for (let i = 0; i < collection.length; i++) {
-            const hierarchicalRecord = collection[i];
-
+        for (const hierarchicalRecord of collection) {
             if (parentExpanded) {
                 data.push(hierarchicalRecord);
             }
@@ -196,7 +192,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     public transform(
@@ -241,12 +237,12 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
-        if (!grid.paging || grid.pagingMode !== GridPagingMode.local) {
+        if (!grid.paging || grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -275,7 +271,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
@@ -323,7 +319,7 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     transform(collection: any[], pipeTrigger: number): any[] {

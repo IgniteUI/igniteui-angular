@@ -8,11 +8,10 @@ import { IgxToastComponent } from 'igniteui-angular';
     encapsulation: ViewEncapsulation.None
 })
 export class ListPanningSampleComponent {
-
     @ViewChild('toast', { static: true })
-    toast: IgxToastComponent;
+    private toast: IgxToastComponent;
 
-    public navItems: object[] = [{
+    public navItems = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -84,7 +83,7 @@ export class ListPanningSampleComponent {
         text: 'Ward Riley'
     }];
 
-    public navItems2: object[];
+    public navItems2;
 
     constructor() {
         this.navItems2 = Object.assign([], this.navItems);
@@ -97,26 +96,26 @@ export class ListPanningSampleComponent {
     public onLeftPanHandler(args) {
         args.keepItem = true;
         this.toast.message = 'Composing message...';
-        this.toast.show();
+        this.toast.open();
     }
 
     public onRightPanHandler(args) {
         args.keepItem = true;
         this.toast.message = 'Dialing...';
-        this.toast.show();
+        this.toast.open();
     }
 
     public onLeftPanHandler2(args) {
         args.keepItem = true;
         this.toast.message = 'Edit contact.';
-        this.toast.show();
+        this.toast.open();
     }
 
     public onRightPanHandler2(args) {
         args.keepItem = false;
         setTimeout((idx = args.item.index - 1) => {
             this.toast.message = 'Contact removed.';
-            this.toast.show();
+            this.toast.open();
             this.navItems2.splice(idx, 1);
         }, 500);
     }

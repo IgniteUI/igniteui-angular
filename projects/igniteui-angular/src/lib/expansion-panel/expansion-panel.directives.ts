@@ -4,7 +4,7 @@ import { Directive, HostBinding } from '@angular/core';
  * @hidden @internal
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-title'
 })
 export class IgxExpansionPanelTitleDirective {
@@ -16,7 +16,7 @@ export class IgxExpansionPanelTitleDirective {
  * @hidden @internal
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-description'
 })
 export class IgxExpansionPanelDescriptionDirective {
@@ -28,7 +28,7 @@ export class IgxExpansionPanelDescriptionDirective {
  * @hidden @internal
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-icon'
 })
 export class IgxExpansionPanelIconDirective {

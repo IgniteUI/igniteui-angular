@@ -27,9 +27,6 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
-    constructor(private element: ElementRef) {
-    }
-
     /** @hidden */
     @Input()
     @HostBinding('class.igx-grid-summary--active')
@@ -38,6 +35,9 @@ export class IgxSummaryCellComponent {
     @Input()
     @HostBinding('attr.data-rowIndex')
     public rowIndex: number;
+
+    constructor(private element: ElementRef) {
+    }
 
     @HostBinding('attr.data-visibleIndex')
     get visibleColumnIndex(): number {

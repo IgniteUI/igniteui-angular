@@ -121,9 +121,9 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     process(event) {
         this.toast.message = 'Loading remote data';
         this.toast.position = 'bottom';
-        this.toast.show();
+        this.toast.open();
         this.remoteService.getData(this.grid3.data, () => {
-            this.toast.hide();
+            this.toast.close();
         });
     }
 
@@ -184,12 +184,12 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.grid1.deleteRow(this.selectedCell.rowIndex);
         this.selectedCell = {};
         this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-        this.snax.show();
+        this.snax.open();
     }
 
     restore() {
         this.grid1.addRow(this.selectedRow.record);
-        this.snax.hide();
+        this.snax.close();
     }
 
     updateRow11() {
@@ -252,6 +252,22 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.getExporterService().exportData(this.grid3.data, this.getOptions('Data'));
     }
 
+    onSearchChange(text: string) {
+        this.grid3.findNext(text);
+    }
+
+    onSearch(ev) {
+        if (ev.key === 'Enter' || ev.key === 'ArrowDown'  || ev.key === 'ArrowRight') {
+            this.grid3.findNext(ev.target.value);
+        } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
+            this.grid3.findPrev(ev.target.value);
+        }
+    }
+
+    onColumnInit(column: IgxColumnComponent) {
+        column.editable = true;
+    }
+
     private getExporterService(): IgxBaseExporter {
         return this.exportFormat === 'XLSX' ? this.excelExporterService : this.csvExporterService;
     }
@@ -268,22 +284,6 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
                 return new IgxCsvExporterOptions(fileName, CsvFileTypes.TAB);
         }
     }
-
-    onSearchChange(text: string) {
-        this.grid3.findNext(text);
-    }
-
-    onSearch(ev) {
-        if (ev.key === 'Enter' || ev.key === 'ArrowDown'  || ev.key === 'ArrowRight') {
-            this.grid3.findNext(ev.target.value);
-        } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
-            this.grid3.findPrev(ev.target.value);
-        }
-    }
-
-    onColumnInit(column: IgxColumnComponent) {
-        column.editable = true;
-    }
 }
 
 export class CustomStringFilter extends IgxStringFilteringOperand {
@@ -292,9 +292,7 @@ export class CustomStringFilter extends IgxStringFilteringOperand {
         super();
         this.append({
             name: 'Custom',
-            logic: (value: any, searchVal: any, ignoreCase: boolean) => {
-                return value === searchVal;
-            },
+            logic: (value: any, searchVal: any, ignoreCase: boolean) => value === searchVal,
             isUnary: false,
             iconName: 'starts_with'
         });

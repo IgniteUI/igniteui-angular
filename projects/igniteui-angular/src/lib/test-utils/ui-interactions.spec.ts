@@ -2,41 +2,24 @@ import { first } from 'rxjs/operators';
 import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
-export function wait(ms = 0) {
-    return new Promise((resolve, reject) => setTimeout(resolve, ms));
-}
+export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
-export function waitForGridScroll(grid) {
-    // wait for grid scroll operation to complete and state to be updated.
-    return new Promise((resolve, reject) => {
-        grid.onScroll.pipe(first()).subscribe(() => {
-            grid.cdr.detectChanges();
-            resolve();
-        });
-    });
-}
+export const waitForGridScroll = grid => new Promise<void>(resolve => grid.onScroll.pipe(first()).subscribe(() => {
+    grid.cdr.detectChanges();
+    resolve();
+}));
 
-export function waitForActiveNodeChange (grid) {
-    // wait for grid activation operation to complete and state to be updated.
-    return new Promise((resolve, reject) => {
-        grid.activeNodeChange.pipe(first()).subscribe(() => {
-            grid.cdr.detectChanges();
-            resolve();
-        });
-    });
-}
+export const waitForActiveNodeChange = grid => new Promise<void>(resolve => grid.activeNodeChange.pipe(first()).subscribe(() => {
+    grid.cdr.detectChanges();
+    resolve();
+}));
 
-export function waitForSelectionChange (grid) {
-    // wait for grid selection operation to complete and state to be updated.
-    return new Promise((resolve, reject) => {
-        grid.onSelection.pipe(first()).subscribe(() => {
-            grid.cdr.detectChanges();
-            resolve();
-        });
-    });
-}
+export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.onSelection.pipe(first()).subscribe(() => {
+    grid.cdr.detectChanges();
+    resolve();
+}));
 
-declare var Touch: {
+declare let Touch: {
     prototype: Touch;
     new(prop): Touch;
 };
@@ -55,6 +38,7 @@ export class UIInteractions {
 
     /**
      * Clicks an element - native or debug, by dispatching pointerdown, pointerup and click events.
+     *
      * @param element - Native or debug element.
      * @param shift - if the shift key is pressed.
      * @param ctrl - if the ctrl key is pressed.
@@ -68,6 +52,7 @@ export class UIInteractions {
 
     /**
      * Double click an element - native or debug, by dispatching pointerdown, pointerup and dblclick events.
+     *
      * @param element - Native or debug element.
      */
     public static simulateDoubleClickAndSelectEvent(element) {
@@ -79,6 +64,7 @@ export class UIInteractions {
 
     /**
      * click with non primary button on an element - native or debug, by dispatching pointerdown, pointerup and click events.
+     *
      * @param element - Native or debug element.
      */
     public static simulateNonPrimaryClick(element) {
@@ -90,15 +76,16 @@ export class UIInteractions {
 
     /**
      * gets a keyboard event
+     *
      * @param eventType - name of the event
      * @param keyPressed- pressed key
      */
-    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false): KeyboardEvent {
+    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = {
             key: keyPressed,
-            altKey: altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            altKey,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -108,13 +95,14 @@ export class UIInteractions {
 
     /**
      * gets a mouse event
+     *
      * @param eventType - name of the event
      */
-    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false): MouseEvent {
+    public static getMouseEvent(eventType, altKey = false, shiftKey = false, ctrlKey = false) {
         const clickEvent = {
-            altKey: altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            altKey,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -124,16 +112,17 @@ export class UIInteractions {
 
     /**
      * Press a key on an element - debug, by triggerEventHandler.
+     *
      * @param keyPressed - pressed key
      * @param elem - debug element
      */
-    public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+    public static triggerEventHandlerKeyDown(key: string, elem: DebugElement, altKey = false, shiftKey = false, ctrlKey = false) {
         const event = {
             target: elem.nativeElement,
-            key: keyPressed,
-            altKey: altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            key,
+            altKey,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -143,15 +132,16 @@ export class UIInteractions {
 
     /**
      * Trigger key up on an element - debug, by triggerEventHandler.
+     *
      * @param keyPressed - pressed key
      * @param elem - debug element
      */
-    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+    public static triggerEventHandlerKeyUp(key: string, elem: DebugElement, altKey = false, shiftKey = false, ctrlKey = false) {
         const event = {
-            key: keyPressed,
-            altKey: altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
+            key,
+            altKey,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
@@ -161,6 +151,7 @@ export class UIInteractions {
 
     /**
      * Sets an input value- native or debug, by dispatching keydown, input and keyup events.
+     *
      * @param element - Native or debug element.
      * @param text - text to be set.
      * @param fix - if fixture is set it will detect changes on it.
@@ -178,6 +169,7 @@ export class UIInteractions {
 
     /**
      * Sets an input value- native or debug, by dispatching only input events.
+     *
      * @param element - Native or debug element.
      * @param text - text to be set.
      * @param fix - if fixture is set it will detect changes on it.
@@ -193,6 +185,7 @@ export class UIInteractions {
 
     /**
      * Sets an input value- debug element.
+     *
      * @param inputElement - debug element.
      * @param inputValue - text to be set.
      */
@@ -227,8 +220,7 @@ export class UIInteractions {
             // target.triggerEventHandler('focus', {});
             const inputEl = target.nativeElement as HTMLInputElement;
             inputEl.setSelectionRange(selectionStart, selectionEnd);
-            for (let i = 0; i < characters.length; i++) {
-                const char = characters[i];
+            for (const char of characters) {
                 this.triggerEventHandlerKeyDown(char, target);
                 this.triggerInputKeyInteraction(char, target);
                 this.triggerEventHandlerKeyUp(char, target);
@@ -253,13 +245,13 @@ export class UIInteractions {
         inputElement.triggerEventHandler('paste', event);
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles = true, altKey = false, shift = false, ctrl = false) {
+    public static triggerKeyDownEvtUponElem(key, elem, bubbles = true, altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyPressed,
-            bubbles: bubbles,
-            shiftKey: shift,
-            ctrlKey: ctrl,
-            altKey: altKey
+            key,
+            bubbles,
+            shiftKey,
+            ctrlKey,
+            altKey
         });
         elem.dispatchEvent(keyboardEvent);
     }
@@ -273,13 +265,13 @@ export class UIInteractions {
         element.dispatchEvent(event);
     }
 
-    public static simulateMouseEvent(eventName: string, element, x, y) {
+    public static simulateMouseEvent(eventName: string, element, clientX, clientY) {
         const options: MouseEventInit = {
             view: window,
             bubbles: true,
             cancelable: true,
-            clientX: x,
-            clientY: y
+            clientX,
+            clientY
         };
         element.dispatchEvent(new MouseEvent(eventName, options));
     }
@@ -311,7 +303,7 @@ export class UIInteractions {
         return pointerEvent;
     }
 
-    public static simulatePointerOverElementEvent(eventName: string, element, shift = false, ctrl = false) {
+    public static simulatePointerOverElementEvent(eventName: string, element, shiftKey = false, ctrlKey = false) {
         const options: PointerEventInit = {
             view: window,
             bubbles: true,
@@ -319,8 +311,8 @@ export class UIInteractions {
             pointerId: 1,
             buttons: 1,
             button: eventName === 'pointerenter' ? -1 : 0,
-            shiftKey: shift,
-            ctrlKey: ctrl
+            shiftKey,
+            ctrlKey
         };
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
@@ -329,31 +321,31 @@ export class UIInteractions {
         const dataTransfer = new DataTransfer();
         dataTransfer.setData(format, data);
 
-        nativeElement.dispatchEvent(new DragEvent('drop', { dataTransfer: dataTransfer }));
+        nativeElement.dispatchEvent(new DragEvent('drop', { dataTransfer }));
     }
 
-    public static simulateWheelEvent(element, deltaX, deltaY) {
-        const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+    public static simulateWheelEvent(element, deltaX, deltaY, shiftKey = false) {
+        const event = new WheelEvent('wheel', { deltaX, deltaY, shiftKey });
         Object.defineProperty(event, 'wheelDeltaX', { value: deltaX });
         Object.defineProperty(event, 'wheelDeltaY', { value: deltaY });
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>(resolve => {
             element.dispatchEvent(event);
             resolve();
         });
     }
 
-    public static simulateTouchStartEvent(element, pageX, pageY) {
+    public static simulateTouchStartEvent(target, pageX, pageY) {
         const touchInit = {
             identifier: 0,
-            target: element,
-            pageX: pageX,
-            pageY: pageY
+            target,
+            pageX,
+            pageY
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchstart', { touches: [t] });
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(touchEventObject);
+        return new Promise<void>(resolve => {
+            target.dispatchEvent(touchEventObject);
             resolve();
         });
     }
@@ -367,7 +359,7 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchmove', { touches: [t] });
-        return new Promise((resolve, reject) => {
+        return new Promise<void>(resolve => {
             element.dispatchEvent(touchEventObject);
             resolve();
         });
@@ -382,7 +374,7 @@ export class UIInteractions {
         };
         const t = new Touch(touchInit);
         const touchEventObject = new TouchEvent('touchend', { touches: [t] });
-        return new Promise((resolve, reject) => {
+        return new Promise<void>(resolve => {
             element.dispatchEvent(touchEventObject);
             resolve();
         });
@@ -390,6 +382,7 @@ export class UIInteractions {
 
     /**
      * Calculate point within element
+     *
      * @param element Element to calculate point for
      * @param hAlign The horizontal position of the point within the element (defaults to center)
      * @param vAlign The vertical position of the point within the element (defaults to middle)
@@ -406,11 +399,11 @@ export class UIInteractions {
     }
 
     public static hoverElement(element: HTMLElement, bubbles: boolean = false) {
-        element.dispatchEvent(new MouseEvent('mouseenter', { bubbles: bubbles }));
+        element.dispatchEvent(new MouseEvent('mouseenter', { bubbles }));
     }
 
     public static unhoverElement(element: HTMLElement, bubbles: boolean = false) {
-        element.dispatchEvent(new MouseEvent('mouseleave', { bubbles: bubbles }));
+        element.dispatchEvent(new MouseEvent('mouseleave', { bubbles }));
     }
 
     public static clickDragDirective(fix, dragDir) {

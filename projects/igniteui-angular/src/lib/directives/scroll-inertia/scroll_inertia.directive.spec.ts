@@ -34,7 +34,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     // Unit tests for inertia function.
-    it('inertia should accelerate and then deccelerate vertically.', async() => {
+    it('inertia should accelerate and then deccelerate vertically.', async () => {
         pending('This should be tested in the e2e test');
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
@@ -53,7 +53,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
         expect(end).toBeLessThan(mid);
     });
 
-    it('inertia should accelerate and then deccelerate horizontally.', async() => {
+    it('inertia should accelerate and then deccelerate horizontally.', async () => {
         pending('This should be tested in the e2e test');
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
@@ -127,6 +127,55 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
         const evt = {preventDefault: () => {}};
         expect (() => scrollInertiaDir.onWheel(evt)).not.toThrow();
+    });
+
+
+    it('should change scroll left when shift + wheel is triggered' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        const evt =  {shiftKey: true, wheelDeltaY: -240, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
+    });
+
+    it('should be able to scroll to left/right when shift + wheel is triggered' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        let evt =  {shiftKey: true, wheelDeltaY: -240, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
+
+        evt =  {shiftKey: true, wheelDeltaY: 120, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
+    });
+
+    it('should change scroll left when shift + wheel is called with with deltaY' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        const evt =  {shiftKey: true, deltaY: 1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
+    });
+
+    it('should be able to scroll to left/right when shift + wheel is called with with deltaY' , () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        let evt =  {shiftKey: true, deltaY: 1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
+
+        evt =  {shiftKey: true, deltaY: -1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(0);
+        expect(scrollContainerMock.scrollLeft).toEqual(0);
     });
 
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
@@ -300,18 +349,13 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         const msGesture = window['MSGesture'];
         if (!msGesture) {
             // if MSGesture does not exist create a dummy obj to use instead.
-            window['MSGesture'] = function() {
-                return {
-                    addPointer: (arg) => {}
-                };
-            } as any;
+            window['MSGesture'] = (() => ({ addPointer: () => {} })) as any;
         }
-
 
         const evt = {
             pointerType: 2,
             target: targetElem,
-            pointerId: pointerId
+            pointerId
         };
         scrollInertiaDir.onPointerDown(evt);
 
@@ -391,6 +435,11 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     `
 })
 export class ScrollInertiaComponent implements OnInit {
+    @ViewChild('container', { static: true }) public container: ElementRef;
+    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
+    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
+    public scrInertiaDir: IgxTestScrollInertiaDirective;
+
     public height = '500px';
     public innerHeight = '5000px';
     public innerWidth = '5000px';
@@ -399,30 +448,23 @@ export class ScrollInertiaComponent implements OnInit {
     public scrLeftArray = [];
     public scrLeftStepArray = [];
 
-    @ViewChild('container', { static: true }) public container: ElementRef;
-    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
-
-    @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
-    public scrInertiaDir: IgxTestScrollInertiaDirective;
-
     ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
 
-        this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => { this.onScroll(evt); });
+        this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => {
+            this.onScroll(evt);
+        });
     }
 
     public onScroll(evt) {
-        let calcScrollStep, calcScrollLeftStep;
         const ind = this.scrTopArray.length - 1;
         const prevScrTop = ind < 0 ? 0 : this.scrTopArray[ind];
         const prevScrLeft = ind < 0 ? 0 : this.scrLeftArray[ind];
         this.scrTopArray.push(evt.target.scrollTop);
         this.scrLeftArray.push(evt.target.scrollLeft);
-        calcScrollStep = evt.target.scrollTop - prevScrTop;
-        calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
+        const calcScrollStep = evt.target.scrollTop - prevScrTop;
+        const calcScrollLeftStep = evt.target.scrollLeft - prevScrLeft;
         this.scrTopStepArray.push(calcScrollStep);
         this.scrLeftStepArray.push(calcScrollLeftStep);
     }
-
-
 }

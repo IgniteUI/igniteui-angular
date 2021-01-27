@@ -9,7 +9,7 @@ import { AppComponent } from './../app.component';
 export class NavdrawerSampleComponent {
     constructor(public app: AppComponent) {}
 
-    toggle() {
+    public toggle() {
         this.app.navdrawer.toggle();
     }
 }
