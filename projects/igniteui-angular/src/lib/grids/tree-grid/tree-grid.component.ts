@@ -362,10 +362,22 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         this.onRowAdded.subscribe(args => {
             if (this.rowSelection === 'multipleCascade') {
-                const rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
-                if (rec.parent) {
+                let rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
+                if (rec && rec.parent) {
+                    // if batch editing is enabled
                     (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(
                         new Set([rec.parent]), true, undefined, rec.parent.rowID);
+                } else {
+                    // if batch editin is disabled
+                    requestAnimationFrame(() => {
+                        rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ?
+                            args.data[this.primaryKey] : args.data);
+                        if (rec && rec.parent) {
+                            (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(
+                                new Set([rec.parent]), true, undefined, rec.parent.rowID);
+                        }
+                        this.notifyChanges();
+                    });
                 }
             }
         });
