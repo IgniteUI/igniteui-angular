@@ -42,9 +42,6 @@
 /// @param {Color} $row-hover-text-color [null] - The hover row text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
 ///
-/// @param {Color} $row-col-selected-cell-background [null] - The background of the selected cell inside the selected row/column.
-/// @param {Color} $row-col-selected-cell-color [null] - The color of the selected cell inside the selected row/column.
-///
 /// @param {String} $pinned-border-width [null] - The border width of the pinned border.
 /// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
 /// @param {Color} $pinned-border-color [null] - The color of the pinned border.
@@ -56,6 +53,8 @@
 /// @param {Color} $cell-edited-value-color [null] - The text color of a cell that has been edited.
 /// @param {Color} $cell-new-color [null] - The text color of a new, unedited cell. Used when adding new row in a grid.
 /// @param {Color} $cell-disabled-color [null] - The text color of a disabled cell.
+/// @param {Color} $cell-selected-within-background [null] - The background of the selected cell inside a selected row/column.
+/// @param {Color} $cell-selected-within-text-color [null] - The color of the selected cell inside a selected row/column.
 ///
 /// @param {Color} $edit-mode-color [null] - The color applied around the row when in editing mode.
 /// @param {Color} $edited-row-indicator [null] - The color applied to the edited row indicator line.
@@ -112,7 +111,6 @@
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
-///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -226,8 +224,8 @@
     $grid-border-color: null,
     $sortable-header-icon-hover-color: null,
 
-    $row-col-selected-cell-background: null,
-    $row-col-selected-cell-color: null,
+    $cell-selected-within-background: null,
+    $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
     $grid-schema: ();
@@ -247,26 +245,8 @@
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
 
-    $rs-bg: if(
-        $row-selected-background,
-        $row-selected-background,
-        igx-color-from-var(
-            map-get($theme, 'row-selected-background'), $palette
-        )
-    );
-
-    @if not($row-col-selected-cell-background) {
-        @if type-of($rs-bg) == 'color' {
-            @if luminance($rs-bg) < .5 {
-                $row-col-selected-cell-background: lighten-color($rs-bg, 8%);
-            } @else {
-                $row-col-selected-cell-background: darken-color($rs-bg, 8%);
-            }
-        }
-    }
-
-    @if not($row-col-selected-cell-color) and $row-col-selected-cell-background {
-        $row-col-selected-cell-color: text-contrast($row-col-selected-cell-background);
+    @if not($cell-selected-within-text-color) and $cell-selected-within-background {
+        $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
     }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -581,8 +561,8 @@
         sortable-header-icon-hover-color: $sortable-header-icon-hover-color,
         grid-border-color: $grid-border-color,
 
-        row-col-selected-cell-background: $row-col-selected-cell-background,
-        row-col-selected-cell-color: $row-col-selected-cell-color,
+        cell-selected-within-background: $cell-selected-within-background,
+        cell-selected-within-text-color: $cell-selected-within-text-color,
     ));
 }
 
@@ -1035,18 +1015,17 @@
 
         &:hover {
             background: --var($theme, 'row-hover-background');
-
+            color: --var($theme, 'row-hover-text-color');
 
             %grid-cell--column-selected {
-                color: --var($theme, 'row-col-selected-cell-color');
+                color: --var($theme, 'row-selected-hover-text-color');
                 background: --var($theme, 'row-selected-hover-background');
             }
 
             %grid-cell--cross-selected {
-                color: --var($theme, 'row-col-selected-cell-color');
-                background: --var($theme, 'row-col-selected-cell-background');
+                color: --var($theme, 'cell-selected-within-text-color');
+                background: --var($theme, 'cell-selected-within-background');
             }
-            color: --var($theme, 'row-hover-text-color');
         }
 
         &%igx-grid__tr--ghost {
@@ -1115,8 +1094,8 @@
 
         %grid-cell--selected,
         %grid-cell--pinned-selected {
-            color: --var($theme, 'row-col-selected-cell-color');
-            background: --var($theme, 'row-col-selected-cell-background');
+            color: --var($theme, 'cell-selected-within-text-color');
+            background: --var($theme, 'cell-selected-within-background');
         }
 
         &:hover {
@@ -1388,8 +1367,8 @@
     }
 
     %grid-cell--cross-selected {
-        color: --var($theme, 'row-col-selected-cell-color');
-        background: --var($theme, 'row-col-selected-cell-background');
+        color: --var($theme, 'cell-selected-within-text-color');
+        background: --var($theme, 'cell-selected-within-background');
     }
 
     %igx-grid__td--new {
