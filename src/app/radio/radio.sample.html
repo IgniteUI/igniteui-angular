@@ -46,7 +46,7 @@
         Disabled = '{{radioGroup.disabled}}'<br>
         Required = '{{radioGroup.required}}'<br>
         SelectedValue = '{{selectedValue}}'<br>
-        <button igxButton type="button" (click)="onBtnClick($event)" style="width: 200px">Select 'Baz'</button>
+        <button igxButton type="button" (click)="onBtnClick()" style="width: 200px">Select 'Baz'</button>
     </article>
     <article class="sample-column">
         <h4 class="sample-title">Radio group in template-driven form</h4>
@@ -81,7 +81,7 @@
                     </igx-radio>
                 </igx-radio-group>
             <br>
-            <button igxButton type="button" (click)="onUpdateBtnClick($event)" style="width: 200px">Update model</button>
+            <button igxButton type="button" (click)="onUpdateBtnClick()" style="width: 200px">Update model</button>
         </form>
         <p>Form value: {{ personKirkForm.value | json }}</p>
         <p>Model value: {{ personKirk | json }}</p>
