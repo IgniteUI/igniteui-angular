@@ -174,7 +174,7 @@
 /// @param {Map} $palette - The igx palette to use to generate css variables for.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
-/// @include igx-palette-vars($default-palette);
+///    @include igx-palette-vars($default-palette);
 ///
 @mixin igx-palette-vars($palette, $contrast: true) {
     $scope: if(is-root(), ':root', '&');
