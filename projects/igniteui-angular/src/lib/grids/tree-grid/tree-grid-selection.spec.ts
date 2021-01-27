@@ -1069,7 +1069,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
-        it('Should set parent row checkbox to indeterminate by selecting/deselecting a child row when all child rows are deselected/selected', () => {
+        it(`Should set parent row checkbox to indeterminate by selecting/deselecting
+            a child row when all child rows are deselected/selected`, () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
             fix.detectChanges();
 
@@ -1148,7 +1149,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 8, 9], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
-        it('After adding a new child row to a selected parent its checkbox state SHOULD be indeterminate.',  async () => {
+        it('After adding a new child row to a selected parent its checkbox state SHOULD be indeterminate.', async () => {
             treeGrid.selectRows([847], true);
             fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(2);
@@ -1348,4 +1349,4 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
 
 const getVisibleSelectedRows = (fix) => TreeGridFunctions.getAllRows(fix).filter(
-        (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
+    (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));

@@ -260,15 +260,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected groupingDiffer;
+    protected _rowSelectionMode: GridSelectionMode;
     private _data;
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
 
-    protected _rowSelectionMode: GridSelectionMode;
-
     /**
      * Gets/Sets row selection mode
+     *
      * @remarks
      * By default the row selection mode is none
      * @param selectionMode: FlatGridSelectionMode

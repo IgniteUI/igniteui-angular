@@ -2777,6 +2777,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
     /**
+     * TypeScript dosn't allow overriding property with superset
+     * so we use the hierarchical enum in the grid-base and flat-grid overrides with a subset.
+     */
+    protected _rowSelectionMode: HierarchicalGridSelectionMode = HierarchicalGridSelectionMode.none;
+
+    /**
      * @hidden @internal
      */
     public get scrollSize() {
@@ -2851,12 +2857,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _showSummaryOnCollapse = false;
     private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
-
-    /**
-     * TypeScript dosn't allow overriding property with superset
-     * so we use the hierarchical enum in the grid-base and flat-grid overrides with a subset.
-     */
-    protected _rowSelectionMode: HierarchicalGridSelectionMode = HierarchicalGridSelectionMode.none;
 
     private lastAddedRowIndex;
 

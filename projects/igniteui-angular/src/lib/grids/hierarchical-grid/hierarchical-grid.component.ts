@@ -123,6 +123,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public parent = null;
 
+    /**
+     * @hidden
+     */
+    protected _rowSelectionMode: GridSelectionMode;
+
     private _data;
     private _filteredData = null;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -284,12 +289,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * @hidden
-     */
-    protected _rowSelectionMode: GridSelectionMode;
-
-    /**
      * Gets/Sets row selection mode
+     *
      * @remarks
      * By default the row selection mode is none
      * @param selectionMode: FlatGridSelectionMode
