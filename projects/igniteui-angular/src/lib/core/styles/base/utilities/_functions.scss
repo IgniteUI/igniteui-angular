@@ -196,8 +196,8 @@
 /// @access public
 /// @alias hexrgba
 /// @see hexrgba
-@function to-opaque($rgba, $background: #fff) {
-    @return hexrgba($rgba, $background);
+@function to-opaque($rgba, $background: #fff, $palette: $default-palette) {
+    @return hexrgba($rgba, $background, $palette);
 }
 
 /// Returns a contrast color for a passed color.
@@ -390,14 +390,23 @@
 /// @requires {function} text-contrast
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {List} $saturations - The saturation list of color variants.
+/// @param {Color} $base [#fff] - The base color to calculate contrast colors against if the base color is transluscent.
 //// Based on the Material color system.
 /// @returns {Map} - A map consisting of 14 color variations and 14
 /// text contrast colors for each variation.
-@function generate-palette($color, $saturations) {
+@function generate-palette(
+    $color,
+    $saturations,
+    $base: #fff
+) {
     $result: ();
     @each $saturation in $saturations {
         $shade: gen-color($color, $saturation);
-        $result: map-merge($result, ($saturation: $shade));
+        $contrast: text-contrast(to-opaque($shade, $base, null));
+        $result: map-merge($result, (
+            $saturation: $shade,
+            #{$saturation}-contrast: $contrast
+        ));
     }
     @return $result;
 }
@@ -408,14 +417,19 @@
 /// @requires {function} text-contrast
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {Map} $shades - A map of variations as keys and opacities as values.
+/// @param {Color} $base [#fff] - The base color to calculate contrast colors against if the base color is transluscent.
 /// Based on the Material color system.
 /// @returns {Map} - A map consisting of 10 color variations and 10
 /// text contrast colors for each variation.
-@function grayscale-palette($color, $shades) {
+@function grayscale-palette($color, $shades, $base: #fff) {
     $result: ();
     @each $saturation, $opacity in $shades {
         $shade: rgba($color, $opacity);
-        $result: map-merge($result, ($saturation: $shade));
+        $contrast: text-contrast(to-opaque($shade, $base, null));
+        $result: map-merge($result, (
+            $saturation: $shade,
+            #{$saturation}-contrast: $contrast
+        ));
     }
     @return $result;
 }
@@ -455,9 +469,9 @@
         'indigo-design': (50: .02, 100: .03, 200: .06, 300: .15, 400: .21, 500: .4, 600: .52, 700: .64, 800: .77, 900: .9),
     ), $variant);
 
-    $primary-palette: generate-palette($primary, $saturations);
-    $secondary-palette: generate-palette($secondary, $saturations);
-    $grayscale-palette: grayscale-palette($grays, $shades);
+    $primary-palette: generate-palette($primary, $saturations, $surface);
+    $secondary-palette: generate-palette($secondary, $saturations, $surface);
+    $grayscale-palette: grayscale-palette($grays, $shades, $surface);
 
     // @debug 'Primary Colors Palette: #{$primary-palette}';
     // @debug 'secondary Colors Palette: #{$secondary-palette}';
@@ -467,11 +481,36 @@
         primary: $primary-palette,
         secondary: $secondary-palette,
         grays: $grayscale-palette,
-        info: (500: $info),
-        success: (500: $success),
-        warn: (500: $warn),
-        error: (500: $error),
-        surface: (500: $surface)
+        info: (
+            500: $info,
+            '500-contrast': text-contrast(
+                to-opaque($info, $surface, null)
+            )
+        ),
+        success: (
+            500: $success,
+            '500-contrast': text-contrast(
+                to-opaque($success, $surface, null)
+            )
+        ),
+        warn: (
+            500: $warn,
+            '500-contrast': text-contrast(
+                to-opaque($warn, $surface, null)
+            )
+        ),
+        error: (
+            500: $error,
+            '500-contrast': text-contrast(
+                to-opaque($error, $surface, null)
+            )
+        ),
+        surface: (
+            500: $surface,
+            '500-contrast': text-contrast(
+                to-opaque($surface, $surface, null)
+            )
+        )
     );
 }
 
