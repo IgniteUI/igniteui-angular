@@ -473,7 +473,7 @@ describe('Carousel', () => {
             expect(carousel.nativeElement.getAttribute('role')).toEqual(expectedRole);
             expect(carousel.nativeElement.getAttribute('aria-roledescription')).toEqual(expectedRoleDescription);
 
-            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS)
+            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
 
             expect(indicators).toBeDefined();
             expect(indicators.getAttribute('role')).toEqual('tablist');
