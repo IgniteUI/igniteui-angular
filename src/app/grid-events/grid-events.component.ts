@@ -109,6 +109,13 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent('=> onColumnSelectionChanging', event.cancel);
     }
 
+    public clearLog() {
+        const  elements = this.logger.nativeElement.querySelectorAll('p');
+        for (const element of elements) {
+            this.renderer.removeChild(this.logger.nativeElement, element);
+          }
+    }
+
     private logAnEvent(msg: string, cancelled?: boolean) {
         const createElem = this.renderer.createElement('p');
         if (cancelled) {
@@ -119,13 +126,6 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.renderer.appendChild(createElem, text);
         const container = this.logger.nativeElement;
         this.renderer.insertBefore(container, createElem, container.children[0]);
-    }
-
-    public clearLog() {
-        const  elements = this.logger.nativeElement.querySelectorAll('p');
-        for (let index = 0; index < elements.length; index++) {
-            this.renderer.removeChild(this.logger.nativeElement, elements[index]);
-        }
     }
 }
 

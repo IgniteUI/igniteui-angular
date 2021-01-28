@@ -1762,10 +1762,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
         index = hasIndex ? index : rootPinnedCols.length;
-        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
         this.grid.onColumnPinning.emit(args);
 
-        if (args.cancel) { return; }
+        if (args.cancel) {
+            return;
+        }
 
         grid.endEdit(true);
 
@@ -1848,7 +1850,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             index = indices.indexOf(this.index);
         }
 
-        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
         this.grid.onColumnPinning.emit(args);
 
         if (args.cancel) { return; }
