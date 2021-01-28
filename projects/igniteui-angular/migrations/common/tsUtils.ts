@@ -130,9 +130,9 @@ export const findMatches = (content: string, change: MemberChange): number[] => 
 };
 
 export const replaceMatch = (content: string, toReplace: string, replaceWith: string, index: number): string =>
-        content.substring(0, index) +
-        replaceWith +
-        content.substring(index + toReplace.length, content.length);
+    content.substring(0, index) +
+    replaceWith +
+    content.substring(index + toReplace.length, content.length);
 
 //#region Language Service
 
@@ -224,7 +224,7 @@ export const createProjectService = (serverHost: tss.server.ServerHost): tss.ser
  * Attempts to get type definitions using the TypeScript Language Service.
  * Can fall back to a cached version of the TSLS.
  */
-function getTypeDefinitions(langServ: tss.LanguageService, entryPath: string, definition: tss.DefinitionInfo): any {
+const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, definition: tss.DefinitionInfo): any => {
     /*
         getTypeScriptLanguageService is attached by us to the Typescript Language Service
         via a custom made plugin, it's sole purpose is to cache the language service and return it
@@ -232,7 +232,7 @@ function getTypeDefinitions(langServ: tss.LanguageService, entryPath: string, de
     */
     return langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start)
         || (langServ as TSLanguageService).getTypeScriptLanguageService().getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
-}
+};
 
 /**
  * Get type information about a TypeScript identifier
@@ -242,61 +242,61 @@ function getTypeDefinitions(langServ: tss.LanguageService, entryPath: string, de
  * @param position Index of identifier
  */
 export const getTypeDefinitionAtPosition =
-(langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null => {
-    const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
-    if (!definition) {
+    (langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null => {
+        const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
+        if (!definition) {
+            return null;
+        }
+
+        // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
+        if (definition.kind.toString() === 'reference') {
+            return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
+        }
+        let typeDefs = getTypeDefinitions(langServ, entryPath, definition);
+        // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
+        // or is a reference in a decorator
+        if (!typeDefs) {
+            /*
+             normally, the tsserver will consider non .ts files as external to the project
+             however, we load .html files which we can handle with the Angular language service
+             here we're only looking for definitions in a .ts source file
+             we call the getSourceFile function which accesses a map of files, previously loaded by the tsserver
+             at this point the map contains all .html files that we've included
+             we have to ignore them, since the language service will attempt to parse them as .ts files
+            */
+            if (!definition.fileName.endsWith('.ts')) {
+                return null;
+            }
+
+            const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
+            if (!sourceFile) {
+                return null;
+            }
+
+            const classDeclaration = sourceFile
+                .statements
+                // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+                .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
+                .find(m => m.name.getText() === definition.containerName);
+
+            // there must be at least one class declaration in the .ts file and the property must belong to it
+            if (!classDeclaration) {
+                return null;
+            }
+
+            const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
+            if (!member?.name) {
+                return null;
+            }
+
+            typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
+        }
+        if (typeDefs?.length) {
+            return typeDefs[0];
+        }
+
         return null;
-    }
-
-    // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
-    if (definition.kind.toString() === 'reference') {
-        return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
-    }
-    let typeDefs = getTypeDefinitions(langServ, entryPath, definition);
-    // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
-    // or is a reference in a decorator
-    if (!typeDefs) {
-        /*
-         normally, the tsserver will consider non .ts files as external to the project
-         however, we load .html files which we can handle with the Angular language service
-         here we're only looking for definitions in a .ts source file
-         we call the getSourceFile function which accesses a map of files, previously loaded by the tsserver
-         at this point the map contains all .html files that we've included
-         we have to ignore them, since the language service will attempt to parse them as .ts files
-        */
-        if (!definition.fileName.endsWith('.ts')) {
-            return null;
-        }
-
-        const sourceFile = langServ.getProgram().getSourceFile(definition.fileName);
-        if (!sourceFile) {
-            return null;
-        }
-
-        const classDeclaration = sourceFile
-            .statements
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            .filter(<(a: tss.Statement) => a is tss.ClassDeclaration>(m => m.kind === tss.SyntaxKind.ClassDeclaration))
-            .find(m => m.name.getText() === definition.containerName);
-
-        // there must be at least one class declaration in the .ts file and the property must belong to it
-        if (!classDeclaration) {
-            return null;
-        }
-
-        const member: ts.ClassElement = classDeclaration.members.find(m => m.name.getText() === definition.name);
-        if (!member?.name) {
-            return null;
-        }
-
-        typeDefs = langServ.getTypeDefinitionAtPosition(definition.fileName, member.name.getStart() + 1);
-    }
-    if (typeDefs?.length) {
-        return typeDefs[0];
-    }
-
-    return null;
-};
+    };
 
 export const isMemberIgniteUI =
     (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
