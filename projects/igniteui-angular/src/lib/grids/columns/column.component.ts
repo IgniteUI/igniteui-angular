@@ -1958,7 +1958,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const eventArgs: IColumnVisibilityChangingEventArgs = { column: this, newValue, cancel: false };
         this.grid.columnVisibilityChanging.emit(eventArgs);
 
-        if (eventArgs.cancel) { return; }
+        if (eventArgs.cancel) {
+            return;
+        }
         this.hidden = newValue;
         this.grid.onColumnVisibilityChanged.emit({ column: this, newValue: newValue });
     }

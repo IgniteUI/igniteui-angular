@@ -218,7 +218,9 @@ export class IgxFilteringService implements OnDestroy {
         const eventArgs: IFilteringEventArgs = { owner: grid, filteringExpressions: filteringTree, cancel: false };
         this.grid.filtering.emit(eventArgs);
 
-        if (eventArgs.cancel) { return; }
+        if (eventArgs.cancel) {
+            return;
+        }
 
         if (conditionOrExpressionTree) {
             this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
@@ -296,7 +298,9 @@ export class IgxFilteringService implements OnDestroy {
 
         const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: grid.filteringExpressionsTree, cancel: false };
         grid.filtering.emit(eventArgs);
-        if (eventArgs.cancel) { return; }
+        if (eventArgs.cancel) {
+            return;
+        }
 
         grid.endEdit(false);
         if (grid.paging) {
