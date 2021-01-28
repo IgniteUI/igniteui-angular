@@ -79,14 +79,12 @@ $_base-dark-grid: (
     ),
 
     cell-selected-within-background: (
-        igx-color: ('secondary', 500),
-        rgba: .24,
+        igx-color: ('secondary', 400),
         hexrgba: #222,
-        lighten: 8%
     ),
 
     cell-selected-within-text-color: (
-        igx-contrast-color: ('secondary', 500)
+        igx-contrast-color: ('secondary', 400)
     ),
 
     row-selected-hover-background: (
