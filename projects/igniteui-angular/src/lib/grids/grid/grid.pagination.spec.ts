@@ -213,12 +213,10 @@ describe('IgxGrid - Grid Paging #grid', () => {
             verifyGridPager(fix, 2, '3', '2\xA0of\xA05', []);
 
             // Change page size to be 5
-            spyOn(grid.onPagingDone, 'emit');
             grid.perPage = 5;
             await wait();
             fix.detectChanges();
             let vScrollBar = grid.verticalScrollContainer.getScroll();
-            expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(255);
@@ -229,7 +227,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
             vScrollBar = grid.verticalScrollContainer.getScroll();
             // onPagingDone should be emitted only if we have a change in the page number
-            expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
@@ -238,7 +235,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             grid.perPage = -7;
             await wait();
             fix.detectChanges();
-            expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);

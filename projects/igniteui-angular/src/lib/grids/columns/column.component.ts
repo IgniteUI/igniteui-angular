@@ -1773,7 +1773,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
-        const targetColumn = grid._pinnedColumns[args.insertAtIndex];
+        // it is possible that index is the last position, so will need to find target column by [index-1]
+        const targetColumn = args.insertAtIndex === grid._pinnedColumns.length ?
+            grid._pinnedColumns[args.insertAtIndex - 1] : grid._pinnedColumns[args.insertAtIndex];
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
@@ -1837,7 +1839,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return this.topLevelParent.unpin(index);
         }
         const hasIndex = index !== undefined;
-        if (hasIndex && (index < 0 || index >= grid._unpinnedColumns.length)) {
+        if (hasIndex && (index < 0 || index > grid._unpinnedColumns.length)) {
             return false;
         }
 
@@ -1862,7 +1864,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);
 
-        const targetColumn = grid._unpinnedColumns[index];
+        // it is possible that index is the last position, so will need to find target column by [index-1]
+        const targetColumn = args.insertAtIndex === grid._unpinnedColumns.length ?
+            grid._unpinnedColumns[args.insertAtIndex - 1] : grid._unpinnedColumns[args.insertAtIndex];
 
         if (!hasIndex) {
             grid._unpinnedColumns.splice(index, 0, this);

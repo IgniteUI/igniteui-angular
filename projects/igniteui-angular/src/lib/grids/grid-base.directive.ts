@@ -4164,9 +4164,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginate(this._page + 1);
     }
 
     /**
@@ -4178,9 +4176,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginate(this._page - 1);
     }
 
     /**
@@ -4285,25 +4281,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._moveChildColumns(column.parent, column, target, pos);
         }
 
+        let columnPinStateChanged;
         // pinning and unpinning will work correctly even without passing index
         // but is easier to calclulate the index here, and later use it in the pinning event args
         if (target.pinned && !column.pinned) {
             const pinnedIndex = this._pinnedColumns.indexOf(target);
             const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
-            column.pin(index);
+            columnPinStateChanged = column.pin(index);
         }
 
         if (!target.pinned && column.pinned) {
             const unpinnedIndex = this._unpinnedColumns.indexOf(target);
             const index = pos === DropPosition.AfterDropTarget ? unpinnedIndex + 1 : unpinnedIndex;
-            column.unpin(index);
+            columnPinStateChanged = column.unpin(index);
         }
 
-        if (target.pinned && column.pinned) {
+        if (target.pinned && column.pinned && !columnPinStateChanged) {
             this._reorderColumns(column, target, pos, this._pinnedColumns);
         }
 
-        if (!target.pinned && !column.pinned) {
+        if (!target.pinned && !column.pinned && !columnPinStateChanged) {
             this._reorderColumns(column, target, pos, this._unpinnedColumns);
         }
 
@@ -4321,7 +4318,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param val
      */
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
+        if (val < 0 || val > this.totalPages - 1 || val === this._page) {
             return;
         }
 
