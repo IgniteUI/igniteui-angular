@@ -8,6 +8,7 @@ import {
 } from 'igniteui-angular';
 
 class MySummary extends IgxNumberSummaryOperand {
+
     constructor() {
         super();
     }
@@ -34,10 +35,15 @@ export class GridSummaryComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     private grid1: IgxGridComponent;
 
+    public showToolbar = false;
+    public hidingEnabled = false;
+    public pinningEnabled = false;
+
     public mySummary = MySummary;
     public w = '1200px';
     public h = '500px';
     public cw = '200px';
+
     public groupable = false;
     public filterable = true;
     public disableHiding = false;

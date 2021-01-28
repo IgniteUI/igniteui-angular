@@ -17,8 +17,6 @@
                 [columnSelection]="'single'"
                 [data]="data"
                 [displayDensity]="density"
-                [showToolbar]="true" [columnHiding]="true"
-                [columnPinning]='true'
                 [allowFiltering]="true"
                 (onColumnMovingStart)="onColumnMovingStart()"
                 (onColumnMoving)="onColumnMoving()"
@@ -69,7 +67,7 @@
                             <label igxLabel for="newIndex">New index</label>
                         </igx-input-group>
                     </div>
-                    <igx-grid [columnSelection]="'single'" [allowFiltering]="true" #grid [data]="mchData" displayDensity="compact" [columnHiding]="true" [columnPinning]="true">
+                    <igx-grid [columnSelection]="'single'" [allowFiltering]="true" #grid [data]="mchData" displayDensity="compact">
                         <igx-column-group [movable]="true" header="General Information" title="General Company Information" [collapsible]="true" [expanded]="true" [hidden]="true">
                             <ng-template igxHeader let-column>
                                 {{ column.header }} {{ column.visibleIndex }}

@@ -21,6 +21,8 @@ export class GridColumnPinningSampleComponent implements OnInit {
     public selectionMode;
     public data: any[];
     public columns: any[];
+    public showToolbar: true;
+    public pinningEnabled: true;
 
     public get rightPinning() {
         return (this.pinningConfig.columns === ColumnPinningPosition.End);
