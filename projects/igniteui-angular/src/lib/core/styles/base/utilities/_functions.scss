@@ -133,7 +133,7 @@
     @if not($valid) {
         @return if(
             $legacy,
-            igx-color($default-palette, $color, to-number($variant)),
+            igx-color($default-palette, $color, $variant),
             #{var(--igx-#{$color}-#{$variant})}
         );
     }
