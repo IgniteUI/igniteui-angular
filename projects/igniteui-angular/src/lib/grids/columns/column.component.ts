@@ -704,7 +704,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             /* No grid/width available at initialization. `initPinning` in the grid
                will re-init the group (if present)
             */
-            this._unpinnedIndex = this.grid ? this.grid.columns.filter(x => !x.pinned).indexOf(this) : 0;
             this._pinned = value;
             this.pinnedChange.emit(this._pinned);
         }
@@ -1287,10 +1286,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    protected _unpinnedIndex;
-    /**
-     * @hidden
-     */
     protected _pinned = false;
     /**
      * @hidden
@@ -1673,7 +1668,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const hasIndex = index !== undefined;
-        if (hasIndex && (index < 0 || index >= grid.pinnedColumns.length)) {
+        if (hasIndex && (index < 0 || index > grid.pinnedColumns.length)) {
             return false;
         }
 
@@ -1681,9 +1676,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return false;
         }
 
-        this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
-        index = index !== undefined ? index : rootPinnedCols.length;
+        index = hasIndex ? index : rootPinnedCols.length;
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
         this.grid.onColumnPinning.emit(args);
 
@@ -1760,13 +1754,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return false;
         }
 
-        // correct unpinnedIndex, if it exceeds unpinned columns length
-        if (this._unpinnedIndex > grid._unpinnedColumns.length) {
-            this._unpinnedIndex = grid._unpinnedColumns.length;
+        // estimate the exact index at which column will be inserted
+        // takes into account initial unpinned index of the column
+        if (!hasIndex) {
+            const indices = grid.unpinnedColumns.map(col => col.index);
+            indices.push(this.index);
+            indices.sort((a, b) => a - b);
+            index = indices.indexOf(this.index);
         }
-
-        index = (index !== undefined ? index :
-            this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
 
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
         this.grid.onColumnPinning.emit(args);
@@ -1798,14 +1793,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         grid.reinitPinStates();
         grid.resetCaches();
 
-        const insertAtIndex = grid._unpinnedColumns.indexOf(this);
         grid.notifyChanges();
         if (this.columnLayoutChild) {
             this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
 
-        this.grid.columnPinned.emit({ column: this, insertAtIndex, isPinned: false });
+        this.grid.columnPinned.emit({ column: this, insertAtIndex: index, isPinned: false });
 
         return true;
     }
@@ -2114,7 +2108,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const cols = this.children.map(child => child.visibleWhenCollapsed);
         return (cols.some(c => c === true) && cols.some(c => c === false));
     }
-
 
     /**
      * @hidden

@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Subject } from 'rxjs';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnResizingEventArgs } from '../common/events';
 
@@ -29,6 +30,8 @@ export class IgxColumnResizingService {
      * The column being resized.
      */
     public column: IgxColumnComponent;
+
+    public _resizingCancelled = false;
 
     constructor(private zone: NgZone) { }
 
@@ -95,8 +98,7 @@ export class IgxColumnResizingService {
             column: this.column,
             prevWidth: currentColWidth.toString(),
             newWidth: size,
-            cancel: false,
-            owner: this
+            cancel: false
         };
         this.column.grid.columnResizing.emit(eventArgs);
 
@@ -123,16 +125,20 @@ export class IgxColumnResizingService {
         let currentColWidth = parseFloat(colWidth);
         const actualWidth = column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth) : currentColWidth;
-        let eventArgs;
+        let eventArgs: IColumnResizingEventArgs | IColumnResizingEventArgs[];
         if (grid.hasColumnLayouts) {
             eventArgs = this.resizeColumnLayoutFor(this.column, diff, true);
         } else if (isPercentageWidth) {
             eventArgs = this._handlePercentageResize(diff, this.column, true);
         } else {
-            eventArgs = this._handlePixelResize(diff, this.column, true);
+            eventArgs = this._handlePixelResize(diff, this.column);
         }
 
         grid.columnResizing.emit(eventArgs);
+        if ((eventArgs as IColumnResizingEventArgs).cancel || eventArgs[0]?.cancel) {
+            this._resizingCancelled = true;
+            return;
+        }
     }
 
     /**
@@ -147,14 +153,16 @@ export class IgxColumnResizingService {
         let currentColWidth = parseFloat(colWidth);
         const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth) : currentColWidth;
+        let eventArgs;
 
         if (this.column.grid.hasColumnLayouts) {
-            this.resizeColumnLayoutFor(this.column, diff);
+            eventArgs = this.resizeColumnLayoutFor(this.column, diff);
         } else if (isPercentageWidth) {
-            this._handlePercentageResize(diff, this.column);
+            eventArgs = this._handlePercentageResize(diff, this.column);
         } else {
-            this._handlePixelResize(diff, this.column);
+            eventArgs = this._handlePixelResize(diff, this.column);
         }
+        this.column.width = (eventArgs as IColumnResizingEventArgs).newWidth;
 
         this.zone.run(() => {});
 
@@ -169,53 +177,25 @@ export class IgxColumnResizingService {
         this.isColumnResizing = false;
     }
 
-    protected _handlePixelResize(diff: number, column: IgxColumnComponent, justCalulate = false) {
+    protected _handlePixelResize(diff: number, column: IgxColumnComponent) {
         const currentColWidth = parseFloat(column.width);
         const colMinWidth = column.minWidthPx;
         const colMaxWidth = column.maxWidthPx;
+        const eventArgs = {
+            column,
+            prevWidth: column.width,
+            cancel: false
+        } as IColumnResizingEventArgs;
+
         if (currentColWidth + diff < colMinWidth) {
-            const eventArgs: IColumnResizingEventArgs = {
-                column,
-                prevWidth: column.width,
-                newWidth: colMinWidth + 'px',
-                cancel: false,
-                owner: this
-            };
-            if (justCalulate) {
-                return eventArgs;
-            }
-            // this.column.grid.columnResizing.emit(eventArgs);
-            // if (eventArgs.cancel) { return; }
-            column.width = colMinWidth + 'px';
+            eventArgs.newWidth = colMinWidth + 'px';
         } else if (colMaxWidth && (currentColWidth + diff > colMaxWidth)) {
-            const eventArgs: IColumnResizingEventArgs = {
-                column,
-                prevWidth: column.width,
-                newWidth: colMaxWidth + 'px',
-                cancel: false,
-                owner: this
-            };
-            if (justCalulate) {
-                return eventArgs;
-            }
-            // this.column.grid.columnResizing.emit(eventArgs);
-            // if (eventArgs.cancel) { return; }
-            column.width = colMaxWidth + 'px';
+            eventArgs.newWidth = colMaxWidth + 'px';
         } else {
-            const eventArgs: IColumnResizingEventArgs = {
-                column,
-                prevWidth: column.width,
-                newWidth: (currentColWidth + diff) + 'px',
-                cancel: false,
-                owner: this
-            };
-            if (justCalulate) {
-                return eventArgs;
-            }
-            // this.column.grid.columnResizing.emit(eventArgs);
-            // if (eventArgs.cancel) { return; }
-            column.width = (currentColWidth + diff) + 'px';
+            eventArgs.newWidth = (currentColWidth + diff) + 'px';
         }
+
+        return eventArgs;
     }
 
     protected _handlePercentageResize(diff: number, column: IgxColumnComponent, justCalulate = false) {
@@ -231,15 +211,11 @@ export class IgxColumnResizingService {
                 column,
                 prevWidth: column.width,
                 newWidth: colMinWidth + '%',
-                cancel: false,
-                owner: this
+                cancel: false
             };
             if (justCalulate) {
                 return eventArgs;
             }
-            // this.column.grid.columnResizing.emit(eventArgs);
-
-            // if (eventArgs.cancel) { return; }
 
             column.width = colMinWidth + '%';
         } else if (colMaxWidth && (currentPercentWidth + diffPercentage > colMaxWidth)) {
@@ -247,14 +223,11 @@ export class IgxColumnResizingService {
                 column,
                 prevWidth: column.width,
                 newWidth: colMaxWidth + '%',
-                cancel: false,
-                owner: this
+                cancel: false
             };
             if (justCalulate) {
                 return eventArgs;
             }
-            // this.column.grid.columnResizing.emit(eventArgs);
-            // if (eventArgs.cancel) { return; }
 
             column.width = colMaxWidth + '%';
         } else {
@@ -262,14 +235,11 @@ export class IgxColumnResizingService {
                 column,
                 prevWidth: column.width,
                 newWidth: currentPercentWidth + diffPercentage + '%',
-                cancel: false,
-                owner: this
+                cancel: false
             };
             if (justCalulate) {
                 return eventArgs;
             }
-            // this.column.grid.columnResizing.emit(eventArgs);
-            // if (eventArgs.cancel) { return; }
 
             column.width = (currentPercentWidth + diffPercentage) + '%';
         }
@@ -315,10 +285,8 @@ export class IgxColumnResizingService {
                         column: col.target,
                         prevWidth: colWidth.toString(),
                         newWidth: (currentResizeWidth + resizeScaled).toString(),
-                        cancel: false,
-                        owner: this
+                        cancel: false
                     };
-                    // this.column.grid.columnResizing.emit(eventArgs);
 
                     if (justCalulate) {
                         return resizingEventArgs;
@@ -334,15 +302,11 @@ export class IgxColumnResizingService {
                         column: col.target,
                         prevWidth: colWidth.toString(),
                         newWidth: (currentResizeWidth + resizeScaled).toString(),
-                        cancel: false,
-                        owner: this
+                        cancel: false
                     };
                     if (justCalulate) {
                         return resizingEventArgs;
                     }
-                    // this.column.grid.columnResizing.emit(eventArgs);
-
-                    // if (eventArgs.cancel) { return; }
 
                     col.target.width = isPercentageWidth ? col.target.maxWidthPercent + '%' : col.target.maxWidthPx + 'px';
                     updatedDiff -= (maxWidth - currentResizeWidth);
@@ -373,10 +337,10 @@ export class IgxColumnResizingService {
                 }
             } else {
                 if (justCalulate) {
-                    const colEventArgs = this._handlePixelResize(resizeScaled, col.target, justCalulate);
+                    const colEventArgs = this._handlePixelResize(resizeScaled, col.target);
                     eventArgs.push(colEventArgs);
                 } else {
-                    this._handlePixelResize(resizeScaled, col.target, justCalulate);
+                    this._handlePixelResize(resizeScaled, col.target);
                 }
             }
         });

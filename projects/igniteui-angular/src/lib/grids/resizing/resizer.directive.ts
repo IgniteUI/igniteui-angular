@@ -11,6 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
+import { IgxColumnResizingService } from './resizing.service';
 
 /**
  * @hidden
@@ -25,7 +26,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
 
     @Input()
-    public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
+    public restrictHResizeMax = 250;
 
     @Output()
     public resizeEnd = new Subject<any>();
@@ -39,7 +40,8 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     private _left;
     private _destroy = new Subject<boolean>();
 
-    constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
+    constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone,
+    private resizingService: IgxColumnResizingService) {
 
         this.resizeStart.pipe(
             map((event) => event.clientX),
@@ -107,6 +109,8 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     onMousemove(event) {
         event.preventDefault();
-        this.resize.next(event);
+        if (!this.resizingService._resizingCancelled) {
+            this.resize.next(event);
+        }
     }
 }

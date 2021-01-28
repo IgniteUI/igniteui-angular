@@ -52,7 +52,7 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
 
 export interface IPageEventArgs extends IBaseEventArgs {
     previous: number;
-    current: number;
+    newPage: number;
 }
 
 export interface IPagingEventArgs extends IPageEventArgs, CancelableEventArgs {

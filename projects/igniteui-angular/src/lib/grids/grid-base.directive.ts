@@ -520,32 +520,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.selectionService.clear(true);
-
-        const eventArgs = { previous: this._page, current: val };
-        const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
-        this.onPaging.emit(cancelableEventArgs);
-
-        if (cancelableEventArgs.cancel) { return; }
-
         this._page = val;
         this.pageChange.emit(this._page);
-        this.onPagingDone.emit(eventArgs);
         this.navigateTo(0);
         this.notifyChanges();
     }
 
     /**
-     * Emitted after the current page is changed.
-     * @example
-     * ```html
-     * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
-     * ```
-     * ```typescript
-     * public onPageChange(page: number) {
-     *   this.currentPage = page;
-     * }
-     * ```
+     * @hidden
      */
+    @DeprecateProperty(`Deprecated. Use 'onPagingDone' instead.`)
     @Output()
     public pageChange = new EventEmitter<number>();
 
@@ -1448,7 +1432,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns an object consisting of the previous and current pages.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPaging)="onPaging($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -3233,6 +3217,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
+    _onPaging(event: IPagingEventArgs) {
+        const eventArgs = { previous: event.previous, newPage: event.newPage, cancel: false, owner: this };
+        this.onPaging.emit(eventArgs);
+        event.newPage = eventArgs.newPage;
+        event.cancel = eventArgs.cancel;
+    }
+
+    _onPagingDone(event: IPageEventArgs) {
+        const eventArgs = { previous: event.previous, newPage: event.newPage, owner: this };
+        this.onPagingDone.emit(eventArgs);
+    }
+
     /**
      * @hidden
      */
@@ -4174,12 +4170,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._moveChildColumns(column.parent, column, target, pos);
         }
 
+        // pinning and unpinning will work correctly even without passing index
+        // but is easier to calclulate the index here, and later use it in the pinning event args
         if (target.pinned && !column.pinned) {
-            column.pin();
+            const pinnedIndex = this._pinnedColumns.indexOf(target);
+            const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
+            column.pin(index);
         }
 
         if (!target.pinned && column.pinned) {
-            column.unpin();
+            const unpinnedIndex = this._unpinnedColumns.indexOf(target);
+            const index = pos === DropPosition.AfterDropTarget ? unpinnedIndex + 1 : unpinnedIndex;
+            column.unpin(index);
         }
 
         if (target.pinned && column.pinned) {
@@ -4228,7 +4230,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
 
-        this.page = val;
+        const eventArgs = { previous: this._page, newPage: val };
+        const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
+        this.onPaging.emit(cancelableEventArgs);
+
+        if (cancelableEventArgs.cancel) { return; }
+
+        this.page = eventArgs.newPage = cancelableEventArgs.newPage;
+        this.onPagingDone.emit(eventArgs);
     }
 
     /**
