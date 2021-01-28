@@ -118,6 +118,30 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public pageChange = new EventEmitter<number>();
 
     /**
+     * Emitted before paging is performed.
+     * @remarks
+     * Returns an object consisting of the previous and current pages.
+     * @example
+     * ```html
+     * <igx-paginator [pagerEnabled]="true" (onPaging)="onPaging($event)"></igx-paginator>
+     * ```
+     */
+    @Output()
+    public onPaging = new EventEmitter<IPagingEventArgs>();
+
+    /**
+     * Emitted after paging is performed.
+     * @remarks
+     * Returns an object consisting of the previous and current pages.
+     * @example
+     * ```html
+     * <igx-paginator [pagerEnabled]="true" (onPagingDone)="onPagingDone($event)"></igx-paginator>
+     * ```
+     */
+    @Output()
+    public onPagingDone = new EventEmitter<IPageEventArgs>();
+
+    /**
      * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
@@ -260,83 +284,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this._resourceStrings;
     }
 
-    /**
-     * @deprecated Use 'resourceStrings' instead.
-     * An @Input property, sets number of label of the select.
-     * The default is 'Items per page' localized string.
-     * ```html
-     * <igx-paginator label="My custom label"></igx-paginator>
-     * ```
-     * @memberof IgxPaginatorComponent
-     */
-    @DeprecateProperty(`'selectLabel' property is deprecated. Use 'resourceStrings' instead.`)
-    @Input()
-    public selectLabel;
-
-    /**
-     * @deprecated Use 'resourceStrings' instead.
-     * An @Input property, sets a preposition between the current page and total pages.
-     * The default is 'of' localized string.
-     * @memberof IgxPaginatorComponent
-     */
-    @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
-    @Input()
-    public prepositionPage;
-
-    /**
-     * Emitted when `perPage` property value of the paginator is changed.
-     * @example
-     * ```html
-     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
-     * ```
-     * ```typescript
-     * public onPerPageChange(perPage: number) {
-     *   this.perPage = perPage;
-     * }
-     * ```
-     */
-    @Output()
-    public perPageChange = new EventEmitter<number>();
-
-    /**
-     * Emitted after the current page is changed.
-     * @example
-     * ```html
-     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
-     * ```
-     * ```typescript
-     * public onPageChange(page: number) {
-     *   this.currentPage = page;
-     * }
-     * ```
-     */
-    @Output()
-    public pageChange = new EventEmitter<number>();
-
-    /**
-     * Emitted before paging is performed.
-     * @remarks
-     * Returns an object consisting of the previous and current pages.
-     * @example
-     * ```html
-     * <igx-paginator [pagerEnabled]="true" (onPaging)="onPaging($event)"></igx-paginator>
-     * ```
-     */
-    @Output()
-    public onPaging = new EventEmitter<IPagingEventArgs>();
-
-    /**
-     * Emitted after paging is performed.
-     * @remarks
-     * Returns an object consisting of the previous and current pages.
-     * @example
-     * ```html
-     * <igx-paginator [pagerEnabled]="true" (onPagingDone)="onPagingDone($event)"></igx-paginator>
-     * ```
-     */
-    @Output()
-    public onPagingDone = new EventEmitter<IPageEventArgs>();
-
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
     }
@@ -396,7 +343,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
-        this.paginate(this._page + 1);
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
@@ -407,7 +356,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
-        this.paginate(this._page - 1);
+        if (!this.isFirstPage) {
+            this.page -= 1;
+        }
     }
     /**
      * Goes to the desired page index.
@@ -422,15 +373,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         if (val < 0 || val > this.totalPages - 1) {
             return;
         }
-
-        const eventArgs = { previous: this._page, newPage: val };
-        const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
-        this.onPaging.emit(cancelableEventArgs);
-
-        if (cancelableEventArgs.cancel) { return; }
-
-        this.page = eventArgs.newPage = cancelableEventArgs.newPage;
-        this.onPagingDone.emit(eventArgs);
+        this.page = val;
     }
 
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
