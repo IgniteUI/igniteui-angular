@@ -116,30 +116,29 @@
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette: null, $color: primary, $variant: 500) {
-    $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
-    $valid-palette: type-of($palette)== 'map' and map-has-key($palette, $color);
-    $temp: igx-palette(#fff, #000);
+    $legacy: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
+    $valid: type-of($palette) == 'map' and map-has-key($palette, $color);
+    $p: igx-palette(#fff, #000);
+    $c: map-get($p, $color);
+    $v: if($c, map-get($c, $variant), null);
 
-    @if $igx-legacy-support == false {
-        @if $palette and $valid-palette {
-            @return map-get(map-get($palette, $color), to-number($variant));
-        } @else if $palette == null {
-            @if map-has-key($temp, $color){
-                @return #{var(--igx-#{$color}-#{$variant})};
-            } @else {
-                @error 'The passed color value is not a valid one';
-            }
-            @return #{var(--igx-#{$color}-#{$variant})};
-        }
-        @return var(--igx-primary-500);
-    } @else {
-        @if $palette and $valid-palette {
-            @return map-get(map-get($palette, $color), $variant);
-        } @else if not($palette) {
-            @return map-get(map-get($default-palette, $color), to-number($variant));
-        }
-        @return #fff;
+    @if not($c) {
+        @error 'The passed color #{$color} is not valid.';
     }
+
+    @if not($v) {
+        @error 'The passed variant #{$variant} is not valid.';
+    }
+
+    @if not($valid) {
+        @return if(
+            $legacy,
+            igx-color($default-palette, $color, to-number($variant)),
+            #{var(--igx-#{$color}-#{$variant})}
+        );
+    }
+
+    @return map-get(map-get($palette, $color), to-number($variant));
 }
 
 @function igx-color-ref($color, $variant: 500) {
