@@ -4323,7 +4323,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
         this.onPaging.emit(cancelableEventArgs);
 
-        if (cancelableEventArgs.cancel) { return; }
+        if (cancelableEventArgs.cancel) {
+            return;
+        }
 
         this.page = eventArgs.newPage = cancelableEventArgs.newPage;
         this.onPagingDone.emit(eventArgs);
@@ -4543,7 +4545,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: ISortingEventArgs = {owner: this, sortingExpressions: expression, cancel: false };
         this.sorting.emit(eventArgs);
 
-        if (eventArgs.cancel) { return; }
+        if (eventArgs.cancel) {
+            return;
+        }
 
         this.endEdit(false);
         if (expression instanceof Array) {

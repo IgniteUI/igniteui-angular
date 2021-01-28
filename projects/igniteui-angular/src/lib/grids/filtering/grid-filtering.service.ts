@@ -259,7 +259,9 @@ export class IgxFilteringService implements OnDestroy {
 
         this.grid.filtering.emit(onFilteringEventArgs);
 
-        if (onFilteringEventArgs.cancel) { return; }
+        if (onFilteringEventArgs.cancel) {
+            return;
+        }
 
         this.isFiltering = true;
         this.gridAPI.clear_filter(field);

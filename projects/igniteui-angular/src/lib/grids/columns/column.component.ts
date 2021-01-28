@@ -1853,7 +1853,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
         this.grid.onColumnPinning.emit(args);
 
-        if (args.cancel) { return; }
+        if (args.cancel) {
+            return;
+        }
 
         this.grid.endEdit(true);
 
@@ -1951,6 +1953,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     /**
      * Toggles column vibisility and emits the respective event.
+     *
      * @hidden
      */
     public toggleVisibility(value?: boolean) {
@@ -1962,7 +1965,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
         this.hidden = newValue;
-        this.grid.onColumnVisibilityChanged.emit({ column: this, newValue: newValue });
+        this.grid.onColumnVisibilityChanged.emit({ column: this, newValue });
     }
 
     /**
