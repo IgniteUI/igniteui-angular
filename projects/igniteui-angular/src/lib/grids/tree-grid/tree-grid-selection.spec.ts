@@ -1339,7 +1339,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it(`No rows are selected. Filter out all children for certain parent. Select this parent. It should be the only one within
         the selectedRows collection. Remove filtering. The selectedRows collection should be empty.
-        All non-direct parents’ checkbox states should be set correctly as well.`, async () => {
+        All non-direct parents’ checkbox states should be set correctly as well`, async () => {
 
             const expressionTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
             expressionTree.filteringOperands = [
@@ -1378,6 +1378,61 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+        });
+
+        it(`Filter out all selected children for a certain parent and explicitly deselect it.
+        Remove filtering. Parent row should be selected again. All non-direct parents’
+        checkbox states should be set correctly as well`, async () => {
+
+            treeGrid.selectRows([317], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+
+            const expressionTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
+            expressionTree.filteringOperands = [
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 711
+                },
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 998
+                },
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 299
+                }
+            ];
+            treeGrid.filter('ID', null, expressionTree);
+
+            await wait(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+
+            treeGrid.deselectRows([317]);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+
+            treeGrid.clearFilter();
+
+            await wait(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
         });
     });
 
