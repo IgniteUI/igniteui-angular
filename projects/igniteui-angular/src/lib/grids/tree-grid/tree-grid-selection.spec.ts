@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent, IgxTreeGridRowComponent } from './public_api';
+import { IgxTreeGridModule, IgxGridCellComponent } from './public_api';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -1096,6 +1096,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('Should select all children of record on Shift + click even if they are not in the selected range. ', () => {
             const firstRow = treeGrid.getRowByIndex(1);
             const secondRow = treeGrid.getRowByIndex(4);
@@ -1117,6 +1118,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('Should select only the newly clicked parent row and its children and deselect the previous selection.', () => {
             treeGrid.selectRows([19, 847], true);
             fix.detectChanges();
@@ -1130,6 +1132,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('Should add a row and its children to the selected rows collection using Ctrl + click.', () => {
             treeGrid.selectRows([847], true);
             fix.detectChanges();
@@ -1154,6 +1157,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 8, 9], true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('After adding a new child row to a selected parent its checkbox state SHOULD be indeterminate.', async () => {
             treeGrid.selectRows([847], true);
             fix.detectChanges();
@@ -1185,6 +1189,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('After adding child to a selected parent with no children, parent checkbox state SHOULD NOT be selected.', async () => {
             treeGrid.selectRows([957], true);
             fix.detectChanges();
@@ -1210,6 +1215,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
+
         it('If parent and its children are selected and we delete a child, parent SHOULD be still selected.', async () => {
             treeGrid.selectRows([147], true);
             fix.detectChanges();
@@ -1238,6 +1244,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('If parent has one non-selected child and we delete it, the parent checkbox state SHOULD be selected.', async () => {
             treeGrid.selectRows([711, 299], true);
             fix.detectChanges();
@@ -1267,6 +1274,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
+
         it('If we delete the only selected child of a parent row, the parent checkbox state SHOULD be deselected', async () => {
             treeGrid.selectRows([711], true);
             fix.detectChanges();
@@ -1504,7 +1512,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
         });
 
-        it(`Selected parent. Filter out some of the children and delete otheres. Parent should be not selected.`, async () => {
+        it(`Selected parent. Filter out some of the children and delete otheres.
+        Parent should be not selected`, async () => {
 
             treeGrid.selectRows([317], true);
             fix.detectChanges();
@@ -1537,6 +1546,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+        });
     });
 
     describe('Cascading Row Selection with Transaction', () => {
