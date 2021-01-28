@@ -45,6 +45,9 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      */
     @Input() public direction: Direction;
 
+    @Input()
+    public total: number;
+
     /**
      * Returns the `tabIndex` of the slide component.
      * ```typescript
@@ -54,9 +57,27 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
      * @memberof IgxSlideComponent
      */
     @HostBinding('attr.tabindex')
-    get tabIndex() {
+    public get tabIndex() {
         return this.active ? 0 : null;
     }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.id')
+    public id: string;
+
+    /**
+     * Returns the `role` of the slide component.
+     * By default is set to `tabpanel`
+     * @memberof IgxSlideComponent
+     */
+    @HostBinding('attr.role')
+    public tab = 'tabpanel';
+
+    /** @hidden */
+    @HostBinding('attr.aria-labelledby')
+    public ariaLabelledBy;
 
     /**
      * Returns the `aria-selected` of the slide.
@@ -70,28 +91,6 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
     public get ariaSelected(): boolean {
         return this.active;
     }
-
-    @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy;
-
-    @Input()
-    public total: number;
-
-    /**
-     * Returns the `aria-live` of the slide.
-     *
-     * ```typescript
-     * let slide = this.slide.ariaLive;
-     * ```
-     *
-     */
-    @HostBinding('attr.aria-selected')
-    public get ariaLive() {
-        return this.active ? 'polite' : null;
-    }
-
-    @HostBinding('attr.role')
-    public tab = 'tabpanel';
 
     /**
      * Returns the class of the slide component.
@@ -165,7 +164,8 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
     }
 
     public ngAfterContentChecked() {
-        this.ariaLabelledBy = `tab-${this.index + 1}-${this.total}`;
+        this.id = `panel-${this.index}`;
+        this.ariaLabelledBy = `tab-${this.index}-${this.total}`;
     }
 
     /**
