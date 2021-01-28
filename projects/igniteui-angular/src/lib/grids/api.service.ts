@@ -551,7 +551,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         grid.data[index] = value;
     }
 
-    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+    public prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
 
         let newExpressionsTree;
