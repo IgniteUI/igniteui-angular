@@ -20,9 +20,9 @@
                 [showToolbar]="true" [columnHiding]="true"
                 [columnPinning]='true'
                 [allowFiltering]="true"
-                (onColumnMovingStart)="onColumnMovingStart($event)"
-                (onColumnMoving)="onColumnMoving($event)"
-                (onColumnMovingEnd)="onColumnMovingEnd($event)"
+                (onColumnMovingStart)="onColumnMovingStart()"
+                (onColumnMoving)="onColumnMoving()"
+                (onColumnMovingEnd)="onColumnMovingEnd()"
                 [rowSelection] ="'multiple'"
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
@@ -44,8 +44,8 @@
                 </igx-column>
                 <igx-grid-footer>
                     <div class="references">
-                       <p>Test</p> 
-                       <p>Test2</p> 
+                       <p>Test</p>
+                       <p>Test2</p>
                     </div>
                 </igx-grid-footer>
             </igx-grid>
@@ -147,7 +147,7 @@
                     </igx-grid>
                 </section>
             </div>
-            
+
         </div>
     </div>
 </div>
