@@ -458,7 +458,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
+    public onColumnPinning = new EventEmitter<IPinColumnCancellableEventArgs>();
 
     /**
      * Emitted after `IgxColumnComponent` is pinned.
