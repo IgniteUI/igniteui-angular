@@ -25,7 +25,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
 
     @Input()
-    public restrictHResizeMaxx: number = Number.MAX_SAFE_INTEGER;
+    public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
 
     @Output()
     public resizeEnd = new Subject<any>();
