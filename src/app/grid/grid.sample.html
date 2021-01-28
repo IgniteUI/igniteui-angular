@@ -44,7 +44,7 @@
                 </igx-card-header>
                 <igx-card-actions>
                     <div class="igx-card-actions__bgroup">
-                        <button igxButton igxRipple (click)="deleteRow($event)">Delete Row</button>
+                        <button igxButton igxRipple (click)="deleteRow()">Delete Row</button>
                     </div>
                 </igx-card-actions>
             </igx-card>
@@ -124,7 +124,7 @@
 
         <div class="paging-config">
             <div class="switch-group">
-                <igx-switch [checked]="grid2.paging" (change)="grid2.paging = $event.target.checked">Enable Paging</igx-switch>
+                <igx-switch [checked]="grid2.paging" (change)="grid2.paging = $event.switch.checked">Enable Paging</igx-switch>
             </div>
             <div class="igx-form-group">
                 <igx-input-group>
@@ -158,7 +158,7 @@
                     <p style="color: crimson"></p>
                 </ng-template>
                 <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                    <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, column?.field, $event.target.checked)"></igx-checkbox>
+                    <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, column?.field, $event.checkbox.checked)"></igx-checkbox>
                 </ng-template>
             </igx-column>
         </igx-grid>
@@ -192,7 +192,7 @@
                 </igx-column-actions>
             </div>
         </div>
-        <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)" [primaryKey]="'ProductID'" [rowSelection]="selectionMode">
+        <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process()" (onSortingDone)="process()" [primaryKey]="'ProductID'" [rowSelection]="selectionMode">
             <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
             <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
             <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -201,7 +201,7 @@
                     <p style="color: crimson"></p>
                 </ng-template>
                 <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                    <igx-checkbox [checked]="item" (change)="grid3.updateCell(ri, column?.field, $event.target.checked)"></igx-checkbox>
+                    <igx-checkbox [checked]="item" (change)="grid3.updateCell(ri, column?.field, $event.checkbox.checked)"></igx-checkbox>
                 </ng-template>
             </igx-column>
         </igx-grid>
