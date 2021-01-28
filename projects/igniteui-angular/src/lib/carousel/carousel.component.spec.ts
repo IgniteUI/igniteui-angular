@@ -464,6 +464,41 @@ describe('Carousel', () => {
         });
 
 
+        it('should apply correctly aria attributes to carousel component', () => {
+            const expectedRole = 'region';
+            const expectedRoleDescription = 'carousel';
+            const tabIndex = carousel.nativeElement.getAttribute('tabindex');
+
+            expect(tabIndex).toBeNull();
+            expect(carousel.nativeElement.getAttribute('role')).toEqual(expectedRole);
+            expect(carousel.nativeElement.getAttribute('aria-roledescription')).toEqual(expectedRoleDescription);
+
+            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS)
+
+            expect(indicators).toBeDefined();
+            expect(indicators.getAttribute('role')).toEqual('tablist');
+
+            const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
+            expect(tabs.length).toEqual(4);
+        });
+
+        it('should apply correctly aria attributes to slide components', () => {
+            carousel.loop = false;
+            carousel.select(carousel.get(1));
+            fixture.detectChanges();
+
+            const expectedRole = 'tabpanel';
+            const slide = carousel.slides.find(s => s.active);
+            const tabIndex = slide.nativeElement.getAttribute('tabindex');
+
+            expect(+tabIndex).toBe(0);
+            expect(slide.nativeElement.getAttribute('role')).toEqual(expectedRole);
+
+            const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
+            const slides = carousel.nativeElement.querySelectorAll('[role="tabpanel"]');
+
+            expect(slides.length).toEqual(tabs.length);
+        });
     });
 
     describe('Templates Tests: ', () => {
