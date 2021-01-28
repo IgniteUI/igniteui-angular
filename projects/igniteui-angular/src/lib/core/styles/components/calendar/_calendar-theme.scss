@@ -328,7 +328,7 @@
 /// @requires {mixin} ellipsis
 /// @requires --var
 @mixin igx-calendar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
     $cal-header-year-margin: 0;

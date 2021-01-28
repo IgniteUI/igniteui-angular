@@ -119,7 +119,7 @@
 /// @requires em
 /// @requires --var
 @mixin igx-card($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, 'variant');
     $not-material-theme: $variant != 'material';

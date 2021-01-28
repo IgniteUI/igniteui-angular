@@ -531,9 +531,9 @@ $p-test: igx-palette(#fff, #000);
     @if map-has-key($map, $key) {
         @if not(legacy()) {
             @if not($fallback) {
-                @return var(--#{map-get($map, 'name')}-#{$key})
+                @return var(--#{$key})
             }
-            @return var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})
+            @return var(--#{$key}, #{$fallback})
         } @else {
             @return map-get($map, $key);
         }

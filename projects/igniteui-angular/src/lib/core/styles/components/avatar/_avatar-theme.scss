@@ -81,7 +81,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-avatar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $small-size: 40px;
     $medium-size: 64px;

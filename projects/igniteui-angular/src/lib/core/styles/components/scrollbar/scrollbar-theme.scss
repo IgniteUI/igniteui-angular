@@ -52,7 +52,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-scrollbar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme, ':root');
 
     %scrollbar-display {
         @if type-of(map-get($theme, 'size') == 'string') {
