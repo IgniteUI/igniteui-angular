@@ -28,25 +28,25 @@
         [id]="setId(slide)"
         [attr.role]="'tab'"
         [attr.aria-label]="setAriaLabel(slide)"
+        [attr.aria-controls]="'panel-' + slide.index"
         [attr.aria-selected]="slide.active">
         <ng-container *ngTemplateOutlet="getIndicatorTemplate; context: {$implicit: slide};"></ng-container>
     </div>
 </div>
-<span [id]="labelId" [ngStyle]="{visibility: 'hidden'}">Carousel content with  {{ total }} slides.</span>
 
 <div *ngIf="showIndicatorsLabel" [ngClass]="indicatorsOrientationClass">
-    <span class="igx-carousel__label">{{getCarouselLabel}}</span>
+    <span id="igxCarouselLbl" class="igx-carousel__label">{{getCarouselLabel}}</span>
 </div>
 
-<div class="igx-carousel__inner">
+<div class="igx-carousel__inner" aria-live="polite">
     <ng-content></ng-content>
 </div>
 
-<div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--prev" [attr.aria-label]="resourceStrings.igx_carousel_previous_slide" (click)="prev()">
+<div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--prev" [attr.aria-label]="resourceStrings.igx_carousel_previous_slide" (keydown.enter)="prev()" (click)="prev()">
     <ng-container *ngTemplateOutlet="getPrevButtonTemplate; context: {$implicit: prevButtonDisabled};"></ng-container>
 </div>
 
-<div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--next" [attr.aria-label]="resourceStrings.igx_carousel_next_slide" (click)="next()">
+<div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--next" [attr.aria-label]="resourceStrings.igx_carousel_next_slide" (keydown.enter)="next()" (click)="next()">
     <ng-container *ngTemplateOutlet="getNextButtonTemplate; context: {$implicit: nextButtonDisabled};"></ng-container>
 </div>
 

@@ -106,11 +106,13 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostBinding('attr.role') public role = 'region';
 
+    /** @hidden */
     @HostBinding('attr.aria-roledescription')
     public roleDescription = 'carousel';
 
+    /** @hidden */
     @HostBinding('attr.aria-labelledby')
-    public labelId = 'igxCarouselLabel';
+    public labelId = `igxCarouselLbl`; // tab-${this.current + 1}-3
 
     /**
      * Sets the `id` of the carousel.
@@ -124,19 +126,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-carousel-${NEXT_ID++}`;
-
-    /**
-     * Returns the `tabIndex` of the carousel component.
-     * ```typescript
-     * let tabIndex =  this.carousel.tabIndex;
-     * ```
-     *
-     * @memberof IgxCarouselComponent
-     */
-    @HostBinding('attr.tabindex')
-    get tabIndex() {
-        return 0;
-    }
 
     /**
      * Returns the class of the carousel component.
@@ -479,7 +468,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxCarouselComponent
      */
     public get total(): number {
-        return this.slides.length;
+        return this.slides?.length;
     }
 
     /**
@@ -568,7 +557,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -578,7 +567,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -604,16 +593,17 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
+    /** @hidden */
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event) {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -715,7 +705,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     /** @hidden */
     public setId(slide) {
-        return `tab-${slide.index + 1}-${this.total}`;
+        return `tab-${slide.index}-${this.total}`;
     }
     /**
      * Returns the slide corresponding to the provided `index` or null.
