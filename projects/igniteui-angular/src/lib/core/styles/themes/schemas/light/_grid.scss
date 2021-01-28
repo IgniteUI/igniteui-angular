@@ -423,7 +423,7 @@ $_light-grid: extend(
 /// @prop {Number} drop-area-border-radius [2px] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} filtering-background-or [igx-color: ('error'), rgba: .5] - The background color of advanced filtering "OR" condition.
 /// @prop {Map} filtering-background-or--focus [igx-color: ('error')] - The background color on focus/selected of advanced filtering "OR" condition.
-/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 100), darken: 8%] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 100), hexrgba: #fff, darken: 8%] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 100)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('grays', 200)] - The selected row hover text color.
 ///
@@ -537,6 +537,7 @@ $_fluent-grid: extend(
 
         cell-selected-within-background: (
             igx-color: ('grays', 100),
+            hexrgba: #fff,
             darken: 8%
         ),
 
@@ -809,10 +810,8 @@ $_indigo-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('primary', 50),
-            rgba: .72,
+            igx-color: ('primary', 100),
             to-opaque: (),
-            darken: 8%
         ),
 
         cell-selected-within-text-color: (

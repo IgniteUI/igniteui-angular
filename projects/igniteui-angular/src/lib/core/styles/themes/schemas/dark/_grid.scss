@@ -34,7 +34,7 @@
 /// @prop {Map} root-summaries-text-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @prop {Map} row-highlight [igx-color: ('secondary', 500)] - The highlight color of a row.
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 900)] - The dragged row background color.
-/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 500), rgba: .24, hexrgba: #222, lighten: 8%] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 400), hexrgba: #222] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('secondary', 500)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('secondary', A700)] - The selected row hover text color.
 
