@@ -29,7 +29,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-// tslint:disable: no-use-before-declare
+/* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {
     configureTestSuite();

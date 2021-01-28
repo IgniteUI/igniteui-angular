@@ -33,6 +33,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```html
      *  <igx-column-group [collapsible] = "true"></igx-column-group>
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
@@ -59,13 +60,16 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *  const state = false
      *  <igx-column-group [(expand)] = "state"></igx-column-group>
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
     public set expanded(value: boolean) {
         this._expanded = value;
         this.expandedChange.emit(this._expanded);
-        if (!this.collapsible) { return; }
+        if (!this.collapsible) {
+            return;
+        }
         if (!this.hidden && this.children) {
             this.setExpandCollapseState();
         }
@@ -79,6 +83,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columnGroupSummaries = this.columnGroup.summaries;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
@@ -90,6 +95,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * this.columnGroup.summaries = IgxNumberSummaryOperand;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     public set summaries(classRef: any) { }
@@ -102,6 +108,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```html
      *  <igx-column-group [searchable] = "false"></igx-column-group>
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
@@ -111,6 +118,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columnGroupFilters = this.columnGroup.filters;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
@@ -122,6 +130,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * this.columnGroup.filters = IgxStringFilteringOperand;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     public set filters(classRef: any) { }
@@ -131,6 +140,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columnGroupSelectable = this.columnGroup.selectable;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     public get selectable(): boolean {
@@ -144,6 +154,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let bodyTemplate = this.columnGroup.bodyTemplate;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get bodyTemplate(): TemplateRef<any> {
@@ -156,6 +167,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /**
      * Allows you to define a custom template for expand/collapse indicator
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
@@ -166,6 +178,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let inlineEditorTemplate = this.columnGroup.inlineEditorTemplate;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get inlineEditorTemplate(): TemplateRef<any> {
@@ -180,6 +193,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columnCells = this.columnGroup.cells;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get cells(): IgxGridCellComponent[] {
@@ -190,6 +204,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let isHidden = this.columnGroup.hidden;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     @Input()
@@ -206,6 +221,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```html
      * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     set hidden(value: boolean) {
@@ -215,7 +231,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this.children.forEach(child => child.hidden = this._hidden);
         } else {
             this.children.forEach(c => {
-                if (c.visibleWhenCollapsed === undefined) { c.hidden = false; return; }
+                if (c.visibleWhenCollapsed === undefined) {
+                    c.hidden = false; return;
+                }
                 c.hidden = this.expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
             });
         }
@@ -226,6 +244,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let isSelected = this.columnGroup.selected;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get selected(): boolean {
@@ -238,6 +257,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * this.columnGroup.selected = true;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     set selected(value: boolean) {
@@ -285,6 +305,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columns =  this.columnGroup.allChildren;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get allChildren(): IgxColumnComponent[] {
@@ -295,6 +316,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let isColumnGroup =  this.columnGroup.columnGroup
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get columnGroup() {
@@ -305,6 +327,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columnGroup =  this.column.columnGroup;
      * ```
+     *
      * @memberof IgxColumnComponent
      */
     get columnLayout() {
@@ -315,11 +338,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```typescript
      * let columnGroupWidth = this.columnGroup.width;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get width() {
-        let width;
-        width = `${this.children.reduce((acc, val) => {
+        const width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
                 return acc;
             }

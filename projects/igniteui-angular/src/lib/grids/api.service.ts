@@ -14,9 +14,6 @@ import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
-import {
-    ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
-} from '../core/utils';
 
 /**
  * @hidden
@@ -202,27 +199,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return args;
     }
 
-    /**
-     * Updates related row of provided grid's data source with provided new row value
-     * @param grid Grid to update data for
-     * @param rowID ID of the row to update
-     * @param rowValueInDataSource Initial value of the row as it is in data source
-     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
-     * @param rowNewValue New value of the row
-     */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
-        if (grid.transactions.enabled) {
-            const transaction: Transaction = {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: rowNewValue
-            };
-            grid.transactions.add(transaction, rowCurrentValue);
-        } else {
-            mergeObjects(rowValueInDataSource, rowNewValue);
-        }
-    }
-
     _update_row(row: IgxRow, value?: any) {
         const grid = this.grid;
 
@@ -294,12 +270,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
         grid.rowEditDone.emit(doneArgs);
         return args;
-    }
-
-
-    protected update_row_in_array(value: any, rowID: any, index: number) {
-        const grid = this.grid;
-        grid.data[index] = value;
     }
 
     public sort(expression: ISortingExpression): void {
@@ -388,7 +358,200 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+    public clear_groupby(name?: string | Array<string>) {
+    }
+
+    public should_apply_number_style(column: ColumnType): boolean {
+        return column.dataType === DataType.Number;
+    }
+
+    public get_data(): any[] {
+        const grid = this.grid;
+        const data = grid.data ? grid.data : [];
+        return data;
+    }
+
+    public get_all_data(includeTransactions = false): any[] {
+        const grid = this.grid;
+        let data = grid && grid.data ? grid.data : [];
+        data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
+        return data;
+    }
+
+    public get_filtered_data(): any[] {
+        return this.grid.filteredData;
+    }
+
+    public addRowToData(rowData: any, parentRowID?) {
+        // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
+        // If there is a row in edit - > commit and close
+        const grid = this.grid;
+        if (grid.transactions.enabled) {
+            const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
+            grid.transactions.add(transaction);
+        } else {
+            grid.data.push(rowData);
+        }
+    }
+
+    public deleteRowFromData(rowID: any, index: number) {
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
+        const grid = this.grid;
+        if (index !== -1) {
+            if (grid.transactions.enabled) {
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                grid.transactions.add(transaction, grid.data[index]);
+            } else {
+                grid.data.splice(index, 1);
+            }
+        } else {
+            const state: State = grid.transactions.getState(rowID);
+            grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+        }
+    }
+
+    public deleteRowById(rowId: any) {
+        let index: number;
+        const grid = this.grid;
+        const data = this.get_all_data();
+        if (grid.primaryKey) {
+            index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
+        } else {
+            index = data.indexOf(rowId);
+        }
+        const state: State = grid.transactions.getState(rowId);
+        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
+
+        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
+        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
+        //  Otherwise just exit - there is nothing to delete
+        if (index !== -1 || hasRowInNonDeletedState) {
+            // Always exit edit when row is deleted
+            grid.endEdit(true);
+        } else {
+            return;
+        }
+
+        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+        grid.onRowDeleted.emit({ data: data[index] });
+
+        this.deleteRowFromData(rowId, index);
+
+        if (grid.selectionService.isRowSelected(rowId)) {
+            grid.selectionService.deselectRow(rowId);
+        } else {
+            grid.selectionService.clearHeaderCBState();
+        }
+        (grid as any)._pipeTrigger++;
+        grid.notifyChanges();
+        // Data needs to be recalculated if transactions are in place
+        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
+        const dataAfterDelete = grid.transactions.enabled ? grid.dataWithAddedInTransactionRows : data;
+        grid.refreshSearch();
+        if (dataAfterDelete.length % grid.perPage === 0 && dataAfterDelete.length / grid.perPage - 1 < grid.page && grid.page !== 0) {
+            grid.page--;
+        }
+    }
+
+    public get_row_id(rowData) {
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
+    }
+
+    public row_deleted_transaction(rowID: any): boolean {
+        const grid = this.grid;
+        if (!grid) {
+            return false;
+        }
+        if (!grid.transactions.enabled) {
+            return false;
+        }
+        const state = grid.transactions.getState(rowID);
+        if (state) {
+            return state.type === TransactionType.DELETE;
+        }
+
+        return false;
+    }
+
+    public get_row_expansion_state(record: any): boolean {
+        const grid = this.grid;
+        const states = grid.expansionStates;
+        const rowID = grid.primaryKey ? record[grid.primaryKey] : record;
+        const expanded = states.get(rowID);
+
+        if (expanded !== undefined) {
+            return expanded;
+        } else {
+            return grid.getDefaultExpandState(record);
+        }
+    }
+
+    public set_row_expansion_state(rowID: any, expanded: boolean, event?: Event) {
+        const grid = this.grid;
+        const expandedStates = grid.expansionStates;
+
+        if (!this.allow_expansion_state_change(rowID, expanded)) {
+            return;
+        }
+
+        const args: IRowToggleEventArgs = {
+            rowID,
+            expanded,
+            event,
+            cancel: false
+        };
+
+        grid.onRowToggle.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+        expandedStates.set(rowID, expanded);
+        grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
+    }
+
+    public get_rec_by_id(rowID) {
+        return  this.grid.primaryKey ? this.getRowData(rowID) : rowID;
+    }
+
+    public allow_expansion_state_change(rowID, expanded) {
+        return this.grid.expansionStates.get(rowID) !== expanded;
+    }
+
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     *
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
+        if (grid.transactions.enabled) {
+            const transaction: Transaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue: rowNewValue
+            };
+            grid.transactions.add(transaction, rowCurrentValue);
+        } else {
+            mergeObjects(rowValueInDataSource, rowNewValue);
+        }
+    }
+
+
+    protected update_row_in_array(value: any, rowID: any, index: number) {
+        const grid = this.grid;
+        grid.data[index] = value;
+    }
+
+    protected prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
         conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
 
         let newExpressionsTree;
@@ -456,174 +619,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     protected remove_grouping_expression(fieldName) {
     }
 
-    public clear_groupby(name?: string | Array<string>) {
-    }
-
-    public should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === DataType.Number;
-    }
-
-    public get_data(): any[] {
-        const grid = this.grid;
-        const data = grid.data ? grid.data : [];
-        return data;
-    }
-
-    public get_all_data(includeTransactions = false): any[] {
-        const grid = this.grid;
-        let data = grid && grid.data ? grid.data : [];
-        data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
-        return data;
-    }
-
-    public get_filtered_data(): any[] {
-        return this.grid.filteredData;
-    }
-
     protected getSortStrategyPerColumn(fieldName: string) {
         return this.get_column_by_name(fieldName) ?
             this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
-
-    public addRowToData(rowData: any, parentRowID?) {
-        // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
-        // If there is a row in edit - > commit and close
-        const grid = this.grid;
-        if (grid.transactions.enabled) {
-            const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
-            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
-            grid.transactions.add(transaction);
-        } else {
-            grid.data.push(rowData);
-        }
-    }
-
-    public deleteRowFromData(rowID: any, index: number) {
-        //  if there is a row (index !== 0) delete it
-        //  if there is a row in ADD or UPDATE state change it's state to DELETE
-        const grid = this.grid;
-        if (index !== -1) {
-            if (grid.transactions.enabled) {
-                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
-                grid.transactions.add(transaction, grid.data[index]);
-            } else {
-                grid.data.splice(index, 1);
-            }
-        } else {
-            const state: State = grid.transactions.getState(rowID);
-            grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
-        }
-    }
-
-    public deleteRowById(rowId: any) {
-        let index: number;
-        const grid = this.grid;
-        const data = this.get_all_data();
-        if (grid.primaryKey) {
-            index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
-        } else {
-            index = data.indexOf(rowId);
-        }
-        const state: State = grid.transactions.getState(rowId);
-        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
-
-        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
-        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
-        //  Otherwise just exit - there is nothing to delete
-        if (index !== -1 || hasRowInNonDeletedState) {
-            // Always exit edit when row is deleted
-            grid.endEdit(true);
-        } else {
-            return;
-        }
-
-        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-        grid.onRowDeleted.emit({ data: data[index] });
-
-        this.deleteRowFromData(rowId, index);
-
-        grid.selectionService.isRowSelected(rowId) ? grid.selectionService.deselectRow(rowId) : grid.selectionService.clearHeaderCBState();
-        (grid as any)._pipeTrigger++;
-        grid.notifyChanges();
-        // Data needs to be recalculated if transactions are in place
-        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
-        const dataAfterDelete = grid.transactions.enabled ? grid.dataWithAddedInTransactionRows : data;
-        grid.refreshSearch();
-        if (dataAfterDelete.length % grid.perPage === 0 && dataAfterDelete.length / grid.perPage - 1 < grid.page && grid.page !== 0) {
-            grid.page--;
-        }
-    }
-
-    public get_row_id(rowData) {
-        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
-    }
-
-    public row_deleted_transaction(rowID: any): boolean {
-        const grid = this.grid;
-        if (!grid) {
-            return false;
-        }
-        if (!grid.transactions.enabled) {
-            return false;
-        }
-        const state = grid.transactions.getState(rowID);
-        if (state) {
-            return state.type === TransactionType.DELETE;
-        }
-
-        return false;
-    }
-
-    public get_row_expansion_state(record: any): boolean {
-        const grid = this.grid;
-        const states = grid.expansionStates;
-        const rowID = grid.primaryKey ? record[grid.primaryKey] : record;
-        const expanded = states.get(rowID);
-
-        if (expanded !== undefined) {
-            return expanded;
-        } else {
-            return grid.getDefaultExpandState(record);
-        }
-    }
-
-    public set_row_expansion_state(rowID: any, expanded: boolean, event?: Event) {
-        const grid = this.grid;
-        const expandedStates = grid.expansionStates;
-
-        if (!this.allow_expansion_state_change(rowID, expanded)) {
-            return;
-        }
-
-        const args: IRowToggleEventArgs = {
-            rowID: rowID,
-            expanded: expanded,
-            event: event,
-            cancel: false
-        };
-
-        grid.onRowToggle.emit(args);
-
-        if (args.cancel) {
-            return;
-        }
-        expandedStates.set(rowID, expanded);
-        grid.expansionStates = expandedStates;
-        if (grid.rowEditable) {
-            grid.endEdit(true);
-        }
-    }
-
-    public get_rec_by_id(rowID) {
-        return  this.grid.primaryKey ? this.getRowData(rowID) : rowID;
-    }
-
-    public allow_expansion_state_change(rowID, expanded) {
-        return this.grid.expansionStates.get(rowID) !== expanded;
-    }
-
-    private isToggleKey(key: string): boolean {
-        return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
-    }
-
 }

@@ -1,9 +1,8 @@
-import { Component, ContentChildren, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from '../../list/list-item.component';
 import { IgxListComponent, IgxListModule } from '../../list/list.component';
-import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
+import { IgxFilterModule, IgxFilterOptions } from './filter.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -23,12 +22,11 @@ describe('Filter', () => {
     it('should filter declaratively created list', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);
         const list = fixture.componentInstance.list;
-        let items;
         let visibleItems;
 
         fixture.detectChanges();
         expect(list.items.length).toBe(3);
-        items = list.items;
+        const items = list.items;
 
         for (const item of items) {
                 expect(item instanceof IgxListItemComponent).toBeTruthy();
@@ -154,13 +152,13 @@ describe('Filter', () => {
                 <input #logInput />`
 })
 class DeclarativeListTestComponent {
+    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
+    @ViewChild('logInput', { static: true }) public logInput: any;
+
     public filterValue: string;
     public isCanceled = false;
     public filteringArgs: FilteringArgs;
     public filteredArgs: FilteringArgs;
-
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
-    @ViewChild('logInput', { static: true }) public logInput: any;
 
     get fo() {
         const options = new IgxFilterOptions();
@@ -190,12 +188,12 @@ class DeclarativeListTestComponent {
               </igx-list>`
 })
 class DynamicListTestComponent {
+    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
+
     public filterValue: string;
     public isCanceled = false;
 
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
-
-    protected dataSourceItems: object[] = [
+    protected dataSourceItems = [
         { key: '1', text: 'Nav1' },
         { key: '2', text: 'Nav2' },
         { key: '3', text: 'Nav3' },

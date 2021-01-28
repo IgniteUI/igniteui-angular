@@ -4,7 +4,7 @@ import { SortingDirection } from './sorting-expression.interface';
 
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;
-    let data: object[];
+    let data: any[];
     const sorting = new IgxSorting();
     beforeEach(() => {
         dataGenerator = new DataGenerator();

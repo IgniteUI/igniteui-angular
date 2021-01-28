@@ -28,7 +28,7 @@ export interface BoundPropertyObject {
     bindingType: InputPropertyType;
 }
 
-// tslint:disable:arrow-parens
+/* eslint-disable arrow-parens */
 export class UpdateChanges {
     protected projectService: tss.server.ProjectService;
     protected serverHost: ServerHost;
@@ -41,7 +41,7 @@ export class UpdateChanges {
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
     protected membersChanges: MemberChanges;
-    protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
+    protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
     private _templateFiles: string[] = [];
@@ -104,6 +104,7 @@ export class UpdateChanges {
 
     /**
      * Create a new base schematic to apply changes
+     *
      * @param rootPath Root folder for the schematic to read configs, pass __dirname
      */
     constructor(private rootPath: string, private host: Tree, private context?: SchematicContext) {
@@ -223,7 +224,7 @@ export class UpdateChanges {
         }
     }
 
-    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.output) {
+    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.Output) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
 
@@ -237,7 +238,7 @@ export class UpdateChanges {
             let groups = 1;
             let searchPattern;
 
-            if (type === BindingType.output) {
+            if (type === BindingType.Output) {
                 base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 replace = `(${change.replaceWith})=$1$2$1`;
             } else {
@@ -375,7 +376,7 @@ export class UpdateChanges {
     protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
         const langServ = this.getDefaultLanguageService(entryPath);
         let content = this.host.read(entryPath).toString();
-        const changes = new Set<{ change, position }>();
+        const changes = new Set<{ change; position }>();
         for (const change of memberChanges.changes) {
             const matches = findMatches(content, change);
             for (const matchPosition of matches) {
@@ -489,7 +490,7 @@ export class UpdateChanges {
         if (this.inputChanges && this.inputChanges.changes.length) {
             // name change of input
             for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
+                this.updateBindings(entryPath, this.inputChanges, BindingType.Input);
             }
         }
     }
@@ -528,6 +529,6 @@ export class UpdateChanges {
 }
 
 export enum BindingType {
-    output,
-    input
+    Output,
+    Input
 }

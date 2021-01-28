@@ -10,25 +10,23 @@ import { RemoteService } from '../shared/remote.service';
     encapsulation: ViewEncapsulation.None
 })
 export class VirtualForSampleComponent implements OnInit {
-    public alignment = ButtonGroupAlignment.vertical;
-    search1: string;
-    data = [];
-    remoteData: any;
-    totalCount: any;
-    options = {};
-    prevRequest: any;
-    itemSize = '50px';
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
-    virtDirVertical: IgxForOfDirective<any>;
+    private virtDirVertical: IgxForOfDirective<any>;
 
     @ViewChild('virtDirHorizontal', { read: IgxForOfDirective, static: true })
-    virtDirHorizontal: IgxForOfDirective<any>;
+    private virtDirHorizontal: IgxForOfDirective<any>;
 
     @ViewChild('virtDirRemote', { read: IgxForOfDirective, static: true })
-    virtDirRemote: IgxForOfDirective<any>;
+    private virtDirRemote: IgxForOfDirective<any>;
 
-    @ViewChild('virtDirVariableVertical', { read: IgxForOfDirective, static: true })
-    virtDirVariableVertical: IgxForOfDirective<any>;
+    public alignment = ButtonGroupAlignment.vertical;
+    public search1: string;
+    public data = [];
+    public remoteData: any;
+    public totalCount: any;
+    public options = {};
+    public prevRequest: any;
+    public itemSize = '50px';
 
     constructor(private remoteService: RemoteService) {
         this.remoteService.urlBuilder = (dataState) => {
@@ -45,7 +43,7 @@ export class VirtualForSampleComponent implements OnInit {
         };
      }
 
-    ngOnInit(): void {
+     public ngOnInit(): void {
         this.remoteData = this.remoteService.remoteData;
         this.totalCount = this.remoteService.totalCount;
         const data = [{
@@ -136,7 +134,7 @@ export class VirtualForSampleComponent implements OnInit {
         }
         this.data = data;
     }
-    chunkLoading(evt) {
+    public chunkLoading(evt) {
         if (this.prevRequest) {
             this.prevRequest.unsubscribe();
         }
@@ -144,52 +142,52 @@ export class VirtualForSampleComponent implements OnInit {
             this.virtDirRemote.cdr.detectChanges();
         });
     }
-    scrNextRow() {
+    public scrNextRow() {
         this.virtDirVertical.scrollNext();
     }
-    scrPrevRow() {
+    public scrPrevRow() {
         this.virtDirVertical.scrollPrev();
     }
-    scrNextPage() {
+    public scrNextPage() {
         this.virtDirVertical.scrollNextPage();
     }
-    scrPrevPage() {
+    public scrPrevPage() {
         this.virtDirVertical.scrollPrevPage();
     }
-    scrScrollTo(index) {
+    public scrScrollTo(index) {
         this.virtDirVertical.scrollTo(parseInt(index, 10));
     }
-    scrNextCol() {
+    public scrNextCol() {
         this.virtDirHorizontal.scrollNext();
     }
-    scrPrevCol() {
+    public scrPrevCol() {
         this.virtDirHorizontal.scrollPrev();
     }
-    scrNextHorizontalPage() {
+    public  scrNextHorizontalPage() {
         this.virtDirHorizontal.scrollNextPage();
     }
-    scrPrevHorizontalPage() {
+    public scrPrevHorizontalPage() {
         this.virtDirHorizontal.scrollPrevPage();
     }
 
-    horizontalVisibleItemCount() {
+    public horizontalVisibleItemCount() {
         const count = this.virtDirHorizontal.getItemCountInView();
         console.log(count);
     }
-    verticalVisibleItemCount() {
+    public verticalVisibleItemCount() {
         const count = this.virtDirVertical.getItemCountInView();
         console.log(count);
     }
 
-    scrHorizontalScrollTo(index) {
+    public scrHorizontalScrollTo(index) {
         this.virtDirHorizontal.scrollTo(parseInt(index, 10));
     }
 
-    trackByKey(index, item) {
+    public trackByKey(index, item) {
         return item.key;
     }
 
-    changeItemSize() {
+    public changeItemSize() {
         if (this.itemSize === '50px') {
             this.itemSize = '100px';
         } else {

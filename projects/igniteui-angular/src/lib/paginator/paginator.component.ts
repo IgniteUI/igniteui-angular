@@ -18,18 +18,118 @@ import { IPageEventArgs, IPagingEventArgs } from '../grids/common/events';
     templateUrl: 'paginator.component.html',
 })
 export class IgxPaginatorComponent extends DisplayDensityBase {
+    /**
+     * An @Input property that sets if the pager in the paginator should be enabled.
+     * ```html
+     * <igx-paginator [pagerEnabled]="true"></igx-paginator>
+     * ```
+     *
+     * @memberof IgxPaginatorComponent
+     */
+    @Input()
+    public pagerEnabled = true;
+
+    /**
+     * An @Input property that sets if the pager in the paginator should be hidden.
+     * ```html
+     * <igx-paginator [pagerHidden]="true"></igx-paginator>
+     * ```
+     *
+     * @memberof IgxPaginatorComponent
+     */
+    @Input()
+    public pagerHidden = false;
+
+    /**
+     * An @Input property that sets if the dropdown in the paginator should be enabled.
+     * ```html
+     * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
+     * ```
+     *
+     * @memberof IgxPaginatorComponent
+     */
+    @Input()
+    public dropdownEnabled = true;
+
+    /**
+     * An @Input property that sets if the dropdown in the paginator should be hidden.
+     * ```html
+     * <igx-paginator [dropdownHidden]="true"></igx-paginator>
+     * ```
+     *
+     * @memberof IgxPaginatorComponent
+     */
+    @Input()
+    public dropdownHidden = false;
+
+    /**
+     * @deprecated Use 'resourceStrings' instead.
+     * An @Input property, sets number of label of the select.
+     * The default is 'Items per page' localized string.
+     * ```html
+     * <igx-paginator label="My custom label"></igx-paginator>
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
+    @DeprecateProperty(`'selectLabel' property is deprecated. Use 'resourceStrings' instead.`)
+    @Input()
+    public selectLabel;
+
+    /**
+     * @deprecated Use 'resourceStrings' instead.
+     * An @Input property, sets a preposition between the current page and total pages.
+     * The default is 'of' localized string.
+     * @memberof IgxPaginatorComponent
+     */
+    @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
+    @Input()
+    public prepositionPage;
+
+    /**
+     * Emitted when `perPage` property value of the paginator is changed.
+     *
+     * @example
+     * ```html
+     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
+     */
+    @Output()
+    public perPageChange = new EventEmitter<number>();
+
+    /**
+     * Emitted after the current page is changed.
+     *
+     * @example
+     * ```html
+     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
+     */
+    @Output()
+    public pageChange = new EventEmitter<number>();
 
     /**
      * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
-    private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
-    private _overlaySettings: OverlaySettings = {};
+
     protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions;
-    private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
+
+    private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
+    private _overlaySettings: OverlaySettings = {};
+    private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
 
     /**
      * Sets the class of the IgxPaginatorComponent based
@@ -56,6 +156,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let page = this.paginator.page;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -74,6 +175,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let itemsPerPage = this.paginator.perPage;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -96,6 +198,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let totalRecords = this.paginator.totalRecords;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -113,6 +216,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * let options = this.paginator.selectOptions;
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     @Input()
@@ -124,46 +228,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._selectOptions = this.sortUniqueOptions(value, this._perPage);
         this.defaultSelectValues = [...value];
     }
-
-    /**
-     * An @Input property that sets if the pager in the paginator should be enabled.
-     * ```html
-     * <igx-paginator [pagerEnabled]="true"></igx-paginator>
-     * ```
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public pagerEnabled = true;
-
-    /**
-     * An @Input property that sets if the pager in the paginator should be hidden.
-     * ```html
-     * <igx-paginator [pagerHidden]="true"></igx-paginator>
-     * ```
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public pagerHidden = false;
-
-    /**
-     * An @Input property that sets if the dropdown in the paginator should be enabled.
-     * ```html
-     * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
-     * ```
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public dropdownEnabled = true;
-
-    /**
-     * An @Input property that sets if the dropdown in the paginator should be hidden.
-     * ```html
-     * <igx-paginator [dropdownHidden]="true"></igx-paginator>
-     * ```
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public dropdownHidden = false;
 
     /**
      * An @Input property that sets custom OverlaySettings.
@@ -273,8 +337,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
 
-    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
-    ) {
+    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
     }
 
@@ -313,12 +376,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this.isLastPage || !this.pagerEnabled;
     }
 
-    private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
-        return Array.from(new Set([...values, newOption])).sort((a, b) => a - b);
-    }
-
     /**
      * Sets DisplayDensity for the <select> inside the paginator
+     *
      * @hidden
      */
     public paginatorSelectDisplayDensity(): string {
@@ -332,6 +392,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.nextPage();
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
@@ -342,6 +403,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.previousPage();
      * ```
+     *
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
@@ -352,6 +414,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.paginate(1);
      * ```
+     *
      * @param val
      * @memberof IgxPaginatorComponent
      */
@@ -368,6 +431,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
         this.page = eventArgs.newPage = cancelableEventArgs.newPage;
         this.onPagingDone.emit(eventArgs);
+    }
+
+    private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
+        return Array.from(new Set([...values, newOption])).sort((a, b) => a - b);
     }
 }
 

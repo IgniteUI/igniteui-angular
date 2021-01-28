@@ -222,12 +222,12 @@ describe('IgxGrid - Summaries #grid', () => {
 
                 // Get last cell of first data row
                 const lastColumnNormalCell =  GridFunctions.getRowCells(fixture, 0)[4];
-                const lastColumnNormalCellRect = (<HTMLElement>lastColumnNormalCell.nativeElement).getBoundingClientRect();
+                const lastColumnNormalCellRect = lastColumnNormalCell.nativeElement.getBoundingClientRect();
 
                 // Get last summary cell of the summary row
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
                 const lastColumnSummaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 4);
-                const lastColumnSummaryCellRect = (<HTMLElement>lastColumnSummaryCell.nativeElement).getBoundingClientRect();
+                const lastColumnSummaryCellRect = lastColumnSummaryCell.nativeElement.getBoundingClientRect();
 
                 expect(lastColumnSummaryCellRect.left).toBe(lastColumnNormalCellRect.left,
                     'summary cell and data cell are not left aligned');
@@ -2331,14 +2331,14 @@ describe('IgxGrid - Summaries #grid', () => {
         }));
     });
 
-    function verifySummaryRowIndentationByDataRowIndex(fixture, visibleIndex) {
+    const verifySummaryRowIndentationByDataRowIndex = (fixture, visibleIndex) => {
         const grid = fixture.componentInstance.grid;
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex ? visibleIndex : grid.dataView.length);
         const summaryRowIndentation = summaryRow.query(By.css('.igx-grid__summaries-patch'));
         expect(summaryRowIndentation.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
-    }
+    };
 
-    function verifyBaseSummaries(fixture) {
+    const verifyBaseSummaries = (fixture) => {
         const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
@@ -2348,9 +2348,9 @@ describe('IgxGrid - Summaries #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
             ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
-    }
+    };
 
-    function verifySummariesForParentID19(fixture, vissibleIndex) {
+    const verifySummariesForParentID19 = (fixture, vissibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '19', '19', '19', '19']);
@@ -2358,9 +2358,9 @@ describe('IgxGrid - Summaries #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['1', 'May 4, 2014', 'May 4, 2014']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '44', '44', '44', '44']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['1']);
-    }
+    };
 
-    function verifySummariesForParentID147(fixture, vissibleIndex) {
+    const verifySummariesForParentID147 = (fixture, vissibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '147', '147', '441', '147']);
@@ -2369,9 +2369,9 @@ describe('IgxGrid - Summaries #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
             ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
-    }
+    };
 
-    function verifySummariesForParentID17(fixture, vissibleIndex) {
+    const verifySummariesForParentID17 = (fixture, vissibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
@@ -2379,7 +2379,7 @@ describe('IgxGrid - Summaries #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
-    }
+    };
 });
 
 class DealsSummary extends IgxNumberSummaryOperand {
@@ -2506,9 +2506,9 @@ class AllDataAvgSummary extends IgxSummaryOperand {
 })
 
 export class CustomSummariesComponent {
-    public data = SampleTestData.foodProductData();
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
+    public data = SampleTestData.foodProductData();
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
     public earliest = EarliestSummary;

@@ -105,7 +105,7 @@ describe('Icon Service', () => {
             (iconService as any)._iconLoaded.next({
                 name: iconName,
                 value: svgText,
-                fontSet: fontSet
+                fontSet
             });
         });
 

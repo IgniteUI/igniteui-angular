@@ -38,14 +38,6 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     templateUrl: './excel-style-default-expression.component.html'
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
-    private destroy$ = new Subject<boolean>();
-
-    public dropDownOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: true
-    };
-
     @Input()
     public column: IgxColumnComponent;
 
@@ -78,6 +70,12 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     @ViewChild('inputValues', { read: IgxInputDirective, static: true })
     protected inputValuesDirective: IgxInputDirective;
+
+    public dropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
 
     get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;

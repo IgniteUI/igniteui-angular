@@ -11,15 +11,7 @@ import { IBaseEventArgs } from '../../core/utils';
  */
 @Directive({ selector: '[igxTemplateOutlet]' })
 export class IgxTemplateOutletDirective implements OnChanges {
-    private _viewRef !: EmbeddedViewRef<any>;
-
-    /**
-     * The embedded views cache. Collection is key-value paired.
-     * Key is the template id, value is the embedded view for the related template.
-     */
-    private _embeddedViewsMap: Map<string, EmbeddedViewRef<any>> = new Map();
-
-    @Input() public igxTemplateOutletContext !: Object;
+    @Input() public igxTemplateOutletContext !: any;
 
     @Input() public igxTemplateOutlet !: TemplateRef<any>;
 
@@ -34,6 +26,14 @@ export class IgxTemplateOutletDirective implements OnChanges {
 
     @Output()
     public onBeforeViewDetach = new EventEmitter<IViewChangeEventArgs>();
+
+    private _viewRef !: EmbeddedViewRef<any>;
+
+    /**
+     * The embedded views cache. Collection is key-value paired.
+     * Key is the template id, value is the embedded view for the related template.
+     */
+    private _embeddedViewsMap: Map<string, EmbeddedViewRef<any>> = new Map();
 
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
@@ -153,9 +153,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
         }
     }
 
-    private _updateExistingContext(ctx: Object): void {
+    private _updateExistingContext(ctx: any): void {
         for (const propName of Object.keys(ctx)) {
-            (<any>this._viewRef.context)[propName] = (<any>this.igxTemplateOutletContext)[propName];
+            this._viewRef.context[propName] = this.igxTemplateOutletContext[propName];
         }
     }
 

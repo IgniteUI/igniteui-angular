@@ -73,7 +73,9 @@ import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-maste
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
-import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import {
+    HierarchicalGridRemoteVirtualizationComponent
+} from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 import { GridNestedPropsSampleComponent } from './grid-nested-props/grid-nested-props.sample';
 import { GridColumnActionsSampleComponent } from './grid-column-actions/grid-column-actions.sample';
