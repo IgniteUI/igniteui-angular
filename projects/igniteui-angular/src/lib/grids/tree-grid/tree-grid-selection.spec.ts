@@ -1415,7 +1415,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
-        it('Delete one of the selected parent children. Parent checkbox state SHOULD be selected.', async () => {
+        fit('Delete one of the children of selected parent. Parent checkbox state SHOULD be selected.', async () => {
+            const trans = treeGrid.transactions;
             treeGrid.selectRows([317], true);
             fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(4);
@@ -1430,6 +1431,25 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             await wait(100);
             fix.detectChanges();
 
+            expect(getVisibleSelectedRows(fix).length).toBe(3);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            trans.undo();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            trans.redo();
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(3);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
