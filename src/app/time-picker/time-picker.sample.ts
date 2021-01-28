@@ -13,45 +13,45 @@ export class TimePickerSampleComponent implements AfterViewInit {
     @ViewChild('target')
     public target: IgxInputDirective;
 
-    max = '19:00';
-    min = '09:00';
+    public max = '19:00';
+    public min = '09:00';
 
-    itemsDelta = { hours: 1, minutes: 5 };
-    format = 'hh:mm:ss tt';
-    isSpinLoop = true;
-    isVertical = true;
-    mode = InteractionMode.DropDown;
+    public itemsDelta = { hours: 1, minutes: 5 };
+    public format = 'hh:mm:ss tt';
+    public isSpinLoop = true;
+    public isVertical = true;
+    public mode = InteractionMode.DropDown;
 
-    date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
-    date = new Date(2018, 10, 27, 9, 45, 0, 0);
-    val = new Date(0, 0, 0, 19, 35, 30, 0);
-    today = new Date(Date.now());
+    public date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
+    public date = new Date(2018, 10, 27, 9, 45, 0, 0);
+    public val = new Date(0, 0, 0, 19, 35, 30, 0);
+    public today = new Date(Date.now());
 
-    isRequired = true;
+    public isRequired = true;
 
-    myOverlaySettings: OverlaySettings = {
+    public myOverlaySettings: OverlaySettings = {
         modal: false,
         closeOnOutsideClick: true,
         positionStrategy: new AutoPositionStrategy()
     };
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.myOverlaySettings.target = this.target.nativeElement;
     }
 
-    showDate(date) {
+    public showDate(date) {
         return date ? date.toLocaleString() : 'Value is null.';
     }
 
-    change() {
+    public change() {
         this.isRequired = !this.isRequired;
     }
 
-    valueChanged(event) {
+    public valueChanged(event) {
         console.log(event);
     }
 
-    validationFailed(event) {
+    public validationFailed(event) {
         console.log(event);
     }
 

@@ -5,15 +5,15 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class RemoteService {
-
     public remotePagingData: BehaviorSubject<any[]>;
     public urlPaging = 'https://www.igniteui.com/api/products';
-    totalCount: Observable<number>;
-    _totalCount: BehaviorSubject<number>;
-    remoteData: Observable<any[]>;
-    _remoteData: BehaviorSubject<any[]>;
-    url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
-    urlBuilder;
+    public totalCount: Observable<number>;
+    public remoteData: Observable<any[]>;
+    public url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
+    public urlBuilder;
+
+    private _remoteData: BehaviorSubject<any[]>;
+    private _totalCount: BehaviorSubject<number>;
 
     constructor(private http: HttpClient) {
         this._remoteData = new BehaviorSubject([]);
@@ -23,15 +23,15 @@ export class RemoteService {
         this.remotePagingData = new BehaviorSubject([]);
     }
 
-    nullData() {
+    public nullData() {
         this._remoteData.next(null);
     }
 
-    undefinedData() {
+    public undefinedData() {
         this._remoteData.next(undefined);
     }
 
-    getData(data?: any, cb?: (any) => void) {
+    public getData(data?: any, cb?: (any) => void) {
         const dataState = data;
         return this.http.get(this.buildUrl(dataState)).pipe(
             map(response => response),
@@ -45,7 +45,7 @@ export class RemoteService {
         });
     }
 
-    getOrdersData(url: string, data?: any, cb?: (any) => void) {
+    public getOrdersData(url: string, data?: any, cb?: (any) => void) {
         return this.http.get(url).pipe(
             map(response => response),
         )
@@ -58,7 +58,7 @@ export class RemoteService {
         });
     }
 
-    buildUrl(dataState: any) {
+    public buildUrl(dataState: any) {
         return this.urlBuilder(dataState);
     }
 

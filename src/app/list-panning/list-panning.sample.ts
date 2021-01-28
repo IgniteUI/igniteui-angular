@@ -8,9 +8,8 @@ import { IgxToastComponent } from 'igniteui-angular';
     encapsulation: ViewEncapsulation.None
 })
 export class ListPanningSampleComponent {
-
     @ViewChild('toast', { static: true })
-    toast: IgxToastComponent;
+    private toast: IgxToastComponent;
 
     public navItems = [{
         avatar: 'assets/images/avatar/1.jpg',

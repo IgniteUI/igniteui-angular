@@ -1,21 +1,18 @@
-import { IgxTreeGridComponent } from './../../../projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.component';
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent, IgxGridComponent, DisplayDensity, ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
+import { Component, OnInit } from '@angular/core';
+import { ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tree-grid-add-row',
     templateUrl: `tree-grid-add-row.sample.html`
 })
 export class TreeGridAddRowSampleComponent implements OnInit {
-    @ViewChild('actionstrip1') actionStrip: IgxActionStripComponent;
-    @ViewChild('grid', { static: true }) grid1: IgxTreeGridComponent;
     public result: string;
 
-    data: any[];
-    columns: any[];
-    pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+    public data: any[];
+    public columns: any[];
+    public pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
 
-    onMouseOver(event, grid, actionStrip) {
+    public onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
             const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
@@ -23,13 +20,13 @@ export class TreeGridAddRowSampleComponent implements OnInit {
         }
     }
 
-    onMouseLeave(actionstrip, event?) {
+    public onMouseLeave(actionstrip, event?) {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: false },
             { field: 'Salary', label: 'Salary', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: true },

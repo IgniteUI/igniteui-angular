@@ -46,7 +46,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
 
     public loadData() {
         this.grid.shouldGenerate = true;
-        this.remoteService.getData(this.grid.virtualizationState, (data) => {
+        this.remoteService.getData(this.grid.virtualizationState, () => {
             this.remoteData = this.remoteService.remoteData;
         });
     }
@@ -71,7 +71,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
         this.remoteData = this.remoteService.remoteData;
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         if (this.prevRequest) {
             this.prevRequest.unsubscribe();
         }

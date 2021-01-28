@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild  } from '@angular/core';
-import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, DisplayDensity } from 'igniteui-angular';
+import { Component, OnInit } from '@angular/core';
+import { IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent, DisplayDensity } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-toolbar-sample',
@@ -7,21 +7,18 @@ import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService, IgxCo
     templateUrl: 'grid-toolbar.sample.html'
 })
 export class GridToolbarSampleComponent implements OnInit {
-    @ViewChild('grid1', { read: IgxGridComponent, static: true })
-    public igxGrid1: IgxGridComponent;
-
-    showToolbar = true;
-    title = 'Custom Title';
-    customContent = false;
-    showProgress = false;
-    hidingEnabled = true;
-    pinningEnabled = true;
-    csv = true;
-    excel = true;
+    public showToolbar = true;
+    public title = 'Custom Title';
+    public customContent = false;
+    public showProgress = false;
+    public hidingEnabled = true;
+    public pinningEnabled = true;
+    public csv = true;
+    public excel = true;
 
     public _displayDensity = [DisplayDensity.comfortable, DisplayDensity.cosy, DisplayDensity.compact];
 
-    data = [
+    public data = [
         {
             Name: 'Alice',
             Age: 25
@@ -35,10 +32,10 @@ export class GridToolbarSampleComponent implements OnInit {
     constructor() {
     }
 
-    ngOnInit() {
+    public ngOnInit() {
     }
 
-    toolbarExportClicked(obj) {
+    public toolbarExportClicked(obj) {
         obj.cancel = true;
         let exporter;
         switch (obj.type) {
