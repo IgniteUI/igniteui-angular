@@ -190,7 +190,7 @@ describe('igxOverlay', () => {
     });
 
     const verifyOverlayMargins = (overlaySettings: OverlaySettings, overlay: IgxOverlayService, fix, expectedMargin) => {
-        overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+        overlay.show(overlay.attach(SimpleDynamicComponent, overlaySettings));
         tick();
         fix.detectChanges();
         const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
