@@ -1445,7 +1445,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
         it(`Parent in indeterminate state. Filter out its children -> parent not selected. Select parent and add new child.
         Parent -> not selected. Revert filtering so that previous records are back in the view and parent should become in
-        indeterminate state because one of it children is selected`, async () => {
+        indeterminate state because one of it children is selected`, fakeAsync(() => {
 
             treeGrid.selectRows([998], true);
             fix.detectChanges();
@@ -1473,15 +1473,16 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 }
             ];
             treeGrid.filter('ID', null, expressionTree);
+            fix.detectChanges();
 
-            await wait(100);
+            tick(100);
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
 
-            treeGrid.selectRows([317], true);
+            treeGrid.selectRows([317]);
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(1);
@@ -1494,8 +1495,9 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 HireDate: undefined,
                 Age: undefined
             }, 317);
+            fix.detectChanges();
 
-            await wait(100);
+            tick(100);
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(0);
@@ -1503,24 +1505,25 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
 
-            await wait(100);
+            tick(100);
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(1);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
-        });
+        }));
 
         it(`Selected parent. Filter out some of the children and delete otheres.
-        Parent should be not selected`, async () => {
+        Parent should be not selected`, fakeAsync(() => {
 
             treeGrid.selectRows([317], true);
             fix.detectChanges();
 
-            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
-            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
 
             const expressionTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
             expressionTree.filteringOperands = [
@@ -1536,17 +1539,21 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 }
             ];
             treeGrid.filter('ID', null, expressionTree);
-
-            treeGrid.deleteRow(299);
-
-            await wait(100);
             fix.detectChanges();
 
+            tick(100);
+            fix.detectChanges();
+
+            treeGrid.deleteRow(299);
+            fix.detectChanges();
+
+            tick(100);
+            fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
-        });
+        }));
     });
 
     describe('Cascading Row Selection with Transaction', () => {
