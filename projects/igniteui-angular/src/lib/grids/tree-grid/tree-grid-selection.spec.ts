@@ -29,6 +29,8 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
 import { TransactionType } from '../../services/public_api';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -1334,7 +1336,51 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
         });
+
+        it(`No rows are selected. Filter out all children for certain parent. Select this parent. It should be the only one within
+        the selectedRows collection. Remove filtering. The selectedRows collection should be empty.
+        All non-direct parents’ checkbox states should be set correctly as well.`, async () => {
+
+            const expressionTree = new FilteringExpressionsTree(FilteringLogic.And, 'ID');
+            expressionTree.filteringOperands = [
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 711
+                },
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 998
+                },
+                {
+                    condition: IgxNumberFilteringOperand.instance().condition('doesNotEqual'),
+                    fieldName: 'ID',
+                    searchVal: 299
+                }
+            ];
+            treeGrid.filter('ID', null, expressionTree);
+
+            await wait(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+
+            treeGrid.selectRows([317], true);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+
+            treeGrid.clearFilter();
+
+            await wait(100);
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+        });
     });
+
     describe('Cascading Row Selection with Transaction', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridCascadingSelectionTransactionComponent);
