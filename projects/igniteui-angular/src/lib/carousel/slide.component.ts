@@ -70,6 +70,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
     /**
      * Returns the `role` of the slide component.
      * By default is set to `tabpanel`
+     *
      * @memberof IgxSlideComponent
      */
     @HostBinding('attr.role')
