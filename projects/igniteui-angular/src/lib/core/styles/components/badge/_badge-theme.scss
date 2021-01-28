@@ -99,7 +99,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-badge($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
 

@@ -91,7 +91,7 @@
 /// @requires em
 /// @requires --var
 @mixin igx-checkbox($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     @include scale-in-out($start-scale: .9);
 

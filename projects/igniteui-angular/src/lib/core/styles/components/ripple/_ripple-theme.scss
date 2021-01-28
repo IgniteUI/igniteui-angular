@@ -24,11 +24,11 @@
     $schema: $light-schema,
     $color: null
 ) {
-    $name: 'igx-ripple';
+    $name: '[igxRipple]';
     $ripple-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $ripple-schema: map-get($schema, $name);
+    @if map-has-key($schema, 'igx-ripple') {
+        $ripple-schema: map-get($schema, 'igx-ripple');
     } @else {
         $ripple-schema: $schema;
     }
@@ -47,7 +47,7 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires --var
 @mixin igx-ripple($theme, $palette: $default-palette) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %igx-ripple-display {
         display: block;

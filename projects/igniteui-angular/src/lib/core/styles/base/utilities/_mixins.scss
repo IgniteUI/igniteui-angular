@@ -248,11 +248,15 @@
 /// @access public
 /// @param {map} $theme - The component theme to be used
 /// @requires {mixin} css-vars-from-theme
-@mixin igx-css-vars($theme, $s: null) {
-    $name: if($s, $s, map-get($theme, 'name'));
+@mixin igx-css-vars($theme, $scope: null) {
+    $name: if($scope, $scope, map-get($theme, 'name'));
 
     @if not(legacy()) {
-        #{$name} {
+        @if is-root() {
+            #{$name} {
+                @include css-vars-from-theme($theme);
+            }
+        } @else {
             @include css-vars-from-theme($theme);
         }
     }
