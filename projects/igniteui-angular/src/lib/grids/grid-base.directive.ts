@@ -637,6 +637,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before filtering expressions are applied.
+     *
      * @remarks
      * Returns an `IFilteringEventArgs` object. `filteringExpressions` key holds the filtering expressions for the column.
      * @example
