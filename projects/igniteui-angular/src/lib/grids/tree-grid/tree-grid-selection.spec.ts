@@ -1415,7 +1415,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
-        fit('Delete one of the children of selected parent. Parent checkbox state SHOULD be selected.', async () => {
+        it('Delete one of the children of selected parent. Parent checkbox state SHOULD be selected.', async () => {
             const trans = treeGrid.transactions;
             treeGrid.selectRows([317], true);
             fix.detectChanges();
