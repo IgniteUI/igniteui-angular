@@ -1,0 +1,16 @@
+@import '../base/utilities/functions';
+
+@include describe('Unit conversions') {
+    @include it('should convert pixels to rem') {
+        @include assert-equal(rem(16px, 16px), 1rem);
+    }
+
+    @include it('should convert pixels to em') {
+        @include assert-equal(em(16px, 16px), 1em);
+    }
+
+    @include it('should convert relative units to pixels') {
+        @include assert-equal(px(1em, 16px), 16px);
+        @include assert-equal(px(1rem, 16px), 16px);
+    }
+}
