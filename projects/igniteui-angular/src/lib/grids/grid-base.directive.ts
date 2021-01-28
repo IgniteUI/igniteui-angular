@@ -462,6 +462,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after `IgxColumnComponent` is pinned.
+     *
      * @remarks
      * The index that the column is inserted at may be changed through the `insertAtIndex` property.
      * @example
@@ -610,6 +611,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before sorting expressions are applied.
+     *
      * @remarks
      * Returns an `ISortingEventArgs` object. `sortingExpressions` key holds the sorting expressions.
      * @example
@@ -660,6 +662,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before paging is performed.
+     *
      * @remarks
      * Returns an object consisting of the previous and next pages.
      * @example
@@ -711,6 +714,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted constantly while moving the resize handler.
+     *
      * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
      * @example
@@ -761,6 +765,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted before column visibility is changed.
+     *
      * @remarks
      * Args: { column: any, newValue: boolean }
      * @example

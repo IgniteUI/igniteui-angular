@@ -119,6 +119,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     /**
      * Emitted before paging is performed.
+     *
      * @remarks
      * Returns an object consisting of the previous and current pages.
      * @example
@@ -131,6 +132,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     /**
      * Emitted after paging is performed.
+     *
      * @remarks
      * Returns an object consisting of the previous and current pages.
      * @example
@@ -343,9 +345,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginate(this._page + 1);
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
@@ -356,9 +356,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginate(this._page - 1);
     }
     /**
      * Goes to the desired page index.
@@ -373,7 +371,16 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         if (val < 0 || val > this.totalPages - 1) {
             return;
         }
-        this.page = val;
+        const eventArgs = { previous: this._page, newPage: val };
+        const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
+        this.onPaging.emit(cancelableEventArgs);
+
+        if (cancelableEventArgs.cancel) {
+            return;
+        }
+
+        this.page = eventArgs.newPage = cancelableEventArgs.newPage;
+        this.onPagingDone.emit(eventArgs);
     }
 
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
