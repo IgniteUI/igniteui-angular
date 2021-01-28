@@ -1,5 +1,12 @@
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
     [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
+    <igx-grid-toolbar *ngIf="showToolbar">
+        <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
+        <igx-grid-toolbar-actions>
+            <igx-grid-toolbar-pinning *ngIf="pinningEnabled"></igx-grid-toolbar-pinning>
+            <igx-grid-toolbar-hiding *ngIf="hidingEnabled"></igx-grid-toolbar-hiding>
+        </igx-grid-toolbar-actions>
+    </igx-grid-toolbar>
     <igx-column field="Index" header="Index" [width]="cw">
     </igx-column>
     <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
@@ -46,10 +53,10 @@
 
 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
 <igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
-<igx-switch [(ngModel)]="grid1.columnHiding">columnHiding</igx-switch>
-<igx-switch [(ngModel)]="grid1.columnPinning">columnPinning</igx-switch>
+<igx-switch [(ngModel)]="hidingEnabled">columnHiding</igx-switch>
+<igx-switch [(ngModel)]="pinningEnabled">columnPinning</igx-switch>
 <igx-switch (change)='onChange()'>Left Pinning toggle</igx-switch>
-<igx-switch [(ngModel)]="grid1.showToolbar">showToolbar</igx-switch>
+<igx-switch [(ngModel)]="showToolbar">showToolbar</igx-switch>
 <igx-switch [(ngModel)]="groupable">ReorderLevel groupable</igx-switch>
 <igx-switch [(ngModel)]="filterable">ReorderLevel filterable</igx-switch>
 <igx-switch [(ngModel)]="disableHiding">ReorderLevel disableHiding</igx-switch>
