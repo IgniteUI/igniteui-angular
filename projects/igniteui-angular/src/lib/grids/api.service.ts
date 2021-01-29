@@ -545,20 +545,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const newExpressionsTree: FilteringExpressionsTree = createNewTree ?
             new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName) : filteringState as FilteringExpressionsTree;
-        if (filteringState.type) {
-            newExpressionsTree.type = filteringState.type;
-        }
-
-        if (createNewTree && filteringState && filteringState instanceof FilteringExpressionsTree) {
-            for (let index = 0; index < filteringState.filteringOperands.length; index++) {
-                if (!(filteringState.filteringOperands[index] instanceof FilteringExpressionsTree)) {
-                    newExpressionsTree.fieldName = filteringState.filteringOperands[index].fieldName;
-                    newExpressionsTree.filteringOperands.push(filteringState.filteringOperands[index] as IFilteringExpression);
-                } else {
-                    newExpressionsTree.filteringOperands.push(filteringState.filteringOperands[index]);
-                }
-            }
-        }
 
         if (oldExpressionsTreeIndex === -1) {
             // no expressions tree found for this field
