@@ -91,7 +91,6 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
 const DEFAULT_COLUMN_WIDTH = 8.43;
 
 export abstract class IgxBaseExporter {
-    private flatRecords: IExportRecord[] = [];
     public onExportEnded = new EventEmitter<IBaseEventArgs>();
 
     /**
@@ -118,12 +117,12 @@ export abstract class IgxBaseExporter {
      */
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
-    protected _isTreeGrid = false;
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
 
     private _columnList: any[];
     private _columnWidthList: number[];
+    private flatRecords: IExportRecord[] = [];
 
     public get columnWidthList() {
         return this._columnWidthList;
@@ -273,7 +272,6 @@ export abstract class IgxBaseExporter {
             this.resetDefaults();
         });
     }
-
 
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData) {
@@ -425,15 +423,15 @@ export abstract class IgxBaseExporter {
             return;
         }
 
-        for (let i = 0; i < records.length; i++) {
+        for (const record of records) {
             const hierarchicalRecord: IExportRecord = {
-                data: records[i].data,
-                level: records[i].level,
+                data: record.data,
+                level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.TreeGridRecord
             };
             this.flatRecords.push(hierarchicalRecord);
-            this.addTreeGridData(records[i].children, parentExpanded && records[i].expanded);
+            this.addTreeGridData(record.children, parentExpanded && record.expanded);
         }
     }
 
@@ -441,14 +439,14 @@ export abstract class IgxBaseExporter {
         if (!records) {
             return;
         }
-        for (let i = 0; i < records.length; i++) {
-            const record: IExportRecord = {
-                data: records[i],
+        for (const record of records) {
+            const data: IExportRecord = {
+                data: record,
                 type: ExportRecordType.DataRecord,
                 level: 0
             };
 
-            this.flatRecords.push(record);
+            this.flatRecords.push(data);
         }
     }
 
@@ -460,8 +458,7 @@ export abstract class IgxBaseExporter {
 
         const firstCol = this._columnList[0].field;
 
-        for (let i = 0; i < records.length; i++) {
-            const record = records[i];
+        for (const record of records) {
             let recordVal = record.value;
 
             const hierarchy = getHierarchy(record);
@@ -492,9 +489,9 @@ export abstract class IgxBaseExporter {
             } else {
                 const rowRecords = record.records;
 
-                for (let j = 0; j < rowRecords.length; j++) {
+                for (const rowRecord of rowRecords) {
                     const currentRecord: IExportRecord = {
-                        data: rowRecords[j],
+                        data: rowRecord,
                         level: record.level + 1,
                         hidden: !(expanded && parentExpanded),
                         type: ExportRecordType.DataRecord
