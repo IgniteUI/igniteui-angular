@@ -593,7 +593,7 @@
             }
         } @else {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call($func, $payload, $args...);
+                $result: call($func, null, $args...);
             } @else {
                 $result: call($func, $args...);
             }
