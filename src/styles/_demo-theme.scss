@@ -9,8 +9,8 @@ body {
     color: $igx-foreground-color;
 }
 
-@include igx-core($direction: ltr);
-@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: false);
+@include igx-core($direction: $direction);
+@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: $legacy-support);
 
 @include igx-typography($type-scale: $typography);
 
