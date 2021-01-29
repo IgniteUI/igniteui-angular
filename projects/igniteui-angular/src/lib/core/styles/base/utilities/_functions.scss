@@ -271,19 +271,13 @@
 /// Retrieves a contrast text color for a given color from a color palette.
 /// @access public
 /// @group Palettes
-/// @param {Map} $palette - The source palette map.
-/// @param {string} $color - The target color from the color palette.
+/// @param {Map} $palette [null] - The source palette map.
+/// @param {string} $color [primary] - The target color from the color palette.
 /// @param {number|variant} $variant [500] - The target color shade from the color palette.
 /// @requires igx-color
-/// @requires text-contrast
-/// @requires hexrgba
 /// @returns {Color} [#fff] - Returns white if no palette, color and/or variant matches found.
-@function igx-contrast-color($palette, $color, $variant: 500) {
-    $_color: igx-color($palette, $color, $variant);
-    @if $_color {
-        @return text-contrast($background: to-opaque($_color), $palette: $palette);
-    }
-    @return #fff;
+@function igx-contrast-color($palette: null, $color: primary, $variant: 500) {
+    @return igx-color($palette, $color, #{$variant}-contrast);
 }
 
 /// Test if `$value` is a valid direction.
