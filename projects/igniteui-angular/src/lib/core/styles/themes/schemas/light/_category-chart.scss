@@ -88,7 +88,7 @@ $_light-category-chart: extend(
 
         'title-text-color': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'title-text-style': null,
@@ -102,7 +102,7 @@ $_light-category-chart: extend(
 
         'subtitle-text-color': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'subtitle-text-style': null,
@@ -120,7 +120,7 @@ $_light-category-chart: extend(
 
         'x-axis-label-text-color': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'x-axis-label-text-style': null,
@@ -145,7 +145,7 @@ $_light-category-chart: extend(
 
         'x-axis-tick-stroke': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'x-axis-tick-stroke-thickness': null,
@@ -159,7 +159,7 @@ $_light-category-chart: extend(
 
         'x-axis-title-text-color': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'x-axis-title-text-style': null,
@@ -171,7 +171,7 @@ $_light-category-chart: extend(
 
         'y-axis-label-text-color': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'y-axis-label-text-style': null,
@@ -201,7 +201,7 @@ $_light-category-chart: extend(
 
         'y-axis-title-text-color': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'y-axis-title-text-style': null,
@@ -210,7 +210,7 @@ $_light-category-chart: extend(
 
         'y-axis-tick-stroke': (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         'y-axis-tick-stroke-thickness': null

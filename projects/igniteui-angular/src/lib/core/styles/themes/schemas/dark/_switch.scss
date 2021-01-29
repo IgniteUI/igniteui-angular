@@ -8,12 +8,12 @@
 
 /// Generates a base dark switch schema.
 /// @type {Map}
-/// @prop {Map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #000] - The color of the thumb when the switch is disabled.
+/// @prop {Map} thumb-disabled-color [igx-color: ('grays', 400), to-opaque: #000] - The color of the thumb when the switch is disabled.
 /// @see $default-palette
 $_base-dark-switch: (
     thumb-disabled-color: (
         igx-color: ('grays', 400),
-        hexrgba: #000
+        to-opaque: #000
     )
 );
 

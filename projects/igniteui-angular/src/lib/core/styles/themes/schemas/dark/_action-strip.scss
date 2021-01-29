@@ -8,7 +8,7 @@
 
 /// Generates a dark action-strip schema.
 /// @type {Map}
-/// @property {Map} actions-background [igx-color: ('grays', 200), hexrgba: #000, rgba: .8]- actions container background.
+/// @property {Map} actions-background [igx-color: ('grays', 200), to-opaque: #000, rgba: .8]- actions container background.
 /// @requires {function} extend
 /// @requires $_light-action-strip
 /// @see $default-palette
@@ -19,7 +19,7 @@ $_dark-action-strip: extend(
 
         actions-background: (
             igx-color: ('grays', 200),
-            hexrgba: #222,
+            to-opaque: #222,
             rgba: .8
         ),
     )

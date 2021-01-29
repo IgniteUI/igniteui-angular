@@ -49,7 +49,7 @@ $_dark-bootstrap-navdrawer: extend(
 
 /// Generates a dark indigo navdrawer schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 800), hexrgba: #000] - The navigation drawer background color.
+/// @prop {Map} background [igx-color: ('grays', 800), to-opaque: #000] - The navigation drawer background color.
 /// @prop {Map} item-header-text-color [igx-contrast-color: ('grays', 800)] - The header's idle text color.
 /// @prop {Map} item-text-color [igx-contrast-color: ('grays', 800), rgba: .8] - The item's idle text color.
 /// @prop {Map} item-icon-color [igx-contrast-color: ('grays', 800), rgba: .8] - The item's icon color.
@@ -65,7 +65,7 @@ $_dark-indigo-navdrawer: extend(
     (
         background: (
             igx-color: ('grays', 800),
-            hexrgba: #000
+            to-opaque: #000
         ),
 
         item-header-text-color: (

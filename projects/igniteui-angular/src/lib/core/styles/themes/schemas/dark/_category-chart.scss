@@ -8,53 +8,53 @@
 
 /// Generates the base dark category-chart schema.
 /// @type {Map}
-/// @prop {Color} title-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the chart title.
-/// @prop {Color} subtitle-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the chart subtitle.
-/// @prop {Color} x-axis-label-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of labels on the X-axis.
-/// @prop {Color} x-axis-tick-stroke [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color to apply to tickmarks along the X-axis.
-/// @prop {Color} x-axis-title-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the title on the X-axis.
-/// @prop {Color} y-axis-label-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of labels on the Y-axis.
-/// @prop {Color} y-axis-tick-stroke [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color to apply to tickmarks along the Y-axis.
-/// @prop {Color} y-axis-title-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the title on the Y-axis.
+/// @prop {Color} title-text-color [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color of the chart title.
+/// @prop {Color} subtitle-text-color [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color of the chart subtitle.
+/// @prop {Color} x-axis-label-text-color [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color of labels on the X-axis.
+/// @prop {Color} x-axis-tick-stroke [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color to apply to tickmarks along the X-axis.
+/// @prop {Color} x-axis-title-text-color [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color of the title on the X-axis.
+/// @prop {Color} y-axis-label-text-color [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color of labels on the Y-axis.
+/// @prop {Color} y-axis-tick-stroke [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color to apply to tickmarks along the Y-axis.
+/// @prop {Color} y-axis-title-text-color [igx-color: ('grays', 400), to-opaque: #fff] - Sets the color of the title on the Y-axis.
 $_base-dark-category-chart: (
     title-text-color: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     subtitle-text-color: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     x-axis-label-text-color: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     x-axis-title-text-color: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     x-axis-tick-stroke: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     y-axis-label-text-color: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     y-axis-title-text-color: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     y-axis-tick-stroke: (
         igx-color: ('grays', 400),
-        hexrgba: #fff
+        to-opaque: #fff
     )
 );
 
