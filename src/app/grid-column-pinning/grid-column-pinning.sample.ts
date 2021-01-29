@@ -33,6 +33,8 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     data: any[];
     columns: any[];
+    showToolbar: true;
+    pinningEnabled: true;
 
     onChange() {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
