@@ -38,7 +38,7 @@
     <span id="igxCarouselLbl" class="igx-carousel__label">{{getCarouselLabel}}</span>
 </div>
 
-<div class="igx-carousel__inner" aria-live="polite">
+<div class="igx-carousel__inner" [attr.aria-live]="!interval || stoppedByInteraction ? 'polite' : 'off'">
     <ng-content></ng-content>
 </div>
 

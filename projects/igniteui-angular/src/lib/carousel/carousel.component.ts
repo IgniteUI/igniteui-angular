@@ -382,11 +382,15 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public stoppedByInteraction: boolean;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;
     private playing: boolean;
-    private stoppedByInteraction: boolean;
     private destroyed: boolean;
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
