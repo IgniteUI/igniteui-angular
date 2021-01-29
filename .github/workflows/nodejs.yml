@@ -37,6 +37,7 @@ jobs:
             npm run test:lib:grid
             npm run test:lib:hgrid
             npm run test:lib:tgrid
+            npm run test:styles
             npm run test:schematics
         env:
             NODE_OPTIONS: --max_old_space_size=4096
