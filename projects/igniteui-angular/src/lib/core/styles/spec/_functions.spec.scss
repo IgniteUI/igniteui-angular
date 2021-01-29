@@ -112,14 +112,6 @@ $default-palette: $_palette;
             @include assert-equal(type-of($value), color);
             @include assert-equal($value, $_secondary);
         }
-
-        @include it('should return a value when variant is either string or number')  {
-            $value: igx-color($_palette, 'secondary', 500);
-            @include assert-equal($value, $_secondary);
-
-            $value: igx-color($_palette, 'secondary', '500');
-            @include assert-equal($value, $_secondary);
-        }
     }
 
     @include describe('igx-color w/ legacy support') {

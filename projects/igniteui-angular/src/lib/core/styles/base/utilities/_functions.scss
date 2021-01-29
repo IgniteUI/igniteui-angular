@@ -116,7 +116,6 @@
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette: null, $color: primary, $variant: 500) {
-    $variant: to-number($variant);
     $p: igx-palette(#fff, #000);
     $c: map-get($p, $color);
     $v: if($c, map-get($c, $variant), null);
@@ -137,7 +136,7 @@
         );
     }
 
-    @return map-get(map-get($palette, $color), to-number($variant));
+    @return map-get(map-get($palette, $color), $variant);
 }
 
 /// Retrieves a contrast text color for a given color from a color palette.
