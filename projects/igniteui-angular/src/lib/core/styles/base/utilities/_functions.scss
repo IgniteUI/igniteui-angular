@@ -108,6 +108,143 @@
     }
 }
 
+/// Generates a Material-like color palette for a single color.
+/// @access private
+/// @group Palettes
+/// @requires {function} gen-color
+/// @requires {function} text-contrast
+/// @param {Color} $color - The base color used to generate the palette.
+/// @param {List} $saturations - The saturation list of color variants.
+/// @param {Color} $base [#fff] - The base color to calculate contrast colors against if the base color is transluscent.
+//// Based on the Material color system.
+/// @returns {Map} - A map consisting of 14 color variations and 14
+/// text contrast colors for each variation.
+@function generate-palette(
+    $color,
+    $saturations,
+    $base: #fff
+) {
+    $result: ();
+    @each $saturation in $saturations {
+        $shade: gen-color($color, $saturation);
+        $contrast: text-contrast(to-opaque($shade, $base, null));
+        $result: map-merge($result, (
+            $saturation: $shade,
+            #{$saturation}-contrast: $contrast
+        ));
+    }
+    @return $result;
+}
+
+/// Generates grayscale color palette from a color.
+/// @access private
+/// @group Palettes
+/// @requires {function} text-contrast
+/// @param {Color} $color - The base color used to generate the palette.
+/// @param {Map} $shades - A map of variations as keys and opacities as values.
+/// @param {Color} $base [#fff] - The base color to calculate contrast colors against if the base color is transluscent.
+/// Based on the Material color system.
+/// @returns {Map} - A map consisting of 10 color variations and 10
+/// text contrast colors for each variation.
+@function grayscale-palette($color, $shades, $base: #fff) {
+    $result: ();
+    @each $saturation, $opacity in $shades {
+        $shade: rgba($color, $opacity);
+        $contrast: text-contrast(to-opaque($shade, $base, null));
+        $result: map-merge($result, (
+            $saturation: $shade,
+            #{$saturation}-contrast: $contrast
+        ));
+    }
+    @return $result;
+}
+
+/// Generates a color palette.
+/// @access public
+/// @group Palettes
+/// @requires {function} generate-palette
+/// @param {Color} $primary - The primary color used to generate the primary color palette.
+/// @param {Color} $secondary - The secondary color used to generate the secondary color palette.
+/// @param {Color} $info [#1377d5] - The information color used throughout the application.
+/// @param {Color} $success [#4eb862] - The success color used throughout the application.
+/// @param {Color} $warn [#fbb13c] - The warning color used throughout the application.
+/// @param {Color} $error [#ff134a] - The error color used throughout the application.
+/// @param {Color} $grays [#000 | $igx-foreground-color] - The color used for generating the grays palette.
+/// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @param {String} $variant ['material'] - The palette variant that gets generated. Possible values are: 'material', 'fluent', 'bootstrap', and 'indigo-design'.
+/// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
+/// `info`, `success`, `warn`, and `error` colors.
+@function igx-palette(
+    $primary,
+    $secondary,
+    $info: #1377d5,
+    $success: #4eb862,
+    $warn: #fbb13c,
+    $error: #ff134a,
+    $grays: #000,
+    $surface: #fff,
+    $variant: 'material'
+) {
+    $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
+
+    $shades: map-get((
+        'material': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
+        'fluent': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
+        'bootstrap': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
+        'indigo-design': (50: .02, 100: .03, 200: .06, 300: .15, 400: .21, 500: .4, 600: .52, 700: .64, 800: .77, 900: .9),
+    ), $variant);
+
+    $primary-palette: generate-palette($primary, $saturations, $surface);
+    $secondary-palette: generate-palette($secondary, $saturations, $surface);
+    $grayscale-palette: grayscale-palette($grays, $shades, $surface);
+
+    // @debug 'Primary Colors Palette: #{$primary-palette}';
+    // @debug 'secondary Colors Palette: #{$secondary-palette}';
+    // @debug 'Warn Colors Palette: #{$warn-palette}';
+
+    @return (
+        primary: $primary-palette,
+        secondary: $secondary-palette,
+        grays: $grayscale-palette,
+        info: (
+            500: $info,
+            '500-contrast': text-contrast(
+                to-opaque($info, $surface, null)
+            )
+        ),
+        success: (
+            500: $success,
+            '500-contrast': text-contrast(
+                to-opaque($success, $surface, null)
+            )
+        ),
+        warn: (
+            500: $warn,
+            '500-contrast': text-contrast(
+                to-opaque($warn, $surface, null)
+            )
+        ),
+        error: (
+            500: $error,
+            '500-contrast': text-contrast(
+                to-opaque($error, $surface, null)
+            )
+        ),
+        surface: (
+            500: $surface,
+            '500-contrast': text-contrast(
+                to-opaque($surface, $surface, null)
+            )
+        )
+    );
+}
+
+
+/// Used in igx-color to test internally
+/// for color and variant validity.
+/// @private
+$p-test: igx-palette(#fff, #000);
+
 /// Retrieves a color from a color palette.
 /// @access public
 /// @group Palettes
@@ -116,8 +253,7 @@
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette: null, $color: primary, $variant: 500) {
-    $p: igx-palette(#fff, #000);
-    $c: map-get($p, $color);
+    $c: map-get($palette or $p-test, $color);
     $v: if($c, map-get($c, $variant), null);
 
     @if not($c) {
@@ -136,7 +272,7 @@
         );
     }
 
-    @return map-get(map-get($palette, $color), $variant);
+    @return map-get($c, $variant);
 }
 
 /// Retrieves a contrast text color for a given color from a color palette.
@@ -374,137 +510,6 @@
     }
 
     @return $result;
-}
-
-/// Generates a Material-like color palette for a single color.
-/// @access private
-/// @group Palettes
-/// @requires {function} gen-color
-/// @requires {function} text-contrast
-/// @param {Color} $color - The base color used to generate the palette.
-/// @param {List} $saturations - The saturation list of color variants.
-/// @param {Color} $base [#fff] - The base color to calculate contrast colors against if the base color is transluscent.
-//// Based on the Material color system.
-/// @returns {Map} - A map consisting of 14 color variations and 14
-/// text contrast colors for each variation.
-@function generate-palette(
-    $color,
-    $saturations,
-    $base: #fff
-) {
-    $result: ();
-    @each $saturation in $saturations {
-        $shade: gen-color($color, $saturation);
-        $contrast: text-contrast(to-opaque($shade, $base, null));
-        $result: map-merge($result, (
-            $saturation: $shade,
-            #{$saturation}-contrast: $contrast
-        ));
-    }
-    @return $result;
-}
-
-/// Generates grayscale color palette from a color.
-/// @access private
-/// @group Palettes
-/// @requires {function} text-contrast
-/// @param {Color} $color - The base color used to generate the palette.
-/// @param {Map} $shades - A map of variations as keys and opacities as values.
-/// @param {Color} $base [#fff] - The base color to calculate contrast colors against if the base color is transluscent.
-/// Based on the Material color system.
-/// @returns {Map} - A map consisting of 10 color variations and 10
-/// text contrast colors for each variation.
-@function grayscale-palette($color, $shades, $base: #fff) {
-    $result: ();
-    @each $saturation, $opacity in $shades {
-        $shade: rgba($color, $opacity);
-        $contrast: text-contrast(to-opaque($shade, $base, null));
-        $result: map-merge($result, (
-            $saturation: $shade,
-            #{$saturation}-contrast: $contrast
-        ));
-    }
-    @return $result;
-}
-
-/// Generates a color palette.
-/// @access public
-/// @group Palettes
-/// @requires {function} generate-palette
-/// @param {Color} $primary - The primary color used to generate the primary color palette.
-/// @param {Color} $secondary - The secondary color used to generate the secondary color palette.
-/// @param {Color} $info [#1377d5] - The information color used throughout the application.
-/// @param {Color} $success [#4eb862] - The success color used throughout the application.
-/// @param {Color} $warn [#fbb13c] - The warning color used throughout the application.
-/// @param {Color} $error [#ff134a] - The error color used throughout the application.
-/// @param {Color} $grays [#000 | $igx-foreground-color] - The color used for generating the grays palette.
-/// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
-/// @param {String} $variant ['material'] - The palette variant that gets generated. Possible values are: 'material', 'fluent', 'bootstrap', and 'indigo-design'.
-/// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
-/// `info`, `success`, `warn`, and `error` colors.
-@function igx-palette(
-    $primary,
-    $secondary,
-    $info: #1377d5,
-    $success: #4eb862,
-    $warn: #fbb13c,
-    $error: #ff134a,
-    $grays: #000,
-    $surface: #fff,
-    $variant: 'material'
-) {
-    $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
-
-    $shades: map-get((
-        'material': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
-        'fluent': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
-        'bootstrap': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
-        'indigo-design': (50: .02, 100: .03, 200: .06, 300: .15, 400: .21, 500: .4, 600: .52, 700: .64, 800: .77, 900: .9),
-    ), $variant);
-
-    $primary-palette: generate-palette($primary, $saturations, $surface);
-    $secondary-palette: generate-palette($secondary, $saturations, $surface);
-    $grayscale-palette: grayscale-palette($grays, $shades, $surface);
-
-    // @debug 'Primary Colors Palette: #{$primary-palette}';
-    // @debug 'secondary Colors Palette: #{$secondary-palette}';
-    // @debug 'Warn Colors Palette: #{$warn-palette}';
-
-    @return (
-        primary: $primary-palette,
-        secondary: $secondary-palette,
-        grays: $grayscale-palette,
-        info: (
-            500: $info,
-            '500-contrast': text-contrast(
-                to-opaque($info, $surface, null)
-            )
-        ),
-        success: (
-            500: $success,
-            '500-contrast': text-contrast(
-                to-opaque($success, $surface, null)
-            )
-        ),
-        warn: (
-            500: $warn,
-            '500-contrast': text-contrast(
-                to-opaque($warn, $surface, null)
-            )
-        ),
-        error: (
-            500: $error,
-            '500-contrast': text-contrast(
-                to-opaque($error, $surface, null)
-            )
-        ),
-        surface: (
-            500: $surface,
-            '500-contrast': text-contrast(
-                to-opaque($surface, $surface, null)
-            )
-        )
-    );
 }
 
 /// Returns a CSS property value. It could return either css '--var' or
