@@ -34,6 +34,8 @@ export abstract class IgxExporterOptionsBase {
 
     /**
      * Specifies whether the exported data should be sorted as in the provided IgxGrid.
+     * When you export grouped data, setting ignoreSorting to true will cause
+     * the grouping to fail because it relies on the sorting of the records.
      * ```typescript
      * let ignoreSorting = this.exportOptions.ignoreSorting;
      * this.exportOptions.ignoreSorting = true;
