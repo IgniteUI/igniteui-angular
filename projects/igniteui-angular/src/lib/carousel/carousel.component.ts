@@ -145,7 +145,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```
      */
     @HostBinding('style.touch-action')
-    get touchAction() {
+    public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
 
@@ -404,14 +404,14 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * By default it uses EN resources.
      */
     @Input()
-    set resourceStrings(value: ICarouselResourceStrings) {
+    public set resourceStrings(value: ICarouselResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
-    get resourceStrings(): ICarouselResourceStrings {
+    public get resourceStrings(): ICarouselResourceStrings {
         return this._resourceStrings;
     }
 
@@ -514,7 +514,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *
      * @memberof IgxCarouselComponent
      */
-    get nativeElement(): any {
+    public get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -527,7 +527,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberof IgxCarouselComponent
      */
     @Input()
-    get interval(): number {
+    public get interval(): number {
         return this._interval;
     }
 
@@ -540,7 +540,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *
      * @memberof IgxCarouselComponent
      */
-    set interval(value: number) {
+    public set interval(value: number) {
         this._interval = +value;
         this.restartInterval();
     }

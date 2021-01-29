@@ -922,7 +922,7 @@ class HelperTestFunctions {
             deltaY: 0,
             duration: 100,
             velocity,
-            preventDefault: ( ( e: any ) => {  })
+            preventDefault: ( () => {  })
         };
 
         carouselElement.triggerEventHandler(event, panOptions);
@@ -1048,7 +1048,7 @@ class CarouselDynamicSlidesComponent {
         this.addNewSlide();
     }
 
-    addNewSlide() {
+    public addNewSlide() {
         this.slides.push(
             { text: 'Slide 1', active: false },
             { text: 'Slide 2', active: false },
