@@ -216,7 +216,7 @@ $_bootstrap-button-group: extend(
 /// Generates an indigo light button-group schema.
 /// @type {Map}
 /// @prop {Color} item-background [#fff] - The background color for button group items.
-/// @prop {Color} item-text-color [igx-contrast-color: #fff]- The text color for button group items.
+/// @prop {Color} item-text-color [text-contrast: #fff]- The text color for button group items.
 /// @prop {Map} shadow-color [igx-color: ('grays', 300)] - The outline color of button group items.
 /// @prop {Map} selected-shadow-color [igx-color: ('primary', 200)] - The outline color of selected button group items.
 /// @prop {Map} item-border-color [igx-color: ('primary', 400)] - The border color between button group items.
@@ -253,7 +253,7 @@ $_indigo-button-group: extend(
         ),
 
         item-text-color: (
-            igx-contrast-color: #fff
+            text-contrast: #fff
         ),
 
         item-border-color: (
