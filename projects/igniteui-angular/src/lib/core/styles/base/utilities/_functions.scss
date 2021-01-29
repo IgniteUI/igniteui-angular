@@ -111,16 +111,34 @@
 /// Retrieves a color from a color palette.
 /// @access public
 /// @group Palettes
-/// @param {Map} $palette - The source palette map.
-/// @param {string} $color - The target color from the color palette.
+/// @param {Map} $palette [null]- The source palette map.
+/// @param {string} $color [primary]- The target color from the color palette.
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
-@function igx-color($palette, $color, $variant: 500) {
-    @if type-of($palette) == 'map' and map-has-key($palette, $color) {
-        @return map-get(map-get($palette, $color), $variant);
+@function igx-color($palette: null, $color: primary, $variant: 500) {
+    $legacy: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
+    $valid: type-of($palette) == 'map' and map-has-key($palette, $color);
+    $p: igx-palette(#fff, #000);
+    $c: map-get($p, $color);
+    $v: if($c, map-get($c, $variant), null);
+
+    @if not($c) {
+        @error 'The passed color #{$color} is not valid.';
     }
 
-    @return #fff;
+    @if not($v) {
+        @error 'The passed variant #{$variant} is not valid.';
+    }
+
+    @if not($valid) {
+        @return if(
+            $legacy,
+            igx-color($default-palette, $color, $variant),
+            #{var(--igx-#{$color}-#{$variant})}
+        );
+    }
+
+    @return map-get(map-get($palette, $color), to-number($variant));
 }
 
 @function igx-color-ref($color, $variant: 500) {
