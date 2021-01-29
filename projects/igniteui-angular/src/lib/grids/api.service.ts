@@ -523,10 +523,19 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return this.grid.expansionStates.get(rowID) !== expanded;
     }
 
-    public prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
-        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
+    /** Modifies the filteringState object to contain the newly added fitering conditions/expressions.
+     * If createNewTree is true, filteringState will not be modified (because it directly affects the grid.filteringExpressionsTree),
+     * but a new object is created and returned.
+     */
+    public prepare_filtering_expression(
+        filteringState: IFilteringExpressionsTree,
+        fieldName: string,
+        searchVal,
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase: boolean,
+        insertAtIndex = -1,
+        createNewTree = false): FilteringExpressionsTree {
 
-        let newExpressionsTree;
         const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
         const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
             conditionOrExpressionsTree as IFilteringExpressionsTree : null;
@@ -534,21 +543,40 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             null : conditionOrExpressionsTree as IFilteringOperation;
         const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
 
+        const newExpressionsTree: FilteringExpressionsTree = createNewTree ?
+            new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName) : filteringState as FilteringExpressionsTree;
+        if (filteringState.type) {
+            newExpressionsTree.type = filteringState.type;
+        }
+
+        if (createNewTree && filteringState && filteringState instanceof FilteringExpressionsTree) {
+            for (let index = 0; index < filteringState.filteringOperands.length; index++) {
+                if (!(filteringState.filteringOperands[index] instanceof FilteringExpressionsTree)) {
+                    newExpressionsTree.fieldName = filteringState.filteringOperands[index].fieldName;
+                    newExpressionsTree.filteringOperands.push(filteringState.filteringOperands[index] as IFilteringExpression);
+                } else {
+                    newExpressionsTree.filteringOperands.push(filteringState.filteringOperands[index]);
+                }
+            }
+        }
+
         if (oldExpressionsTreeIndex === -1) {
             // no expressions tree found for this field
             if (expressionsTree) {
                 if (insertAtIndex > -1) {
-                    filteringState.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
+                    newExpressionsTree.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
                 } else {
-                    filteringState.filteringOperands.push(expressionsTree);
+                    newExpressionsTree.filteringOperands.push(expressionsTree);
                 }
             } else if (condition) {
                 // create expressions tree for this field and add the new expression to it
-                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-                newExpressionsTree.filteringOperands.push(newExpression);
-                filteringState.filteringOperands.push(newExpressionsTree);
+                const newExprTree: FilteringExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+                newExprTree.filteringOperands.push(newExpression);
+                newExpressionsTree.filteringOperands.push(newExprTree);
             }
         }
+
+        return newExpressionsTree;
     }
 
     /**

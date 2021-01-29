@@ -212,10 +212,12 @@ export class IgxFilteringService implements OnDestroy {
         if (fieldFilterIndex > -1) {
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }
-        this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree, filteringIgnoreCase,
-            fieldFilterIndex);
+        const newFilteringTree: FilteringExpressionsTree =
+            this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
+            filteringIgnoreCase, fieldFilterIndex, true);
 
-        const eventArgs: IFilteringEventArgs = { owner: grid, filteringExpressions: filteringTree, cancel: false };
+        const eventArgs: IFilteringEventArgs = { owner: grid,
+            filteringExpressions: newFilteringTree.find(field) as FilteringExpressionsTree, cancel: false };
         this.grid.filtering.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -251,10 +253,9 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
-        // TODO feature-events
         const onFilteringEventArgs: IFilteringEventArgs = {
             owner: this.grid,
-            filteringExpressions: this.grid.filteringExpressionsTree,
+            filteringExpressions: null,
             cancel: false };
 
         this.grid.filtering.emit(onFilteringEventArgs);
@@ -267,7 +268,7 @@ export class IgxFilteringService implements OnDestroy {
         this.gridAPI.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
 
         if (field) {
             const expressions = this.getExpressions(field);
@@ -292,13 +293,14 @@ export class IgxFilteringService implements OnDestroy {
 
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        filteringTree.filteringOperands = [];
+        let newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
+
         for (const column of grid.columns) {
-            this.gridAPI.prepare_filtering_expression(filteringTree, column.field, value,
-                condition, ignoreCase || column.filteringIgnoreCase);
+            this.gridAPI.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
+                ignoreCase || column.filteringIgnoreCase);
         }
 
-        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: grid.filteringExpressionsTree, cancel: false };
+        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: newFilteringTree, cancel: false };
         grid.filtering.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
@@ -308,7 +310,7 @@ export class IgxFilteringService implements OnDestroy {
         if (grid.paging) {
             grid.page = 0;
         }
-        grid.filteringExpressionsTree = filteringTree;
+        grid.filteringExpressionsTree = newFilteringTree;
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
