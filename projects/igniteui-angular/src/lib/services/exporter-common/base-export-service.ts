@@ -475,8 +475,12 @@ export abstract class IgxBaseExporter {
                 recordVal = pipe.transform(isoString);
             }
 
+            const groupExpressionName = record.column && record.column.header ?
+                record.column.header :
+                record.expression.fieldName;
+
             const groupExpression: IExportRecord = {
-                data: { [firstCol]: `${record.expression.fieldName}: ${recordVal} (${record.records.length})` },
+                data: { [firstCol]: `${groupExpressionName}: ${recordVal} (${record.records.length})` },
                 level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.GroupedRecord,
