@@ -258,7 +258,7 @@ describe('Excel Exporter', () => {
 
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(
-                actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
+                actualData.simpleGridSortByNameDesc(), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
             grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
