@@ -1,7 +1,36 @@
 <div class="items-wrapper">
     <div class="column-span">
         <h3 class="sample-title">Different size tabs</h3>
-        <igx-tabs [selectedIndex]="1">
+        <button (click)="changeSelectedIndex()">Change selectedIndex</button>
+        <button (click)="changeTabSelected()">Change tab.selected</button>
+
+        <igx-tabs-new #tabsNew>
+            <igx-tab-item-new>
+                <igx-tab-header-new [label]="'Tab1'" [icon]="'folder'"></igx-tab-header-new>
+                <igx-tab-panel-new>
+                    Content 1
+                </igx-tab-panel-new>
+            </igx-tab-item-new>
+
+            <igx-tab-item-new>
+                <igx-tab-header-new>
+                    <igx-icon>folder</igx-icon>
+                    Tab 2
+                </igx-tab-header-new>
+                <igx-tab-panel-new>
+                    Content 2
+                </igx-tab-panel-new>
+            </igx-tab-item-new>
+
+            <igx-tab-item-new>
+                <igx-tab-header-new [label]="'Tab 3'"></igx-tab-header-new>
+                <igx-tab-panel-new>
+                    Content 3
+                </igx-tab-panel-new>
+            </igx-tab-item-new>
+        </igx-tabs-new>
+
+        <!-- <igx-tabs [selectedIndex]="1">
             <igx-tabs-group label="Tab 1" icon="folder">
                 <div class="my-tab-content">
                     <h3>First Tab</h3>
@@ -272,7 +301,7 @@
                         sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
                 </div>
             </igx-tabs-group>
-        </igx-tabs>
+        </igx-tabs> -->
     </div>
     <div>
         <h3 class="sample-title">Same size tabs</h3>
@@ -282,6 +311,9 @@
         </igx-navbar>
         <igx-tabs tabsType="fixed" [selectedIndex]="2">
             <igx-tabs-group label="Recent" icon="phone">
+                <ng-template igxTab>
+                    Tab 1
+                </ng-template>
                 <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                     <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                         *ngFor="let contact of contacts">

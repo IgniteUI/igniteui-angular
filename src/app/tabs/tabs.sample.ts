@@ -1,4 +1,5 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import { IgxTabsNewComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tabs-sample',
@@ -7,6 +8,9 @@ import {Component, ViewEncapsulation} from '@angular/core';
     encapsulation: ViewEncapsulation.None
 })
 export class TabsSampleComponent {
+
+    @ViewChild('tabsNew')
+    tabs: IgxTabsNewComponent;
 
     public data = [
         /* eslint-disable max-len */
@@ -69,5 +73,13 @@ export class TabsSampleComponent {
         text: 'Lisa Landers'
     }];
 
+
+    changeSelectedIndex() {
+        this.tabs.selectedIndex = 1;
+    }
+
+    changeTabSelected() {
+        this.tabs.tabs.toArray()[1].selected = true;
+    }
 }
 

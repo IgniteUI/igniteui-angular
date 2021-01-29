@@ -3,6 +3,9 @@
         <div class="tabbar-wrapper" #tabbarEl>
             <igx-bottom-nav>
                 <igx-tab-panel icon="phone">
+                    <!-- <ng-template igxTab>
+                        Tab 1
+                    </ng-template> -->
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item [isHeader]="true">History</igx-list-item>
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content"
@@ -56,7 +59,33 @@
 
     <article class="sample-column">
         <div class="tabbar-wrapper" #tabbarEl>
-            <igx-bottom-nav #tabbar>
+
+            <igx-bottom-nav-new>
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header [label]="'Tab1'" [icon]="'folder'"></igx-bottom-nav-header>
+                    <igx-bottom-nav-panel>
+                        Content 1
+                    </igx-bottom-nav-panel>
+                </igx-bottom-nav-item>
+
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header>
+                        Tab 2
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-panel>
+                        Content 2
+                    </igx-bottom-nav-panel>
+                </igx-bottom-nav-item>
+
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header [label]="'Tab3'"></igx-bottom-nav-header>
+                    <igx-bottom-nav-panel>
+                        Content 3
+                    </igx-bottom-nav-panel>
+                </igx-bottom-nav-item>
+            </igx-bottom-nav-new>
+
+            <!-- <igx-bottom-nav #tabbar>
 
                 <igx-tab-panel label="Movies" icon="local_movies">
                     <div class="tab-content">
@@ -111,7 +140,7 @@
                             volutpat. Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. </p>
                     </div>
                 </igx-tab-panel>
-            </igx-bottom-nav>
+            </igx-bottom-nav> -->
         </div>
     </article>
 </div>

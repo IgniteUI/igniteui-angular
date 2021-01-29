@@ -19,7 +19,48 @@
 
         <br/>
 
-        <igx-tabs>
+        <igx-tabs-new [selectedIndex]="-1">
+            <igx-tab-item-new
+                routerLinkActive
+                #rla1="routerLinkActive"
+                [selected]="rla1.isActive"
+            >
+                <igx-tab-header-new
+                    [label]="'Tab 1'"
+                    [icon]="'folder'"
+                    routerLink="/tabs-routing/view1"
+                >
+                </igx-tab-header-new>
+            </igx-tab-item-new>
+
+            <igx-tab-item-new
+                routerLinkActive
+                #rla2="routerLinkActive"
+                [selected]="rla2.isActive"
+            >
+                <igx-tab-header-new
+                    [label]="'Tab 2'"
+                    [icon]="'folder'"
+                    routerLink="/tabs-routing/view2"
+                >
+                </igx-tab-header-new>
+            </igx-tab-item-new>
+
+            <igx-tab-item-new
+                routerLinkActive
+                #rla3="routerLinkActive"
+                [selected]="rla3.isActive"
+            >
+                <igx-tab-header-new
+                    [label]="'Tab 3'"
+                    [icon]="'folder'"
+                    routerLink="/tabs-routing/view3"
+                >
+                </igx-tab-header-new>
+            </igx-tab-item-new>
+        </igx-tabs-new>
+
+        <!-- <igx-tabs>
             <igx-tab-item label="Tab 1" icon="folder"
                 routerLink="/tabs-routing/view1"
                 routerLinkActive #rla1="routerLinkActive"
@@ -33,13 +74,13 @@
             <igx-tab-item label="Tab 3" icon="folder"
                 routerLink="/tabs-routing/view3"
                 routerLinkActive #rla3="routerLinkActive"
-                [isSelected]="rla3.isActive">
+                [isSelected]="rla3.isActive"> -->
                 <!-- <ng-template igxTab let-context>
                     <span>{{context.label}}</span>
                     <span>[Retemplated tab]</span>
                 </ng-template> -->
-            </igx-tab-item>
-        </igx-tabs>
+            <!-- </igx-tab-item>
+        </igx-tabs> -->
         <div>
             <router-outlet></router-outlet>
         </div>

@@ -40,7 +40,9 @@ import {
     IgxToggleModule,
     IgxTooltipModule,
     IgxSelectModule,
-    IgxDateRangePickerModule
+    IgxDateRangePickerModule,
+    IgxTabsNewModule,
+    IgxBottomNavNewModule
 } from 'igniteui-angular';
 
 
@@ -80,6 +82,8 @@ const igniteModules = [
     IgxSwitchModule,
     IgxSplitterModule,
     IgxTabsModule,
+    IgxTabsNewModule,
+    IgxBottomNavNewModule,
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
