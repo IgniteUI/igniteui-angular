@@ -30,6 +30,7 @@ import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IRowSelectionEventArgs } from '../common/events';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -1569,6 +1570,40 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
         }));
+
+        it(`Setting true to the cancel property of the onRowSelectionChange event should not modify the selected rows collection`, () => {
+
+            treeGrid.onRowSelectionChange.subscribe((e: IRowSelectionEventArgs) => {
+                e.cancel = true;
+            });
+
+            spyOn(treeGrid.onRowSelectionChange, 'emit').and.callThrough();
+
+            treeGrid.selectionService.selectRowsWithNoEvent([317]);
+            fix.detectChanges();
+
+            treeGrid.selectionService.deselectRow(299);
+            fix.detectChanges();
+
+            const args: IRowSelectionEventArgs = {
+                oldSelection: [317, 711, 998, 299],
+                newSelection: [711, 998],
+                added: [],
+                removed: [317, 299],
+                event: undefined,
+                cancel: true
+            };
+
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
+
+            fix.detectChanges();
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
+        });
     });
 
     describe('Cascading Row Selection with Transaction', () => {

@@ -1022,7 +1022,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(treeGrid.selectedRows).toEqual([1, 6, 10]);
             });
 
-            fit('check row selection within multipleCascade selection mode when expand a row', fakeAsync(() => {
+            it('check row selection within multipleCascade selection mode when expand a row', fakeAsync(() => {
                 treeGrid.rowSelection = HierarchicalGridSelectionMode.multipleCascade;
                 fix.detectChanges();
 
