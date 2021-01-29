@@ -60,7 +60,7 @@ export class IgxRowIslandAPIService {
         return this.childRowIslands.get(rowIslandKey);
     }
 
-    registerChildGrid(parentRowID: string|object, grid: IgxHierarchicalGridComponent) {
+    registerChildGrid(parentRowID: any, grid: IgxHierarchicalGridComponent) {
         this.childGrids.set(parentRowID, grid);
     }
 

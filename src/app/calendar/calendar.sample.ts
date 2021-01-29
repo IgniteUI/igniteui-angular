@@ -7,7 +7,7 @@ import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, 
     styleUrls: ['calendar.sample.scss']
 })
 export class CalendarSampleComponent implements OnInit, AfterViewInit {
-    @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
+    @ViewChild('calendar', { static: true }) public calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { static: true }) public calendar1: IgxCalendarComponent;
     @ViewChild('alert', { static: true }) public dialog: IgxDialogComponent;
     public range = [];

@@ -1,6 +1,6 @@
 /** @hidden */
 export class ExcelStrings {
-    /* tslint:disable max-line-length */
+    /* eslint-disable  max-len */
     private static XML_STRING = '<?xml version="1.0" encoding="UTF-8"?>\r\n';
     private static SHARED_STRING_RELATIONSHIP = '<Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml" />';
 
@@ -103,7 +103,7 @@ ${tableParts}</worksheet>`;
     <autoFilter ref="${dimension}"/>${sort}${tableColumns}<tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>
 </table>`;
     }
-    /* tslint:enable max-line-length */
+    /* eslint-enable  max-len */
 
     public static getExcelColumn(index: number): string {
         // Returns the excel column name for given 0-based index

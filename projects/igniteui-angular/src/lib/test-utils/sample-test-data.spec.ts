@@ -1,4 +1,3 @@
-
 import { Calendar } from '../calendar/calendar';
 import { cloneValue } from '../core/utils';
 import { ValueData } from '../services/excel/test-data.service.spec';
@@ -8,44 +7,44 @@ export class SampleTestData {
     public static timeGenerator: Calendar = new Calendar();
     public static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
-    // tslint:disable:quotemark
+    /* eslint-disable @typescript-eslint/quotes */
     public static stringArray = () => ([
         "Terrance Orta",
         "Richard Mahoney LongerName",
         "Donna Price",
         "Lisa Landers",
         "Dorothy H. Spencer"
-    ])
+    ]);
 
     public static numbersArray = () => ([
         10,
         20,
         30
-    ])
+    ]);
 
     public static dateArray = () => ([
         new Date("2018"),
         new Date(2018, 3, 23),
         new Date(30),
         new Date("2018/03/23")
-    ])
+    ]);
 
     public static excelDateArray = () => ([
         new Date(2018, 3, 23),
         new Date("2018/03/23")
-    ])
+    ]);
 
     public static emptyObjectData = () => ([
         {},
         {},
         {}
-    ])
+    ]);
 
     public static noHeadersObjectArray = () => ([
         new ValueData('1'),
         new ValueData('2'),
         new ValueData('3')
-    ])
+    ]);
 
     public static oneItemNumberData = () => ([{ index: 1, value: 1 }]);
 
@@ -53,20 +52,20 @@ export class SampleTestData {
     public static numberDataTwoFields = () => ([
         { index: 1, value: 1 },
         { index: 2, value: 2 }
-    ])
+    ]);
 
     /* Fields: index: number, value: number, other: number, another: number; 2 items. */
     public static numberDataFourFields = () => ([
         { index: 1, value: 1, other: 1, another: 1 },
         { index: 2, value: 2, other: 2, another: 2 }
-    ])
+    ]);
 
     /* Fields: Number: number, String: string, Boolean: boolean; Date: date; 3 items. */
     public static differentTypesData = () => ([
         { Number: 1, String: "1", Boolean: true, Date: new Date(2018, 3, 3) },
         { Number: 2, String: "2", Boolean: false, Date: new Date(2018, 5, 6) },
         { Number: 3, String: "3", Boolean: true, Date: new Date(2018, 9, 22) }
-    ])
+    ]);
 
     /* Fields: Name: string, Avatar: string; 3 items. */
     public static personAvatarData = () => ([
@@ -82,7 +81,7 @@ export class SampleTestData {
             Name: 'Person 3',
             Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
         }
-    ])
+    ]);
 
     /* Fields: name: string, phone: string; 5 items. */
     public static contactsData = () => ([
@@ -102,7 +101,7 @@ export class SampleTestData {
             name: "Dorothy H. Spencer",
             phone: "573-394-9254"
         }
-    ])
+    ]);
 
     /* Fields: name: string, phone: string; 6 items. Remarks: Contains special and cyrilic characters. */
     public static contactsFunkyData = () => ([
@@ -125,7 +124,7 @@ export class SampleTestData {
             name: "Иван Иванов (1,2)",
             phone: "№ 573-394-9254"
         }
-    ])
+    ]);
 
     /* Fields: name: string, phone: string; 3 items. Remarks: Contains records without values for one of the fields. */
     public static contactsDataPartial = () => ([
@@ -137,21 +136,21 @@ export class SampleTestData {
         }, {
             phone: "780-555-1331"
         }
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: string; 3 items. */
     public static personIDNameData = () => ([
         { ID: 1, Name: "Johny" },
         { ID: 2, Name: "Sally" },
         { ID: 3, Name: "Tim" }
-    ])
+    ]);
 
     /* Data fields: FirstName: string, LastName: string, age:number; 3 items. */
     public static personNameAgeData = () => ([
         { FirstName: "John", LastName: "Brown", age: 20 },
         { FirstName: "Ben", LastName: "Affleck", age: 30 },
         { FirstName: "Tom", LastName: "Riddle", age: 50 }
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: string, LastName: string, Region: string; 7 items. */
     public static personIDNameRegionData = () => ([
@@ -162,7 +161,7 @@ export class SampleTestData {
         { ID: 5, Name: "ALex", LastName: "Smith", Region: "MlDs" },
         { ID: 4, Name: "Alex", LastName: "Wilson", Region: "DC" },
         { ID: 3, Name: "Connor", LastName: "Walker", Region: "OC" }
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: string, JobTitle: string, HireDate: string; 10 items, sorted by ID. */
     public static personJobDataFull = () => ([
@@ -176,7 +175,7 @@ export class SampleTestData {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead", HireDate: "2005-10-14T11:23:17.714Z" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer", HireDate: "2013-10-10T11:23:17.714Z" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager", HireDate: "2011-11-28T11:23:17.714Z" }
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: string, JobTitle: string, WokingHours: number, HireDate: string, Performance: array;
        3 items, sorted by ID. */
@@ -205,7 +204,7 @@ export class SampleTestData {
                 {Points: 29, Week: 4}
             ]
         }
-    ])
+    ]);
 
     public static hireDate = () => ([
         { ID: 1, HireDate: new Date(2008, 3, 20).toISOString() },
@@ -213,7 +212,7 @@ export class SampleTestData {
         { ID: 3, HireDate: new Date(2012, 6, 30).toISOString() },
         { ID: 4, HireDate: new Date(2010, 1, 5).toISOString() },
         { ID: 5, HireDate: new Date(2020, 4, 17).toISOString() },
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: string, JobTitle: string; 10 items, sorted by ID. */
     public static personJobData = () => ([
@@ -227,7 +226,7 @@ export class SampleTestData {
         { ID: 8, Name: "Erika Wells", JobTitle: "Software Development Team Lead" },
         { ID: 9, Name: "Leslie Hansen", JobTitle: "Associate Software Developer" },
         { ID: 10, Name: "Eduardo Ramirez", JobTitle: "Manager" }
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: string, JobTitle: string, Company: string; 10 items, sorted by ID. */
     public static personIDNameJobCompany = () => ([
@@ -241,7 +240,7 @@ export class SampleTestData {
         { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', Company: 'Company A' },
         { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Company: 'Company D' },
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
-    ])
+    ]);
 
     /* Data fields: ID: number, Name: Object{FirstName: string, LastName: string },
     JobTitle: string, Company: string; 10 items, sorted by ID. */
@@ -256,7 +255,7 @@ export class SampleTestData {
         { ID: 8, Name: { FirstName: 'Erika', LastName: 'Wells' } , JobTitle: 'Software Development Team Lead', Company: 'Company A' },
         { ID: 9, Name: { FirstName: 'Leslie', LastName: 'Hansen' } , JobTitle: 'Associate Software Developer', Company: 'Company D' },
         { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }
-    ])
+    ]);
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         11 items, sorted by ID. */
@@ -402,12 +401,12 @@ export class SampleTestData {
             Phone: "(171) 555-1212",
             Fax: null
         }
-    ])
+    ]);
 
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         27 items, sorted by ID. */
-    /* tslint:disable */
+    /* eslint-disable */
     public static contactInfoDataFull = () => ([
         { "ID": "ALFKI", "CompanyName": "Alfreds Futterkiste", "ContactName": "Maria Anders", "ContactTitle": "Sales Representative", "Address": "Obere Str. 57", "City": "Berlin", "Region": null, "PostalCode": "12209", "Country": "Germany", "Phone": "030-0074321", "Fax": "030-0076545" },
         { "ID": "ANATR", "CompanyName": "Ana Trujillo Emparedados y helados", "ContactName": "Ana Trujillo", "ContactTitle": "Owner", "Address": "Avda. de la Constitución 2222", "City": "México D.F.", "Region": null, "PostalCode": "05021", "Country": "Mexico", "Phone": "(5) 555-4729", "Fax": "(5) 555-3745" },
@@ -437,9 +436,9 @@ export class SampleTestData {
         { "ID": "FRANR", "CompanyName": "France restauration", "ContactName": "Carine Schmitt", "ContactTitle": "Marketing Manager", "Address": "54, rue Royale", "City": "Nantes", "Region": null, "PostalCode": "44000", "Country": "France", "Phone": "40.32.21.21", "Fax": "40.32.21.20" },
         { "ID": "FRANS", "CompanyName": "Franchi S.p.A.", "ContactName": "Paolo Accorti", "ContactTitle": "Sales Representative", "Address": "Via Monte Bianco 34", "City": "Torino", "Region": null, "PostalCode": "10100", "Country": "Italy", "Phone": "011-4988260", "Fax": "011-4988261" }
     ]);
-    /* tslint:enable */
+    /* eslint-enable */
 
-    // tslint:disable:quotemark
+    /* eslint-disable @typescript-eslint/quotes */
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string; 1 item. */
     public static contactMariaAndersData = () => ([{
@@ -454,7 +453,7 @@ export class SampleTestData {
         Country: "Germany",
         Phone: "030-0074321",
         Fax: "030-0076545"
-    }])
+    }]);
 
     /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean;
         8 items, sorted by ID. */
@@ -515,7 +514,7 @@ export class SampleTestData {
             ReleaseDate: SampleTestData.today,
             Released: false
         }
-    ])
+    ]);
 
     /* Data fields: Downloads: number, ID: number, ProductName: string, ReleaseDate: Date, Released: boolean,
         Category: string, Items: string, Test: string;
@@ -601,7 +600,7 @@ export class SampleTestData {
             Items: "Item 8",
             Test: "Test 8"
         }
-    ])
+    ]);
 
     /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
         10 items, sorted by ID. */
@@ -616,7 +615,7 @@ export class SampleTestData {
         { ProductID: 8, ProductName: "Tofu", InStock: true, UnitsInStock: 7898, OrderDate: new Date("2017-09-09") },
         { ProductID: 9, ProductName: "Teatime Chocolate Biscuits", InStock: true, UnitsInStock: 6998, OrderDate: new Date("2025-12-25") },
         { ProductID: 10, ProductName: "Chocolate", InStock: true, UnitsInStock: 20000, OrderDate: new Date("2018-03-01") }
-    ])
+    ]);
 
     /* Data fields: ProductID: number, ProductName: string, InStock: boolean, UnitsInStock: number, OrderDate: Date;
         19 items, sorted by ID. */
@@ -640,7 +639,7 @@ export class SampleTestData {
         { ProductID: 17, ProductName: "Parmesan", InStock: true, UnitsInStock: 4898, OrderDate: new Date("2017-09-09") },
         { ProductID: 18, ProductName: "Steaks", InStock: true, UnitsInStock: 3098, OrderDate: new Date("2025-12-25") },
         { ProductID: 19, ProductName: "Biscuits", InStock: true, UnitsInStock: 10570, OrderDate: new Date("2018-03-01") }
-    ])
+    ]);
 
     /* Generates data with the following data fields: index: number, value: number, other: number, another: number. */
     public static generateNumberData(rowsCount: number) {
@@ -780,7 +779,7 @@ export class SampleTestData {
         for (let r = 0; r < rowsCount; r++) {
             const record = {};
             for (let c = 0; c < columns.length; c++) {
-                (startFromOne && c === 0) ? record[columns[c].key] = 1 : record[columns[c].key] = c * r;
+                record[columns[c].key] = startFromOne && c === 0 ? 1 : c * r;
             }
             data.push(record);
         }
@@ -999,41 +998,41 @@ export class SampleTestData {
                     Age: 27
                 }]
         }
-    ])
+    ]);
 
     public static employeeScrollingData = () => ([
-        { 'Salary': 2500, 'employeeID': 0, 'PID': -1, 'firstName': 'Andrew', 'lastName': 'Fuller', 'Title': 'Vice President, Sales' },
-        { 'Salary': 3500, 'employeeID': 1, 'PID': -1, 'firstName': 'Jonathan', 'lastName': 'Smith', 'Title': 'Human resources' },
-        { 'Salary': 1500, 'employeeID': 2, 'PID': -1, 'firstName': 'Nancy', 'lastName': 'Davolio', 'Title': 'CFO' },
-        { 'Salary': 2500, 'employeeID': 3, 'PID': -1, 'firstName': 'Steven', 'lastName': 'Buchanan', 'Title': 'CTO' },
+        { Salary: 2500, employeeID: 0, PID: -1, firstName: 'Andrew', lastName: 'Fuller', Title: 'Vice President, Sales' },
+        { Salary: 3500, employeeID: 1, PID: -1, firstName: 'Jonathan', lastName: 'Smith', Title: 'Human resources' },
+        { Salary: 1500, employeeID: 2, PID: -1, firstName: 'Nancy', lastName: 'Davolio', Title: 'CFO' },
+        { Salary: 2500, employeeID: 3, PID: -1, firstName: 'Steven', lastName: 'Buchanan', Title: 'CTO' },
         // sub of ID 0
-        { 'Salary': 2500, 'employeeID': 4, 'PID': 0, 'firstName': 'Janet', 'lastName': 'Leverling', 'Title': 'Sales Manager' },
-        { 'Salary': 3500, 'employeeID': 5, 'PID': 0, 'firstName': 'Laura', 'lastName': 'Callahan', 'Title': 'Inside Sales Coordinator' },
-        { 'Salary': 1500, 'employeeID': 6, 'PID': 0, 'firstName': 'Margaret', 'lastName': 'Peacock', 'Title': 'Sales Representative' },
-        { 'Salary': 2500, 'employeeID': 7, 'PID': 0, 'firstName': 'Michael', 'lastName': 'Suyama', 'Title': 'Sales Representative' },
+        { Salary: 2500, employeeID: 4, PID: 0, firstName: 'Janet', lastName: 'Leverling', Title: 'Sales Manager' },
+        { Salary: 3500, employeeID: 5, PID: 0, firstName: 'Laura', lastName: 'Callahan', Title: 'Inside Sales Coordinator' },
+        { Salary: 1500, employeeID: 6, PID: 0, firstName: 'Margaret', lastName: 'Peacock', Title: 'Sales Representative' },
+        { Salary: 2500, employeeID: 7, PID: 0, firstName: 'Michael', lastName: 'Suyama', Title: 'Sales Representative' },
         // sub of ID 4
-        { 'Salary': 2500, 'employeeID': 8, 'PID': 4, 'firstName': 'Anne', 'lastName': 'Dodsworth', 'Title': 'Sales Representative' },
-        { 'Salary': 3500, 'employeeID': 9, 'PID': 4, 'firstName': 'Danielle', 'lastName': 'Davis', 'Title': 'Sales Representative' },
-        { 'Salary': 1500, 'employeeID': 10, 'PID': 4, 'firstName': 'Robert', 'lastName': 'King', 'Title': 'Sales Representative' },
+        { Salary: 2500, employeeID: 8, PID: 4, firstName: 'Anne', lastName: 'Dodsworth', Title: 'Sales Representative' },
+        { Salary: 3500, employeeID: 9, PID: 4, firstName: 'Danielle', lastName: 'Davis', Title: 'Sales Representative' },
+        { Salary: 1500, employeeID: 10, PID: 4, firstName: 'Robert', lastName: 'King', Title: 'Sales Representative' },
         // sub of ID 2
-        { 'Salary': 2500, 'employeeID': 11, 'PID': 2, 'firstName': 'Peter', 'lastName': 'Lewis', 'Title': 'Chief Accountant' },
-        { 'Salary': 3500, 'employeeID': 12, 'PID': 2, 'firstName': 'Ryder', 'lastName': 'Zenaida', 'Title': 'Accountant' },
-        { 'Salary': 1500, 'employeeID': 13, 'PID': 2, 'firstName': 'Wang', 'lastName': 'Mercedes', 'Title': 'Accountant' },
+        { Salary: 2500, employeeID: 11, PID: 2, firstName: 'Peter', lastName: 'Lewis', Title: 'Chief Accountant' },
+        { Salary: 3500, employeeID: 12, PID: 2, firstName: 'Ryder', lastName: 'Zenaida', Title: 'Accountant' },
+        { Salary: 1500, employeeID: 13, PID: 2, firstName: 'Wang', lastName: 'Mercedes', Title: 'Accountant' },
         // sub of ID 3
-        { 'Salary': 1500, 'employeeID': 14, 'PID': 3, 'firstName': 'Theodore', 'lastName': 'Zia', 'Title': 'Software Architect' },
-        { 'Salary': 4500, 'employeeID': 15, 'PID': 3, 'firstName': 'Lacota', 'lastName': 'Mufutau', 'Title': 'Product Manager' },
+        { Salary: 1500, employeeID: 14, PID: 3, firstName: 'Theodore', lastName: 'Zia', Title: 'Software Architect' },
+        { Salary: 4500, employeeID: 15, PID: 3, firstName: 'Lacota', lastName: 'Mufutau', Title: 'Product Manager' },
         // sub of ID 16
-        { 'Salary': 2500, 'employeeID': 16, 'PID': 15, 'firstName': 'Jin', 'lastName': 'Elliott', 'Title': 'Product Owner' },
-        { 'Salary': 3500, 'employeeID': 17, 'PID': 15, 'firstName': 'Armand', 'lastName': 'Ross', 'Title': 'Product Owner' },
-        { 'Salary': 1500, 'employeeID': 18, 'PID': 15, 'firstName': 'Dane', 'lastName': 'Rodriquez', 'Title': 'Team Leader' },
+        { Salary: 2500, employeeID: 16, PID: 15, firstName: 'Jin', lastName: 'Elliott', Title: 'Product Owner' },
+        { Salary: 3500, employeeID: 17, PID: 15, firstName: 'Armand', lastName: 'Ross', Title: 'Product Owner' },
+        { Salary: 1500, employeeID: 18, PID: 15, firstName: 'Dane', lastName: 'Rodriquez', Title: 'Team Leader' },
         // sub of ID 19
-        { 'Salary': 2500, 'employeeID': 19, 'PID': 18, 'firstName': 'Declan', 'lastName': 'Lester', 'Title': 'Senior Software Developer' },
-        { 'Salary': 3500, 'employeeID': 20, 'PID': 18, 'firstName': 'Bernard', 'lastName': 'Jarvis', 'Title': 'Senior Software Developer' },
-        { 'Salary': 1500, 'employeeID': 21, 'PID': 18, 'firstName': 'Jason', 'lastName': 'Clark', 'Title': 'QA' },
-        { 'Salary': 1500, 'employeeID': 22, 'PID': 18, 'firstName': 'Mark', 'lastName': 'Young', 'Title': 'QA' },
+        { Salary: 2500, employeeID: 19, PID: 18, firstName: 'Declan', lastName: 'Lester', Title: 'Senior Software Developer' },
+        { Salary: 3500, employeeID: 20, PID: 18, firstName: 'Bernard', lastName: 'Jarvis', Title: 'Senior Software Developer' },
+        { Salary: 1500, employeeID: 21, PID: 18, firstName: 'Jason', lastName: 'Clark', Title: 'QA' },
+        { Salary: 1500, employeeID: 22, PID: 18, firstName: 'Mark', lastName: 'Young', Title: 'QA' },
         // sub of ID 20
-        { 'Salary': 1500, 'employeeID': 23, 'PID': 20, 'firstName': 'Jeremy', 'lastName': 'Donaldson', 'Title': 'Software Developer' }
-    ])
+        { Salary: 1500, employeeID: 23, PID: 20, firstName: 'Jeremy', lastName: 'Donaldson', Title: 'Software Developer' }
+    ]);
 
     /* Small tree data: Every employee node has ID, Name, HireDate, Age and Employees */
     public static employeeSmallTreeData = () => ([
@@ -1103,7 +1102,7 @@ export class SampleTestData {
                     Age: 25
                 }]
         }
-    ])
+    ]);
 
     /* Search tree data: Every employee node has ID, Name, HireDate, Age, JobTitle and Employees */
     public static employeeSearchTreeData = () => ([
@@ -1183,7 +1182,7 @@ export class SampleTestData {
                     Age: 25
                 }]
         }
-    ])
+    ]);
 
     /* All types tree data: Every employee node has ID, Name, HireDate, Age, OnPTO and Employees */
     public static employeeAllTypesTreeData = () => ([
@@ -1263,7 +1262,7 @@ export class SampleTestData {
                     OnPTO: true
                 }]
         }
-    ])
+    ]);
 
     public static employeeTreeDataDisplayOrder = () => ([
         { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
@@ -1274,7 +1273,7 @@ export class SampleTestData {
         { ID: 6, ParentID: -1, Name: 'Erma Walsh', JobTitle: 'CEO', Age: 52 },
         { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 },
         { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 }
-    ])
+    ]);
 
     public static employeePrimaryForeignKeyTreeData = () => ([
         { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
@@ -1285,7 +1284,7 @@ export class SampleTestData {
         { ID: 7, ParentID: 2, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Age: 35 },
         { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 },
         { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 }
-    ])
+    ]);
 
     public static employeeTreeDataPrimaryForeignKey = () => ([
         {
@@ -1437,7 +1436,7 @@ export class SampleTestData {
             OnPTO: false,
             Age: 27
         }
-    ])
+    ]);
 
     public static employeeGroupByData = () => ([
         {
@@ -1508,7 +1507,7 @@ export class SampleTestData {
             OnPTO: false,
             Age: 27
         }
-    ])
+    ]);
 
     public static excelFilteringData = () => ([
         {
@@ -1575,15 +1574,16 @@ export class SampleTestData {
             Released: undefined,
             AnotherField: 'custom'
         }
-    ])
+    ]);
 
 
     /**
      * Generates simple array of primitve values
+     *
      * @param rows Number of items to add to the array
      * @param type The type of the items
      */
-    public static generateListOfPrimitiveValues(rows: number, type: Number | String | Boolean): any[] {
+    public static generateListOfPrimitiveValues(rows: number, type: string): any[] {
         const data: any[] = [];
         for (let row = 0; row < rows; row++) {
             if (type === 'Number') {
@@ -1595,6 +1595,23 @@ export class SampleTestData {
             }
         }
         return data;
+    }
+
+    /* Generates hierahical data  */
+    public static generateHGridData(count: number, level: number, parendID?) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+           if (level > 0 ) {
+                children = this.generateHGridData(count / 2 , currLevel - 1, rowID);
+           }
+           prods.push({
+            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
+            Col2: i, Col3: i, childData: children, childData2: children });
+        }
+        return prods;
     }
 
     /* Gets the name of the identifier column if exists. */
@@ -1614,23 +1631,6 @@ export class SampleTestData {
         }
     }
 
-    /* Generates hierahical data  */
-    public static generateHGridData(count: number, level: number, parendID?) {
-        const prods = [];
-        const currLevel = level;
-        let children;
-        for (let i = 0; i < count; i++) {
-            const rowID = parendID ? parendID + i : i.toString();
-           if (level > 0 ) {
-                children = this.generateHGridData(count / 2 , currLevel - 1, rowID);
-           }
-           prods.push({
-            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-            'Col2': i, 'Col3': i, childData: children, childData2: children });
-        }
-        return prods;
-    }
-
      /* Data fields: Price: number, Brand: string, Model: string, Edition: string */
      public static exportGroupedDataColumns = () => ([
         { Price: 75000, Brand: 'Tesla', Model: 'Model S', Edition: 'Sport' },
@@ -1644,7 +1644,7 @@ export class SampleTestData {
     ])
 }
 
-// tslint:enable:quotemark
+/* eslint-enable @typescript-eslint/quotes */
 
 export class DataParent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);

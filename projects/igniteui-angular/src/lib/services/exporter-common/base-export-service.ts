@@ -91,13 +91,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
 const DEFAULT_COLUMN_WIDTH = 8.43;
 
 export abstract class IgxBaseExporter {
-    private _columnList: any[];
     private flatRecords: IExportRecord[] = [];
-    private _columnWidthList: number[];
-
-    protected _indexOfLastPinnedColumn = -1;
-    protected _sort = null;
-
     public onExportEnded = new EventEmitter<IBaseEventArgs>();
 
     /**
@@ -107,6 +101,7 @@ export abstract class IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
@@ -118,9 +113,17 @@ export abstract class IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
+
+    protected _isTreeGrid = false;
+    protected _indexOfLastPinnedColumn = -1;
+    protected _sort = null;
+
+    private _columnList: any[];
+    private _columnWidthList: number[];
 
     public get columnWidthList() {
         return this._columnWidthList;
@@ -131,6 +134,7 @@ export abstract class IgxBaseExporter {
      * ```typescript
      * this.exporterService.export(this.igxGridForExport, this.exportOptions);
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public export(grid: any, options: IgxExporterOptionsBase): void {
@@ -187,6 +191,7 @@ export abstract class IgxBaseExporter {
      * ```typescript
      * this.exporterService.exportData(this.arrayForExport, this.exportOptions);
      * ```
+     *
      * @memberof IgxBaseExporter
      */
     public exportData(data: any[], options: IgxExporterOptionsBase): void {
@@ -269,7 +274,6 @@ export abstract class IgxBaseExporter {
         });
     }
 
-    protected abstract exportDataImplementation(data: IExportRecord[], options: IgxExporterOptionsBase): void;
 
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData) {
@@ -420,6 +424,7 @@ export abstract class IgxBaseExporter {
         if (!records) {
             return;
         }
+
         for (let i = 0; i < records.length; i++) {
             const hierarchicalRecord: IExportRecord = {
                 data: records[i].data,
@@ -427,7 +432,6 @@ export abstract class IgxBaseExporter {
                 hidden: !parentExpanded,
                 type: ExportRecordType.TreeGridRecord
             };
-
             this.flatRecords.push(hierarchicalRecord);
             this.addTreeGridData(records[i].children, parentExpanded && records[i].expanded);
         }
@@ -508,4 +512,6 @@ export abstract class IgxBaseExporter {
         this._sort = null;
         this.flatRecords = [];
     }
+
+    protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;
 }

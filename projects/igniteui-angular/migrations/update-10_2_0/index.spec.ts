@@ -1,8 +1,6 @@
 import * as path from 'path';
 
-// tslint:disable:no-implicit-dependencies
 import { EmptyTree } from '@angular-devkit/schematics';
-// tslint:disable-next-line:no-submodule-imports
 import {
     SchematicTestRunner,
     UnitTestTree,
@@ -36,6 +34,7 @@ describe('Update 10.2.0', () => {
     it('should remove the type property if the value is not a valid type', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
+            // eslint-disable-next-line max-len
             `<igx-input-group type="line"></igx-input-group><igx-input-group type="box"></igx-input-group><igx-input-group type="border"></igx-input-group><igx-input-group type="search"></igx-input-group><igx-input-group type="bootstrap"></igx-input-group><igx-input-group type="fluent"></igx-input-group><igx-input-group type="fluent_search"></igx-input-group><igx-input-group type="indigo"></igx-input-group><igx-input-group type='bootstrap'></igx-input-group><igx-input-group type='fluent'></igx-input-group><igx-input-group type='fluent_search'></igx-input-group><igx-input-group type='indigo'></igx-input-group>`
         );
 
@@ -44,6 +43,7 @@ describe('Update 10.2.0', () => {
             .toPromise();
         expect(
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        // eslint-disable-next-line max-len
         ).toEqual(`<igx-input-group type="line"></igx-input-group><igx-input-group type="box"></igx-input-group><igx-input-group type="border"></igx-input-group><igx-input-group type="search"></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group><igx-input-group></igx-input-group>`);
     });
 

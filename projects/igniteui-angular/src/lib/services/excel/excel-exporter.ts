@@ -38,9 +38,7 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
  */
 @Injectable()
 export class IgxExcelExporterService extends IgxBaseExporter {
-
     private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' } as JSZip.JSZipGeneratorOptions<'base64'>;
-    private _xlsx: JSZip;
 
     /**
      * This event is emitted when the export process finishes.
@@ -49,10 +47,13 @@ export class IgxExcelExporterService extends IgxBaseExporter {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxExcelExporterService
      */
     @Output()
     public onExportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
+
+    private _xlsx: JSZip;
 
     private static async populateFolderAsync(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {

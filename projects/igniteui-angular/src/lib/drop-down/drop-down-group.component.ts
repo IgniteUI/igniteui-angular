@@ -13,8 +13,6 @@ let NEXT_ID = 0;
     `
 })
 export class IgxDropDownGroupComponent {
-    private _id = NEXT_ID++;
-
     /**
      * @hidden @internal
      */
@@ -89,4 +87,6 @@ export class IgxDropDownGroupComponent {
      */
     @Input()
     public label: string;
+
+    private _id = NEXT_ID++;
 }

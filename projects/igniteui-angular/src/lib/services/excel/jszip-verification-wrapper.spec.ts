@@ -18,6 +18,43 @@ export class JSZipWrapper {
         this._filesContent = [];
     }
 
+    /* Asserts the JSZip contains the files it should contain. */
+    public verifyStructure(message = '') {
+        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.templatesNames);
+
+        result = (this.hasValues) ?
+                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, JSZipFiles.dataFilesAndFoldersNames) :
+                    result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
+
+        expect(result).toBe(true, message + ' Unexpected zip structure!');
+    }
+
+    /* Verifies the contents of all template files and asserts the result.
+    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
+    public async verifyTemplateFilesContent(message = '', hasDates = false) {
+        JSZipFiles.hasDates = hasDates;
+
+        let result;
+        const msg = (message !== '') ? message + '\r\n' : '';
+
+        await this.readTemplateFiles().then(() => {
+            result = this.compareFiles(this.templateFilesContent, undefined);
+            expect(result.areEqual).toBe(true, msg + result.differences);
+        });
+    }
+
+    /* Verifies the contents of all data files and asserts the result.
+    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
+    public async verifyDataFilesContent(expectedData: IFileContent[], message = '') {
+        let result;
+        const msg = (message !== '') ? message + '\r\n' : '';
+
+        await this.readDataFiles().then(() => {
+            result = this.compareFiles(this.dataFilesContent, expectedData);
+            expect(result.areEqual).toBe(true, msg + result.differences);
+        });
+    }
+
     private createFilesAndFolders() {
         this._filesAndFolders = Object.keys(this._files).map(f => f);
     }
@@ -102,43 +139,6 @@ export class JSZipWrapper {
                         =================== Expected content ====================
                         ${expectedContent}`;
         return differences;
-    }
-
-    /* Asserts the JSZip contains the files it should contain. */
-    public verifyStructure(message = '') {
-        let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.templatesNames);
-
-        result = (this.hasValues) ?
-                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, JSZipFiles.dataFilesAndFoldersNames) :
-                    result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
-
-        expect(result).toBe(true, message + ' Unexpected zip structure!');
-    }
-
-    /* Verifies the contents of all template files and asserts the result.
-    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyTemplateFilesContent(message = '', hasDates = false) {
-        JSZipFiles.hasDates = hasDates;
-
-        let result;
-        const msg = (message !== '') ? message + '\r\n' : '';
-
-        await this.readTemplateFiles().then(() => {
-            result = this.compareFiles(this.templateFilesContent, undefined);
-            expect(result.areEqual).toBe(true, msg + result.differences);
-        });
-    }
-
-    /* Verifies the contents of all data files and asserts the result.
-    Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyDataFilesContent(expectedData: IFileContent[], message = '') {
-        let result;
-        const msg = (message !== '') ? message + '\r\n' : '';
-
-        await this.readDataFiles().then(() => {
-            result = this.compareFiles(this.dataFilesContent, expectedData);
-            expect(result.areEqual).toBe(true, msg + result.differences);
-        });
     }
 
     /* Compares the content of two files based on the provided file type and expected value data. */
@@ -243,7 +243,7 @@ export class ObjectComparer {
 
         // Compare properties
         if (Object.prototype.toString.call(actual) === '[object Array]') {
-            // tslint:disable-next-line:prefer-for-of
+            // eslint-disable-next-line @typescript-eslint/prefer-for-of
             for (let i = 0; i < actual.length; i++) {
                 result = (result && template.indexof(actual[i]) >= 0);
             }

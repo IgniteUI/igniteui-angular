@@ -16,6 +16,7 @@ export class IgxFocusDirective {
      * public igxFocus: IgxFocusDirective;
      * let isFocusOn = this.igxFocus.focused;
      * ```
+     *
      * @memberof IgxFocusDirective
      */
     @Input('igxFocus')
@@ -29,6 +30,7 @@ export class IgxFocusDirective {
      *  <input #focusContainer igxInput [igxFocus]="true"/>
      * </igx-input-group>
      * ```
+     *
      * @memberof IgxFocusDirective
      */
     set focused(val: boolean) {
@@ -42,6 +44,7 @@ export class IgxFocusDirective {
      * public igxFocus: IgxFocusDirective;
      * let igxFocusNativeElement = this.igxFocus.nativeElement;
      * ```
+     *
      * @memberof IgxFocusDirective
      */
     get nativeElement() {
@@ -59,6 +62,7 @@ export class IgxFocusDirective {
      * public igxFocus: IgxFocusDirective;
      * this.igxFocus.trigger();
      * ```
+     *
      * @memberof IgxFocusDirective
      */
     trigger() {

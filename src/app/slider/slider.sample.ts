@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
 
 class Task {
-    title: string;
-    percentCompleted: number;
+    public title: string;
+    public percentCompleted: number;
 
     constructor(title: string, percentCompeted: number) {
         this.title = title;
@@ -17,9 +17,6 @@ class Task {
     templateUrl: 'slider.sample.html'
 })
 export class SliderSampleComponent {
-    private _lowerValue: Date;
-    private _upperValue: Date;
-
     public labelOrientaion = TickLabelsOrientation.Horizontal;
     public ticksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
@@ -38,6 +35,9 @@ export class SliderSampleComponent {
         lower: 2,
         upper: 5
     };
+
+    private _lowerValue: Date;
+    private _upperValue: Date;
 
     constructor() {
         for (let i = 0; i <= 500; i++) {
@@ -85,7 +85,7 @@ export class SliderSampleComponent {
         }
     }
 
-    public tickLabel(value, primary, index, labels) {
+    public tickLabel(value, primary) {
         if (primary) {
             return Math.round(value);
         }

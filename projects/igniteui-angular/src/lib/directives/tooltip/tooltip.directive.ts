@@ -44,8 +44,6 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     selector: '[igxTooltipTarget]'
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
-    private destroy$ = new Subject();
-
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -179,88 +177,11 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     @Output()
     public onTooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
+    private destroy$ = new Subject();
+
     constructor(private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService) {
         super(_element, _navigationService);
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnInit() {
-        super.ngOnInit();
-
-        const positionSettings: PositionSettings = {
-            horizontalDirection: HorizontalAlignment.Center,
-            horizontalStartPoint: HorizontalAlignment.Center,
-            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
-            closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
-        };
-
-        this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
-        this._overlayDefaults.closeOnOutsideClick = false;
-        this._overlayDefaults.closeOnEscape = true;
-
-        this.target.onClosing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
-            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
-
-            if (hidingArgs.cancel) {
-                event.cancel = true;
-            }
-        });
-    }
-
-    /**
-     * @hidden
-     */
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
-
-    private checkOutletAndOutsideClick() {
-        if (this.outlet) {
-            this._overlayDefaults.outlet = this.outlet;
-        }
-    }
-
-    private get mergedOverlaySettings() {
-        return Object.assign({}, this._overlayDefaults, this.overlaySettings);
-    }
-
-    // Return true if the execution in onMouseEnter should be terminated after this method
-    private preMouseEnterCheck() {
-        // If tooltip is about to be opened
-        if (this.target.toBeShown) {
-            clearTimeout(this.target.timeoutId);
-            this.target.toBeShown = false;
-        }
-
-        // If Tooltip is opened or about to be hidden
-        if (!this.target.collapsed || this.target.toBeHidden) {
-            clearTimeout(this.target.timeoutId);
-
-            //  if close animation has started finish it, or close the tooltip with no animation
-            this.target.forceClose(this.mergedOverlaySettings);
-            this.target.toBeHidden = false;
-        }
-
-        return false;
-    }
-
-    // Return true if the execution in onMouseLeave should be terminated after this method
-    private preMouseLeaveCheck(): boolean {
-        clearTimeout(this.target.timeoutId);
-
-        // If tooltip is about to be opened
-        if (this.target.toBeShown) {
-            this.target.toBeShown = false;
-            this.target.toBeHidden = false;
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -355,6 +276,41 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     }
 
     /**
+     * @hidden
+     */
+    public ngOnInit() {
+        super.ngOnInit();
+
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            horizontalStartPoint: HorizontalAlignment.Center,
+            openAnimation: useAnimation(scaleInCenter, { params: { duration: '150ms' } }),
+            closeAnimation: useAnimation(fadeOut, { params: { duration: '75ms' } })
+        };
+
+        this._overlayDefaults.positionStrategy = new AutoPositionStrategy(positionSettings);
+        this._overlayDefaults.closeOnOutsideClick = false;
+        this._overlayDefaults.closeOnEscape = true;
+
+        this.target.onClosing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            const hidingArgs = { target: this, tooltip: this.target, cancel: false };
+            this.onTooltipHide.emit(hidingArgs);
+
+            if (hidingArgs.cancel) {
+                event.cancel = true;
+            }
+        });
+    }
+
+    /**
+     * @hidden
+     */
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    /**
      * Shows the tooltip by respecting the 'showDelay' property.
      *
      * ```typescript
@@ -406,6 +362,50 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             this.target.toBeHidden = false;
         }, this.hideDelay);
     }
+
+    private checkOutletAndOutsideClick() {
+        if (this.outlet) {
+            this._overlayDefaults.outlet = this.outlet;
+        }
+    }
+
+    private get mergedOverlaySettings() {
+        return Object.assign({}, this._overlayDefaults, this.overlaySettings);
+    }
+
+    // Return true if the execution in onMouseEnter should be terminated after this method
+    private preMouseEnterCheck() {
+        // If tooltip is about to be opened
+        if (this.target.toBeShown) {
+            clearTimeout(this.target.timeoutId);
+            this.target.toBeShown = false;
+        }
+
+        // If Tooltip is opened or about to be hidden
+        if (!this.target.collapsed || this.target.toBeHidden) {
+            clearTimeout(this.target.timeoutId);
+
+            //  if close animation has started finish it, or close the tooltip with no animation
+            this.target.forceClose(this.mergedOverlaySettings);
+            this.target.toBeHidden = false;
+        }
+
+        return false;
+    }
+
+    // Return true if the execution in onMouseLeave should be terminated after this method
+    private preMouseLeaveCheck(): boolean {
+        clearTimeout(this.target.timeoutId);
+
+        // If tooltip is about to be opened
+        if (this.target.toBeShown) {
+            this.target.toBeShown = false;
+            this.target.toBeHidden = false;
+            return true;
+        }
+
+        return false;
+    }
 }
 
 let NEXT_ID = 0;
@@ -428,24 +428,6 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]'
 })
 export class IgxTooltipDirective extends IgxToggleDirective {
-
-    /**
-     * @hidden
-     */
-    public timeoutId;
-
-    /**
-     * @hidden
-     * Returns whether close time out has started
-     */
-    public toBeHidden = false;
-
-    /**
-     * @hidden
-     * Returns whether open time out has started
-     */
-    public toBeShown = false;
-
     /**
      * @hidden
      */
@@ -504,6 +486,23 @@ export class IgxTooltipDirective extends IgxToggleDirective {
         return 'tooltip';
     }
 
+    /**
+     * @hidden
+     */
+    public timeoutId;
+
+    /**
+     * @hidden
+     * Returns whether close time out has started
+     */
+    public toBeHidden = false;
+
+    /**
+     * @hidden
+     * Returns whether open time out has started
+     */
+    public toBeShown = false;
+
     /** @hidden */
     constructor(
         elementRef: ElementRef,
@@ -517,6 +516,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * If there is open animation in progress this method will finish is.
      * If there is no open animation in progress this method will open the toggle with no animation.
+     *
      * @param overlaySettings setting to use for opening the toggle
      */
     protected forceOpen(overlaySettings?: OverlaySettings) {
@@ -537,6 +537,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * If there is close animation in progress this method will finish is.
      * If there is no close animation in progress this method will close the toggle with no animation.
+     *
      * @param overlaySettings settings to use for closing the toggle
      */
     protected forceClose(overlaySettings?: OverlaySettings) {

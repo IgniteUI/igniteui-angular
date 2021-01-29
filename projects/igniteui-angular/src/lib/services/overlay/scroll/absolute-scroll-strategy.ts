@@ -69,5 +69,5 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         if (!overlayInfo.elementRef.nativeElement.contains(e.target)) {
             this._overlayService.reposition(this._id);
         }
-    }
+    };
 }

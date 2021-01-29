@@ -93,14 +93,18 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
      * @internal
      */
     @HostBinding('class.igx-grid-toolbar--cosy')
-    get cosyStyle() { return this.displayDensity === 'cosy'; }
+    get cosyStyle() {
+ return this.displayDensity === 'cosy';
+}
 
     /**
      * @hidden
      * @internal
      */
     @HostBinding('class.igx-grid-toolbar--compact')
-    get compactStyle() { return this.displayDensity === 'compact'; }
+    get compactStyle() {
+ return this.displayDensity === 'compact';
+}
 
     /** @hidden @internal */
     @HostBinding('style.max-width.px')

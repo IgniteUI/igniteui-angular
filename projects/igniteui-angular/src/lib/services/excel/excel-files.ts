@@ -166,7 +166,7 @@ export class WorksheetFile implements IExcelFile {
         return rowData.join('');
     }
 
-    /* tslint:disable member-ordering */
+    /* eslint-disable  @typescript-eslint/member-ordering */
     private static getCellData(worksheetData: WorksheetData, row: number, column: number): string {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
@@ -200,7 +200,7 @@ export class WorksheetFile implements IExcelFile {
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         }
     }
-    /* tslint:enable member-ordering */
+    /* eslint-enable  @typescript-eslint/member-ordering */
 }
 
 /**

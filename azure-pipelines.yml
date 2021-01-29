@@ -38,6 +38,9 @@ steps:
   env:
     NODE_OPTIONS: "--max_old_space_size=4096"
 
+- script: npm run test:styles
+  displayName: 'Run styling library tests'
+
 ## Use only Github actions for publishing coveralls.io status
 # - script: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
 #   displayName: 'Combine coverage results'

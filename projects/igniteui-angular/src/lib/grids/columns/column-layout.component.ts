@@ -22,6 +22,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```typescript
      * let columnGroupWidth = this.columnGroup.width;
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     get width(): any {
@@ -55,6 +56,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```typescript
      * let visibleColumnIndex =  this.column.visibleIndex;
      * ```
+     *
      * @memberof IgxColumnComponent
      */
     get visibleIndex(): number {
@@ -93,6 +95,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```typescript
      * <igx-column-layout [hidden] = "true"></igx-column->
      * ```
+     *
      * @memberof IgxColumnGroupComponent
      */
     set hidden(value: boolean) {
