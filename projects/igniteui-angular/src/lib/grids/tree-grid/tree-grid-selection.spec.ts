@@ -1604,6 +1604,54 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
         });
+
+        it(`selectionService clearRowSelection method should work correctly`, () => {
+            treeGrid.selectionService.selectRowsWithNoEvent([711]);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            expect(treeGrid.selectionService.indeterminateRows.size).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+
+            treeGrid.selectionService.clearRowSelection();
+            treeGrid.cdr.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(0);
+            expect(treeGrid.selectionService.indeterminateRows.size).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, false, false);
+        });
+
+        it(`selectionService selectAllRows method should work correctly`, () => {
+            treeGrid.selectionService.selectRowsWithNoEvent([711]);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(1);
+            expect(treeGrid.selectionService.indeterminateRows.size).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+
+            treeGrid.selectionService.selectAllRows();
+            treeGrid.cdr.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(10);
+            expect(treeGrid.selectionService.indeterminateRows.size).toBe(0);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+        });
     });
 
     describe('Cascading Row Selection with Transaction', () => {
