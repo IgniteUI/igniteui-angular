@@ -293,7 +293,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        let newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
+        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
 
         for (const column of grid.columns) {
             this.gridAPI.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
