@@ -1,0 +1,6 @@
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
+$typography: $indigo-type-scale;
+
+$igx-background-color: darken(igx-color($palette, 'surface'), 5%);
+$igx-foreground-color: igx-color($palette, 'grays', 900);

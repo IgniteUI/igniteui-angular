@@ -29,7 +29,7 @@
               "src/web.config"
             ],
             "styles": [
-              "src/styles/igniteui-theme.scss"
+              "src/styles/styles.scss"
             ],
             "scripts": []
           },
