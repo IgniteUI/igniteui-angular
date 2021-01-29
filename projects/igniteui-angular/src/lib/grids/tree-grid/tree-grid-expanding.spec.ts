@@ -16,7 +16,7 @@ import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from '../grid/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridSelectionMode } from '../common/enums';
+import { HierarchicalGridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
@@ -992,7 +992,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             it('check row selection when expand a row', async () => {
-                treeGrid.rowSelection = GridSelectionMode.multiple;
+                treeGrid.rowSelection = HierarchicalGridSelectionMode.multiple;
                 fix.detectChanges();
 
                 treeGrid.selectAllRows();
@@ -1021,6 +1021,41 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, true);
                 expect(treeGrid.selectedRows).toEqual([1, 6, 10]);
             });
+
+            fit('check row selection within multipleCascade selection mode when expand a row', fakeAsync(() => {
+                treeGrid.rowSelection = HierarchicalGridSelectionMode.multipleCascade;
+                fix.detectChanges();
+
+                treeGrid.selectRows([1]);
+                fix.detectChanges();
+
+                expect(treeGrid.selectedRows).toEqual([1]);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+
+                treeGrid.expandRow(1);
+                fix.detectChanges();
+                tick(1000);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(5);
+                expect(treeGrid.selectedRows.length).toBe(3);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, true, true);
+
+                treeGrid.expandRow(2);
+                fix.detectChanges();
+                tick(1000);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(7);
+                expect(treeGrid.selectedRows.length).toBe(5);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            }));
         });
 
         describe('ChildDataKey', () => {

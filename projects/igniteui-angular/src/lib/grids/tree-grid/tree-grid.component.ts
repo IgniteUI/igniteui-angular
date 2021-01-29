@@ -747,14 +747,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
-        requestAnimationFrame(() => {
-            if (this.rowSelection === 'multipleCascade') {
-                if (this.selectionService.isRowSelected(parentID)) {
-                    this.selectionService.rowSelection.delete(parentID);
-                    this.selectionService.selectRowsWithNoEvent([parentID]);
-                }
+        if (this.rowSelection === 'multipleCascade') {
+            this.cdr.detectChanges();
+            if (this.selectionService.isRowSelected(parentID)) {
+                this.selectionService.rowSelection.delete(parentID);
+                this.selectionService.selectRowsWithNoEvent([parentID]);
             }
-        });
+        }
     }
 
     private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {

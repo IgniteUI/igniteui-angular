@@ -28,7 +28,6 @@ import { IgxActionStripModule, IgxActionStripComponent } from '../../action-stri
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { By } from '@angular/platform-browser';
-import { TransactionType } from '../../services/public_api';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
@@ -1553,6 +1552,22 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(0);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+        }));
+
+        it(`Set nested child row, that has its own children, as initially selected and verify
+        that both direct and indirect parent's checkboxes are set in the correct state.`, fakeAsync(() => {
+
+            treeGrid.selectedRows = [317];
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
         }));
     });
 
