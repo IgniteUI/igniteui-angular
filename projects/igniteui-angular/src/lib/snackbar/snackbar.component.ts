@@ -97,6 +97,7 @@ export class IgxSnackbarComponent {
      * ```typescript
      * let snackbarId = this.snackbar.id;
      * ```
+     *
      * @memberof IgxSnackbarComponent
      */
     @HostBinding('attr.id')
@@ -214,7 +215,9 @@ export class IgxSnackbarComponent {
      */
     public show(message?: string): void {
         clearTimeout(this.timeoutId);
-        if (message !== undefined) { this.snackbarMessage = message; }
+        if (message !== undefined) {
+ this.snackbarMessage = message;
+}
         setTimeout(this.timeoutId);
         this.isVisible = true;
 

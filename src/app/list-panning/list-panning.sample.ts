@@ -12,7 +12,7 @@ export class ListPanningSampleComponent {
     @ViewChild('toast', { static: true })
     toast: IgxToastComponent;
 
-    public navItems: object[] = [{
+    public navItems = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -84,7 +84,7 @@ export class ListPanningSampleComponent {
         text: 'Ward Riley'
     }];
 
-    public navItems2: object[];
+    public navItems2;
 
     constructor() {
         this.navItems2 = Object.assign([], this.navItems);

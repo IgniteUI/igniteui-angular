@@ -49,17 +49,6 @@ export interface IChangeProgressEventArgs extends IBaseEventArgs {
  */
 @Directive()
 export abstract class BaseProgressDirective {
-    private requestAnimationId: number = undefined;
-
-    protected _initValue = 0;
-    protected _contentInit = false;
-    protected _valueInPercent = MIN_VALUE;
-    protected _max = 100;
-    protected _value = MIN_VALUE;
-    protected _newVal = MIN_VALUE;
-    protected _animate = true;
-    protected _step;
-
     /**
      * An event, which is triggered after a progress is changed.
      * ```typescript
@@ -75,6 +64,17 @@ export abstract class BaseProgressDirective {
      */
     @Output()
     public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
+
+    protected _initValue = 0;
+    protected _contentInit = false;
+    protected _valueInPercent = MIN_VALUE;
+    protected _max = 100;
+    protected _value = MIN_VALUE;
+    protected _newVal = MIN_VALUE;
+    protected _animate = true;
+    protected _step;
+
+    private requestAnimationId: number = undefined;
 
     /**
      * Returns the value which update the progress indicator of the `progress bar`.
@@ -300,11 +300,6 @@ let NEXT_GRADIENT_ID = 0;
     templateUrl: 'templates/linear-bar.component.html'
 })
 export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
-
-    constructor() {
-        super();
-    }
-
     @HostBinding('attr.aria-valuemin')
     public valueMin = 0;
 
@@ -404,6 +399,10 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     @Input()
     public type = 'default';
 
+    constructor() {
+        super();
+    }
+
    /**
     * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
     * ```typescript
@@ -485,9 +484,6 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
 })
 export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
 
-    private readonly STROKE_OPACITY_DVIDER = 100;
-    private readonly STROKE_OPACITY_ADDITION = .2;
-
     /** @hidden */
     @HostBinding('class.igx-circular-bar')
     public cssClass = 'igx-circular-bar';
@@ -501,11 +497,6 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     @HostBinding('attr.id')
     @Input()
     public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
-
-    /**
-     * @hidden
-     */
-    public gradientId = `igx-circular-gradient-${NEXT_GRADIENT_ID++}`;
 
     /**
      * An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
@@ -543,6 +534,14 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
 
     @ContentChild(IgxProgressBarGradientDirective, { read: IgxProgressBarGradientDirective })
     public gradientTemplate: IgxProgressBarGradientDirective;
+
+    @ViewChild('circle', { static: true })
+    private _svgCircle: ElementRef;
+
+    /**
+     * @hidden
+     */
+    public gradientId = `igx-circular-gradient-${NEXT_GRADIENT_ID++}`;
 
     /**
      * @hidden
@@ -595,8 +594,8 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     private _circleRadius = 46;
     private _circumference = 2 * Math.PI * this._circleRadius;
 
-    @ViewChild('circle', { static: true })
-    private _svgCircle: ElementRef;
+    private readonly STROKE_OPACITY_DVIDER = 100;
+    private readonly STROKE_OPACITY_ADDITION = .2;
 
     constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
         super();
@@ -666,13 +665,9 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
     }
 }
 
-export function valueInRange(value: number, max: number, min = 0): number {
-    return Math.max(Math.min(value, max), min);
-}
+export const valueInRange = (value: number, max: number, min = 0): number => Math.max(Math.min(value, max), min);
 
-export function toPercent(value: number, max: number) {
-    return Math.floor(100 * value / max);
-}
+export const toPercent = (value: number, max: number) => Math.floor(100 * value / max);
 
 /**
  * @hidden

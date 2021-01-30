@@ -86,6 +86,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
+     *
      * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
@@ -97,6 +98,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * An @Input property that sets the height of the `IgxChipsAreaComponent`.
+     *
      * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
@@ -109,6 +111,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     /**
      * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` should be reordered.
      * Returns an array of `IgxChipComponent`s.
+     *
      * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder($event)"></igx-chips-area>
@@ -121,6 +124,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected/deselected.
      * Fired after the chips area is initialized if there are initially selected chips as well.
      * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
+     *
      * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection($event)"></igx-chips-area>
@@ -131,6 +135,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     *
      * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveStart)="moveStart($event)"></igx-chips-area>
@@ -141,6 +146,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     *
      * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveEnd)="moveEnd($event)"></igx-chips-area>
@@ -151,6 +157,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
+     *
      * @example
      * ```typescript
      * ngAfterViewInit(){
@@ -161,9 +168,10 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     @ContentChildren(IgxChipComponent, { descendants: true })
     public chipsList: QueryList<IgxChipComponent>;
 
+    protected destroy$ = new Subject<boolean>();
+
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
-    protected destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public element: ElementRef,
         private _iterableDiffers: IterableDiffers) {
@@ -331,7 +339,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
         const eventData: IChipsAreaReorderEventArgs = {
             chipsArray: this.modifiedChipsArray,
-            originalEvent: originalEvent,
+            originalEvent,
             owner: this
         };
         this.onReorder.emit(eventData);
@@ -347,9 +355,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
         if (event.selected && !selectedChips.includes(event.owner)) {
             selectedChips.push(event.owner);
         } else if (!event.selected && selectedChips.includes(event.owner)) {
-            selectedChips = selectedChips.filter((chip) => {
-                return chip.id !== event.owner.id;
-            });
+            selectedChips = selectedChips.filter((chip) => chip.id !== event.owner.id);
         }
         this.onSelection.emit({
             originalEvent: event.originalEvent,

@@ -7,7 +7,7 @@ import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteri
 
 describe('Unit testing FilteringStrategy', () => {
     let dataGenerator: DataGenerator;
-    let data: object[];
+    let data: any[];
     let fs: FilteringStrategy;
     beforeEach(() => {
         dataGenerator = new DataGenerator();

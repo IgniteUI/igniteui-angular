@@ -12,13 +12,13 @@ import {
     templateUrl: 'grid-cellEditing.component.html'
 })
 export class GridCellEditingComponent {
-
-    orderDateHidden = false;
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public gridWithoutPK: IgxGridComponent;
     @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+
+    orderDateHidden = false;
     data: any;
     dataWithoutPK: any;
     public density = 'compact';
@@ -37,12 +37,10 @@ export class GridCellEditingComponent {
 
     kk = false;
     pname = 'ProductName';
-    private subscribtion;
     public selectionMode;
     public earliest = EarliestSummary;
 
     constructor() {
-        const date = new Date();
         this.data = data;
         this.dataWithoutPK = dataWithoutPK;
         this.displayDensities = [
@@ -202,10 +200,14 @@ export class GridCellEditingComponent {
             const cell = args.event.shiftKey ?
                 this.gridWithPK.getPreviousCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable) :
                 this.gridWithPK.getNextCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable);
-            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => {
+ obj.target.nativeElement.focus();
+});
         } else if (type === 'dataCell'  && args.event.key.toLowerCase() === 'enter') {
             args.cancel = true;
-            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => { obj.target.nativeElement.focus(); });
+            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => {
+ obj.target.nativeElement.focus();
+});
         }
     }
 }

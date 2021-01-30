@@ -8,16 +8,13 @@ import {
     templateUrl: 'hierarchical-grid-add-row.sample.html'
 })
 export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
+    @ViewChild('hGrid', { static: true })
+    hGrid: IgxHierarchicalGridComponent;
+
     localData = [];
 
     public columns;
     public childColumns;
-
-
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
-
-
 
     constructor(private cdr: ChangeDetectorRef) {
         this.localData = this.generateDataUneven(100, 3);
@@ -27,11 +24,9 @@ export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
         this.localData[2].childData[1].hasChild = false;
     }
 
-
     ngAfterViewInit() {
         this.cdr.detectChanges();
     }
-
 
     generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
@@ -57,8 +52,6 @@ export class HierarchicalGridAddRowSampleComponent implements AfterViewInit {
         }
         return prods;
     }
-
-
 
     onMouseOver(event,  hierarchicalGrid, actionStrip) {
         const target = event.target;

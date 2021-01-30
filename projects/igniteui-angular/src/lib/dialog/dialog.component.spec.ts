@@ -450,10 +450,10 @@ describe('Dialog', () => {
         });
     });
 
-    function dispatchEvent(element: HTMLElement, eventType: string) {
+    const dispatchEvent = (element: HTMLElement, eventType: string) => {
         const event = new Event(eventType);
         element.dispatchEvent(event);
-    }
+    };
 });
 
 @Component({

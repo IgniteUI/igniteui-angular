@@ -15,6 +15,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 /**
  * Base class for the pinning/hiding column actions.
+ *
  * @hidden @internal
  */
 @Directive()
@@ -64,7 +65,7 @@ export abstract class BaseToolbarDirective {
 }
 
 
-function _makeOverlaySettings(): OverlaySettings {
+const _makeOverlaySettings = (): OverlaySettings => {
     const positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -78,4 +79,4 @@ function _makeOverlaySettings(): OverlaySettings {
         closeOnEscape: true,
         closeOnOutsideClick: true
     };
-}
+};

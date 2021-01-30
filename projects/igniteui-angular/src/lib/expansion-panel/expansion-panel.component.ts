@@ -26,7 +26,6 @@ export interface AnimationSettings {
     providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }]
 })
 export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterContentInit {
-    private _collapsed = true;
     /**
      * Sets/gets the animation settings of the expansion panel component
      * Open and Close animation should be passed
@@ -73,6 +72,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      * ```typescript
      * let panelId =  this.panel.id;
      * ```
+     *
      * @memberof IgxExpansionPanelComponent
      */
     @HostBinding('attr.id')
@@ -163,6 +163,8 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
+    private _collapsed = true;
+
     constructor(private cdr: ChangeDetectorRef, private builder: AnimationBuilder) { }
 
     /** @hidden */
@@ -174,37 +176,6 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
                 this.body.label = this.body.label || this.id + '-region';
             });
         }
-    }
-
-    private playOpenAnimation(cb: () => void) {
-        if (!this.body) { // if not body element is passed, there is nothing to animate
-            return;
-        }
-        const animation = useAnimation(this.animationSettings.openAnimation);
-        const animationBuilder = this.builder.build(animation);
-        const openAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
-
-        openAnimationPlayer.onDone(() => {
-            cb();
-            openAnimationPlayer.reset();
-        });
-
-        openAnimationPlayer.play();
-    }
-
-    private playCloseAnimation(cb: () => void) {
-        if (!this.body) { // if not body element is passed, there is nothing to animate
-            return;
-        }
-        const animation = useAnimation(this.animationSettings.closeAnimation);
-        const animationBuilder = this.builder.build(animation);
-        const closeAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
-        closeAnimationPlayer.onDone(() => {
-            cb();
-            closeAnimationPlayer.reset();
-        });
-
-        closeAnimationPlayer.play();
     }
 
     /**
@@ -278,4 +249,34 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         this.collapse(evt);
     }
 
+    private playOpenAnimation(cb: () => void) {
+        if (!this.body) { // if not body element is passed, there is nothing to animate
+            return;
+        }
+        const animation = useAnimation(this.animationSettings.openAnimation);
+        const animationBuilder = this.builder.build(animation);
+        const openAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
+
+        openAnimationPlayer.onDone(() => {
+            cb();
+            openAnimationPlayer.reset();
+        });
+
+        openAnimationPlayer.play();
+    }
+
+    private playCloseAnimation(cb: () => void) {
+        if (!this.body) { // if not body element is passed, there is nothing to animate
+            return;
+        }
+        const animation = useAnimation(this.animationSettings.closeAnimation);
+        const animationBuilder = this.builder.build(animation);
+        const closeAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
+        closeAnimationPlayer.onDone(() => {
+            cb();
+            closeAnimationPlayer.reset();
+        });
+
+        closeAnimationPlayer.play();
+    }
 }

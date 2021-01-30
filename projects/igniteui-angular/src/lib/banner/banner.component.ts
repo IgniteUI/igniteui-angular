@@ -41,15 +41,6 @@ export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventA
     templateUrl: 'banner.component.html'
 })
 export class IgxBannerComponent implements IToggleView {
-    private _bannerEvent: BannerEventArgs;
-    private _animationSettings: AnimationSettings;
-
-    @ViewChild('expansionPanel', { static: true })
-    private _expansionPanel: IgxExpansionPanelComponent;
-
-    @ContentChild(IgxBannerActionsDirective)
-    private _bannerActionTemplate: IgxBannerActionsDirective;
-
     /**
      * @hidden
      */
@@ -167,6 +158,15 @@ export class IgxBannerComponent implements IToggleView {
     public get displayStyle(): string {
         return this.collapsed ? '' : 'block';
     }
+
+    @ViewChild('expansionPanel', { static: true })
+    private _expansionPanel: IgxExpansionPanelComponent;
+
+    @ContentChild(IgxBannerActionsDirective)
+    private _bannerActionTemplate: IgxBannerActionsDirective;
+
+    private _bannerEvent: BannerEventArgs;
+    private _animationSettings: AnimationSettings;
 
     constructor(public elementRef: ElementRef) { }
 

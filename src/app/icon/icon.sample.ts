@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
     templateUrl: 'icon.sample.html'
 })
 export class IconSampleComponent implements OnInit {
-    constructor (public router: Router, private _iconService: IgxIconService) {}
+    constructor(public router: Router, private _iconService: IgxIconService) {}
 
     ngOnInit(): void {
         // register custom svg icons

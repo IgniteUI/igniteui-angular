@@ -27,6 +27,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     /**
      * Checks if element can fit in viewport and updates provided connectedFit
      * with the result
+     *
      * @param connectedFit connectedFit to update
      */
     protected updateViewPortFit(connectedFit: ConnectedFit) {
@@ -58,6 +59,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     /**
      * Calculates the position of the left border of the element if it gets positioned
      * with provided start point and direction
+     *
      * @param targetRect Rectangle of the target where element is attached
      * @param elementRect Rectangle of the element
      * @param startPoint Start point of the target
@@ -72,6 +74,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     /**
      * Calculates the position of the top border of the element if it gets positioned
      * with provided position settings related to the target
+     *
      * @param targetRect Rectangle of the target where element is attached
      * @param elementRect Rectangle of the element
      * @param startPoint Start point of the target
@@ -85,6 +88,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /**
      * Returns whether the element should fit in viewport
+     *
      * @param connectedFit connectedFit object containing all necessary parameters
      */
     protected shouldFitInViewPort(connectedFit: ConnectedFit) {
@@ -94,6 +98,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /**
      * Fits the element into viewport according to the position settings
+     *
      * @param element element to fit in viewport
      * @param connectedFit connectedFit object containing all necessary parameters
      */

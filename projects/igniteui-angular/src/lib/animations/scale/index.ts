@@ -22,7 +22,7 @@ const baseInParams: IAnimationParams = {
     delay: '0s',
     direction: '',
     duration: '350ms',
-    easing: EaseOut.quad,
+    easing: EaseOut.Quad,
     endOpacity: 1,
     fromScale: .5,
     startOpacity: 0,
@@ -33,7 +33,7 @@ const baseInParams: IAnimationParams = {
 
 const baseOutParams: IAnimationParams = {
     ...baseInParams,
-    easing: EaseOut.sine,
+    easing: EaseOut.Sine,
     endOpacity: 0,
     fromScale: 1,
     startOpacity: 1,

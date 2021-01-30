@@ -16,11 +16,11 @@ export class MainComponent implements AfterViewInit, OnDestroy {
     @Output() public recordsVolume = new EventEmitter<any>();
     @Output() public frequencyTimer = new EventEmitter<any>();
     @Output() public player = new EventEmitter<any>();
-
-    private subscription$;
     public theme = false;
     public volume = 1000;
     public frequency = 500;
+
+    private subscription$;
     private _timer;
 
     constructor(private elRef: ElementRef) {
@@ -31,6 +31,11 @@ export class MainComponent implements AfterViewInit, OnDestroy {
         //     this.finGrid.data = x;
         // });
     }
+
+    public ngOnDestroy() {
+        this.stopFeed();
+    }
+
     public onSwitchChanged(event: any) {
         switch (event.action) {
             case 'toolbar': {
@@ -115,9 +120,5 @@ export class MainComponent implements AfterViewInit, OnDestroy {
      */
     private parentComponentEl() {
         return this.elRef.nativeElement.parentElement.parentElement;
-    }
-
-    public ngOnDestroy() {
-        this.stopFeed();
     }
 }

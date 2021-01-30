@@ -6,6 +6,7 @@ import { IgxOverlayService } from '../overlay';
 export interface IScrollStrategy {
     /**
      * Initializes the strategy. Should be called once
+     *
      * @param document reference to Document object.
      * @param overlayService IgxOverlay service to use in this strategy.
      * @param id Unique id for this strategy.

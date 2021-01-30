@@ -182,7 +182,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(summaries.length).toBe(0);
         });
 
-        it('should position correctly summary row for collapsed rows -- bottom position', async() => {
+        it('should position correctly summary row for collapsed rows -- bottom position', async () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -226,7 +226,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
         });
 
-        it('should position correctly summary row for collapsed rows -- top position', async() => {
+        it('should position correctly summary row for collapsed rows -- top position', async () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -1660,7 +1660,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         expect(treeGrid.dataRowList.length).toEqual(10);
     });
 
-    function verifySummaryForRow147(fixture, visibleIndex) {
+    const verifySummaryForRow147 = (fixture, visibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
@@ -1668,49 +1668,49 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
             ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['3']);
-    }
+    };
 
-    function verifySummaryForRow317(fixture, visibleIndex) {
+    const verifySummaryForRow317 = (fixture, visibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'Nov 11, 2009', 'Oct 17, 2015']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '35', '44', '79', '39.5']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['2']);
-    }
+    };
 
-    function verifySummaryForRow847(fixture, visibleIndex) {
+    const verifySummaryForRow847 = (fixture, visibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['2', 'May 4, 2014', 'Dec 9, 2017']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '25', '44', '69', '34.5']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['2']);
-    }
+    };
 
-    function verifySummaryForRow663(fixture, visibleIndex) {
+    const verifySummaryForRow663 = (fixture, visibleIndex) => {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Apr 22, 2010', 'Apr 22, 2010']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '39', '39', '39', '39']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['1']);
-    }
+    };
 
-    function verifySummaryIsEmpty(summaryRow) {
+    const verifySummaryIsEmpty = (summaryRow) => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['0']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['0', '', '']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '0', '0', '0', '0']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['0']);
-    }
+    };
 
-    function verifyTreeBaseSummaries(fixture) {
+    const verifyTreeBaseSummaries = (fixture) => {
         const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['4', 'Apr 20, 2008', 'Feb 22, 2014']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
-    }
+    };
 });

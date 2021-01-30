@@ -2,22 +2,42 @@ import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, Inject } 
 import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansion-panel.common';
 
 @Component({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-expansion-panel-body',
     template: `<ng-content></ng-content>`
 })
 export class IgxExpansionPanelBodyComponent {
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-expansion-panel__body')
+    public cssClass = `igx-expansion-panel__body`;
+
+    /**
+     * Gets/sets the `role` attribute of the panel body
+     * Default is 'region';
+     * Get
+     * ```typescript
+     *  const currentRole = this.panel.body.role;
+     * ```
+     * Set
+     * ```typescript
+     *  this.panel.body.role = 'content';
+     * ```
+     * ```html
+     *  <igx-expansion-panel-body [role]="'custom'"></igx-expansion-panel-body>
+     * ```
+     */
+    @Input()
+    @HostBinding('attr.role')
+    public role = 'region';
+
     private _labelledBy = '';
     private _label = '';
     constructor(
         @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase,
         public element: ElementRef, public cdr: ChangeDetectorRef) {
     }
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-expansion-panel__body')
-    public cssClass = `igx-expansion-panel__body`;
 
     /**
      * Gets the `aria-label` attribute of the panel body
@@ -70,23 +90,4 @@ export class IgxExpansionPanelBodyComponent {
     public set labelledBy(val: string) {
         this._labelledBy = val;
     }
-
-    /**
-     * Gets/sets the `role` attribute of the panel body
-     * Default is 'region';
-     * Get
-     * ```typescript
-     *  const currentRole = this.panel.body.role;
-     * ```
-     * Set
-     * ```typescript
-     *  this.panel.body.role = 'content';
-     * ```
-     * ```html
-     *  <igx-expansion-panel-body [role]="'custom'"></igx-expansion-panel-body>
-     * ```
-     */
-    @Input()
-    @HostBinding('attr.role')
-    public role = 'region';
 }
