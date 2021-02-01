@@ -224,15 +224,14 @@ export const createProjectService = (serverHost: tss.server.ServerHost): tss.ser
  * Attempts to get type definitions using the TypeScript Language Service.
  * Can fall back to a cached version of the TSLS.
  */
-const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, definition: tss.DefinitionInfo): any => {
+const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, definition: tss.DefinitionInfo): any =>
     /*
         getTypeScriptLanguageService is attached by us to the Typescript Language Service
         via a custom made plugin, it's sole purpose is to cache the language service and return it
         before any other plugins modify it
     */
-    return langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start)
-        || (langServ as TSLanguageService).getTypeScriptLanguageService().getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
-};
+    langServ.getTypeDefinitionAtPosition(entryPath, definition.textSpan.start)
+    || (langServ as TSLanguageService).getTypeScriptLanguageService().getTypeDefinitionAtPosition(entryPath, definition.textSpan.start);
 
 /**
  * Get type information about a TypeScript identifier
