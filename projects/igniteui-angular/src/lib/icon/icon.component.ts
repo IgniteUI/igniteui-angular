@@ -4,8 +4,6 @@ import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
-let NEXT_ID = 0;
-
 /**
  * Icon provides a way to include material icons to markup
  *
@@ -57,18 +55,6 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      */
     @HostBinding('attr.aria-hidden')
     public ariaHidden = true;
-
-    /**
-     * An @Input property that sets the value of the `id` attribute.
-     *
-     * @example
-     * ```html
-     * <igx-icon id="igx-icon-1" family="material">settings</igx-icon>
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-icon-${NEXT_ID++}`;
 
     /**
      * An @Input property that sets the value of the `family`. By default it's "material".
