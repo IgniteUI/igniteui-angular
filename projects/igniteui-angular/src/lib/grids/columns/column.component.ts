@@ -1726,7 +1726,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
+     * Pins the column at the provided index in the pinned area.
+     * Defaults to index `0` if not provided, or to the initial index in the pinned area.
      * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
      * Column cannot be pinned if:
      * - Is already pinned
@@ -1818,7 +1819,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return true;
     }
     /**
-     * Unpins the column and place it at the provided index in the unpinned area. Defaults to index `0` if not provided.
+     * Unpins the column and place it at the provided index in the unpinned area.
+     * Defaults to index `0` if not provided, or to the initial index in the unpinned area.
      * Returns `true` if the column is successfully unpinned. Returns `false` if the column cannot be unpinned.
      * Column cannot be unpinned if:
      * - Is already unpinned

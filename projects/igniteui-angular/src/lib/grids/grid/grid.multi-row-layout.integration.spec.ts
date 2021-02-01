@@ -375,7 +375,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
-            checkbox.click();
+            const checkboxEl = ControlsFunction.getCheckboxElement('group1', columnChooserElement, fixture);
+            checkboxEl.triggerEventHandler("click", new Event("click"));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
@@ -384,7 +385,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
-            checkbox.click();
+            checkboxEl.triggerEventHandler("click", new Event("click"));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
@@ -732,13 +733,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const column = grid.getColumnByName('group1');
             expect(column.pinned).toBeFalsy();
 
-            checkbox.click();
+            const checkboxEl = ControlsFunction.getCheckboxElement('group1', columnChooserElement, fixture);
+            checkboxEl.triggerEventHandler("click", new Event("click"));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
             expect(column.pinned).toBeTruthy();
 
-            checkbox.click();
+            checkboxEl.triggerEventHandler("click", new Event("click"));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
