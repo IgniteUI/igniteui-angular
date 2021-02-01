@@ -328,7 +328,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * const selectedItem = this.myTabComponent.selectedTabItem;
      * ```
      */
-    get selectedTabItem(): IgxTabItemComponent {
+    public get selectedTabItem(): IgxTabItemComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }

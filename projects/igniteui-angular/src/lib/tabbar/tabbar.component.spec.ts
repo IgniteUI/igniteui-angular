@@ -42,11 +42,9 @@ describe('IgxBottomNav', () => {
 
     describe('Html Attributes', () => {
         let fixture;
-        let tabbar;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(BottomNavTestHtmlAttributesComponent);
-            tabbar = fixture.componentInstance.tabbar;
         }));
 
         it('should set the correct attributes on the html elements', () => {
@@ -404,7 +402,7 @@ class TabBarTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 
-    public tabSelectedHandler(args) {
+    public tabSelectedHandler() {
     }
 }
 
