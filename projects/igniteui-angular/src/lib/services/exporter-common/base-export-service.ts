@@ -479,6 +479,8 @@ export abstract class IgxBaseExporter {
                 record.column.header :
                 record.expression.fieldName;
 
+            recordVal = recordVal !== null ? recordVal : '';
+
             const groupExpression: IExportRecord = {
                 data: { [firstCol]: `${groupExpressionName}: ${recordVal} (${record.records.length})` },
                 level: record.level,
