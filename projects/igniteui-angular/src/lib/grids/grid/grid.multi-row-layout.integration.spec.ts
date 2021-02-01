@@ -602,12 +602,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Fax').pinned).toBeTruthy();
             expect(grid.getColumnByName('Phone').pinned).toBeTruthy();
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
 
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
-             // headers are aligned to cells
-             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
             // check virtualization state
             // 4 groups in total - 1 is pinned
@@ -780,12 +776,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Address').pinned).toBeTruthy();
             expect(grid.getColumnByName('County').pinned).toBeTruthy();
             const gridFirstRow = grid.rowList.first;
-            const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
 
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
-             // headers are aligned to cells
-             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
             // check virtualization state
             const horizontalVirtualization = grid.rowList.first.virtDirRow;
