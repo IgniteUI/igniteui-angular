@@ -125,7 +125,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     /** @hidden */
     @HostBinding('attr.aria-labelledby')
-    public labelId = `${this.id}-label`;
+    public get labelId() {
+        return this.showIndicatorsLabel ? `${this.id}-label` : null;
+    } ;
 
     /**
      * Returns the class of the carousel component.
