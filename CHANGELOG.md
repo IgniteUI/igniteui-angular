@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
+- `IgxGrid`
+    - Added support for exporting grouped data.
 ### General
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.

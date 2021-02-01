@@ -96,6 +96,7 @@ export class GridGroupBySampleComponent implements OnInit {
         }
         this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
     }
+
     toggleGroupedVisibility(event) {
         this.grid1.hideGroupedColumns = !event.checked;
     }

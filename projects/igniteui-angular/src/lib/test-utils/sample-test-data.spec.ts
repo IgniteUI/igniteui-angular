@@ -1576,6 +1576,17 @@ export class SampleTestData {
         }
     ]);
 
+    /* Data fields: Price: number, Brand: string, Model: string, Edition: string */
+    public static exportGroupedDataColumns = () => ([
+        { Price: 75000, Brand: 'Tesla', Model: 'Model S', Edition: 'Sport' },
+        { Price: 100000, Brand: 'Tesla', Model: 'Roadster', Edition: 'Performance' },
+        { Price: 65000, Brand: 'Tesla', Model: 'Model S', Edition: 'Base' },
+        { Price: 150000, Brand: 'BMW', Model: 'M5', Edition: 'Competition' },
+        { Price: 100000, Brand: 'BMW', Model: 'M5', Edition: 'Performance' },
+        { Price: 75000, Brand: 'VW', Model: 'Arteon', Edition: 'Business' },
+        { Price: 65000, Brand: 'VW', Model: 'Passat', Edition: 'Business' },
+        { Price: 100000, Brand: 'VW', Model: 'Arteon', Edition: 'R Line' },
+    ]);
 
     /**
      * Generates simple array of primitve values
