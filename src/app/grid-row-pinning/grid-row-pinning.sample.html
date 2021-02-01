@@ -16,7 +16,7 @@
             <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
         </div>
         <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
-            [columnHiding]='true' [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'"
+            #grid1 [data]="data" [width]="'800px'"
             [height]="'600px'" [rowSelection]="'multiple'">
 
             <ng-template igxGridDetail let-dataItem>
@@ -51,7 +51,7 @@
     <div class="sample-column">
         <div>igxHierarchicalGrid</div>
         <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true'
-            [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' [columnHiding]='true'  [rowSelection]="true" >
+            [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" >
             <ng-template igxToolbarCustomContent>
                 <app-grid-search-box [grid]="hGrid" [style.width]="'400px'"></app-grid-search-box>
             </ng-template>
@@ -79,9 +79,7 @@
     <div class="sample-column">
         <div>igxTreeGrid</div>
         <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
-        [width]="'900px'" [height]="'800px'" [showToolbar]="true"
-        [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
-       >
+        [width]="'900px'" [height]="'800px'" >
        <igx-column width='150px' [filterable]='false'>
             <ng-template igxCell let-cell="cell" let-val>
                 <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)">
