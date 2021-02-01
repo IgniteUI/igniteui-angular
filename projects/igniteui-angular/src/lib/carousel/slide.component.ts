@@ -81,19 +81,6 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
     public ariaLabelledBy;
 
     /**
-     * Returns the `aria-selected` of the slide.
-     *
-     * ```typescript
-     * let slide = this.slide.ariaSelected;
-     * ```
-     *
-     */
-    @HostBinding('attr.aria-selected')
-    public get ariaSelected(): boolean {
-        return this.active;
-    }
-
-    /**
      * Returns the class of the slide component.
      * ```typescript
      * let class =  this.slide.cssClass;
