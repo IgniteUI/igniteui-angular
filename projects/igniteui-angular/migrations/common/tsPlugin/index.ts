@@ -8,9 +8,7 @@ const init = (modules: { typescript: typeof import('typescript/lib/tsserverlibra
      * Returns a cached version of the TSLS.
      * Useful if other global or local plugins modify it.
      */
-    const getTypeScriptLanguageService = (): ts.LanguageService => {
-        return tsLanguageService;
-    };
+    const getTypeScriptLanguageService = (): ts.LanguageService => tsLanguageService;
 
     const create = (info: ts.server.PluginCreateInfo): TSLanguageService => {
         tsLanguageService = info.languageService;
