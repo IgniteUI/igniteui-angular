@@ -95,17 +95,6 @@ export class IgxSplitterPaneComponent {
     @Output()
     public collapsedChange = new EventEmitter<IgxSplitterPaneComponent>();
 
-    /**
-     * Event fired when collapsed state of pane is changed.
-     *
-     * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane (onToggle)='onPaneToggle($event)'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
-     */
-
     /** @hidden @internal */
     @HostBinding('style.order')
     public order!: number;
