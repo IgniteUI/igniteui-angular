@@ -96,6 +96,19 @@ export class CarouselHammerConfig extends HammerGestureConfig {
 })
 
 export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
+
+    /**
+     * Sets the `id` of the carousel.
+     * If not set, the `id` of the first carousel component will be `"igx-carousel-0"`.
+     * ```html
+     * <igx-carousel id="my-first-carousel"></igx-carousel>
+     * ```
+     *
+     * @memberof IgxCarouselComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-carousel-${NEXT_ID++}`;
     /**
      * Returns the `role` attribute of the carousel.
      * ```typescript
@@ -112,20 +125,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     /** @hidden */
     @HostBinding('attr.aria-labelledby')
-    public labelId = `igxCarouselLbl`; // tab-${this.current + 1}-3
-
-    /**
-     * Sets the `id` of the carousel.
-     * If not set, the `id` of the first carousel component will be `"igx-carousel-0"`.
-     * ```html
-     * <igx-carousel id="my-first-carousel"></igx-carousel>
-     * ```
-     *
-     * @memberof IgxCarouselComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-carousel-${NEXT_ID++}`;
+    public labelId = `${this.id}-label`;
 
     /**
      * Returns the class of the carousel component.
@@ -702,15 +702,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /** @hidden */
-    public setAriaLabel(slide) {
-        return `${this.resourceStrings.igx_carousel_slide} ${slide.index + 1} ${this.resourceStrings.igx_carousel_of} ${this.total}`;
-    }
-
-    /** @hidden */
-    public setId(slide) {
-        return `tab-${slide.index}-${this.total}`;
-    }
     /**
      * Returns the slide corresponding to the provided `index` or null.
      * ```typescript
