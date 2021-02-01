@@ -21,7 +21,7 @@
             <button igxButton="raised" (click)="changeSlidesRemove()">Change slides remove</button>
             <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
             <div style="height: 800px;">
-                <igx-carousel #car [interval]="interval" [pause]="pause" [loop]="loop">
+                <igx-carousel #car  [pause]="pause" [loop]="true">
                     <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                         <img [src]="slide.image">
                     </igx-slide>
@@ -44,29 +44,6 @@
                     </ng-template> -->
                 </igx-carousel>
             </div>
-
-            <igx-carousel class="mt30" #car [interval]="interval" [pause]="pause" [loop]="loop">
-                <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
-                    <img [src]="slide.image">
-                </igx-slide>
-
-                <ng-template igxCarouselIndicator let-slide>
-                    <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
-                    <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
-                </ng-template>
-
-                <!-- <ng-template igxCarouselNextButton let-disabled>
-                        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-                                <igx-icon>add</igx-icon>
-                            </button>
-                </ng-template>
-
-                <ng-template igxCarouselPrevButton let-disabled>
-                        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-                                <igx-icon>remove</igx-icon>
-                            </button>
-                </ng-template> -->
-            </igx-carousel>
         </article>
     </section>
 </div>

@@ -96,15 +96,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
 })
 
 export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
-    /**
-     * Returns the `role` attribute of the carousel.
-     * ```typescript
-     * let carouselRole =  this.carousel.role;
-     * ```
-     *
-     * @memberof IgxCarouselComponent
-     */
-    @HostBinding('attr.role') public role = 'region';
 
     /**
      * Sets the `id` of the carousel.
@@ -118,29 +109,24 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-carousel-${NEXT_ID++}`;
-
     /**
-     * Returns the `aria-label` of the carousel.
-     *
+     * Returns the `role` attribute of the carousel.
      * ```typescript
-     * let carousel = this.carousel.ariaLabel;
-     * ```
-     *
-     */
-    @HostBinding('attr.aria-label')
-    public ariaLabel = 'carousel';
-
-    /**
-     * Returns the `tabIndex` of the carousel component.
-     * ```typescript
-     * let tabIndex =  this.carousel.tabIndex;
+     * let carouselRole =  this.carousel.role;
      * ```
      *
      * @memberof IgxCarouselComponent
      */
-    @HostBinding('attr.tabindex')
-    get tabIndex() {
-        return 0;
+    @HostBinding('attr.role') public role = 'region';
+
+    /** @hidden */
+    @HostBinding('attr.aria-roledescription')
+    public roleDescription = 'carousel';
+
+    /** @hidden */
+    @HostBinding('attr.aria-labelledby')
+    public get labelId() {
+        return this.showIndicatorsLabel ? `${this.id}-label` : null;
     }
 
     /**
@@ -161,7 +147,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```
      */
     @HostBinding('style.touch-action')
-    get touchAction() {
+    public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
 
@@ -398,11 +384,15 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
     private defaultPrevButton: TemplateRef<any>;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public stoppedByInteraction: boolean;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;
     private playing: boolean;
-    private stoppedByInteraction: boolean;
     private destroyed: boolean;
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
@@ -420,14 +410,14 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * By default it uses EN resources.
      */
     @Input()
-    set resourceStrings(value: ICarouselResourceStrings) {
+    public set resourceStrings(value: ICarouselResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
-    get resourceStrings(): ICarouselResourceStrings {
+    public get resourceStrings(): ICarouselResourceStrings {
         return this._resourceStrings;
     }
 
@@ -484,7 +474,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxCarouselComponent
      */
     public get total(): number {
-        return this.slides.length;
+        return this.slides?.length;
     }
 
     /**
@@ -530,7 +520,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *
      * @memberof IgxCarouselComponent
      */
-    get nativeElement(): any {
+    public get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -543,7 +533,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberof IgxCarouselComponent
      */
     @Input()
-    get interval(): number {
+    public get interval(): number {
         return this._interval;
     }
 
@@ -556,7 +546,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *
      * @memberof IgxCarouselComponent
      */
-    set interval(value: number) {
+    public set interval(value: number) {
         this._interval = +value;
         this.restartInterval();
     }
@@ -566,13 +556,14 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
+
     /** @hidden */
     @HostListener('keydown.arrowright', ['$event'])
     public onKeydownArrowRight(event) {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -582,7 +573,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -608,7 +599,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -618,7 +609,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
         }
     }
 
@@ -711,11 +702,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
         }
-    }
-
-    /** @hidden */
-    public setAriaLabel(slide) {
-        return `Item ${slide.index + 1} of ${this.total}`;
     }
 
     /**
@@ -1104,6 +1090,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
+                slide.total = this.total;
                 this.onSlideAdded.emit({ carousel: this, slide });
                 if (slide.active) {
                     this.currentSlide = slide;
