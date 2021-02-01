@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { IgxBaseExporter } from '../exporter-common/base-export-service';
+import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -72,19 +72,22 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
-        if (this._isTreeGrid) {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
+        const level = data[0]?.level;
+
+        if (typeof level !== 'undefined') {
             let maxLevel = 0;
+
             data.forEach((r) => {
-                maxLevel = Math.max(maxLevel, r.originalRowData.level);
+                maxLevel = Math.max(maxLevel, r.level);
             });
+
             if (maxLevel > 7) {
                 throw Error('Can create an outline of up to eight levels!');
             }
         }
 
-        const worksheetData =
-            new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
+        const worksheetData = new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort);
 
         this._xlsx = new JSZip();
 
