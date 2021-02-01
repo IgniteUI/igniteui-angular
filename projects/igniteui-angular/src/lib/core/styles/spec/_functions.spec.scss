@@ -1,0 +1,51 @@
+@include describe('Unit conversions') {
+    @include it('should convert pixel numbers to rem') {
+        @include assert-equal(rem(16px, 16px), 1rem);
+    }
+
+    @include it('should convert unitless numbers to rem') {
+        @include assert-equal(rem(16, 16), 1rem);
+    }
+
+    @include it('should convert pixel numbers to em') {
+        @include assert-equal(em(16px, 16px), 1em);
+    }
+
+    @include it('should convert unitless numbers to em') {
+        @include assert-equal(em(16px, 16px), 1em);
+    }
+
+    @include it('should convert relative unit numbers to pixels') {
+        @include assert-equal(px(1em, 16px), 16px);
+        @include assert-equal(px(1rem, 16px), 16px);
+    }
+
+    @include it('should convert unitless numbers to pixels') {
+        @include assert-equal(px(1, 16), 16px);
+    }
+}
+
+@include describe('Luminance') {
+    @include it('should return a number') {
+        @include assert-true(type-of(luminance(blue)), 'number');
+    }
+
+    @include it('should retrieve luminance for a given color value') {
+        @include assert-equal(luminance(red), .2126);
+    }
+
+    @include it('should pass through non-color values') {
+        @include assert-equal(luminance('bozo'), 'bozo');
+    }
+}
+
+@include describe('Contrast') {
+    @include it('should return a number') {
+        @include assert-true(type-of(contrast(white, black)), 'number');
+    }
+
+    @include it('should return the contrast ratio between two colors') {
+        @include assert-equal(contrast(white, black), 21);
+        @include assert-equal(round(contrast(#09f, black)), 7);
+    }
+}
