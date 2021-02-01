@@ -90,6 +90,11 @@
             "version": "11.0.0",
             "description": "Updates Ignite UI for Angular from v10.2.x to v11.0.0",
             "factory": "./update-11_0_0"
+        },
+        "migration-19": {
+            "version": "11.1.0",
+            "description": "Updates Ignite UI for Angular from v11.0.x to v11.1.0",
+            "factory": "./update-11_0_0"
         }
     }
 }
