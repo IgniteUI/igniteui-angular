@@ -894,8 +894,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
         // check groups are rendered correctly
 
-        let firstRowCells = grid.rowList.first.cells.toArray();
-        let headerCells = grid.headerGroups.first.children.toArray();
+        const firstRowCells = grid.rowList.first.cells.toArray();
+        const headerCells = grid.headerGroups.first.children.toArray();
         GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid.rowList.first,
             fixture.componentInstance.colGroups.slice(0, horizontalVirtualization.state.chunkSize));
@@ -906,9 +906,6 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         fixture.detectChanges();
 
         // last 3 blocks should be rendered
-        firstRowCells = grid.rowList.first.cells.toArray();
-        headerCells = grid.headerGroups.first.children.toArray();
-        GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid.rowList.first,
             fixture.componentInstance.colGroups.slice(
                 horizontalVirtualization.state.startIndex,
