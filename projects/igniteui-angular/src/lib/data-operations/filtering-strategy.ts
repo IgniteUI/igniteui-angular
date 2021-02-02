@@ -24,7 +24,7 @@ export class NoopFilteringStrategy implements IFilteringStrategy {
     }
 }
 
-export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
+export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean): boolean {
         const cond = expr.condition;
         const val = this.getFieldValue(rec, expr.fieldName, isDate);
@@ -76,6 +76,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instace: FilteringStrategy = null;
+    protected grid: GridType;
 
     constructor() {
         super();
@@ -91,6 +92,8 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         let rec;
         const len = data.length;
         const res: T[] = [];
+        this.grid = grid;
+
         if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
             return data;
         }
@@ -107,5 +110,33 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         let value = resolveNestedPath(rec, fieldName);
         value = value && isDate ? parseDate(value) : value;
         return value;
+    }
+}
+
+export class FormattedFilterStrategy extends FilteringStrategy {
+    constructor(public columns?: string[] | number[]) {
+        super();
+    }
+
+    public getFieldValue(rec: any, fieldName: string, isDate: boolean): any {
+        let value = resolveNestedPath(rec, fieldName);
+        let applyFormatter = false;
+        const column = this.grid.getColumnByName(fieldName);
+
+        if (!this.columns || this.columns.length === 0) {
+            applyFormatter = true;
+        } else if (typeof this.columns[0] === 'number') {
+            if (this.columns.some(c => c === column.index)) {
+                applyFormatter = true;
+            }
+        } else if (typeof this.columns[0] === 'string') {
+            if (this.columns.some(c => c === fieldName)) {
+                applyFormatter = true;
+            }
+        }
+
+
+        // value = this.fieldName === fieldName ? this.fr(value) : super.getFieldValue(rec, fieldName, isDate);
+        return applyFormatter && column.formatter ? column.formatter(value) : value;
     }
 }

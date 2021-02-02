@@ -4,7 +4,8 @@ import {
     IgxNumberSummaryOperand,
     IgxSummaryResult,
     ColumnPinningPosition,
-    IPinningConfig
+    IPinningConfig,
+    FormattedFilterStrategy
 } from 'igniteui-angular';
 
 class MySummary extends IgxNumberSummaryOperand {
@@ -99,7 +100,7 @@ export class GridSummaryComponent {
         UnitPrice: '10.0000',
         UnitsInStock: 13,
         UnitsOnOrder: 70,
-        ReorderLevel: 25,
+        ReorderLevel: 26,
         Discontinued: false,
         OrderDate: new Date('2006-03-17')
     }, {
@@ -131,7 +132,7 @@ export class GridSummaryComponent {
         UnitPrice: '21.3500',
         UnitsInStock: 0,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 70,
         Discontinued: true,
         OrderDate: new Date('2011-11-11')
     }, {
@@ -147,7 +148,7 @@ export class GridSummaryComponent {
         UnitPrice: '25.0000',
         UnitsInStock: 0,
         UnitsOnOrder: 0,
-        ReorderLevel: 25,
+        ReorderLevel: 55,
         Discontinued: false,
         OrderDate: new Date('2017-12-17')
     }, {
@@ -163,7 +164,7 @@ export class GridSummaryComponent {
         UnitPrice: '30.0000',
         UnitsInStock: 150,
         UnitsOnOrder: 0,
-        ReorderLevel: 10,
+        ReorderLevel: 12,
         Discontinued: false,
         OrderDate: new Date('2016-07-17')
     }, {
@@ -179,7 +180,7 @@ export class GridSummaryComponent {
         UnitPrice: '40.0000',
         UnitsInStock: 6,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 40,
         Discontinued: false,
         OrderDate: new Date('2025-01-17')
     }, {
@@ -195,7 +196,7 @@ export class GridSummaryComponent {
         UnitPrice: '$97.0000',
         UnitsInStock: 29,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 50,
         Discontinued: true,
         OrderDate: new Date('2010-02-17')
     }, {
@@ -211,7 +212,7 @@ export class GridSummaryComponent {
         UnitPrice: '31.0000',
         UnitsInStock: 31,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 80,
         Discontinued: false,
         OrderDate: new Date('2008-05-17')
     }, {
@@ -227,7 +228,7 @@ export class GridSummaryComponent {
         UnitPrice: '21.0000',
         UnitsInStock: 22,
         UnitsOnOrder: 30,
-        ReorderLevel: 30,
+        ReorderLevel: 36,
         Discontinued: false,
         OrderDate: new Date('2009-01-17')
     }, {
@@ -243,7 +244,7 @@ export class GridSummaryComponent {
         UnitPrice: '38.0000',
         UnitsInStock: 86,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 20,
         Discontinued: false,
         OrderDate: new Date('2015-11-17')
     }, {
@@ -275,7 +276,7 @@ export class GridSummaryComponent {
         UnitPrice: '23.2500',
         UnitsInStock: 35,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 34,
         Discontinued: false,
         OrderDate: new Date('2019-06-17')
     }, {
@@ -291,7 +292,7 @@ export class GridSummaryComponent {
         UnitPrice: '15.5000',
         UnitsInStock: 39,
         UnitsOnOrder: 0,
-        ReorderLevel: 5,
+        ReorderLevel: 15,
         Discontinued: false,
         OrderDate: new Date('1995-03-17')
     }, {
@@ -307,7 +308,7 @@ export class GridSummaryComponent {
         UnitPrice: '17.4500',
         UnitsInStock: 29,
         UnitsOnOrder: 0,
-        ReorderLevel: 10,
+        ReorderLevel: 11,
         Discontinued: false,
         OrderDate: new Date('2018-03-28')
     }, {
@@ -323,7 +324,7 @@ export class GridSummaryComponent {
         UnitPrice: '39.0000',
         UnitsInStock: 0,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 22,
         Discontinued: true,
         OrderDate: new Date('2015-08-17')
     }, {
@@ -339,7 +340,7 @@ export class GridSummaryComponent {
         UnitPrice: '62.5000',
         UnitsInStock: 42,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 46,
         Discontinued: false,
         OrderDate: new Date('2005-09-27')
     }, {
@@ -355,7 +356,7 @@ export class GridSummaryComponent {
         UnitPrice: '$9.2000',
         UnitsInStock: 25,
         UnitsOnOrder: 0,
-        ReorderLevel: 5,
+        ReorderLevel: 75,
         Discontinued: false,
         OrderDate: new Date('2001-03-17')
     }, {
@@ -371,7 +372,7 @@ export class GridSummaryComponent {
         UnitPrice: undefined,
         UnitsInStock: 40,
         UnitsOnOrder: 0,
-        ReorderLevel: 0,
+        ReorderLevel: 58,
         Discontinued: false,
         OrderDate: new Date('2005-03-17')
     }
@@ -700,6 +701,7 @@ export class GridSummaryComponent {
     }
     ];
 
+    public f: FormattedFilterStrategy;
     constructor() {
         for (let i = 0; i < 10; i++) {
             this.data = this.data.concat(this.data);
@@ -708,6 +710,8 @@ export class GridSummaryComponent {
         for (let i = 0; i < this.data.length; i++) {
             this.data[i]['Index'] = i;
         }
+
+        this.f = new FormattedFilterStrategy(['ReorderLevel']);
     }
 
     public updateData() {
@@ -815,5 +819,13 @@ export class GridSummaryComponent {
         } else {
             this.pinningConfig = { columns: ColumnPinningPosition.End };
         }
+    }
+
+    public customFormatter(value): any {
+        return value % 2;
+    }
+
+    public oddEven(value) {
+        return value % 2;
     }
 }

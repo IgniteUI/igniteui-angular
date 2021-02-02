@@ -1,5 +1,6 @@
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
-    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
+    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'"
+    [filterStrategy]="f">
     <igx-grid-toolbar *ngIf="showToolbar">
         <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
         <igx-grid-toolbar-actions>
@@ -7,7 +8,7 @@
             <igx-grid-toolbar-hiding *ngIf="hidingEnabled"></igx-grid-toolbar-hiding>
         </igx-grid-toolbar-actions>
     </igx-grid-toolbar>
-    <igx-column field="Index" header="Index" [width]="cw">
+    <igx-column field="Index" header="Index" [width]="cw" [formatter]="oddEven" [dataType]="'number'">
     </igx-column>
     <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
         <ng-template igxCell let-cell="cell" let-val>
@@ -15,7 +16,8 @@
         </ng-template>
     </igx-column>
     <igx-column field="ReorderLevel" [width]="cw" [sortable]="true" [groupable]="groupable" [filterable]="filterable"
-        editable="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning">
+        editable="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning"
+        [formatter]="customFormatter">
     </igx-column>
     <igx-column field="QuantityPerUnit" [width]="cw" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'"
         [editable]="true">

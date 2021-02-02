@@ -28,6 +28,7 @@ import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
+import { FormattedFilterStrategy } from '../../../data-operations/filtering-strategy';
 
 /**
  * @hidden
@@ -539,19 +540,31 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private renderColumnValuesFromData() {
         let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
+        const isFormattedFilterStrategy = this.grid.filterStrategy instanceof FormattedFilterStrategy;
 
         if (expressionsTree.filteringOperands.length) {
-            const state = { expressionsTree };
+            const state = {
+                expressionsTree,
+                strategy: isFormattedFilterStrategy ? this.grid.filterStrategy : null
+            };
             data = DataUtil.filter(cloneArray(data), state, this.grid);
         }
 
         const columnField = this.column.field;
-        const columnValues = (this.column.dataType === DataType.Date) ?
+        let columnValues = (this.column.dataType === DataType.Date) ?
             data.map(record => {
                 const value = (resolveNestedPath(record, columnField));
                 const label = this.getFilterItemLabel(value);
                 return { label, value };
             }) : data.map(record => resolveNestedPath(record, columnField));
+
+
+        if (isFormattedFilterStrategy &&
+            (this.grid.filterStrategy as FormattedFilterStrategy).
+                columns.some(c => c === this.column.field || c === this.column.index)) {
+            const f = this.column.formatter;
+            columnValues = columnValues.map(v => f ? f(v) : v);
+        }
 
         this.renderValues(columnValues);
     }
