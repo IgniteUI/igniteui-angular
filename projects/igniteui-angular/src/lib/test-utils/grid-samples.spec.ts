@@ -2316,3 +2316,10 @@ export class IgxAddRowComponent implements OnInit {
         /* eslint-enable max-len */
     }
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` [hideGroupedColumns]="true"`, '', ColumnDefinitions.exportGroupedDataColumns)
+})
+export class GridExportGroupedDataComponent extends BasicGridComponent {
+    data = SampleTestData.exportGroupedDataColumns();
+}
