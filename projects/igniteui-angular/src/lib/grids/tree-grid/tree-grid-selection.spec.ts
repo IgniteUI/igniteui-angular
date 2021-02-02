@@ -1652,6 +1652,76 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
         });
+
+        it('selectRowById event SHOULD be emitted correctly with valid arguments.', () => {
+            spyOn(treeGrid.onRowSelectionChange, 'emit').and.callThrough();
+            treeGrid.selectionService.selectRowsWithNoEvent([317]);
+            fix.detectChanges();
+
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(getVisibleSelectedRows(fix).length).toBe(4);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            treeGrid.selectionService.selectRowById(847, true);
+
+            const args: IRowSelectionEventArgs = {
+                oldSelection: [317, 711, 998, 299],
+                newSelection: [847, 663],
+                added: [847, 663],
+                removed: [317, 711, 998, 299],
+                event: undefined,
+                cancel: false
+            };
+
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
+
+            treeGrid.cdr.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 5, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, false, false);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 9, true, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('After changing the newSelection arguments of onSelectedRowChange, the arguments SHOULD be correct.', () => {
+            treeGrid.onRowSelectionChange.subscribe((e: IRowSelectionEventArgs) => {
+                e.newSelection = [847, 663];
+            });
+            spyOn(treeGrid.onRowSelectionChange, 'emit').and.callThrough();
+
+            treeGrid.selectionService.selectRowsWithNoEvent([317], true);
+            fix.detectChanges();
+
+            treeGrid.selectionService.selectRowById(19, true);
+
+            const selectionArgs: IRowSelectionEventArgs = {
+                oldSelection: [317, 711, 998, 299],
+                newSelection: [847, 663],
+                added: [19],
+                removed: [317, 711, 998, 299],
+                event: undefined,
+                cancel: false
+            };
+
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledWith(selectionArgs);
+
+            treeGrid.cdr.detectChanges();
+
+            expect(getVisibleSelectedRows(fix).length).toBe(2);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 8, true, true);
+            TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 9, true, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
     });
 
     describe('Cascading Row Selection with Transaction', () => {
@@ -1818,6 +1888,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
+
     });
 
     describe('Custom row selectors', () => {
