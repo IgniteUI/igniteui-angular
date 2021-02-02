@@ -403,7 +403,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public selectDay(event) {
         this.selectDateFromClient(event.date);
         this.onDateSelection.emit(event);
-        this.onSelection.emit(this.selectedDates);
+        this.selected.emit(this.selectedDates);
     }
 
     /**
