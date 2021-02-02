@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [showToolbar]="true"  [columnHiding] = "true">
+    <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'">
         <igx-column-group header="General Information" title="General Company Information" >
             <igx-column [field]='"Missing"' [groupable]='true'></igx-column>
         </igx-column-group>
@@ -15,7 +15,6 @@
                 <igx-column-actions
                 igxColumnHiding
                 [grid]="grid1"
-                [title]="grid1.columnHidingTitle"
                 (onColumnToggled)="columnToggled($event)">
                 </igx-column-actions>
             </div>
