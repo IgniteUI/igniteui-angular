@@ -9,8 +9,8 @@
 /// Generates a light tooltip schema.
 /// @type {Map}
 ///
-/// @property {Map} background [igx-color: ('grays', 700), hexrgba: (), rgba: .9] - The background color of the tooltip.
-/// @property {Map} text-color [igx-color: ('grays', 700), hexrgba: (), rgba: .9, text-contrast: ()] - The text color of the tooltip.
+/// @property {Map} background [igx-color: ('grays', 700), to-opaque: (), rgba: .9] - The background color of the tooltip.
+/// @property {Map} text-color [igx-color: ('grays', 700), to-opaque: (), rgba: .9, text-contrast: ()] - The text color of the tooltip.
 /// @property {Number} border-radius [.25] - The border radius used for tooltip. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @requires {function} extend
@@ -21,13 +21,13 @@ $_light-tooltip: extend(
     (
         background: (
             igx-color: ('grays', 700),
-            hexrgba: (),
+            to-opaque: (),
             rgba: .9
         ),
 
         text-color: (
             igx-color: ('grays', 700),
-            hexrgba: (),
+            to-opaque: (),
             rgba: .9,
             text-contrast: ()
         ),

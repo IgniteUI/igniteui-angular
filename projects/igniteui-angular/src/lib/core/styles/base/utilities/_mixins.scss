@@ -251,9 +251,8 @@
 @mixin igx-css-vars($theme) {
     $scope: if(is-root(), ':root', '&');
     $prefix: map-get($theme, 'name');
-    $legacy: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
 
-    @if not($legacy) {
+    @if not(legacy()) {
         #{$scope} {
             @include css-vars-from-theme($theme, $prefix);
         }

@@ -1,5 +1,4 @@
 @import '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
-@import'../../../styles/igniteui-theme.scss';
 
 .sample-wrapper {
     display: grid;
@@ -30,10 +29,6 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 16px;
     margin-bottom: 48px;
-}
-
-.color-container {
-    @include igx-color-classes('background', $palette: $palette);
 }
 
 .color-title {

@@ -7,7 +7,7 @@
 /// Generates a light highlight schema.
 /// @type {Map}
 /// @property {Map} resting-background [igx-color: ('grays', 300)] - The background color used for the highlight in its resting state.
-/// @property {Map} resting-color [igx-color: ('grays', 300), hexrgba: #fff, text-contrast: ()] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-color [igx-color: ('grays', 300), to-opaque: #fff, text-contrast: ()] - The icon color used for the highlight in its resting state.
 /// @property {Map} active-background [igx-color: ('secondary', A100)] - The background color used for the highlight in its active state.
 /// @property {Map} active-color [igx-color: ('secondary', A100), text-contrast: ()] - The text color used for the highlight in its active state.
 /// @see $default-palette
@@ -18,7 +18,7 @@ $_light-highlight: (
 
     resting-color: (
         igx-color: ('grays', 300),
-        hexrgba: (#fff),
+        to-opaque: (#fff),
         text-contrast: ()
     ),
 

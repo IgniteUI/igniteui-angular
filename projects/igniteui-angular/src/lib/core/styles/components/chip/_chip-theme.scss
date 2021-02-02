@@ -117,7 +117,7 @@
     }
 
     @if not($hover-text-color) and $hover-background {
-        $hover-text-color: text-contrast(hexrgba($hover-background));
+        $hover-text-color: text-contrast(to-opaque($hover-background));
     }
 
     @if not($focus-background) and $background {
@@ -131,7 +131,7 @@
     }
 
     @if not($focus-text-color) and $focus-background {
-        $focus-text-color: text-contrast(hexrgba($focus-background));
+        $focus-text-color: text-contrast(to-opaque($focus-background));
     }
 
     @if not($selected-background) and $background {
@@ -145,7 +145,7 @@
     }
 
     @if not($selected-text-color) and $selected-background {
-        $selected-text-color: text-contrast(hexrgba($selected-background));
+        $selected-text-color: text-contrast(to-opaque($selected-background));
     }
 
     @if not($hover-selected-background) and $hover-background {
@@ -153,7 +153,7 @@
     }
 
     @if not($hover-selected-text-color) and $hover-selected-background {
-        $hover-selected-text-color: text-contrast(hexrgba($hover-selected-background));
+        $hover-selected-text-color: text-contrast(to-opaque($hover-selected-background));
     }
 
     @if not($focus-selected-background) and $selected-background {
@@ -167,7 +167,7 @@
     }
 
     @if not($focus-selected-text-color) and $focus-selected-background {
-        $focus-selected-text-color: text-contrast(hexrgba($focus-selected-background));
+        $focus-selected-text-color: text-contrast(to-opaque($focus-selected-background));
     }
 
     @if not($hover-border-color) and $border-color {

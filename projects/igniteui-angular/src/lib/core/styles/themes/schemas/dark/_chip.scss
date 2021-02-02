@@ -7,11 +7,11 @@
 
 /// Generates the base dark chip schema.
 /// @type {Map}
-/// @prop {Map} ghost-background [igx-color: ('grays', 400), hexrgba: #000] - The chip ghost background color.
+/// @prop {Map} ghost-background [igx-color: ('grays', 400), to-opaque: #000] - The chip ghost background color.
 $_base-dark-chip: (
     ghost-background: (
         igx-color: ('grays', 400),
-        hexrgba: #000
+        to-opaque: #000
     )
 );
 

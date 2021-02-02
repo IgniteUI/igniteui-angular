@@ -14,8 +14,8 @@
 /// @property {Map} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
 ///
 /// @property {Map} item-background [igx-color: 'surface'] - The list item background color.
-/// @property {Map} item-background-hover [igx-color: ('grays', 200),  hexrgba: (#fff)] - The list item hover background.
-/// @property {Map} item-background-active [igx-color: ('grays', 200),  hexrgba: (#fff)] - The active list item background color.
+/// @property {Map} item-background-hover [igx-color: ('grays', 200),  to-opaque: (#fff)] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('grays', 200),  to-opaque: (#fff)] - The active list item background color.
 ///
 /// @property {Map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
 /// @property {Map} item-text-color-hover [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
@@ -66,12 +66,12 @@ $_light-list: extend(
 
         item-background-hover: (
             igx-color: ('grays', 200),
-            hexrgba: (#fff)
+            to-opaque: (#fff)
         ),
 
         item-background-active: (
             igx-color: ('grays', 200),
-            hexrgba: (#fff)
+            to-opaque: (#fff)
         ),
 
         item-text-color: (
@@ -133,7 +133,7 @@ $_fluent-list: extend($_light-list);
 /// @property {Map} header-background [#fff] - The list header background color.
 ///
 /// @property {Map} item-background [#fff] - The list item background color.
-/// @property {Map} item-background-hover [igx-color: ('grays', 100), hexrgba: (#fff)] - The list item hover background.
+/// @property {Map} item-background-hover [igx-color: ('grays', 100), to-opaque: (#fff)] - The list item hover background.
 ///
 /// @property {Map} item-text-color [igx-color: ('grays', 900)] - The list item text color.
 /// @property {Map} item-text-color-hover [igx-color: ('grays', 900)] - The list item text color.
@@ -164,7 +164,7 @@ $_bootstrap-list: extend(
 
         item-background-hover: (
             igx-color: ('grays', 100),
-            hexrgba: (#fff)
+            to-opaque: (#fff)
         ),
 
         item-text-color: (

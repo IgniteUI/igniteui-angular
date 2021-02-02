@@ -51,7 +51,7 @@ $_light-grid-summary: (
 ///
 /// @property {Color} background-color [ igx-color: ('surface')] - The summaries background color is inherited from the grid footer.
 /// @property {map} border-color [ igx-color: ('grays', 100)] - The summaries border color.
-/// @property {map} pinned-border-color [igx-color: ('grays', 300), hexrgba: #fff] - The border color of the summary panel.
+/// @property {map} pinned-border-color [igx-color: ('grays', 300), to-opaque: #fff] - The border color of the summary panel.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-grid-summary
@@ -68,7 +68,7 @@ $_fluent-grid-summary: extend(
 
         pinned-border-color: (
             igx-color: ('grays', 300),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
     )
 );
