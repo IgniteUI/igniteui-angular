@@ -119,7 +119,7 @@ export class FormattedFilterStrategy extends FilteringStrategy {
     }
 
     public getFieldValue(rec: any, fieldName: string, isDate: boolean): any {
-        let value = resolveNestedPath(rec, fieldName);
+        const value = resolveNestedPath(rec, fieldName);
         let applyFormatter = false;
         const column = this.grid.getColumnByName(fieldName);
 
@@ -135,8 +135,6 @@ export class FormattedFilterStrategy extends FilteringStrategy {
             }
         }
 
-
-        // value = this.fieldName === fieldName ? this.fr(value) : super.getFieldValue(rec, fieldName, isDate);
         return applyFormatter && column.formatter ? column.formatter(value) : value;
     }
 }
