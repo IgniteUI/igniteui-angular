@@ -12,7 +12,7 @@ export abstract class IgxTabsBase {
     public tabsContainer: ElementRef;
     public itemsContainer: ElementRef;
     public headerContainer: ElementRef;
-    public onTabItemSelected: EventEmitter<any>; // TODO: Define event arg interface!
+    public tabItemSelected: EventEmitter<any>; // TODO: Define event arg interface!
     public hasContentTabs: boolean;
     public abstract scrollElement(element: any, scrollRight: boolean);
     public abstract performSelectionChange(newTab: IgxTabItemBase);
