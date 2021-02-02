@@ -93,10 +93,10 @@ export class IgxNavbarComponent {
      *  //..
      * ```
      * ```html
-     * <igx-navbar (onAction)="actionExc($event)" title="Sample App" actionButtonIcon="menu">
+     * <igx-navbar (action)="actionExc($event)" title="Sample App" actionButtonIcon="menu">
      * ```
      */
-    @Output() public onAction = new EventEmitter<IgxNavbarComponent>();
+    @Output() public action = new EventEmitter<IgxNavbarComponent>();
 
     /**
      * An @Input property that sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
@@ -157,7 +157,7 @@ export class IgxNavbarComponent {
      * @hidden
      */
     public _triggerAction() {
-        this.onAction.emit(this);
+        this.action.emit(this);
     }
 }
 

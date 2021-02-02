@@ -72,11 +72,11 @@ describe('IgxNavbar', () => {
             component.actionButtonIcon = 'home';
             fixture.detectChanges();
 
-            spyOn(component.navbar.onAction, 'emit');
+            spyOn(component.navbar.action, 'emit');
             fixture.debugElement.nativeElement.querySelector('igx-icon').click();
             fixture.detectChanges();
 
-            expect(component.navbar.onAction.emit)
+            expect(component.navbar.action.emit)
                 .toHaveBeenCalledWith(component.navbar);
         });
 
