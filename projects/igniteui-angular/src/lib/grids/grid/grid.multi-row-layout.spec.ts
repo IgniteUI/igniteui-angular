@@ -218,6 +218,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // the following throws error because last colgroup row span in header does not fill content
         // expect(groupHeaderBlocks[2].nativeElement.clientHeight).toBe(50 * 3);
 
+        GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
         GridFunctions.verifyDOMMatchesLayoutSettings(grid.rowList.first, fixture.componentInstance.colGroups);
     }));
 
