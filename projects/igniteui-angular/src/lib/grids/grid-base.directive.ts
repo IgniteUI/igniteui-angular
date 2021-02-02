@@ -1497,7 +1497,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.selectionService.clear(true);
         this._perPage = val;
         this.perPageChange.emit(this._perPage);
-        this.page = 0;
+        // toDO not needed to paginate every time
+        this.paginate(0);
         this.endEdit(true);
         this.notifyChanges();
     }
