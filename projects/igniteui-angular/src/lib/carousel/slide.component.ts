@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked } from '@angular/core';
 import { Subject } from 'rxjs';
 
 export enum Direction { NONE, NEXT, PREV }
@@ -20,7 +20,7 @@ export enum Direction { NONE, NEXT, PREV }
     templateUrl: 'slide.component.html'
 })
 
-export class IgxSlideComponent implements OnDestroy {
+export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
@@ -45,6 +45,9 @@ export class IgxSlideComponent implements OnDestroy {
      */
     @Input() public direction: Direction;
 
+    @Input()
+    public total: number;
+
     /**
      * Returns the `tabIndex` of the slide component.
      * ```typescript
@@ -54,35 +57,28 @@ export class IgxSlideComponent implements OnDestroy {
      * @memberof IgxSlideComponent
      */
     @HostBinding('attr.tabindex')
-    get tabIndex() {
+    public get tabIndex() {
         return this.active ? 0 : null;
     }
 
     /**
-     * Returns the `aria-selected` of the slide.
-     *
-     * ```typescript
-     * let slide = this.slide.ariaSelected;
-     * ```
-     *
+     * @hidden
      */
-    @HostBinding('attr.aria-selected')
-    public get ariaSelected(): boolean {
-        return this.active;
-    }
+    @HostBinding('attr.id')
+    public id: string;
 
     /**
-     * Returns the `aria-live` of the slide.
+     * Returns the `role` of the slide component.
+     * By default is set to `tabpanel`
      *
-     * ```typescript
-     * let slide = this.slide.ariaLive;
-     * ```
-     *
+     * @memberof IgxSlideComponent
      */
-    @HostBinding('attr.aria-selected')
-    public get ariaLive() {
-        return this.active ? 'polite' : null;
-    }
+    @HostBinding('attr.role')
+    public tab = 'tabpanel';
+
+    /** @hidden */
+    @HostBinding('attr.aria-labelledby')
+    public ariaLabelledBy;
 
     /**
      * Returns the class of the slide component.
@@ -153,6 +149,11 @@ export class IgxSlideComponent implements OnDestroy {
      */
     public get isDestroyed(): Subject<boolean> {
     return this._destroy$;
+    }
+
+    public ngAfterContentChecked() {
+        this.id = `panel-${this.index}`;
+        this.ariaLabelledBy = `tab-${this.index}-${this.total}`;
     }
 
     /**
