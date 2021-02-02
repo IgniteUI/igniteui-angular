@@ -1957,10 +1957,10 @@ export class GridFunctions {
 
     public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
         for (let i = 0; i < headerCells.length; i++) {
-            expect(headerCells[i].headerCell.elementRef.nativeElement.clientWidth)
-                .toBe(rowCells[i].nativeElement.clientWidth);
-            expect(headerCells[i].headerCell.elementRef.nativeElement.clientHeight)
-                .toBeGreaterThanOrEqual(rowCells[i].nativeElement.clientHeight);
+            const widthDiff = headerCells[i].headerCell.elementRef.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
+            const heightDiff = headerCells[i].headerCell.elementRef.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+            expect(widthDiff).toBeLessThanOrEqual(1);
+            expect(heightDiff).toBeLessThanOrEqual(3);
         }
     }
 
