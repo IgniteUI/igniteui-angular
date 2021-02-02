@@ -565,35 +565,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return newExpressionsTree;
     }
 
-    /**
-     * Updates related row of provided grid's data source with provided new row value
-     *
-     * @param grid Grid to update data for
-     * @param rowID ID of the row to update
-     * @param rowValueInDataSource Initial value of the row as it is in data source
-     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
-     * @param rowNewValue New value of the row
-     */
-    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
-        if (grid.transactions.enabled) {
-            const transaction: Transaction = {
-                id: rowID,
-                type: TransactionType.UPDATE,
-                newValue: rowNewValue
-            };
-            grid.transactions.add(transaction, rowCurrentValue);
-        } else {
-            mergeObjects(rowValueInDataSource, rowNewValue);
-        }
-    }
-
-
-    protected update_row_in_array(value: any, rowID: any, index: number) {
-        const grid = this.grid;
-        grid.data[index] = value;
-    }
-
-    protected prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
+    public prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
         if (expression.dir === SortingDirection.None) {
             stateCollections.forEach(state => {
                 state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
@@ -630,7 +602,35 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         });
     }
 
-    protected remove_grouping_expression(fieldName) {
+    public remove_grouping_expression(fieldName) {
+    }
+
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     *
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
+        if (grid.transactions.enabled) {
+            const transaction: Transaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue: rowNewValue
+            };
+            grid.transactions.add(transaction, rowCurrentValue);
+        } else {
+            mergeObjects(rowValueInDataSource, rowNewValue);
+        }
+    }
+
+
+    protected update_row_in_array(value: any, rowID: any, index: number) {
+        const grid = this.grid;
+        grid.data[index] = value;
     }
 
     protected getSortStrategyPerColumn(fieldName: string) {

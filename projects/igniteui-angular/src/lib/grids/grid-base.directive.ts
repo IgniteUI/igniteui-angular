@@ -37,7 +37,7 @@ import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import {
@@ -4546,7 +4546,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
-        const eventArgs: ISortingEventArgs = {owner: this, sortingExpressions: expression, cancel: false };
+        const sortingState = cloneArray(this.sortingExpressions);
+
+        if (expression instanceof Array) {
+            for (const each of expression) {
+                if (each.dir === SortingDirection.None) {
+                    this.gridAPI.remove_grouping_expression(each.fieldName);
+                }
+                this.gridAPI.prepare_sorting_expression([sortingState], each);
+            }
+        } else {
+            if (expression.dir === SortingDirection.None) {
+                this.gridAPI.remove_grouping_expression(expression.fieldName);
+            }
+            this.gridAPI.prepare_sorting_expression([sortingState], expression);
+        }
+
+        const eventArgs: ISortingEventArgs = {owner: this, sortingExpressions: sortingState, cancel: false };
         this.sorting.emit(eventArgs);
 
         if (eventArgs.cancel) {
