@@ -296,7 +296,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
-                sortingExpressions: grid.sortingExpressions[0],
+                sortingExpressions: grid.sortingExpressions,
                 owner: grid
             });
 

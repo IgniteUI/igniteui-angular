@@ -300,7 +300,7 @@ export class IgxFilteringService implements OnDestroy {
                 ignoreCase || column.filteringIgnoreCase);
         }
 
-        const eventArgs: IFilteringEventArgs = { owner: this, filteringExpressions: newFilteringTree, cancel: false };
+        const eventArgs: IFilteringEventArgs = { owner: grid, filteringExpressions: newFilteringTree, cancel: false };
         grid.filtering.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
