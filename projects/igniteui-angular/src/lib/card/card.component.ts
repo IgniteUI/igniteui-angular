@@ -348,6 +348,10 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
 
     constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngOnChanges(changes: SimpleChanges) {
         for (const prop in changes) {
             if (prop === 'vertical') {
@@ -356,6 +360,10 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         }
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngOnInit() {
         this.vertical = !this.isVerticalSet && this.card.horizontal;
     }
