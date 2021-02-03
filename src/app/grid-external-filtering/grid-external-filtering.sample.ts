@@ -25,7 +25,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     constructor(private cdr: ChangeDetectorRef) {
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
         tree.filteringOperands.push({
             fieldName: 'ID',

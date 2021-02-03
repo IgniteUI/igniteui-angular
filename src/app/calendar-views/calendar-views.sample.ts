@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     IgxCalendarComponent,
     DateRangeType,
-    IgxDaysViewComponent,
-    IgxMonthPickerComponent
+    IgxDaysViewComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -12,17 +11,16 @@ import {
     styleUrls: ['calendar-views.sample.scss']
 })
 export class CalendarViewsSampleComponent implements OnInit {
-    @ViewChild('calendar', { static: true }) public calendar: IgxCalendarComponent;
-    @ViewChild('daysView', { static: true }) public daysView: IgxDaysViewComponent;
-    @ViewChild('mp', { static: true }) public monthPicker: IgxMonthPickerComponent;
+    @ViewChild('calendar', { static: true })
+    private calendar: IgxCalendarComponent;
+    @ViewChild('daysView', { static: true })
+    private daysView: IgxDaysViewComponent;
 
     public dates: Date | Date[];
     public date = new Date(2018, 8, 5);
     public date1 = new Date(2019, 1, 7);
-
     public viewDate = new Date(2019, 1, 7);
     public selection = new Date(2018, 1, 13);
-
     public locale = 'en';
     public localeFr = 'fr';
     public localeDe = 'de';

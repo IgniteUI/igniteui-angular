@@ -39,7 +39,7 @@
             <div class="calendar-sample dark-calendar">
                 <h4 class="sample-title">Calendar with Special and Disabled Dates</h4>
                 <article class="sample-column calendar-wrapper">
-                    <igx-calendar [showWeekNumbers]="true" #calendar1 weekStart="1" [selection]="'multi'" (selected)="selectPTOdays($event)">
+                    <igx-calendar [showWeekNumbers]="true" #calendar1 weekStart="1" [selection]="'multi'" (selected)="selectPTOdays()">
                     </igx-calendar>
                     <igx-dialog #alert title="Request Time Off" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
                     </igx-dialog>

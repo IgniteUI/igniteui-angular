@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, IViewDateChangeEventArgs } from 'igniteui-angular';
+import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, IViewDateChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-calendar-sample',
@@ -7,9 +7,13 @@ import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, 
     styleUrls: ['calendar.sample.scss']
 })
 export class CalendarSampleComponent implements OnInit, AfterViewInit {
-    @ViewChild('calendar', { static: true }) public calendar: IgxCalendarComponent;
-    @ViewChild('calendar1', { static: true }) public calendar1: IgxCalendarComponent;
-    @ViewChild('alert', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('calendar', { static: true })
+    private calendar: IgxCalendarComponent;
+    @ViewChild('calendar1', { static: true })
+    private calendar1: IgxCalendarComponent;
+    @ViewChild('alert', { static: true })
+    private dialog: IgxDialogComponent;
+
     public range = [];
     public today = new Date();
     public ppNovember = new Date(this.today.getFullYear(), this.today.getMonth() + 1, 10);
