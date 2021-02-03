@@ -8,6 +8,22 @@
                 "selector": "igx-splitter-pane",
                 "type": "component"
             }
+        },
+        {
+            "name": "onSelect",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-buttongroup",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onUnselect",
+            "replaceWith": "deselected",
+            "owner": {
+                "selector": "igx-buttongroup",
+                "type": "component"
+            }
         }
     ]
 }
