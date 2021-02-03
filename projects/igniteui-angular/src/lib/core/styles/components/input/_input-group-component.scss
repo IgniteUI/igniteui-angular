@@ -67,10 +67,6 @@
         @extend %form-group-helper !optional;
     }
 
-    @include e(hint-item) {
-        @extend %form-group-helper-item !optional;
-    }
-
     @include e(hint-item, $m: start) {
         @extend %form-group-helper-item !optional;
         @extend %form-group-helper-item--start !optional;
