@@ -41,7 +41,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    get disabled(): boolean {
+    public get disabled(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
