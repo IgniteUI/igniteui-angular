@@ -8,11 +8,11 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../da
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../../chips/chip.component';
 import { IgxSelectComponent } from '../../../select/select.component';
-import { IDragStartEventArgs, IDragBaseEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
+import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
 import { CloseScrollStrategy } from '../../../services/overlay/scroll/close-scroll-strategy';
 import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
-import { takeUntil, first } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/public_api';
@@ -24,8 +24,8 @@ import { DataUtil } from './../../../data-operations/data-util';
  * @hidden
  */
 class ExpressionItem {
-    parent: ExpressionGroupItem;
-    selected: boolean;
+    public parent: ExpressionGroupItem;
+    public selected: boolean;
     constructor(parent?: ExpressionGroupItem) {
         this.parent = parent;
     }
@@ -35,8 +35,8 @@ class ExpressionItem {
  * @hidden
  */
 class ExpressionGroupItem extends ExpressionItem {
-    operator: FilteringLogic;
-    children: ExpressionItem[];
+    public operator: FilteringLogic;
+    public children: ExpressionItem[];
     constructor(operator: FilteringLogic, parent?: ExpressionGroupItem) {
         super(parent);
         this.operator = operator;
@@ -48,11 +48,11 @@ class ExpressionGroupItem extends ExpressionItem {
  * @hidden
  */
 class ExpressionOperandItem extends ExpressionItem {
-    expression: IFilteringExpression;
-    inEditMode: boolean;
-    inAddMode: boolean;
-    hovered: boolean;
-    columnHeader: string;
+    public expression: IFilteringExpression;
+    public inEditMode: boolean;
+    public inAddMode: boolean;
+    public hovered: boolean;
+    public columnHeader: string;
     constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
         super(parent);
         this.expression = expression;
@@ -355,7 +355,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * An @Input property that sets the grid.
      */
     @Input()
-    set grid(grid: GridType) {
+    public set grid(grid: GridType) {
         this._grid = grid;
 
         if (this._filteringChange) {
@@ -376,14 +376,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * Returns the grid.
      */
-    get grid(): GridType {
+    public get grid(): GridType {
         return this._grid;
     }
 
     /**
      * @hidden @internal
      */
-    get filterableColumns(): IgxColumnComponent[] {
+    public get filterableColumns(): IgxColumnComponent[] {
         return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
     }
 
@@ -404,7 +404,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public dragEnd(dragArgs: IDragBaseEventArgs) {
+    public dragEnd() {
         if (!this.contextMenuToggle.collapsed) {
             this.calculateContextMenuTarget();
             this.contextMenuToggle.reposition();
