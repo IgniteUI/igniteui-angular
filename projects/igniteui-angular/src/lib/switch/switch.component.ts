@@ -76,7 +76,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      */
     @ViewChild('label', { static: true })
-    public nativeLabel: string;
+    public nativeLabel: ElementRef;
     /**
      * Returns reference to the label placeholder element.
      *
@@ -86,7 +86,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      */
     @ViewChild('placeholderLabel', { static: true })
-    public placeholderLabel: string;
+    public placeholderLabel: ElementRef;
 
     /**
      * Sets/gets the `id` of the switch component.
