@@ -100,33 +100,8 @@ describe('ng-add schematics', () => {
   });
 
   it('should not add hammer.js if it exists in angular.json build options', async () => {
-    const ngJsonConfig1 = {
-      defaultProject: 'testProj',
-      version: 1,
-      projects: {
-        testProj: {
-          sourceRoot,
-          projectType: ProjectType.Application,
-          architect: {
-            serve: {},
-            build: {
-              options: {
-                main: `${sourceRoot}/main.ts`,
-                polyfills: `${sourceRoot}/polyfills.ts`,
-                scripts: ['./node_modules/hammerjs/hammer.min.js']
-              }
-            },
-            test: {
-              options: {
-                main: `${sourceRoot}/test.ts`,
-                polyfills: `${sourceRoot}/polyfills.ts`,
-                scripts: []
-              }
-            },
-          }
-        }
-      }
-    };
+    const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
+    ngJsonConfig1.projects.testProj.architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
 
@@ -141,33 +116,8 @@ describe('ng-add schematics', () => {
   });
 
   it('should not add hammer.js if it exists in angular.json test options', async () => {
-    const ngJsonConfig1 = {
-      defaultProject: 'testProj',
-      version: 1,
-      projects: {
-        testProj: {
-          sourceRoot,
-          projectType: ProjectType.Application,
-          architect: {
-            serve: {},
-            build: {
-              options: {
-                main: `${sourceRoot}/main.ts`,
-                polyfills: `${sourceRoot}/polyfills.ts`,
-                scripts: []
-              }
-            },
-            test: {
-              options: {
-                main: `${sourceRoot}/test.ts`,
-                polyfills: `${sourceRoot}/polyfills.ts`,
-                scripts: ['./node_modules/hammerjs/hammer.min.js']
-              }
-            },
-          }
-        }
-      }
-    };
+    const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
+    ngJsonConfig1.projects.testProj.architect.test.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
 
