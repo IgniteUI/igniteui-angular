@@ -830,7 +830,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(2);
 
             const filteringExpressions = grid.filteringExpressionsTree.find('ProductName') as FilteringExpressionsTree;
-            let args = { owner: grid, cancel: false, filteringExpressions };
+            const args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
