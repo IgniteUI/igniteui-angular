@@ -1396,6 +1396,11 @@
         justify-content: flex-end;
     }
 
+    %form-group-helper-item--start,
+    %form-group-helper-item--end {
+        width: 100%;
+    }
+
     %form-group-prefix--disabled,
     %form-group-suffix--disabled {
         color: --var($theme, 'disabled-text-color');
