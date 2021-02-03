@@ -32,6 +32,38 @@
                 "selector": "igx-snackbar",
                 "type": "component"
             }
+        },
+        {
+            "name": "onShowing",
+            "replaceWith": "showing",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onShown",
+            "replaceWith": "shown",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onHiding",
+            "replaceWith": "hiding",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onHidden",
+            "replaceWith": "hidden",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
         }
     ]
 }

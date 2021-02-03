@@ -67,14 +67,39 @@ describe('Update to 11.1.0', () => {
 
     it('should replace onAction with clicked in igx-snackbar', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/buttongroup.component.html`,
+            `/testSrc/appPrefix/component/snackbar.component.html`,
             `<igx-snackbar (onAction)="someHandler($event)"></igx-snackbar>`
         );
 
         const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/buttongroup.component.html')).toEqual(
+        expect(tree.readContent('/testSrc/appPrefix/component/snackbar.component.html')).toEqual(
             `<igx-snackbar (clicked)="someHandler($event)"></igx-snackbar>`
+        );
+    });
+
+    it('should replace onShowing, onShown, onHiding, onHidden with showing, shown, hiding, hidden in igx-toast', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/toast.component.html`,
+            `<igx-toast
+                (onShowing)="someHandler($event)"
+                (onShown)="someHandler($event)"
+                (onHiding)="someHandler($event)"
+                (onHidden)="someHandler($event)"
+            >
+            </igx-toast>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/toast.component.html')).toEqual(
+            `<igx-toast
+                (showing)="someHandler($event)"
+                (shown)="someHandler($event)"
+                (hiding)="someHandler($event)"
+                (hidden)="someHandler($event)"
+            >
+            </igx-toast>`
         );
     });
 });
