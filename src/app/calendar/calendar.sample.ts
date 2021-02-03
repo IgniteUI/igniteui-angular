@@ -33,7 +33,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
         this.range = dates;
     }
 
-    public submitPTOdays(eventArgs) {
+    public submitPTOdays() {
         this.calendar1.specialDates =
             [{ type: DateRangeType.Specific, dateRange: this.range }];
 
@@ -54,7 +54,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSelection(event: Date) {
-        const date = event;
+        console.log(`Selected date\s:${event}`);
     }
 
     public viewDateChanged(event: IViewDateChangeEventArgs) {
@@ -62,6 +62,8 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public activeViewChanged(event: CalendarView) {
+        const calendarView = event;
+        console.log(`Selected date:${calendarView}`);
     }
 
     public setSelection(args: string) {

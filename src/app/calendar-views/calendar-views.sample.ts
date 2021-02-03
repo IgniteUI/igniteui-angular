@@ -3,8 +3,7 @@ import {
     IgxCalendarComponent,
     DateRangeType,
     IgxDaysViewComponent,
-    IgxMonthPickerComponent,
-    CalendarView
+    IgxMonthPickerComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -13,35 +12,35 @@ import {
     styleUrls: ['calendar-views.sample.scss']
 })
 export class CalendarViewsSampleComponent implements OnInit {
-    @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
-    @ViewChild('daysView', { static: true }) daysView: IgxDaysViewComponent;
-    @ViewChild('mp', { static: true }) monthPicker: IgxMonthPickerComponent;
+    @ViewChild('calendar', { static: true }) public calendar: IgxCalendarComponent;
+    @ViewChild('daysView', { static: true }) public daysView: IgxDaysViewComponent;
+    @ViewChild('mp', { static: true }) public monthPicker: IgxMonthPickerComponent;
 
-    dates: Date | Date[];
-    date = new Date(2018, 8, 5);
-    date1 = new Date(2019, 1, 7);
+    public dates: Date | Date[];
+    public date = new Date(2018, 8, 5);
+    public date1 = new Date(2019, 1, 7);
 
-    viewDate = new Date(2019, 1, 7);
-    selection = new Date(2018, 1, 13);
+    public viewDate = new Date(2019, 1, 7);
+    public selection = new Date(2018, 1, 13);
 
-    locale = 'en';
-    localeFr = 'fr';
-    localeDe = 'de';
+    public locale = 'en';
+    public localeFr = 'fr';
+    public localeDe = 'de';
 
-    formatOptions = {
+    public formatOptions = {
         day: '2-digit',
         month: 'short',
         weekday: 'short',
         year: '2-digit'
     };
 
-    formatViews = {
+    public formatViews = {
         day: false,
         month: true,
         year: false
     };
 
-    disabledDates = [{
+    public disabledDates = [{
         type: DateRangeType.Between,
         dateRange: [
             new Date(2019, 0, 14),
@@ -49,7 +48,7 @@ export class CalendarViewsSampleComponent implements OnInit {
         ]
     }];
 
-    specialDates = [{
+    public specialDates = [{
         type: DateRangeType.Specific,
         dateRange: [
             new Date(2019, 0, 7),
@@ -57,7 +56,7 @@ export class CalendarViewsSampleComponent implements OnInit {
         ]
     }];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.dates = [
             new Date(2019, 1, 7),
             new Date(2019, 1, 8)
@@ -77,35 +76,27 @@ export class CalendarViewsSampleComponent implements OnInit {
         }];
     }
 
-    onSelection(event) {
-        console.log(event);
+    public onSelection(date) {
+        console.log(`selected date: ${date}`);
     }
 
-    select() {
+    public select() {
         // this.calendar.selectDate(new Date(2019, 1, 13));
         this.calendar.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 
-    deselect() {
+    public deselect() {
         // this.calendar.deselectDate(new Date(2019, 1, 13));
         this.calendar.deselectDate([new Date(2019, 1, 7), new Date(2019, 1, 8), new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 
-    selectDV() {
+    public selectDV() {
         this.daysView.selectDate(new Date(2019, 1, 13));
         // this.daysView.selectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
     }
 
-    deselectDV() {
+    public deselectDV() {
         this.daysView.deselectDate(new Date(2019, 1, 13));
         // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
-    }
-
-    public viewDateChanged(event: Date) {
-        const date = event;
-        console.log(date);
-    }
-
-    public activeViewChanged(event: CalendarView) {
     }
 }
