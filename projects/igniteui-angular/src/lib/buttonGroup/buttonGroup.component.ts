@@ -204,7 +204,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```typescript
      * @ViewChild("toast")
      * private toast: IgxToastComponent;
-     * public selectedHandler(buttongroup){
+     * public selectedHandler(buttongroup) {
      *     this.toast.open()
      * }
      *  //...
