@@ -24,6 +24,14 @@
                 "selector": "igx-buttongroup",
                 "type": "component"
             }
+        },
+        {
+            "name": "onAction",
+            "replaceWith": "clicked",
+            "owner": {
+                "selector": "igx-snackbar",
+                "type": "component"
+            }
         }
     ]
 }

@@ -64,4 +64,17 @@ describe('Update to 11.1.0', () => {
             </igx-buttongroup>`
         );
     });
+
+    it('should replace onAction with clicked in igx-snackbar', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/buttongroup.component.html`,
+            `<igx-snackbar (onAction)="someHandler($event)"></igx-snackbar>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/buttongroup.component.html')).toEqual(
+            `<igx-snackbar (clicked)="someHandler($event)"></igx-snackbar>`
+        );
+    });
 });
