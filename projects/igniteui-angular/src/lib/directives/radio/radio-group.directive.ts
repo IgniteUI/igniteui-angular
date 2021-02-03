@@ -248,6 +248,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     private destroy$ = new Subject<boolean>();
 
+    /**
+     * @hidden
+     * @internal
+     */
     ngAfterContentInit() {
         // The initial value can possibly be set by NgModel and it is possible that
         // the OnInit of the NgModel occurs after the OnInit of this class.
