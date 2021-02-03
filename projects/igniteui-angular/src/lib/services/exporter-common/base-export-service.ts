@@ -149,7 +149,7 @@ export abstract class IgxBaseExporter {
         let lastVisibleColumnIndex = -1;
 
         columns.forEach((column) => {
-            const columnHeader = column.header !== '' ? column.header : column.field;
+            const columnHeader = !ExportUtilities.isNullOrWhitespaces(column.header) ? column.header : column.field;
             const exportColumn = !column.hidden || options.ignoreColumnsVisibility;
             const index = options.ignoreColumnsOrder ? column.index : column.visibleIndex;
             const columnWidth = Number(column.width.slice(0, -2));
@@ -230,9 +230,7 @@ export abstract class IgxBaseExporter {
                 const columnExportArgs = {
                     header: !ExportUtilities.isNullOrWhitespaces(column.header) ?
                         column.header :
-                        !ExportUtilities.isNullOrWhitespaces(column.field) ?
-                            column.field :
-                            'Column' + columnsWithoutHeaderCount++,
+                        'Column' + columnsWithoutHeaderCount++,
                     field: column.field,
                     columnIndex: index,
                     cancel: false,
