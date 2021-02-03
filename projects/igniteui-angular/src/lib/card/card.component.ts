@@ -259,7 +259,7 @@ export class IgxCardComponent {
      * A getter which will return true if the card type is `outlined`.
      */
     @HostBinding('class.igx-card--outlined')
-    get isOutlinedCard() {
+    public get isOutlinedCard() {
         return this.type === IgxCardType.OUTLINED;
     }
 
@@ -323,7 +323,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * set to `justify`.
      */
     @HostBinding('class.igx-card-actions--justify')
-    get isJustifyLayout() {
+    public get isJustifyLayout() {
         return this.layout === IgxCardActionsLayout.JUSTIFY;
     }
 
@@ -348,7 +348,11 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
 
     constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
 
-    ngOnChanges(changes: SimpleChanges) {
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
         for (const prop in changes) {
             if (prop === 'vertical') {
                 this.isVerticalSet = true;
@@ -356,7 +360,11 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnInit() {
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnInit() {
         this.vertical = !this.isVerticalSet && this.card.horizontal;
     }
 }

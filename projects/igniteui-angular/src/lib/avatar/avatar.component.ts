@@ -248,17 +248,17 @@ export class IgxAvatarComponent implements OnInit {
 
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--small')
-    get _isSmallSize(): boolean {
+    public get _isSmallSize(): boolean {
         return this.size === 'small';
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--medium')
-    get _isMediumSize(): boolean {
+    public get _isMediumSize(): boolean {
         return this.size === 'medium';
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--large')
-    get _isLargeSize(): boolean {
+    public get _isLargeSize(): boolean {
         return this.size === 'large';
     }
 
@@ -270,7 +270,7 @@ export class IgxAvatarComponent implements OnInit {
      * let avatarType = this.avatar.type;
      * ```
      */
-    get type(): IgxAvatarType {
+    public get type(): IgxAvatarType {
         if (this.src) {
             return IgxAvatarType.IMAGE;
         }
@@ -288,17 +288,17 @@ export class IgxAvatarComponent implements OnInit {
 
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--image')
-    get _isImageType(): boolean {
+    public get _isImageType(): boolean {
         return this.type === IgxAvatarType.IMAGE;
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--icon')
-    get _isIconType(): boolean {
+    public get _isIconType(): boolean {
         return this.type === IgxAvatarType.ICON;
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--initials')
-    get _isInitialsType(): boolean {
+    public get _isInitialsType(): boolean {
         return this.type === IgxAvatarType.INITIALS;
     }
 
@@ -308,7 +308,7 @@ export class IgxAvatarComponent implements OnInit {
      * @hidden
      * @internal
      */
-    get template(): TemplateRef<any> {
+    public get template(): TemplateRef<any> {
         switch (this.type) {
             case IgxAvatarType.IMAGE:
                 return this.imageTemplate;

@@ -44,6 +44,7 @@ export class GridToolbarSampleComponent implements OnInit {
                 // configure and perform export operation
                 break;
             case 'csv' :
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 exporter = obj.exporter as IgxCsvExporterService;
                 // configure and perform export operation
                 break;

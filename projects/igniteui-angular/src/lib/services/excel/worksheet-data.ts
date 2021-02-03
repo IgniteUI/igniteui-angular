@@ -1,3 +1,4 @@
+import { IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -10,12 +11,12 @@ export class WorksheetData {
     private _keys: string[];
     private _isSpecialData: boolean;
 
-    constructor(private _data: any[], private _columnWidths: number[], public options: IgxExcelExporterOptions,
-            public indexOfLastPinnedColumn, public sort: any, public isTreeGridData = false) {
-        this.initializeData();
+    constructor(private _data: IExportRecord[], private _columnWidths: number[], public options: IgxExcelExporterOptions,
+            public indexOfLastPinnedColumn: number, public sort: any) {
+            this.initializeData();
     }
 
-    public get data() {
+    public get data(): IExportRecord[] {
         return this._data;
     }
 
@@ -27,7 +28,7 @@ export class WorksheetData {
         return this._rowCount;
     }
 
-    public get isEmpty() {
+    public get isEmpty(): boolean {
         return !this.rowCount || !this._columnCount;
     }
 
@@ -39,7 +40,7 @@ export class WorksheetData {
         return this._isSpecialData;
     }
 
-    public get dataDictionary() {
+    public get dataDictionary(): WorksheetDataDictionary {
         return this._dataDictionary;
     }
 
@@ -48,7 +49,7 @@ export class WorksheetData {
             return;
         }
 
-        const actualData = this._data.map((item) => item.rowData);
+        const actualData = this._data.map(item => item.data);
 
         this._keys = ExportUtilities.getKeysFromData(actualData);
         if (this._keys.length === 0) {

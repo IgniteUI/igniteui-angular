@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode } from 'igniteui-angular';
 

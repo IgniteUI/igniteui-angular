@@ -25,44 +25,44 @@ describe('Icon Service', () => {
         const iconService = TestBed.inject(IgxIconService);
 
         expect(() => {
-            iconService.defaultFontSet = MY_FONT;
+            iconService.defaultFamily = MY_FONT;
         }).not.toThrow();
     });
 
     it('should get the default icon set', () => {
         const iconService = TestBed.inject(IgxIconService);
-        iconService.defaultFontSet = MY_FONT;
+        iconService.defaultFamily = MY_FONT;
 
-        expect(iconService.defaultFontSet).toBe(MY_FONT);
+        expect(iconService.defaultFamily).toBe(MY_FONT);
     });
 
     it('should associate alias name with icon set name', () => {
         const iconService = TestBed.inject(IgxIconService);
 
         expect(() => {
-            iconService.registerFontSetAlias(ALIAS, MY_FONT);
+            iconService.registerFamilyAlias(ALIAS, MY_FONT);
         }).not.toThrow();
     });
 
     it('should get icon set name from alias name', () => {
         const iconService = TestBed.inject(IgxIconService);
-        iconService.registerFontSetAlias(ALIAS, MY_FONT);
+        iconService.registerFamilyAlias(ALIAS, MY_FONT);
 
-        expect(iconService.fontSetClassName(ALIAS)).toBe(MY_FONT);
+        expect(iconService.familyClassName(ALIAS)).toBe(MY_FONT);
     });
 
     it('should add custom svg icon from url', () => {
         const iconService = TestBed.inject(IgxIconService) as IgxIconService;
         const document = TestBed.inject(DOCUMENT);
 
-        const iconName = 'test';
-        const fontSet = 'svg-icons';
-        const iconKey = fontSet + '_' + iconName;
+        const name = 'test';
+        const family = 'svg-icons';
+        const iconKey = family + '_' + name;
 
         spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send');
 
-        iconService.addSvgIcon(iconName, 'test.svg', fontSet);
+        iconService.addSvgIcon(name, 'test.svg', family);
 
         expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
         expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
@@ -75,14 +75,14 @@ describe('Icon Service', () => {
         const iconService = TestBed.inject(IgxIconService) as IgxIconService;
         const document = TestBed.inject(DOCUMENT);
 
-        const iconName = 'test';
-        const fontSet = 'svg-icons';
-        const iconKey = fontSet + '_' + iconName;
+        const name = 'test';
+        const family = 'svg-icons';
+        const iconKey = family + '_' + name;
 
-        iconService.addSvgIconFromText(iconName, svgText, fontSet);
+        iconService.addSvgIconFromText(name, svgText, family);
 
-        expect(iconService.isSvgIconCached(iconName, fontSet)).toBeTruthy();
-        expect(iconService.getSvgIconKey(iconName, fontSet)).toEqual(iconKey);
+        expect(iconService.isSvgIconCached(name, family)).toBeTruthy();
+        expect(iconService.getSvgIconKey(name, family)).toEqual(iconKey);
 
         const svgElement = document.querySelector(`svg[id='${iconKey}']`);
         expect(svgElement).toBeDefined();
@@ -93,22 +93,22 @@ describe('Icon Service', () => {
 
         iconService.iconLoaded.pipe(first()).subscribe(event => {
             expect(event.name).toMatch('test');
-            expect(event.fontSet).toMatch('svg-icons');
+            expect(event.family).toMatch('svg-icons');
             done();
         });
 
-        const iconName = 'test';
-        const fontSet = 'svg-icons';
+        const name = 'test';
+        const family = 'svg-icons';
 
         spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
         spyOn(XMLHttpRequest.prototype, 'send').and.callFake(() => {
             (iconService as any)._iconLoaded.next({
-                name: iconName,
+                name,
                 value: svgText,
-                fontSet
+                family
             });
         });
 
-        iconService.addSvgIcon(iconName, 'test.svg', fontSet);
+        iconService.addSvgIcon(name, 'test.svg', family);
     });
 });

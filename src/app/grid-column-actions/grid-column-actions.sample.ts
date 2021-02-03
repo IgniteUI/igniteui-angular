@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, IColumnToggledEventArgs } from 'igniteui-angular';
+import { Component, OnInit } from '@angular/core';
+import { IColumnToggledEventArgs } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -9,17 +9,14 @@ import { IgxGridComponent, IColumnToggledEventArgs } from 'igniteui-angular';
 })
 
 export class GridColumnActionsSampleComponent implements OnInit {
-    @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    public data: any[];
+    public columns: any[];
 
-    data: any[];
-    columns: any[];
-
-    columnToggled(event: IColumnToggledEventArgs) {
+    public columnToggled(event: IColumnToggledEventArgs) {
         console.log(event);
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },
             { field: 'CompanyName', width: '200px' },
