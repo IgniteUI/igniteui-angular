@@ -1,10 +1,7 @@
 import * as path from 'path';
 
 import { EmptyTree } from '@angular-devkit/schematics';
-import {
-    SchematicTestRunner,
-    UnitTestTree,
-} from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
 describe('Update to 11.1.0', () => {
     let appTree: UnitTestTree;
@@ -25,6 +22,8 @@ describe('Update to 11.1.0', () => {
             },
         },
     };
+  
+    const migrationName = 'migration-19';
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -185,5 +184,23 @@ export class IconTestComponent {
                 '/testSrc/appPrefix/component/icon-test.component.ts'
             )
         ).toEqual(expectedContent);
+
+    it('should replace onToggle with collapsedChange ', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/splitter.component.html`,
+            `<igx-splitter style='height: 30vh;' [type]='0'>
+                <igx-splitter-pane (onToggle)="toggled()">
+                </igx-splitter-pane>
+            </igx-splitter>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
+            .toEqual(`<igx-splitter style='height: 30vh;' [type]='0'>
+                <igx-splitter-pane (collapsedChange)="toggled()">
+                </igx-splitter-pane>
+            </igx-splitter>`);
     });
 });
