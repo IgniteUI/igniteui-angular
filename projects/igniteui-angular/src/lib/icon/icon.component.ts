@@ -123,14 +123,14 @@ export class IgxIconComponent implements OnInit, OnDestroy {
             first(e => e.name === this.name && e.family === this.family),
             takeUntil(this.destroy$)
         )
-        .subscribe(_ => this.ref.detectChanges());
+        .subscribe(() => this.ref.detectChanges());
     }
 
     /**
      * @hidden
      * @internal
      */
-    ngOnInit() {
+    public ngOnInit() {
         this.updateIconClass();
     }
 
@@ -138,7 +138,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @hidden
      * @internal
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
     }
@@ -155,7 +155,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get getFamily(): string {
+    public get getFamily(): string {
         return this.family;
     }
 
@@ -171,7 +171,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get getActive(): boolean {
+    public get getActive(): boolean {
         return this.active;
     }
 
@@ -188,7 +188,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     @HostBinding('class.igx-icon--inactive')
-    get getInactive(): boolean {
+    public get getInactive(): boolean {
         return !this.active;
     }
 
@@ -205,7 +205,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     @HostBinding('style.color')
-    get getColor(): string {
+    public get getColor(): string {
         return this.color;
     }
 
@@ -221,7 +221,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get getName(): string {
+    public get getName(): string {
         return this.name;
     }
 
@@ -238,7 +238,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get getSvgKey(): string {
+    public get getSvgKey(): string {
         if (this.iconService.isSvgIconCached(this.name, this.family)) {
             return '#' + this.iconService.getSvgIconKey(this.name, this.family);
         }
@@ -258,7 +258,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get template(): TemplateRef<HTMLElement> {
+    public get template(): TemplateRef<HTMLElement> {
         if (this.name) {
             if (this.iconService.isSvgIconCached(this.name, this.family)) {
                 return this.svgImage;

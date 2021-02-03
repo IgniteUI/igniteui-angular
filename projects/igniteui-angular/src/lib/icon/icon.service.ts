@@ -59,7 +59,7 @@ export class IgxIconService {
      *   const defaultFamily = this.iconService.defaultFamily;
      * ```
      */
-    get defaultFamily(): string {
+    public get defaultFamily(): string {
         return this._family;
     }
 
@@ -69,7 +69,7 @@ export class IgxIconService {
      *   this.iconService.defaultFamily = 'svg-flags';
      * ```
      */
-    set defaultFamily(className: string) {
+    public set defaultFamily(className: string) {
         this._family = className;
     }
 
