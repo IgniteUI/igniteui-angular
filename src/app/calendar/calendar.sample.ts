@@ -35,6 +35,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
 
     public selectPTOdays(dates: Date[]) {
         this.range = dates;
+        console.log(this.range);
     }
 
     public submitPTOdays() {
@@ -65,7 +66,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
         console.log(event);
     }
 
-    public activeViewChanged(event: CalendarView) {
+    public activeViewChanged(event) {
         const calendarView = event;
         console.log(`Selected date:${calendarView}`);
     }
