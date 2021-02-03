@@ -10,49 +10,50 @@ import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridCellStylingSampleComponent implements OnInit {
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true })
+    private grid1: IgxGridComponent;
 
     public data: Array<any>;
-    data2: Array<any>;
+    public data2: Array<any>;
     public columns: Array<any>;
-    styles = {
+    public styles = {
         background: 'linear-gradient(180deg, #dd4c4c 0%, firebrick 100%)',
         color: 'white',
         'text-shadow': '1px 1px 2px rgba(25,25,25,.25)',
         animation: '0.25s ease-in-out forwards alternate popin'
     };
 
-    cellClasses1 = {
+    public cellClasses1 = {
         test1: this.condition1,
         test2: this.condition2,
         test3: this.condition3
     };
 
-    cellClasses2 = {
+    public cellClasses2 = {
         test1: this.condition4,
         test2: this.condition5,
         test3: this.condition6
     };
 
-    condition(rowData: any): boolean {
+    public condition(rowData: any): boolean {
         return rowData[this.grid1.primaryKey] === 'BLONP';
     }
-    condition1(rowData: any, columnKey: any): boolean {
+    public condition1(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] === 'ALFKI' || rowData[columnKey] === 'ANTON';
     }
-    condition2(rowData: any, columnKey: any): boolean {
+    public condition2(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] === 'BERGS' || rowData[columnKey] === 'ANATR';
     }
-    condition3(rowData: any, columnKey: any) {
+    public condition3(rowData: any, columnKey: any) {
         return rowData[columnKey] === 'FRANS' || rowData[columnKey] === 'BLONP';
     }
-    condition4(rowData: any, columnKey: any): boolean {
+    public condition4(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 0 && rowData[columnKey] <= 3;
     }
-    condition5(rowData: any, columnKey: any): boolean {
+    public condition5(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 3 && rowData[columnKey] <= 6;
     }
-    condition6(rowData: any, columnKey: any): boolean {
+    public condition6(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 6;
     }
 
@@ -75,7 +76,7 @@ export class GridCellStylingSampleComponent implements OnInit {
         this.data2 = HIERARCHICAL_SAMPLE_DATA.slice(0);
     }
 
-    indent(event: KeyboardEvent, element: HTMLTextAreaElement) {
+    public indent(event: KeyboardEvent, element: HTMLTextAreaElement) {
         event.preventDefault();
         const start = element.selectionStart;
         const end = element.selectionEnd;
@@ -84,7 +85,7 @@ export class GridCellStylingSampleComponent implements OnInit {
         element.selectionStart = element.selectionEnd = start + 2;
     }
 
-    dedent(event: KeyboardEvent, element: HTMLTextAreaElement) {
+    public dedent(event: KeyboardEvent, element: HTMLTextAreaElement) {
         event.preventDefault();
         const start = element.selectionStart;
         const end = element.selectionEnd;
@@ -93,15 +94,15 @@ export class GridCellStylingSampleComponent implements OnInit {
         element.selectionStart = element.selectionEnd = start - 2;
     }
 
-    applyCSS() {
+    public applyCSS() {
         this.columns.forEach(column => column.cellStyles = this.styles);
     }
 
-    applyCSSClasses() {
+    public applyCSSClasses() {
         this.columns.forEach(column => column.cellClasses = this.cellClasses1);
     }
 
-    updateCSS(css: string) {
+    public updateCSS(css: string) {
         this.styles = {...this.styles, ...JSON.parse(css)};
         this.applyCSS();
     }

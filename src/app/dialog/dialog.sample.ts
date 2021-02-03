@@ -39,12 +39,12 @@ export class DialogSampleComponent implements OnInit {
         console.log(this.alert.positionSettings);
     }
 
-    togglePosition() {
+    public togglePosition() {
         this.alert.positionSettings = this.alert.positionSettings === this.positionSettings ?
             this.newPositionSettings : this.positionSettings;
     }
 
-    onDialogOKSelected(args) {
+    public onDialogOKSelected(args) {
         // args.event - event
         // args.dialog - dialog
 

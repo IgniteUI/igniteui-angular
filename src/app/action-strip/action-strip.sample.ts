@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'igniteui-angular';
+import { Component, OnInit } from '@angular/core';
+import { DisplayDensity } from 'igniteui-angular';
 
 @Component({
     selector: 'app-action-strip-sample',
@@ -7,9 +7,6 @@ import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'ignit
     templateUrl: `action-strip.sample.html`
 })
 export class ActionStripSampleComponent implements OnInit {
-    @ViewChild('actionstrip') actionStrip: IgxActionStripComponent;
-    @ViewChild('actionstrip1') actionStrip1: IgxActionStripComponent;
-    @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
     public result: string;
     public isVisible = false;
     public customItem = true;
@@ -17,25 +14,24 @@ export class ActionStripSampleComponent implements OnInit {
     public cosy: DisplayDensity = DisplayDensity.cosy;
     public compact: DisplayDensity = DisplayDensity.compact;
     public displayDensity = this.comfortable;
-
-    data: any[];
-    columns: any[];
+    public data: any[];
+    public columns: any[];
 
     private counter = 0;
 
-    doSomeAction() {
+    public doSomeAction() {
         this.result = `Clicked ${this.counter++} times`;
     }
 
-    showActions() {
+    public showActions() {
         this.isVisible = true;
     }
 
-    hideActions() {
+    public hideActions() {
         this.isVisible = false;
     }
 
-    onMouseOver(event, grid, actionStrip) {
+    public onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
             const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
@@ -43,17 +39,17 @@ export class ActionStripSampleComponent implements OnInit {
         }
     }
 
-    onMouseLeave(actionstrip, event?) {
+    public onMouseLeave(actionstrip, event?) {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }
     }
 
-    setDensity(density: DisplayDensity) {
+    public setDensity(density: DisplayDensity) {
         this.displayDensity = density;
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },
             { field: 'CompanyName', width: '200px' },
