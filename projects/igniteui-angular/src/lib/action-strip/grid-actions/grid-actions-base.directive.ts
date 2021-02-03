@@ -21,7 +21,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * ```
      */
     @Input()
-    asMenuItems = false;
+    public asMenuItems = false;
 
     public strip: IgxActionStripComponent;
 
@@ -29,7 +29,7 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @hidden
      * @internal
      */
-    get grid() {
+    public get grid() {
         return this.strip.context.grid;
     }
 
@@ -39,22 +39,22 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * @hidden
      * @internal
      */
-    get isRowContext(): boolean {
+    public get isRowContext(): boolean {
         return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
     }
 
     constructor(protected iconService: IgxIconService,
-                protected differs: IterableDiffers) { }
+        protected differs: IterableDiffers) { }
 
     /**
      * @hidden
      * @internal
      */
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         if (this.asMenuItems) {
-                this.buttons.changes.subscribe((change: QueryList<IgxGridActionButtonComponent>) => {
-                        this.strip.cdr.detectChanges();
-                });
+            this.buttons.changes.subscribe(() => {
+                this.strip.cdr.detectChanges();
+            });
         }
     }
 

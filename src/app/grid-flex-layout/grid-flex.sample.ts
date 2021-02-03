@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
-import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     providers: [],
@@ -11,14 +10,15 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 
 export class GridFlexSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
+
     public localData;
-    columns;
+    public columns;
 
     constructor() {
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         const data = [];
         for (let i = 0; i < 20; i++) {
             data.push(  { ID: i, Name: 'A' + i });
@@ -30,7 +30,7 @@ export class GridFlexSampleComponent implements OnInit, AfterViewInit {
             { field: 'Name', width: 800, resizable: true, maxWidth: 1000, minWidth: 70 }
         ];
     }
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.grid1.cdr.detectChanges();
         // this.remoteService.getData(this.grid3.data);
     }

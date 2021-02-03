@@ -31,17 +31,17 @@
     </div>
 
     <ng-template #defaultGroupByExpandedTemplate>
-        <igx-icon fontSet="material">expand_more</igx-icon>
+        <igx-icon>expand_more</igx-icon>
     </ng-template>
 
     <ng-template #defaultGroupByCollapsedTemplate>
-        <igx-icon fontSet="material">chevron_right</igx-icon>
+        <igx-icon>chevron_right</igx-icon>
     </ng-template>
 
 
     <ng-template #defaultGroupByTemplate>
         <div class="igx-group-label">
-            <igx-icon fontSet="material" class="igx-group-label__icon">group_work</igx-icon>
+            <igx-icon class="igx-group-label__icon">group_work</igx-icon>
             <span class="igx-group-label__column-name">
                 {{ groupRow.column && groupRow.column.header ?
                 groupRow.column.header :

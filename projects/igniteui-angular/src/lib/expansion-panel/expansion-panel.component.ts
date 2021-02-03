@@ -196,6 +196,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
             () => {
                 this.onCollapsed.emit({ event: evt, panel: this, owner: this });
                 this.collapsed = true;
+                this.cdr.markForCheck();
             }
         );
     }
