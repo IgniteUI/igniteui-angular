@@ -50,8 +50,8 @@
 /// @prop {Map} cell-new-color [igx-color: ('grays', 500)] - The text color of a new, unedited cell. Used when adding new row in a grid.
 /// @prop {Map} cell-edited-value-color [igx-color: ('grays', 600)] - The color of cell edited value.
 /// @prop {Map} cell-disabled-color [igx-color: ('grays', 500)] - The text color of a disabled cell.
-/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 50), darken: 8%] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('secondary', 50)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 100), darken-color: 2%] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('secondary', 100)] - The color of the selected cell inside a selected row/column.
 ///
 /// @prop {Map} resize-line-color [igx-color: ('secondary', 500)] - The table header resize line color.
 /// @prop {Map} drop-indicator-color [igx-color: ('secondary', 500)] - The color of the drop indicator.
@@ -187,6 +187,15 @@ $_light-grid: extend(
             igx-contrast-color: ('secondary', 50)
         ),
 
+        cell-selected-within-background: (
+            igx-color: ('secondary', 100),
+            darken-color: 2%
+        ),
+
+        cell-selected-within-text-color: (
+            igx-contrast-color: ('secondary', 100)
+        ),
+
         row-selected-hover-background: (
             igx-color: ('secondary', 50),
             darken-color: 2%
@@ -207,15 +216,6 @@ $_light-grid: extend(
 
         row-border-color: (
             igx-color: ('grays', 300)
-        ),
-
-        cell-selected-within-background: (
-            igx-color: ('secondary', 50),
-            darken: 8%
-        ),
-
-        cell-selected-within-text-color: (
-            igx-contrast-color: ('secondary', 50)
         ),
 
         pinned-border-width: 2px,
@@ -423,8 +423,8 @@ $_light-grid: extend(
 /// @prop {Number} drop-area-border-radius [2px] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Map} filtering-background-or [igx-color: ('error'), rgba: .5] - The background color of advanced filtering "OR" condition.
 /// @prop {Map} filtering-background-or--focus [igx-color: ('error')] - The background color on focus/selected of advanced filtering "OR" condition.
-/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 100), hexrgba: #fff, darken: 8%] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 100)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 300), to-opaque: #fff] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 300)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('grays', 200)] - The selected row hover text color.
 ///
 /// @requires {function} extend
@@ -536,13 +536,12 @@ $_fluent-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('grays', 100),
-            hexrgba: #fff,
-            darken: 8%
+            igx-color: ('grays', 300),
+            to-opaque: #fff,
         ),
 
         cell-selected-within-text-color: (
-            igx-contrast-color: ('grays', 100)
+            igx-contrast-color: ('grays', 300)
         ),
 
         root-summaries-background: (
@@ -570,8 +569,8 @@ $_fluent-grid: extend(
 /// @prop {Map} pinned-border-color [igx-color: ('primary', 200)] - The color of the pinned border.
 /// @prop {Map} resize-line-color [igx-color: ('primary', 500)] - The table header resize line color.
 /// @prop {Number} drop-area-border-radius [4px] - The border radius used for drop-area. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 50), darken: 8%] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('primary', 50)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 100)] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('primary', 100)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('primary', 100)] - The selected row hover text color.
 /// @requires {function} extend
 /// @requires {Map} $_light-grid
@@ -619,12 +618,11 @@ $_bootstrap-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('primary', 50),
-            darken: 8%
+            igx-color: ('primary', 100),
         ),
 
         cell-selected-within-text-color: (
-            igx-contrast-color: ('primary', 50)
+            igx-contrast-color: ('primary', 100)
         ),
 
         row-selected-hover-background: (
@@ -702,7 +700,7 @@ $_bootstrap-grid: extend(
 /// @prop {Map} group-count-background [igx-color: ('primary', 300)] - The grid group row cont badge background color.
 /// @prop {Map} group-count-text-color [igx-contrast-color: ('primary', 500)] - The grid group row cont badge text color.
 /// @prop {Map} expand-icon-color [igx-color: ('primary', 200)] - The grid row expand icon color.
-/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 50), rgba: .72, to-opaque: (), darken: 8%] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 50), to-opaque: ()] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('primary', 50)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('primary', 50)] - The selected row hover text color.
 
@@ -810,7 +808,7 @@ $_indigo-grid: extend(
         ),
 
         cell-selected-within-background: (
-            igx-color: ('primary', 100),
+            igx-color: ('primary', 50),
             to-opaque: (),
         ),
 
