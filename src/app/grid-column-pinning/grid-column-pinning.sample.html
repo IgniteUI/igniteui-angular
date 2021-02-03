@@ -33,9 +33,9 @@
         <div class="sample-switches">
             <igx-switch [(ngModel)]="showToolbar">Toolbar</igx-switch>
             <igx-switch [(ngModel)]="pinningEnabled">Column Pinning</igx-switch>
-            <igx-switch (change)='onSelectionModeChange()'>Row Selectors</igx-switch>
-            <igx-switch (change)='onChange()'>Right/Left Column Pinning toggle</igx-switch>
-            <igx-switch (change)='onRowChange()'>Top/Bottom Row Pinning toggle</igx-switch>
+            <igx-switch (change)="onSelectionModeChange()">Row Selectors</igx-switch>
+            <igx-switch (change)="onChange()">Right/Left Column Pinning toggle</igx-switch>
+            <igx-switch (change)="onRowChange()">Top/Bottom Row Pinning toggle</igx-switch>
         </div>
         </div>
     </div>
