@@ -22,7 +22,7 @@ describe('Update to 11.1.0', () => {
             },
         },
     };
-  
+
     const migrationName = 'migration-19';
 
     beforeEach(() => {
@@ -179,11 +179,13 @@ export class IconTestComponent {
     imports: [IgxIconModule]
 });
 `;
+
         expect(
             tree.readContent(
                 '/testSrc/appPrefix/component/icon-test.component.ts'
             )
         ).toEqual(expectedContent);
+    });
 
     it('should replace onToggle with collapsedChange ', async () => {
         appTree.create(
