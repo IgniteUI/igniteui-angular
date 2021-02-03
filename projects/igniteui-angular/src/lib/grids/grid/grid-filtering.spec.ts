@@ -1012,7 +1012,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
 
-        expect(grid.filtering.emit).toHaveBeenCalledTimes(1)
+        expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
         expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(1);
     }));
 

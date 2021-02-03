@@ -473,7 +473,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
-            const args = { owner: grid, cancel: false, filteringExpressions }
+            const args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
@@ -494,7 +494,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should emit onFilteringDone when clear the input of filteringUI', fakeAsync(() => {
             spyOn(grid.filtering, 'emit');
-            spyOn(grid.onFilteringDone, 'emit')
+            spyOn(grid.onFilteringDone, 'emit');
             const columnName = 'ProductName';
             const filterValue = 'search';
             grid.filter(columnName, filterValue, IgxStringFilteringOperand.instance().condition('contains'));
@@ -509,7 +509,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            const args = { owner: grid, cancel: false, filteringExpressions: null }
+            const args = { owner: grid, cancel: false, filteringExpressions: null };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
         }));
@@ -821,7 +821,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('should update UI when chip is removed from header cell.', fakeAsync(() => {
             spyOn(grid.filtering, 'emit');
-            spyOn(grid.onFilteringDone, 'emit')
+            spyOn(grid.onFilteringDone, 'emit');
 
             grid.filter('ProductName', 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
             tick(30);
@@ -830,7 +830,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toEqual(2);
 
             const filteringExpressions = grid.filteringExpressionsTree.find('ProductName') as FilteringExpressionsTree;
-            let args = { owner: grid, cancel: false, filteringExpressions }
+            let args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
