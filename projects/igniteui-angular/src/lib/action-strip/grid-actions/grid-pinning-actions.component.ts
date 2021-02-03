@@ -25,7 +25,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    get pinned(): boolean {
+    public get pinned(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -43,7 +43,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    get inPinnedArea(): boolean {
+    public get inPinnedArea(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -57,7 +57,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    get pinnedTop(): boolean {
+    public get pinnedTop(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
