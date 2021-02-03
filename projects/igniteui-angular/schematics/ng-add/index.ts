@@ -53,7 +53,7 @@ const readInput = (options: Options): Rule =>
         // If project targets angular cli version >= 7.3
         build.options[targetProperty] = true;
         enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
-        workspaces.writeWorkspace(workspace, workspaceHost);
+        await workspaces.writeWorkspace(workspace, workspaceHost);
       } else {
         // If project targets angular cli version < 7.3
         polyfillsData = await enablePolyfills(tree, context);
@@ -68,7 +68,7 @@ const addNormalize = (options: Options): Rule =>
       const workspaceHost = createHost(tree);
       const { workspace } = await workspaces.readWorkspace(tree.root.path, createHost(tree));
       const result = addResetCss(workspace, tree);
-      workspaces.writeWorkspace(workspace, workspaceHost);
+      await workspaces.writeWorkspace(workspace, workspaceHost);
       if (!result) {
         context.logger.warn(`Could not complete adding reset styles. Those may need to be added manually.`);
       }

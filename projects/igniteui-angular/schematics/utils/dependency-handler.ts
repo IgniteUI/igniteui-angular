@@ -177,7 +177,7 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
                 break;
         }
     }
-    workspaces.writeWorkspace(workspace, workspaceHost);
+    await workspaces.writeWorkspace(workspace, workspaceHost);
 };
 
 export const addPackageToPkgJson = (tree: Tree, pkg: string, version: string, target: string): boolean => {
