@@ -324,7 +324,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
-     *     <igx-icon fontSet="material">loop</igx-icon>
+     *     <igx-icon>loop</igx-icon>
      * </ng-template>
      *
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'ID'" [foreignKey]="'parentID'"

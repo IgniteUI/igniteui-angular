@@ -6,7 +6,7 @@
                 (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick()">
                 <span *ngIf="!draggedElem">Drag me</span>
                 <span *ngIf="draggedElem">Weeeee</span>
-                <igx-icon igxDragIgnore fontSet="material" class="dragClickable" (click)="openDialog()">edit</igx-icon>
+                <igx-icon igxDragIgnore class="dragClickable" (click)="openDialog()">edit</igx-icon>
             </div>
         </div>
         <br>
@@ -35,7 +35,7 @@
                 <div class="igx-dialog__window-content">
                     <div class="dialogHeader">
                         <span [style.margin.px]="10">Sign In</span>
-                        <igx-icon igxDragHandle fontSet="material" class="dialogHandle">control_camera</igx-icon>
+                        <igx-icon igxDragHandle class="dialogHandle">control_camera</igx-icon>
                     </div>
                     <igx-input-group>
                         <igx-prefix>
