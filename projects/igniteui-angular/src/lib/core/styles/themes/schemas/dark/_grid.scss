@@ -34,6 +34,10 @@
 /// @prop {Map} root-summaries-text-color [igx-color: ('grays', 300), to-opaque: #222, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @prop {Map} row-highlight [igx-color: ('secondary', 500)] - The highlight color of a row.
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 900)] - The dragged row background color.
+/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 500), rgba: .8, to-opaque: #222] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('secondary', 500)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('secondary', A700)] - The selected row hover text color.
+
 $_base-dark-grid: (
     header-background: (
         igx-color: ('grays', 100),
@@ -74,11 +78,25 @@ $_base-dark-grid: (
         to-opaque: #222
     ),
 
+    cell-selected-within-background: (
+        igx-color: ('secondary', 500),
+        rgba: .8,
+        to-opaque: #222,
+    ),
+
+    cell-selected-within-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
     row-selected-hover-background: (
         igx-color: ('secondary', 'A700'),
         rgba: .24,
         to-opaque: #222,
         lighten-color: 5%
+    ),
+
+    row-selected-hover-text-color: (
+        igx-contrast-color: ('secondary', 'A700'),
     ),
 
     row-selected-text-color: #fff,
@@ -159,6 +177,10 @@ $_dark-grid: extend($_light-grid, $_base-dark-grid);
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), to-opaque: #222] - The hover row background color.
 /// @prop {Map} row-selected-background [igx-color: ('grays', 200), to-opaque: #222] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('grays', '300'), to-opaque: #222] - The selected row background color on hover.
+/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 200), rgba: .2, to-opaque: #222] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('grays', 200)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('grays', 300)] - The selected row hover text color.
+///
 /// @requires {function} extend
 /// @requires $_fluent-grid
 /// @requires $_base-dark-grid
@@ -187,9 +209,23 @@ $_dark-fluent-grid: extend(
             to-opaque: #222
         ),
 
+        cell-selected-within-background: (
+            igx-color: ('grays', 200),
+            rgba: .2,
+            to-opaque: #222,
+        ),
+
+        cell-selected-within-text-color: (
+            igx-contrast-color: ('grays', 200)
+        ),
+
         row-selected-hover-background: (
             igx-color: ('grays', 300),
             to-opaque: #222
+        ),
+
+        row-selected-hover-text-color: (
+            igx-contrast-color: ('grays', 300),
         ),
     )
 );
@@ -202,6 +238,7 @@ $_dark-fluent-grid: extend(
 /// @prop {Color} header-text-color [#fff] - The table header text color.
 /// @prop {Map} header-selected-background [igx-color: ('secondary', 500), rgba: .24, to-opaque: #222] - The table header background color when selected (ex. column selection).
 /// @prop {Map} header-selected-text-color [igx-color: ('secondary', 500), rgba: .24, to-opaque: #222, text-contrast: ()] - The table header text color when selected (ex. column selection).
+/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 500), rgba: .5, to-opaque: #222] - The background of the selected cell inside a selected row/column.
 ///
 /// @requires {function} extend
 /// @requires $_bootstrap-grid
@@ -212,6 +249,12 @@ $_dark-bootstrap-grid: extend(
     (
         header-background: #222,
         header-text-color: #fff,
+
+        cell-selected-within-background: (
+            igx-color: ('secondary', 500),
+            rgba: .5,
+            to-opaque: #222,
+        ),
 
         header-selected-background: (
             igx-color: ('secondary', 500),
@@ -254,7 +297,7 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} sorted-header-icon-color [igx-contrast-color: 'surface'] - The sorted table header icon color.
 /// @prop {Map} sortable-header-icon-hover-color [igx-contrast-color: 'surface'] - The icon color on hover in grid header when the column is sortable.
 ///
-/// @prop {Map} row-selected-background [igx-color: 'primary'] - The selected row background color.
+/// @prop {Map} row-selected-background [igx-color: ('primary', 500)] - The selected row background color.
 /// @prop {Color} row-selected-text-color [igx-contrast-color: 'primary'] - The selected row text color.
 /// @prop {Color} row-selected-hover-text-color [igx-contrast-color: ('primary', 400)] - The selected row text color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('primary', 400)] - The selected row hover background.
@@ -283,6 +326,8 @@ $_dark-bootstrap-grid: extend(
 /// @prop {Map} expand-icon-color [igx-color: ('grays', 600)] - The grid row expand icon color.
 /// @prop {Map} expand-icon-hover-color [igx-color: ('grays', 900)] - The grid row expand icon hover color.
 /// @prop {Color} filtering-row-background [igx-color: 'surface'] - The background color of the filtering row.
+/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 400)] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('primary', 400)] - The color of the selected cell inside a selected row/column.
 ///
 /// @requires {function} extend
 /// @requires $_indigo-grid
@@ -401,16 +446,24 @@ $_dark-indigo-grid: extend(
             igx-color: ('primary', 500),
         ),
 
+        cell-selected-within-background: (
+            igx-color: ('primary', 400),
+        ),
+
+        cell-selected-within-text-color: (
+            igx-contrast-color: ('primary', 400)
+        ),
+
         row-selected-hover-background: (
             igx-color: ('primary', 400),
         ),
 
-        row-selected-text-color: (
-            igx-contrast-color: ('primary', 500),
-        ),
-
         row-selected-hover-text-color: (
             igx-contrast-color: ('primary', 400),
+        ),
+
+        row-selected-text-color: (
+            igx-contrast-color: ('primary', 500),
         ),
 
         group-row-background: (
