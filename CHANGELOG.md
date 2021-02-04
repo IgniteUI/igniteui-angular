@@ -2,6 +2,18 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 11.1.0
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The following new events are introduced: `sorting`, `filtering`, `onPaging`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
+    - `onPagingDone` is now emitted AFTER the paging operation has completed
+    - `IPageEventArgs` now expose a `previous` and `newPage` properties instead of `previous` and `current`.
+    - `pageChange` event is now hidden, it only serves two way data binding
+    - `page` setter no longer emits paging events. Only the `paginate` method will emit corresponding events.
+- `IgxPaginator`:
+    - exposes `onPaging` and `onPagingDone` events
+    - `page` setter no longer emits paging events. Only the `paginate` method will emit corresponding events.
 
 ### New Features
 - `IgxDropDown`

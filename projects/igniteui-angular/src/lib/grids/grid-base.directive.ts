@@ -714,19 +714,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted constantly while moving the resize handler.
-     *
-     * @remarks
-     * Returns the `IgxColumnComponent` object's old and new width.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" (onColumnResized)="resizing($event)" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    @Output()
-    public columnResizing = new EventEmitter<IColumnResizingEventArgs>();
-
-    /**
      * Emitted after column is resized.
      *
      * @remarks
