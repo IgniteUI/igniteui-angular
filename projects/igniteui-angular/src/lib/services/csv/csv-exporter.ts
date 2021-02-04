@@ -36,7 +36,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     /**
      * This event is emitted when the export process finishes.
      * ```typescript
-     * this.exporterService.onExportEnded.subscribe((args: ICsvExportEndedEventArgs) => {
+     * this.exporterService.exportEnded.subscribe((args: ICsvExportEndedEventArgs) => {
      * // put event handler code here
      * });
      * ```
@@ -44,7 +44,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      * @memberof IgxCsvExporterService
      */
     @Output()
-    public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
+    public exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     private _stringData: string;
 
@@ -54,7 +54,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
         csvData.prepareDataAsync((r) => {
             this._stringData = r;
             this.saveFile(options);
-            this.onExportEnded.emit({ csvData: this._stringData });
+            this.exportEnded.emit({ csvData: this._stringData });
         });
     }
 
