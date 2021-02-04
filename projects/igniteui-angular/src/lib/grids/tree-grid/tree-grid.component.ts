@@ -73,32 +73,182 @@ let NEXT_ID = 0;
     ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
-    private _id = `igx-tree-grid-${NEXT_ID++}`;
-    private _data;
-    private _rowLoadingIndicatorTemplate: TemplateRef<any>;
-    protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
+    /**
+     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
+     * ```html
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public childDataKey;
+
+    /**
+     * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
+     * ```html
+     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
+     * </igx-tree-grid>
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public foreignKey;
+
+    /**
+     * An @Input property that sets the key indicating whether a row has children.
+     * This property is only used for load on demand scenarios.
+     * ```html
+     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'"
+     *                [loadChildrenOnDemand]="loadChildren"
+     *                [hasChildrenKey]="'hasEmployees'">
+     * </igx-tree-grid>
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public hasChildrenKey;
+
+    /**
+     * An @Input property indicating whether child records should be deleted when their parent gets deleted.
+     * By default it is set to true and deletes all children along with the parent.
+     * ```html
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">
+     * </igx-tree-grid>
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public cascadeOnDelete = true;
+
+    /**
+     * An @Input property that provides a callback for loading child rows on demand.
+     * ```html
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [loadChildrenOnDemand]="loadChildren">
+     * </igx-tree-grid>
+     * ```
+     * ```typescript
+     * public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+     *     this.dataService.getData(parentID, children => done(children));
+     * }
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     @HostBinding('attr.id')
     @Input()
-    public get id(): string {
-        return this._id;
-    }
-    public set id(value: string) {
-        this._id = value;
-    }
+    public id  = `igx-tree-grid-${NEXT_ID++}`;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
+    public dragIndicatorIconBase: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('record_template', { read: TemplateRef, static: true })
+    protected recordTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('summary_template', { read: TemplateRef, static: true })
+    protected summaryTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
+    protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
+
+    /**
+     * @hidden
+     */
+    public flatData: any[];
+
+    /**
+     * @hidden
+     */
+    public processedExpandedFlatData: any[];
+
+    /**
+     * Returns an array of the root level `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the root record with index=2
+     * const states = this.grid.rootRecords[2];
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    public rootRecords: ITreeGridRecord[];
+
+    /**
+     * Returns a map of all `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the record with primaryKey=2
+     * const states = this.grid.records.get(2);
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
+
+    /**
+     * Returns an array of processed (filtered and sorted) root `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the processed root record with index=2
+     * const states = this.grid.processedRootRecords[2];
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    public processedRootRecords: ITreeGridRecord[];
+
+    /**
+     * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the processed record with primaryKey=2
+     * const states = this.grid.processedRecords.get(2);
+     * ```
+     *
+     * @memberof IgxTreeGridComponent
+     */
+    public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
+
+    /**
+     * @hidden
+     */
+    public loadingRows = new Set<any>();
+
+    protected _transactions: HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
+    private _data;
+    private _rowLoadingIndicatorTemplate: TemplateRef<any>;
+    private _expansionDepth = Infinity;
+    private _filteredData = null;
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
      * ```html
      * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     @Input()
@@ -121,6 +271,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * ```typescript
      * let filteredData = this.grid.filteredData;
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     get filteredData() {
@@ -135,6 +286,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *       Name: "A"
      * }];
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     set filteredData(value) {
@@ -143,6 +295,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     /**
      * Get transactions service for the grid.
+     *
      * @experimental @hidden
      */
     get transactions() {
@@ -150,110 +303,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @hidden
-     */
-    public flatData: any[];
-
-    /**
-     * @hidden
-     */
-    public processedExpandedFlatData: any[];
-
-    /**
-     * Returns an array of the root level `ITreeGridRecord`s.
-     * ```typescript
-     * // gets the root record with index=2
-     * const states = this.grid.rootRecords[2];
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    public rootRecords: ITreeGridRecord[];
-
-    /**
-     * Returns a map of all `ITreeGridRecord`s.
-     * ```typescript
-     * // gets the record with primaryKey=2
-     * const states = this.grid.records.get(2);
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
-
-    /**
-     * Returns an array of processed (filtered and sorted) root `ITreeGridRecord`s.
-     * ```typescript
-     * // gets the processed root record with index=2
-     * const states = this.grid.processedRootRecords[2];
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    public processedRootRecords: ITreeGridRecord[];
-
-    /**
-     * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
-     * ```typescript
-     * // gets the processed record with primaryKey=2
-     * const states = this.grid.processedRecords.get(2);
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
-
-    /**
-     * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
-     * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [autoGenerate]="true"></igx-tree-grid>
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public childDataKey;
-
-    /**
-     * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
-     * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [autoGenerate]="true">
-     * </igx-tree-grid>
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public foreignKey;
-
-    /**
-     * An @Input property that sets the key indicating whether a row has children.
-     * This property is only used for load on demand scenarios.
-     * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'"
-     *                [loadChildrenOnDemand]="loadChildren"
-     *                [hasChildrenKey]="'hasEmployees'">
-     * </igx-tree-grid>
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public hasChildrenKey;
-
-    /**
-     * An @Input property indicating whether child records should be deleted when their parent gets deleted.
-     * By default it is set to true and deletes all children along with the parent.
-     * ```html
-     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" cascadeOnDelete="false">
-     * </igx-tree-grid>
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public cascadeOnDelete = true;
-
-    private _expansionDepth = Infinity;
-
-    /**
      * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
      * set to `Infinity` which means all levels would be expanded.
      * ```html
      * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     @Input()
@@ -267,16 +322,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @hidden
-     */
-    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
-    protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
-
-    /**
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
-     *     <igx-icon fontSet="material">loop</igx-icon>
+     *     <igx-icon>loop</igx-icon>
      * </ng-template>
      *
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'ID'" [foreignKey]="'parentID'"
@@ -284,6 +333,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *                [rowLoadingIndicatorTemplate]="rowLoadingTemplate">
      * </igx-tree-grid>
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     @Input()
@@ -296,51 +346,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.notifyChanges();
     }
 
-    /**
-     * An @Input property that provides a callback for loading child rows on demand.
-     * ```html
-     * <igx-tree-grid [data]="employeeData" [primaryKey]="'employeeID'" [foreignKey]="'parentID'" [loadChildrenOnDemand]="loadChildren">
-     * </igx-tree-grid>
-     * ```
-     * ```typescript
-     * public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-     *     this.dataService.getData(parentID, children => done(children));
-     * }
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
-
-    /**
-     * @hidden
-     */
-    public loadingRows = new Set<any>();
-
     // Kind of stupid
     private get _gridAPI(): IgxTreeGridAPIService {
         return this.gridAPI as IgxTreeGridAPIService;
     }
-    private _filteredData = null;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
-    public dragIndicatorIconBase: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('record_template', { read: TemplateRef, static: true })
-    protected recordTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('summary_template', { read: TemplateRef, static: true })
-    protected summaryTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -381,80 +390,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
-    private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
-        if (this.loadChildrenOnDemand) {
-            const parentID = args.rowID;
-
-            if (args.expanded && !this._expansionStates.has(parentID)) {
-                this.loadingRows.add(parentID);
-
-                this.loadChildrenOnDemand(parentID, children => {
-                    this.loadingRows.delete(parentID);
-                    this.addChildRows(children, parentID);
-                    this.notifyChanges();
-                });
-            }
-        }
-    }
-
-    private addChildRows(children: any[], parentID: any) {
-        if (this.primaryKey && this.foreignKey) {
-            for (const child of children) {
-                child[this.foreignKey] = parentID;
-            }
-            this.data.push(...children);
-        } else if (this.childDataKey) {
-            let parent = this.records.get(parentID);
-            let parentData = parent.data;
-
-            if (this.transactions.enabled && this.transactions.getAggregatedChanges(true).length) {
-                const path = [];
-                while (parent) {
-                    path.push(parent.rowID);
-                    parent = parent.parent;
-                }
-
-                let collection = this.data;
-                let record: any;
-                for (let i = path.length - 1; i >= 0; i--) {
-                    const pid = path[i];
-                    record = collection.find(r => r[this.primaryKey] === pid);
-
-                    if (!record) {
-                        break;
-                    }
-                    collection = record[this.childDataKey];
-                }
-                if (record) {
-                    parentData = record;
-                }
-            }
-
-            parentData[this.childDataKey] = children;
-        }
-        this.selectionService.clearHeaderCBState();
-        this._pipeTrigger++;
-    }
-
-   protected findRecordIndexInView(rec) {
-        return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
-    }
-
-    protected getUnpinnedIndexById(id) {
-        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
-    }
-
-    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
-        const mapCloned: Map<any, boolean> = new Map<any, boolean>();
-
-        mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
-
-            mapCloned.set(key, value);
-        });
-
-        return mapCloned;
-    }
-
     public getDefaultExpandState(record: ITreeGridRecord) {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
@@ -464,6 +399,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * ```typescript
      * this.grid.expandAll();
      * ```
+     *
      * @memberof IgxTreeGridComponent
      */
     public expandAll() {
@@ -477,6 +413,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * ```typescript
      * this.grid.collapseAll();
      *  ```
+     *
      * @memberof IgxTreeGridComponent
      */
     public collapseAll() {
@@ -491,7 +428,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey) {
             const rowID = args.data[this.foreignKey];
-            this.summaryService.clearSummaryCache({rowID: rowID});
+            this.summaryService.clearSummaryCache({rowID});
             this._pipeTrigger++;
             this.cdr.detectChanges();
         }
@@ -508,6 +445,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * };
      * this.grid.addRow(record, 1); // Adds a new child row to the row with ID=1.
      * ```
+     *
      * @param data
      * @param parentRowID
      * @memberof IgxTreeGridComponent
@@ -522,15 +460,66 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     /**
      * @hidden
+     */
+    public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
+        return {
+            $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
+            index: this.getDataViewIndex(rowIndex, pinned),
+            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false,
+            addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
+        };
+    }
+
+    /**
+     * @hidden
      * @internal
      */
-    protected _getParentRecordId() {
-        if (this.addRowParent.asChild) {
-            return super._getParentRecordId();
-        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
-            const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
-            return spawnedForRecord?.parent?.rowID;
+    public getInitialPinnedIndex(rec) {
+        return this._pinnedRecordIDs.indexOf(rec.rowID);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public getSelectedData(formatters = false, headers = false): any[] {
+        let source = [];
+
+        const process = (record) => {
+            if (record.summaries) {
+                source.push(null);
+                return;
+            }
+            source.push(record.data);
+        };
+
+        this.unpinnedDataView.forEach(process);
+        source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
+        return this.extractDataFromSelection(source, formatters, headers);
+    }
+
+    public getEmptyRecordObjectFor(rec) {
+        const row = {...rec};
+        const data = rec || {};
+        row.data = {... data};
+        Object.keys(row.data).forEach(key => {
+            // persist foreign key if one is set.
+            if (this.foreignKey && key === this.foreignKey) {
+                row.data[key] = rec.data[key];
+            } else {
+                row.data[key] = undefined;
+            }
+        });
+        let id = this.generateRowID();
+        const rootRecPK = this.foreignKey && this.rootRecords && this.rootRecords.length > 0 ?
+         this.rootRecords[0].data[this.foreignKey] : null;
+        if (id === rootRecPK) {
+            // safeguard in case generated id matches the root foreign key.
+            id = this.generateRowID();
         }
+        row.rowID = id;
+        row.data[this.primaryKey] = id;
+        return row;
     }
 
     /** @hidden */
@@ -553,6 +542,27 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return path.reverse();
+    }
+
+    protected findRecordIndexInView(rec) {
+        return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
+    }
+
+    protected getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _getParentRecordId() {
+        if (this.addRowParent.asChild) {
+            return super._getParentRecordId();
+        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
+            const spawnedForRecord =  this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
+            return spawnedForRecord?.parent?.rowID;
+        }
     }
 
     /**
@@ -600,70 +610,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.scrollToHorizontally(column);
     }
 
-    /**
-     * @hidden
-     */
-    public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
-        return {
-            $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
-            index: this.getDataViewIndex(rowIndex, pinned),
-            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false,
-            addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
-        };
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public getInitialPinnedIndex(rec) {
-        return this._pinnedRecordIDs.indexOf(rec.rowID);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    getSelectedData(formatters = false, headers = false): any[] {
-        let source = [];
-
-        const process = (record) => {
-            if (record.summaries) {
-                source.push(null);
-                return;
-            }
-            source.push(record.data);
-        };
-
-        this.unpinnedDataView.forEach(process);
-        source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
-        return this.extractDataFromSelection(source, formatters, headers);
-    }
-
-    public getEmptyRecordObjectFor(rec) {
-        const row = {...rec};
-        const data = rec || {};
-        row.data = {... data};
-        Object.keys(row.data).forEach(key => {
-            // persist foreign key if one is set.
-            if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = rec.data[key];
-            } else {
-                row.data[key] = undefined;
-            }
-        });
-        let id = this.generateRowID();
-        const rootRecPK = this.foreignKey && this.rootRecords && this.rootRecords.length > 0 ?
-         this.rootRecords[0].data[this.foreignKey] : null;
-        if (id === rootRecPK) {
-            // safeguard in case generated id matches the root foreign key.
-            id = this.generateRowID();
-        }
-        row.rowID = id;
-        row.data[this.primaryKey] = id;
-        return row;
-    }
-
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
     }
@@ -671,7 +617,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-   protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: (args: any) => void = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
@@ -694,6 +640,61 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
+        }
+    }
+
+    private addChildRows(children: any[], parentID: any) {
+        if (this.primaryKey && this.foreignKey) {
+            for (const child of children) {
+                child[this.foreignKey] = parentID;
+            }
+            this.data.push(...children);
+        } else if (this.childDataKey) {
+            let parent = this.records.get(parentID);
+            let parentData = parent.data;
+
+            if (this.transactions.enabled && this.transactions.getAggregatedChanges(true).length) {
+                const path = [];
+                while (parent) {
+                    path.push(parent.rowID);
+                    parent = parent.parent;
+                }
+
+                let collection = this.data;
+                let record: any;
+                for (let i = path.length - 1; i >= 0; i--) {
+                    const pid = path[i];
+                    record = collection.find(r => r[this.primaryKey] === pid);
+
+                    if (!record) {
+                        break;
+                    }
+                    collection = record[this.childDataKey];
+                }
+                if (record) {
+                    parentData = record;
+                }
+            }
+
+            parentData[this.childDataKey] = children;
+        }
+        this.selectionService.clearHeaderCBState();
+        this._pipeTrigger++;
+    }
+
+    private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
+        if (this.loadChildrenOnDemand) {
+            const parentID = args.rowID;
+
+            if (args.expanded && !this._expansionStates.has(parentID)) {
+                this.loadingRows.add(parentID);
+
+                this.loadChildrenOnDemand(parentID, children => {
+                    this.loadingRows.delete(parentID);
+                    this.addChildRows(children, parentID);
+                    this.notifyChanges();
+                });
+            }
         }
     }
 }

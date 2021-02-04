@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from './data';
 
-import { IgxGridComponent, Transaction, IgxToggleDirective, GridSelectionMode } from 'igniteui-angular';
+import { IgxGridComponent, IgxToggleDirective, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -9,8 +9,18 @@ import { IgxGridComponent, Transaction, IgxToggleDirective, GridSelectionMode } 
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
+    @ViewChild('gridRowEdit', { read: IgxGridComponent, static: true })
+    private gridRowEdit: IgxGridComponent;
+    @ViewChild('gridRowEditTransaction', { read: IgxGridComponent, static: true })
+    private gridRowEditTransaction: IgxGridComponent;
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    private grid: IgxGridComponent;
+    @ViewChild('gridTransaction', { read: IgxGridComponent, static: true })
+    private gridTransaction: IgxGridComponent;
+
     public console = window.console;
-    private addProductId: number;
     public pinFlag = false;
     public hideFlag = false;
     public summaryFlag = true;
@@ -18,10 +28,6 @@ export class GridRowEditSampleComponent {
     public update_value;
     public update_row;
     public update_column;
-    private cssRed = `color: #aa2222;`;
-    private cssGreen = `color: #22aa22;`;
-    private cssBlue = `color: #2222aa;`;
-    private cssBig = `font-size: 16px; font-weight: 800;`;
     public events = {
         cell: {
             done: true,
@@ -49,25 +55,24 @@ export class GridRowEditSampleComponent {
         }
     };
     public currentActiveGrid: {
-        id: string,
-        transactions: any[]
+        id: string;
+        transactions: any[];
     } = {
-            id: '',
-            transactions: []
-        };
-    data: any[];
-    performanceData: any[] = [];
-    columns;
+        id: '',
+        transactions: []
+    };
+    public data: any[];
+    public performanceData: any[] = [];
+    public columns;
     public selectionMode;
-    @ViewChild('gridRowEdit', { read: IgxGridComponent, static: true }) public gridRowEdit: IgxGridComponent;
-    @ViewChild('gridRowEditTransaction', { read: IgxGridComponent, static: true }) public gridRowEditTransaction: IgxGridComponent;
-    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
-    @ViewChild('gridTransaction', { read: IgxGridComponent, static: true }) public gridTransaction: IgxGridComponent;
-    @ViewChild('gridPerformance', { read: IgxGridComponent, static: true }) public gridPerformance: IgxGridComponent;
-    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
+    private cssRed = `color: #aa2222;`;
+    private cssGreen = `color: #22aa22;`;
+    private cssBlue = `color: #2222aa;`;
+    private cssBig = `font-size: 16px; font-weight: 800;`;
+    private addProductId: number;
 
     constructor() {
-        const enhancedData = data.map((e, i) => Object.assign(e, {
+        const enhancedData = data.map((e) => Object.assign(e, {
             UnitPrice2: this.getRandomInt(10, 1000),
             UnitsInStock2: this.getRandomInt(1, 100),
             UnitsOnOrder2: this.getRandomInt(1, 20),
@@ -107,9 +112,8 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         this.currentActiveGrid = {
             id: gridID,
-            transactions: (<Transaction[]>currentGrid.transactions.getTransactionLog()).map(e => {
-                return `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`;
-            })
+            transactions: (currentGrid.transactions.getTransactionLog())
+                            .map(e => `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`)
         };
         this.toggle.open();
     }
@@ -124,6 +128,77 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.clear();
         this.toggle.close();
+    }
+
+    public rowEditEnter(evt) {
+        if (this.events.row.enter) {
+            console.log('%cRow' + '%c Edit ENTER', this.cssBig, this.cssBlue);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.row.enter;
+    }
+    public rowEdit(evt) {
+        if (this.events.row.done) {
+            console.log('%cRow' + '%c Edit', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.row.done;
+    }
+    public rowEditDone(evt) {
+        if (this.events.row.doneCommitted) {
+            console.log('%cRow' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+    }
+
+    public rowEditExit(evt) {
+        if (this.events.row.exit) {
+            console.log('%cRow' + '%c Edit EXIT', this.cssBig, this.cssRed);
+            console.log(evt);
+        }
+    }
+
+    public cellEnterEditMode(evt) {
+        if (this.events.cell.enter) {
+            console.log('%cCell' + '%c Edit ENTER', this.cssBig, this.cssBlue);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.cell.enter;
+    }
+    public cellEdit(evt) {
+        if (this.events.cell.done) {
+            console.log('%cCell' + '%c Edit', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.cell.done;
+    }
+    public cellEditDone(evt) {
+        if (this.events.cell.doneCommitted) {
+            console.log('%cCell' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+    }
+
+    public cellEditExit(evt) {
+        if (this.events.cell.exit) {
+            console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
+            console.log(evt);
+        }
+    }
+
+    public updateCell(value: any, row: any, column: string): void {
+        row = parseInt(row, 10); // primaryKey is type number
+        this.gridRowEditTransaction.updateCell(value, row, column);
+    }
+
+    public update(grid: string) {
+        const editRowValue = this.generateRow();
+        editRowValue.ProductID = 3;
+        this.getGridById(grid).updateRow(editRowValue, 3);
+    }
+
+    public refreshAll() {
+        this.gridRowEditTransaction.markForCheck();
     }
 
     private getRandomInt(min, max) {
@@ -143,62 +218,6 @@ export class GridRowEditSampleComponent {
         }
 
         return null;
-    }
-
-    rowEditEnter(evt) {
-        if (this.events.row.enter) {
-            console.log('%cRow' + '%c Edit ENTER', this.cssBig, this.cssBlue);
-            console.log(evt);
-        }
-        evt.cancel = this.cancel.row.enter;
-    }
-    rowEdit(evt) {
-        if (this.events.row.done) {
-            console.log('%cRow' + '%c Edit', this.cssBig, this.cssGreen);
-            console.log(evt);
-        }
-        evt.cancel = this.cancel.row.done;
-    }
-    rowEditDone(evt) {
-        if (this.events.row.doneCommitted) {
-            console.log('%cRow' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
-            console.log(evt);
-        }
-    }
-
-    rowEditExit(evt) {
-        if (this.events.row.exit) {
-            console.log('%cRow' + '%c Edit EXIT', this.cssBig, this.cssRed);
-            console.log(evt);
-        }
-    }
-
-    cellEnterEditMode(evt) {
-        if (this.events.cell.enter) {
-            console.log('%cCell' + '%c Edit ENTER', this.cssBig, this.cssBlue);
-            console.log(evt);
-        }
-        evt.cancel = this.cancel.cell.enter;
-    }
-    cellEdit(evt) {
-        if (this.events.cell.done) {
-            console.log('%cCell' + '%c Edit', this.cssBig, this.cssGreen);
-            console.log(evt);
-        }
-        evt.cancel = this.cancel.cell.done;
-    }
-    cellEditDone(evt) {
-        if (this.events.cell.doneCommitted) {
-            console.log('%cCell' + '%c Edit DONE & COMMITTED', this.cssBig, this.cssGreen);
-            console.log(evt);
-        }
-    }
-
-    cellEditExit(evt) {
-        if (this.events.cell.exit) {
-            console.log('%cCell' + '%c Edit EXIT', this.cssBig, this.cssRed);
-            console.log(evt);
-        }
     }
 
     private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {
@@ -227,21 +246,6 @@ export class GridRowEditSampleComponent {
             newObj['ID'] = row + 1;
             this.performanceData.push(newObj);
         }
-    }
-
-    updateCell(value: any, row: any, column: string): void {
-        row = parseInt(row, 10); // primaryKey is type number
-        this.gridRowEditTransaction.updateCell(value, row, column);
-    }
-
-    update(grid: string) {
-        const editRowValue = this.generateRow();
-        editRowValue.ProductID = 3;
-        this.getGridById(grid).updateRow(editRowValue, 3);
-    }
-
-    refreshAll() {
-        this.gridRowEditTransaction.markForCheck();
     }
 
     private generateRow() {

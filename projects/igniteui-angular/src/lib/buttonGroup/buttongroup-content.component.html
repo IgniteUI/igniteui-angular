@@ -12,7 +12,7 @@
         [igxRipple]="button.ripple"
     >
         <span class="igx-button-group__item-content {{ itemContentCssClass }}">
-            <igx-icon *ngIf="button.icon" fontSet="material">{{button.icon}}</igx-icon>
+            <igx-icon *ngIf="button.icon">{{button.icon}}</igx-icon>
             <span class="igx-button-group__button-text" *ngIf="button.label">{{button.label}}</span>
         </span>
     </button>

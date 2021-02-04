@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class IgxNavigationService {
-    private navs: { [id: string]: IToggleView; };
+    private navs: { [id: string]: IToggleView };
 
     constructor() {
         this.navs = {};

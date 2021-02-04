@@ -37,6 +37,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * let delimiter = this.exportOptions.valueDelimiter;
      * ```
+     *
      * @memberof IgxCsvExporterOptions
      */
     get valueDelimiter() {
@@ -48,6 +49,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.valueDelimiter = '|';
      * ```
+     *
      * @memberof IgxCsvExporterOptions
      */
     set valueDelimiter(value) {
@@ -59,6 +61,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * let filetype = this.exportOptions.fileType;
      * ```
+     *
      * @memberof IgxCsvExporterOptions
      */
     get fileType() {
@@ -70,6 +73,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.fileType = CsvFileTypes.TAB;
      * ```
+     *
      * @memberof IgxCsvExporterOptions
      */
     set fileType(value) {

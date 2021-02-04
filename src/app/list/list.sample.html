@@ -197,7 +197,7 @@
             </igx-input-group>
 
             <div class="list-sample">
-                <igx-list [displayDensity]="density" #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
+                <igx-list [displayDensity]="density" #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler()">
                     <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
                     <igx-list-item><span igxListLine>Red Delicious</span></igx-list-item>
                     <igx-list-item><span igxListLine>Ambrosia</span></igx-list-item>
@@ -325,11 +325,9 @@
 <igx-dialog #addFruitDialog title="Add Fruit" leftButtonLabel="Cancel" (onLeftButtonSelect)="addFruitDialog.close()" rightButtonLabel="Add"
             rightButtonBackgroundColor="#0375be" rightButtonColor="white" (onRightButtonSelect)="onAddFruitButtonClicked(newFruitName.value);newFruitName.value='';"
             backgroundClick="true" closeOnOutsideSelect="true">
-    <div class="sample-dialog-content">
-        <igx-input-group>
-            <label for="newFruit">Fruit Name</label>
-            <input id="newFruit" igxInput #newFruitName type="text" />
-        </igx-input-group>
-    </div>
+    <igx-input-group>
+        <label igxLabel for="newFruit">Fruit Name</label>
+        <input id="newFruit" igxInput #newFruitName type="text" />
+    </igx-input-group>
 </igx-dialog>
 

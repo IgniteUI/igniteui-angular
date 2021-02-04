@@ -21,25 +21,17 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
         public cdr: ChangeDetectorRef,
-        private helement: ElementRef,
+        helement: ElementRef,
         protected zone: NgZone,
         touchManager: HammerGesturesManager,
         protected platformUtil: PlatformUtil
-        ) {
-            super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager, platformUtil);
-         }
+    ) {
+        super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager, platformUtil);
+    }
 
     ngOnInit() {
         super.ngOnInit();
         this._rootGrid = this._getRootGrid();
-    }
-
-    private _getRootGrid() {
-        let currGrid = this.grid;
-        while (currGrid.parent) {
-            currGrid = currGrid.parent;
-        }
-        return currGrid;
     }
 
     // TODO: Extend the new selection service to avoid complete traversal
@@ -82,5 +74,13 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         }
         this.grid.navigation.activeNode.gridID = this.gridID;
         super.activate(event);
+    }
+
+    private _getRootGrid() {
+        let currGrid = this.grid;
+        while (currGrid.parent) {
+            currGrid = currGrid.parent;
+        }
+        return currGrid;
     }
 }

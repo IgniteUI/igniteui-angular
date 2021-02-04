@@ -10,6 +10,21 @@ import {
     templateUrl: 'chips.sample.html'
 })
 export class ChipsSampleComponent {
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
+    private chipsArea: IgxChipsAreaComponent;
+
+    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
+    private chipsAreaTo: IgxChipsAreaComponent;
+
+    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
+    private chipsAreaCc: IgxChipsAreaComponent;
+
+    @ViewChild('dropTo', { read: ElementRef, static: true })
+    private dropTo: ElementRef;
+
+    @ViewChild('dropCc', { read: ElementRef, static: true })
+    private dropCc: ElementRef;
+
     public chipList = [
         {
             id: 'Country', text: 'Country',
@@ -57,57 +72,36 @@ export class ChipsSampleComponent {
     public draggingElem = false;
     public dragEnteredArea = false;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
-    public chipsAreaTo: IgxChipsAreaComponent;
-
-    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
-    public chipsAreaCc: IgxChipsAreaComponent;
-
-    @ViewChild('dropTo', { read: ElementRef, static: true })
-    public dropTo: ElementRef;
-
-    @ViewChild('dropCc', { read: ElementRef, static: true })
-    public dropCc: ElementRef;
-
     constructor(public cdr: ChangeDetectorRef) { }
 
-    chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
+    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipList.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+        for (const chip of event.chipsArray) {
+            const chipItem = this.chipList.filter((item) => item.id === chip.id)[0];
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
         this.cdr.detectChanges();
     }
 
-    chipMovingEnded() {
+    public chipMovingEnded() {
     }
 
-    chipRemoved(event: IBaseChipEventArgs) {
-        this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.owner.id;
-        });
+    public chipRemoved(event: IBaseChipEventArgs) {
+        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.cdr.detectChanges();
     }
 
-    removeChip(chip: IgxChipComponent) {
+    public removeChip(chip: IgxChipComponent) {
         chip.elementRef.nativeElement.remove();
     }
 
-    selectChip(chipId) {
-        const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => {
-            return chip.id === chipId;
-        });
+    public selectChip(chipId) {
+        const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => chip.id === chipId);
         chipToSelect.selected = true;
     }
 
-    onChipsSelected(event: IChipSelectEventArgs) {
+    public onChipsSelected(event: IChipSelectEventArgs) {
         console.log(event);
     }
 
@@ -115,24 +109,20 @@ export class ChipsSampleComponent {
      * Chip Sample 2
      */
 
-    chipsOrderChangedTo(event) {
+    public chipsOrderChangedTo(event) {
         const newChipListTo = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipListTo.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+        for (const chip of event.chipsArray) {
+            const chipItem = this.chipListTo.filter((item) => item.id === chip.id)[0];
             newChipListTo.push(chipItem);
         }
         this.chipListTo = newChipListTo;
         this.cdr.detectChanges();
     }
 
-    chipsOrderChangedCc(event) {
+    public chipsOrderChangedCc(event) {
         const newChipListCc = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipListCc.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
+        for (const chip of event.chipsArray) {
+            const chipItem = this.chipListCc.filter((item) => item.id === chip.id)[0];
             newChipListCc.push(chipItem);
         }
         this.chipListCc = newChipListCc;
@@ -155,9 +145,7 @@ export class ChipsSampleComponent {
 
         this.chipsAreaCc.cdr.detectChanges();
 
-        this.chipListTo = this.chipListTo.filter(item => {
-            return item.text !== chipSwapEl.text;
-        });
+        this.chipListTo = this.chipListTo.filter(item => item.text !== chipSwapEl.text);
 
         this.chipsAreaTo.cdr.detectChanges();
         this.dropCc.nativeElement.style.visibility = 'hidden';
@@ -171,32 +159,30 @@ export class ChipsSampleComponent {
 
         this.chipsAreaTo.cdr.detectChanges();
 
-        this.chipListCc = this.chipListCc.filter(item => {
-            return item.text !== chipSwapEl.text;
-        });
+        this.chipListCc = this.chipListCc.filter(item => item.text !== chipSwapEl.text);
 
         this.chipsAreaCc.cdr.detectChanges();
         this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartTo() {
+    public onMoveStartTo() {
         this.dropCc.nativeElement.style.visibility = 'visible';
         this.dropCc.nativeElement.textContent = 'You can drop me here!';
         this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartCc() {
+    public onMoveStartCc() {
         this.dropTo.nativeElement.style.visibility = 'visible';
         this.dropTo.nativeElement.textContent = 'You can drop me here!';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedTo() {
+    public moveEndedTo() {
         this.dropTo.nativeElement.style.visibility = 'hidden';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedCc() {
+    public moveEndedCc() {
         this.dropTo.nativeElement.style.visibility = 'hidden';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }

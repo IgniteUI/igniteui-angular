@@ -10,6 +10,7 @@ import { pinLeft, unpinLeft, jumpDown, jumpUp } from '@igniteui/material-icons-e
 export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective {
     /**
      * Host `class.igx-action-strip` binding.
+     *
      * @hidden
      * @internal
      */
@@ -20,10 +21,11 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Getter to know if the row is pinned
+     *
      * @hidden
      * @internal
      */
-    get pinned(): boolean {
+    public get pinned(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -37,10 +39,11 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Getter to know if the row is in pinned and ghost
+     *
      * @hidden
      * @internal
      */
-    get inPinnedArea(): boolean {
+    public get inPinnedArea(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -50,10 +53,11 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Getter to know if the row pinning is set to top or bottom
+     *
      * @hidden
      * @internal
      */
-    get pinnedTop(): boolean {
+    public get pinnedTop(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -62,6 +66,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Pin the row according to the context.
+     *
      * @example
      * ```typescript
      * this.gridPinningActions.pin();
@@ -82,6 +87,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
 
     /**
      * Unpin the row according to the context.
+     *
      * @example
      * ```typescript
      * this.gridPinningActions.unpin();

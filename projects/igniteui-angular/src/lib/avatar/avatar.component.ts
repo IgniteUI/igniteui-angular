@@ -56,34 +56,6 @@ export type IgxAvatarType = (typeof IgxAvatarType)[keyof typeof IgxAvatarType];
     templateUrl: 'avatar.component.html'
 })
 export class IgxAvatarComponent implements OnInit {
-
-    /**
-     * This is a reference to the avatar image element in the DOM.
-     *
-     * @example
-     * ```typescript
-     *  let image = this.avatar.image;
-     * ```
-     */
-    @ViewChild('image')
-    public image: ElementRef;
-
-    /** @hidden @internal */
-    @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
-    protected defaultTemplate: TemplateRef<any>;
-
-    /** @hidden @internal */
-    @ViewChild('imageTemplate', { read: TemplateRef, static: true })
-    protected imageTemplate: TemplateRef<any>;
-
-    /** @hidden @internal */
-    @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
-    protected initialsTemplate: TemplateRef<any>;
-
-    /** @hidden @internal */
-    @ViewChild('iconTemplate', { read: TemplateRef, static: true })
-    protected iconTemplate: TemplateRef<any>;
-
     /**
      * Returns the `aria-label` attribute of the avatar.
      *
@@ -219,6 +191,22 @@ export class IgxAvatarComponent implements OnInit {
     @Input()
     public src: string;
 
+    /** @hidden @internal */
+    @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
+    protected defaultTemplate: TemplateRef<any>;
+
+    /** @hidden @internal */
+    @ViewChild('imageTemplate', { read: TemplateRef, static: true })
+    protected imageTemplate: TemplateRef<any>;
+
+    /** @hidden @internal */
+    @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
+    protected initialsTemplate: TemplateRef<any>;
+
+    /** @hidden @internal */
+    @ViewChild('iconTemplate', { read: TemplateRef, static: true })
+    protected iconTemplate: TemplateRef<any>;
+
     /**
      * @hidden
      * @internal
@@ -260,17 +248,17 @@ export class IgxAvatarComponent implements OnInit {
 
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--small')
-    get _isSmallSize(): boolean {
+    public get _isSmallSize(): boolean {
         return this.size === 'small';
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--medium')
-    get _isMediumSize(): boolean {
+    public get _isMediumSize(): boolean {
         return this.size === 'medium';
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--large')
-    get _isLargeSize(): boolean {
+    public get _isLargeSize(): boolean {
         return this.size === 'large';
     }
 
@@ -282,7 +270,7 @@ export class IgxAvatarComponent implements OnInit {
      * let avatarType = this.avatar.type;
      * ```
      */
-    get type(): IgxAvatarType {
+    public get type(): IgxAvatarType {
         if (this.src) {
             return IgxAvatarType.IMAGE;
         }
@@ -300,17 +288,17 @@ export class IgxAvatarComponent implements OnInit {
 
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--image')
-    get _isImageType(): boolean {
+    public get _isImageType(): boolean {
         return this.type === IgxAvatarType.IMAGE;
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--icon')
-    get _isIconType(): boolean {
+    public get _isIconType(): boolean {
         return this.type === IgxAvatarType.ICON;
     }
     /** @hidden @internal */
     @HostBinding('class.igx-avatar--initials')
-    get _isInitialsType(): boolean {
+    public get _isInitialsType(): boolean {
         return this.type === IgxAvatarType.INITIALS;
     }
 
@@ -320,7 +308,7 @@ export class IgxAvatarComponent implements OnInit {
      * @hidden
      * @internal
      */
-    get template(): TemplateRef<any> {
+    public get template(): TemplateRef<any> {
         switch (this.type) {
             case IgxAvatarType.IMAGE:
                 return this.imageTemplate;
@@ -334,6 +322,16 @@ export class IgxAvatarComponent implements OnInit {
     }
 
     constructor(public elementRef: ElementRef) { }
+
+    /**
+     * Returns the css url of the image.
+     *
+     * @hidden
+     * @internal
+     */
+    public getSrcUrl() {
+        return `url(${this.src})`;
+    }
 
     /** @hidden @internal */
     public ngOnInit() {
@@ -352,16 +350,6 @@ export class IgxAvatarComponent implements OnInit {
             default:
                 return 'custom avatar';
         }
-    }
-
-    /**
-     * Returns the css url of the image.
-     *
-     * @hidden
-     * @internal
-     */
-    public getSrcUrl() {
-        return `url(${this.src})`;
     }
 }
 

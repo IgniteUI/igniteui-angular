@@ -4,7 +4,7 @@
         [value]="condition"
         [selected]="isConditionSelected(condition)">
         <div class="igx-grid__filtering-dropdown-items">
-            <igx-icon fontSet="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
         </div>
     </igx-drop-down-item>
@@ -17,7 +17,7 @@
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon fontSet="imx-icons" [name]="getIconName()"></igx-icon>
+            <igx-icon family="imx-icons" [name]="getIconName()"></igx-icon>
         </igx-prefix>
         <input
             #input
@@ -57,12 +57,12 @@
                             (click)="inputGroupPrefixClick($event)"
                             (keydown)="onPrefixKeyDown($event)"
                             [igxDropDownItemNavigation]="inputGroupConditions">
-                    <igx-icon fontSet="imx-icons" [name]="expression.condition.iconName"></igx-icon>
+                    <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input
                        igxInput
                        tabindex="0"
-                       (click)="expression.condition.isUnary ? noop() : openDialog(inputGroup.element.nativeElement)"
+                       (click)="expression.condition.isUnary ? null : openDialog(inputGroup.element.nativeElement)"
                        [placeholder]="placeholder"
                        autocomplete="off"
                        [value]="
@@ -102,7 +102,7 @@
                     [removable]="true">
                     <igx-icon
                         igxPrefix
-                        fontSet="imx-icons"
+                        family="imx-icons"
                         [name]="item.expression.condition.iconName">
                     </igx-icon>
                     <span>{{filteringService.getChipLabel(item.expression)}}</span>

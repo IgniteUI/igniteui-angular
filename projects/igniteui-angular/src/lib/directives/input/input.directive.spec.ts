@@ -875,7 +875,7 @@ class ToggleRequiredWithNgModelInputComponent {
     public isRequired = false;
 }
 
-function testRequiredValidation(inputElement, fixture) {
+const testRequiredValidation = (inputElement, fixture) => {
     dispatchInputEvent('focus', inputElement, fixture);
     inputElement.value = 'test';
     dispatchInputEvent('input', inputElement, fixture);
@@ -902,9 +902,9 @@ function testRequiredValidation(inputElement, fixture) {
 
     expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
     expect(igxInput.valid).toBe(IgxInputState.INVALID);
-}
+};
 
-function dispatchInputEvent(eventName, inputNativeElement, fixture) {
+const dispatchInputEvent = (eventName, inputNativeElement, fixture) => {
     inputNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
-}
+};

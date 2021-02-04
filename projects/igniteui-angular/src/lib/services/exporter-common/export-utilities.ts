@@ -42,9 +42,9 @@ export class ExportUtilities {
         const buf = new ArrayBuffer(s.length);
         const view = new Uint8Array(buf);
         for (let i = 0; i !== s.length; ++i) {
-            /* tslint:disable no-bitwise */
+            /* eslint-disable  no-bitwise */
             view[i] = s.charCodeAt(i) & 0xFF;
-            /* tslint:enable no-bitwise */
+            /* eslint-enable  no-bitwise */
         }
         return buf;
     }

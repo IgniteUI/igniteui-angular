@@ -19,11 +19,11 @@ export enum DropPosition {
     providedIn: 'root',
 })
 export class IgxColumnMovingService {
-    private _icon: any;
-    private _column: IgxColumnComponent;
-
     public cancelDrop: boolean;
     public isColumnMoving: boolean;
+
+    private _icon: any;
+    private _column: IgxColumnComponent;
 
     get column(): IgxColumnComponent {
         return this._column;

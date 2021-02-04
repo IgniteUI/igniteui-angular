@@ -22,7 +22,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
             [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+                <igx-icon igxPrefix>drag_indicator</igx-icon>
             </igx-chip>
             <igx-chip #chipElem tabIndex="1" [id]="tabChipAttr">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
@@ -44,6 +44,12 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
 })
 class TestChipComponent {
 
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChildren('chipElem', { read: IgxChipComponent })
+    public chips: QueryList<IgxChipComponent>;
+
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
@@ -53,16 +59,8 @@ class TestChipComponent {
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChildren('chipElem', { read: IgxChipComponent })
-    public chips: QueryList<IgxChipComponent>;
-
     chipRemoved(event) {
-        this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.owner.id;
-        });
+        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.cdr.detectChanges();
     }
 }
@@ -79,18 +77,18 @@ class TestChipComponent {
 })
 class TestChipsLabelAndSuffixComponent {
 
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChildren('chipElem', { read: IgxChipComponent })
+    public chips: QueryList<IgxChipComponent>;
+
     public chipList = [
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true },
         { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true },
     ];
-
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChildren('chipElem', { read: IgxChipComponent })
-    public chips: QueryList<IgxChipComponent>;
 }
 
 

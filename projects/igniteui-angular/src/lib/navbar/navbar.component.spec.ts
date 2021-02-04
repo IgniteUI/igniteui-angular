@@ -28,7 +28,7 @@ describe('IgxNavbar', () => {
         }).compileComponents();
     }));
 
-    let fixture, component, domNavbar;
+    let fixture; let component; let domNavbar;
 
     describe('Default Action Icon', () => {
         beforeEach(() => {
@@ -95,8 +95,8 @@ describe('IgxNavbar', () => {
             // Verify there is a default icon on the left.
             const defaultIcon = leftArea.query(By.css('igx-icon'));
             expect(defaultIcon).not.toBeNull('Default icon is not found on the left.');
-            const leftAreaLeft = (<HTMLElement>leftArea.nativeElement).getBoundingClientRect().left;
-            const defaultIconLeft = (<HTMLElement>defaultIcon.nativeElement).getBoundingClientRect().left;
+            const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
+            const defaultIconLeft = defaultIcon.nativeElement.getBoundingClientRect().left;
             expect(leftAreaLeft).toBe(defaultIconLeft, 'Default icon is not first on the left.');
         });
     });
@@ -115,8 +115,8 @@ describe('IgxNavbar', () => {
             // Verify there is a custom content on the left.
             const customContent = leftArea.query(By.css('igx-navbar-action'));
             expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
-            const leftAreaLeft = (<HTMLElement>leftArea.nativeElement).getBoundingClientRect().left;
-            const customContentLeft = (<HTMLElement>customContent.nativeElement).getBoundingClientRect().left;
+            const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
+            const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
             expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
         });
 
@@ -131,12 +131,12 @@ describe('IgxNavbar', () => {
             const customIcon = customActionIcon.query(By.css('igx-icon'));
 
             // Verify custom igxIcon is vertically-centered within the igx-navbar-action.
-            const navbarTop = (<HTMLElement>domNavbar.nativeElement).getBoundingClientRect().top;
-            const customIconTop = (<HTMLElement>customIcon.nativeElement).getBoundingClientRect().top;
+            const navbarTop = domNavbar.nativeElement.getBoundingClientRect().top;
+            const customIconTop = customIcon.nativeElement.getBoundingClientRect().top;
             const topOffset = customIconTop - navbarTop;
 
-            const navbarBottom = (<HTMLElement>domNavbar.nativeElement).getBoundingClientRect().bottom;
-            const customIconBottom = (<HTMLElement>customIcon.nativeElement).getBoundingClientRect().bottom;
+            const navbarBottom = domNavbar.nativeElement.getBoundingClientRect().bottom;
+            const customIconBottom = customIcon.nativeElement.getBoundingClientRect().bottom;
             const bottomOffset = navbarBottom - customIconBottom;
 
             expect(topOffset).toBe(bottomOffset, 'Custom icon is not vertically-centered.');
@@ -150,8 +150,8 @@ describe('IgxNavbar', () => {
             const customContent = leftArea.query(By.directive(IgxNavbarActionDirective));
             expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
 
-            const leftAreaLeft = (<HTMLElement>leftArea.nativeElement).getBoundingClientRect().left;
-            const customContentLeft = (<HTMLElement>customContent.nativeElement).getBoundingClientRect().left;
+            const leftAreaLeft = leftArea.nativeElement.getBoundingClientRect().left;
+            const customContentLeft = customContent.nativeElement.getBoundingClientRect().left;
             expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
         }));
     });
@@ -203,10 +203,10 @@ describe('IgxNavbar', () => {
                </igx-navbar>`
 })
 class NavbarIntializeTestComponent {
+    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
     public title: string;
     public actionButtonIcon: string;
     public isActionButtonVisible: boolean;
-    @ViewChild(IgxNavbarComponent, { static: true }) public navbar: IgxNavbarComponent;
 }
 
 @Component({
@@ -231,7 +231,7 @@ class NavbarCustomActionIconTestComponent {
                             actionButtonIcon="home"
                             isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                        <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                </igx-navbar>`
 })
@@ -245,7 +245,7 @@ class NavbarCustomIgxIconTestComponent {
                             title="Test Title"
                             actionButtonIcon="home"
                             isActionButtonVisible="true">
-                    <igx-icon igxNavbarAction fontSet="material">arrow_back</igx-icon>
+                    <igx-icon igxNavbarAction>arrow_back</igx-icon>
                </igx-navbar>`
 })
 class NavbarCustomIgxIconDirectiveTestComponent {
@@ -259,7 +259,7 @@ class NavbarCustomIgxIconDirectiveTestComponent {
                            actionButtonIcon="home"
                            isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                        <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                     <igx-navbar-title>Custom Title</igx-navbar-title>
                </igx-navbar>`
@@ -275,7 +275,7 @@ class NavbarCustomTitleTestComponent {
                            actionButtonIcon="home"
                            isActionButtonVisible="true">
                     <igx-navbar-action>
-                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                        <igx-icon>arrow_back</igx-icon>
                     </igx-navbar-action>
                     <div igxNavbarTitle>
                         <div>Custom</div>

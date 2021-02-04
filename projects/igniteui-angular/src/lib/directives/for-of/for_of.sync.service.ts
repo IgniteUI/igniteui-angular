@@ -1,4 +1,4 @@
-import { Injectable, Component } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IgxGridForOfDirective } from './for_of.directive';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 

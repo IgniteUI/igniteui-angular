@@ -1,10 +1,9 @@
 import * as path from 'path';
 
-// tslint:disable:no-implicit-dependencies
 import { EmptyTree } from '@angular-devkit/schematics';
-// tslint:disable-next-line:no-submodule-imports
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { workspaces } from '@angular-devkit/core';
 
 import * as addNormalize from '../../schematics/ng-add/add-normalize';
 
@@ -13,6 +12,7 @@ describe('Update 7.2.0', () => {
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
         defaultProject: 'testProj',
+        version: 1,
         projects: {
             testProj: {
                 sourceRoot: '/testSrc'
@@ -61,7 +61,7 @@ describe('Update 7.2.0', () => {
             .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
-            `<igx-drop-down #myDropDown>
+                `<igx-drop-down #myDropDown>
                 <igx-drop-down-item
                     selected="something"
                     focused="isSelected"
@@ -91,11 +91,14 @@ describe('Update 7.2.0', () => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
         spyOn(addNormalize, 'addResetCss').and.callThrough();
-
         const tree = await schematicRunner.runSchematicAsync('migration-08', {}, appTree)
             .toPromise();
 
-        expect(addNormalize.addResetCss).toHaveBeenCalledWith(appTree);
+        expect(addNormalize.addResetCss).toHaveBeenCalledWith(
+            jasmine.objectContaining<workspaces.WorkspaceDefinition>({
+                extensions: jasmine.anything(),
+                projects: jasmine.anything()
+            }), appTree);
         expect(tree.readContent('/testSrc/styles.scss')).toContain(addNormalize.scssImport);
         expect(JSON.parse(tree.readContent('package.json'))).toEqual({
             dependencies: { 'minireset.css': '~0.0.4' }

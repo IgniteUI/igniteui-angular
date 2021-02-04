@@ -47,7 +47,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
         });
 
-        it('Should allow the expansion of a newly added (commited) record', async() => {
+        it('Should allow the expansion of a newly added (commited) record', async () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.rowID);
             fixture.detectChanges();

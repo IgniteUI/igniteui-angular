@@ -665,8 +665,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 grid.selectRange(range);
             } catch (error) {
                 errorMessage = error.message;
-            }
-            finally {
+            } finally {
                 fix.detectChanges();
             }
             expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
@@ -698,8 +697,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 grid.selectRange(range2);
             } catch (error) {
                 errorMessage = error.message;
-            }
-            finally {
+            } finally {
                 fix.detectChanges();
             }
             expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
@@ -718,8 +716,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 grid.selectRange(range);
             } catch (error) {
                 errorMessage = error.message;
-            }
-            finally {
+            } finally {
                 fix.detectChanges();
             }
             expect(errorMessage).toEqual('Cannot read property \'visibleIndex\' of undefined');
@@ -853,15 +850,15 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             expect(selectedData.length).toBe(1);
-            expect(selectedData[0]).toEqual({ 'Name': 'Monica Reyes' });
+            expect(selectedData[0]).toEqual({ Name: 'Monica Reyes' });
 
             const idCell = grid.getCellByColumn(1, 'ID');
             UIInteractions.simulateClickAndSelectEvent(idCell, false, true);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(2);
-            expect(selectedData[0]).toEqual({ 'Name': 'Monica Reyes' });
-            expect(selectedData[1]).toEqual({ 'ID': 957 });
+            expect(selectedData[0]).toEqual({ Name: 'Monica Reyes' });
+            expect(selectedData[1]).toEqual({ ID: 957 });
         });
     });
 
@@ -3240,13 +3237,13 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             expect(selectedData.length).toBe(1);
-            expect(selectedData[0]).toEqual({ 'Name': 'Monica Reyes' });
+            expect(selectedData[0]).toEqual({ Name: 'Monica Reyes' });
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(1);
-            expect(selectedData[0]).toEqual({ 'Name': 'Laurence Johnson' });
+            expect(selectedData[0]).toEqual({ Name: 'Laurence Johnson' });
         });
     });
 

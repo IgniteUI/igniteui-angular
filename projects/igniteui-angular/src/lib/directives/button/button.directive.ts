@@ -36,6 +36,34 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, Displa
     selector: '[igxButton]'
 })
 export class IgxButtonDirective extends DisplayDensityBase {
+    /**
+     * Gets or sets whether the button is selected.
+     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
+     *
+     * @example
+     * ```html
+     * <button igxButton="flat" [selected]="button.selected"></button>
+     * ```
+     */
+    @Input() public selected = false;
+
+    /**
+     * Called when the button is clicked.
+     */
+    @Output()
+    public buttonClick = new EventEmitter<any>();
+
+    /**
+     * Sets/gets the `role` attribute.
+     *
+     * @example
+     * ```typescript
+     * this.button.role = 'navbutton';
+     * let buttonRole = this.button.role;
+     * ```
+     */
+    @HostBinding('attr.role')
+    public role = 'button';
 
     /**
      * @hidden
@@ -92,24 +120,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
-     * Called when the button is clicked.
-     */
-    @Output()
-    public buttonClick = new EventEmitter<any>();
-
-    /**
-     * Sets/gets the `role` attribute.
-     *
-     * @example
-     * ```typescript
-     * this.button.role = 'navbutton';
-     * let buttonRole = this.button.role;
-     * ```
-     */
-    @HostBinding('attr.role')
-    public role = 'button';
-
-    /**
      * Sets the type of the button.
      *
      * @example
@@ -118,7 +128,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * ```
      */
     @Input('igxButton')
-    set type(value: string) {
+    public set type(value: string) {
         const newValue = value ? value : this._defaultType;
         if (this._type !== newValue) {
             this._renderer.removeClass(this.nativeElement, `${this._cssClassPrefix}--${this._type}`);
@@ -135,7 +145,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button igxButton="gradient" igxButtonColor="blue"></button>
      * ```
      */
-    @Input('igxButtonColor') set color(value: string) {
+    @Input('igxButtonColor')
+    public set color(value: string) {
         this._color = value || this.nativeElement.style.color;
         this._renderer.setStyle(this.nativeElement, 'color', this._color);
     }
@@ -148,7 +159,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button igxButton="raised" igxButtonBackground="red"></button>
      * ```
      */
-    @Input('igxButtonBackground') set background(value: string) {
+    @Input('igxButtonBackground')
+    public set background(value: string) {
         this._backgroundColor = value || this._backgroundColor;
         this._renderer.setStyle(this.nativeElement, 'background', this._backgroundColor);
     }
@@ -161,7 +173,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button igxButton= "flat" igxLabel="Label"></button>
      * ```
      */
-    @Input('igxLabel') set label(value: string) {
+    @Input('igxLabel')
+    public set label(value: string) {
         this._label = value || this._label;
         this._renderer.setAttribute(this.nativeElement, `aria-label`, this._label);
     }
@@ -174,7 +187,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button igxButton= "fab" [disabled]="true"></button>
      * ```
      */
-    @Input() set disabled(val) {
+    @Input()
+    public set disabled(val) {
         val = !!val;
         this._disabled = val;
         if (val) {
@@ -248,17 +262,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
     public get disabledAttribute() {
         return this._disabled ? this._disabled : null;
     }
-
-    /**
-     * Gets or sets whether the button is selected.
-     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
-     *
-     * @example
-     * ```html
-     * <button igxButton="flat" [selected]="button.selected"></button>
-     * ```
-     */
-    @Input() public selected = false;
 
     /**
      * @hidden

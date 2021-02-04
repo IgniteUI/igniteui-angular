@@ -12,25 +12,25 @@ export class ToastSampleComponent {
 
     public toastVisibility = false;
 
-    showToast(toast: IgxToastComponent, pos: IgxToastPosition) {
+    public showToast(toast: IgxToastComponent, pos: IgxToastPosition) {
         toast.position = pos;
-        toast.show();
+        toast.open();
     }
 
-    handleShowing(event) {
+    public handleShowing(event) {
         console.log('showing toast', event);
     }
 
-    handleShown(event) {
+    public handleShown(event) {
         console.log('toast shown', event);
 
     }
 
-    handleHiding(event) {
+    public handleHiding(event) {
         console.log('hiding toast', event);
     }
 
-    handleHidden(event) {
+    public handleHidden(event) {
         console.log('toast hidden', event);
     }
 }

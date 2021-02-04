@@ -11,16 +11,18 @@ export class IgxGridActionButtonComponent {
 
     /**
      * Event emitted when action button is clicked.
+     *
      * @example
      * ```html
-     *  <igx-grid-action-button (onActionClick)="startEdit($event)"></igx-grid-action-button>
+     *  <igx-grid-action-button (actionClick)="startEdit($event)"></igx-grid-action-button>
      * ```
      */
     @Output()
-    onActionClick = new EventEmitter<Event>();
+    public actionClick = new EventEmitter<Event>();
 
     /**
      * Reference to the current template.
+     *
      * @hidden
      * @internal
      */
@@ -46,7 +48,7 @@ export class IgxGridActionButtonComponent {
     public classNames: string;
 
     /** @hidden @internal */
-    get containerClass(): string {
+    public get containerClass(): string {
         return 'igx-action-strip__menu-button ' + (this.classNames || '');
     }
 
@@ -67,7 +69,7 @@ export class IgxGridActionButtonComponent {
      * @internal
      */
     public handleClick(event) {
-       this.onActionClick.emit(event);
+       this.actionClick.emit(event);
     }
 
     /**

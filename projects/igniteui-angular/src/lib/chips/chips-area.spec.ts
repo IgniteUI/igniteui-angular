@@ -16,24 +16,23 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
         <igx-chips-area #chipsArea class="customClass">
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+                <igx-icon igxPrefix>drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
     `
 })
 class TestChipComponent {
-
-    public chipList = [
-        { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: false },
-        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
-    ];
-
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
     public chips: QueryList<IgxChipComponent>;
+
+    public chipList = [
+        { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: false },
+        { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
+    ];
 
     constructor(public cdr: ChangeDetectorRef) {}
 }
@@ -62,13 +61,18 @@ class TestChipSelectComponent extends TestChipComponent {
         <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)">
             <igx-chip #chipElem *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
                 [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+                <igx-icon igxPrefix>drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
         </igx-chips-area>
     `
 })
 class TestChipReorderComponent {
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
+    public chipsArea: IgxChipsAreaComponent;
+
+    @ViewChildren('chipElem', { read: IgxChipComponent})
+    public chips: QueryList<IgxChipComponent>;
 
     public chipList = [
         { id: 'Country', text: 'Country' },
@@ -77,29 +81,18 @@ class TestChipReorderComponent {
         { id: 'FirstName', text: 'First Name' },
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
-    public chipsArea: IgxChipsAreaComponent;
-
-    @ViewChildren('chipElem', { read: IgxChipComponent})
-    public chips: QueryList<IgxChipComponent>;
-
     constructor(public cdr: ChangeDetectorRef) {}
 
     chipsOrderChanged(event) {
         const newChipList = [];
-        for (let i = 0; i < event.chipsArray.length; i++) {
-            const chipItem = this.chipList.filter((item) => {
-                return item.id === event.chipsArray[i].id;
-            })[0];
-            newChipList.push(chipItem);
+        for (const chip of event.chipsArray) {
+            newChipList.push(this.chipList.find((item) => item.id === chip.id));
         }
         this.chipList = newChipList;
     }
 
     chipRemoved(event) {
-        this.chipList = this.chipList.filter((item) => {
-            return item.id !== event.owner.id;
-        });
+        this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.chipsArea.cdr.detectChanges();
     }
 }
@@ -165,7 +158,7 @@ describe('IgxChipsArea ', () => {
 
 
     describe('Selection', () => {
-        const spaceKeyEvent = new KeyboardEvent('keydown', { 'key': ' ' });
+        const spaceKeyEvent = new KeyboardEvent('keydown', { key: ' ' });
 
         it('should be able to select chip using input property', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
@@ -222,13 +215,13 @@ describe('IgxChipsArea ', () => {
 
             expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
 
-            const rightKey = new KeyboardEvent('keydown', { 'key': 'ArrowRight' });
+            const rightKey = new KeyboardEvent('keydown', { key: 'ArrowRight' });
             firstChipComp.onChipKeyDown(rightKey);
             fix.detectChanges();
 
             expect(document.activeElement).toBe(secondChipComp.elementRef.nativeElement);
 
-            const leftKey = new KeyboardEvent('keydown', { 'key': 'ArrowLeft' });
+            const leftKey = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
             secondChipComp.onChipKeyDown(leftKey);
             fix.detectChanges();
 
@@ -417,9 +410,9 @@ describe('IgxChipsArea ', () => {
     });
 
     describe('Reorder', () => {
-        const leftKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowLeft', shiftKey: true });
-        const rightKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowRight', shiftKey: true });
-        const deleteKeyEvent = new KeyboardEvent('keydown', { 'key': 'Delete' });
+        const leftKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowLeft', shiftKey: true });
+        const rightKeyEvent = new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true });
+        const deleteKeyEvent = new KeyboardEvent('keydown', { key: 'Delete' });
 
         beforeEach(() => {
             fix = TestBed.createComponent(TestChipReorderComponent);
@@ -452,42 +445,44 @@ describe('IgxChipsArea ', () => {
             expect(newSecondChipLeft).toEqual(secondChipLeft);
         });
 
-        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async() => {
-            chipArea = fix.componentInstance.chipsArea;
-            const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const targetChip = chipComponents[2].componentInstance;
-            const targetChipElem = targetChip.elementRef.nativeElement;
+        it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice',
+            (async () => {
+                chipArea = fix.componentInstance.chipsArea;
+                const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+                const targetChip = chipComponents[2].componentInstance;
+                const targetChipElem = targetChip.elementRef.nativeElement;
 
-            targetChipElem.focus();
-            fix.detectChanges();
+                targetChipElem.focus();
+                fix.detectChanges();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-            targetChip.onChipKeyDown(rightKeyEvent);
-            fix.detectChanges();
+                targetChip.onChipKeyDown(rightKeyEvent);
+                fix.detectChanges();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
 
-            targetChip.onChipKeyDown(leftKeyEvent);
-            fix.detectChanges();
-            await wait();
+                targetChip.onChipKeyDown(leftKeyEvent);
+                fix.detectChanges();
+                await wait();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-            targetChip.onChipKeyDown(leftKeyEvent);
-            fix.detectChanges();
-            await wait();
+                targetChip.onChipKeyDown(leftKeyEvent);
+                fix.detectChanges();
+                await wait();
 
-            expect(document.activeElement).toBe(targetChipElem);
-            expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
-            expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
-        }));
+                expect(document.activeElement).toBe(targetChipElem);
+                expect(chipArea.chipsList.toArray()[2].id).toEqual('City');
+                expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
+            })
+        );
 
         it('should not reorder chips for shift + leftarrow when the chip is going out of bounds', () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));

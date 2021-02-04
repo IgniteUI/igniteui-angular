@@ -65,14 +65,12 @@ export class IgxTabTemplateDirective {
     `]
 })
 export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
-    private _currentBottomNavId = NEXT_ID++;
-    private _panelsChanges$: Subscription;
-
     /**
      * Gets the `IgxTabComponent` elements in the tab bar component created based on the provided panels.
      * ```typescript
      * let tabs: QueryList<IgxTabComponent> =  this.tabBar.viewTabs;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     @ViewChildren(forwardRef(() => IgxTabComponent))
@@ -83,6 +81,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * ```typescript
      * let tabs: QueryList<IgxTabComponent> =  this.tabBar.contentTabs;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     @ContentChildren(forwardRef(() => IgxTabComponent))
@@ -94,6 +93,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * ```typescript
      * let tabs: QueryList<IgxTabComponent> =  this.tabBar.tabs;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     public get tabs(): QueryList<IgxTabComponent> {
@@ -105,25 +105,11 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * ```typescript
      * let tabPanels: QueryList<IgxTabPanelComponent> = this.tabBar.panels;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     @ContentChildren(forwardRef(() => IgxTabPanelComponent))
     public panels: QueryList<IgxTabPanelComponent>;
-
-    /**
-     * Sets/gets the `id` of the tab bar.
-     * If not set, the `id` of the first tab bar component will be `"igx-bottom-nav-0"`.
-     * ```html
-     * <igx-bottom-nav id = "my-first-tab-bar"></igx-bottom-nav>
-     * ```
-     * ```typescript
-     * let tabBarId =  this.tabBar.id;
-     * ```
-     * @memberof IgxBottomNavComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-bottom-nav-${this._currentBottomNavId}`;
 
     /**
      * Emits an event when a new tab is selected.
@@ -131,6 +117,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * ```html
      * <igx-bottom-nav (onTableSelected) = "onTabSelected($event)"><igx-bottom-nav>
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     @Output() public onTabSelected = new EventEmitter<ISelectTabEventArgs>();
@@ -141,17 +128,38 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * ```html
      * <igx-bottom-nav (onTabDeselected) = "onTabDeselected($event)"><igx-bottom-nav>
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     @Output() public onTabDeselected = new EventEmitter<ISelectTabEventArgs>();
+
+    private readonly _currentBottomNavId = NEXT_ID++;
+    /**
+     * Sets/gets the `id` of the tab bar.
+     * If not set, the `id` of the first tab bar component will be `"igx-bottom-nav-0"`.
+     * ```html
+     * <igx-bottom-nav id = "my-first-tab-bar"></igx-bottom-nav>
+     * ```
+     * ```typescript
+     * let tabBarId =  this.tabBar.id;
+     * ```
+     *
+     * @memberof IgxBottomNavComponent
+     */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-bottom-nav-${this._currentBottomNavId}`;
 
     /**
      * Gets the `index` of selected tab/panel in the respective collection.
      * ```typescript
      * let index =  this.tabBar.selectedIndex;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public selectedIndex = -1;
 
     /**
@@ -159,6 +167,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      * ```typescript
      * let itemStyle =  this.tabBar.itemStyle;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     public get itemStyle(): string {
@@ -175,13 +184,15 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    private _itemStyle = 'igx-bottom-nav';
+    private readonly _itemStyle = 'igx-bottom-nav';
+    private _panelsChanges$: Subscription;
 
     /**
      * Gets the selected tab in the tab bar.
      * ```typescript
      * let tab =  this.tabBar.selectedTab;
      * ```
+     *
      * @memberof IgxBottomNavComponent
      */
     get selectedTab(): IgxTabComponent {
@@ -190,7 +201,28 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef) {
+    /**
+     * @hidden
+     */
+    @HostListener('onTabSelected', ['$event'])
+    public selectedPanelHandler(args) {
+        if (this.hasContentTabs) {
+            this.selectedIndex = args.tab.index;
+            this.contentTabs.forEach((t) => {
+                if (t !== args.tab) {
+                    this._deselectTab(t);
+                }
+            });
+        } else {
+            if (args.panel) {
+                this.selectedIndex = args.panel.index;
+                this.panels.forEach((p) => {
+                    if (p.index !== this.selectedIndex) {
+                        this._deselectPanel(p);
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -223,36 +255,26 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     */
+    public getTabId(index: number): string {
+        return `igx-tab-${this._currentBottomNavId}-${index}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabPanelId(index: number): string {
+        return `igx-tab-panel-${this._currentBottomNavId}-${index}`;
+    }
+
     private setPanelsAttributes() {
         const panelsArray = Array.from(this.panels);
         for (let index = 0; index < this.panels.length; index++) {
             const tabPanels = panelsArray[index] as IgxTabPanelComponent;
             tabPanels.nativeElement.setAttribute('id', this.getTabPanelId(index));
             tabPanels.nativeElement.setAttribute('aria-labelledby', this.getTabId(index));
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('onTabSelected', ['$event'])
-    public _selectedPanelHandler(args) {
-        if (this.hasContentTabs) {
-            this.selectedIndex = args.tab.index;
-            this.contentTabs.forEach((t) => {
-                if (t !== args.tab) {
-                    this._deselectTab(t);
-                }
-            });
-        } else {
-            if (args.panel) {
-                this.selectedIndex = args.panel.index;
-                this.panels.forEach((p) => {
-                    if (p.index !== this.selectedIndex) {
-                        this._deselectPanel(p);
-                    }
-                });
-            }
         }
     }
 
@@ -273,20 +295,6 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
         aTab.isSelected = false;
         this.onTabDeselected.emit({ tab: aTab, panel: null });
     }
-
-    /**
-     * @hidden
-     */
-    public getTabId(index: number): string {
-        return `igx-tab-${this._currentBottomNavId}-${index}`;
-    }
-
-    /**
-     * @hidden
-     */
-    public getTabPanelId(index: number): string {
-        return `igx-tab-panel-${this._currentBottomNavId}-${index}`;
-    }
 }
 
 // ================================= IgxTabPanelComponent ======================================
@@ -296,17 +304,6 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     templateUrl: 'tab-panel.component.html'
 })
 export class IgxTabPanelComponent implements AfterContentInit {
-
-    /**
-     * @hidden
-     */
-    private _itemStyle = 'igx-tab-panel';
-
-    /**
-     * @hidden
-     */
-    private _isSelected = false;
-
     /**
      * Sets/gets the `label` of the tab panel.
      * ```html
@@ -315,6 +312,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let tabPanelLabel = this.tabPanel.label;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     @Input() public label: string;
@@ -327,6 +325,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let tabPanelIcon =  this.tabPanel.icon;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     @Input() public icon: string;
@@ -339,6 +338,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let isDisabled = this.tabPanel.disabled;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     @Input() public disabled: boolean;
@@ -348,6 +348,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let tabPanelRole = this.tabPanel.role;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     @HostBinding('attr.role') public role = 'tabpanel';
@@ -357,6 +358,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let styleClass = this.tabPanel.styleClass;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     @HostBinding('class.igx-bottom-nav__panel')
@@ -372,6 +374,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let isSelected =  this.tabPanel.isSelected;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     @HostBinding('class.igx-bottom-nav__panel--selected')
@@ -393,6 +396,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let itemStyle = this.tabPanel.itemStyle;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     public get itemStyle(): string {
@@ -414,6 +418,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let tab = this.tabPanel.relatedTab;
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     get relatedTab(): IgxTabComponent {
@@ -436,6 +441,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let panelIndex =  this.tabPanel.index
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     get index() {
@@ -449,6 +455,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * let tabTemplate = this.tabPanel.customTabTemplate
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     get customTabTemplate(): TemplateRef<any> {
@@ -460,6 +467,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * this.tabPanel.customTabTemplate(tabTemplate);
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     set customTabTemplate(template: TemplateRef<any>) {
@@ -469,13 +477,23 @@ export class IgxTabPanelComponent implements AfterContentInit {
     /**
      * @hidden
      */
+    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
+    protected tabTemplate: IgxTabTemplateDirective;
+
+    /**
+     * @hidden
+     */
     private _tabTemplate: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
-    protected tabTemplate: IgxTabTemplateDirective;
+    private readonly _itemStyle = 'igx-tab-panel';
+
+    /**
+     * @hidden
+     */
+    private _isSelected = false;
 
     constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
     }
@@ -495,6 +513,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * ```typescript
      * this.tabPanel.select();
      * ```
+     *
      * @memberof IgxTabPanelComponent
      */
     public select() {
@@ -519,6 +538,7 @@ export class IgxTabComponent {
      * ```typescript
      * let tabRole = this.tab.role;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     @HostBinding('attr.role')
@@ -548,10 +568,26 @@ export class IgxTabComponent {
      * ```typescript
      * let tabPanel =  this.tab.relatedPanel;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     @Input()
     public relatedPanel: IgxTabPanelComponent;
+
+    /**
+     * @hidden @internal
+     * Set to true when the tab is automatically generated from the IgxBottomNavComponent when tab panels are defined.
+     */
+    @Input()
+    public autoGenerated: boolean;
+
+    /** @hidden */
+    @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
+    protected defaultTabTemplate: TemplateRef<any>;
+
+    /** @hidden */
+    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
+    protected customTabTemplateDir: IgxTabTemplateDirective;
 
     /**
      * @hidden
@@ -566,6 +602,7 @@ export class IgxTabComponent {
      * ```typescript
      * let tabLabel = this.tab.label;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     @Input()
@@ -592,6 +629,7 @@ export class IgxTabComponent {
      * ```typescript
      * let tabIcon =  this.tab.icon;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     @Input()
@@ -626,6 +664,7 @@ export class IgxTabComponent {
      * ```typescript
      * let isDisabled = this.tab.disabled;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     @Input()
@@ -640,13 +679,14 @@ export class IgxTabComponent {
         }
     }
 
-    public _selected = false;
+    private _selected = false;
 
     /**
      * Gets whether the tab is selected.
      * ```typescript
      * let isSelected  = this.tab.isSelected;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     @Input()
@@ -663,13 +703,6 @@ export class IgxTabComponent {
     get isSelected(): boolean {
         return this.relatedPanel ? this.relatedPanel.isSelected : this._selected;
     }
-
-    /**
-     * @hidden @internal
-     * Set to true when the tab is automatically generated from the IgxBottomNavComponent when tab panels are defined.
-     */
-    @Input()
-    public autoGenerated: boolean;
 
     @HostBinding('class.igx-bottom-nav__menu-item--selected')
     public get cssClassSelected(): boolean {
@@ -691,6 +724,7 @@ export class IgxTabComponent {
      * ```typescript
      * let tabIndex = this.tab.index;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     public get index(): number {
@@ -699,19 +733,12 @@ export class IgxTabComponent {
         }
     }
 
-    /** @hidden */
-    @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
-    protected defaultTabTemplate: TemplateRef<any>;
-
-    /** @hidden */
-    @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
-    protected customTabTemplateDir: IgxTabTemplateDirective;
-
     /**
      * Returns the `template` for this IgxTabComponent.
      * ```typescript
      * let tabItemTemplate = this.tabItem.template;
      * ```
+     *
      * @memberof IgxTabComponent
      */
     public get template(): TemplateRef<any> {
@@ -738,10 +765,21 @@ export class IgxTabComponent {
     }
 
     /**
+     * @hidden
+     */
+    @HostListener('click')
+    public onClick() {
+        if (this.autoGenerated) {
+            this.select();
+        }
+    }
+
+    /**
      * Selects the current tab and the associated panel.
      * ```typescript
      * this.tab.select();
      * ```
+     *
      * @memberof IgxTabComponent
      */
     public select() {
@@ -750,16 +788,6 @@ export class IgxTabComponent {
         } else {
             this._selected = true;
             this._tabBar.onTabSelected.emit({ tab: this, panel: null });
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('click')
-    public onClick() {
-        if (this.autoGenerated) {
-            this.select();
         }
     }
 

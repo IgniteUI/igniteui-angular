@@ -30,7 +30,6 @@ describe('IgxToast', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(ToastInitializeTestComponent);
         toast = fixture.componentInstance.toast;
-        toast.isVisible = true;
         fixture.detectChanges();
     });
 
@@ -41,7 +40,6 @@ describe('IgxToast', () => {
         expect(domToast.id).toContain('igx-toast-');
         expect(toast.displayTime).toBe(4000);
         expect(toast.autoHide).toBeTruthy();
-        expect(toast.isVisible).toBeTruthy();
 
         toast.id = 'customToast';
         fixture.detectChanges();
@@ -51,79 +49,59 @@ describe('IgxToast', () => {
     });
 
     it('should auto hide after it\'s open', fakeAsync(() => {
-        spyOn(toast.onHiding, 'emit');
+        spyOn(toast.onClosing, 'emit');
         toast.displayTime = 1000;
 
-        toast.show();
+        toast.open();
         tick(1000);
-        expect(toast.onHiding.emit).toHaveBeenCalled();
+        expect(toast.onClosing.emit).toHaveBeenCalled();
     }));
 
     it('should not auto hide after it\'s open', fakeAsync(() => {
-        spyOn(toast.onHiding, 'emit');
+        spyOn(toast.onClosing, 'emit');
         toast.displayTime = 1000;
         toast.autoHide = false;
 
-        toast.show();
+        toast.open();
         tick(1000);
-        expect(toast.onHiding.emit).not.toHaveBeenCalled();
+        expect(toast.onClosing.emit).not.toHaveBeenCalled();
     }));
 
-    it('should emit onShowing when toast is shown', () => {
-        spyOn(toast.onShowing, 'emit');
-        toast.show();
-        expect(toast.onShowing.emit).toHaveBeenCalled();
+    it('should emit onOpening when toast is shown', () => {
+        spyOn(toast.onOpening, 'emit');
+        toast.open();
+        expect(toast.onOpening.emit).toHaveBeenCalled();
     });
 
     it('should emit onHiding when toast is hidden', () => {
         spyOn(toast.onHiding, 'emit');
-        toast.hide();
+        toast.close();
         expect(toast.onHiding.emit).toHaveBeenCalled();
     });
 
-    it('should emit onShown when toggle onOpened is fired', waitForAsync(() => {
-        spyOn(toast.onShown, 'emit');
+    it('should emit onOpened when toast is opened', () => {
+        expect(toast.isVisible).toBeFalse();
         toast.open();
+        fixture.detectChanges();
+        expect(toast.isVisible).toBeTrue();
+    });
 
-        toast.onOpened.subscribe(() => {
-            expect(toast.onShown.emit).toHaveBeenCalled();
-        });
-    }));
-
-    it('should emit onHidden when toggle onClosed is fired', waitForAsync(() => {
-        spyOn(toast.onHidden, 'emit');
-        toast.isVisible = true;
-        toast.close();
-
-        toast.onClosed.subscribe(() => {
-            expect(toast.onHidden.emit).toHaveBeenCalled();
-        });
-    }));
-
-    it('visibility is updated by the toggle() method', waitForAsync((done: DoneFn) => {
-        toast.autoHide = false;
-
+    it('visibility is updated by the toggle() method', () => {
+        expect(toast.isVisible).toBeFalse();
         toast.toggle();
-        toast.onOpened.subscribe(() => {
-            expect(toast.isVisible).toEqual(true);
-        });
-
-        toast.toggle();
-        toast.onClosed.subscribe(() => {
-            expect(toast.isVisible).toEqual(false);
-            done();
-        });
-    }));
+        fixture.detectChanges();
+        expect(toast.isVisible).toBeTrue();
+    });
 
     it('can set message through show method', fakeAsync(() => {
         toast.displayTime = 100;
         toast.autoHide = false;
 
-        toast.show('Custom Message');
+        toast.open('Custom Message');
         tick(100);
         fixture.detectChanges();
-
         expect(toast.isVisible).toBeTruthy();
+
         expect(toast.autoHide).toBeFalsy();
         expect(toast.toastMessage).toBe('Custom Message');
     }));
@@ -136,3 +114,4 @@ class ToastInitializeTestComponent {
     @ViewChild(IgxToastComponent, { static: true })
     public toast: IgxToastComponent;
 }
+

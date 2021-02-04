@@ -1,9 +1,7 @@
-import { SchematicContext, Rule, SchematicsException } from '@angular-devkit/schematics';
-import { Tree } from '@angular-devkit/schematics/src/tree/interface';
-import { getWorkspace } from '@schematics/angular/utility/config';
+import { workspaces } from '@angular-devkit/core';
+import { SchematicContext, Rule, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
-import { WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
-
+import { createHost } from './util';
 
 export enum PackageTarget {
     DEV = 'devDependencies',
@@ -15,54 +13,56 @@ export interface PackageEntry {
     target: PackageTarget;
 }
 
-
 const schematicsPackage = '@igniteui/angular-schematics';
 /**
  * Dependencies are explicitly defined here, so we avoid adding
  * unnecessary packages to the consuming project's deps
  */
 export const DEPENDENCIES_MAP: PackageEntry[] = [
-        // dependencies
-        { name: 'hammerjs', target: PackageTarget.REGULAR },
-        { name: 'jszip', target: PackageTarget.REGULAR },
-        { name: 'tslib', target: PackageTarget.NONE },
-        { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
-        { name: '@types/hammerjs', target: PackageTarget.DEV },
-        { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
-        { name: 'lodash.mergewith', target: PackageTarget.NONE },
-        { name: 'uuid', target: PackageTarget.NONE },
-        { name: 'web-animations-js', target: PackageTarget.REGULAR },
-        { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
-        // peerDependencies
-        { name: '@angular/forms', target: PackageTarget.NONE },
-        { name: '@angular/common', target: PackageTarget.NONE },
-        { name: '@angular/core', target: PackageTarget.NONE },
-        { name: '@angular/animations', target: PackageTarget.NONE },
-        // igxDevDependencies
-        { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
+    // dependencies
+    { name: 'hammerjs', target: PackageTarget.REGULAR },
+    { name: 'jszip', target: PackageTarget.REGULAR },
+    { name: 'tslib', target: PackageTarget.NONE },
+    { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
+    { name: '@types/hammerjs', target: PackageTarget.DEV },
+    { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
+    { name: 'lodash.mergewith', target: PackageTarget.NONE },
+    { name: 'uuid', target: PackageTarget.NONE },
+    { name: 'web-animations-js', target: PackageTarget.REGULAR },
+    { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
+    // peerDependencies
+    { name: '@angular/forms', target: PackageTarget.NONE },
+    { name: '@angular/common', target: PackageTarget.NONE },
+    { name: '@angular/core', target: PackageTarget.NONE },
+    { name: '@angular/animations', target: PackageTarget.NONE },
+    // igxDevDependencies
+    { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
 
-function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
-    context.logger.info(`Including ${pkg} - Version: ${version}`);
-}
+export const getWorkspacePath = (host: Tree): string => {
+    const targetFiles = ['/angular.json', '/.angular.json'];
+    return targetFiles.filter(p => host.exists(p))[0];
+};
 
-function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string) {
+const logIncludingDependency = (context: SchematicContext, pkg: string, version: string): void =>
+    context.logger.info(`Including ${pkg} - Version: ${version}`);
+
+const getTargetedProjectOptions = (project: workspaces.ProjectDefinition, target: string) => {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
         return project.targets[target].options;
     }
 
-    if (project.architect &&
-        project.architect[target] &&
-        project.architect[target].options) {
-        return project.architect[target].options;
+    const projectTarget = project.targets.get(target);
+    if (projectTarget) {
+        return projectTarget.options;
     }
 
     throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
-}
+};
 
-export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
+export const getConfigFile = (project: workspaces.ProjectDefinition, option: string, configSection: string = 'build'): string => {
     const options = getTargetedProjectOptions(project, configSection);
     if (!options) {
         throw new SchematicsException(`Could not find matching ${configSection} section` +
@@ -74,45 +74,46 @@ export function getConfigFile(project: WorkspaceProject<ProjectType>, option: st
     }
     return options[option];
 
-}
-export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
+};
+
+export const overwriteJsonFile = (tree: Tree, targetFile: string, data: any) =>
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
-}
 
-export function logSuccess(options: Options): Rule {
-    return (tree: Tree, context: SchematicContext) => {
-        context.logger.info('');
-        context.logger.warn('Ignite UI for Angular installed');
-        context.logger.info('Learn more: https://www.infragistics.com/products/ignite-ui-angular');
-        context.logger.info('');
-    };
-}
 
-export function addDependencies(options: Options): Rule {
-    return (tree: Tree, context: SchematicContext) => {
-        const pkgJson = require('../../package.json');
+export const logSuccess = (options: Options): Rule => (tree: Tree, context: SchematicContext) => {
+    context.logger.info('');
+    context.logger.warn('Ignite UI for Angular installed');
+    context.logger.info('Learn more: https://www.infragistics.com/products/ignite-ui-angular');
+    context.logger.info('');
+};
 
-        includeDependencies(pkgJson, context, tree);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const addDependencies = (options: Options) => async (tree: Tree, context: SchematicContext): Promise<void> => {
+    const pkgJson = require('../../package.json');
 
-        // Add web-animations-js to dependencies
-        Object.keys(pkgJson.peerDependencies).forEach(pkg => {
-            if (pkg.includes('web-animations')) {
-                const version = pkgJson.peerDependencies[pkg];
-                addPackageToPkgJson(tree, pkg, version, PackageTarget.REGULAR);
-                logIncludingDependency(context, pkg, version);
-                return;
-            }
-        });
+    await includeDependencies(pkgJson, context, tree);
 
-        addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
-        return tree;
-    };
-}
+    // Add web-animations-js to dependencies
+    Object.keys(pkgJson.peerDependencies).forEach(pkg => {
+        if (pkg.includes('web-animations')) {
+            const version = pkgJson.peerDependencies[pkg];
+            addPackageToPkgJson(tree, pkg, version, PackageTarget.REGULAR);
+            logIncludingDependency(context, pkg, version);
+            return;
+        }
+    });
 
-/**
- * Recursively search for the first property that matches targetProp within a json file.
- */
-export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): { key: string, value: any } {
+    addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
+};
+
+/** Checks whether a property exists in the angular workspace. */
+export const propertyExistsInWorkspace = (targetProp: string, workspace: workspaces.WorkspaceDefinition): boolean => {
+    const foundProp = getPropertyFromWorkspace(targetProp, workspace);
+    return foundProp !== null && foundProp.key === targetProp;
+};
+
+/** Recursively search for the first property that matches targetProp within a json file. */
+export const getPropertyFromWorkspace = (targetProp: string, workspace: any, curKey = ''): { key: string; value: any } => {
     if (workspace.hasOwnProperty(targetProp)) {
         return { key: targetProp, value: workspace[targetProp] };
     }
@@ -137,9 +138,9 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     }
 
     return null;
-}
+};
 
-function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, config: string) {
+const addHammerToConfig = async (project: workspaces.ProjectDefinition, tree: Tree, config: string): Promise<void> => {
     const projectOptions = getTargetedProjectOptions(project, config);
     const tsPath = getConfigFile(project, 'main', config);
     const hammerImport = 'import \'hammerjs\';\n';
@@ -151,33 +152,35 @@ function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, c
         const mainContents = hammerImport + tsContent;
         tree.overwrite(tsPath, mainContents);
     }
-}
+};
 
-function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree) {
-    Object.keys(pkgJson.dependencies).forEach(pkg => {
+const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
+    const workspaceHost = createHost(tree);
+    const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
+    const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
+    for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
         if (!entry || entry.target === PackageTarget.NONE) {
-            return;
+            continue;
         }
         switch (pkg) {
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                const workspace = getWorkspace(tree);
-                const project = workspace.projects[workspace.defaultProject];
-                addHammerToConfig(project, tree, 'build');
-                addHammerToConfig(project, tree, 'test');
+                await addHammerToConfig(project, tree, 'build');
+                await addHammerToConfig(project, tree, 'test');
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
                 break;
         }
-    });
-}
+    }
+    await workspaces.writeWorkspace(workspace, workspaceHost);
+};
 
-export function addPackageToPkgJson(tree: Tree, pkg: string, version: string, target: string): boolean {
+export const addPackageToPkgJson = (tree: Tree, pkg: string, version: string, target: string): boolean => {
     const targetFile = 'package.json';
     if (tree.exists(targetFile)) {
         const sourceText = tree.read(targetFile).toString();
@@ -200,4 +203,4 @@ export function addPackageToPkgJson(tree: Tree, pkg: string, version: string, ta
     }
 
     return false;
-}
+};

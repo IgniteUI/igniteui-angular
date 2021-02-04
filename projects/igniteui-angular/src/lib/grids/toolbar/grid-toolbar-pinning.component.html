@@ -2,13 +2,15 @@
     <button [title]="grid?.resourceStrings.igx_grid_toolbar_pinning_button_tooltip" #btn igxButton="outlined"
         name="btnColumnPinning" (click)="toggle(btn, ref, actions)" [displayDensity]="grid.displayDensity">
         <div class="igx-grid-toolbar__button-space">
-            <igx-icon fontSet="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
+            <igx-icon family="imx-icons" [name]="!grid.pinnedColumnsCount ? 'unpin-left' : 'pin-left'"></igx-icon>
             <span>{{ grid.pinnedColumnsCount }}</span>
             <span>{{ grid.pinnedColumnsTextInternal }}</span>
         </div>
     </button>
     <igx-column-actions #actions igxColumnPinning igxToggle (onOpened)="focusSearch(ref.element)" #ref="toggle"
         [grid]="grid" [title]="grid.columnPinningTitleInternal || title || grid?.resourceStrings.igx_grid_toolbar_pinning_title"
-        [filterColumnsPrompt]="prompt || grid?.resourceStrings.igx_grid_toolbar_actions_filter_prompt">
+        [filterColumnsPrompt]="prompt || grid?.resourceStrings.igx_grid_toolbar_actions_filter_prompt"
+        [hideFilter]="hideFilter" [filterCriteria]="filterCriteria" [columnDisplayOrder]="columnDisplayOrder" [columnsAreaMaxHeight]="columnsAreaMaxHeight"
+        [uncheckAllText]="uncheckAllText" [checkAllText]="checkAllText" [indentation]="indentetion">
     </igx-column-actions>
 </ng-container>

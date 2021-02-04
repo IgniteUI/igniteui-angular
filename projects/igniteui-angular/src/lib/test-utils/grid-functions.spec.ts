@@ -220,14 +220,14 @@ export class GridFunctions {
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
-    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise(async (resolve, reject) => {
+    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise<void>(async (resolve, reject) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
         UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
         await wait(debounceTime);
         fix.detectChanges();
 
         resolve();
-    })
+    });
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
@@ -1034,9 +1034,7 @@ export class GridFunctions {
 
     public static getColumnGroupHeaders(fix: ComponentFixture<any>): DebugElement[] {
         const allHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-        const groupHeaders = allHeaders.filter(h => {
-            return h.componentInstance.column.columnGroup;
-        });
+        const groupHeaders = allHeaders.filter(h => h.componentInstance.column.columnGroup);
         return groupHeaders;
     }
 
@@ -1051,13 +1049,13 @@ export class GridFunctions {
 
     public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnHeader(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey, ctrlKey }));
         fix.detectChanges();
     }
 
     public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnGroupHeaderCell(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey, ctrlKey }));
         fix.detectChanges();
     }
 
@@ -1482,8 +1480,7 @@ export class GridFunctions {
     public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
         path: number[]) {
         let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
-        for (let index = 0; index < path.length; index++) {
-            const pos = path[index];
+        for (const pos of path) {
             const directChildren = GridFunctions.getAdvancedFilteringTreeChildItems(node, true);
             node = directChildren[pos];
         }
@@ -1731,23 +1728,19 @@ export class GridFunctions {
     }
 
     public static sortNativeElementsVertically(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a).getBoundingClientRect().top - (<HTMLElement>b).getBoundingClientRect().top);
+        return arr.sort((a: HTMLElement, b: HTMLElement) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
     }
 
     public static sortNativeElementsHorizontally(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a).getBoundingClientRect().left - (<HTMLElement>b).getBoundingClientRect().left);
+        return arr.sort((a: HTMLElement, b: HTMLElement) => a.getBoundingClientRect().left - b.getBoundingClientRect().left);
     }
 
     public static sortDebugElementsVertically(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+        return arr.sort((a, b) => a.nativeElement.getBoundingClientRect().top - b.nativeElement.getBoundingClientRect().top);
     }
 
     public static sortDebugElementsHorizontally(arr) {
-        return arr.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().left - (<HTMLElement>b.nativeElement).getBoundingClientRect().left);
+        return arr.sort((a, b) => a.nativeElement.getBoundingClientRect().left - b.nativeElement.getBoundingClientRect().left);
     }
 
     public static getRowEditingBannerRow(fix): HTMLElement {
@@ -1816,9 +1809,8 @@ export class GridFunctions {
     }
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
-        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => {
-            return header.nativeElement.title === columnField;
-        });
+        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS))
+                                            .find(header => header.nativeElement.title === columnField);
         return headerTitle.parent;
     }
 
@@ -1964,11 +1956,11 @@ export class GridFunctions {
     }
 
     public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
-        for (let i; i < headerCells.length; i++) {
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
-                .toBe(rowCells[i].nativeElement.offsetWidth);
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
-                .toBe(rowCells[i].nativeElement.offsetHeight);
+        for (let i = 0; i < headerCells.length; i++) {
+            const widthDiff = headerCells[i].headerCell.elementRef.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
+            const heightDiff = headerCells[i].headerCell.elementRef.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+            expect(widthDiff).toBeLessThanOrEqual(1);
+            expect(heightDiff).toBeLessThanOrEqual(3);
         }
     }
 
@@ -2114,8 +2106,7 @@ export class GridSummaryFunctions {
 
     public static getAllVisibleSummariesSorted(fix: ComponentFixture<any>) {
         const summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
-        return summaries.sort((a, b) =>
-            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+        return summaries.sort((a, b) => a.nativeElement.getBoundingClientRect().top - b.nativeElement.getBoundingClientRect().top);
     }
 
     public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 36) {
@@ -2144,7 +2135,7 @@ export class GridSummaryFunctions {
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
-        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
+        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise<void>(async resolve => {
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             fix.detectChanges();
             await wait();
@@ -2155,7 +2146,7 @@ export class GridSelectionFunctions {
             await wait();
             fix.detectChanges();
             resolve();
-        })
+        });
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
@@ -2167,7 +2158,7 @@ export class GridSelectionFunctions {
     }
 
     public static selectCellsRangeWithShiftKey =
-        (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
+        (fix, startCell, endCell) => new Promise<void>(async resolve => {
             UIInteractions.simulateClickAndSelectEvent(startCell);
             await wait();
             fix.detectChanges();
@@ -2177,7 +2168,7 @@ export class GridSelectionFunctions {
             fix.detectChanges();
             resolve();
             resolve();
-        })
+        });
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
         UIInteractions.simulateClickAndSelectEvent(startCell);
@@ -2322,6 +2313,7 @@ export class GridSelectionFunctions {
 
     /**
      * Returns if the specified element looks like a selection checkbox based on specific class affix
+     *
      * @param element The element to check
      * @param modifier The modifier to the base class
      */
@@ -2365,7 +2357,7 @@ export class GridSelectionFunctions {
     //
 
     public static expandRowIsland(rowNumber = 1) {
-        (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
+        (document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber] as any).click();
     }
 
     public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {
@@ -2402,8 +2394,8 @@ export class GridSelectionFunctions {
 
     public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey = false) {
         const event = {
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
+            shiftKey,
+            ctrlKey,
             stopPropagation: () => { }
         };
 

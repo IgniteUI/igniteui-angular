@@ -38,7 +38,7 @@ describe('IgxGrid - Clipboard #grid', () => {
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
         expect(eventData).
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             toEqual('ProductNameHeader\tDownloads\tReleased\r\n** Ignite UI for JavaScript **\t254\tfalse\r\n** NetAdvantage **\t127\ttrue\r\n');
     });
 
@@ -169,10 +169,10 @@ describe('IgxGrid - Clipboard #grid', () => {
     }));
 });
 
-function dispatchCopyEventOnGridBody(fixture) {
+const dispatchCopyEventOnGridBody = (fixture) => {
     const gridBody = fixture.debugElement.query(By.css('.igx-grid__tbody')).nativeElement;
-    const ev = new ClipboardEvent('copy', {clipboardData: new DataTransfer});
+    const ev = new ClipboardEvent('copy', {clipboardData: new DataTransfer()});
     gridBody.dispatchEvent(ev);
     fixture.detectChanges();
     return  ev.clipboardData.getData('text/plain');
-}
+};

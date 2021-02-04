@@ -19,18 +19,15 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
-    constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
-        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
-        protected comboAPI: IgxComboAPIService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
-    }
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxComboItemComponent, { descendants: true })
+    public children: QueryList<IgxDropDownItemBaseDirective> = null;
 
     /** @hidden @internal */
-   public get scrollContainer(): HTMLElement {
+    public get scrollContainer(): HTMLElement {
         return this.virtDir.dc.location.nativeElement;
     }
 
@@ -46,12 +43,44 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this.items.length - 1;
     }
 
+    protected get sortedChildren(): IgxDropDownItemBaseDirective[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxDropDownItemBaseDirective, b: IgxDropDownItemBaseDirective) => a.index - b.index);
+        }
+        return null;
+    }
+
     /**
-     * @hidden
-     * @internal
+     * Get all non-header items
+     *
+     * ```typescript
+     * let myDropDownItems = this.dropdown.items;
+     * ```
      */
-    @ContentChildren(IgxComboItemComponent, { descendants: true })
-    public children: QueryList<IgxDropDownItemBaseDirective> = null;
+    public get items(): IgxComboItemComponent[] {
+        const items: IgxComboItemComponent[] = [];
+        if (this.children !== undefined) {
+            const sortedChildren = this.sortedChildren as IgxComboItemComponent[];
+            for (const child of sortedChildren) {
+                if (!child.isHeader) {
+                    items.push(child);
+                }
+            }
+        }
+
+        return items;
+    }
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selection: IgxSelectionAPIService,
+        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
+        protected comboAPI: IgxComboAPIService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(elementRef, cdr, selection, _displayDensityOptions);
+    }
 
     /**
      * @hidden @internal
@@ -116,49 +145,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         this._focusedItem = item;
     }
 
-    private focusAddItemButton() {
-        if (this.combo.isAddButtonVisible()) {
-            this.focusedItem = this.items[this.items.length - 1];
-        }
-    }
-
-    protected scrollToHiddenItem(newItem: any): void { }
-
-    protected scrollHandler = () => {
-        this.comboAPI.disableTransitions = true;
-    }
-
-    protected get sortedChildren(): IgxDropDownItemBaseDirective[] {
-        if (this.children !== undefined) {
-            return this.children.toArray()
-                .sort((a: IgxDropDownItemBaseDirective, b: IgxDropDownItemBaseDirective) => {
-                    return a.index - b.index;
-                });
-        }
-        return null;
-    }
-
-    /**
-     * Get all non-header items
-     *
-     * ```typescript
-     * let myDropDownItems = this.dropdown.items;
-     * ```
-     */
-    public get items(): IgxComboItemComponent[] {
-        const items: IgxComboItemComponent[] = [];
-        if (this.children !== undefined) {
-            const sortedChildren = this.sortedChildren as IgxComboItemComponent[];
-            for (const child of sortedChildren) {
-                if (!child.isHeader) {
-                    items.push(child);
-                }
-            }
-        }
-
-        return items;
-    }
-
     /**
      * @hidden @internal
      */
@@ -182,6 +168,25 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
     }
 
+    public ngAfterViewInit() {
+        this.virtDir.getScroll().addEventListener('scroll', this.scrollHandler);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnDestroy(): void {
+        this.virtDir.getScroll().removeEventListener('scroll', this.scrollHandler);
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    protected scrollToHiddenItem(newItem: any): void { }
+
+    protected scrollHandler = () => {
+        this.comboAPI.disableTransitions = true;
+    };
+
     private handleEnter() {
         if (this.isAddItemFocused()) {
             this.combo.addItemToCollection();
@@ -202,16 +207,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         return this.focusedItem instanceof IgxComboAddItemComponent;
     }
 
-    public ngAfterViewInit() {
-        this.virtDir.getScroll().addEventListener('scroll', this.scrollHandler);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public ngOnDestroy(): void {
-        this.virtDir.getScroll().removeEventListener('scroll', this.scrollHandler);
-        this.destroy$.next(true);
-        this.destroy$.complete();
+    private focusAddItemButton() {
+        if (this.combo.isAddButtonVisible()) {
+            this.focusedItem = this.items[this.items.length - 1];
+        }
     }
 }

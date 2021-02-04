@@ -15,6 +15,7 @@ import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALU
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
+import { noop } from 'rxjs';
 
 export const SwitchLabelPosition = mkenum({
     BEFORE: 'before',
@@ -27,7 +28,6 @@ export interface IChangeSwitchEventArgs extends IBaseEventArgs {
     switch: IgxSwitchComponent;
 }
 
-const noop = () => { };
 let nextId = 0;
 /**
  *
@@ -58,11 +58,6 @@ let nextId = 0;
     templateUrl: 'switch.component.html'
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
-    /**
-     * @hidden
-     * @internal
-     */
-    protected _value: any;
     /**
      * Returns a reference to the native checkbox element.
      *
@@ -194,18 +189,9 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * An event that is emitted after the switch state is changed.
      * Provides references to the `IgxSwitchComponent` and the `checked` property as event arguments.
      */
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
     readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onChangeCallback: (_: any) => void = noop;
     /**
      * Returns the class of the switch component.
      *
@@ -255,6 +241,21 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public inputId = `${this.id}-input`;
     /**
+     * @hidden
+     * @internal
+     */
+    protected _value: any;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onTouchedCallback: () => void = noop;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onChangeCallback: (_: any) => void = noop;
+    /**
      * Toggles the checked state of the switch.
      *
      * @example
@@ -295,21 +296,21 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public _onLabelClick(event) {
+    public onLabelClick() {
         this.toggle();
     }
     /**
      * @hidden
      * @internal
      */
-    public onFocus(event) {
+    public onFocus() {
         this.focused = true;
     }
     /**
      * @hidden
      * @internal
      */
-    public onBlur(event) {
+    public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }
@@ -346,12 +347,16 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) {
+ this._onChangeCallback = fn;
+}
     /**
      * @hidden
      * @internal
      */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void) {
+ this._onTouchedCallback = fn;
+}
 }
 
 export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
@@ -360,7 +365,7 @@ export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
     multi: true
 };
 
-/* tslint:disable directive-selector */
+/* eslint-disable  @angular-eslint/directive-selector */
 @Directive({
     selector: `igx-switch[required][formControlName],
     igx-switch[required][formControl],
