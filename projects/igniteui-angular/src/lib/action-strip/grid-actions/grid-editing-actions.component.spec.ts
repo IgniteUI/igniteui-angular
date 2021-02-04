@@ -246,10 +246,10 @@ class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    data: any[];
-    columns: any[];
+    private data: any[];
+    private columns: any[];
 
-    ngOnInit() {
+    public ngOnInit() {
 
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },

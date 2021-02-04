@@ -1,0 +1,21 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "fontSet",
+            "replaceWith": "family",
+            "owner": {
+                "selector": "igx-icon",
+                "type": "component"
+            }
+        },
+        {
+            "name": "isActive",
+            "replaceWith": "active",
+            "owner": {
+                "selector": "igx-icon",
+                "type": "component"
+            }
+        }
+    ]
+}
