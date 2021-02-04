@@ -6,8 +6,8 @@ import { DataType } from 'igniteui-angular';
     templateUrl: 'grid-nested-props.sample.html'
 })
 export class GridNestedPropsSampleComponent {
-    data = [];
-    config = [
+    public data = [];
+    public config = [
         { field: 'id', type: DataType.Number },
         { field: 'padding.left', type: DataType.Number },
         { field: 'padding.top', type: DataType.Number },
@@ -17,7 +17,7 @@ export class GridNestedPropsSampleComponent {
         { field: 'misc.font.family', type: DataType.String, groupable: true }
     ];
 
-    treeData = [
+    public treeData = [
         {
             ID: 147,
             Name: 'John Winchester',
@@ -86,7 +86,7 @@ export class GridNestedPropsSampleComponent {
         }
     ];
 
-    styles = {
+    public styles = {
         color: (_, __, value) => value > 10 && value % 2 === 0 ? 'purple' : 'gray',
         'font-weight': (_, __, value) => value > 10 && value % 2 === 0 ? 'bold' : 'normal',
     };

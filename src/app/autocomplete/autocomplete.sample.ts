@@ -10,10 +10,12 @@ const ATTRACTIONS_CUSTOM_WIDTH = '300px';
     templateUrl: `autocomplete.sample.html`
 })
 export class AutocompleteSampleComponent {
-    @ViewChild('alert', { read: IgxDialogComponent, static: true }) public alert: IgxDialogComponent;
+    @ViewChild('alert', { read: IgxDialogComponent, static: true })
+    private alert: IgxDialogComponent;
+
     public travel: FormGroup;
-    worldInfo;
-    attractions;
+    public worldInfo;
+    public attractions;
     public attractionsWidth = '';
 
     constructor(fb: FormBuilder) {
@@ -26,7 +28,7 @@ export class AutocompleteSampleComponent {
         });
     }
 
-    onSearch() {
+    public onSearch() {
         if (filterGroupContains(this.worldInfo, this.travel.value.country, true).length > 0 &&
             filterContains(this.attractions, this.travel.value.attraction, true).length > 0) {
             this.alert.message = 'You can visit ' + (100 + Math.floor(Math.random() * 100)) + ' ' + this.travel.value.attraction +
@@ -37,7 +39,7 @@ export class AutocompleteSampleComponent {
         this.alert.open();
     }
 
-    changeDefaultWidth(event: any) {
+    public changeDefaultWidth(event: any) {
         this.attractionsWidth = event.checked ? ATTRACTIONS_CUSTOM_WIDTH : '';
     }
 }

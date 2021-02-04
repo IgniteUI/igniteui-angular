@@ -24,7 +24,7 @@ import { IgxActionStripComponent } from '../action-strip/public_api';
                 <ng-template igxHeader let-columnRef="column">
                     <div>
                         <span>ID</span>
-                        <igx-icon fontSet="material" (click)="pinColumn(columnRef)">lock</igx-icon>
+                        <igx-icon (click)="pinColumn(columnRef)">lock</igx-icon>
                     </div>
                 </ng-template>
             </igx-column>

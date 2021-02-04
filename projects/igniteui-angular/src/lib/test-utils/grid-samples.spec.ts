@@ -29,15 +29,15 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
             ${GridTemplateStrings.declareGrid('[autoGenerate]="autoGenerate"', '', ColumnDefinitions.indexAndValue)}</div>`
 })
 export class GridInDivComponent extends GridAutoGenerateComponent {
-    data = SampleTestData.oneItemNumberData();
-    autoGenerate = false;
+    public data = SampleTestData.oneItemNumberData();
+    public autoGenerate = false;
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(` width="500px"`, '', ColumnDefinitions.pinnedTwoOfFour)
 })
 export class PinningAndResizingComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameRegionData();
+    public data = SampleTestData.personIDNameRegionData();
 }
 
 @Component({
@@ -45,7 +45,7 @@ export class PinningAndResizingComponent extends BasicGridComponent {
         ColumnDefinitions.pinnedThreeOfEight)
 })
 export class LargePinnedColGridComponent extends BasicGridComponent {
-    data = SampleTestData.generateProductData(75);
+    public data = SampleTestData.generateProductData(75);
 }
 
 @Component({
@@ -60,13 +60,13 @@ export class SortingAndResizingComponent extends BasicGridComponent {
     public prevWidth;
     public newWidth;
 
-    data = SampleTestData.productInfoData();
+    public data = SampleTestData.productInfoData();
 
-    columnResized(event) {
-        this.count++;
-        this.column = event.column;
-        this.prevWidth = event.prevWidth;
-        this.newWidth = event.newWidth;
+    public columnResized(event) {
+                this.count++;
+                this.column = event.column;
+                this.prevWidth = event.prevWidth;
+                this.newWidth = event.newWidth;
     }
 }
 
@@ -89,7 +89,7 @@ export class ResizableColumnsComponent extends BasicGridComponent {
         { field: 'Fax', resizable: true }
     ];
 
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -98,8 +98,8 @@ export class ResizableColumnsComponent extends BasicGridComponent {
 })
 export class ColumnsFromIterableComponent extends BasicGridComponent {
 
-    public columns = ['ID', 'Name'];
-    data = SampleTestData.personIDNameData();
+    public columns = [ 'ID', 'Name'];
+    public data = SampleTestData.personIDNameData();
 }
 
 @Component({
@@ -113,7 +113,7 @@ export class TemplatedColumnsComponent extends BasicGridComponent {
     @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
 
-    data = SampleTestData.personIDNameData();
+    public data = SampleTestData.personIDNameData();
 }
 
 @Component({
@@ -121,7 +121,7 @@ export class TemplatedColumnsComponent extends BasicGridComponent {
         `<igx-column field="ID" [hidden]="true"></igx-column>`)
 })
 export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameData();
+    public data = SampleTestData.personIDNameData();
 }
 
 @Component({
@@ -140,7 +140,7 @@ export class ColumnHiddenFromMarkupComponent extends BasicGridComponent {
 })
 export class GridAddColumnComponent extends BasicGridComponent implements OnInit {
     public columns: Array<any>;
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 150, movable: true, type: 'string', pinned: true },
@@ -156,7 +156,7 @@ export class GridAddColumnComponent extends BasicGridComponent implements OnInit
         ColumnDefinitions.idNameFormatter)
 })
 export class ColumnCellFormatterComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameData();
+    public data = SampleTestData.personIDNameData();
 
     public multiplier(value: number): string {
         return `${value * value}`;
@@ -168,7 +168,7 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
         ColumnDefinitions.productFilterable)
 })
 export class FilteringComponent extends BasicGridComponent {
-    data = SampleTestData.productInfoData();
+    public data = SampleTestData.productInfoData();
 }
 
 @Component({
@@ -177,7 +177,7 @@ export class FilteringComponent extends BasicGridComponent {
         '', '')
 })
 export class SelectionComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(20);
+    public data = SampleTestData.generateBigValuesData(20);
 }
 
 @Component({
@@ -186,7 +186,7 @@ export class SelectionComponent extends BasicGridComponent {
         '', ColumnDefinitions.productBasicNumberID)
 })
 export class RowSelectionComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductDataExtended();
+    public data = SampleTestData.foodProductDataExtended();
     public width = '800px';
     public height = '600px';
     public selectedRows = [];
@@ -211,7 +211,7 @@ export class RowSelectionWithDisabledSelectRowOnClickComponent extends BasicGrid
         '', ColumnDefinitions.productBasicNumberID)
 })
 export class SingleRowSelectionComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductDataExtended();
+    public data = SampleTestData.foodProductDataExtended();
     public width = '800px';
     public height = '600px';
 }
@@ -235,7 +235,7 @@ export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
         ColumnDefinitions.productBasic)
 })
 export class SelectionCancellableComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductData();
+    public data = SampleTestData.foodProductData();
 
     public rowSelectionChange(evt) {
         if (evt.added.length > 0 && (evt.added[0].ProductID) % 2 === 0) {
@@ -255,7 +255,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
         '', '')
 })
 export class ScrollsComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigDataRowsAndCols(16, 16);
+    public data = SampleTestData.generateBigDataRowsAndCols(16, 16);
 }
 
 @Component({
@@ -267,7 +267,7 @@ export class ScrollsComponent extends BasicGridComponent {
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class NoScrollsComponent extends GridWithSizeComponent {
-    data = SampleTestData.personIDNameJobCompany();
+    public data = SampleTestData.personIDNameJobCompany();
 }
 
 @Component({
@@ -276,7 +276,7 @@ export class NoScrollsComponent extends GridWithSizeComponent {
         '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummariesComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductData();
+    public data = SampleTestData.foodProductData();
 }
 
 class DealsSummaryMinMax extends IgxNumberSummaryOperand {
@@ -304,7 +304,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
         '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductData();
+    public data = SampleTestData.foodProductData();
     public hasSummary = true;
 
     public numberSummary = new IgxNumberSummaryOperand();
@@ -318,7 +318,7 @@ export class SummaryColumnComponent extends BasicGridComponent {
         '', ColumnDefinitions.productDefaultSummaries)
 })
 export class VirtualSummaryColumnComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductDataExtended();
+    public data = SampleTestData.foodProductDataExtended();
 
     public width = '800px';
     public height = '600px';
@@ -341,7 +341,7 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productBasic)
 })
 export class ProductsComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductData();
+    public data = SampleTestData.foodProductData();
 }
 
 @Component({
@@ -352,7 +352,7 @@ export class ProductsComponent extends BasicGridComponent {
 export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
     public columns = [];
 
-    columnInit(column) {
+    public columnInit(column) {
         switch (this.grid.columnList.length) {
             case 5:
                 if (column.index === 0 || column.index === 4) {
@@ -383,8 +383,8 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
         EventSubscriptions.onColumnInit, ColumnDefinitions.generatedWithDataType)
 })
 export class NxMWithSummaryComponent extends GridNxMComponent {
-    columnsType = 'number';
-    columnInit(column) {
+    public columnsType = 'number';
+    public columnInit(column) {
         column.hasSummary = true;
     }
 }
@@ -394,8 +394,8 @@ export class NxMWithSummaryComponent extends GridNxMComponent {
         EventSubscriptions.onColumnInit, ColumnDefinitions.generatedEditable)
 })
 export class NxMWithSummaryEditableComponent extends NxMWithSummaryComponent {
-    hasEditableColumns = true;
-    startFromOne = true;
+    public hasEditableColumns = true;
+    public startFromOne = true;
 }
 
 @Component({
@@ -403,7 +403,7 @@ export class NxMWithSummaryEditableComponent extends NxMWithSummaryComponent {
         EventSubscriptions.onColumnInit, '')
 })
 export class NxMColumnWidthAndSummaryComponent extends NxMWithSummaryComponent {
-    columnInit(column) {
+    public columnInit(column) {
         switch (this.grid.columnList.length) {
             case 5:
                 if (column.index === 0 || column.index === 4) {
@@ -430,8 +430,8 @@ export class NxMColumnWidthAndSummaryComponent extends NxMWithSummaryComponent {
         ColumnDefinitions.generatedEditable)
 })
 export class Grid5x5WithSummariesComponent extends NxMWithSummaryEditableComponent {
-    colsCount = 5;
-    rowsCount = 5;
+    public colsCount = 5;
+    public rowsCount = 5;
 }
 // export class Summaries5x5Component extends BasicGridComponent {
 //     public columns = [];
@@ -453,8 +453,8 @@ export class Grid5x5WithSummariesComponent extends NxMWithSummaryEditableCompone
         ColumnDefinitions.generatedWithDataType)
 })
 export class Grid10x30WithSummariesComponent extends NxMWithSummaryComponent {
-    colsCount = 10;
-    rowsCount = 30;
+    public colsCount = 10;
+    public rowsCount = 30;
 }
 // export class Summaries10x30Component extends SummariesNxMComponent {
 //     constructor() {
@@ -468,8 +468,8 @@ export class Grid10x30WithSummariesComponent extends NxMWithSummaryComponent {
         ColumnDefinitions.generatedWithDataType)
 })
 export class Grid30x1000WithSummariesComponent extends NxMWithSummaryComponent {
-    colsCount = 30;
-    rowsCount = 1000;
+    public colsCount = 30;
+    public rowsCount = 1000;
 }
 // export class Summaries30x1000Component extends SummariesNxMComponent {
 //     constructor() {
@@ -483,8 +483,8 @@ export class Grid30x1000WithSummariesComponent extends NxMWithSummaryComponent {
         ColumnDefinitions.generatedWithDataType)
 })
 export class Grid150x200WithSummariesComponent extends NxMWithSummaryComponent {
-    colsCount = 150;
-    rowsCount = 200;
+    public colsCount = 150;
+    public rowsCount = 200;
 }
 // export class Summaries150x200Component extends SummariesNxMComponent {
 //     constructor() {
@@ -503,7 +503,7 @@ export class WidthAndHeightComponent extends BasicGridComponent {
     public width: string;
     public height: string;
 
-    data = SampleTestData.generateData(30, 3);
+    public data = SampleTestData.generateData(30, 3);
 }
 
 @Component({
@@ -514,7 +514,7 @@ export class WidthAndHeightComponent extends BasicGridComponent {
     </div>`
 })
 export class NullHeightComponent extends BasicGridComponent {
-    data = SampleTestData.generateData(20, 5);
+    public data = SampleTestData.generateData(20, 5);
 }
 
 @Component({
@@ -532,11 +532,11 @@ export class DefaultCRUDGridComponent extends BasicGridComponent {
     public rowsAdded = 0;
     public rowsDeleted = 0;
 
-    public rowAdded(event) {
+    public rowAdded() {
         this.rowsAdded++;
     }
 
-    public rowDeleted(event) {
+    public rowDeleted() {
         this.rowsDeleted++;
     }
 
@@ -556,7 +556,7 @@ export class DefaultCRUDGridComponent extends BasicGridComponent {
         `
 })
 export class PagingAndEditingComponent extends PagingComponent {
-    perPage = 4;
+    public perPage = 4;
 
     public GoToPage(val) {
         switch (val) {
@@ -578,7 +578,7 @@ export class PagingAndEditingComponent extends PagingComponent {
         ColumnDefinitions.idNameHiddenJobHirePinned)
 })
 export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
-    data = SampleTestData.personJobData();
+    public data = SampleTestData.personJobData();
 }
 
 @Component({
@@ -587,7 +587,7 @@ export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
     @ViewChild('nameColumn', { static: true }) public nameColumn;
 
-    data = SampleTestData.personIDNameRegionData();
+    public data = SampleTestData.personIDNameRegionData();
 }
 
 @Component({
@@ -595,9 +595,9 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
         `${EventSubscriptions.onColumnInit}${EventSubscriptions.onSelection}`, '')
 })
 export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
-    data = SampleTestData.contactInfoDataFull();
-    width = '800px';
-    height = '300px';
+    public data = SampleTestData.contactInfoDataFull();
+    public width = '800px';
+    public height = '300px';
 
     public selectedCell;
     public columnInit(column) {
@@ -628,7 +628,7 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
     `
 })
 export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
-    colGroups = [
+    public colGroups = [
         {
             field: 'group1',
             group: 'group1',
@@ -675,12 +675,12 @@ export class PinningComponent extends GridWithSizeComponent
         { field: 'Fax', width: 150 }
     ];
 
-    data = SampleTestData.contactMariaAndersData();
-    width = '800px';
-    height = '300px';
+    public data = SampleTestData.contactMariaAndersData();
+    public width = '800px';
+    public height = '300px';
 
-    selectedCell: IgxGridCellComponent;
-    cellSelected(event: IGridCellEventArgs) {
+    public selectedCell: IgxGridCellComponent;
+    public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
     }
 
@@ -693,7 +693,7 @@ export class PinningComponent extends GridWithSizeComponent
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productFilterSortPin)
 })
 export class GridFeaturesComponent extends BasicGridComponent {
-    data = SampleTestData.productInfoData();
+    public data = SampleTestData.productInfoData();
 
 }
 
@@ -703,7 +703,7 @@ export class GridFeaturesComponent extends BasicGridComponent {
         '', ColumnDefinitions.idNameJobHireDate)
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
-    data = SampleTestData.generateFromData(SampleTestData.personJobDataFull(), 30);
+    public data = SampleTestData.generateFromData(SampleTestData.personJobDataFull(), 30);
 }
 
 @Component({
@@ -712,7 +712,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
-    data = SampleTestData.personIDNameJobCompany();
+    public data = SampleTestData.personIDNameJobCompany();
 }
 
 @Component({
@@ -730,30 +730,30 @@ export class GridAllFeaturesComponent extends GridWithSizeComponent {
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameJobTitleId)
 })
 export class ReorderedColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personJobData();
+    public data = SampleTestData.personJobData();
 }
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobTitleEditable)
 })
 export class GridIDNameJobTitleComponent extends PagingComponent {
-    data = SampleTestData.personJobDataFull();
-    width = '100%';
-    height = '100%';
+    public data = SampleTestData.personJobDataFull();
+    public width = '100%';
+    public height = '100%';
 }
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHoursHireDatePerformance)
 })
 export class GridIDNameJobTitleHireDataPerformanceComponent extends BasicGridComponent {
-    data = SampleTestData.personJobHoursDataPerformance();
+    public data = SampleTestData.personJobHoursDataPerformance();
 }
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.hireDate)
 })
 export class GridHireDateComponent extends BasicGridComponent {
-    data = SampleTestData.hireDate();
+    public data = SampleTestData.hireDate();
 }
 
 @Component({
@@ -764,30 +764,30 @@ export class GridHireDateComponent extends BasicGridComponent {
         ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameRegionData();
-    autoGenerate = false;
-    rowSelection = 'none';
-    isFilterable = false;
-    isSortable = false;
-    isResizable = false;
-    isEditable = false;
-    isHidden = false;
-    isGroupable = false;
-    width = '500px';
-    height = '300px';
-    count = 0;
-    countStart = 0;
-    countEnd = 0;
-    cancel = false;
-    source: IgxColumnComponent;
-    target: IgxColumnComponent;
+    public data = SampleTestData.personIDNameRegionData();
+    public autoGenerate = false;
+    public rowSelection = 'none';
+    public isFilterable = false;
+    public isSortable = false;
+    public isResizable = false;
+    public isEditable = false;
+    public isHidden = false;
+    public isGroupable = false;
+    public width = '500px';
+    public height = '300px';
+    public count = 0;
+    public countStart = 0;
+    public countEnd = 0;
+    public cancel = false;
+    public source: IgxColumnComponent;
+    public target: IgxColumnComponent;
 
-    onColumnMovingStarted(event) {
+    public onColumnMovingStarted(event) {
         this.countStart++;
         this.source = event.source;
     }
 
-    onColumnMoving(event) {
+    public onColumnMoving(event) {
         this.count++;
         this.source = event.source;
 
@@ -796,7 +796,7 @@ export class MovableColumnsComponent extends BasicGridComponent {
         }
     }
 
-    onColumnMovingEnded(event) {
+    public onColumnMovingEnded(event) {
         this.countEnd++;
         this.source = event.source;
         this.target = event.target;
@@ -811,10 +811,10 @@ export class MovableColumnsComponent extends BasicGridComponent {
     template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px"`, '', ColumnDefinitions.movableColumns)}`
 })
 export class MovableTemplatedColumnsComponent extends BasicGridComponent {
-    data = SampleTestData.personIDNameRegionData();
-    isFilterable = false;
-    isSortable = false;
-    isResizable = false;
+    public data = SampleTestData.personIDNameRegionData();
+    public isFilterable = false;
+    public isSortable = false;
+    public isResizable = false;
 }
 
 @Component({
@@ -823,11 +823,11 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 
-    width = '500px';
-    height = '400px';
-    paging = false;
+    public width = '500px';
+    public height = '400px';
+    public paging = false;
 
     public columnInit(column: IgxColumnComponent) {
         column.movable = true;
@@ -835,7 +835,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
         column.width = '100px';
     }
 
-    pinColumn(name: string) {
+    public pinColumn(name: string) {
         const col = this.grid.getColumnByName(name);
         col.pinned = !col.pinned;
     }
@@ -845,8 +845,8 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
     template: `${GridTemplateStrings.declareGrid(`height="800px"`, '', ColumnDefinitions.multiColHeadersColumns)}`
 })
 export class MultiColumnHeadersComponent extends BasicGridComponent {
-    data = SampleTestData.contactInfoDataFull();
-    isPinned = false;
+    public data = SampleTestData.contactInfoDataFull();
+    public isPinned = false;
 }
 
 @Component({
@@ -854,8 +854,8 @@ export class MultiColumnHeadersComponent extends BasicGridComponent {
         ColumnDefinitions.multiColHeadersWithGroupingColumns)}`
 })
 export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent {
-    data = SampleTestData.contactInfoDataFull();
-    isPinned = false;
+    public data = SampleTestData.contactInfoDataFull();
+    public isPinned = false;
 }
 
 
@@ -863,8 +863,8 @@ export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent 
     template: `${GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar)}`
 })
 export class GridWithAvatarComponent extends GridWithSizeComponent {
-    data = SampleTestData.personAvatarData();
-    height = '500px';
+    public data = SampleTestData.personAvatarData();
+    public height = '500px';
 }
 
 
@@ -996,7 +996,7 @@ export class VirtualGridComponent extends BasicGridComponent {
         '', ColumnDefinitions.idNameJobHireWithTypes)
 })
 export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
-    data = SampleTestData.personJobDataFull();
+    public data = SampleTestData.personJobDataFull();
 }
 
 @Component({
@@ -1418,8 +1418,8 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
     </igx-excel-style-date-expression>`
 })
 export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringComponent implements AfterViewInit {
-    exprUI: ExpressionUI;
-    exprList: Array<ExpressionUI>;
+    public exprUI: ExpressionUI;
+    public exprList: Array<ExpressionUI>;
 
     constructor(private cd: ChangeDetectorRef) {
         super();
@@ -1431,14 +1431,14 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
                 name: 'equals',
                 isUnary: false,
                 iconName: 'equals',
-                logic: (target: Date, searchVal: Date) => true
+                logic: () => true
             },
         };
 
         this.exprList = [this.exprUI];
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.cd.detectChanges();
     }
 }
@@ -1527,7 +1527,7 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
     public data = SampleTestData.excelFilteringData();
-    formatter = (value: any) => `** ${value} **`;
+    public formatter = (value: any) => `** ${value} **`;
 }
 
 @Component({
@@ -1545,9 +1545,9 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
         { field: 'Region', width: 100, dataType: 'string' }
     ];
 
-    data = SampleTestData.contactInfoDataFull();
-    width = '800px';
-    height = '800px';
+    public data = SampleTestData.contactInfoDataFull();
+    public width = '800px';
+    public height = '800px';
 }
 
 @Component({
@@ -1609,7 +1609,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     </igx-grid>`
 })
 export class IgxGridRowEditingComponent extends BasicGridComponent {
-    showToolbar = false;
+    public showToolbar = false;
     public data = SampleTestData.foodProductData();
 }
 
@@ -1950,7 +1950,7 @@ export class GridWithUndefinedDataComponent implements OnInit {
 })
 export class CollapsibleColumnGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
     public generalInfCollapsible;
     public generalInfExpanded;
     public personDetailsCollapsible;
@@ -1958,7 +1958,7 @@ export class CollapsibleColumnGroupTestComponent {
     public personDetailsVisibleWhenCollapse;
     public companyNameVisibleWhenCollapse;
     public hideContactInformation = true;
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 }
 
 
@@ -1990,8 +1990,8 @@ export class CollapsibleColumnGroupTestComponent {
 })
 export class ColumnSelectionGroupTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
-    data = SampleTestData.contactInfoDataFull();
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
 }
 @Component({
     template: `
@@ -2027,12 +2027,12 @@ export class ColumnSelectionGroupTestComponent {
 })
 export class CollapsibleGroupsTemplatesTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
 
     @ViewChild('indicatorTemplate', { read: TemplateRef, static: false })
     public indicatorTemplate;
 
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -2109,8 +2109,8 @@ export class CollapsibleGroupsDynamicColComponent {
 })
 export class ColumnGroupsNavigationTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
-    data = SampleTestData.contactInfoDataFull();
+    public grid: IgxGridComponent;
+    public data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -2126,7 +2126,7 @@ export class ColumnGroupsNavigationTestComponent {
 export class IgxGridFilteringBindingComponent extends BasicGridComponent implements OnInit {
     public resizable = false;
     public filterable = true;
-    filterTree: FilteringExpressionsTree;
+    public filterTree: FilteringExpressionsTree;
 
     public data = SampleTestData.excelFilteringData();
 
@@ -2156,7 +2156,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
 export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent implements OnInit {
     public resizable = false;
     public filterable = true;
-    filterTree: FilteringExpressionsTree;
+    public filterTree: FilteringExpressionsTree;
 
     public data = SampleTestData.excelFilteringData();
 
@@ -2199,7 +2199,7 @@ export class ColumnEditablePropertyTestComponent extends BasicGridComponent {
     `
 })
 export class NoColumnWidthGridComponent extends BasicGridComponent {
-    data = SampleTestData.generateNumberData(1000);
+    public data = SampleTestData.generateNumberData(1000);
 }
 
 @Component({
@@ -2238,8 +2238,8 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
 })
 export class MRLTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
-    colGroups: Array<any> = [
+    public grid: IgxGridComponent;
+    public colGroups: Array<any> =  [
         {
             group: 'group1',
             columns: [
@@ -2266,7 +2266,7 @@ export class MRLTestComponent {
             ]
         }
     ];
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({
@@ -2290,10 +2290,10 @@ export class IgxAddRowComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    data: any[];
-    columns: any[];
+    public data: any[];
+    public columns: any[];
 
-    ngOnInit() {
+    public ngOnInit() {
 
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },

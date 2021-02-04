@@ -35,21 +35,21 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
 
 @Injectable()
 export class TestNgZone extends NgZone {
-    onStable: EventEmitter<any> = new EventEmitter(false);
+    public onStable: EventEmitter<any> = new EventEmitter(false);
 
     constructor() {
         super({enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false});
     }
 
-    run(fn: () => void): any {
+    public run(fn: () => void): any {
         return fn();
     }
 
-    runOutsideAngular(fn: () => void): any {
+    public runOutsideAngular(fn: () => void): any {
         return fn();
     }
 
-    simulateOnStable(): void {
+    public simulateOnStable(): void {
         this.onStable.emit(null);
     }
 }
