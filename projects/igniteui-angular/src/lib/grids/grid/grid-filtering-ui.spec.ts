@@ -3299,6 +3299,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.displayDensity = DisplayDensity.compact;
             tick(200);
             fix.detectChanges();
+            spyOn(grid.columnVisibilityChanging, 'emit');
             spyOn(grid.onColumnVisibilityChanged, 'emit');
 
             const column = grid.columns.find((col) => col.field === 'ProductName');

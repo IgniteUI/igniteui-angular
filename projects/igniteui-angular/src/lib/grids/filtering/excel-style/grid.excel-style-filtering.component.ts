@@ -406,18 +406,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     public onHideToggle() {
-        const eventArgs: IColumnVisibilityChangingEventArgs = {
-            column: this.column,
-            newValue: !this.column.hidden,
-            cancel: false };
-        this.grid.columnVisibilityChanging.emit(eventArgs);
-
-        if (eventArgs.cancel) {
-            return;
-        }
-
-        this.column.hidden = !this.column.hidden;
-        this.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: this.column.hidden });
+        this.column.toggleVisibility();
         this.closeDropdown();
     }
 

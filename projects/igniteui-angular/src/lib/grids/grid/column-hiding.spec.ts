@@ -152,7 +152,7 @@ describe('Column Hiding UI #grid', () => {
         });
 
         it('onColumnToggled, onColumnVisibilityChanged, onColumnVisibilityChanging event is fired on toggling checkboxes.', () => {
-            spyOn(columnChooser.onColumnToggled, 'emit').and.callThrough();
+            spyOn(columnChooser.onColumnToggled, 'emit');
             spyOn(grid.onColumnVisibilityChanged, 'emit');
             spyOn(grid.columnVisibilityChanging, 'emit');
 
