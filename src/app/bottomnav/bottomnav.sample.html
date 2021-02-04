@@ -62,25 +62,36 @@
 
             <igx-bottom-nav-new>
                 <igx-bottom-nav-item>
-                    <igx-bottom-nav-header [label]="'Tab1'" [icon]="'folder'"></igx-bottom-nav-header>
+                    <igx-bottom-nav-header [label]="'Tab1'" [icon]="'phone'"></igx-bottom-nav-header>
                     <igx-bottom-nav-panel>
-                        Content 1
+                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                            <igx-list-item [isHeader]="true">History</igx-list-item>
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content"
+                                *ngFor="let contact of contacts">
+                                <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                <p igxListLineTitle>{{contact.text}}</p>
+                                <span igxListLineSubTitle>{{contact.phone}}</span>
+                                <igx-icon igxListAction>phone</igx-icon>
+                            </igx-list-item>
+                        </igx-list>
+                    </igx-bottom-nav-panel>
+                </igx-bottom-nav-item>
+
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header [label]="'Tab 2'"></igx-bottom-nav-header>
+                    <igx-bottom-nav-panel>
+                        Content 2
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
                     </igx-bottom-nav-panel>
                 </igx-bottom-nav-item>
 
                 <igx-bottom-nav-item>
                     <igx-bottom-nav-header>
-                        Tab 2
+                        Tab 3
                     </igx-bottom-nav-header>
                     <igx-bottom-nav-panel>
-                        Content 2
-                    </igx-bottom-nav-panel>
-                </igx-bottom-nav-item>
-
-                <igx-bottom-nav-item>
-                    <igx-bottom-nav-header [label]="'Tab3'"></igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
                         Content 3
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
                     </igx-bottom-nav-panel>
                 </igx-bottom-nav-item>
             </igx-bottom-nav-new>

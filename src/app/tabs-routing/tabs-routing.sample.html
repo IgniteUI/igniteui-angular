@@ -66,6 +66,7 @@
                 routerLinkActive #rla1="routerLinkActive"
                 [isSelected]="rla1.isActive">
             </igx-tab-item>
+
             <igx-tab-item label="Tab 2" icon="folder"
                 routerLink="/tabs-routing/view2"
                 routerLinkActive #rla2="routerLinkActive"
@@ -74,12 +75,8 @@
             <igx-tab-item label="Tab 3" icon="folder"
                 routerLink="/tabs-routing/view3"
                 routerLinkActive #rla3="routerLinkActive"
-                [isSelected]="rla3.isActive"> -->
-                <!-- <ng-template igxTab let-context>
-                    <span>{{context.label}}</span>
-                    <span>[Retemplated tab]</span>
-                </ng-template> -->
-            <!-- </igx-tab-item>
+                [isSelected]="rla3.isActive">
+            </igx-tab-item>
         </igx-tabs> -->
         <div>
             <router-outlet></router-outlet>

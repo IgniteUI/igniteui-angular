@@ -5,10 +5,15 @@ import { IgxTabsDirective } from '../tabs.directive';
 @Component({
     selector: 'igx-tabs-new',
     templateUrl: 'tabs.component.html',
+    styles: [
+        `:host {
+            position: relative;
+            height: 100%;
+        }`
+    ],
     providers: [{ provide: IgxTabsBaseNew, useExisting: IgxTabsNewComponent }]
 })
 export class IgxTabsNewComponent extends IgxTabsDirective {
-
     /** @hidden */
     @HostBinding('attr.class')
     public get cssClass() {

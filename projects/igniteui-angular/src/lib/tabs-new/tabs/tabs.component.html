@@ -7,6 +7,9 @@
         </div>
     </div>
 </div>
-<ng-container *ngFor="let tab of tabs; let i = index">
-    <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
-</ng-container>
+<div style="position: relative; overflow: hidden; height: inherit">
+    <ng-container *ngFor="let tab of tabs; let i = index">
+        <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
+    </ng-container>
+</div>
+

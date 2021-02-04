@@ -22,4 +22,7 @@ export abstract class IgxTabHeaderNewBase {
 }
 
 /** @hidden */
-export abstract class IgxTabPanelNewBase {}
+export abstract class IgxTabPanelNewBase {
+    public nativeElement: HTMLElement;
+}
+
