@@ -8,26 +8,6 @@ import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 
-const primitive = ['1', '2', '3', '4', '5', '6'];
-const complex = [{
-    field: 1,
-    value: 1
-}, {
-    field: 2,
-    value: 2
-}, {
-    field: 3,
-    value: 3
-}, {
-    field: 4,
-    value: 4
-}, {
-    field: 5,
-    value: 5
-}, {
-    field: 6,
-    value: 6
-}];
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'combo-sample',
@@ -35,12 +15,14 @@ const complex = [{
     styleUrls: ['combo.sample.css']
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
-    @ViewChild('playgroundCombo', { static: true }) public igxCombo: IgxComboComponent;
-    @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
-    @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
-    @ViewChild('customItemTemplate', { read: TemplateRef, static: true }) private customItemTemplate;
+    @ViewChild('playgroundCombo', { static: true })
+    public igxCombo: IgxComboComponent;
+    @ViewChild('playgroundCombo', { read: ElementRef, static: true })
+    private comboRef: ElementRef;
+    @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
+    private customItemTemplate;
 
-    alignment = ButtonGroupAlignment.vertical;
+    public alignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     public filterableFlag = true;
     public customValuesFlag = true;
@@ -117,20 +99,17 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onSelection(ev) {
-    }
-
-    handleAddition(evt) {
+    public handleAddition(evt) {
         console.log(evt);
         evt.addedItem[this.igxCombo.groupKey] = 'MyCustomGroup';
     }
 
-    toggleItem(itemID) {
+    public toggleItem(itemID) {
         this.toggleItemState = !this.toggleItemState;
         this.igxCombo.setSelectedItem(itemID, this.toggleItemState);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.igxCombo.onOpening.subscribe(() => {
             console.log('Opening log!');
         });
@@ -161,7 +140,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         });
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
         this.overlaySettings[1] = {
             target: this.comboRef.nativeElement,
@@ -184,21 +163,21 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         };
     }
 
-    changeOverlaySettings(index: number) {
+    public changeOverlaySettings(index: number) {
         this.igxCombo.overlaySettings = this.overlaySettings[index];
     }
 
-    changeItemTemplate() {
+    public changeItemTemplate() {
         const comboTemplate = this.initialItemTemplate ? null : this.igxCombo.itemTemplate;
         this.igxCombo.itemTemplate = this.initialItemTemplate ? this.initialItemTemplate : this.customItemTemplate ;
         this.initialItemTemplate = comboTemplate;
     }
 
-    setDensity(density: DisplayDensity) {
+    public setDensity(density: DisplayDensity) {
         this.igxCombo.displayDensity = density;
     }
 
-    handleSelectionChange(event: IComboSelectionChangeEventArgs) {
+    public handleSelectionChange(event: IComboSelectionChangeEventArgs) {
         console.log(event);
     }
 }

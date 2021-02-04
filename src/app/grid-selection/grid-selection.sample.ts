@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { IgxGridComponent, IgxGridCellComponent } from 'igniteui-angular';
+import { Observable } from 'rxjs';
+import { IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
 @Component({
@@ -9,18 +9,18 @@ import { RemoteService } from '../shared/remote.service';
     styleUrls: ['grid-selection.sample.css']
 })
 export class GridSelectionComponent implements AfterViewInit {
-
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
-    remote: Observable<any[]>;
-    selection = true;
-    selectionModes = ['none', 'single', 'multiple'];
+    private grid1: IgxGridComponent;
+
+    public remote: Observable<any[]>;
+    public selection = true;
+    public selectionModes = ['none', 'single', 'multiple'];
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
-        this.remoteService.urlBuilder = (state) => this.remoteService.url;
+        this.remoteService.urlBuilder = () => this.remoteService.url;
      }
 
-    ngAfterViewInit() {
+     public ngAfterViewInit() {
         this.remote = this.remoteService.remoteData;
         this.remoteService.getData(this.grid1.data);
         this.cdr.detectChanges();
@@ -38,7 +38,7 @@ export class GridSelectionComponent implements AfterViewInit {
         this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }
 
-    handleRowSelection(args) {
+    public handleRowSelection() {
         console.log('ONSELECTIONEVENTFIRED');
 /*         const targetCell = args.cell as IgxGridCellComponent;
         if  (!this.selection) {
@@ -46,17 +46,17 @@ export class GridSelectionComponent implements AfterViewInit {
         } */
     }
 
-    selectCells() {
+    public selectCells() {
         this.grid1.selectRange({rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 2});
     }
 
-    selectCell() {
+    public selectCell() {
         this.grid1.getCellByColumn(1, 'ProductName').selected = this.grid1.getCellByColumn(1, 'ProductName').selected ?
         false : true;
         this.grid1.cdr.detectChanges();
     }
 
-    toggle() {
+    public toggle() {
         const currentSelection = this.grid1.selectedRows;
         if (currentSelection !== undefined) {
             const currentSelectionSet = new Set(currentSelection);
@@ -68,32 +68,33 @@ export class GridSelectionComponent implements AfterViewInit {
         this.grid1.selectRows([1, 2, 5], false);
     }
 
-    toggleAll() {
+    public toggleAll() {
         if ((this.grid1.selectedRows || []).length === 0) {
             this.grid1.selectAllRows();
         } else {
             this.grid1.deselectAllRows();
         }
     }
-    log(args) {
+
+    public log(args) {
         console.log(args);
     }
 
-    callSelectAll() {
+    public callSelectAll() {
         this.grid1.selectAllRows();
     }
 
-    selectRow() {
+    public selectRow() {
         this.grid1.selectRows(['abc']);
     }
 
-    selectThirdRow() {
+    public selectThirdRow() {
         this.grid1.getRowByIndex(2).selected = this.grid1.getRowByIndex(2).selected ?
         false : true;
         this.grid1.cdr.detectChanges();
     }
 
-    deleteSelectedRow() {
+    public deleteSelectedRow() {
         const r = this.grid1.selectedRows[0];
         this.grid1.deleteRow(r);
 

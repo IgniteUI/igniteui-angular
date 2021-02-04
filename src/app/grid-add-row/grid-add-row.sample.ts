@@ -1,5 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'igniteui-angular';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-grid-add-row',
@@ -7,14 +6,11 @@ import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'ignit
     templateUrl: `grid-add-row.sample.html`
 })
 export class GridAddRowSampleComponent implements OnInit {
-    @ViewChild('actionstrip1') actionStrip: IgxActionStripComponent;
-    @ViewChild('grid', { static: true }) grid1: IgxGridComponent;
-    public result: string;
+    public data: any[];
+    public dataFull: any[];
+    public columns: any[];
 
-    data: any[];
-    dataFull: any[];
-    columns: any[];
-    onMouseOver(event, grid, actionStrip) {
+    public onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
             const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
@@ -22,13 +18,13 @@ export class GridAddRowSampleComponent implements OnInit {
         }
     }
 
-    onMouseLeave(actionstrip, event?) {
+    public onMouseLeave(actionstrip, event?) {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: '200px'},
             { field: 'CompanyName', width: '200px' },

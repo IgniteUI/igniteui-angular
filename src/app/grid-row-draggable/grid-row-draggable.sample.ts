@@ -16,16 +16,19 @@ enum DragIcon {
 })
 export class GridRowDraggableComponent implements AfterViewInit {
 
-    @ViewChild('grid1', { read: IgxGridComponent, static: true }) public grid1: IgxGridComponent;
-    @ViewChild('grid2', { read: IgxGridComponent, static: true }) public grid2: IgxGridComponent;
-    remote: Observable<any[]>;
-    newData = [];
-    dragdrop = true;
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
+    private grid1: IgxGridComponent;
+    @ViewChild('grid2', { read: IgxGridComponent, static: true })
+    private grid2: IgxGridComponent;
+
+    public remote: Observable<any[]>;
+    public newData = [];
+    public dragdrop = true;
     public density = 'comfortable';
     public displayDensities;
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
-        this.remoteService.urlBuilder = (state) => this.remoteService.url;
+        this.remoteService.urlBuilder = () => this.remoteService.url;
 
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
@@ -34,7 +37,7 @@ export class GridRowDraggableComponent implements AfterViewInit {
         ];
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.remote = this.remoteService.remoteData;
         this.remoteService.getData(this.grid1.data);
         this.cdr.detectChanges();
@@ -44,11 +47,11 @@ export class GridRowDraggableComponent implements AfterViewInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    public handleRowDrag(args) {
+    public handleRowDrag() {
 
     }
 
-    public handleRowDrop(args) {
+    public handleRowDrop() {
 
     }
 

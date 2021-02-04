@@ -46,7 +46,7 @@ The navbar component provides us with the ability to use a template for the acti
             (action)="navigateBack()">
     <igx-action-icon>
         Navigate back:
-        <igx-icon fontSet="material">arrow_back</igx-icon>
+        <igx-icon>arrow_back</igx-icon>
     </igx-action-icon>
 </igx-navbar>
 ```
