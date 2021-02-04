@@ -1214,7 +1214,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             >
             <ng-template let-data igxRowDragGhost>
                 <div class="dragGhost">
-                    <igx-icon fontSet="material"></igx-icon>
+                    <igx-icon></igx-icon>
                         Moving a row!
                 </div>
             </ng-template>

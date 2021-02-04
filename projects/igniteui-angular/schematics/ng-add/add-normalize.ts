@@ -1,9 +1,9 @@
 import * as path from 'path';
 
 import { Tree } from '@angular-devkit/schematics';
-import { getWorkspace, getWorkspacePath } from '@schematics/angular/utility/config';
-import { WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
 import { addPackageToPkgJson } from '../utils/dependency-handler';
+import { JsonArray, workspaces } from '@angular-devkit/core';
+import { ProjectType } from '../utils/util';
 
 const resetPackage = { 'minireset.css': '~0.0.4' };
 
@@ -13,11 +13,9 @@ export const scssImport =
     + `@import '~minireset.css/minireset';\n`;
 
 
-export const addResetCss = (host: Tree): boolean => {
-    const config = getWorkspace(host);
-    const project = config.projects[config.defaultProject] as WorkspaceProject<ProjectType.Application>;
+export const addResetCss = (workspace: workspaces.WorkspaceDefinition , host: Tree): boolean => {
+    const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
     let addPackage;
-
     const styleExts = ['scss', 'sass', 'css', 'less', 'styl'];
     const styleExt = styleExts.find(ext => host.exists(path.posix.join(project.sourceRoot, `styles.${ext}`)));
     if (!styleExt) {
@@ -26,34 +24,32 @@ export const addResetCss = (host: Tree): boolean => {
     const stylesFile = path.posix.join(project.sourceRoot, `styles.${styleExt}`);
 
     switch (styleExt) {
-    case 'sass':
-    case 'scss':
-        let content = host.read(stylesFile).toString();
-        if (content.indexOf(`~minireset.css/minireset`) === -1) {
-            content = scssImport + content;
-            host.overwrite(stylesFile, content);
+        case 'sass':
+        case 'scss':
+            let content = host.read(stylesFile).toString();
+            if (content.indexOf(`~minireset.css/minireset`) === -1) {
+                content = scssImport + content;
+                host.overwrite(stylesFile, content);
+                addPackage = resetPackage;
+            }
+            break;
+        case 'css':
+        case 'less':
+        case 'styl':
+            const build = project.targets.get('build');
+            if (!build || project.extensions['projectType'] !== ProjectType.Application) {
+                return false;
+            }
+            if (build.options.styles) {
+                build.options.styles =
+                    [cssImport, ...build.options.styles as JsonArray];
+            } else {
+                build.options.styles = [cssImport];
+            }
             addPackage = resetPackage;
-        }
-        break;
-    case 'css':
-    case 'less':
-    case 'styl':
-        if (!project.architect ||
-            !project.architect.build ||
-            project.projectType !== ProjectType.Application) {
-            return false;
-        }
-        if (project.architect.build.options.styles) {
-            project.architect.build.options.styles =
-                [cssImport, ...project.architect.build.options.styles];
-        } else {
-            project.architect.build.options.styles = [cssImport];
-        }
-        host.overwrite(getWorkspacePath(host), JSON.stringify(config, null, 2));
-        addPackage = resetPackage;
-        break;
-    default:
-        break;
+            break;
+        default:
+            break;
     }
 
     if (addPackage) {

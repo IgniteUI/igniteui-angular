@@ -15,7 +15,14 @@ import { IgxGridComponent,
 
 export class GridColumnPinningSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
+
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
+    public selectionMode;
+    public data: any[];
+    public columns: any[];
+    public showToolbar: true;
+    public pinningEnabled: true;
 
     public get rightPinning() {
         return (this.pinningConfig.columns === ColumnPinningPosition.End);
@@ -27,16 +34,8 @@ export class GridColumnPinningSampleComponent implements OnInit {
             this.pinningConfig.columns = ColumnPinningPosition.End;
         }
     }
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
-    public selectionMode;
-
-    data: any[];
-    columns: any[];
-    showToolbar: true;
-    pinningEnabled: true;
-
-    onChange() {
+    public onChange() {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
             this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
         } else {
@@ -44,7 +43,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
         }
     }
 
-    onRowChange() {
+    public onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
             this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Top };
         } else {
@@ -52,7 +51,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },
             { field: 'CompanyName', width: '200px' },
@@ -100,17 +99,17 @@ export class GridColumnPinningSampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
-    toggleColumn(name: string) {
+    public toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;
     }
 
-    toggleVisibility(name: string) {
+    public toggleVisibility(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.hidden = !col.hidden;
     }
 
-    togglePinRow(index) {
+    public togglePinRow(index) {
         const rec = this.data[index];
         if (this.grid1.isRecordPinned(rec)) {
             this.grid1.unpinRow(rec);
@@ -119,11 +118,11 @@ export class GridColumnPinningSampleComponent implements OnInit {
         }
     }
 
-    onSelectionModeChange() {
+    public onSelectionModeChange() {
         this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
-    doSomeAction(row?: IgxGridRowComponent) {
+    public doSomeAction(row?: IgxGridRowComponent) {
         if (this.grid1.isRecordPinned(row.rowData)) {
             this.grid1.unpinRow(row.rowData);
         } else {

@@ -11,19 +11,19 @@ import {
 })
 export class ChipsSampleComponent {
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
-    public chipsArea: IgxChipsAreaComponent;
+    private chipsArea: IgxChipsAreaComponent;
 
     @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent, static: true })
-    public chipsAreaTo: IgxChipsAreaComponent;
+    private chipsAreaTo: IgxChipsAreaComponent;
 
     @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent, static: true })
-    public chipsAreaCc: IgxChipsAreaComponent;
+    private chipsAreaCc: IgxChipsAreaComponent;
 
     @ViewChild('dropTo', { read: ElementRef, static: true })
-    public dropTo: ElementRef;
+    private dropTo: ElementRef;
 
     @ViewChild('dropCc', { read: ElementRef, static: true })
-    public dropCc: ElementRef;
+    private dropCc: ElementRef;
 
     public chipList = [
         {
@@ -74,7 +74,7 @@ export class ChipsSampleComponent {
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
+    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newChipList = [];
         for (const chip of event.chipsArray) {
             const chipItem = this.chipList.filter((item) => item.id === chip.id)[0];
@@ -84,24 +84,24 @@ export class ChipsSampleComponent {
         this.cdr.detectChanges();
     }
 
-    chipMovingEnded() {
+    public chipMovingEnded() {
     }
 
-    chipRemoved(event: IBaseChipEventArgs) {
+    public chipRemoved(event: IBaseChipEventArgs) {
         this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.cdr.detectChanges();
     }
 
-    removeChip(chip: IgxChipComponent) {
+    public removeChip(chip: IgxChipComponent) {
         chip.elementRef.nativeElement.remove();
     }
 
-    selectChip(chipId) {
+    public selectChip(chipId) {
         const chipToSelect = this.chipsArea.chipsList.toArray().find((chip) => chip.id === chipId);
         chipToSelect.selected = true;
     }
 
-    onChipsSelected(event: IChipSelectEventArgs) {
+    public onChipsSelected(event: IChipSelectEventArgs) {
         console.log(event);
     }
 
@@ -109,7 +109,7 @@ export class ChipsSampleComponent {
      * Chip Sample 2
      */
 
-    chipsOrderChangedTo(event) {
+    public chipsOrderChangedTo(event) {
         const newChipListTo = [];
         for (const chip of event.chipsArray) {
             const chipItem = this.chipListTo.filter((item) => item.id === chip.id)[0];
@@ -119,7 +119,7 @@ export class ChipsSampleComponent {
         this.cdr.detectChanges();
     }
 
-    chipsOrderChangedCc(event) {
+    public chipsOrderChangedCc(event) {
         const newChipListCc = [];
         for (const chip of event.chipsArray) {
             const chipItem = this.chipListCc.filter((item) => item.id === chip.id)[0];
@@ -165,24 +165,24 @@ export class ChipsSampleComponent {
         this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartTo() {
+    public onMoveStartTo() {
         this.dropCc.nativeElement.style.visibility = 'visible';
         this.dropCc.nativeElement.textContent = 'You can drop me here!';
         this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartCc() {
+    public onMoveStartCc() {
         this.dropTo.nativeElement.style.visibility = 'visible';
         this.dropTo.nativeElement.textContent = 'You can drop me here!';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedTo() {
+    public moveEndedTo() {
         this.dropTo.nativeElement.style.visibility = 'hidden';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedCc() {
+    public moveEndedCc() {
         this.dropTo.nativeElement.style.visibility = 'hidden';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
