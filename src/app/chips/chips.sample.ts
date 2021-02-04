@@ -165,24 +165,24 @@ export class ChipsSampleComponent {
         this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartTo() {
+    public onMoveStartTo() {
         this.dropCc.nativeElement.style.visibility = 'visible';
         this.dropCc.nativeElement.textContent = 'You can drop me here!';
         this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartCc() {
+    public onMoveStartCc() {
         this.dropTo.nativeElement.style.visibility = 'visible';
         this.dropTo.nativeElement.textContent = 'You can drop me here!';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedTo() {
+    public moveEndedTo() {
         this.dropTo.nativeElement.style.visibility = 'hidden';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedCc() {
+    public moveEndedCc() {
         this.dropTo.nativeElement.style.visibility = 'hidden';
         this.dropCc.nativeElement.style.visibility = 'hidden';
     }

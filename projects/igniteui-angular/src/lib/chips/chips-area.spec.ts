@@ -60,7 +60,7 @@ class TestChipSelectComponent extends TestChipComponent {
     `
         <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)">
             <igx-chip #chipElem *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
-                [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
+                [removable]="true" [selectable]="true" (remove)="chipRemoved($event)">
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
             </igx-chip>
@@ -83,7 +83,7 @@ class TestChipReorderComponent {
 
     constructor(public cdr: ChangeDetectorRef) {}
 
-    chipsOrderChanged(event) {
+    public chipsOrderChanged(event) {
         const newChipList = [];
         for (const chip of event.chipsArray) {
             newChipList.push(this.chipList.find((item) => item.id === chip.id));
@@ -91,7 +91,7 @@ class TestChipReorderComponent {
         this.chipList = newChipList;
     }
 
-    chipRemoved(event) {
+    public chipRemoved(event) {
         this.chipList = this.chipList.filter((item) => item.id !== event.owner.id);
         this.chipsArea.cdr.detectChanges();
     }
@@ -348,19 +348,19 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.onReorder, 'emit');
-            spyOn(chipArea.onSelection, 'emit');
-            spyOn(chipArea.onMoveStart, 'emit');
-            spyOn(chipArea.onMoveEnd, 'emit');
+            spyOn(chipArea.reorder, 'emit');
+            spyOn(chipArea.selectionChange, 'emit');
+            spyOn(chipArea.moveStart, 'emit');
+            spyOn(chipArea.moveEnd, 'emit');
 
 
             secondChip.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
 
-            expect(chipArea.onSelection.emit).toHaveBeenCalled();
-            expect(chipArea.onReorder.emit).not.toHaveBeenCalled();
-            expect(chipArea.onMoveStart.emit).not.toHaveBeenCalled();
-            expect(chipArea.onMoveEnd.emit).not.toHaveBeenCalled();
+            expect(chipArea.selectionChange.emit).toHaveBeenCalled();
+            expect(chipArea.reorder.emit).not.toHaveBeenCalled();
+            expect(chipArea.moveStart.emit).not.toHaveBeenCalled();
+            expect(chipArea.moveEnd.emit).not.toHaveBeenCalled();
         });
 
         it('should select a chip by clicking on it and emit onSelection event', () => {
@@ -537,20 +537,20 @@ describe('IgxChipsArea ', () => {
             chipArea = fix.componentInstance.chipsArea;
             const secondChip = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(chipArea.onReorder, 'emit');
-            spyOn(chipArea.onSelection, 'emit');
-            spyOn(chipArea.onMoveStart, 'emit');
-            spyOn(chipArea.onMoveEnd, 'emit');
-            spyOn(secondChip.onRemove, 'emit');
+            spyOn(chipArea.reorder, 'emit');
+            spyOn(chipArea.selectionChange, 'emit');
+            spyOn(chipArea.moveStart, 'emit');
+            spyOn(chipArea.moveEnd, 'emit');
+            spyOn(secondChip.remove, 'emit');
 
             secondChip.onChipKeyDown(deleteKeyEvent);
             fix.detectChanges();
 
-            expect(secondChip.onRemove.emit).toHaveBeenCalled();
-            expect(chipArea.onReorder.emit).not.toHaveBeenCalled();
-            expect(chipArea.onSelection.emit).not.toHaveBeenCalled();
-            expect(chipArea.onMoveStart.emit).not.toHaveBeenCalled();
-            expect(chipArea.onMoveEnd.emit).not.toHaveBeenCalled();
+            expect(secondChip.remove.emit).toHaveBeenCalled();
+            expect(chipArea.reorder.emit).not.toHaveBeenCalled();
+            expect(chipArea.selectionChange.emit).not.toHaveBeenCalled();
+            expect(chipArea.moveStart.emit).not.toHaveBeenCalled();
+            expect(chipArea.moveEnd.emit).not.toHaveBeenCalled();
         });
     });
 

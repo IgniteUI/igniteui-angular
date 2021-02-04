@@ -20,7 +20,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable"
             [removable]="chip.removable" [selectable]="chip.selectable"
-            [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
+            [displayDensity]="chip.density" (remove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
             </igx-chip>
@@ -254,24 +254,24 @@ describe('IgxChip', () => {
             fix.detectChanges();
         });
 
-        it('should not trigger onRemove event when delete button is pressed when not removable', () => {
+        it('should not trigger remove event when delete button is pressed when not removable', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
-            spyOn(firstChipComp.onRemove, 'emit');
+            spyOn(firstChipComp.remove, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Delete', firstChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
 
-            expect(firstChipComp.onRemove.emit).not.toHaveBeenCalled();
+            expect(firstChipComp.remove.emit).not.toHaveBeenCalled();
         });
 
-        it('should trigger onRemove event when delete button is pressed when removable', () => {
+        it('should trigger remove event when delete button is pressed when removable', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(secondChipComp.onRemove, 'emit');
+            spyOn(secondChipComp.remove, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Delete', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
 
-            expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
+            expect(secondChipComp.remove.emit).toHaveBeenCalled();
         });
 
         it('should delete chip when space button is pressed on delete button', () => {

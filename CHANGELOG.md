@@ -9,6 +9,15 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`
     - Added support for exporting grouped data.
 ### General
+- **Breaking Change** - Many outputs are renamed with the introduction of new rules in Ignite UI for Angular's naming convention. Please, ensure that when you update to 11.1 you do so through
+    ```
+    ng update igniteui-angular
+    ```
+    or execute the update migrations manually afterwards
+    ```
+    ng update igniteui-angular --migrate-only
+    ```
+    This will ensure your application is updated to use the new output names.
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
@@ -25,6 +34,24 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `theme` that allows you to set the theme explicitly and at runtime.
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+- `IgxSplitter`
+    - **Breaking Change** - the `onToggle` output is renamed to `collapsedChange`. This allows for the `collapsed` state to be two-way bindable using the syntax ```[(collapsed)]="paneCollapse"```
+- `IgxChip`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onMoveStart` to `moveStart`
+        - `onMoveEnd` to `moveEnd`
+        - `onRemove` to `remove`
+        - `onClick` to `chipClick`
+        - `onSelection` to `selectedChanging`
+        - `onSelectionDone` to `selectedChanged`
+        - `onKeyDown` to `keyDown`
+        - `onDragEnter` to `dragEnter`
+- `IgxChipArea`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onReorder` to `reorder`
+        - `onSelection` to `selectionChange`
+        - `onMoveStart` to `moveStart`
+        - `onMoveEnd` to `moveEnd`
 
 ## 11.0.4
 
