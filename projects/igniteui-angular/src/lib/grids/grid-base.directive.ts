@@ -3576,7 +3576,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.onPinnedRowsChanged(change);
             });
 
-        this.addRowSnackbar?.onAction.subscribe(() => {
+        this.addRowSnackbar?.clicked.subscribe(() => {
             const rec = this.filteredSortedData[this.lastAddedRowIndex];
             this.scrollTo(rec, 0);
             this.addRowSnackbar.close();
