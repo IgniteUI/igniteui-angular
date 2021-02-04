@@ -700,7 +700,7 @@ $_bootstrap-grid: extend(
 /// @prop {Map} group-count-background [igx-color: ('primary', 300)] - The grid group row cont badge background color.
 /// @prop {Map} group-count-text-color [igx-contrast-color: ('primary', 500)] - The grid group row cont badge text color.
 /// @prop {Map} expand-icon-color [igx-color: ('primary', 200)] - The grid row expand icon color.
-/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 50), to-opaque: ()] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('primary', 50)] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('primary', 50)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('primary', 50)] - The selected row hover text color.
 
@@ -809,7 +809,6 @@ $_indigo-grid: extend(
 
         cell-selected-within-background: (
             igx-color: ('primary', 50),
-            to-opaque: (),
         ),
 
         cell-selected-within-text-color: (

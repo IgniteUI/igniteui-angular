@@ -34,8 +34,8 @@
 /// @prop {Map} root-summaries-text-color [igx-color: ('grays', 300), to-opaque: #222, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @prop {Map} row-highlight [igx-color: ('secondary', 500)] - The highlight color of a row.
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 900)] - The dragged row background color.
-/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 400), rgba: .8, to-opaque: #222] - The background of the selected cell inside a selected row/column.
-/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('secondary', 400)] - The color of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 500), rgba: .8, to-opaque: #222] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('secondary', 500)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('secondary', A700)] - The selected row hover text color.
 
 $_base-dark-grid: (
@@ -238,7 +238,7 @@ $_dark-fluent-grid: extend(
 /// @prop {Color} header-text-color [#fff] - The table header text color.
 /// @prop {Map} header-selected-background [igx-color: ('secondary', 500), rgba: .24, to-opaque: #222] - The table header background color when selected (ex. column selection).
 /// @prop {Map} header-selected-text-color [igx-color: ('secondary', 500), rgba: .24, to-opaque: #222, text-contrast: ()] - The table header text color when selected (ex. column selection).
-/// @prop {Map} cell-selected-within-background [igx-color: ('grays', 500), rgba: .5, to-opaque: #222] - The background of the selected cell inside a selected row/column.
+/// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 500), rgba: .5, to-opaque: #222] - The background of the selected cell inside a selected row/column.
 ///
 /// @requires {function} extend
 /// @requires $_bootstrap-grid
