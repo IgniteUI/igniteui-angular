@@ -5,7 +5,7 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
+    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -13,14 +13,13 @@ import {
 })
 export class GridCellEditingComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
-    public gridWithPK: IgxGridComponent;
+    private gridWithPK: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent, static: true })
-    public gridWithoutPK: IgxGridComponent;
-    @ViewChild(IgxButtonGroupComponent, { static: true }) public buttonGroup: IgxButtonGroupComponent;
+    private gridWithoutPK: IgxGridComponent;
 
-    orderDateHidden = false;
-    data: any;
-    dataWithoutPK: any;
+    public orderDateHidden = false;
+    public data: any;
+    public dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
     public options = {
@@ -35,8 +34,8 @@ export class GridCellEditingComponent {
     };
     public formatOptions = this.options;
 
-    kk = false;
-    pname = 'ProductName';
+    public kk = false;
+    public pname = 'ProductName';
     public selectionMode;
     public earliest = EarliestSummary;
 
@@ -75,7 +74,7 @@ export class GridCellEditingComponent {
         }
     }
 
-    enDisSummaries() {
+    public enDisSummaries() {
         if (this.gridWithPK.getColumnByName('ReorderLevel').hasSummary) {
             this.gridWithPK.disableSummaries([{ fieldName: 'ReorderLevel' }]);
         } else {
@@ -85,7 +84,6 @@ export class GridCellEditingComponent {
 
     public deleteRow(event, rowID) {
         event.stopPropagation();
-        const row = this.gridWithPK.getRowByKey(rowID);
         this.gridWithPK.deleteRow(rowID);
     }
     public updateCell() {
@@ -107,7 +105,7 @@ export class GridCellEditingComponent {
             OrderDate: new Date('2005-03-17')
         }, rowID);
     }
-    pin() {
+    public pin() {
         for (const name of ['UnitsInStock', 'Discontinued']) {
             if (this.gridWithPK.getColumnByName(name).pinned) {
                 this.gridWithPK.unpinColumn(name);
@@ -117,7 +115,7 @@ export class GridCellEditingComponent {
         }
     }
 
-    hideColumn() {
+    public hideColumn() {
         this.orderDateHidden = !this.orderDateHidden;
     }
 
@@ -129,11 +127,11 @@ export class GridCellEditingComponent {
         }
     }
 
-    deleteRowbyIndex(index) {
+    public deleteRowbyIndex(index) {
         const row = this.gridWithoutPK.getRowByIndex(index);
         row.delete();
     }
-    updateRowbyIndex(index) {
+    public updateRowbyIndex(index) {
         const row = this.gridWithoutPK.getRowByIndex(index);
         row.update({
             ProductID: index + 53,
@@ -149,12 +147,12 @@ export class GridCellEditingComponent {
             OrderDate: new Date('2005-03-17')
         });
     }
-    moveColumns() {
+    public moveColumns() {
         const column = this.gridWithoutPK.getColumnByName('ProductName');
         const secColumn = this.gridWithoutPK.getColumnByName('OrderDate');
         this.gridWithoutPK.moveColumn(column, secColumn);
     }
-    updateSelectedCell() {
+    public updateSelectedCell() {
         let newValue;
         const selectedCell = this.gridWithoutPK.selectedCells[0];
         console.log(selectedCell.column.dataType);
@@ -167,7 +165,7 @@ export class GridCellEditingComponent {
         selectedCell.update(newValue);
     }
 
-    updateSpecificRow() {
+    public updateSpecificRow() {
         this.gridWithPK.updateRow({
             ProductID: 225 + 96,
             ProductName: 'UpdatedRow',
@@ -187,7 +185,7 @@ export class GridCellEditingComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
-    customKeydown(args) {
+    public customKeydown(args) {
         const target = args.target;
         const type = args.targetType;
         if (type === 'dataCell'  && target.editMode && args.event.key.toLowerCase() === 'tab') {
@@ -200,14 +198,10 @@ export class GridCellEditingComponent {
             const cell = args.event.shiftKey ?
                 this.gridWithPK.getPreviousCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable) :
                 this.gridWithPK.getNextCell(target.rowIndex, target.visibleColumnIndex, (col) => col.editable);
-            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => {
- obj.target.nativeElement.focus();
-});
+            this.gridWithPK.navigateTo(cell.rowIndex, cell.visibleColumnIndex, (obj) => obj.target.nativeElement.focus());
         } else if (type === 'dataCell'  && args.event.key.toLowerCase() === 'enter') {
             args.cancel = true;
-            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => {
- obj.target.nativeElement.focus();
-});
+            this.gridWithPK.navigateTo(target.rowIndex + 1, target.visibleColumnIndex, (obj) => obj.target.nativeElement.focus());
         }
     }
 }

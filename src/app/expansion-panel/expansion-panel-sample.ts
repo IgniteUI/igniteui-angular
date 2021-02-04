@@ -1,5 +1,5 @@
-import { IgxExpansionPanelComponent, growVerIn, growVerOut, scaleInVerTop, IExpansionPanelEventArgs } from 'igniteui-angular';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { IgxExpansionPanelComponent, growVerIn, growVerOut, IExpansionPanelEventArgs } from 'igniteui-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 
 @Component({
@@ -10,8 +10,7 @@ import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 })
 export class ExpansionPanelSampleComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
-    public igxExpansionPanel: IgxExpansionPanelComponent;
-    @ViewChild('button') public button: ElementRef;
+    private igxExpansionPanel: IgxExpansionPanelComponent;
 
     public animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata } = {
         openAnimation: useAnimation(growVerIn, { params: {
@@ -49,36 +48,36 @@ export class ExpansionPanelSampleComponent implements OnInit {
         return Object.keys(currentScore).sort((a, b) => currentScore[b] - currentScore[a])[0];
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.generateScore();
     }
 
-    resetScore(event: Event) {
+    public resetScore(event: Event) {
         this.data = [];
         event.stopPropagation();
         this.generateScore();
     }
 
-    collapsed() {
+    public collapsed() {
         return this.igxExpansionPanel && this.igxExpansionPanel.collapsed;
     }
 
-    handleCollapsed(event) {
+    public handleCollapsed(event) {
         console.log(`I'm collapsing!`, event);
     }
-    handleExpanded(event) {
+    public handleExpanded(event) {
         console.log(`I'm expanding!`, event);
     }
-    onInteraction(event: IExpansionPanelEventArgs) {
+    public onInteraction(event: IExpansionPanelEventArgs) {
         console.log(event.owner);
         console.log(`Header's touched!`, event);
     }
 
-    templateIcon() {
+    public templateIcon() {
         this.templatedIcon = !this.templatedIcon;
     }
 
-    toggleLeftRight() {
+    public toggleLeftRight() {
         this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right';
     }
 

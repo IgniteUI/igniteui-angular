@@ -4,18 +4,18 @@
 <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
 <div class="sample-container">
     <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [displayDensity]="density" [width]="'500px'" [height]="'600px'"
-        [rowDraggable]="dragdrop" (onRowDragStart)="handleRowDrag($event)" (onRowDragEnd)="handleRowDrop($event)">
+        [rowDraggable]="dragdrop" (onRowDragStart)="handleRowDrag()" (onRowDragEnd)="handleRowDrop()">
         <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
         <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
-                <igx-icon fontSet="material" [igxRowDrag]="cell.row">info</igx-icon>
+                <igx-icon [igxRowDrag]="cell.row">info</igx-icon>
             </ng-template>
         </igx-column>
         <ng-template let-data igxRowDragGhost>
             <div class="dragGhost">
-                    <igx-icon fontSet="material"></igx-icon> 
+                    <igx-icon></igx-icon>
                      Moving {{data.ProductName}}!
                 </div>
         </ng-template>
@@ -27,7 +27,7 @@
         <igx-column [field]="'UnitsInStock'"></igx-column>
         <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
         <ng-template igxDragIndicatorIcon>
-            <igx-icon fontSet="material">info</igx-icon>
+            <igx-icon>info</igx-icon>
         </ng-template>
     </igx-grid>
 </div>

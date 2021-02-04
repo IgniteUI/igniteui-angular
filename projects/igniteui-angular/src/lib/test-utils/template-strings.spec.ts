@@ -454,6 +454,13 @@ export class ColumnDefinitions {
     <igx-column [field]="'Age'" width="150px" dataType="number"></igx-column>
     <igx-column [field]="'OnPTO'" width="150px" dataType="boolean"></igx-column>
     `;
+
+    public static exportGroupedDataColumns = `
+    <igx-column [field]="'Price'" dataType="number" [groupable]='true'></igx-column>
+    <igx-column [field]="'Brand'" dataType="string" [groupable]='true'></igx-column>
+    <igx-column [field]="'Model'" dataType="string" [groupable]='true'></igx-column>
+    <igx-column [field]="'Edition'" dataType="string" [groupable]='true'></igx-column>
+    `;
 }
 
 export class EventSubscriptions {

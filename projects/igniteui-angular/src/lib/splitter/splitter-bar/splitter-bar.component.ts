@@ -108,7 +108,7 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     @HostListener('keydown', ['$event'])
-    keyEvent(event: KeyboardEvent) {
+    public keyEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         const ctrl = event.ctrlKey;
         event.stopPropagation();

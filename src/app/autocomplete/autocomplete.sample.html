@@ -1,6 +1,6 @@
 <form action="/" class="sample-form" method="POST" [formGroup]="travel">
     <igx-input-group type="box">
-        <igx-prefix><igx-icon fontSet="material">language</igx-icon></igx-prefix>
+        <igx-prefix><igx-icon>language</igx-icon></igx-prefix>
         <input placeholder="Country" formControlName="country" igxInput type="text" required
             [igxAutocomplete]='countryPanel'/>
     </igx-input-group>
@@ -12,14 +12,14 @@
         </igx-drop-down-item-group>
     </igx-drop-down>
     <igx-input-group type="box">
-        <igx-prefix><igx-icon fontSet="material">insert_emoticon</igx-icon></igx-prefix>
+        <igx-prefix><igx-icon>insert_emoticon</igx-icon></igx-prefix>
         <input placeholder="Attraction" igxInput formControlName="attraction" type="text" required
             [igxAutocomplete]='attractionsPanel'/>
     </igx-input-group>
     <igx-drop-down #attractionsPanel [width]="attractionsWidth" maxHeight="300px">
         <igx-drop-down-item *ngFor="let attraction of attractions | contains: travel.value.attraction" [value]="attraction.name">
             <div class="dd-item">
-                <igx-icon class="dd-icon" fontSet="material">{{attraction.image}}</igx-icon>
+                <igx-icon class="dd-icon">{{attraction.image}}</igx-icon>
                 <span>{{attraction.name}}</span>
             </div>
         </igx-drop-down-item>
