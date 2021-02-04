@@ -550,7 +550,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         const columnField = this.column.field;
-        let columnValues = (this.column.dataType === DataType.Date) ?
+        const columnValues = (this.column.dataType === DataType.Date) ?
             data.map(record => {
                 const value = (resolveNestedPath(record, columnField));
                 const label = this.getFilterItemLabel(value);
