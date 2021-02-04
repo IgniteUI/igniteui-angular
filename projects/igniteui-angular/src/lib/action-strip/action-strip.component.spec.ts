@@ -206,7 +206,7 @@ class IgxActionStripTestingComponent {
 
     public flag = false;
 
-    onIconClick() {
+    public onIconClick() {
         this.flag = true;
     }
 }

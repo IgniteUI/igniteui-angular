@@ -13,22 +13,22 @@ import localeJA from '@angular/common/locales/ja';
 })
 
 export class DatePickerSampleComponent {
-    @ViewChild('datepicker1', { read: IgxDatePickerComponent, static: true }) datepicker1: IgxDatePickerComponent;
+    @ViewChild('datepicker1', { read: IgxDatePickerComponent, static: true })
+    private datepicker1: IgxDatePickerComponent;
 
     @ViewChild('retemplated', { static: true })
     private retemplatedDP;
 
     @ViewChild('datePicker', { static: true })
     private dp: IgxDatePickerComponent;
-    date = new Date('10/3/2018');
 
+    public date = new Date('10/3/2018');
     public formatOptions = {
         day: 'numeric',
         month: 'long',
         weekday: 'short',
         year: 'numeric'
     };
-
     public date1;
     public date2;
     public date3;
@@ -66,7 +66,7 @@ export class DatePickerSampleComponent {
         this.date4 = date3;
     }
 
-    formatter = (_: Date) => _.toLocaleString('en');
+    public formatter = (_: Date) => _.toLocaleString('en');
 
     public deselect(datePicker) {
         datePicker.deselectDate();

@@ -13,7 +13,7 @@ import { GridType } from '../common/grid.interface';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
-import { fadeIn, fadeOut } from '../../animations/main';
+import { fadeIn } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
@@ -58,7 +58,7 @@ export class IgxFilteringService implements OnDestroy {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
         private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
