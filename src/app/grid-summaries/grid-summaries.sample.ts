@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     IgxGridComponent,
     IgxNumberSummaryOperand,
@@ -31,7 +31,7 @@ class MySummary extends IgxNumberSummaryOperand {
     styleUrls: ['./grid-summaries.component.scss'],
     templateUrl: 'grid-summaries.sample.html'
 })
-export class GridSummaryComponent {
+export class GridSummaryComponent implements OnInit {
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     private grid1: IgxGridComponent;
@@ -701,6 +701,7 @@ export class GridSummaryComponent {
     }
     ];
 
+    public columnValueStrategy;
     public f: FormattedFilterStrategy;
     constructor() {
         for (let i = 0; i < 10; i++) {
@@ -711,7 +712,12 @@ export class GridSummaryComponent {
             this.data[i]['Index'] = i;
         }
 
+    }
+
+    ngOnInit() {
         this.f = new FormattedFilterStrategy(['ReorderLevel']);
+        this.columnValueStrategy = this.f.uniqueColumnFormattedValuesStrategy();
+
     }
 
     public updateData() {

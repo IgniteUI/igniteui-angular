@@ -2,6 +2,7 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 
 const DateType = 'date';
 
@@ -114,7 +115,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
 }
 
 export class FormattedFilterStrategy extends FilteringStrategy {
-    constructor(public columns?: string[] | number[]) {
+    constructor(public columns?: string[]) {
         super();
     }
 
@@ -125,16 +126,26 @@ export class FormattedFilterStrategy extends FilteringStrategy {
 
         if (!this.columns || this.columns.length === 0) {
             applyFormatter = true;
-        } else if (typeof this.columns[0] === 'number') {
-            if (this.columns.some(c => c === column.index)) {
-                applyFormatter = true;
-            }
-        } else if (typeof this.columns[0] === 'string') {
-            if (this.columns.some(c => c === fieldName)) {
-                applyFormatter = true;
-            }
+        } else if (this.columns.some(c => c === fieldName)) {
+            applyFormatter = true;
         }
 
         return applyFormatter && column.formatter ? column.formatter(value) : value;
+    }
+
+    public uniqueColumnFormattedValuesStrategy() {
+        return (column: IgxColumnComponent,
+            expression: IFilteringExpressionsTree,
+            done: (vals: any[]) => void) => {
+            this.getColumnData(column, expression, vals => done(vals));
+        };
+    }
+
+    private getColumnData(column: IgxColumnComponent, expression: IFilteringExpressionsTree, done: (colVals: any[]) => void) {
+        let data = [];
+        data = this.filter(column.grid.data, expression, null, column.grid);
+        const formatData = !this.columns || this.columns.length === 0 || this.columns.some(c => c === column.field);
+        data = data.map(record => column.formatter && formatData ? column.formatter(record[column.field]) : record[column.field]);
+        done(data);
     }
 }

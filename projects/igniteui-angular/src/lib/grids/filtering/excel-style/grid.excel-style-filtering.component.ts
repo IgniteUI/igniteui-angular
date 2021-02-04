@@ -540,12 +540,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private renderColumnValuesFromData() {
         let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
-        const isFormattedFilterStrategy = this.grid.filterStrategy instanceof FormattedFilterStrategy;
 
         if (expressionsTree.filteringOperands.length) {
             const state = {
                 expressionsTree,
-                strategy: isFormattedFilterStrategy ? this.grid.filterStrategy : null
+                strategy: this.grid.filterStrategy
             };
             data = DataUtil.filter(cloneArray(data), state, this.grid);
         }
@@ -557,14 +556,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 const label = this.getFilterItemLabel(value);
                 return { label, value };
             }) : data.map(record => resolveNestedPath(record, columnField));
-
-
-        if (isFormattedFilterStrategy &&
-            (this.grid.filterStrategy as FormattedFilterStrategy).
-                columns.some(c => c === this.column.field || c === this.column.index)) {
-            const f = this.column.formatter;
-            columnValues = columnValues.map(v => f ? f(v) : v);
-        }
 
         this.renderValues(columnValues);
     }
