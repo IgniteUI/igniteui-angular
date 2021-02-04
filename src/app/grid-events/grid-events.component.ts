@@ -4,7 +4,7 @@ import { IgxGridComponent, FilteringExpressionsTree,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
-    IColumnVisibilityChangingEventArgs, IColumnResizingEventArgs, IPagingEventArgs } from 'igniteui-angular';
+    IColumnVisibilityChangingEventArgs, IPagingEventArgs } from 'igniteui-angular';
 import { data } from '../grid-cellEditing/data';
 
 @Component({
@@ -31,12 +31,6 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.localData = data;
     }
 
-    public ngOnInit() {
-    }
-
-    public ngAfterViewInit() {
-    }
-
     public filter(term) {
         this.grid.filter('ProductName', term, IgxStringFilteringOperand.instance().condition('contains'));
     }
@@ -45,7 +39,7 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.grid.filterGlobal(term, IgxStringFilteringOperand.instance().condition('contains'));
     }
 
-    public onColumnMovingStart(event: IColumnMovingStartEventArgs) { 
+    public onColumnMovingStart(event: IColumnMovingStartEventArgs) {
         console.log('event' + event);
         this.logAnEvent('=> onColumnMovingStart');
     }
