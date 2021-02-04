@@ -336,7 +336,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
         }
 
         this.checked = true;
-        this.focused = false;
         this.change.emit({ value: this.value, radio: this });
         this._onChangeCallback(this.value);
     }

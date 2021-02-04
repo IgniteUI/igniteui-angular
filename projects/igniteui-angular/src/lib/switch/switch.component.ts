@@ -269,7 +269,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         }
 
         this.checked = !this.checked;
-        this.focused = false;
         this.change.emit({ checked: this.checked, switch: this });
         this._onChangeCallback(this.checked);
     }
