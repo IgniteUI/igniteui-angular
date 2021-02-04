@@ -207,7 +207,7 @@ export class DragDropSampleComponent {
         });
     }
 
-    public dragGhostAnimXY(event) {
+    public dragGhostAnimXY() {
 
     }
 

@@ -1,5 +1,5 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';

@@ -7,3 +7,7 @@
     flex: 1 0 20%;
     margin-bottom: 72px;
 }
+
+.color {
+    color: var(--igx-primary-300);
+}
