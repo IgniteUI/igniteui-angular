@@ -107,7 +107,7 @@
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
-        @include css-vars-from-theme((font: inherit), 'bullet-graph');
+        --bullet-graph-font: var(--igx-font-family, inherit);
     }
 }
 

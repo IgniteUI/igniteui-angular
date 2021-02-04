@@ -79,9 +79,10 @@
 /// @requires {mixin} igx-type-style
 @mixin igx-dock-manager-typography() {
     $scope: if(is-root(), ':root', '&');
+    $font-family: inherit;
 
     #{$scope} {
-        @include css-vars-from-theme((font-family: inherit), 'igc');
+        --igc-font-family: var(--igx-font-family, inherit);
     }
 }
 

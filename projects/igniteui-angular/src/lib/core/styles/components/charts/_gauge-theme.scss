@@ -122,8 +122,8 @@
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
-        @include css-vars-from-theme((font: inherit), 'linear-gauge');
-        @include css-vars-from-theme((font: inherit), 'radial-gauge');
+        --linear-gauge-font: var(--igx-font-family, inherit);
+        --radial-gauge-font: var(--igx-font-family, inherit);
     }
 }
 

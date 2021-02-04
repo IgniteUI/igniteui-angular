@@ -146,7 +146,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires {mixin} igx-css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} igx-ripple
@@ -157,7 +157,7 @@
 /// @requires {mixin} animation
 /// @requires --var
 @mixin igx-switch($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
     $variant: map-get($theme, variant);
@@ -356,7 +356,7 @@
             position: relative;
             $focus-outline-offset-top: rem(2px);
             $focus-outline-offset-left: rem(2px);
-            
+
             &::after {
                 content: '';
                 position: absolute;
