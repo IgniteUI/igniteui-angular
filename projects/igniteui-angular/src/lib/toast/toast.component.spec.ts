@@ -74,9 +74,9 @@ describe('IgxToast', () => {
     });
 
     it('should emit onHiding when toast is hidden', () => {
-        spyOn(toast.onHiding, 'emit');
+        spyOn(toast.hiding, 'emit');
         toast.close();
-        expect(toast.onHiding.emit).toHaveBeenCalled();
+        expect(toast.hiding.emit).toHaveBeenCalled();
     });
 
     it('should emit onOpened when toast is opened', () => {
