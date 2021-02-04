@@ -14,9 +14,9 @@ export class BottomNavSampleComponent implements AfterViewInit {
     @ViewChildren('tabbarEl')
     private tabbar: QueryList<ElementRef>;
 
-    options = {};
+    public options = {};
 
-    contacts = [{
+    public contacts = [{
         avatar: 'assets/images/avatar/1.jpg',
         favorite: true,
         key: '1',
@@ -69,7 +69,7 @@ export class BottomNavSampleComponent implements AfterViewInit {
 
     constructor(private renderer: Renderer2) { }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.tabbar.map((e) => {
             const menubar = e.nativeElement.querySelector('.igx-bottom-nav__menu');
             this.renderer.setStyle(menubar, 'position', 'absolute');

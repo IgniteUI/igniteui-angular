@@ -112,9 +112,9 @@ Example of using an icon for a `prefix`, text for content and a custom icon agai
 
 ```html
 <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-    <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+    <igx-icon igxPrefix>drag_indicator</igx-icon>
     {{chip.text}}
-    <igx-icon igxSuffix fontSet="material">close</igx-icon>
+    <igx-icon igxSuffix>close</igx-icon>
 </igx-chip>
 ```
 

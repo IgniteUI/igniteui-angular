@@ -12,19 +12,19 @@ export interface IgxIconLoadedEvent {
     name: string;
     /** The actual SVG text */
     value: string;
-    /** The fontSet for the icon. Defaults to material. */
-    fontSet: string;
+    /** The font-family for the icon. Defaults to material. */
+    family: string;
 }
 
 /**
  * **Ignite UI for Angular Icon Service** -
  *
  * The Ignite UI Icon Service makes it easy for developers to include custom SVG images and use them with IgxIconComponent.
- * In addition it could be used to associate a custom class to be applied on IgxIconComponent according to given fontSet.
+ * In addition it could be used to associate a custom class to be applied on IgxIconComponent according to given font-family.
  *
  * Example:
  * ```typescript
- * this.iconService.registerFontSetAlias('material', 'material-icons');
+ * this.iconService.registerFamilyAlias('material', 'material-icons');
  * this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
  * ```
  */
@@ -43,8 +43,8 @@ export class IgxIconService {
      */
     public iconLoaded: Observable<IgxIconLoadedEvent>;
 
-    private _fontSet = 'material-icons';
-    private _fontSetAliases = new Map<string, string>();
+    private _family = 'material-icons';
+    private _familyAliases = new Map<string, string>();
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
@@ -54,44 +54,44 @@ export class IgxIconService {
     }
 
     /**
-     *  Returns the default font set.
+     *  Returns the default font-family.
      * ```typescript
-     *   const defaultFontSet = this.iconService.defaultFontSet;
+     *   const defaultFamily = this.iconService.defaultFamily;
      * ```
      */
-    get defaultFontSet(): string {
-        return this._fontSet;
+    public get defaultFamily(): string {
+        return this._family;
     }
 
     /**
-     *  Sets the default font set.
+     *  Sets the default font-family.
      * ```typescript
-     *   this.iconService.defaultFontSet = 'svg-flags';
+     *   this.iconService.defaultFamily = 'svg-flags';
      * ```
      */
-    set defaultFontSet(className: string) {
-        this._fontSet = className;
+    public set defaultFamily(className: string) {
+        this._family = className;
     }
 
     /**
-     *  Registers a custom class to be applied to IgxIconComponent for a given fontSet.
+     *  Registers a custom class to be applied to IgxIconComponent for a given font-family.
      * ```typescript
-     *   this.iconService.registerFontSetAlias('material', 'material-icons');
+     *   this.iconService.registerFamilyAlias('material', 'material-icons');
      * ```
      */
-    public registerFontSetAlias(alias: string, className: string = alias): this {
-        this._fontSetAliases.set(alias, className);
+    public registerFamilyAlias(alias: string, className: string = alias): this {
+        this._familyAliases.set(alias, className);
         return this;
     }
 
     /**
-     *  Returns the custom class, if any, associated to a given fontSet.
+     *  Returns the custom class, if any, associated to a given font-family.
      * ```typescript
-     *   const fontSetClass = this.iconService.fontSetClassName('material');
+     *   const familyClass = this.iconService.familyClassName('material');
      * ```
      */
-    public fontSetClassName(alias: string): string {
-        return this._fontSetAliases.get(alias) || alias;
+    public familyClassName(alias: string): string {
+        return this._familyAliases.get(alias) || alias;
     }
 
     /**
@@ -100,8 +100,8 @@ export class IgxIconService {
      *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
      * ```
      */
-    public addSvgIcon(iconName: string, url: string, fontSet: string = '') {
-        if (iconName && url) {
+    public addSvgIcon(name: string, url: string, family: string = '') {
+        if (name && url) {
             const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
             if (!safeUrl) {
                 throw new Error(`The provided URL could not be processed as trusted resource URL by Angular's DomSanitizer: "${url}".`);
@@ -112,9 +112,9 @@ export class IgxIconService {
                 throw new Error(`The URL provided was not trusted as a resource URL: "${url}".`);
             }
 
-            this.fetchSvg(iconName, url, fontSet);
+            this.fetchSvg(name, url, family);
         } else {
-            throw new Error('You should provide at least `iconName` and `url` to register an svg icon.');
+            throw new Error('You should provide at least `name` and `url` to register an svg icon.');
         }
     }
 
@@ -125,11 +125,11 @@ export class IgxIconService {
      *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
      * ```
      */
-    public addSvgIconFromText(iconName: string, iconText: string, fontSet: string = '') {
-        if (iconName && iconText) {
-            this.cacheSvgIcon(iconName, iconText, fontSet);
+    public addSvgIconFromText(name: string, iconText: string, family: string = '') {
+        if (name && iconText) {
+            this.cacheSvgIcon(name, iconText, family);
         } else {
-            throw new Error('You should provide at least `iconName` and `iconText` to register an svg icon.');
+            throw new Error('You should provide at least `name` and `iconText` to register an svg icon.');
         }
     }
 
@@ -139,8 +139,8 @@ export class IgxIconService {
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
      */
-    public isSvgIconCached(iconName: string, fontSet: string = ''): boolean {
-        const iconKey = this.getSvgIconKey(iconName, fontSet);
+    public isSvgIconCached(name: string, family: string = ''): boolean {
+        const iconKey = this.getSvgIconKey(name, family);
         return this._cachedSvgIcons.has(iconKey);
     }
 
@@ -150,14 +150,14 @@ export class IgxIconService {
      *   const svgIconKey = this.iconService.getSvgIconKey('aruba', 'svg-flags');
      * ```
      */
-    public getSvgIconKey(iconName: string, fontSet: string = '') {
-        return fontSet + '_' + iconName;
+    public getSvgIconKey(name: string, family: string = '') {
+        return family + '_' + name;
     }
 
     /**
      * @hidden
      */
-    private fetchSvg(iconName: string, url: string, fontSet: string = '') {
+    private fetchSvg(name: string, url: string, family: string = '') {
         const instance = this;
         const httpRequest = new XMLHttpRequest();
         httpRequest.open('GET', url, true);
@@ -168,8 +168,8 @@ export class IgxIconService {
             if (event) {
                 const request = event.target as XMLHttpRequest;
                 if (request.status === 200) {
-                    instance.cacheSvgIcon(iconName, request.responseText, fontSet);
-                    instance._iconLoaded.next({ name: iconName, value: request.responseText, fontSet });
+                    instance.cacheSvgIcon(name, request.responseText, family);
+                    instance._iconLoaded.next({ name, value: request.responseText, family });
                 } else {
                     throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
                 }
@@ -193,8 +193,8 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private cacheSvgIcon(iconName: string, value: string, fontSet: string = '') {
-        if (iconName && value) {
+    private cacheSvgIcon(name: string, value: string, family: string = '') {
+        if (name && value) {
             this.ensureSvgContainerCreated();
 
             const div = this._document.createElement('DIV');
@@ -202,7 +202,7 @@ export class IgxIconService {
             const svg = div.querySelector('svg') as SVGElement;
 
             if (svg) {
-                const iconKey = this.getSvgIconKey(iconName, fontSet);
+                const iconKey = this.getSvgIconKey(name, family);
 
                 svg.setAttribute('id', iconKey);
                 svg.setAttribute('fit', '');

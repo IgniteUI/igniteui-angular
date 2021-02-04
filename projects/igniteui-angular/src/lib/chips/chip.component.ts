@@ -70,7 +70,7 @@ let CHIP_ID = 0;
  * @example
  * ```html
  * <igx-chip class="chipStyle" [id]="901" [draggable]="true" [removable]="true" (remove)="chipRemoved($event)">
- *    <igx-avatar class="chip-avatar-resized" igxPrefix fontSet="material" roundShape="true"></igx-avatar>
+ *    <igx-avatar class="chip-avatar-resized" igxPrefix roundShape="true"></igx-avatar>
  * </igx-chip>
  * ```
  */

@@ -26,6 +26,11 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
 - `IgxDialog`
     - Added new `onOpened` and `onClosed` events.
+- `IgxIcon`
+    - **Deprecated** - The `color` input property has been deprecated. 
+    - **Renamed inputs**
+        `isActive` to `active`
+        `fontSet` to `family`
 - `IgxToast`
     - **Breaking Change** - 
     `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.

@@ -7,18 +7,20 @@ import { IgxCarouselComponent, CarouselIndicatorsOrientation } from 'igniteui-an
     templateUrl: 'carousel.sample.html'
 })
 export class CarouselSampleComponent {
-    @ViewChild('car', { static: true }) car: IgxCarouselComponent;
-    animationModes = ['none', 'slide', 'fade'];
-    slides = [];
-    interval = 3000;
-    pause = true;
-    loop = true;
+    @ViewChild('car', { static: true })
+    private car: IgxCarouselComponent;
+
+    public animationModes = ['none', 'slide', 'fade'];
+    public slides = [];
+    public interval = 3000;
+    public pause = true;
+    public loop = true;
 
     constructor() {
         this.addNewSlide();
     }
 
-    addNewSlide() {
+    public addNewSlide() {
         this.slides.push(
             {image: 'assets/images/carousel/slide1@x2.jpg'},
             {image: 'assets/images/carousel/slide2@x2.jpg'},
@@ -34,7 +36,7 @@ export class CarouselSampleComponent {
         this.slides = this.slides.slice(1);
     }
 
-    changeOrientation() {
+    public changeOrientation() {
         if (this.car.indicatorsOrientation === CarouselIndicatorsOrientation.top) {
             this.car.indicatorsOrientation = CarouselIndicatorsOrientation.bottom;
         } else {

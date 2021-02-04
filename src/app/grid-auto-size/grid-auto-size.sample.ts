@@ -10,7 +10,8 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 })
 
 export class GridAutoSizeSampleComponent implements OnInit {
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true })
+    private grid1: IgxGridComponent;
 
     public data: Array<any>;
     public columns: Array<any>;
@@ -54,13 +55,13 @@ export class GridAutoSizeSampleComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    checkCols(): void {
+    public checkCols(): void {
         const columns = this.grid1.columns;
         columns.forEach(c => console.log(c.width));
-      }
+    }
 
 
-    setData(count?) {
+    public setData(count?) {
         this.data = SAMPLE_DATA.slice(0, count);
     }
 }
