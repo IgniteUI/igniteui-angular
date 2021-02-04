@@ -45,7 +45,8 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.grid.filterGlobal(term, IgxStringFilteringOperand.instance().condition('contains'));
     }
 
-    public onColumnMovingStart(event: IColumnMovingStartEventArgs) {
+    public onColumnMovingStart(event: IColumnMovingStartEventArgs) { 
+        console.log('event' + event);
         this.logAnEvent('=> onColumnMovingStart');
     }
     public onColumnMoving(event: IColumnMovingEventArgs) {
@@ -53,6 +54,7 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent(event.cancel ? '=> onColumnMoving cancelled' : '=> onColumnMoving');
     }
     public onColumnMovingEnd(event: IColumnMovingEndEventArgs) {
+        console.log('event' + event);
         this.logAnEvent('=> onColumnMovingEnd');
     }
 
@@ -61,6 +63,7 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent('=> sorting', event.cancel);
     }
     public onSortingDone(event: ISortingExpression) {
+        console.log('event' + event);
         this.logAnEvent(`=> onSortingDone`);
     }
 
@@ -69,6 +72,7 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent('=> filtering', event.cancel);
     }
     public onFilteringDone(event: FilteringExpressionsTree) {
+        console.log('event' + event);
         this.logAnEvent(`=> onFilteringDone`);
     }
 
@@ -77,6 +81,7 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent('=> onPaging', event.cancel);
     }
     public onPagingDone(event: IPageEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> onPagingDone`);
     }
 
@@ -85,6 +90,7 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent('=> onColumnPinning', event.cancel);
     }
     public columnPinned(event: IPinColumnEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> columnPinned`);
     }
 
@@ -96,11 +102,8 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
         this.logAnEvent(`=> onColumnVisibilityChanged`);
     }
 
-    public columnResizing(event: IColumnResizingEventArgs) {
-        event.cancel = this.$resizing;
-        this.logAnEvent('=> columnResizing: ' + event.newWidth, event.cancel);
-    }
     public onColumnResized(event: IColumnResizeEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> onColumnResized`);
     }
 
