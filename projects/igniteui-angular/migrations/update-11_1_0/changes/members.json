@@ -56,6 +56,97 @@
             "definedIn": [
                 "IgxIconComponent"
             ]
+        },
+        {
+            "member": "onToggle",
+            "replaceWith": "collapsedChange",
+            "definedIn": [
+                "IgxSplitterPaneComponent"
+            ]
+        },
+        {
+            "member": "onMoveStart",
+            "replaceWith": "moveStart",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onRemove",
+            "replaceWith": "remove",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onClick",
+            "replaceWith": "chipClick",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectedChanging",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onSelectionDone",
+            "replaceWith": "selectedChanged",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onKeyDown",
+            "replaceWith": "keyDown",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onDragEnter",
+            "replaceWith": "dragEnter",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onReorder",
+            "replaceWith": "reorder",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectionChange",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onMoveStart",
+            "replaceWith": "moveStart",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
         }
     ]
 }

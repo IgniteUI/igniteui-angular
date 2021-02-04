@@ -205,4 +205,54 @@ export class IconTestComponent {
                 </igx-splitter-pane>
             </igx-splitter>`);
     });
+
+    it('should replace on-prefixed outputs in chip and chips-area', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/chips.component.html`,
+            `<igx-chips-area #chipsAreaTo class="chipAreaTo"
+                (onReorder)="chipsOrderChangedTo($event)"
+                (onSelection)="chipsSelectionChanged($event)"
+                (onMoveStart)="chipsMoveStart($event)"
+                (onMoveEnd)="chipsMoveEnd($event)">
+                <igx-chip *ngFor="let chip of chipListTo"
+                    [id]="chip.id"
+                    [draggable]="true"
+                    (onClick)="chipClicked()"
+                    (onRemove)="chipRemoved()"
+                    (onKeyDown)="chipKeyDown()"
+                    (onDragEnter)="dragEnter()"
+                    (onSelection)="chipSelection()"
+                    (onSelectionDone)="chipSelectionDone()"
+                    (onMoveStart)="onMoveStartTo()"
+                    (onMoveEnd)="moveEndedTo()">
+                    <igx-avatar igxPrefix class="chip-area-avatar"></igx-avatar>
+                    <span>{{chip.text}}</span>
+                </igx-chip>
+            </igx-chips-area>`
+        );
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/chips.component.html'))
+            .toEqual(`<igx-chips-area #chipsAreaTo class="chipAreaTo"
+                (reorder)="chipsOrderChangedTo($event)"
+                (selectionChange)="chipsSelectionChanged($event)"
+                (moveStart)="chipsMoveStart($event)"
+                (moveEnd)="chipsMoveEnd($event)">
+                <igx-chip *ngFor="let chip of chipListTo"
+                    [id]="chip.id"
+                    [draggable]="true"
+                    (chipClick)="chipClicked()"
+                    (remove)="chipRemoved()"
+                    (keyDown)="chipKeyDown()"
+                    (dragEnter)="dragEnter()"
+                    (selectedChanging)="chipSelection()"
+                    (selectedChanged)="chipSelectionDone()"
+                    (moveStart)="onMoveStartTo()"
+                    (moveEnd)="moveEndedTo()">
+                    <igx-avatar igxPrefix class="chip-area-avatar"></igx-avatar>
+                    <span>{{chip.text}}</span>
+                </igx-chip>
+            </igx-chips-area>`);
+    });
 });
