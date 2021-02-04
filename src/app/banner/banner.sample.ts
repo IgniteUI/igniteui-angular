@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxBannerComponent, growVerIn, growVerOut } from 'igniteui-angular';
-import { animate, useAnimation } from '@angular/animations';
+import { useAnimation } from '@angular/animations';
 
 @Component({
     selector: 'app-banner-sample',
@@ -8,8 +8,10 @@ import { animate, useAnimation } from '@angular/animations';
     styleUrls: [`banner.sample.css`]
 })
 export class BannerSampleComponent {
-    @ViewChild('bannerNoSafeConnection', { static: true }) bannerNoSafeConnection: IgxBannerComponent;
-    @ViewChild('bannerCookies', { static: true }) bannerCookies: IgxBannerComponent;
+    @ViewChild('bannerNoSafeConnection', { static: true })
+    private bannerNoSafeConnection: IgxBannerComponent;
+    @ViewChild('bannerCookies', { static: true })
+    private bannerCookies: IgxBannerComponent;
 
     public animationSettings = { openAnimation: useAnimation(growVerIn, {
         params: {

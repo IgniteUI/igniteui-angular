@@ -1,10 +1,9 @@
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { getWorkspace } from '@schematics/angular/utility/config';
 import { scssImport, cssImport } from './add-normalize';
-import { ProjectType } from '@schematics/angular/utility/workspace-models';
 import { DEPENDENCIES_MAP, PackageTarget, PackageEntry } from '../utils/dependency-handler';
+import { ProjectType } from '../utils/util';
 
 describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
@@ -13,6 +12,7 @@ describe('ng-add schematics', () => {
   const sourceRoot = 'testSrc';
   const ngJsonConfig = {
     defaultProject: 'testProj',
+    version: 1,
     projects: {
       testProj: {
         sourceRoot,
@@ -54,16 +54,6 @@ describe('ng-add schematics', () => {
     tree.create('/package.json', JSON.stringify(pkgJsonConfig));
     tree.create(`${sourceRoot}/main.ts`, '// test comment');
     tree.create(`${sourceRoot}/test.ts`, '// test comment');
-  });
-
-  it('should create the needed files correctly', () => {
-    expect(tree).toBeTruthy();
-    expect(tree.exists('/angular.json')).toBeTruthy();
-    expect(tree.exists('/package.json')).toBeTruthy();
-    expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect).toBeTruthy();
-
-    const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(Object.keys(pkgJsonData).length).toBeGreaterThan(0);
   });
 
   it('should include ALL dependencies in map', () => {
@@ -110,10 +100,9 @@ describe('ng-add schematics', () => {
   });
 
   it('should not add hammer.js if it exists in angular.json build options', async () => {
-    const workspace = getWorkspace(tree) as any;
-    const currentProjectName = workspace.defaultProject;
-    workspace.projects[currentProjectName].architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
-    tree.overwrite('angular.json', JSON.stringify(workspace));
+    const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
+    ngJsonConfig1.projects.testProj.architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
+    tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
 
     const newContent = tree.read(`${sourceRoot}/main.ts`).toString();
@@ -127,10 +116,9 @@ describe('ng-add schematics', () => {
   });
 
   it('should not add hammer.js if it exists in angular.json test options', async () => {
-    const workspace = getWorkspace(tree) as any;
-    const currentProjectName = workspace.defaultProject;
-    workspace.projects[currentProjectName].architect.test.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
-    tree.overwrite('angular.json', JSON.stringify(workspace));
+    const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
+    ngJsonConfig1.projects.testProj.architect.test.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
+    tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
 
     const testTs = tree.read(`${sourceRoot}/test.ts`).toString();
@@ -138,7 +126,6 @@ describe('ng-add schematics', () => {
   });
 
   it('should not add hammer.js if it exists in main.ts', async () => {
-
     const mainTsPath = `${sourceRoot}/main.ts`;
     const content = tree.read(mainTsPath).toString();
     tree.overwrite(mainTsPath, 'import \'hammerjs\';\n' + content);

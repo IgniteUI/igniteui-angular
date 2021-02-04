@@ -7,13 +7,13 @@
             (click)="esf.onSelect()"
             [ngClass]="esf.selectedClass()"
         >
-            <igx-icon fontSet="material">done</igx-icon>
+            <igx-icon>done</igx-icon>
         </button>
         <button *ngIf="showPinning"
             igxButton="icon"
             (click)="esf.onPin()"
         >
-            <igx-icon fontSet="imx-icons" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
+            <igx-icon family="imx-icons" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
         </button>
         <button *ngIf="showHiding"
             igxButton="icon"

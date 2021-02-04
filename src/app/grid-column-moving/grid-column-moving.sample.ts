@@ -51,7 +51,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
         { ID: 'FRANS', CompanyName: 'Franchi S.p.A.', ContactName: 'Paolo Accorti', ContactTitle: 'Sales Representative', Address: 'Via Monte Bianco 34', City: 'Torino', Region: null, PostalCode: '10100', Country: 'Italy', Phone: '011-4988260', Fax: '011-4988261' }
     ];
 
-    log(event) {
+    public log(event) {
         console.log(event);
     }
 
@@ -108,22 +108,22 @@ export class GridColumnMovingSampleComponent implements OnInit {
         col.move(this.gridMCHNewIndex);
     }
 
-    toggleColumn(name: string) {
+    public toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;
     }
 
-    onColumnMovingStart(event) {
+    public onColumnMovingStart() {
 
     }
 
-    onColumnMoving(event) {
+    public onColumnMoving() {
         // if (event.target.field === 'ID') {
         //     event.cancel = true;
         // }
     }
 
-    onColumnMovingEnd(event) {
+    public onColumnMovingEnd() {
         // if (event.target.field === 'Fax') {
         //     event.cancel = true;
         // }

@@ -28,30 +28,30 @@ import { LocalService } from '../shared/local.service';
 })
 export class GridSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
 
     @ViewChild('grid2', { static: true })
-    grid2: IgxGridComponent;
+    private grid2: IgxGridComponent;
 
     @ViewChild('grid3', { static: true })
-    grid3: IgxGridComponent;
+    private grid3: IgxGridComponent;
 
     @ViewChild('toast', { static: true })
-    toast: IgxToastComponent;
+    private toast: IgxToastComponent;
 
     @ViewChild('snax', { static: true })
-    snax: IgxSnackbarComponent;
+    private snax: IgxSnackbarComponent;
 
-    data: Observable<any[]>;
-    remote: Observable<any[]>;
-    localData: any[];
-    selectedCell;
-    selectedRow;
-    newRecord = '';
-    editCell;
-    exportFormat = 'XLSX';
-    customFilter = CustomStringFilter.instance();
-    selectionMode;
+    public data: Observable<any[]>;
+    public remote: Observable<any[]>;
+    public localData: any[];
+    public selectedCell;
+    public selectedRow;
+    public newRecord = '';
+    public editCell;
+    public exportFormat = 'XLSX';
+    public customFilter = CustomStringFilter.instance();
+    public selectionMode;
 
     constructor(private localService: LocalService,
                 private remoteService: RemoteService,
@@ -82,7 +82,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         };
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.data = this.localService.records;
         this.remote = this.remoteService.remoteData;
 
@@ -104,21 +104,21 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.selectionMode = GridSelectionMode.multiple;
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.grid1.cdr.detectChanges();
         // this.remoteService.getData(this.grid3.data);
     }
 
 
-    onInlineEdit(event) {
+    public onInlineEdit(event) {
         this.editCell = event.cell;
     }
 
-    showInput(index, field) {
+    public showInput(index, field) {
         return this.editCell && this.editCell.columnField === field && this.editCell.rowIndex === index;
     }
 
-    process(event) {
+    public process() {
         this.toast.message = 'Loading remote data';
         this.toast.position = 'bottom';
         this.toast.open();
@@ -127,7 +127,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         });
     }
 
-    initColumns(event: IgxColumnComponent) {
+    public initColumns(event: IgxColumnComponent) {
         const column: IgxColumnComponent = event;
         if (column.field === 'Name') {
             column.filterable = true;
@@ -136,7 +136,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onPagination(event) {
+    public onPagination(event) {
         if (!this.grid2.paging) {
             return;
         }
@@ -148,7 +148,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.grid2.paginate(event);
     }
 
-    onPerPage(event) {
+    public onPerPage(event) {
         if (!this.grid2.paging) {
             return;
         }
@@ -161,11 +161,11 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         state.paging.recordsPerPage = event;
     }
 
-    selectCell(event) {
+    public selectCell(event) {
         this.selectedCell = event;
     }
 
-    addRow() {
+    public addRow() {
         if (!this.newRecord.trim()) {
             this.newRecord = '';
             return;
@@ -175,11 +175,11 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.newRecord = '';
     }
 
-    updateRecord(event) {
+    public updateRecord(event) {
         this.grid1.updateCell(this.selectedCell.rowIndex, this.selectedCell.columnField, event);
     }
 
-    deleteRow(event) {
+    public deleteRow() {
         this.selectedRow = Object.assign({}, this.selectedCell.Row);
         this.grid1.deleteRow(this.selectedCell.rowIndex);
         this.selectedCell = {};
@@ -187,12 +187,12 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.snax.open();
     }
 
-    restore() {
+    public restore() {
         this.grid1.addRow(this.selectedRow.record);
         this.snax.close();
     }
 
-    updateRow11() {
+    public updateRow11() {
         this.grid3.updateRow({
             __metadata: {
                 uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)',
@@ -225,11 +225,11 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
             }
         }, 11);
     }
-    exportRaw() {
+    public exportRaw() {
         this.getExporterService().export(this.grid3, this.getOptions('Report'));
     }
 
-    export() {
+    public export() {
         this.grid3.clearFilter();
 
         const options = this.getOptions('Report');
@@ -238,7 +238,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.getExporterService().export(this.grid3, options);
     }
 
-    exportFilteredGrid() {
+    public exportFilteredGrid() {
         this.grid3.filter('ProductName', 'Queso', IgxStringFilteringOperand.instance().condition('contains'), true);
         this.grid3.cdr.detectChanges();
 
@@ -248,15 +248,15 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
 
         this.getExporterService().export(this.grid3, options);
     }
-    exportData() {
+    public exportData() {
         this.getExporterService().exportData(this.grid3.data, this.getOptions('Data'));
     }
 
-    onSearchChange(text: string) {
+    public onSearchChange(text: string) {
         this.grid3.findNext(text);
     }
 
-    onSearch(ev) {
+    public onSearch(ev) {
         if (ev.key === 'Enter' || ev.key === 'ArrowDown'  || ev.key === 'ArrowRight') {
             this.grid3.findNext(ev.target.value);
         } else if (ev.key === 'ArrowUp' || ev.key === 'ArrowLeft') {
@@ -264,7 +264,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onColumnInit(column: IgxColumnComponent) {
+    public onColumnInit(column: IgxColumnComponent) {
         column.editable = true;
     }
 
@@ -292,7 +292,7 @@ export class CustomStringFilter extends IgxStringFilteringOperand {
         super();
         this.append({
             name: 'Custom',
-            logic: (value: any, searchVal: any, ignoreCase: boolean) => value === searchVal,
+            logic: (value: any, searchVal: any) => value === searchVal,
             isUnary: false,
             iconName: 'starts_with'
         });
