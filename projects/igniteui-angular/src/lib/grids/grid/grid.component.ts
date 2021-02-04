@@ -280,10 +280,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     set rowSelection(selectionMode: GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
-        if (this.gridAPI.grid && this.columnList) {
-            this.selectionService.clearAllSelectedRows();
-            this.notifyChanges(true);
-        }
+        this.selectionService.clearAllSelectedRows();
+        this.notifyChanges();
     }
 
     /**
@@ -510,7 +508,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             return res;
         }
         const rList = this._groupsRowList.filter(item => item.element.nativeElement.parentElement !== null)
-                                        .sort((item1, item2) => item1.index - item2.index);
+            .sort((item1, item2) => item1.index - item2.index);
         res.reset(rList);
         return res;
     }

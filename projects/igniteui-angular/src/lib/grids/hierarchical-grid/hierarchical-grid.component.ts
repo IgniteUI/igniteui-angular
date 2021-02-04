@@ -302,10 +302,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     set rowSelection(selectionMode: GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
-        if (this.gridAPI.grid && this.columnList) {
-            this.selectionService.clearAllSelectedRows();
-            this.notifyChanges(true);
-        }
+        this.selectionService.clearAllSelectedRows();
+        this.notifyChanges();
     }
 
     /**

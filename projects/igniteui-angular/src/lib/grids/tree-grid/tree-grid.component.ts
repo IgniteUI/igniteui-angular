@@ -36,6 +36,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { IgxTreeGridHierarchizingPipe } from './tree-grid.pipes';
 
 let NEXT_ID = 0;
 
@@ -498,6 +499,31 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.summaryService.clearSummaryCache({ rowID });
             this._pipeTrigger++;
             this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * Gets/Sets the current selection state.
+     *
+     * @remarks
+     * Represents the selected rows' IDs (primary key or rowData)
+     * @example
+     * ```html
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="'ID'" [foreignKey]="'parentID'"
+     *                rowSelection="multiple" [selectedRows]="[0, 1, 2]">
+     * <igx-tree-grid>
+     * ```
+     */
+    @Input()
+    public set selectedRows(rowIDs: any[]) {
+        if (this.records.size === 0) {
+            new IgxTreeGridHierarchizingPipe(this._gridAPI).transform(
+                this.data, this.primaryKey, this.foreignKey, this.childDataKey, this.id, 0);
+        }
+        if (rowIDs.length > 0) {
+            this.selectRows(rowIDs, true);
+        } else {
+            this.deselectAllRows();
         }
     }
 
