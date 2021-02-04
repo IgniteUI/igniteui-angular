@@ -7,15 +7,16 @@ import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 })
 export class GridMRLSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
-    width = null;
-    cols: Array<any> = [
+    private grid: IgxGridComponent;
+
+    public width = null;
+    public cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
         { field: 'CompanyName', rowStart: 1, colStart: 2},
         { field: 'ContactName', rowStart: 1, colStart: 3},
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
     ];
-    colGroups = [
+    public colGroups = [
         {
             group: 'group1',
             columns: this.cols
@@ -25,7 +26,7 @@ export class GridMRLSampleComponent {
     public density = 'compact';
     public displayDensities;
     public selectionMode;
-    data = [
+    public data = [
         /* eslint-disable max-len */
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
         { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner', Address: 'Avda. de la Constitución 2222', City: 'México D.F.', Region: null, PostalCode: '05021', Country: 'Mexico', Phone: '(5) 555-4729', Fax: '(5) 555-3745' },
@@ -69,21 +70,21 @@ export class GridMRLSampleComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
-    hideGroup() {
+    public hideGroup() {
         const col = this.grid.getColumnByName('group2');
         col.hidden = !col.hidden;
     }
-    pinGroup() {
+    public pinGroup() {
         const col = this.grid.getColumnByName('group2');
         console.log(col);
         col.pinned = !col.pinned;
     }
-    pinGroup1() {
+    public pinGroup1() {
         const col = this.grid.getColumnByName('group1');
         col.pinned = !col.pinned;
     }
 
-    moveGroup() {
+    public moveGroup() {
         const col1 = this.grid.getColumnByName('group2');
         const col2 = this.grid.getColumnByName('group1');
         this.grid.moveColumn(col2, col1);
