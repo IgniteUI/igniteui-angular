@@ -1814,7 +1814,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
-        const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true, owner: this };
+        const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true };
         this.grid.columnPinned.emit(eventArgs);
         return true;
     }

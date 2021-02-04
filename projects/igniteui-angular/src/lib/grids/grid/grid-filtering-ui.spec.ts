@@ -2922,10 +2922,16 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
             spyOn(grid.onColumnVisibilityChanged, 'emit');
+            spyOn(grid.columnVisibilityChanging, 'emit');
             GridFunctions.getExcelFilteringHideContainer(fix).click();
             fix.detectChanges();
 
+            const args = { column: grid.getColumnByName('Downloads'), newValue: true };
+            expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledWith({ ...args, cancel: false });
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(args);
+
             expect(grid.columns[2].hidden).toBeTruthy();
         }));
 
@@ -3306,11 +3312,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify Excel menu is closed
             expect(GridFunctions.getExcelStyleFilteringComponent(fix)).toBeNull();
+            const args = { column, newValue: true };
+            expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledWith({ ...args, cancel: false });
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith({
-                column,
-                newValue: true
-            });
+            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(args);
         }));
 
         it('Should move pinned column correctly by using move buttons', fakeAsync(() => {

@@ -34,13 +34,25 @@ describe('IgxPaginator with default settings', () => {
 
     it('should change current page to equal last page, after changing perPage', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
-        fix.detectChanges();
         const paginator = fix.componentInstance.paginator;
 
-        paginator.paginate(paginator.totalPages - 1);
-        paginator.perPage = paginator.totalRecords / 2;
+        spyOn(paginator.onPaging, 'emit');
+        spyOn(paginator.onPagingDone, 'emit');
 
         fix.detectChanges();
+
+        paginator.paginate(paginator.totalPages - 1);
+        fix.detectChanges();
+
+        expect(paginator.onPaging.emit).toHaveBeenCalledTimes(1);
+        expect(paginator.onPagingDone.emit).toHaveBeenCalledTimes(1);
+
+        paginator.perPage = paginator.totalRecords / 2;
+        fix.detectChanges();
+
+        expect(paginator.onPaging.emit).toHaveBeenCalledTimes(2);
+        expect(paginator.onPagingDone.emit).toHaveBeenCalledTimes(2);
+
         const page = paginator.page;
         expect(page).toBe(1);
     });
