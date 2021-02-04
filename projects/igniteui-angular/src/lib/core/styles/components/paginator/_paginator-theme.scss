@@ -6,7 +6,7 @@
 ////
 
 /// Grid Paging Theme
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $text-color [currentColor] - The text color.
 /// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
@@ -24,7 +24,7 @@
 ///   // Pass the theme to the igx-paginator component mixin
 ///   @include igx-paginator($my-paginator-theme);
 @function igx-paginator-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $text-color: null,

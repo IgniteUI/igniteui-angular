@@ -5,7 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The list background color.
@@ -56,7 +56,7 @@
 ///   // Pass the theme to the igx-list component mixin
 ///   @include igx-list($my-list-theme);
 @function igx-list-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
