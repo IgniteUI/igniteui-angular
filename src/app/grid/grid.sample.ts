@@ -99,7 +99,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.grid2.sortingExpressions = [];
         this.grid3.sortingExpressions = [{ fieldName: 'ProductID', dir: SortingDirection.Desc, ignoreCase: true,
             strategy: DefaultSortingStrategy.instance() }];
-        this.grid3.paging = true;
+        this.grid3.enablePaging = true;
 
         this.selectionMode = GridSelectionMode.multiple;
     }
@@ -137,7 +137,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onPagination(event) {
-        if (!this.grid2.paging) {
+        if (!this.grid2.enablePaging) {
             return;
         }
         const total = this.grid2.data.length;
@@ -149,7 +149,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onPerPage(event) {
-        if (!this.grid2.paging) {
+        if (!this.grid2.enablePaging) {
             return;
         }
         const total = this.grid2.data.length;

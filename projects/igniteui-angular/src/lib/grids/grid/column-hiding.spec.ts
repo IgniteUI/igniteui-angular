@@ -482,7 +482,7 @@ describe('Column Hiding UI #grid', () => {
 
         it('- When Hide All columns no rows should be rendered', fakeAsync(() => {
             grid.rowSelection = GridSelectionMode.multiple;
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.rowDraggable = true;
             tick(30);
             fix.detectChanges();

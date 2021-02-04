@@ -300,7 +300,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const filteringTree = grid.filteringExpressionsTree;
         this.grid.endEdit(false);
 
-        if (grid.paging) {
+        if (grid.enablePaging) {
             grid.page = 0;
         }
 
@@ -321,7 +321,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
         grid.endEdit(false);
-        if (grid.paging) {
+        if (grid.enablePaging) {
             grid.page = 0;
         }
 

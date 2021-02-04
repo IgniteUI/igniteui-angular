@@ -15,7 +15,7 @@
             <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
             <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
         </div>
-        <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
+        <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [enablePaging]="true"
             #grid1 [data]="data" [width]="'800px'"
             [height]="'600px'" [rowSelection]="'multiple'">
 
@@ -50,7 +50,7 @@
     <br/>
     <div class="sample-column">
         <div>igxHierarchicalGrid</div>
-        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true'
+        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [enablePaging]="true" [primaryKey]='"ID"' [allowFiltering]='true'
             [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" >
             <ng-template igxToolbarCustomContent>
                 <app-grid-search-box [grid]="hGrid" [style.width]="'400px'"></app-grid-search-box>
@@ -78,7 +78,7 @@
 
     <div class="sample-column">
         <div>igxTreeGrid</div>
-        <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
+        <igx-tree-grid [enablePaging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
         [width]="'900px'" [height]="'800px'" >
        <igx-column width='150px' [filterable]='false'>
             <ng-template igxCell let-cell="cell" let-val>

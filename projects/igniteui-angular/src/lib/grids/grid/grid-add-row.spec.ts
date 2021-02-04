@@ -94,7 +94,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should display the banner above the row if there is no room underneath it', () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 7;
             fixture.detectChanges();
 
@@ -239,7 +239,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('should navigate to added row on snackbar button click when row is not in current view.', async () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
             fixture.detectChanges();
 
@@ -596,7 +596,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
         it('Should preserve the changes after page navigation', () => {
             const dataLength = grid.data.length;
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
             fixture.detectChanges();
 
@@ -614,7 +614,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
         it('Should save changes when changing page count', () => {
             const dataLength = grid.data.length;
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
             fixture.detectChanges();
 

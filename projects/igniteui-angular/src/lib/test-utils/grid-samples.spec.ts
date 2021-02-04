@@ -533,7 +533,7 @@ export class DefaultCRUDGridComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
+    template: GridTemplateStrings.declareGrid(` [enablePaging]="paging" [perPage]="perPage"`,
         '', ColumnDefinitions.idNameJobTitleEditable) + `
         <button id="prevPageBtn" igxButton (click)="GoToPage(-2)">Prev page</button>
         <button id="nextPageBtn" igxButton (click)="GoToPage(-1)">Next page</button>
@@ -803,7 +803,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
+    template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [enablePaging]="paging"`,
         EventSubscriptions.onColumnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
@@ -1537,7 +1537,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 
 @Component({
     template: `
-    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
+    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [enablePaging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
         <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
@@ -1723,7 +1723,7 @@ export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
-    [paging]="paging" [perPage]="7">
+    [enablePaging]="paging" [perPage]="7">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
@@ -1880,7 +1880,7 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
+            ` [width]="width" [height]="height" [enablePaging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
             '', ColumnDefinitions.productBasic)
 })
 export class GridWithUndefinedDataComponent implements OnInit  {

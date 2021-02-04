@@ -1136,7 +1136,7 @@ describe('IgxGrid Component Tests #grid', () => {
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.paging = true;
+            fix.componentInstance.enablePaging = true;
             fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
 
             tick();
@@ -2540,7 +2540,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
     template:
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
             <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
-                [paging]="paging" [perPage]="pageSize">
+                [enablePaging]="paging" [perPage]="pageSize">
             </igx-grid>
         </div>`
 })
@@ -2593,7 +2593,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     template:
         `<div style="height:300px">
             <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
-                [paging]="paging" [perPage]="pageSize">
+                [enablePaging]="paging" [perPage]="pageSize">
             </igx-grid>
         </div>`
 })
@@ -2795,7 +2795,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
       </igx-tabs-group>
       <igx-tabs-group label="Tab 4">
         <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
-            [paging]="true" [perPage]="3">
+            [enablePaging]="true" [perPage]="3">
         <igx-column
             *ngFor="let column of columns"
             [field]="column.field"
@@ -2807,7 +2807,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
       </igx-tabs-group>
       <igx-tabs-group label="Tab 5">
         <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-            [paging]="true" [perPage]="4">
+            [enablePaging]="true" [perPage]="4">
         <igx-column
             *ngFor="let column of columns"
             [field]="column.field"
@@ -2874,7 +2874,7 @@ export class IgxGridInsideIgxTabsComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data"
-        [paging]="true" [paginationTemplate]="pager" [autoGenerate]="true">
+        [enablePaging]="true" [paginationTemplate]="pager" [autoGenerate]="true">
         </igx-grid>
         <ng-template #pager let-grid>
             <h2>{{grid.totalRecords}}</h2>

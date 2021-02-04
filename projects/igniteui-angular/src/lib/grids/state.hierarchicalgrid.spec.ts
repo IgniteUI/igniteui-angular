@@ -578,7 +578,7 @@ class HelperFunctions {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #hGrid [data]="data" igxGridState [expandChildren]="true" [paging]="true" perPage="5" primaryKey="ID"
+    <igx-hierarchical-grid #hGrid [data]="data" igxGridState [expandChildren]="true" [enablePaging]="true" perPage="5" primaryKey="ID"
      [autoGenerate]="false" [height]="'800px'" [width]="'800px'" rowSelection="multiple" cellSelection="multiple">
         <igx-column *ngFor="let c of columns"
             [width]="c.width"
@@ -601,7 +601,7 @@ class HelperFunctions {
             [pinned]="c.pinned"
             [hidden]="c.hidden">
         </igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [paging]="true" perPage="5" primaryKey="ID">
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [enablePaging]="true" perPage="5" primaryKey="ID">
             <igx-column *ngFor="let c of childColumns"
                 [width]="c.width"
                 [sortable]="c.sortable"
@@ -623,7 +623,7 @@ class HelperFunctions {
                 [pinned]="c.pinned"
                 [hidden]="c.hidden">
             </igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [paging]="true" perPage="5">
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [enablePaging]="true" perPage="5">
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`

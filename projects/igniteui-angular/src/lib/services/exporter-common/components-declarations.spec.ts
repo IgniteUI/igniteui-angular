@@ -20,7 +20,7 @@ export class GridDeclarationComponent {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [paging]="true" [perPage]="3">
+        <igx-grid #grid1 [data]="data" [enablePaging]="true" [perPage]="3">
             <igx-column field="ID"></igx-column>
             <igx-column field="Name"></igx-column>
             <igx-column field="JobTitle"></igx-column>

@@ -106,7 +106,7 @@ export class IgxTreeGridPrimaryForeignKeyComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="0" width="900px" height="600px"
-        [paging]="true" [perPage]="10">
+        [enablePaging]="true" [perPage]="10">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
@@ -122,7 +122,7 @@ export class IgxTreeGridExpandingComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees" expansionDepth="2" width="900px" height="500px"
-        [paging]="true" [perPage]="10">
+        [enablePaging]="true" [perPage]="10">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
@@ -771,7 +771,7 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
     template: `
     <igx-tree-grid #treeGridCustomSelectors
         [data]="data" primaryKey="ID" foreignKey="ParentID"
-        [paging]="true" [perPage]="5" [rowSelection]="'multiple'" width="900px" height="600px">
+        [enablePaging]="true" [perPage]="5" [rowSelection]="'multiple'" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>

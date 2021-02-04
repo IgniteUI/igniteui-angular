@@ -86,7 +86,7 @@
         </div>
         <app-grid-with-transactions>
             <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
-                [rowEditable]="true" [paging]="true" [perPage]="5" (rowEdit)="rowEdit($event)" (rowEditDone)="rowEditDone($event)"
+                [rowEditable]="true" [enablePaging]="true" [perPage]="5" (rowEdit)="rowEdit($event)" (rowEditDone)="rowEditDone($event)"
                 (rowEditExit)="rowEditExit($event)" (rowEditEnter)="rowEditEnter($event)"
                 (cellEditEnter)="cellEnterEditMode($event)" (cellEdit)="cellEdit($event)" (cellEditDone)="cellEditDone($event)"
                 (cellEditExit)="cellEditExit($event)">

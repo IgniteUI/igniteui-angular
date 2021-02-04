@@ -591,7 +591,7 @@ class HelperFunctions {
 
 @Component({
     template: `
-        <igx-grid #grid [data]="data" [paging]="true" [autoGenerate]="false" igxGridState rowSelection="multiple"
+        <igx-grid #grid [data]="data" [enablePaging]="true" [autoGenerate]="false" igxGridState rowSelection="multiple"
             cellSelection="multiple" primaryKey="ProductID">
             <igx-column *ngFor="let c of columns"
                 [width]="c.width"
@@ -639,7 +639,7 @@ export class IgxGridStateComponent {
 
 @Component({
     template: `
-        <igx-grid #grid [data]="data" [paging]="true" [autoGenerate]="true" [igxGridState]="options">
+        <igx-grid #grid [data]="data" [enablePaging]="true" [autoGenerate]="true" [igxGridState]="options">
         </igx-grid>
     `
 })
@@ -661,7 +661,7 @@ export class IgxGridStateWithOptionsComponent {
 
 @Component({
     template: `
-        <igx-grid #grid [data]="data" [paging]="true" [autoGenerate]="true" igxGridState primaryKey="ProductID">
+        <igx-grid #grid [data]="data" [enablePaging]="true" [autoGenerate]="true" igxGridState primaryKey="ProductID">
             <!-- Grid Detail View Template -->
             <ng-template igxGridDetail let-dataItem>
                 <span>Detail view</span>

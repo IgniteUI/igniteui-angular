@@ -13,7 +13,7 @@
                 [allowAdvancedFiltering]="true"
                 [advancedFilteringExpressionsTree]="advancedFilteringTree"
                 [rowSelection]="selectionMode"
-                [paging]="false"
+                [enablePaging]="false"
                 [width]="'980px'"
                 [height]="'600px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
@@ -53,7 +53,7 @@
                 [filterMode]="'excelStyleFilter'"
                 [allowAdvancedFiltering]="true"
                 [rowSelection]="selectionMode"
-                [paging]="false"
+                [enablePaging]="false"
                 [width]="'980px'"
                 [height]="'600px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"

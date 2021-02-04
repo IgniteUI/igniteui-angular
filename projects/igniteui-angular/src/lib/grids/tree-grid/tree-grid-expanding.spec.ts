@@ -337,7 +337,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('should update current page when \'collapseAll\' ', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
@@ -368,7 +368,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
             tick(16);
@@ -411,7 +411,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when a row of any level is collapsed', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
             tick(16);
@@ -457,7 +457,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when navigating through pages', () => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             fix.detectChanges();
 
             // Verify current page
@@ -786,7 +786,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('should update current page when \'collapseAll\' ', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 2;
             fix.detectChanges();
             tick(16);
@@ -817,7 +817,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
             tick(16);
@@ -862,7 +862,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when a row of any level is collapsed', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
             tick(16);
@@ -892,7 +892,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when navigating through pages', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
             tick(16);

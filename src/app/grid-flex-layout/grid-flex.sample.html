@@ -2,7 +2,7 @@
     <div igxFlex igxLayout igxLayoutDir="column">
         <div igxFlex igxLayout igxLayoutDir="column">
             <h4 class="sample-title">Grid1</h4>
-            <igx-grid #grid1 [paging]='true' [data]="localData" [autoGenerate]="false">
+            <igx-grid #grid1 [enablePaging]='true' [data]="localData" [autoGenerate]="false">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                     [header]="c.field"
                     [resizable]="true"

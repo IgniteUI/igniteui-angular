@@ -984,7 +984,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Should affect all pages when columns are reordered programatically and paging is enabled.', (async () => {
-            fixture.componentInstance.paging = true;
+            fixture.componentInstance.enablePaging = true;
             fixture.detectChanges();
 
             let columnsList = grid.columnList.toArray();
@@ -1005,7 +1005,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
 
         it('Should affect all pages when columns are reordered and paging is enabled.', (async () => {
-            fixture.componentInstance.paging = true;
+            fixture.componentInstance.enablePaging = true;
             fixture.detectChanges();
 
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));

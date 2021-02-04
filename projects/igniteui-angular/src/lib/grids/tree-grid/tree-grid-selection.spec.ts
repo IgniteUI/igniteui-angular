@@ -243,7 +243,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
             tick(16);
 
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
@@ -466,7 +466,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             fix.detectChanges();
 
-            treeGrid.paging = true;
+            treeGrid.enablePaging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
@@ -862,7 +862,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should persist selection after scrolling', async () => {
-            treeGrid.paging = false;
+            treeGrid.enablePaging = false;
             fix.detectChanges();
 
             const rows = TreeGridFunctions.getAllRows(fix);

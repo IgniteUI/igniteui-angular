@@ -84,7 +84,7 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
+    template: GridTemplateStrings.declareGrid(` [enablePaging]="paging" [perPage]="perPage"`,
         '', ColumnDefinitions.idNameJobTitle)
 })
 export class PagingComponent extends GridWithSizeComponent {

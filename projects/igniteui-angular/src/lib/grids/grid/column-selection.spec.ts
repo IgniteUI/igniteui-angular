@@ -1107,7 +1107,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         it('Paging: Verify column stays selected when change page', fakeAsync(() => {
             colProductName.selected = true;
             colProductID.selected = true;
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 3;
             fix.detectChanges();
             tick(30);

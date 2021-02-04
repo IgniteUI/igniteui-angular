@@ -17,7 +17,7 @@
 
 
             <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'" [allowFiltering]="true"
-                [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [paging]="false" [width]="'900px'"
+                [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [enablePaging]="false" [width]="'900px'"
                 [height]="'800px'" (onColumnSelectionChange)="onColumnSelection($event)">
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [movable]="c.movable"
                     [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
@@ -87,7 +87,7 @@
                 </igx-buttongroup>
             </div>
             <div class="sample-buttons">
-                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                <igx-switch [(ngModel)]="grid1.enablePaging">Enable Paging</igx-switch>
                 <br>
                 <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
                 <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>

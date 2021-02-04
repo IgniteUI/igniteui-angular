@@ -120,7 +120,7 @@ Enabling and configuring features is done through the **igx-row-island** markup 
 
 ```html
 <igx-hierarchical-grid [data]="localData" [displayDensity]="density" [autoGenerate]="false"
-    [allowFiltering]='true' [paging]="true" [height]="'600px'" [width]="'800px'" #hGrid>
+    [allowFiltering]='true' [enablePaging]="true" [height]="'600px'" [width]="'800px'" #hGrid>
     <igx-column field="ID" [pinned]="true" [filterable]='true'></igx-column>
     <igx-column-group header="Information">
         <igx-column field="ChildLevels"></igx-column>

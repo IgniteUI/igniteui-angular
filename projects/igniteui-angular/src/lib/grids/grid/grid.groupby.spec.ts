@@ -2019,7 +2019,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.instance.enablePaging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2043,7 +2043,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.instance.enablePaging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2079,7 +2079,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.instance.enablePaging = true;
         fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
@@ -3342,7 +3342,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         await wait();
 
-        grid.paging = false;
+        grid.enablePaging = false;
         grid.columns[1].groupingComparer = (a, b) => {
             if (a instanceof Date && b instanceof Date &&
                 a.getFullYear() === b.getFullYear()) {
@@ -3439,7 +3439,7 @@ export class DefaultGridComponent extends DataParent {
             [width]='width'
             [height]='height'
             [data]="data"
-            [paging]="true">
+            [enablePaging]="true">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>

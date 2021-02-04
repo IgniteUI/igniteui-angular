@@ -100,7 +100,7 @@ export class IgxGridPagingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
-        if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
+        if (!this.gridAPI.grid.enablePaging || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
         const state = {

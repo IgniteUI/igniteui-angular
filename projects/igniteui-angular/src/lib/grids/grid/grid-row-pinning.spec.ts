@@ -553,7 +553,7 @@ describe('Row Pinning #grid', () => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.componentInstance.createSimpleData(12);
             grid = fix.componentInstance.instance;
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
 
             fix.detectChanges();

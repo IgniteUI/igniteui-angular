@@ -323,7 +323,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
+     * <igx-grid #grid [enablePaging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
      * ```
      */
     @Input()
@@ -1356,16 +1356,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The default state is disabled (false).
      * @example
      * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [paging]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [enablePaging]="true"></igx-grid>
      * ```
      */
     @Input()
-    public get paging(): boolean {
-        return this._paging;
+    public get enablePaging(): boolean {
+        return this._enablePaging;
     }
 
-    public set paging(value: boolean) {
-        this._paging = value;
+    public set enablePaging(value: boolean) {
+        this._enablePaging = value;
         this._pipeTrigger++;
         this.notifyChanges(true);
     }
@@ -1375,7 +1375,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     *  <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
+     *  <igx-grid #grid [data]="Data" [enablePaging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
      * ```
      * @remarks
      * Supports two-way binding.
@@ -1404,7 +1404,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * The default is 15.
      * @example
      * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [enablePaging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Input()
@@ -2681,7 +2681,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _paging = false;
+    protected _enablePaging = false;
     /**
      * @hidden
      */
@@ -4959,7 +4959,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paging ? Math.min(allItems, this.perPage) : allItems);
+            this.enablePaging ? Math.min(allItems, this.perPage) : allItems);
     }
 
     /**
@@ -6624,7 +6624,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paging ? row + (this.perPage * this.page) : row;
+            row = this.enablePaging ? row + (this.perPage * this.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -6736,7 +6736,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof (row) !== 'number') {
+        if (this.enablePaging && typeof (row) !== 'number') {
             const rowIndex = inCollection.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 

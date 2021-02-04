@@ -1149,7 +1149,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Paging: Should preserve the changes after page navigation`, () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 7;
             fix.detectChanges();
 
@@ -1182,7 +1182,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Paging: Should save changes when changing page while editing`, () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 7;
             fix.detectChanges();
 
@@ -1208,7 +1208,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Paging: Should exit edit mode when changing the page size while editing`, () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 7;
             fix.detectChanges();
 
@@ -1239,7 +1239,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Paging: Should exit edit mode when changing the page size resulting in the edited cell going to the next page`,
             () => {
-                grid.paging = true;
+                grid.enablePaging = true;
                 grid.perPage = 7;
                 fix.detectChanges();
 
@@ -2270,7 +2270,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Paging: Should not apply edited classes to the same row on a different page`, () => {
             // This is not a valid scenario if the grid does not have transactions enabled
-            fix.componentInstance.paging = true;
+            fix.componentInstance.enablePaging = true;
             fix.detectChanges();
 
             const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
@@ -2509,7 +2509,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should change pages when the only item on the last page is a pending added row that gets deleted', () => {
             expect(grid.data.length).toEqual(10);
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
             fix.detectChanges();
 
@@ -2539,7 +2539,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should change pages when committing deletes on the last page', () => {
             expect(grid.data.length).toEqual(10);
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
             fix.detectChanges();
 
@@ -2562,7 +2562,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it('Should NOT change pages when deleting a row on the last page', () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 5;
             fix.detectChanges();
 

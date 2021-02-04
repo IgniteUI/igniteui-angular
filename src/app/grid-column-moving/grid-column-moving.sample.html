@@ -23,7 +23,7 @@
                 (onColumnMovingEnd)="onColumnMovingEnd()"
                 [rowSelection] ="'multiple'"
                 [filterMode]="'excelStyleFilter'"
-                [paging]="false"
+                [enablePaging]="false"
                 [width]="'900px'"
                 >
                 <igx-column *ngFor="let c of columns" [field]="c.field"

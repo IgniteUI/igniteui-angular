@@ -691,7 +691,7 @@ describe('IgxGrid Master Detail #grid', () => {
         describe('Paging', () => {
              it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.paging = true;
+                fix.componentInstance.enablePaging = true;
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
 
@@ -704,7 +704,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should persist template state after paging to a page with fewer records and paging back.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.paging = true;
+                fix.componentInstance.enablePaging = true;
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -1190,7 +1190,7 @@ describe('IgxGrid Master Detail #grid', () => {
 @Component({
     template: `
         <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]='true'
-        [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
+        [enablePaging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
 
@@ -1228,7 +1228,7 @@ export class DefaultGridMasterDetailComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [expansionStates]='expStates'
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
+         [width]="width" [height]="height" [primaryKey]="'ID'" [enablePaging]="paging" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
 
@@ -1259,7 +1259,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
 @Component({
     template: `
         <igx-grid [data]="data"
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
+         [width]="width" [height]="height" [primaryKey]="'ID'" [enablePaging]="paging" [rowSelection]="rowSelectable">
         <igx-column-layout field='group2'>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
             <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'"></igx-column>

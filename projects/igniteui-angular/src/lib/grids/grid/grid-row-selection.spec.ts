@@ -1313,7 +1313,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Paging: Should persist through paging', fakeAsync(() => {
-            grid.paging = true;
+            grid.enablePaging = true;
             tick();
             fix.detectChanges();
 
@@ -1358,7 +1358,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Paging: Should persist all rows selection through paging', fakeAsync(() => {
-            grid.paging = true;
+            grid.enablePaging = true;
             tick();
             fix.detectChanges();
 
@@ -1391,7 +1391,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Paging: Should be able to select rows with Shift and Click', fakeAsync(() => {
-            grid.paging = true;
+            grid.enablePaging = true;
             tick();
             fix.detectChanges();
 

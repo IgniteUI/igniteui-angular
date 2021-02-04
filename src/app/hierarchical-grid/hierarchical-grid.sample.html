@@ -7,7 +7,7 @@
     <button igxButton="raised" (click)="getState()">Get state</button>
     <igx-hierarchical-grid #grid1 [data]="localData" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid"
         [displayDensity]="density" [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]='true'
-        [paging]="true" [rowDraggable]="true" [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded"
+        [enablePaging]="true" [rowDraggable]="true" [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded"
         #hGrid>
         <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column-group header="Information">

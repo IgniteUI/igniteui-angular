@@ -285,7 +285,7 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('Should scroll properly when using paging', fakeAsync(() => {
             grid.height = '240px';
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 7;
             fix.detectChanges();
 
@@ -856,7 +856,7 @@ describe('IgxGrid - search API #grid - ', () => {
         });
 
         it('Should update highlight when setting perPage option', () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             fix.detectChanges();
 
             const searchString = 'casey';
@@ -983,7 +983,7 @@ describe('IgxGrid - search API #grid - ', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
-            grid.paging = true;
+            grid.enablePaging = true;
             grid.perPage = 6;
             fix.detectChanges();
 
@@ -1011,7 +1011,7 @@ describe('IgxGrid - search API #grid - ', () => {
         });
 
         it('Should be able to properly handle perPage changes with grouping and paging', () => {
-            grid.paging = true;
+            grid.enablePaging = true;
             fix.detectChanges();
             grid.groupBy({
                 fieldName: 'JobTitle',
@@ -1146,7 +1146,7 @@ describe('IgxGrid - search API #grid - ', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             grid.perPage = 8;
-            grid.paging = true;
+            grid.enablePaging = true;
             fix.detectChanges();
             grid.findNext('software');
             grid.findNext('software');

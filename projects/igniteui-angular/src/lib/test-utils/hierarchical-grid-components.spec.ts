@@ -136,12 +136,12 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid [paging]="true" [data]="data" [cellSelection]="false" [height]="'600px'"
+    <igx-hierarchical-grid [enablePaging]="true" [data]="data" [cellSelection]="false" [height]="'600px'"
         [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
         [rowSelection]="'multiple'">
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" #rowIsland1 [paging]="true" [primaryKey]="'ID'" [rowSelection]="'single'">
+        <igx-row-island [key]="'childData'" #rowIsland1 [enablePaging]="true" [primaryKey]="'ID'" [rowSelection]="'single'">
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
             <ng-template igxHeadSelector let-headContext>

@@ -1,5 +1,5 @@
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
-    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
+    [enablePaging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
     <igx-grid-toolbar *ngIf="showToolbar">
         <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
         <igx-grid-toolbar-actions>
@@ -51,7 +51,7 @@
     <input [(ngModel)]="cw">
 </div>
 
-<igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+<igx-switch [(ngModel)]="grid1.enablePaging">Enable Paging</igx-switch>
 <igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
 <igx-switch [(ngModel)]="hidingEnabled">columnHiding</igx-switch>
 <igx-switch [(ngModel)]="pinningEnabled">columnPinning</igx-switch>
