@@ -264,6 +264,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
+    private dataSetTroughVirtualization = false;
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.
@@ -1034,8 +1035,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         console.log('is remote in data loading: ', this.dataSetTroughVirtualization);
         this.onDataPreLoad.emit(event);
     }
-
-    private dataSetTroughVirtualization = false;
 
     /**
      * @inheritdoc
