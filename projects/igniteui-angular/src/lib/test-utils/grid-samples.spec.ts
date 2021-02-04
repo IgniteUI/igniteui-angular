@@ -63,10 +63,10 @@ export class SortingAndResizingComponent extends BasicGridComponent {
     public data = SampleTestData.productInfoData();
 
     public columnResized(event) {
-                this.count++;
-                this.column = event.column;
-                this.prevWidth = event.prevWidth;
-                this.newWidth = event.newWidth;
+        this.count++;
+        this.column = event.column;
+        this.prevWidth = event.prevWidth;
+        this.newWidth = event.newWidth;
     }
 }
 
@@ -98,7 +98,7 @@ export class ResizableColumnsComponent extends BasicGridComponent {
 })
 export class ColumnsFromIterableComponent extends BasicGridComponent {
 
-    public columns = [ 'ID', 'Name'];
+    public columns = ['ID', 'Name'];
     public data = SampleTestData.personIDNameData();
 }
 
@@ -2239,7 +2239,7 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
 export class MRLTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
-    public colGroups: Array<any> =  [
+    public colGroups: Array<any> = [
         {
             group: 'group1',
             columns: [
