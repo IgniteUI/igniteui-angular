@@ -9,6 +9,8 @@ import { IgxGridComponent, IgxToggleDirective, GridSelectionMode } from 'igniteu
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggle: IgxToggleDirective;
     @ViewChild('gridRowEdit', { read: IgxGridComponent, static: true })
     private gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent, static: true })
@@ -17,8 +19,6 @@ export class GridRowEditSampleComponent {
     private grid: IgxGridComponent;
     @ViewChild('gridTransaction', { read: IgxGridComponent, static: true })
     private gridTransaction: IgxGridComponent;
-    @ViewChild(IgxToggleDirective, { static: true })
-    private toggle: IgxToggleDirective;
 
     public console = window.console;
     public pinFlag = false;

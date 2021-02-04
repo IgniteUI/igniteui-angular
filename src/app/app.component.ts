@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
     public appId = 'igniteui-demo-app';
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
-    private navdrawer;
+    public navdrawer;
 
     public urlString: string;
 
