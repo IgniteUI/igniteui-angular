@@ -12,7 +12,7 @@
                 <span igxDrawerItem [isHeader]="true">Components</span>
 
                 <span *ngFor="let item of componentLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
-                    <igx-icon fontSet="material">{{item.icon}}</igx-icon>
+                    <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
 
@@ -20,7 +20,7 @@
                 <span igxDrawerItem [isHeader]="true">Directives</span>
 
                 <span *ngFor="let item of directiveLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
-                    <igx-icon fontSet="material">{{item.icon}}</igx-icon>
+                    <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
 
@@ -28,7 +28,7 @@
                 <span igxDrawerItem [isHeader]="true">Style</span>
 
                 <span *ngFor="let item of styleLinks" igxDrawerItem igxRipple routerLinkActive="igx-nav-drawer__item--active" routerLink="{{item.link}}">
-                    <igx-icon fontSet="material">{{item.icon}}</igx-icon>
+                    <igx-icon>{{item.icon}}</igx-icon>
                     <span class="navdrawer-ellipsis">{{item.name}}</span>
                 </span>
             </nav>
@@ -37,15 +37,15 @@
         <ng-template *ngIf="drawerState.miniVariant" igxDrawerMini>
             <nav>
                 <span *ngFor="let item of componentLinks" igxRipple igxDrawerItem routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
-                    <igx-icon fontSet="material">{{item.icon}}</igx-icon>
+                    <igx-icon>{{item.icon}}</igx-icon>
                 </span>
 
                 <span *ngFor="let item of directiveLinks" igxDrawerItem igxRipple routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
-                    <igx-icon fontSet="material">{{item.icon}}</igx-icon>
+                    <igx-icon>{{item.icon}}</igx-icon>
                 </span>
 
                 <span *ngFor="let item of styleLinks" igxDrawerItem igxRipple routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" routerLink="{{item.link}}">
-                    <igx-icon fontSet="material">{{item.icon}}</igx-icon>
+                    <igx-icon>{{item.icon}}</igx-icon>
                 </span>
             </nav>
         </ng-template>

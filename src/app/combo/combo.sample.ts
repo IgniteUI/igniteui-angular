@@ -16,7 +16,7 @@ import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms'
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('playgroundCombo', { static: true })
-    private igxCombo: IgxComboComponent;
+    public igxCombo: IgxComboComponent;
     @ViewChild('playgroundCombo', { read: ElementRef, static: true })
     private comboRef: ElementRef;
     @ViewChild('customItemTemplate', { read: TemplateRef, static: true })

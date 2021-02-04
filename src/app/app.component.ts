@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
     public appId = 'igniteui-demo-app';
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
-    private navdrawer;
+    public navdrawer;
 
     public urlString: string;
 
@@ -549,8 +549,8 @@ export class AppComponent implements OnInit {
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {
-        iconService.registerFontSetAlias('fa-solid', 'fa');
-        iconService.registerFontSetAlias('fa-brands', 'fab');
+        iconService.registerFamilyAlias('fa-solid', 'fa');
+        iconService.registerFamilyAlias('fa-brands', 'fab');
 
         router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             for (const component of this.componentLinks) {
