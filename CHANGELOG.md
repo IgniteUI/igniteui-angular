@@ -8,7 +8,8 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
-- `IgxInput` now supports `type="file"` and its styling upon all themes.
+- `IgxInput` now supports `type="file"` and its styling upon all themes.  
+   _Note: validation of file type input is not yet supported._
 
 ### General
 - `IgxDialog`
