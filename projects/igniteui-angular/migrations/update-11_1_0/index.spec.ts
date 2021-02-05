@@ -267,7 +267,7 @@ export class IconTestComponent {
             `<igx-grid [paging]='true'></igx-grid>`
         );
 
-        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+        let tree = await runner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
         expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
@@ -278,7 +278,7 @@ export class IconTestComponent {
             `<igx-grid paging='true'></igx-grid>`
         );
 
-        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+        tree = await runner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
         expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
