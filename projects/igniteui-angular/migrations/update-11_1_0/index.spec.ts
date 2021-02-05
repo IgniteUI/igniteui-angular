@@ -263,26 +263,15 @@ export class IconTestComponent {
 
     it('should replace paging with enablePaging ', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/grid.component.html`,
+            `/testSrc/appPrefix/component/grid-paging.component.html`,
             `<igx-grid [paging]='true'></igx-grid>`
         );
 
         let tree = await runner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
+        expect(tree.readContent('/testSrc/appPrefix/component/grid-paging.component.html'))
             .toEqual(`<igx-grid [enablePaging]='true'></igx-grid>`);
-
-        appTree.create(
-            `/testSrc/appPrefix/component/grid.component.html`,
-            `<igx-grid paging='true'></igx-grid>`
-        );
-
-        tree = await runner.runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
-
-        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
-            .toEqual(`<igx-grid enablePaging='true'></igx-grid>`);
     });
 
     it('should migrate paging to enablePaging names', async () => {
