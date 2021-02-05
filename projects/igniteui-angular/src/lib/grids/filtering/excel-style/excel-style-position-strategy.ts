@@ -3,7 +3,7 @@ import { ConnectedFit } from '../../../services/overlay/utilities';
 
 /** @hidden */
 export class ExcelStylePositionStrategy extends AutoPositionStrategy {
-    protected shouldFitInViewPort() {
+    protected shouldFitInViewPort(connectedFit: ConnectedFit) {
         return true;
     }
 

@@ -79,7 +79,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     @HostBinding('class.igx-excel-filter')
-    public className = 'igx-excel-filter';
+    className = 'igx-excel-filter';
 
     /**
      * @hidden @internal
@@ -254,7 +254,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * Gets the minimum height.
      */
     @Input()
-    public get minHeight(): string {
+    get minHeight(): string {
         if (this._minHeight || this._minHeight === 0) {
             return this._minHeight;
         }
@@ -273,7 +273,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * Sets the minimum height.
      */
-    public set minHeight(value: string) {
+    set minHeight(value: string) {
         this._minHeight = value;
     }
 
@@ -298,7 +298,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     @Input()
     @HostBinding('style.max-height')
-    public get maxHeight(): string {
+    get maxHeight(): string {
         if (this._maxHeight) {
             return this._maxHeight;
         }
@@ -317,21 +317,21 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * Sets the maximum height.
      */
-    public set maxHeight(value: string) {
+    set maxHeight(value: string) {
         this._maxHeight = value;
     }
 
     /**
      * @hidden @internal
      */
-    public get grid(): IgxGridBaseDirective {
+    get grid(): IgxGridBaseDirective {
         return this.gridAPI?.grid ?? this.column?.grid;
     }
 
     /**
      * @hidden @internal
      */
-    public get displayDensity() {
+    get displayDensity() {
         return this.grid?.displayDensity;
     }
 
@@ -343,7 +343,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public ngOnDestroy(): void {
+    ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }

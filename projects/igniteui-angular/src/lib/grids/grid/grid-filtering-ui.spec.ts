@@ -74,6 +74,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
+        const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
         beforeEach(fakeAsync(() => {
@@ -639,7 +640,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'Downloads');
 
             const columnProductName = GridFunctions.getColumnHeader('ProductName', fix);
-            columnProductName.triggerEventHandler('click', { stopPropagation: () => { } });
+            columnProductName.triggerEventHandler('click', { stopPropagation: (e: any) => { } });
             fix.detectChanges();
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -1129,6 +1130,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const editingBtns = filteringRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
             const reset = editingBtns.queryAll(By.css('button'))[0];
+            const close = editingBtns.queryAll(By.css('button'))[1];
 
             expect(reset.nativeElement.childNodes[1].textContent.trim()).toBe('Reset');
         }));
@@ -2591,6 +2593,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     describe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
+        const cal = SampleTestData.timeGenerator;
         const today = SampleTestData.today;
 
         beforeEach(fakeAsync(() => {
@@ -5567,6 +5570,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should not execute done callback for null column', fakeAsync(() => {
+            const compInstance = fix.componentInstance as IgxGridFilteringESFLoadOnDemandComponent;
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             fix.detectChanges();
 

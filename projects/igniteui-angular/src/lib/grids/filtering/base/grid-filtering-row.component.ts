@@ -39,11 +39,11 @@ import { DisplayDensity } from '../../../core/displayDensity';
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit {
     @Input()
-    public get column(): IgxColumnComponent {
+    get column(): IgxColumnComponent {
         return this._column;
     }
 
-    public set column(val) {
+    set column(val) {
         if (this._column) {
             this.expressionsList.forEach(exp => exp.isSelected = false);
         }
@@ -59,11 +59,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     @Input()
-    public get value(): any {
+    get value(): any {
         return this.expression ? this.expression.searchVal : null;
     }
 
-    public set value(val) {
+    set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
             this.showHideArrowButtons();
@@ -114,7 +114,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected closeButton: ElementRef;
 
     @HostBinding('class')
-    public get styleClasses(): string {
+    get styleClasses(): string {
         let classes = 'igx-grid__filtering-row';
 
         switch (this.column.grid.displayDensity) {
@@ -170,7 +170,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
-    public ngAfterViewInit() {
+    ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outlet;
         this._operatorsOverlaySettings.outlet = this.column.grid.outlet;
 
@@ -182,18 +182,18 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
-    public get disabled(): boolean {
+    get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
 
-    public get template(): TemplateRef<any> {
+    get template(): TemplateRef<any> {
         if (this.column.dataType === DataType.Date) {
             return this.defaultDateUI;
         }
         return this.defaultFilterUI;
     }
 
-    public get type() {
+    get type() {
         switch (this.column.dataType) {
             case DataType.String:
             case DataType.Boolean:
@@ -203,11 +203,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
-    public get conditions(): any {
+    get conditions(): any {
         return this.column.filters.conditionList();
     }
 
-    public get isUnaryCondition(): boolean {
+    get isUnaryCondition(): boolean {
         if (this.expression.condition) {
             return this.expression.condition.isUnary;
         } else {
@@ -215,7 +215,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
-    public get placeholder(): string {
+    get placeholder(): string {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
         } else if (this.column.dataType === DataType.Date) {
@@ -269,7 +269,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     /**
      * Event handler for keyup on the input.
      */
-    public onInputKeyUp() {
+    public onInputKeyUp(eventArgs) {
         this.isKeyPressed = false;
     }
 
