@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
@@ -43,7 +43,6 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      *
      * @memberof IgxCsvExporterService
      */
-    @Output()
     public exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     private _stringData: string;
