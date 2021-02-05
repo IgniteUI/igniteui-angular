@@ -19,6 +19,7 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
+import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -53,10 +54,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public displayDensity: DisplayDensity;
 
     @Output()
-    public expressionRemoved = new EventEmitter<ExpressionUI>();
+    public onExpressionRemoved = new EventEmitter<ExpressionUI>();
 
     @Output()
-    public logicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
+    public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public overlayOutlet: IgxOverlayOutletDirective;
@@ -76,23 +77,23 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         closeOnOutsideClick: true
     };
 
-    public get isLast(): boolean {
+    get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
     }
 
-    public get isSingle(): boolean {
+    get isSingle(): boolean {
         return this.expressionsList.length === 1;
     }
 
-    public get conditionsPlaceholder(): string {
+    get conditionsPlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
     }
 
-    public get inputValuePlaceholder(): string {
+    get inputValuePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_placeholder'];
     }
 
-    public get type() {
+    get type() {
         switch (this.column.dataType) {
             case DataType.Number:
                 return 'number';
@@ -103,7 +104,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     constructor(public cdr: ChangeDetectorRef) {}
 
-    public get conditions() {
+    get conditions() {
         return this.column.filters.conditionList();
     }
 
@@ -111,7 +112,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.inputValuesDirective;
     }
 
-    public ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
         this.dropDownOverlaySettings.outlet = this.overlayOutlet;
         this.dropDownOverlaySettings.target = this.dropdownConditions.inputGroup.element.nativeElement;
         this.dropDownOverlaySettings.excludeFromOutsideClick = [this.dropdownConditions.inputGroup.element.nativeElement as HTMLElement];
@@ -162,7 +163,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             eventArgs.stopPropagation();
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
         } else {
-            this.logicOperatorChanged.emit({
+            this.onLogicOperatorChanged.emit({
                 target: this.expressionUI,
                 newValue: buttonIndex as FilteringLogic
             });
@@ -172,7 +173,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onLogicOperatorKeyDown(eventArgs, buttonIndex: number) {
         if (eventArgs.key === KEYS.ENTER) {
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
-            this.logicOperatorChanged.emit({
+            this.onLogicOperatorChanged.emit({
                 target: this.expressionUI,
                 newValue: buttonIndex as FilteringLogic
             });
@@ -180,7 +181,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public onRemoveButtonClick() {
-        this.expressionRemoved.emit(this.expressionUI);
+        this.onExpressionRemoved.emit(this.expressionUI);
     }
 
     public onOutletPointerDown(event) {
