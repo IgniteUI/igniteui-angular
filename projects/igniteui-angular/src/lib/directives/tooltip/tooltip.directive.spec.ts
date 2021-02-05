@@ -10,7 +10,7 @@ import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '..
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';
 
-fdescribe('IgxTooltip', () => {
+describe('IgxTooltip', () => {
     configureTestSuite();
     let fix;
     let tooltipNativeElement;
