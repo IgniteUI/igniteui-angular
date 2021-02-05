@@ -224,7 +224,10 @@
                 @include css-vars-from-theme($theme, $prefix);
             }
         } @else {
-            @include css-vars-from-theme($theme, $prefix);
+            &,
+            #{$name} {
+                @include css-vars-from-theme($theme, $prefix);
+            }
         }
     }
 }
