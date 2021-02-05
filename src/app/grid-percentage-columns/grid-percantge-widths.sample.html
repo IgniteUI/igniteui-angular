@@ -4,7 +4,7 @@
             <igx-grid [allowFiltering]="true" [data]="data" [autoGenerate]="false" displayDensity="comfortable" width="100%" height="600px" [paging]="true" [perPage]="10">
                 <igx-column field="ProductName" [pinned]="true" [movable]="true" header="Product Name" width="19%" [dataType]="'string'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
                 </igx-column>
-                <igx-column field="UnitsInStock" [pinned]="false" [movable]="true"  header="Units In Stock" width="19%" [dataType]="'number'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
+                <igx-column field="UnitsInStock" [pinned]="false" [movable]="true"  header="Units In Stock" width="19%" [dataType]="'currency'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
                 </igx-column>
                 <igx-column field="OrderDate" [movable]="true" header="Order Date" width="19%" [dataType]="'date'" [sortable]="true" [hasSummary]="false" [editable]="true" [filterable]="true" [resizable]="true">
                     <ng-template igxCell let-cell="cell" let-val>

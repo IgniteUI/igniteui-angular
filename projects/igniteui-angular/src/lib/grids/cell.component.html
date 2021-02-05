@@ -106,6 +106,18 @@
         >
         </igx-date-picker>
     </ng-container>
+    <ng-container *ngIf="column.dataType === 'currency'">
+        <igx-input-group displayDensity="compact">
+            <igx-prefix>{{ currencyCodeSymbol }}</igx-prefix>
+            <input
+                igxInput
+                [value]="editValue"
+                (input)="editValue = $event.target.value"
+                [igxFocus]="true"
+                type="number"
+            />
+        </igx-input-group>
+    </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
 </ng-container>

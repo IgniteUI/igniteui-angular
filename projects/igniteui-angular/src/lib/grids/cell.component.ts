@@ -26,6 +26,7 @@ import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
+import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -52,7 +53,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostBinding('class.igx-grid__td--new')
-    get isEmptyAddRowCell() {
+    public get isEmptyAddRowCell() {
         return this.row.addRow && (this.value === undefined || this.value === null);
     }
 
@@ -592,6 +593,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public activeHighlightClass = 'igx-highlight__active';
+
+
+    /** @hidden @internal */
+    public get currencyCodeSymbol(): string {
+        return getCurrencySymbol(this.column.pipeArgs.currencyCode ?
+            this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale), 'wide', this.grid.locale);
+    }
 
     /** @hidden @internal @deprecated */
     public focused = this.active;
