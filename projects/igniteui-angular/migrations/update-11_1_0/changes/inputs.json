@@ -18,7 +18,7 @@
             }
         },
         {
-            "member": "paging",
+            "name": "paging",
             "replaceWith": "enablePaging",
             "owner": {
                 "selector": "igx-grid",
@@ -26,7 +26,7 @@
             }
         },
         {
-            "member": "paging",
+            "name": "paging",
             "replaceWith": "enablePaging",
             "owner": {
                 "selector": "igx-tree-grid",
@@ -34,7 +34,7 @@
             }
         },
         {
-            "member": "paging",
+            "name": "paging",
             "replaceWith": "enablePaging",
             "owner": {
                 "selector": "igx-hierarchical-grid",
