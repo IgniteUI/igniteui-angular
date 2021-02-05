@@ -24,7 +24,8 @@ export const DataType = mkenum({
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
-    Date: 'date'
+    Date: 'date',
+    Currency: 'currency'
 });
 export type DataType = (typeof DataType)[keyof typeof DataType];
 
