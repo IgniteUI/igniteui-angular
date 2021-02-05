@@ -120,6 +120,22 @@
                 "selector": "igx-toast",
                 "type": "component"
             }
+        },
+        {
+            "name": "onTooltipShow",
+            "replaceWith": "tooltipShow",
+            "owner": {
+                "selector": "igxTooltipTarget",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onTooltipHide",
+            "replaceWith": "tooltipHide",
+            "owner": {
+                "selector": "igxTooltipTarget",
+                "type": "directive"
+            }
         }
     ]
 }

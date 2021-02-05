@@ -477,4 +477,31 @@ providers: [IgxCsvExporterService]
             </igx-toast>`
         );
     });
+
+    it('should replace IgxTooltipTargetDirective event names onTooltipShow and onTooltipHide with tooltipShow and tooltipHide',
+        async () => {
+            appTree.create(
+            `/testSrc/appPrefix/component/tooltip.component.html`,
+            `<button [igxTooltipTarget]="tooltipRef"
+            (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
+        Hover me
+    </button>
+    <div igxTooltip #tooltipRef="tooltip">
+        Hello, I am a tooltip!
+    </div>`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/tooltip.component.html')
+        ).toEqual(`<button [igxTooltipTarget]="tooltipRef"
+        (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)">
+    Hover me
+</button>
+<div igxTooltip #tooltipRef="tooltip">
+    Hello, I am a tooltip!
+</div>`);
+    });
 });
