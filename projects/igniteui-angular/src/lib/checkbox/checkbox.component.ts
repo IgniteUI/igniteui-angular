@@ -341,15 +341,13 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             return;
         }
 
-        this.nativeCheckbox.nativeElement.focus();
-
         if(isIE()) {
             this.nativeCheckbox.nativeElement.blur();
         }
 
         this.indeterminate = false;
         this.checked = !this.checked;
-
+        this.focused = false;
         this.change.emit({ checked: this.checked, checkbox: this });
         this._onChangeCallback(this.checked);
     }
@@ -382,6 +380,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     /** @hidden @internal */
     public _onLabelClick() {
         this.toggle();
+        this.nativeCheckbox.nativeElement.focus();
     }
 
     /** @hidden @internal */

@@ -268,8 +268,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
             return;
         }
 
-        this.nativeCheckbox.nativeElement.focus();
         this.checked = !this.checked;
+        this.focused = false;
         this.change.emit({ checked: this.checked, switch: this });
         this._onChangeCallback(this.checked);
     }
@@ -298,6 +298,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public onLabelClick() {
         this.toggle();
+        this.nativeCheckbox.nativeElement.focus();
     }
     /**
      * @hidden
