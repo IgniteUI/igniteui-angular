@@ -331,6 +331,8 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @memberof IgxRadioComponent
      */
     public select() {
+        this.nativeRadio.nativeElement.focus();
+
         if (isIE()) {
             this.nativeRadio.nativeElement.blur();
         }
@@ -349,8 +351,9 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @memberof IgxRadioComponent
      */
     public deselect() {
+        this.nativeRadio.nativeElement.blur();
+
         this.checked = false;
-        this.focused = false;
         this.cdr.markForCheck();
         this.change.emit({ value: this.value, radio: this });
     }

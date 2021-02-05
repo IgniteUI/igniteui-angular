@@ -64,7 +64,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
-    readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
+    public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
     /**
      * Returns reference to the native checkbox element.
      *
@@ -341,20 +341,28 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             return;
         }
 
+        this.nativeCheckbox.nativeElement.focus();
+
+        if(isIE()) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
+
         this.indeterminate = false;
         this.checked = !this.checked;
 
         this.change.emit({ checked: this.checked, checkbox: this });
         this._onChangeCallback(this.checked);
     }
+
     /** @hidden @internal */
-    public _onCheckboxChange(event) {
+    public _onCheckboxChange(event: Event) {
         // We have to stop the original checkbox change event
         // from bubbling up since we emit our own change event
         event.stopPropagation();
     }
+
     /** @hidden @internal */
-    public _onCheckboxClick(event) {
+    public _onCheckboxClick(event: Event) {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
         // we need to prevent the checkbox click event from bubbling up
@@ -368,34 +376,31 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             event.preventDefault();
         }
 
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
+        this.toggle();
+    }
 
+    /** @hidden @internal */
+    public _onLabelClick() {
         this.toggle();
     }
+
     /** @hidden @internal */
-    public _onLabelClick(event) {
-        // We use a span element as a placeholder label
-        // in place of the native label, we need to emit
-        // the change event separately here alongside
-        // the click event emitted on click
-        this.toggle();
-    }
-    /** @hidden @internal */
-    public onFocus(event) {
+    public onFocus() {
         this.focused = true;
     }
+
     /** @hidden @internal */
-    public onBlur(event) {
+    public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }
+
     /** @hidden @internal */
-    public writeValue(value) {
+    public writeValue(value: string) {
         this._value = value;
         this.checked = !!this._value;
     }
+
     /** @hidden @internal */
     public get labelClass(): string {
         switch (this.labelPosition) {
@@ -406,10 +411,12 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
                 return `${this.cssClass}__label`;
         }
     }
+
     /** @hidden @internal */
     public registerOnChange(fn: (_: any) => void) {
         this._onChangeCallback = fn;
     }
+
     /** @hidden @internal */
     public registerOnTouched(fn: () => void) {
         this._onTouchedCallback = fn;
