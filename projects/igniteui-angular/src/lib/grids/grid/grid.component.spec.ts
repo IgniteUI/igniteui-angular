@@ -1136,7 +1136,7 @@ describe('IgxGrid Component Tests #grid', () => {
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
             fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.enablePaging = true;
+            fix.componentInstance.paging = true;
             fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
 
             tick();

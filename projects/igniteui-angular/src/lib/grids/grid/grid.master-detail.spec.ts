@@ -691,7 +691,7 @@ describe('IgxGrid Master Detail #grid', () => {
         describe('Paging', () => {
              it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.enablePaging = true;
+                fix.componentInstance.paging = true;
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
 
@@ -704,7 +704,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should persist template state after paging to a page with fewer records and paging back.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.enablePaging = true;
+                fix.componentInstance.paging = true;
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();

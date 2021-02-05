@@ -2270,7 +2270,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Paging: Should not apply edited classes to the same row on a different page`, () => {
             // This is not a valid scenario if the grid does not have transactions enabled
-            fix.componentInstance.enablePaging = true;
+            fix.componentInstance.paging = true;
             fix.detectChanges();
 
             const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
