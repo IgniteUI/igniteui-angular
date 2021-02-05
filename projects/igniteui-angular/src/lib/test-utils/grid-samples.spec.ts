@@ -1537,7 +1537,8 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 
 @Component({
     template: `
-    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [enablePaging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
+    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [enablePaging]="true"
+        [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
         <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
