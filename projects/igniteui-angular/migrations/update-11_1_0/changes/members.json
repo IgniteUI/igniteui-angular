@@ -110,7 +110,9 @@
             "member": "paging",
             "replaceWith": "enablePaging",
             "definedIn": [
-                "IgxGridBaseDirective"
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
             ]
         }
     ]
