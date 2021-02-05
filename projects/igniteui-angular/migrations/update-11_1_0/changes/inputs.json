@@ -16,6 +16,30 @@
                 "selector": "igx-icon",
                 "type": "component"
             }
+        },
+        {
+            "member": "paging",
+            "replaceWith": "enablePaging",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "member": "paging",
+            "replaceWith": "enablePaging",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "member": "paging",
+            "replaceWith": "enablePaging",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
         }
     ]
 }

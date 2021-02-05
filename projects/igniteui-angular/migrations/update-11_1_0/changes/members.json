@@ -105,6 +105,13 @@
             "definedIn": [
                 "IgxToastComponent"
             ]
+        },
+        {
+            "member": "paging",
+            "replaceWith": "enablePaging",
+            "definedIn": [
+                "IgxGridBaseDirective"
+            ]
         }
     ]
 }

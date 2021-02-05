@@ -260,4 +260,75 @@ export class IconTestComponent {
             </igx-toast>`
         );
     });
+
+    it('should replace paging with enablePaging ', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/grid.component.html`,
+            `<igx-grid [paging]='true'></igx-grid>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
+            .toEqual(`<igx-grid [enablePaging]='true'></igx-grid>`);
+
+        appTree.create(
+            `/testSrc/appPrefix/component/grid.component.html`,
+            `<igx-grid paging='true'></igx-grid>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
+            .toEqual(`<igx-grid enablePaging='true'></igx-grid>`);
+    });
+
+    it('should migrate paging to enablePaging names', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/grid-test.component.ts',
+            `import { Component } from '@angular/core';
+            import { IgxGridComponent } from 'igniteui-angular';
+
+            @Component({
+                selector: 'app-grid',
+                templateUrl: './grid.component.html',
+                styleUrls: ['./grid.component.scss']
+            })
+            export class GridTestComponent {
+                @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+                public ngOnInit(): void {
+                    this.grid.paging = true;
+                    this.paging = 'justTest'
+                }}`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent = `
+            import { Component } from '@angular/core';
+            import { IgxGridComponent } from 'igniteui-angular';
+
+            @Component({
+                selector: 'app-grid',
+                templateUrl: './grid.component.html',
+                styleUrls: ['./grid.component.scss']
+            })
+            export class GridTestComponent {
+                @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+                public ngOnInit(): void {
+                    this.grid.enablePaging = true;
+                    this.paging = 'justTest'
+                }
+            }`;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/grid-test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
 });
