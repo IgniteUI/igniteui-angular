@@ -191,7 +191,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
-    readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
+    public readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
     /**
      * Returns the class of the switch component.
      *
@@ -268,6 +268,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
             return;
         }
 
+        this.nativeCheckbox.nativeElement.focus();
         this.checked = !this.checked;
         this.change.emit({ checked: this.checked, switch: this });
         this._onChangeCallback(this.checked);
