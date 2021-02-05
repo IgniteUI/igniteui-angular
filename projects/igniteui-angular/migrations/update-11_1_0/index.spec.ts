@@ -233,8 +233,7 @@ export class IconTestComponent {
     it('should replace IgxListComponent event name onLeftPan with leftPan', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/list.component.html`,
-            `<igx-list [allowLeftPanning]="true"
-                (onLeftPan)="leftPanPerformed($event)">`
+            `<igx-list [allowLeftPanning]="true" (onLeftPan)="leftPanPerformed($event)">`
         );
 
         const tree = await runner
@@ -242,15 +241,13 @@ export class IconTestComponent {
             .toPromise();
         expect(
             tree.readContent('/testSrc/appPrefix/component/list.component.html')
-        ).toEqual(`<igx-list [allowLeftPanning]="true" [allowRightPanning]="true"
-        (leftPan)="leftPanPerformed($event)" (rightPan)="rightPanPerformed($event)">`);
+        ).toEqual(`<igx-list [allowLeftPanning]="true" (leftPan)="leftPanPerformed($event)">`);
     });
 
     it('should replace IgxListComponent event name onRightPan with rightPan', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/list.component.html`,
-            `<igx-list [allowRightPanning]="true"
-                (onRightPan)="rightPanPerformed($event)">`
+            `<igx-list [allowRightPanning]="true" (onRightPan)="rightPanPerformed($event)">`
         );
 
         const tree = await runner
@@ -258,8 +255,7 @@ export class IconTestComponent {
             .toPromise();
         expect(
             tree.readContent('/testSrc/appPrefix/component/list.component.html')
-        ).toEqual(`<igx-list [allowRightPanning]="true"
-            (rightPan)="rightPanPerformed($event)">`);
+        ).toEqual(`<igx-list [allowRightPanning]="true" (rightPan)="rightPanPerformed($event)">`);
     });
 
     it('should replace IgxListComponent event name onPanStateChange with panStateChange', async () => {
@@ -357,7 +353,7 @@ providers: [IgxExcelExporterService]
 
         expect(
             tree.readContent(
-                '/testSrc/appPrefix/component/icon-test.component.ts'
+                '/testSrc/appPrefix/component/excel-export.component.ts'
             )
         ).toEqual(expectedContent);
     });
@@ -414,7 +410,7 @@ providers: [IgxCsvExporterService]
 `;
         expect(
             tree.readContent(
-                '/testSrc/appPrefix/component/icon-test.component.ts'
+                '/testSrc/appPrefix/component/csv-export.component.ts'
             )
         ).toEqual(expectedContent);
     });
@@ -482,8 +478,7 @@ providers: [IgxCsvExporterService]
         async () => {
             appTree.create(
             `/testSrc/appPrefix/component/tooltip.component.html`,
-            `<button [igxTooltipTarget]="tooltipRef"
-            (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
+    `<button [igxTooltipTarget]="tooltipRef" (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
         Hover me
     </button>
     <div igxTooltip #tooltipRef="tooltip">
@@ -496,12 +491,12 @@ providers: [IgxCsvExporterService]
             .toPromise();
         expect(
             tree.readContent('/testSrc/appPrefix/component/tooltip.component.html')
-        ).toEqual(`<button [igxTooltipTarget]="tooltipRef"
-        (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)">
-    Hover me
-</button>
-<div igxTooltip #tooltipRef="tooltip">
-    Hello, I am a tooltip!
-</div>`);
+        ).toEqual(
+    `<button [igxTooltipTarget]="tooltipRef" (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)">
+        Hover me
+    </button>
+    <div igxTooltip #tooltipRef="tooltip">
+        Hello, I am a tooltip!
+    </div>`);
     });
 });
