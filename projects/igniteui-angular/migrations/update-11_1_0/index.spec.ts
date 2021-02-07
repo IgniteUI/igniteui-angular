@@ -301,6 +301,7 @@ export class IconTestComponent {
     });
 
     it('should update Excel exporter onExportEnded event name to exportEnded', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
 `import { Component } from '@angular/core';
@@ -358,6 +359,7 @@ export class ExcelExportComponent {
     });
 
     it('should update CSV exporter onExportEnded event name to exportEnded', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
 `import { Component } from '@angular/core';
