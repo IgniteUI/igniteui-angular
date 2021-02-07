@@ -303,19 +303,19 @@ export class IconTestComponent {
     it('should update Excel exporter onExportEnded event name to exportEnded', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/excel-export.component.ts',
-        `import { Component } from '@angular/core';
-        import { IgxExcelExporterService } from "igniteui-angular";
+`import { Component } from '@angular/core';
+import { IgxExcelExporterService } from "igniteui-angular";
 
-        @Component({
-            selector: "app-excel-export",
-            styleUrls: ["./excel-export.component.scss"],
-            templateUrl: "./excel-export.component.html"
-        })
-        export class ExcelExportComponent {
-            constructor(private excelExportService: IgxExcelExporterService) {
-                this.excelExportService.onExportEnded.subscribe();
-            }
-        }
+@Component({
+    selector: "app-excel-export",
+    styleUrls: ["./excel-export.component.scss"],
+    templateUrl: "./excel-export.component.html"
+})
+export class ExcelExportComponent {
+    constructor(private excelExportService: IgxExcelExporterService) {
+        this.excelExportService.onExportEnded.subscribe();
+    }
+}
 @NgModule({
     declarations: [ExcelExportComponent],
     exports: [ExcelExportComponent],
@@ -329,24 +329,24 @@ export class IconTestComponent {
             .toPromise();
 
         const expectedContent =
-        `import { Component } from '@angular/core';
-        import { IgxExcelExporterService } from "igniteui-angular";
+`import { Component } from '@angular/core';
+import { IgxExcelExporterService } from "igniteui-angular";
 
-        @Component({
-            selector: "app-excel-export",
-            styleUrls: ["./excel-export.component.scss"],
-            templateUrl: "./excel-export.component.html"
-        })
-        export class ExcelExportComponent {
-            constructor(private excelExportService: IgxExcelExporterService) {
-                this.excelExportService.exportEnded.subscribe();
-            }
-        }
+@Component({
+    selector: "app-excel-export",
+    styleUrls: ["./excel-export.component.scss"],
+    templateUrl: "./excel-export.component.html"
+})
+export class ExcelExportComponent {
+    constructor(private excelExportService: IgxExcelExporterService) {
+        this.excelExportService.exportEnded.subscribe();
+    }
+}
 @NgModule({
-declarations: [ExcelExportComponent],
-exports: [ExcelExportComponent],
-imports: [],
-providers: [IgxExcelExporterService]
+    declarations: [ExcelExportComponent],
+    exports: [ExcelExportComponent],
+    imports: [],
+    providers: [IgxExcelExporterService]
 });
 `;
 
@@ -360,19 +360,19 @@ providers: [IgxExcelExporterService]
     it('should update CSV exporter onExportEnded event name to exportEnded', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/csv-export.component.ts',
-        `import { Component } from '@angular/core';
-        import { IgxCsvExporterService } from "igniteui-angular";
+`import { Component } from '@angular/core';
+import { IgxCsvExporterService } from "igniteui-angular";
 
-        @Component({
-            selector: "app-csv-export",
-            styleUrls: ["./csv-export.component.scss"],
-            templateUrl: "./csv-export.component.html"
-            })
-        export class CsvExportComponent {
-            constructor(private csvExportService: IgxCsvExporterService) {
-                this.csvExportService.onExportEnded.subscribe();
-            }
-        }
+@Component({
+    selector: "app-csv-export",
+    styleUrls: ["./csv-export.component.scss"],
+    templateUrl: "./csv-export.component.html"
+})
+export class CsvExportComponent {
+    constructor(private csvExportService: IgxCsvExporterService) {
+        this.csvExportService.onExportEnded.subscribe();
+    }
+}
 @NgModule({
     declarations: [CsvExportComponent],
     exports: [CsvExportComponent],
@@ -386,24 +386,24 @@ providers: [IgxExcelExporterService]
             .toPromise();
 
         const expectedContent =
-        `import { Component } from '@angular/core';
-        import { IgxCsvExporterService } from "igniteui-angular";
+`import { Component } from '@angular/core';
+import { IgxCsvExporterService } from "igniteui-angular";
 
-        @Component({
-            selector: "app-csv-export",
-            styleUrls: ["./csv-export.component.scss"],
-            templateUrl: "./csv-export.component.html"
-        })
-        export class CsvExportComponent {
-            constructor(private csvExportService: IgxCsvExporterService) {
-                this.csvExportService.exportEnded.subscribe();
-            }
-        }
+@Component({
+    selector: "app-csv-export",
+    styleUrls: ["./csv-export.component.scss"],
+    templateUrl: "./csv-export.component.html"
+})
+export class CsvExportComponent {
+    constructor(private csvExportService: IgxCsvExporterService) {
+        this.csvExportService.exportEnded.subscribe();
+    }
+}
 @NgModule({
-declarations: [CsvExportComponent],
-exports: [CsvExportComponent],
-imports: [],
-providers: [IgxCsvExporterService]
+    declarations: [CsvExportComponent],
+    exports: [CsvExportComponent],
+    imports: [],
+    providers: [IgxCsvExporterService]
 });
 `;
         expect(
