@@ -1345,8 +1345,16 @@
     %form-group-helper {
         position: relative;
         display: flex;
-        justify-content: space-between;
         padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
+        justify-content: space-between;
+
+        > * {
+            margin-#{$right}: rem(8px);
+
+            &:last-child {
+                margin-#{$right}: 0;
+            }
+        }
 
         &:empty {
             display: none;
@@ -1375,18 +1383,22 @@
     }
 
     %form-group-helper-item {
-        @include ellipsis();
+        display: flex;
+        align-items: center;
         position: relative;
-        min-width: 0;
-        max-width: 100%;
     }
 
     %form-group-helper-item--start {
-        order: 0;
+        justify-content: flex-start;
     }
 
     %form-group-helper-item--end {
-        order: 1;
+        justify-content: flex-end;
+    }
+
+    %form-group-helper-item--start,
+    %form-group-helper-item--end {
+        width: 100%;
     }
 
     %form-group-prefix--disabled,

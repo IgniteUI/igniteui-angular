@@ -416,9 +416,11 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
+            const pinnedCells = firstRowCells
+                .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedCells);
 
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
@@ -604,10 +606,12 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
+            const pinnedCells = firstRowCells
+                .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
-             // headers are aligned to cells
-             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            // headers are aligned to cells
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedCells);
 
             // check virtualization state
             // 4 groups in total - 1 is pinned
@@ -782,10 +786,12 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
+            const pinnedCells = firstRowCells
+                .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
-             // headers are aligned to cells
-             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            // headers are aligned to cells
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedCells);
 
             // check virtualization state
             const horizontalVirtualization = grid.rowList.first.virtDirRow;
@@ -820,11 +826,13 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
+            const pinnedCells = firstRowCells
+                .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
             expect(filterIcons.length).toBe(gridFirstRow.cells.length);
 
             // headers are aligned to cells
-            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedCells);
 
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
         });
