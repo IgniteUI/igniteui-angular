@@ -1,13 +1,6 @@
-import {
-    Rule,
-    SchematicContext,
-    Tree
-} from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { findMatches, replaceMatch } from '../common/tsUtils';
 import { UpdateChanges } from '../common/UpdateChanges';
-import {
-    findMatches,
-    replaceMatch
-} from '../common/tsUtils';
 
 const version = '11.1.0';
 
@@ -24,18 +17,15 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     for (const entryPath of tsFiles) {
         const ls = update.getDefaultLanguageService(entryPath);
         let content = host.read(entryPath).toString();
-        const matches = [];
         for (const change of changes) {
-            matches.push({ change, positions: findMatches(content, change) });
-        }
-        for (const match of matches) {
-            for (const position of match.positions) {
+            const matches = findMatches(content, change);
+            for (const position of matches) {
                 const definition = ls.getDefinitionAndBoundSpan(entryPath, position - 1)?.definitions[0];
                 if (definition
                     && definition.kind === 'enum'
                     && definition.name === targetEnum
                     && definition.fileName.includes('igniteui-angular')) {
-                    content = replaceMatch(content, match.change.member, match.change.replaceWith, position);
+                    content = replaceMatch(content, change.member, change.replaceWith, position);
                     host.overwrite(entryPath, content);
                 }
             }
