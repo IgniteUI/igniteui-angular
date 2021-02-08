@@ -69,7 +69,7 @@
             "name": "onSelection",
             "replaceWith": "selected",
             "owner": {
-                "selector": "IgxCalendarComponent",
+                "selector": "igx-calendar",
                 "type": "component"
             }
         },
@@ -77,7 +77,7 @@
             "name": "onViewChanging",
             "replaceWith": "viewChanging",
             "owner": {
-                "selector": "IgxCalendarComponent",
+                "selector": "igx-calendar",
                 "type": "component"
             }
         },
@@ -85,7 +85,7 @@
             "name": "onDateSelection",
             "replaceWith": "dateSelection",
             "owner": {
-                "selector": "IgxCalendarComponent",
+                "selector": "igx-calendar",
                 "type": "component"
             }
         },
@@ -93,7 +93,7 @@
             "name": "onYearSelection",
             "replaceWith": "yearSelection",
             "owner": {
-                "selector": "IgxCalendarComponent",
+                "selector": "igx-calendar",
                 "type": "component"
             }
         },
@@ -101,7 +101,7 @@
             "name": "onMonthSelection",
             "replaceWith": "monthSelection",
             "owner": {
-                "selector": "IgxCalendarComponent",
+                "selector": "igx-calendar",
                 "type": "component"
             }
         },
@@ -109,7 +109,7 @@
             "name": "onSelection",
             "replaceWith": "selected",
             "owner": {
-                "selector": "IgxYearsViewComponent",
+                "selector": "igx-years-view",
                 "type": "component"
             }
         },
@@ -117,7 +117,7 @@
             "name": "onYearSelection",
             "replaceWith": "yearSelection",
             "owner": {
-                "selector": "IgxYearsViewComponent",
+                "selector": "igx-years-view",
                 "type": "component"
             }
         },
@@ -125,7 +125,7 @@
             "name": "onDateSelection",
             "replaceWith": "dateSelection",
             "owner": {
-                "selector": "IgxDaysViewComponent",
+                "selector": "igx-days-view",
                 "type": "component"
             }
         },
@@ -133,7 +133,7 @@
             "name": "onViewChanging",
             "replaceWith": "viewChanging",
             "owner": {
-                "selector": "IgxDaysViewComponent",
+                "selector": "igx-days-view",
                 "type": "component"
             }
         },
@@ -141,7 +141,7 @@
             "name": "onSelection",
             "replaceWith": "selected",
             "owner": {
-                "selector": "IgxMonthPickerComponent",
+                "selector": "igx-month-picker",
                 "type": "component"
             }
         },
@@ -149,7 +149,7 @@
             "name": "onSelection",
             "replaceWith": "selected",
             "owner": {
-                "selector": "IgxMonthsViewComponent",
+                "selector": "igx-months-view",
                 "type": "component"
             }
         },
@@ -157,7 +157,7 @@
             "name": "onMonthSelection",
             "replaceWith": "monthSelection",
             "owner": {
-                "selector": "IgxMonthsViewComponent",
+                "selector": "igx-months-view",
                 "type": "component"
             }
         }
