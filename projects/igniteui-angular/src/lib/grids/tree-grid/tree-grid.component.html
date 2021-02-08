@@ -74,9 +74,9 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
             <ng-container *ngIf='data
-            | treeGridTransaction:id:pipeTrigger
+            | treeGridTransaction
             | visibleColumns:hasVisibleColumns
-            | treeGridNormalizeRecord:pipeTrigger
+            | treeGridNormalizeRecord
             | gridRowPinning:id:true:pipeTrigger
             | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
             | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger:true
@@ -96,14 +96,14 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
-        | treeGridTransaction:id:pipeTrigger
+        | treeGridTransaction
         | visibleColumns:hasVisibleColumns
-        | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
+        | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id
         | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger
-        | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
-        | treeGridPaging:page:perPage:id:pipeTrigger
-        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:id:pipeTrigger:summaryPipeTrigger
+        | treeGridFlattening:id:expansionDepth:expansionStates
+        | treeGridPaging:page:perPage
+        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse
         | gridRowPinning:id:false:pipeTrigger
         | gridAddRow:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
