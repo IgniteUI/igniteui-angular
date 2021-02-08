@@ -160,6 +160,7 @@ export type PredefinedFormatOptions = (typeof PredefinedFormatOptions)[keyof typ
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
     EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    private _label: string = 'Date';
     /**
      * Gets/Sets the `IgxDatePickerComponent` label.
      *
@@ -182,7 +183,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         <label igxLabel>Custom label</label>
     </igx-date-picker> `)
     @Input()
-    public label = 'Date';
+    public get label(): string {
+        return this._label;
+    }
+
+    public set label(v: string) {
+        this._label = v;
+    }
+
+    public get labelTemplate(): IgxLabelDirective {
+        return this._labelDirectiveUserTemplate;
+    }
 
     /**
      * Gets/Sets the `IgxDatePickerComponent` label visibility.
@@ -459,7 +470,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             displayData: this.displayData,
             format: this.format,
             isSpinLoop: this.isSpinLoop,
-            label: this.label,
             labelVisibility: this.labelVisibility,
             locale: this.locale,
             mask: this.mask,
