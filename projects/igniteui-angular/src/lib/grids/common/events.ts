@@ -75,16 +75,8 @@ export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, Can
  */
 export interface IPageEventArgs extends IBaseEventArgs {
     previous: number;
-    newPage: number;
+    current: number;
 }
-
-/**
- * The event arguments before a page is changed.
- * `oldPage` is the currently active page, `newPage` is the page that will be active if the operation completes succesfully.
- */
-export interface IPagingEventArgs extends IPageEventArgs, CancelableEventArgs {
-}
-
 
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;

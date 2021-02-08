@@ -1,7 +1,6 @@
 <div class="switches">
     <igx-switch (change)='this.$sorting = !this.$sorting' style="padding-left: 20px">cancel sorting</igx-switch>
     <igx-switch (change)='this.$filtering = !this.$filtering' style="padding-left: 20px">cancel filtering</igx-switch>
-    <igx-switch (change)='this.$paging = !this.$paging' style="padding-left: 20px">cancel paging</igx-switch>
     <igx-switch (change)='this.$pinning = !this.$pinning' style="padding-left: 20px">cancel pinning</igx-switch>
     <igx-switch (change)='this.$resizing = !this.$resizing' style="padding-left: 20px">cancel resizing</igx-switch>
     <igx-switch (change)='this.$onColumnSelectionChange = !this.$onColumnSelectionChange' style="padding-left: 20px">cancel onColumnSelectionChange</igx-switch>
@@ -34,7 +33,6 @@
                 (onSortingDone)="onSortingDone($event)"
                 (filtering)="onFiltering($event)"
                 (onFilteringDone)="onFilteringDone($event)"
-                (onPaging)="onPaging($event)"
                 (onPagingDone)="onPagingDone($event)"
                 (onColumnPinning)="onColumnPinning($event)"
                 (columnPinned)="columnPinned($event)"

@@ -138,7 +138,6 @@ import {
     IActiveNodeChangeEventArgs,
     ISortingEventArgs,
     IFilteringEventArgs,
-    IPagingEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
     IPinColumnCancellableEventArgs,
@@ -293,9 +292,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
     /**
-     * @hidden
+     * Emitted after the current page is changed.
+     *
+     * @example
+     * ```html
+     * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
      */
-    @DeprecateProperty(`Deprecated. Use 'onPagingDone' instead.`)
     @Output()
     public pageChange = new EventEmitter<number>();
 
@@ -660,19 +668,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
-
-    /**
-     * Emitted before paging is performed.
-     *
-     * @remarks
-     * Returns an object consisting of the previous and next pages.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPaging)="onPaging($event)"></igx-grid>
-     * ```
-     */
-    @Output()
-    public onPaging = new EventEmitter<IPagingEventArgs>();
 
     /**
      * Emitted after paging is performed.
@@ -1456,6 +1451,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.selectionService.clear(true);
+        this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
         this.navigateTo(0);
@@ -1484,8 +1480,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.selectionService.clear(true);
         this._perPage = val;
         this.perPageChange.emit(this._perPage);
-        // toDO not needed to paginate every time
-        this.paginate(0);
+        this.page = 0;
         this.endEdit(true);
         this.notifyChanges();
     }
@@ -3374,18 +3369,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
-    _onPaging(event: IPagingEventArgs) {
-        const eventArgs = { previous: event.previous, newPage: event.newPage, cancel: false, owner: this };
-        this.onPaging.emit(eventArgs);
-        event.newPage = eventArgs.newPage;
-        event.cancel = eventArgs.cancel;
-    }
-
-    _onPagingDone(event: IPageEventArgs) {
-        const eventArgs = { previous: event.previous, newPage: event.newPage, owner: this };
-        this.onPagingDone.emit(eventArgs);
-    }
-
     /**
      * @hidden
      */
@@ -4152,7 +4135,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public nextPage(): void {
-        this.paginate(this._page + 1);
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
     }
 
     /**
@@ -4164,7 +4149,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public previousPage(): void {
-        this.paginate(this._page - 1);
+        if (!this.isFirstPage) {
+            this.page -= -1;
+        }
     }
 
     /**
@@ -4306,20 +4293,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param val
      */
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1 || val === this._page) {
+        if (val < 0 || val > this.totalPages - 1) {
             return;
         }
 
-        const eventArgs = { previous: this._page, newPage: val };
-        const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
-        this.onPaging.emit(cancelableEventArgs);
-
-        if (cancelableEventArgs.cancel) {
-            return;
-        }
-
-        this.page = eventArgs.newPage = cancelableEventArgs.newPage;
-        this.onPagingDone.emit(eventArgs);
+        this.page = val;
     }
 
     /**

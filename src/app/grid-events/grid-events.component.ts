@@ -4,7 +4,7 @@ import { IgxGridComponent, FilteringExpressionsTree,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
-    IColumnVisibilityChangingEventArgs, IPagingEventArgs } from 'igniteui-angular';
+    IColumnVisibilityChangingEventArgs } from 'igniteui-angular';
 import { data } from '../grid-cellEditing/data';
 
 @Component({
@@ -68,11 +68,6 @@ export class GridEventsComponent implements OnInit, AfterViewInit {
     public onFilteringDone(event: FilteringExpressionsTree) {
         console.log('event' + event);
         this.logAnEvent(`=> onFilteringDone`);
-    }
-
-    public onPaging(event: IPagingEventArgs) {
-        event.cancel = this.$paging;
-        this.logAnEvent('=> onPaging', event.cancel);
     }
     public onPagingDone(event: IPageEventArgs) {
         console.log('event' + event);

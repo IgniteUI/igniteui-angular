@@ -11,7 +11,6 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IPageEventArgs, IPagingEventArgs } from '../grids/common/events';
 
 @Component({
     selector: 'igx-paginator',
@@ -118,32 +117,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public pageChange = new EventEmitter<number>();
 
     /**
-     * Emitted before paging is performed.
-     *
-     * @remarks
-     * Returns an object consisting of the previous and current pages.
-     * @example
-     * ```html
-     * <igx-paginator [pagerEnabled]="true" (onPaging)="onPaging($event)"></igx-paginator>
-     * ```
-     */
-    @Output()
-    public onPaging = new EventEmitter<IPagingEventArgs>();
-
-    /**
-     * Emitted after paging is performed.
-     *
-     * @remarks
-     * Returns an object consisting of the previous and current pages.
-     * @example
-     * ```html
-     * <igx-paginator [pagerEnabled]="true" (onPagingDone)="onPagingDone($event)"></igx-paginator>
-     * ```
-     */
-    @Output()
-    public onPagingDone = new EventEmitter<IPageEventArgs>();
-
-    /**
      * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
@@ -215,7 +188,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
         this.totalPages = Math.ceil(this.totalRecords / this._perPage);
         if (this.totalPages !== 0 && this.page >= this.totalPages) {
-            this.paginate(this.totalPages - 1);
+            this.page = this.totalPages - 1;
         }
     }
 
@@ -345,7 +318,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
-        this.paginate(this._page + 1);
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
@@ -356,7 +331,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
-        this.paginate(this._page - 1);
+        if (!this.isFirstPage) {
+            this.page -= 1;
+        }
     }
     /**
      * Goes to the desired page index.
@@ -371,16 +348,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         if (val < 0 || val > this.totalPages - 1) {
             return;
         }
-        const eventArgs = { previous: this._page, newPage: val };
-        const cancelableEventArgs = { ...eventArgs, cancel: false, owner: this };
-        this.onPaging.emit(cancelableEventArgs);
-
-        if (cancelableEventArgs.cancel) {
-            return;
-        }
-
-        this.page = eventArgs.newPage = cancelableEventArgs.newPage;
-        this.onPagingDone.emit(eventArgs);
+        this.page = val;
     }
 
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
