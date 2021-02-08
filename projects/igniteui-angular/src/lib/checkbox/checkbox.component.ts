@@ -391,7 +391,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     /** @hidden @internal */
     public _onLabelClick() {
         this.toggle();
-        this.nativeCheckbox.nativeElement.focus();
     }
 
     /** @hidden @internal */
