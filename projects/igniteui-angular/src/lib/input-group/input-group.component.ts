@@ -285,7 +285,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         }
     }
 
-    public hintClickHandler(event) {
+    public hintClickHandler(event: MouseEvent) {
         event.stopPropagation();
     }
 
@@ -380,7 +380,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /** @hidden @internal */
     public get fileNames() {
-        return this.input.fileNames;
+        return this.input.fileNames || this._resourceStrings.igx_input_file_placeholder;
     }
 
     /**

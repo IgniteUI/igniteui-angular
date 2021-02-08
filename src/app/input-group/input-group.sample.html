@@ -5,13 +5,13 @@
             <igx-buttongroup
                 [alignment]="alignment"
                 [values]="displayDensities"
-                (onSelect)="selectDensity($event)"
+                (selected)="selectDensity($event)"
             ></igx-buttongroup>
             <strong>Select Input type</strong>
             <igx-buttongroup
                 [alignment]="alignment"
                 [values]="inputTypes"
-                (onSelect)="selectInputType($event)"
+                (selected)="selectInputType($event)"
             ></igx-buttongroup>
             <strong>Disable fields</strong>
             <igx-switch name="disabledswitch" [(ngModel)]="isDisabled"></igx-switch>
