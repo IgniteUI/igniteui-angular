@@ -76,7 +76,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * let labelElement =  this.switch.nativeLabel;
      * ```
      */
-    @ViewChild('label', { static: true }) public nativeLabel;
+    @ViewChild('label', { static: true })
+    public nativeLabel: ElementRef;
     /**
      * Returns reference to the label placeholder element.
      *
@@ -85,7 +86,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * let labelPlaceholder = this.switch.placeholderLabel;
      * ```
      */
-    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true })
+    public placeholderLabel: ElementRef;
 
     /**
      * Sets/gets the `id` of the switch component.
@@ -116,7 +118,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * <igx-switch [value]="switchValue"></igx-switch>
      * ```
      */
-    @Input() public value: any;
+    @Input() public value: string;
     /**
      * Sets/gets the `name` attribute of the switch component.
      *
@@ -323,7 +325,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public writeValue(value) {
+    public writeValue(value: string) {
         this._value = value;
         this.checked = !!this._value;
     }

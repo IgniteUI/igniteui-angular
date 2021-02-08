@@ -22,7 +22,7 @@ export const LabelPosition = mkenum({
     BEFORE: 'before',
     AFTER: 'after'
 });
-export type LabelPosition = (typeof LabelPosition)[keyof typeof LabelPosition];
+export type LabelPosition = typeof LabelPosition[keyof typeof LabelPosition];
 
 export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
     checked: boolean;
@@ -83,7 +83,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * let labelElement =  this.checkbox.nativeLabel;
      * ```
      */
-    @ViewChild('label', { static: true }) public nativeLabel;
+    @ViewChild('label', { static: true })
+    public nativeLabel: ElementRef;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
@@ -92,7 +93,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * let labelPlaceholder =  this.checkbox.placeholderLabel;
      * ```
      */
-    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true })
+    public placeholderLabel: ElementRef;
     /**
      * Sets/gets the `id` of the checkbox component.
      * If not set, the `id` of the first checkbox component will be `"igx-checkbox-0"`.
@@ -106,7 +108,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      */
     @HostBinding('attr.id')
-    @Input() public id = `igx-checkbox-${nextId++}`;
+    @Input()
+    public id = `igx-checkbox-${nextId++}`;
     /**
      * Sets/gets the id of the `label` element.
      * If not set, the id of the `label` in the first checkbox component will be `"igx-checkbox-0-label"`.
@@ -259,7 +262,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      */
     @HostBinding('class.igx-checkbox--indeterminate')
-    @Input() public indeterminate = false;
+    @Input()
+    public indeterminate = false;
     /**
      * Sets/gets whether the checkbox is checked.
      * Default value is `false`.
@@ -273,7 +277,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      */
     @HostBinding('class.igx-checkbox--checked')
-    @Input() public checked = false;
+    @Input()
+    public checked = false;
     /**
      * Sets/gets whether the checkbox is disabled.
      * Default value is `false`.
@@ -287,7 +292,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      */
     @HostBinding('class.igx-checkbox--disabled')
-    @Input() public disabled = false;
+    @Input()
+    public disabled = false;
     /**
      * Sets/gets whether the checkbox is readonly.
      * Default value is `false`.
@@ -314,13 +320,14 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * ```
      */
     @HostBinding('class.igx-checkbox--plain')
-    @Input() public disableTransitions = false;
+    @Input()
+    public disableTransitions = false;
     /** @hidden @internal */
     public inputId = `${this.id}-input`;
     /**
      * @hidden
      */
-    protected _value: any;
+    protected _value: string;
     /**
      * @hidden
      */
@@ -390,7 +397,17 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
     /** @hidden @internal */
     public _onLabelClick() {
+        // We use a span element as a placeholder label
+        // in place of the native label, we need to emit
+        // the change event separately here alongside
+        // the click event emitted on click
+
         this.toggle();
+    }
+
+    /** @hidden @internal */
+    public onFocus() {
+        this.focused = true;
     }
 
     /** @hidden @internal */
@@ -445,7 +462,7 @@ export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {
     igx-checkbox[required][ngModel]`,
     providers: [IGX_CHECKBOX_REQUIRED_VALIDATOR]
 })
-export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator { }
+export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator {}
 
 /**
  * @hidden
@@ -455,4 +472,4 @@ export class IgxCheckboxRequiredDirective extends CheckboxRequiredValidator { }
     exports: [IgxCheckboxComponent, IgxCheckboxRequiredDirective],
     imports: [IgxRippleModule]
 })
-export class IgxCheckboxModule { }
+export class IgxCheckboxModule {}
