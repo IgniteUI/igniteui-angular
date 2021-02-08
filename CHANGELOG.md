@@ -13,6 +13,22 @@ All notable changes for each version of this project will be documented in this 
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
+    - `onSelection` is now `selected` 
+    - `onViewChanging` is now `viewChanging`
+    - `onDateSelection` is now `dateSelection`
+    - `onYearSelection` is now `yearSelection`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxYearsViewComponent`
+    - `onSelection` is now `selected`
+    - `onYearSelection` is now `yearSelection`
+- `IgxDaysViewComponent`
+    - `onDateSelection` is now `dateSelection`
+    - `onViewChanging` is now `viewChanging`
+- `IgxMonthsViewComponent`
+    - `onSelection` is now `selected`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxMonthPickerComponent`
+    - `onSelection` is now `selected`
 - `IgxRadioGroup`
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
 - `IgxDialog`
@@ -30,29 +46,9 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `theme` that allows you to set the theme explicitly and at runtime.
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
-- `IgxCalendarComponent`
-    - `onSelection` is now `selected` 
-    - `onViewChanging` is now `viewChanging`
-    - `onDateSelection` is now `dateSelection`
-    - `onYearSelection` is now `yearSelection`
-    - `onMonthSelection` is now `monthSelection`
-- `IgxYearsViewComponent`
-    - `onSelection` is now `selected`
-    - `onYearSelection` is now `yearSelection`
-- `IgxDaysViewComponent`
-    - `onDateSelection` is now `dateSelection`
-    - `onViewChanging` is now `viewChanging`
-- `IgxMonthsViewComponent`
-    - `onSelection` is now `selected`
-    - `onMonthSelection` is now `monthSelection`
-- `IgxMonthPickerComponent`
-    - `onSelection` is now `selected`
-- `IgxGrid`
+- `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
-- `IgxHierarchicalGrid`
-    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
-- `IgxTreeGrid`
-    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
+    - `GridPagingMode` enum members rename - `local` to `Local` and `remote` to `Remote`. Example:  `GridPagingMode.Local`.
 
 ## 11.0.4
 
