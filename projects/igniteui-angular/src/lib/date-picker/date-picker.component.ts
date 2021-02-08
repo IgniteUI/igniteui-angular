@@ -161,7 +161,7 @@ const noop = () => { };
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
     EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
-    private _label: string = 'Date';
+    private _label = 'Date';
     /**
      * Gets/Sets the `IgxDatePickerComponent` label.
      * @remarks
