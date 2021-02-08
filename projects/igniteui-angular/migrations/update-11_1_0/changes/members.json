@@ -145,13 +145,6 @@
             "member": "onSelection",
             "replaceWith": "selected",
             "definedIn": [
-                "IgxMonthsViewComponent"
-            ]
-        },
-        {
-            "member": "onSelection",
-            "replaceWith": "selected",
-            "definedIn": [
                 "IgxYearsViewComponent"
             ]
         },
