@@ -334,7 +334,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @internal
      */
     @HostListener('keyup', ['$event'])
-    public onKeydown(event: KeyboardEvent) {
+    public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
     }
