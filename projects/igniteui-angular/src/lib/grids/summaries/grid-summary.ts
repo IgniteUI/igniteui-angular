@@ -1,4 +1,4 @@
-import { DecimalPipe, DatePipe } from '@angular/common';
+import { DecimalPipe, DatePipe, CurrencyPipe } from '@angular/common';
 import { IColumnPipeArgs } from '../columns/interfaces';
 
 export interface ISummaryExpression {
@@ -263,6 +263,37 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
             key: 'latest',
             label: 'Latest',
             summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), pipeArgs.format, pipeArgs.timezone)
+        });
+        return result;
+    }
+}
+
+export class IgxCurrencySummaryOperand extends IgxSummaryOperand {
+
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
+        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName, locale);
+        const pipe = new CurrencyPipe(locale, pipeArgs.currencyCode);
+        result.push({
+            key: 'min',
+            label: 'Min',
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), pipeArgs.currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+        });
+        result.push({
+            key: 'max',
+            label: 'Max',
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), pipeArgs.currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+        });
+        result.push({
+            key: 'sum',
+            label: 'Sum',
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), pipeArgs.currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+        });
+        result.push({
+            key: 'average',
+            label: 'Avg',
+            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data),
+                pipeArgs.currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
         });
         return result;
     }

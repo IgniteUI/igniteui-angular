@@ -1,4 +1,4 @@
-import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
+import { DOCUMENT, DatePipe, DecimalPipe, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -1332,6 +1332,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set locale(value: string) {
         if (value !== this._locale) {
             this._locale = value;
+            this._currencyPositionLeft = undefined;
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.notifyChanges();
@@ -2355,6 +2356,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._currentRowState;
     }
 
+    /**
+     * @hidden @internal
+     */
+    public get currencyPositionLeft(): boolean {
+        if (this._currencyPositionLeft !== undefined) {
+            return this._currencyPositionLeft;
+        }
+        const format = getLocaleNumberFormat(this.locale, NumberFormatStyle.Currency);
+        const formatParts = format.split(',');
+        const i = formatParts.indexOf(formatParts.find(c => c.includes('¤')));
+        return this._currencyPositionLeft = i < 1;
+    }
+
 
     /**
      * Gets/Sets whether the toolbar is shown.
@@ -2851,6 +2865,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
+    private _currencyPositionLeft: boolean;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,

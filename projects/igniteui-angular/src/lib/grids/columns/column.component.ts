@@ -35,7 +35,7 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand } from '../summaries/grid-summary';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand, IgxCurrencySummaryOperand } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -1536,6 +1536,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     break;
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
+                    break;
+                case DataType.Currency:
+                    this.summaries = IgxCurrencySummaryOperand;
                     break;
                 default:
                     this.summaries = IgxSummaryOperand;
