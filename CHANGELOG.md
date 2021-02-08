@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 ## 11.1.0
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - The following new events are introduced: `sorting`, `filtering`, `onPaging`, `columnPinned`, `columnVisibilityChanging`.
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
     - **Behavioral Change** -
     - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
 

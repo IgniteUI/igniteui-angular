@@ -4151,7 +4151,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public previousPage(): void {
         if (!this.isFirstPage) {
-            this.page -= -1;
+            this.page -= 1;
         }
     }
 
