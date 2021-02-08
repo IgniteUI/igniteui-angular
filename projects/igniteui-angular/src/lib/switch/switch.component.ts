@@ -261,7 +261,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     @HostListener('keyup', ['$event'])
-    public onKeydown(event: KeyboardEvent) {
+    public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
     }
