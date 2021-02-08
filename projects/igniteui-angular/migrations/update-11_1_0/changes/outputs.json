@@ -64,6 +64,102 @@
                 "selector": "igx-toast",
                 "type": "component"
             }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "IgxCalendarComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "owner": {
+                "selector": "IgxCalendarComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "owner": {
+                "selector": "IgxCalendarComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "owner": {
+                "selector": "IgxCalendarComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "owner": {
+                "selector": "IgxCalendarComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "IgxYearsViewComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "owner": {
+                "selector": "IgxYearsViewComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "owner": {
+                "selector": "IgxDaysViewComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "owner": {
+                "selector": "IgxDaysViewComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "IgxMonthPickerComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "IgxMonthsViewComponent",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "owner": {
+                "selector": "IgxMonthsViewComponent",
+                "type": "component"
+            }
         }
     ]
 }
