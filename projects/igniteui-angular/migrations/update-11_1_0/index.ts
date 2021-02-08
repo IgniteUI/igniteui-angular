@@ -4,6 +4,10 @@ import {
     Tree
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
+import {
+    findMatches,
+    replaceMatch
+} from '../common/tsUtils';
 
 const version = '11.1.0';
 
@@ -11,5 +15,34 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
     const update = new UpdateChanges(__dirname, host, context);
+    const tsFiles = update.tsFiles;
+    const targetEnum = 'GridPagingMode';
+    const changes = [
+        { member: 'remote', replaceWith: 'Remote', definedIn: [targetEnum] },
+        { member: 'local', replaceWith: 'Local', definedIn: [targetEnum] }
+    ];
+    for (const entryPath of tsFiles) {
+        const ls = update.getDefaultLanguageService(entryPath);
+        let content = host.read(entryPath).toString();
+        const matches = [];
+        for (const change of changes) {
+            matches.push({ change, positions: findMatches(content, change) });
+        }
+        for (const match of matches) {
+            for (const position of match.positions) {
+                const definition = ls.getDefinitionAndBoundSpan(entryPath, position - 1)?.definitions[0];
+                if (definition
+                    && definition.kind === 'enum'
+                    && definition.name === targetEnum
+                    && definition.fileName.includes('igniteui-angular')) {
+                    console.log('replacing member: ' + match.change.member);
+                    console.log('replacing with: ' + match.change.replaceWith);
+                    console.log('replacing position: ' + position);
+                    content = replaceMatch(content, match.change.member, match.change.replaceWith, position);
+                    host.overwrite(entryPath, content);
+                }
+            }
+        }
+    }
     update.applyChanges();
 };
