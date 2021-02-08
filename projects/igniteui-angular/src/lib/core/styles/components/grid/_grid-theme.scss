@@ -408,8 +408,6 @@
         $drop-area-background: text-contrast($grouparea-background);
     }
 
-
-
     @if not($drop-area-on-drop-background) and $drop-area-background {
         $drop-area-on-drop-background: $drop-area-background;
     }
@@ -1420,6 +1418,11 @@
             width: 100%;
             height: 100%;
             padding-top: 0 !important;
+        }
+
+        igx-select {
+            width: 100%;
+            height: 100%;
         }
 
         igx-date-picker,
