@@ -30,6 +30,23 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `theme` that allows you to set the theme explicitly and at runtime.
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+- `IgxCalendarComponent`
+    - `onSelection` is now `selected` 
+    - `onViewChanging` is now `viewChanging`
+    - `onDateSelection` is now `dateSelection`
+    - `onYearSelection` is now `yearSelection`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxYearsViewComponent`
+    - `onSelection` is now `selected`
+    - `onYearSelection` is now `yearSelection`
+- `IgxDaysViewComponent`
+    - `onDateSelection` is now `dateSelection`
+    - `onViewChanging` is now `viewChanging`
+- `IgxMonthsViewComponent`
+    - `onSelection` is now `selected`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxMonthPickerComponent`
+    - `onSelection` is now `selected`
 - `IgxGrid`
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
 - `IgxHierarchicalGrid`
