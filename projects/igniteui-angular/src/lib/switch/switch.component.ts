@@ -9,7 +9,8 @@ import {
     Output,
     Provider,
     ViewChild,
-    ElementRef
+    ElementRef,
+    HostListener
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -256,6 +257,16 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     private _onChangeCallback: (_: any) => void = noop;
     /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keyup', ['$event'])
+    public onKeydown(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = true;
+    }
+
+    /**
      * Toggles the checked state of the switch.
      *
      * @example
@@ -268,8 +279,9 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
             return;
         }
 
+        this.nativeCheckbox.nativeElement.focus();
+
         this.checked = !this.checked;
-        this.focused = false;
         this.change.emit({ checked: this.checked, switch: this });
         this._onChangeCallback(this.checked);
     }
@@ -277,14 +289,14 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public _onSwitchChange(event) {
+    public _onSwitchChange(event: Event) {
         event.stopPropagation();
     }
     /**
      * @hidden
      * @internal
      */
-    public _onSwitchClick(event) {
+    public _onSwitchClick(event: Event) {
         event.stopPropagation();
         this.toggle();
 
@@ -298,14 +310,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public onLabelClick() {
         this.toggle();
-        this.nativeCheckbox.nativeElement.focus();
-    }
-    /**
-     * @hidden
-     * @internal
-     */
-    public onFocus() {
-        this.focused = true;
     }
     /**
      * @hidden

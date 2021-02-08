@@ -2,6 +2,7 @@ import {
     Component,
     Directive,
     EventEmitter,
+    HostListener,
     forwardRef,
     HostBinding,
     Input,
@@ -329,6 +330,15 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     private _onChangeCallback: (_: any) => void = noop;
     /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keyup', ['$event'])
+    public onKeydown(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = true;
+    }
+    /**
      * If `disabled` is `false`, switches the `checked` state.
      *
      * @example
@@ -341,13 +351,10 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             return;
         }
 
-        if(isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
+        this.nativeCheckbox.nativeElement.focus();
 
         this.indeterminate = false;
         this.checked = !this.checked;
-        this.focused = false;
         this.change.emit({ checked: this.checked, checkbox: this });
         this._onChangeCallback(this.checked);
     }
@@ -375,17 +382,16 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         }
 
         this.toggle();
+
+        if (isIE()) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
     }
 
     /** @hidden @internal */
     public _onLabelClick() {
         this.toggle();
         this.nativeCheckbox.nativeElement.focus();
-    }
-
-    /** @hidden @internal */
-    public onFocus() {
-        this.focused = true;
     }
 
     /** @hidden @internal */
