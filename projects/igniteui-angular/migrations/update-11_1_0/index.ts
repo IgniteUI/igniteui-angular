@@ -35,9 +35,6 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     && definition.kind === 'enum'
                     && definition.name === targetEnum
                     && definition.fileName.includes('igniteui-angular')) {
-                    console.log('replacing member: ' + match.change.member);
-                    console.log('replacing with: ' + match.change.replaceWith);
-                    console.log('replacing position: ' + position);
                     content = replaceMatch(content, match.change.member, match.change.replaceWith, position);
                     host.overwrite(entryPath, content);
                 }
