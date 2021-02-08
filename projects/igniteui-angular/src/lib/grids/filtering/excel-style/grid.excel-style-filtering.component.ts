@@ -511,6 +511,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         if (this.grid.uniqueColumnValuesStrategy) {
             this.cdr.detectChanges();
             this.renderColumnValuesRemotely();
+        } else if (this.grid.filterStrategy instanceof FormattedFilterStrategy) {
+            this.renderFormattedColumnVauesFromData();
         } else {
             this.renderColumnValuesFromData();
         }
@@ -537,15 +539,39 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         });
     }
 
+    private renderFormattedColumnVauesFromData() {
+        const filterStrategy = this.grid.filterStrategy as FormattedFilterStrategy;
+        let data = this.column.gridAPI.get_all_data((this.grid as any).id);
+        const expressionsTree = this.getColumnFilterExpressionsTree();
+
+        if (expressionsTree.filteringOperands.length) {
+            const state = { expressionsTree, strategy: this.grid.filterStrategy };
+            data = DataUtil.filter(cloneArray(data), state, this.grid);
+        }
+
+        const columnField = this.column.field;
+        let columnValues = (this.column.dataType === DataType.Date) ?
+            data.map(record => {
+                const value = (resolveNestedPath(record, columnField));
+                const label = this.getFilterItemLabel(value);
+                return { value, label };
+            }) : data.map(record => resolveNestedPath(record, columnField));
+
+        if (!filterStrategy.columns || filterStrategy.columns.length === 0 ||
+            filterStrategy.columns.some(c => c === columnField)) {
+            const columnFormatter = this.column.formatter;
+            columnValues = columnValues.map(val => columnFormatter ? columnFormatter(val) : val);
+        }
+
+        this.renderValues(columnValues);
+    }
+
     private renderColumnValuesFromData() {
         let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
 
         if (expressionsTree.filteringOperands.length) {
-            const state = {
-                expressionsTree,
-                strategy: this.grid.filterStrategy
-            };
+            const state = { expressionsTree };
             data = DataUtil.filter(cloneArray(data), state, this.grid);
         }
 

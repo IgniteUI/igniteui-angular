@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     IgxGridComponent,
@@ -715,9 +716,7 @@ export class GridSummaryComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.f = new FormattedFilterStrategy(['ReorderLevel']);
-        this.columnValueStrategy = this.f.uniqueColumnFormattedValuesStrategy();
-
+        this.f = new FormattedFilterStrategy([]);
     }
 
     public updateData() {

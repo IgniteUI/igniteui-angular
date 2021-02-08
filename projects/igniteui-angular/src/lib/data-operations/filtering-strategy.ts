@@ -132,20 +132,4 @@ export class FormattedFilterStrategy extends FilteringStrategy {
 
         return applyFormatter && column.formatter ? column.formatter(value) : value;
     }
-
-    public uniqueColumnFormattedValuesStrategy() {
-        return (column: IgxColumnComponent,
-            expression: IFilteringExpressionsTree,
-            done: (vals: any[]) => void) => {
-            this.getColumnData(column, expression, vals => done(vals));
-        };
-    }
-
-    private getColumnData(column: IgxColumnComponent, expression: IFilteringExpressionsTree, done: (colVals: any[]) => void) {
-        let data = [];
-        data = this.filter(column.grid.data, expression, null, column.grid);
-        const formatData = !this.columns || this.columns.length === 0 || this.columns.some(c => c === column.field);
-        data = data.map(record => column.formatter && formatData ? column.formatter(record[column.field]) : record[column.field]);
-        done(data);
-    }
 }
