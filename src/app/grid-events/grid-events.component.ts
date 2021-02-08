@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree,
     ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
@@ -12,7 +12,7 @@ import { data } from '../grid-cellEditing/data';
     styleUrls: ['grid-events.component.scss'],
     templateUrl: 'grid-events.component.html'
 })
-export class GridEventsComponent implements OnInit, AfterViewInit {
+export class GridEventsComponent {
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
     @ViewChild('logger') public logger: ElementRef;
