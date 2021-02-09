@@ -1203,7 +1203,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             // add new child through the UI
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             const addChildBtn = editActions[2].componentInstance;
-            addChildBtn.onActionClick.emit();
+            addChildBtn.actionClick.emit();
             fix.detectChanges();
             endTransition();
 
@@ -1263,7 +1263,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             // delete the child through the UI
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             const deleteBtn = editActions[2].componentInstance;
-            deleteBtn.onActionClick.emit();
+            deleteBtn.actionClick.emit();
             fix.detectChanges();
 
             await wait(100);
@@ -1293,7 +1293,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             // delete the child through the UI
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             const deleteBtn = editActions[2].componentInstance;
-            deleteBtn.onActionClick.emit();
+            deleteBtn.actionClick.emit();
             fix.detectChanges();
 
             await wait(100);
@@ -1890,7 +1890,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             // delete the child through the UI
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             const deleteBtn = editActions[2].componentInstance;
-            deleteBtn.onActionClick.emit();
+            deleteBtn.actionClick.emit();
             fix.detectChanges();
 
             await wait(100);
