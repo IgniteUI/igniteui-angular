@@ -228,6 +228,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid';
     $grid-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -457,6 +458,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
 
         header-background: $header-background,
