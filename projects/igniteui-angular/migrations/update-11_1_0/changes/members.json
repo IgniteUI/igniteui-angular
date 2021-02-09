@@ -105,6 +105,90 @@
             "definedIn": [
                 "IgxToastComponent"
             ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxYearsViewComponent"
+            ]
+        },
+        {
+            "member": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "definedIn": [
+                "IgxYearsViewComponent"
+            ]
+        },
+        {
+            "member": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "definedIn": [
+                "IgxDaysViewComponent"
+            ]
+        },
+        {
+            "member": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "definedIn": [
+                "IgxDaysViewComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxMonthPickerComponent"
+            ]
+        },
+        {
+            "member": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "definedIn": [
+                "IgxMonthsViewComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxMonthsViewComponent"
+            ]
         }
     ]
 }

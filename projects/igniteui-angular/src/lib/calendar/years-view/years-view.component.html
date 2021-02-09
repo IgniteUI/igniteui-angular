@@ -3,7 +3,7 @@
         <span
             [igxCalendarYear]="year"
             [date]="date"
-            (onYearSelection)="selectYear($event)"
+            (yearSelection)="selectYear($event)"
             *ngFor="let year of decade; trackBy: yearTracker">
 
             {{ formattedYear(year) }}

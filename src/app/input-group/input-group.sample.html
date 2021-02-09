@@ -5,13 +5,13 @@
             <igx-buttongroup
                 [alignment]="alignment"
                 [values]="displayDensities"
-                (onSelect)="selectDensity($event)"
+                (selected)="selectDensity($event)"
             ></igx-buttongroup>
             <strong>Select Input type</strong>
             <igx-buttongroup
                 [alignment]="alignment"
                 [values]="inputTypes"
-                (onSelect)="selectInputType($event)"
+                (selected)="selectInputType($event)"
             ></igx-buttongroup>
             <strong>Disable fields</strong>
             <igx-switch name="disabledswitch" [(ngModel)]="isDisabled"></igx-switch>
@@ -109,6 +109,21 @@
             </igx-input-group>
             <br />
 
+            <!-- input type file -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Important Documents</label>
+                <input
+                    igxInput
+                    name="testFile"
+                    [required]="isRequired"
+                    [disabled]="isDisabled"
+                    type="file"
+                    multiple
+                />
+                <igx-hint>Upload a file to begin...</igx-hint>
+            </igx-input-group>
+
+            <br />
             <!-- textarea -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
                 <label igxLabel>Textarea</label>

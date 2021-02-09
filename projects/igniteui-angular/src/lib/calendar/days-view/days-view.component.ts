@@ -83,13 +83,13 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     @Output()
-    public onDateSelection = new EventEmitter<ICalendarDate>();
+    public dateSelection = new EventEmitter<ICalendarDate>();
 
     /**
      * @hidden
      */
     @Output()
-    public onViewChanging = new EventEmitter<IViewChangingEventArgs>();
+    public viewChanging = new EventEmitter<IViewChangingEventArgs>();
 
     /**
      * @hidden
@@ -402,8 +402,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      */
     public selectDay(event) {
         this.selectDateFromClient(event.date);
-        this.onDateSelection.emit(event);
-        this.onSelection.emit(this.selectedDates);
+        this.dateSelection.emit(event);
+        this.selected.emit(this.selectedDates);
     }
 
     /**
