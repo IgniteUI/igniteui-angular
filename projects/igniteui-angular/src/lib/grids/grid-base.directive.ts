@@ -1,4 +1,4 @@
-import { DOCUMENT, DatePipe, DecimalPipe, getLocaleNumberFormat, NumberFormatStyle } from '@angular/common';
+import { DOCUMENT, DatePipe, DecimalPipe, getLocaleNumberFormat, NumberFormatStyle, CurrencyPipe } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -2738,6 +2738,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public currencyPipe: CurrencyPipe;
+    /**
+     * @hidden @internal
+     */
     public _totalRecords = -1;
 
     /**
@@ -3082,6 +3086,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
         this.decimalPipe = new DecimalPipe(this.locale);
+        this.currencyPipe = new CurrencyPipe(this.locale);
         this.cdr.detach();
     }
 

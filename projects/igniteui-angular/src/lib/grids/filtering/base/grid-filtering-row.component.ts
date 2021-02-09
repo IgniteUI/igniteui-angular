@@ -193,12 +193,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         return this.defaultFilterUI;
     }
 
-    get type() {
+     public get type() {
         switch (this.column.dataType) {
             case DataType.String:
             case DataType.Boolean:
                 return 'text';
             case DataType.Number:
+            case DataType.Currency:
                 return 'number';
         }
     }

@@ -225,6 +225,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             case DataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
             case DataType.Number:
+            case DataType.Currency:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
