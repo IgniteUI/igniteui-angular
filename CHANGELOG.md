@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 11.1.0
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
 
 ### New Features
 - `IgxDropDown`
@@ -10,7 +15,7 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
-    - `pageChange` and `perPageChange` event is now hidden and for internal use onlu, it only serves two way data binding
+    - `pageChange` and `perPageChange` event is now hidden and for internal use only, it only serves two way data binding
     - `page` setter no longer emits paging events. Only the `paginate` method will emit corresponding events.
 
 
@@ -19,6 +24,22 @@ All notable changes for each version of this project will be documented in this 
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
+    - `onSelection` is now `selected` 
+    - `onViewChanging` is now `viewChanging`
+    - `onDateSelection` is now `dateSelection`
+    - `onYearSelection` is now `yearSelection`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxYearsViewComponent`
+    - `onSelection` is now `selected`
+    - `onYearSelection` is now `yearSelection`
+- `IgxDaysViewComponent`
+    - `onDateSelection` is now `dateSelection`
+    - `onViewChanging` is now `viewChanging`
+- `IgxMonthsViewComponent`
+    - `onSelection` is now `selected`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxMonthPickerComponent`
+    - `onSelection` is now `selected`
 - `IgxRadioGroup`
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
 - `IgxDialog`
@@ -36,14 +57,11 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `theme` that allows you to set the theme explicitly and at runtime.
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
-- `IgxGrid`
+- `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
+    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
+    - `GridPagingMode` enum members rename - `local` to `Local` and `remote` to `Remote`. Example:  `GridPagingMode.Local`.
     - **Breaking Change**:
-    - The grid no longer exposes the `page` and `perPage` properties, the `onPagingDone`, `perPageChange` and `pageChange` events.
-    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
-- `IgxHierarchicalGrid`
-    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
-- `IgxTreeGrid`
-    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
+        - The grids deprecate the `page` and `perPage` properties, also the `onPagingDone` output. Use the corresponding `IgxPaginator` otuputs/inputs..
 
 ## 11.0.4
 

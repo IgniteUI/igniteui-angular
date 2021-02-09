@@ -260,4 +260,103 @@ export class IconTestComponent {
             </igx-toast>`
         );
     });
+
+    it('should replace outputs with selected in igx-calendar', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/calendar.component.html`,
+`<igx-calendar
+    (onSelection)="someHandler($event)"
+    (onViewChanging)="someHandler($event)"
+    (onDateSelection)="someHandler($event)"
+    (onYearSelection)="someHandler($event)"
+    (onMonthSelection)="someHandler($event)"
+></igx-calendar>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/calendar.component.html')).toEqual(
+`<igx-calendar
+    (selected)="someHandler($event)"
+    (viewChanging)="someHandler($event)"
+    (dateSelection)="someHandler($event)"
+    (yearSelection)="someHandler($event)"
+    (monthSelection)="someHandler($event)"
+></igx-calendar>`
+        );
+    });
+
+    it('should replace onSelection and onYearSelection with selected in igx-years-view', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/yearsview.component.html`,
+`<igx-years-view
+    (onSelection)="changeYear($event)"
+    (onYearSelection)="changeYear($event)"
+></igx-years-view>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/yearsview.component.html')).toEqual(
+`<igx-years-view
+    (selected)="changeYear($event)"
+    (yearSelection)="changeYear($event)"
+></igx-years-view>`
+        );
+    });
+
+    it('should replace onDateSelection and onViewChanging with selected in igx-days-view', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/daysview.component.html`,
+`<igx-days-view
+    (onDateSelection)="someHandler($event)"
+    (onViewChanging)="someHandler($event)"
+></igx-days-view>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/daysview.component.html')).toEqual(
+`<igx-days-view
+    (dateSelection)="someHandler($event)"
+    (viewChanging)="someHandler($event)"
+></igx-days-view>`
+        );
+    });
+
+    it('should replace onSelection and onMonthSelection with selected in igx-months-view', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/monthsview.component.html`,
+`<igx-months-view
+    (onSelection)="someHandler($event)"
+    (onMonthSelection)="someHandler($event)"
+></igx-months-view>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/monthsview.component.html')).toEqual(
+`<igx-months-view
+    (selected)="someHandler($event)"
+    (monthSelection)="someHandler($event)"
+></igx-months-view>`
+        );
+    });
+
+    it('should replace onSelection and onMonthSelection with selected in igx-month-picker', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/monthpicker.component.html`,
+`<igx-month-picker
+    (onSelection)="someHandler($event)"
+></igx-month-picker>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/monthpicker.component.html')).toEqual(
+`<igx-month-picker
+    (selected)="someHandler($event)"
+></igx-month-picker>`
+        );
+    });
 });
