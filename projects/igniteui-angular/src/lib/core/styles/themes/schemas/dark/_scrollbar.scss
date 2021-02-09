@@ -8,8 +8,8 @@
 
 /// Generates a dark scrollbar schema.
 /// @type {Map}
-/// @property {Color} bar-thumb-background [igx-color: surface, lighten: 20%] - The background color used for the thumb.
-/// @property {Color} bar-track-background [igx-color: 'surface', lighten: 5%] - The background color used for the track.
+/// @property {Color} thumb-background [igx-color: surface, lighten: 20%] - The background color used for the thumb.
+/// @property {Color} track-background [igx-color: 'surface', lighten: 5%] - The background color used for the track.
 /// @property {String | Number} size [16px] - The size of the track.
 /// @requires {function} extend
 /// @requires $_light-scrollbar
@@ -17,7 +17,7 @@
 $_dark-scrollbar: extend(
     $_light-scrollbar,
     (
-        bar-thumb-background: (
+        thumb-background: (
             igx-color: 'surface',
             lighten: 20%
         ),

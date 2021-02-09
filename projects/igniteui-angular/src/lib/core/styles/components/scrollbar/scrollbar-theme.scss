@@ -41,9 +41,9 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        bar-thumb-background: $thumb-background,
-        bar-track-background: $track-background,
-        bar-size: $size
+        thumb-background: $thumb-background,
+        track-background: $track-background,
+        size: $size
     ));
 }
 
@@ -52,23 +52,23 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-scrollbar($theme) {
-    @include igx-css-vars($theme, ':root');
+    @include igx-css-vars($theme, '.igx-scrollbar');
 
     %scrollbar-display {
-        @if type-of(map-get($theme, 'bar-size') == 'string') {
-            scrollbar-width: --var($theme, 'bar-size');
+        @if type-of(map-get($theme, 'size') == 'string') {
+            scrollbar-width: --var($theme, 'size');
         }
 
-        scrollbar-color: --var($theme, 'bar-thumb-background') --var($theme, 'bar-track-background');
+        scrollbar-color: --var($theme, 'thumb-background') --var($theme, 'track-background');
 
         ::-webkit-scrollbar {
-            width: --var($theme, 'bar-size');
-            height: --var($theme, 'bar-size');
-            background: --var($theme, 'bar-track-background');
+            width: --var($theme, 'size');
+            height: --var($theme, 'size');
+            background: --var($theme, 'track-background');
         }
 
         ::-webkit-scrollbar-thumb {
-            background: --var($theme, 'bar-thumb-background');
+            background: --var($theme, 'thumb-background');
         }
     }
 }
