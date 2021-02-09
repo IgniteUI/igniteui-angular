@@ -299,6 +299,10 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
+    igx-input-group {
+        --theme: #{map-get($theme, 'variant')};
+    }
+
     %form-group-display {
         position: relative;
         display: block;
