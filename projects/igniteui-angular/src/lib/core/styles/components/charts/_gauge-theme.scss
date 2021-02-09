@@ -119,10 +119,11 @@
 /// @group typography
 /// @requires {mixin} igx-type-style
 @mixin igx-gauge-typography() {
-    $scope: if(is-root(), ':root', '&');
-
-    #{$scope} {
+    igx-linear-gauge {
         --linear-gauge-font: var(--igx-font-family, inherit);
+    }
+
+    igx-radial-gauge {
         --radial-gauge-font: var(--igx-font-family, inherit);
     }
 }

@@ -78,10 +78,7 @@
 /// @group typography
 /// @requires {mixin} igx-type-style
 @mixin igx-dock-manager-typography() {
-    $scope: if(is-root(), ':root', '&');
-    $font-family: inherit;
-
-    #{$scope} {
+    igx-dock-manager {
         --igc-font-family: var(--igx-font-family, inherit);
     }
 }
