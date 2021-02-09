@@ -36,7 +36,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
-import { mkenum } from '../core/utils';
+import { isIE, mkenum } from '../core/utils';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -137,7 +137,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _variant: IgxInputGroupTheme = 'material';
+    private _variant: IgxInputGroupTheme;
     private _resourceStrings = CurrentResourceStrings.InputResStrings;
 
     /** @hidden */
@@ -285,17 +285,22 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         }
     }
 
+    /** @hidden @internal */
     public hintClickHandler(event: MouseEvent) {
         event.stopPropagation();
     }
 
+    /** @hidden @internal */
     public ngAfterContentInit() {
         if (!this.theme) {
-            const variant = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue('--igx-input-group-variant')
-                .trim();
-            this._variant = variant as IgxInputGroupTheme;
+            if(isIE()) {
+                this._variant = IgxInputGroupTheme.Material;
+            } else {
+                this._variant = this.document.defaultView
+                    .getComputedStyle(this.element.nativeElement)
+                    .getPropertyValue('--igx-input-group-variant')
+                    .trim() as IgxInputGroupTheme;
+            }
         }
 
         if (this.isFileType) {
