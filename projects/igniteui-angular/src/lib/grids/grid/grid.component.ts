@@ -280,8 +280,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     set rowSelection(selectionMode: GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
-        this.selectionService.clearAllSelectedRows();
-        this.notifyChanges();
+        if (!this._init) {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges(true);
+        }
     }
 
     /**

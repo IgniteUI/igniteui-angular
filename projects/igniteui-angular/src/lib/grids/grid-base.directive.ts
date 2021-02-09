@@ -2531,7 +2531,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._rowSelectionMode = selectionMode;
         if (!this._init) {
             this.selectionService.clearAllSelectedRows();
-            this.notifyChanges();
+            this.notifyChanges(true);
         }
     }
 
