@@ -148,16 +148,14 @@ const addHammerToConfig = async (project: workspaces.ProjectDefinition, tree: Tr
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
     // and the "main" file does not contain an import with hammerjs
     if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !tsContent.includes(hammerImport)) {
-        // import hammerjs in the specified by config main file
-        const mainContents = hammerImport + tsContent;
-        tree.overwrite(tsPath, mainContents);
+        projectOptions.scripts.push('./node_modules/hammerjs/hammer.min.js');
     }
 };
 
 const includeDependencies = async (pkgJson: any, context: SchematicContext, tree: Tree): Promise<void> => {
     const workspaceHost = createHost(tree);
     const { workspace } = await workspaces.readWorkspace(tree.root.path, workspaceHost);
-    const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
+    const defaultProject = workspace.projects.get(workspace.extensions['defaultProject'] as string);
     for (const pkg of Object.keys(pkgJson.dependencies)) {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
@@ -168,8 +166,8 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                await addHammerToConfig(project, tree, 'build');
-                await addHammerToConfig(project, tree, 'test');
+                await addHammerToConfig(defaultProject, tree, 'build');
+                await addHammerToConfig(defaultProject, tree, 'test');
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
