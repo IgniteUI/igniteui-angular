@@ -50,13 +50,13 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * Emits an event when a selection is made in the years view.
      * Provides reference the `date` property in the `IgxYearsViewComponent`.
      * ```html
-     * <igx-years-view (onSelection)="onSelection($event)"></igx-years-view>
+     * <igx-years-view (selected)="onSelection($event)"></igx-years-view>
      * ```
      *
      * @memberof IgxYearsViewComponent
      */
     @Output()
-    public onSelection = new EventEmitter<Date>();
+    public selected = new EventEmitter<Date>();
 
     /**
      * The default css class applied to the component.
@@ -238,7 +238,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.enter')
     public onKeydownEnter() {
-        this.onSelection.emit(this.date);
+        this.selected.emit(this.date);
         this._onChangeCallback(this.date);
     }
 
@@ -260,7 +260,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     public selectYear(event) {
         this.date = event;
 
-        this.onSelection.emit(this.date);
+        this.selected.emit(this.date);
         this._onChangeCallback(this.date);
     }
 

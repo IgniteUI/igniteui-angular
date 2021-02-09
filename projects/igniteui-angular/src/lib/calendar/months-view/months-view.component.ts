@@ -127,13 +127,13 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * Emits an event when a selection is made in the months view.
      * Provides reference the `date` property in the `IgxMonthsViewComponent`.
      * ```html
-     * <igx-months-view (onSelection)="onSelection($event)"></igx-months-view>
+     * <igx-months-view (selected)="onSelection($event)"></igx-months-view>
      * ```
      *
      * @memberof IgxMonthsViewComponent
      */
     @Output()
-    public onSelection = new EventEmitter<Date>();
+    public selected = new EventEmitter<Date>();
 
     /**
      * The default css class applied to the component.
@@ -157,7 +157,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      *
      * @hidden
      */
-    get months(): Date[] {
+    public get months(): Date[] {
         let start = new Date(this.date.getFullYear(), 0, 1);
         const result = [];
 
@@ -343,12 +343,12 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         const value = this.monthsRef.find((date) => date.nativeElement === event.target).value;
         this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
         this.activeMonth = this.date.getMonth();
-        this.onSelection.emit(this.date);
+        this.selected.emit(this.date);
         this._onChangeCallback(this.date);
     }
 
-    @HostListener('focusout', ['$event'])
-    public resetActiveMonth(event) {
+    @HostListener('focusout')
+    public resetActiveMonth() {
         this.activeMonth = this.date.getMonth();
     }
 
@@ -368,7 +368,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     public selectMonth(event) {
-        this.onSelection.emit(event);
+        this.selected.emit(event);
 
         this.date = event;
         this.activeMonth = this.date.getMonth();

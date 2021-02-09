@@ -54,7 +54,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Provides reference the `selectedDates` property.
      */
     @Output()
-    public onSelection = new EventEmitter<Date | Date[]>();
+    public selected = new EventEmitter<Date | Date[]>();
 
     /**
      * Emits an event when the month in view is changed.
