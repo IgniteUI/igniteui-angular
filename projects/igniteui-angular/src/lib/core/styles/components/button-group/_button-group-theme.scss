@@ -73,11 +73,13 @@
     $item-selected-hover-background: null,
     $selected-shadow-color: null
 ) {
-    $name: 'igx-buttongroup';
+    $name: 'igx-button-group';
+    $selector: 'igx-buttongroup';
+
     $button-group-schema: ();
 
-    @if map-has-key($schema, 'igx-button-group') {
-        $button-group-schema: map-get($schema, 'igx-button-group');
+    @if map-has-key($schema, $name) {
+        $button-group-schema: map-get($schema, $name);
     } @else {
         $button-group-schema: $schema;
     }
@@ -145,6 +147,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,

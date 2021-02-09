@@ -29,8 +29,8 @@
 
     $ripple-schema: ();
 
-    @if map-has-key($schema, 'igx-ripple') {
-        $ripple-schema: map-get($schema, 'igx-ripple');
+    @if map-has-key($schema, $name) {
+        $ripple-schema: map-get($schema, $name);
     } @else {
         $ripple-schema: $schema;
     }
