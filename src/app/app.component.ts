@@ -259,6 +259,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Formatting'
         },
         {
+            link: '/gridEvents',
+            icon: 'view_column',
+            name: 'Grid Events'
+        },
+        {
             link: '/gridFinJS',
             icon: 'view_column',
             name: 'Grid FinJS'

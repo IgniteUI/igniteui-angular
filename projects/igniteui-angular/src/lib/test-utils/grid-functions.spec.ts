@@ -1930,7 +1930,7 @@ export class GridFunctions {
 
     public static clickColumnChooserItem(columnChooserElement: DebugElement, name: string) {
         const item = this.getColumnChooserItemElement(columnChooserElement, name);
-        item.triggerEventHandler('change', new Event('change'));
+        item.triggerEventHandler('click', new Event('click'));
     }
 
     public static getColumnChooserItemInput(item: DebugElement): HTMLInputElement {
@@ -1956,11 +1956,11 @@ export class GridFunctions {
     }
 
     public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
-        for (let i; i < headerCells.length; i++) {
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
-                .toBe(rowCells[i].nativeElement.offsetWidth);
-            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
-                .toBe(rowCells[i].nativeElement.offsetHeight);
+        for (let i = 0; i < headerCells.length; i++) {
+            const widthDiff = headerCells[i].headerCell.elementRef.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
+            const heightDiff = headerCells[i].headerCell.elementRef.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+            expect(widthDiff).toBeLessThanOrEqual(1);
+            expect(heightDiff).toBeLessThanOrEqual(3);
         }
     }
 

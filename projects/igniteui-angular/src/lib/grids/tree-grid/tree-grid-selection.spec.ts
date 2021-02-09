@@ -382,6 +382,37 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [1, 3], false);
             TreeGridFunctions.verifyDataRowsSelection(fix, [6, 8, 9], true);
         });
+        it('Rows would be selected only from checkboxes if selectRowOnClick is disabled', () => {
+            expect(treeGrid.selectRowOnClick).toBe(true);
+            const firstRow = treeGrid.getRowByIndex(1);
+            const secondRow = treeGrid.getRowByIndex(4);
+            expect(treeGrid.selectedRows).toEqual([]);
+
+            // selectRowOnClick = true;
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+            TreeGridFunctions.verifyDataRowsSelection(fix, [1, 4], true);
+
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 1);
+            fix.detectChanges();
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 4);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows).toEqual([]);
+
+            // selectRowOnClick = false
+            treeGrid.selectRowOnClick = false;
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+            TreeGridFunctions.verifyDataRowsSelection(fix, [1], false);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 1);
+            fix.detectChanges();
+            TreeGridFunctions.verifyDataRowsSelection(fix, [1], true);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 4);
+            fix.detectChanges();
+            TreeGridFunctions.verifyDataRowsSelection(fix, [1, 4], true);
+        });
 
         it('should persist the selection after sorting', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
