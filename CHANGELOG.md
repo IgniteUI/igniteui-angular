@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 11.1.0
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
 
 ### New Features
 - `IgxDropDown`
@@ -30,6 +35,9 @@ All notable changes for each version of this project will be documented in this 
     - Added new property `theme` that allows you to set the theme explicitly and at runtime.
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
+- `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
+    - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
+    - `GridPagingMode` enum members rename - `local` to `Local` and `remote` to `Remote`. Example:  `GridPagingMode.Local`.
 
 ## 11.0.4
 
