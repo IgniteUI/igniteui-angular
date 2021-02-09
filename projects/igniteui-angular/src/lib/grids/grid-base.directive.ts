@@ -1980,11 +1980,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set selectedRows(rowIDs: any[]) {
-        if (rowIDs.length > 0) {
-            this.selectRows(rowIDs, true);
-        } else {
-            this.deselectAllRows();
-        }
+        this.selectRows(rowIDs || [], true);
     }
 
     public get selectedRows(): any[] {
@@ -2533,8 +2529,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set rowSelection(selectionMode: HierarchicalGridSelectionMode) {
         this._rowSelectionMode = selectionMode;
-        this.selectionService.clearAllSelectedRows();
-        this.notifyChanges();
+        if (!this._init) {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges();
+        }
     }
 
     /**
@@ -3007,7 +3005,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) private localeId: string) {
         super(_displayDensityOptions);
-        this._setupServices();
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
         this.decimalPipe = new DecimalPipe(this.locale);
@@ -3319,6 +3316,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngOnInit() {
         super.ngOnInit();
+        this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
         this.columnListDiffer = this.differs.find([]).create(null);

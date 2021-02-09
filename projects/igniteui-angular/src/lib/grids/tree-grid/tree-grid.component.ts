@@ -10,7 +10,8 @@ import {
     ContentChild,
     AfterContentInit,
     ViewChild,
-    DoCheck
+    DoCheck,
+    AfterViewInit
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -73,7 +74,7 @@ let NEXT_ID = 0;
         IgxForOfScrollSyncService
     ]
 })
-export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
+export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, AfterViewInit, DoCheck, AfterContentInit {
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
      * ```html
@@ -451,6 +452,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
+    public ngAfterViewInit() {
+        super.ngAfterViewInit();
+        if(this.rowSelection === 'multipleCascade' && this.selectedRows.length) {
+            const selRows = this.selectedRows;
+            this.selectionService.clearRowSelection();
+            this.selectRows(selRows, true);
+        }
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden
+     */
     public ngAfterContentInit() {
         if (this.rowLoadingTemplate) {
             this._rowLoadingIndicatorTemplate = this.rowLoadingTemplate.template;
@@ -502,30 +516,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-    /**
-     * Gets/Sets the current selection state.
-     *
-     * @remarks
-     * Represents the selected rows' IDs (primary key or rowData)
-     * @example
-     * ```html
-     * <igx-tree-grid [data]="employeeData" [primaryKey]="'ID'" [foreignKey]="'parentID'"
-     *                rowSelection="multiple" [selectedRows]="[0, 1, 2]">
-     * <igx-tree-grid>
-     * ```
-     */
-    @Input()
-    public set selectedRows(rowIDs: any[]) {
-        if (this.records.size === 0) {
-            new IgxTreeGridHierarchizingPipe(this._gridAPI).transform(
-                this.data, this.primaryKey, this.foreignKey, this.childDataKey, this.id, 0);
-        }
-        if (rowIDs.length > 0) {
-            this.selectRows(rowIDs, true);
-        } else {
-            this.deselectAllRows();
-        }
-    }
 
     /**
      * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created

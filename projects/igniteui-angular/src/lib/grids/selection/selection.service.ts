@@ -812,7 +812,7 @@ export class IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
-        if (this.grid.rowSelection === 'multipleCascade') {
+        if (this.grid && this.grid.rowSelection === 'multipleCascade') {
             (this.grid.gridAPI as IgxTreeGridAPIService).cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
             return;
         }
