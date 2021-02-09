@@ -150,7 +150,7 @@ import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/gri
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 
 let FAKE_ROW_ID = -1;
 
@@ -286,35 +286,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
-    /**
-     * Emitted after the current page is changed.
-     *
-     * @example
-     * ```html
-     * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
-     * ```
-     * ```typescript
-     * public onPageChange(page: number) {
-     *   this.currentPage = page;
-     * }
-     * ```
-     */
+    /** @hidden @internal */
     @Output()
     public pageChange = new EventEmitter<number>();
 
-    /**
-     * Emitted when `perPage` property value of the grid is changed.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
-     * ```
-     * ```typescript
-     * public onPerPageChange(perPage: number) {
-     *   this.perPage = perPage;
-     * }
-     * ```
-     */
+    /** @hidden @internal */
     @Output()
     public perPageChange = new EventEmitter<number>();
 
@@ -622,6 +598,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
+     * @deprecated Use `IgxPaginator` outputs instead.
      * Emitted when paging is performed.
      *
      * @remarks
@@ -631,6 +608,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
      * ```
      */
+    @DeprecateProperty('Use the corresponding event emiited by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
 
@@ -1419,7 +1397,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.selectionService.clear(true);
         this._perPage = val;
         this.perPageChange.emit(this._perPage);
-        this.page = 0;
+
+        if (this.totalPages !== 0 && this._page >= this.totalPages) {
+            this.page = this.totalPages - 1;
+        }
+
         this.endEdit(true);
         this.notifyChanges();
     }
@@ -4042,6 +4024,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Gets the total number of pages.
      *
      * @example
@@ -4049,14 +4032,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const totalPages = this.grid.totalPages;
      * ```
      */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
     public get totalPages(): number {
         if (this.pagingState) {
             return this.pagingState.metadata.countPages;
         }
-        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this.perPage) : -1;
+        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this._perPage) : -1;
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Gets if the current page is the first page.
      *
      * @example
@@ -4064,11 +4049,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const firstPage = this.grid.isFirstPage;
      * ```
      */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
     public get isFirstPage(): boolean {
-        return this.page === 0;
+        return this._page === 0;
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Goes to the next page, if the grid is not already at the last page.
      *
      * @example
@@ -4076,13 +4063,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.nextPage();
      * ```
      */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginate(this._page + 1);
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding methods instead.
      * Goes to the previous page, if the grid is not already at the first page.
      *
      * @example
@@ -4090,10 +4077,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.previousPage();
      * ```
      */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginate(this._page - 1);
     }
 
     /**
@@ -4120,6 +4106,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @deprecated
      * Returns if the current page is the last page.
      *
      * @example
@@ -4127,8 +4114,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const lastPage = this.grid.isLastPage;
      * ```
      */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
     public get isLastPage(): boolean {
-        return this.page + 1 >= this.totalPages;
+        return this._page + 1 >= this.totalPages;
     }
 
     /**
@@ -6642,7 +6630,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paging ? row + (this.perPage * this.page) : row;
+            row = this.paging ? row + (this._perPage * this._page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -6758,7 +6746,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const rowIndex = inCollection.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
-            if (this.page !== page) {
+            if (this._page !== page) {
                 delayScrolling = true;
                 this.page = page;
             }

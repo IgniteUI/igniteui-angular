@@ -8,6 +8,12 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
+- `IgxPaginator`
+    - `paging` and `pagingDone` events are now emitted.
+    - `pageChange` and `perPageChange` event is now hidden and for internal use onlu, it only serves two way data binding
+    - `page` setter no longer emits paging events. Only the `paginate` method will emit corresponding events.
+
+
 ### General
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
@@ -31,6 +37,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
 - `IgxGrid`
+    - **Breaking Change**:
+    - The grid no longer exposes the `page` and `perPage` properties, the `onPagingDone`, `perPageChange` and `pageChange` events.
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
 - `IgxHierarchicalGrid`
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
