@@ -64,6 +64,102 @@
                 "selector": "igx-toast",
                 "type": "component"
             }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-years-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "owner": {
+                "selector": "igx-years-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "owner": {
+                "selector": "igx-days-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "owner": {
+                "selector": "igx-days-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-month-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-months-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "owner": {
+                "selector": "igx-months-view",
+                "type": "component"
+            }
         }
     ]
 }

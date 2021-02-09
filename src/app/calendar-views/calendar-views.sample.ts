@@ -74,8 +74,8 @@ export class CalendarViewsSampleComponent implements OnInit {
         }];
     }
 
-    public onSelection(event) {
-        console.log(event);
+    public onSelection(date) {
+        console.log(`selected date: ${date}`);
     }
 
     public select() {
@@ -96,10 +96,5 @@ export class CalendarViewsSampleComponent implements OnInit {
     public deselectDV() {
         this.daysView.deselectDate(new Date(2019, 1, 13));
         // this.daysView.deselectDate([new Date(2019, 1, 13), new Date(2019, 1, 14)]);
-    }
-
-    public viewDateChanged(event: Date) {
-        const date = event;
-        console.log(date);
     }
 }

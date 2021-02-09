@@ -6,7 +6,7 @@
             [igxCalendarMonth]="month"
             [date]="date"
             [attr.tabindex]="activeMonth === month.getMonth() ? 0 : -1"
-            (onMonthSelection)="selectMonth($event)" [index]="i"
+            (monthSelection)="selectMonth($event)" [index]="i"
             *ngFor="let month of months; index as i; trackBy: monthTracker">
             {{ formattedMonth(month) | titlecase }}
         </span>
