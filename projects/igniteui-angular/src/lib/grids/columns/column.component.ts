@@ -1547,6 +1547,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.filters = IgxBooleanFilteringOperand.instance();
                     break;
                 case DataType.Number:
+                case DataType.Currency:
                     this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
