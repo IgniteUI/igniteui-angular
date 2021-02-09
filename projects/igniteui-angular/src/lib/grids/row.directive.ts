@@ -400,7 +400,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (this.grid.rowSelection === 'none' || this.deleted) {
+        if (this.grid.rowSelection === 'none' || this.deleted || !this.grid.selectRowOnClick) {
             return;
         }
         if (event.shiftKey && this.grid.isMultiRowSelectionEnabled) {

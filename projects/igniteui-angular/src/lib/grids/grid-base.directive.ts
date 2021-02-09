@@ -2850,6 +2850,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
     private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
+    private _selectRowOnClick = true;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
     private lastAddedRowIndex;
@@ -5168,6 +5169,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.isRowPinningToTop ?
             [...this.pinnedDataView, ...this.unpinnedDataView] :
             [...this.unpinnedDataView, ...this.pinnedDataView];
+    }
+
+    /**
+     * Gets/Sets whether clicking over a row should select/deselect it
+     *
+     * @remarks
+     * By default it is set to true
+     * @param enabled: boolean
+     */
+    @WatchChanges()
+    @Input()
+    get selectRowOnClick() {
+        return this._selectRowOnClick;
+    }
+
+    set selectRowOnClick(enabled: boolean) {
+        this._selectRowOnClick = enabled;
     }
 
     /**

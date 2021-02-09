@@ -30,7 +30,7 @@ import {
 import { IgxInputGroupBase } from './input-group.common';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
-import { mkenum } from '../core/utils';
+import { isIE, mkenum } from '../core/utils';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -115,7 +115,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     private _type: IgxInputGroupType = null;
     private _filled = false;
-    private _variant: IgxInputGroupTheme = 'material';
+    private _variant: IgxInputGroupTheme;
 
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')
@@ -261,18 +261,23 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         }
     }
 
-    public hintClickHandler(event) {
+    /** @hidden @internal */
+    public hintClickHandler(event: MouseEvent) {
         event.stopPropagation();
     }
 
+    /** @hidden @internal */
     public ngAfterContentInit() {
         if (!this.theme) {
-            const variant = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue('--igx-input-group-variant')
-                .trim();
-            this._variant = variant as IgxInputGroupTheme;
-        }
+            if(isIE()) {
+                this._variant = IgxInputGroupTheme.Material;
+            } else {
+                this._variant = this.document.defaultView
+                    .getComputedStyle(this.element.nativeElement)
+                    .getPropertyValue('--igx-input-group-variant')
+                    .trim() as IgxInputGroupTheme;
+            }
+       }
     }
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.
