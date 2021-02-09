@@ -139,7 +139,7 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
-function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, config: string) {
+const addHammerToConfig = async (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string): Promise<void> => {
     const projectOptions = getTargetedProjectOptions(project, config);
     const tsPath = getConfigFile(project, 'main', config);
     const hammerImport = 'import \'hammerjs\';\n';
@@ -147,16 +147,17 @@ function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, c
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
     // and the "main" file does not contain an import with hammerjs
     if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !tsContent.includes(hammerImport)) {
-        // import hammerjs in the specified by config main file
-        const mainContents = hammerImport + tsContent;
-        tree.overwrite(tsPath, mainContents);
+        projectOptions.scripts.push('./node_modules/hammerjs/hammer.min.js');
+        overwriteJsonFile(tree, 'angular.json', workspace);
     }
-}
+};
 
 function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree) {
     Object.keys(pkgJson.dependencies).forEach(pkg => {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
+        const workspace = getWorkspace(tree);
+        const defaultProject = workspace.projects[workspace.defaultProject];
         if (!entry || entry.target === PackageTarget.NONE) {
             return;
         }
@@ -164,10 +165,8 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                const workspace = getWorkspace(tree);
-                const project = workspace.projects[workspace.defaultProject];
-                addHammerToConfig(project, tree, 'build');
-                addHammerToConfig(project, tree, 'test');
+                addHammerToConfig(workspace, defaultProject, tree, 'build');
+                addHammerToConfig(workspace, defaultProject, tree, 'test');
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
