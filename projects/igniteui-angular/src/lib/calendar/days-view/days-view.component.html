@@ -37,7 +37,7 @@
         [hideOutsideDays]="hideOutsideDays"
         [attr.tabindex]="tabIndex(day)"
         (focus)="activeDate = day.date.toLocaleDateString()"
-        (onDateSelection)="selectDay($event)">
+        (dateSelection)="selectDay($event)">
         {{ formattedDate(day.date) }}
     </igx-day-item>
 </div>
