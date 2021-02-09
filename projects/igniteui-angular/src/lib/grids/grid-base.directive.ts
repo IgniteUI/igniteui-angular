@@ -37,7 +37,7 @@ import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
+import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import {
@@ -54,7 +54,6 @@ import {
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IColumnVisibilityChangedEventArgs } from './column-actions/column-hiding.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
@@ -136,7 +135,13 @@ import {
     IPinRowEventArgs,
     IGridScrollEventArgs,
     IGridEditDoneEventArgs,
-    IActiveNodeChangeEventArgs
+    IActiveNodeChangeEventArgs,
+    ISortingEventArgs,
+    IFilteringEventArgs,
+    IColumnVisibilityChangedEventArgs,
+    IColumnVisibilityChangingEventArgs,
+    IPinColumnCancellableEventArgs,
+    IColumnResizingEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -447,7 +452,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnSelectionChange = new EventEmitter<IColumnSelectionEventArgs>();
 
     /**
-     * Emitted when `IgxColumnComponent` is pinned.
+     * Emitted before `IgxColumnComponent` is pinned.
+     *
+     * @remarks
+     * The index at which to insert the column may be changed through the `insertAtIndex` property.
+     * @example
+     * ```typescript
+     * public columnPinning(event) {
+     *     if (event.column.field === "Name") {
+     *       event.insertAtIndex = 0;
+     *     }
+     * }
+     * ```
+     */
+    @Output()
+    public onColumnPinning = new EventEmitter<IPinColumnCancellableEventArgs>();
+
+    /**
+     * Emitted after `IgxColumnComponent` is pinned.
      *
      * @remarks
      * The index that the column is inserted at may be changed through the `insertAtIndex` property.
@@ -461,7 +483,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
+    public columnPinned = new EventEmitter<IPinColumnEventArgs>();
 
     /**
      * Emitted when cell enters edit mode.
@@ -596,7 +618,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnInit = new EventEmitter<IgxColumnComponent>();
 
     /**
-     * Emitted when sorting is performed through the UI.
+     * Emitted before sorting expressions are applied.
+     *
+     * @remarks
+     * Returns an `ISortingEventArgs` object. `sortingExpressions` key holds the sorting expressions.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (onSorting)="sorting($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public sorting = new EventEmitter<ISortingEventArgs>();
+
+    /**
+     * Emitted after sorting is completed.
      *
      * @remarks
      * Returns the sorting expression.
@@ -609,7 +644,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onSortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
 
     /**
-     * Emitted when filtering is performed through the UI.
+     * Emitted before filtering expressions are applied.
+     *
+     * @remarks
+     * Returns an `IFilteringEventArgs` object. `filteringExpressions` key holds the filtering expressions for the column.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (filtering)="filtering($event)"></igx-grid>
+     * ```
+     */
+    @Output()
+    public filtering = new EventEmitter<IFilteringEventArgs>();
+
+    /**
+     * Emitted after filtering is performed through the UI.
      *
      * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
@@ -622,7 +670,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     * Emitted when paging is performed.
+     * Emitted after paging is performed.
      *
      * @remarks
      * Returns an object consisting of the previous and next pages.
@@ -661,7 +709,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted when column is resized.
+     * Emitted after column is resized.
      *
      * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
@@ -699,10 +747,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
-     * Emitted when column visibility is changed.
+     * Emitted before column visibility is changed.
      *
      * @remarks
      * Args: { column: any, newValue: boolean }
+     * @example
+     * ```html
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
+     * ```
+     */
+   @Output()
+   public columnVisibilityChanging = new EventEmitter<IColumnVisibilityChangingEventArgs>();
+
+    /**
+     * Emitted after column visibility is changed.
+     *
+     * @remarks
+     * Args: { column: IgxColumnComponent, newValue: boolean }
      * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
@@ -3595,9 +3656,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!col) {
             return;
         }
-
-        col.hidden = args.newValue;
-        this.onColumnVisibilityChanged.emit(args);
+        col.toggleVisibility(args.newValue);
     }
 
     /**
@@ -4198,19 +4257,26 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._moveChildColumns(column.parent, column, target, pos);
         }
 
+        let columnPinStateChanged;
+        // pinning and unpinning will work correctly even without passing index
+        // but is easier to calclulate the index here, and later use it in the pinning event args
         if (target.pinned && !column.pinned) {
-            column.pin();
+            const pinnedIndex = this._pinnedColumns.indexOf(target);
+            const index = pos === DropPosition.AfterDropTarget ? pinnedIndex + 1 : pinnedIndex;
+            columnPinStateChanged = column.pin(index);
         }
 
         if (!target.pinned && column.pinned) {
-            column.unpin();
+            const unpinnedIndex = this._unpinnedColumns.indexOf(target);
+            const index = pos === DropPosition.AfterDropTarget ? unpinnedIndex + 1 : unpinnedIndex;
+            columnPinStateChanged = column.unpin(index);
         }
 
-        if (target.pinned && column.pinned) {
+        if (target.pinned && column.pinned && !columnPinStateChanged) {
             this._reorderColumns(column, target, pos, this._pinnedColumns);
         }
 
-        if (!target.pinned && !column.pinned) {
+        if (!target.pinned && !column.pinned && !columnPinStateChanged) {
             this._reorderColumns(column, target, pos, this._unpinnedColumns);
         }
 
@@ -4446,9 +4512,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
+        const sortingState = cloneArray(this.sortingExpressions);
+
+        if (expression instanceof Array) {
+            for (const each of expression) {
+                if (each.dir === SortingDirection.None) {
+                    this.gridAPI.remove_grouping_expression(each.fieldName);
+                }
+                this.gridAPI.prepare_sorting_expression([sortingState], each);
+            }
+        } else {
+            if (expression.dir === SortingDirection.None) {
+                this.gridAPI.remove_grouping_expression(expression.fieldName);
+            }
+            this.gridAPI.prepare_sorting_expression([sortingState], expression);
+        }
+
+        const eventArgs: ISortingEventArgs = {owner: this, sortingExpressions: sortingState, cancel: false };
+        this.sorting.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
+
         this.endEdit(false);
-
-
         if (expression instanceof Array) {
             this.gridAPI.sort_multiple(expression);
         } else {
