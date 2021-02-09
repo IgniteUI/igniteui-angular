@@ -302,10 +302,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                     .trim() as IgxInputGroupTheme;
             }
         }
-
-        if (this.isFileType) {
-            this.renderer.setAttribute(this.input.nativeElement, 'hidden', 'true');
-        }
     }
     /**
      * Returns whether the `IgxInputGroupComponent` has hints.

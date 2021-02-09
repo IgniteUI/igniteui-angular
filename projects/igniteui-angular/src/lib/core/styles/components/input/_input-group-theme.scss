@@ -323,6 +323,10 @@
             margin: 0;
         }
 
+        input[type='file'] {
+            @include hide-default();
+        }
+
         textarea {
             overflow: auto;
         }
