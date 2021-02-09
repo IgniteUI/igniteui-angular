@@ -26,7 +26,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
-        id: string): ITreeGridRecord[] {
+        id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
         let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
@@ -138,7 +138,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 
     public transform(collection: ITreeGridRecord[], id: string,
-        expandedLevels: number, expandedStates: Map<any, boolean>): any[] {
+        expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
 
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const data: ITreeGridRecord[] = [];
@@ -240,7 +240,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
         this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: ITreeGridRecord[], page = 0, perPage = 15): ITreeGridRecord[] {
+    public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
         if (!grid.paging || grid.pagingMode !== GridPagingMode.Local) {
             return collection;
@@ -274,7 +274,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
         this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: any[]): any[] {
+    transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
         if (grid.transactions.enabled) {
