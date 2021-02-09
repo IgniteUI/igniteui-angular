@@ -25,7 +25,7 @@
                     {{calendar.activeDate}}
                 </div>
                 <igx-card>
-                    <igx-calendar #calendar [showWeekNumbers]="true" weekStart="1" [monthsViewNumber]="3" [selection]="selectionType" (viewDateChanged)="viewDateChanged($event)" (activeViewChanged)="activeViewChanged()" (onSelection)="onSelection()" [hideOutsideDays]="false"></igx-calendar>
+                    <igx-calendar #calendar [showWeekNumbers]="true" weekStart="1" [monthsViewNumber]="3" [selection]="selectionType" (viewDateChanged)="viewDateChanged($event)" (activeViewChanged)="activeViewChanged($event)" (selected)="onSelection($event)" [hideOutsideDays]="false"></igx-calendar>
                 </igx-card>
             </div>
 
@@ -39,7 +39,7 @@
             <div class="calendar-sample dark-calendar">
                 <h4 class="sample-title">Calendar with Special and Disabled Dates</h4>
                 <article class="sample-column calendar-wrapper">
-                    <igx-calendar [showWeekNumbers]="true" #calendar1 weekStart="1" [selection]="'multi'" (onSelection)="selectPTOdays($event)">
+                    <igx-calendar [showWeekNumbers]="true" #calendar1 weekStart="1" [selection]="'multi'" (selected)="selectPTOdays($event)">
                     </igx-calendar>
                     <igx-dialog #alert title="Request Time Off" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
                     </igx-dialog>
