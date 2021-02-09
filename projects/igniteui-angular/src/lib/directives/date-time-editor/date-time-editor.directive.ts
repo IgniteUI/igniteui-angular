@@ -178,6 +178,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return this._value;
   }
 
+  /** @hidden @internal */
+  @Input()
+  public preventSpinOnWheel = false;
+
   /**
    * Emitted when the editor's value has changed.
    *
@@ -257,6 +261,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   @HostListener('wheel', ['$event'])
   public onWheel(event: WheelEvent) {
+    if (this.preventSpinOnWheel) {
+      return;
+    }
     event.preventDefault();
     event.stopPropagation();
     if (event.deltaY > 0) {
