@@ -401,13 +401,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // in place of the native label, we need to emit
         // the change event separately here alongside
         // the click event emitted on click
-
         this.toggle();
-    }
-
-    /** @hidden @internal */
-    public onFocus() {
-        this.focused = true;
     }
 
     /** @hidden @internal */
