@@ -28,6 +28,7 @@
     $track-background: null,
 ) {
     $name: 'igx-scrollbar';
+    $selector: '.igx-scrollbar';
     $scrollbar-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -40,6 +41,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         thumb-background: $thumb-background,
         track-background: $track-background,
@@ -52,7 +54,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-scrollbar($theme) {
-    @include igx-css-vars($theme, '.igx-scrollbar');
+    @include igx-css-vars($theme);
 
     %scrollbar-display {
         @if type-of(map-get($theme, 'size') == 'string') {
