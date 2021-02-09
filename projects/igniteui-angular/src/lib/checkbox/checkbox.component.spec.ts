@@ -220,7 +220,7 @@ describe('IgxCheckbox', () => {
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
         const cbxEl = fixture.debugElement.query(By.directive(IgxCheckboxComponent)).nativeElement;
-        const nativeChecbox = checkboxInstance.nativeCheckbox.nativeElement;
+        const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
         const placeholderLabel = checkboxInstance.placeholderLabel.nativeElement;
 
@@ -231,7 +231,7 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
         expect(checkboxInstance.focused).toBe(true);
 
-        nativeChecbox.dispatchEvent(new Event('blur'));
+        nativeCheckbox.dispatchEvent(new Event('blur'));
         fixture.detectChanges();
         expect(checkboxInstance.focused).toBe(false);
 
