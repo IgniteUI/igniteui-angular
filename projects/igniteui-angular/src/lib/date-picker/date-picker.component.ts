@@ -160,7 +160,6 @@ export type PredefinedFormatOptions = (typeof PredefinedFormatOptions)[keyof typ
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
     EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
-    private _label = 'Date';
     /**
      * Gets/Sets the `IgxDatePickerComponent` label.
      *
@@ -794,6 +793,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _onOpen = new EventEmitter<IgxDatePickerComponent>();
     private _onClose = new EventEmitter<IgxDatePickerComponent>();
     private _ngControl: NgControl = null;
+    private _label = 'Date';
 
     //#region ControlValueAccessor
 
