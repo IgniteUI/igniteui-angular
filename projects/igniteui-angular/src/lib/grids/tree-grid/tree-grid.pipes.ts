@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray, cloneHierarchicalArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
@@ -274,7 +275,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
         this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    transform(collection: any[], id: string, pipeTrigger: number): any[] {
+    public transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
         if (grid.transactions.enabled) {
@@ -322,12 +323,12 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
         this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: any[]): any[] {
+    public transform(collection: any[], pipeTrigger: number): any[] {
         const grid =  this.gridAPI.grid;
         const primaryKey = grid.primaryKey;
         // using flattened data because origin data may be hierarchical.
-        collection = grid.flatData;
-        const res = collection.map(rec =>
+        const flatData = grid.flatData;
+        const res = flatData.map(rec =>
             ({
                     rowID: grid.primaryKey ? rec[primaryKey] : rec,
                     data: rec,
