@@ -2901,6 +2901,35 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public abstract id: string;
     abstract data: any[];
     abstract filteredData: any[];
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the next page, if the grid is not already at the last page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.nextPage();
+     * ```
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public nextPage(): void {
+        this.paginate(this._page + 1);
+    }
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding methods instead.
+     * Goes to the previous page, if the grid is not already at the first page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.previousPage();
+     * ```
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public previousPage(): void {
+        this.paginate(this._page - 1);
+    }
+
     /**
      * Returns an array containing the filtered sorted data.
      *
@@ -3121,34 +3150,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public set virtualizationState(state) {
         this.verticalScrollContainer.state = state;
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the next page, if the grid is not already at the last page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.nextPage();
-     * ```
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public nextPage(): void {
-        this.paginate(this._page + 1);
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding methods instead.
-     * Goes to the previous page, if the grid is not already at the first page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.previousPage();
-     * ```
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public previousPage(): void {
-        this.paginate(this._page - 1);
     }
 
     /**
