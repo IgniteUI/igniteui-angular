@@ -140,15 +140,15 @@ describe('List', () => {
 
         fixture.detectChanges();
 
-        list.onLeftPan.subscribe(() => {
+        list.leftPan.subscribe(() => {
             timesCalledLeftPan++;
         });
 
-        list.onPanStateChange.subscribe(() => {
+        list.panStateChange.subscribe(() => {
             timesCalledStateChanged++;
         });
 
-        list.onRightPan.subscribe(() => {
+        list.rightPan.subscribe(() => {
             timesCalledRightPan++;
         });
 
@@ -167,9 +167,9 @@ describe('List', () => {
         expect(timesCalledStateChanged).toBe(2);
         expect(timesCalledRightPan).toBe(1);
 
-        list.onLeftPan.unsubscribe();
-        list.onPanStateChange.unsubscribe();
-        list.onRightPan.unsubscribe();
+        list.leftPan.unsubscribe();
+        list.panStateChange.unsubscribe();
+        list.rightPan.unsubscribe();
 
         unsubscribeEvents(list);
     });
@@ -186,15 +186,15 @@ describe('List', () => {
 
         const list: IgxListComponent = fixture.componentInstance.list;
 
-        list.onLeftPan.subscribe(() => {
+        list.leftPan.subscribe(() => {
             timesCalledLeftPan++;
         });
 
-        list.onPanStateChange.subscribe(() => {
+        list.panStateChange.subscribe(() => {
             timesCalledStateChanged++;
         });
 
-        list.onRightPan.subscribe(() => {
+        list.rightPan.subscribe(() => {
             timesCalledRightPan++;
         });
 
@@ -227,15 +227,15 @@ describe('List', () => {
 
         const list: IgxListComponent = fixture.componentInstance.list;
 
-        list.onLeftPan.subscribe(() => {
+        list.leftPan.subscribe(() => {
             timesCalledLeftPan++;
         });
 
-        list.onPanStateChange.subscribe(() => {
+        list.panStateChange.subscribe(() => {
             timesCalledStateChanged++;
         });
 
-        list.onRightPan.subscribe(() => {
+        list.rightPan.subscribe(() => {
             timesCalledRightPan++;
         });
 
@@ -350,7 +350,7 @@ describe('List', () => {
             return fixture.whenStable();
         }).then(() => {
 
-            list.onItemClicked.subscribe((value) => {
+            list.itemClicked.subscribe((value) => {
                 timesCalled++;
                 listItem = value.item;
             });
@@ -382,7 +382,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        list.onItemClicked.subscribe((eventArgs) => {
+        list.itemClicked.subscribe((eventArgs) => {
             expect(eventArgs.direction).toBe(IgxListPanState.LEFT);
             unsubscribeEvents(list);
             done();
@@ -397,7 +397,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        list.onItemClicked.subscribe((eventArgs) => {
+        list.itemClicked.subscribe((eventArgs) => {
             expect(eventArgs.direction).toBe(IgxListPanState.LEFT);
             unsubscribeEvents(list);
             done();
@@ -412,7 +412,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        list.onItemClicked.subscribe((eventArgs) => {
+        list.itemClicked.subscribe((eventArgs) => {
             expect(eventArgs.direction).toBe(IgxListPanState.RIGHT);
             unsubscribeEvents(list);
             done();
@@ -427,7 +427,7 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
 
-        list.onItemClicked.subscribe((eventArgs) => {
+        list.itemClicked.subscribe((eventArgs) => {
             expect(eventArgs.direction).toBe(IgxListPanState.RIGHT);
             unsubscribeEvents(list);
             done();
@@ -508,9 +508,9 @@ describe('List', () => {
 
             item = list.items[0] as IgxListItemComponent;
 
-            spyOn(list.onLeftPan, 'emit');
-            spyOn(list.onRightPan, 'emit');
-            spyOn(list.onPanStateChange, 'emit');
+            spyOn(list.leftPan, 'emit');
+            spyOn(list.rightPan, 'emit');
+            spyOn(list.panStateChange, 'emit');
 
             elementRefCollection = fixture.debugElement.queryAll(By.css('igx-list-item'));
             return panItem(elementRefCollection[1], 0.8);
@@ -521,9 +521,9 @@ describe('List', () => {
             return panItem(elementRefCollection[1], -0.8);
         }).then(() => {
             expect(item.panState).toBe(IgxListPanState.NONE);
-            expect(list.onLeftPan.emit).toHaveBeenCalledTimes(0);
-            expect(list.onRightPan.emit).toHaveBeenCalledTimes(0);
-            expect(list.onPanStateChange.emit).toHaveBeenCalledTimes(0);
+            expect(list.leftPan.emit).toHaveBeenCalledTimes(0);
+            expect(list.rightPan.emit).toHaveBeenCalledTimes(0);
+            expect(list.panStateChange.emit).toHaveBeenCalledTimes(0);
             done();
         });
     }, 5000);
@@ -612,7 +612,7 @@ describe('List', () => {
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        list.onLeftPan.subscribe((args) => {
+        list.leftPan.subscribe((args) => {
             args.keepItem = true;
         });
 
@@ -627,7 +627,7 @@ describe('List', () => {
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
 
-        list.onRightPan.subscribe((args) => {
+        list.rightPan.subscribe((args) => {
             args.keepItem = true;
         });
 
@@ -831,10 +831,10 @@ describe('List', () => {
     };
 
     const unsubscribeEvents = list => {
-        list.onLeftPan.unsubscribe();
-        list.onPanStateChange.unsubscribe();
-        list.onRightPan.unsubscribe();
-        list.onItemClicked.unsubscribe();
+        list.leftPan.unsubscribe();
+        list.panStateChange.unsubscribe();
+        list.rightPan.unsubscribe();
+        list.itemClicked.unsubscribe();
         list.onDensityChanged.unsubscribe();
     };
 
