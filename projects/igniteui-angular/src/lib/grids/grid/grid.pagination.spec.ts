@@ -189,15 +189,15 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(grid.nativeElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
         });
 
-        it('change paging pages per page API', (async () => {
+        it('change paging pages per page API', fakeAsync(() => {
 
             grid.height = '300px';
             grid.perPage = 2;
-            await wait();
+            tick();
             fix.detectChanges();
 
             grid.page = 1;
-            await wait();
+            tick();
             fix.detectChanges();
 
             expect(grid.paging).toBeTruthy();
@@ -206,27 +206,27 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
             // Change page size to be 5
             grid.perPage = 5;
-            await wait();
+            tick();
             fix.detectChanges();
             let vScrollBar = grid.verticalScrollContainer.getScroll();
-            verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
+            verifyGridPager(fix, 5, '6', '2\xA0of\xA02', [false, false, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(255);
 
             // Change page size to be 33
             grid.perPage = 33;
-            await wait();
+            tick();
             fix.detectChanges();
             vScrollBar = grid.verticalScrollContainer.getScroll();
-            verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
+            verifyGridPager(fix, 10, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
 
             // Change page size to be negative
             grid.perPage = -7;
-            await wait();
+            tick();
             fix.detectChanges();
-            verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
+            verifyGridPager(fix, 10, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(500);
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
         }));

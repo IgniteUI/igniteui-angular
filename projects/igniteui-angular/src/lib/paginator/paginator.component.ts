@@ -85,7 +85,19 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public prepositionPage;
 
-    /** @hidden @internal */
+    /**
+     * Emitted when `perPage` property value of the paginator is changed.
+     *
+     * @example
+     * ```html
+     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
+     */
     @Output()
     public perPageChange = new EventEmitter<number>();
 
@@ -115,7 +127,19 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Output()
     public pagingDone = new EventEmitter<IPagingDoneEventArgs>();
 
-    /** @hidden @internal */
+    /**
+     * Emitted after the current page is changed.
+     *
+     * @example
+     * ```html
+     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
+     */
     @Output()
     public pageChange = new EventEmitter<number>();
 
@@ -198,7 +222,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
         this.totalPages = Math.ceil(this._totalRecords / this._perPage);
         if (this.totalPages !== 0 && this._page >= this.totalPages) {
-            this.page = this.totalPages - 1;
+            this.paginate(this.totalPages - 1);
         }
     }
 
@@ -332,6 +356,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         }
         return DisplayDensity.compact;
     }
+
     /**
      * Goes to the next page of the `IgxPaginatorComponent`, if the paginator is not already at the last page.
      * ```typescript
@@ -343,6 +368,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public nextPage(): void {
         this.paginate(this._page + 1);
     }
+
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
      * ```typescript
@@ -354,6 +380,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public previousPage(): void {
         this.paginate(this._page - 1);
     }
+
     /**
      * Goes to the desired page index.
      * ```typescript
@@ -363,6 +390,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @param val
      * @memberof IgxPaginatorComponent
      */
+
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1 || val === this._page) {
             return;

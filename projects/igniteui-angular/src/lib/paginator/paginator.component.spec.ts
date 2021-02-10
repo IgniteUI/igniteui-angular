@@ -172,8 +172,8 @@ describe('IgxPaginator with default settings', () => {
         paginator.perPage = paginator.totalRecords / 2;
         fix.detectChanges();
 
-        expect(paginator.paging.emit).toHaveBeenCalledTimes(1);
-        expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(1);
+        expect(paginator.paging.emit).toHaveBeenCalledTimes(2);
+        expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(2);
 
         const page = paginator.page;
         expect(page).toBe(1);

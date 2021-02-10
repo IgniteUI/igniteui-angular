@@ -290,11 +290,39 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
-    /** @hidden @internal */
+    /**
+     * @deprecated Use `IgxPaginator` corresponding output instead.
+     * Emitted after the current page is changed.
+     *
+     * @example
+     * ```html
+     * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
+     */
+    @DeprecateProperty('Use the corresponding output exposed by the `igx-paginator`.')
     @Output()
     public pageChange = new EventEmitter<number>();
 
-    /** @hidden @internal */
+    /**
+     * @deprecated Use `IgxPaginator` corresponding output instead.
+     * Emitted when `perPage` property value of the grid is changed.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
+     */
+    @DeprecateProperty('Use the corresponding output exposed by the `igx-paginator`.')
     @Output()
     public perPageChange = new EventEmitter<number>();
 
