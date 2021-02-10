@@ -22,8 +22,7 @@ export interface IgxTimePickerBase {
     selectedMinute: string;
     selectedSeconds: string;
     selectedAmPm: string;
-    format: string;
-    promptChar: string;
+    
     cleared: boolean;
     mode: InteractionMode;
     showHoursList: boolean;

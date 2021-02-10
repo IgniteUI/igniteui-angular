@@ -1,37 +1,27 @@
-<ng-template #labelTemplate>
+<!-- <ng-template #labelTemplate>
     <ng-content select="[igxLabel]"></ng-content>
-</ng-template>
+</ng-template> -->
 
-<ng-template #dropdownInputTemplate>
+<!-- <ng-template #dropdownInputTemplate>
     <igx-input-group #group (mousedown)="mouseDown($event)" [suppressInputAutofocus]="true">
         <label igxLabel *ngIf="!labelDirective">Time</label>
         <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
-        <igx-prefix (click)="openDialog(group.element.nativeElement)">
+        <igx-prefix (click)="open()">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
-        <input
-            type="text"
-            [igxMask]="mask"
-            igxInput
-            [includeLiterals]="true"
-            [placeholder]="format"
-            [displayValuePipe]="displayFormat"
-            [focusedValuePipe]="inputFormat"
-            [promptChar]="promptChar"
-            [value]="displayValue"
-            [igxTextSelection]="true"
-            (input)="onInput($event)"
-            (blur)="onBlur($event)"
-            (focus)="onFocus($event)"
-            (wheel)="spinOnEdit($event)"
-            [disabled]="disabled" />
+        <input type="text" [igxMask]="mask" igxInput 
+            [includeLiterals]="true" [placeholder]="format"
+            [displayValuePipe]="displayFormat" [focusedValuePipe]="inputFormat" [promptChar]="promptChar"
+            [value]="displayValue" [igxTextSelection]="true" (input)="onInput($event)" (blur)="onBlur($event)"
+            (focus)="onFocus($event)" (wheel)="spinOnEdit($event)" [disabled]="disabled" />
         <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
         </igx-suffix>
     </igx-input-group>
-</ng-template>
-<ng-template #defaultTimePickerTemplate>
-    <igx-input-group (click)="openDialog()" (mousedown)="mouseDown($event)">
+</ng-template> -->
+
+<!-- <ng-template #defaultTimePickerTemplate>
+    <igx-input-group (click)="open()" (mousedown)="mouseDown($event)">
         <igx-prefix>
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
@@ -44,8 +34,58 @@
             tabindex="0" readonly
             (blur)="onBlur($event)" />
     </igx-input-group>
+</ng-template> -->
+ <!-- [igxTextSelection]="true" -->
+
+<!-- (mousedown)="mouseDown($event)" -->
+    <igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && open()">
+        <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text"
+            [readonly]="!this.isDropdown" tabindex="0"
+            [value]="this.value"
+            [displayFormat]="this.displayFormat"
+            [placeholder]="this.placeholder"
+            role="combobox" aria-haspopup="dialog"
+            [attr.aria-expanded]="!toggle.collapsed"
+            [attr.aria-labelledby]="this.label?.id"
+            (wheel)="spinOnEdit($event)"
+             />
+
+            <igx-prefix *ngIf="!this.toggleComponents.length" (click)="open()">
+                <ng-container *ngTemplateOutlet="defaultToggleIcon"></ng-container>
+            </igx-prefix>
+    
+            <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
+                <ng-container *ngTemplateOutlet="defaultClearIcon"></ng-container>
+            </igx-suffix>
+
+        <ng-container ngProjectAs="[igxLabel]">
+            <ng-content select="[igxLabel]"></ng-content>
+        </ng-container>
+        <ng-container ngProjectAs="igx-prefix">
+            <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+        </ng-container>
+        <ng-container ngProjectAs="igx-suffix">
+            <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+        </ng-container>
+        <ng-container ngProjectAs="igx-hint">
+            <ng-content select="igx-hint,[igxHint]"></ng-content>
+        </ng-container>
+    </igx-input-group>
+
+
+<ng-template #defaultToggleIcon>
+    <igx-icon fontSet="material">
+        access_time
+    </igx-icon>
 </ng-template>
-<ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+
+<ng-template #defaultClearIcon>
+    <igx-icon fontSet="material">
+        clear
+    </igx-icon>
+</ng-template>
+
+<!-- <ng-container *ngTemplateOutlet="template; context: context"></ng-container> -->
 
 <ng-template #defaultTimePickerActions>
     <div *ngIf="cancelButtonLabel || okButtonLabel" class="igx-time-picker__buttons">
@@ -57,9 +97,11 @@
         </button>
     </div>
 </ng-template>
-<div igxToggle class="igx-time-picker"
-    [ngClass]="{'igx-time-picker--dropdown': mode === 'dropdown', 'igx-time-picker--vertical': vertical && mode === 'dialog'}">
-    <div *ngIf="mode === 'dialog'" class="igx-time-picker__header">
+
+
+<div #toggle="toggle" igxToggle class="igx-time-picker"
+    [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': vertical && !this.isDropdown}">
+    <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
             <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>:<span>{{ selectedSeconds }}</span>
@@ -69,23 +111,23 @@
         <div class="igx-time-picker__body">
             <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
                 <span [igxHourItem]="hour"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Hour, hour)}"
-                *ngFor="let hour of hourView">{{ hour }}</span>
+                    [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Hour, hour)}"
+                    *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxMinuteItem]="minute"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Minute, minute)}"
-                *ngFor="let minute of minuteView" >{{ minute }}</span>
+                    [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Minute, minute)}"
+                    *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
             <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
                 <span [igxSecondsItem]="seconds"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Seconds, seconds)}"
-                *ngFor="let seconds of secondsView">{{ seconds }}</span>
+                    [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.Seconds, seconds)}"
+                    *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.AMPM, ampm)}"
-                *ngFor="let ampm of ampmView">{{ ampm }}</span>
+                    [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.AMPM, ampm)}"
+                    *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
         <ng-container

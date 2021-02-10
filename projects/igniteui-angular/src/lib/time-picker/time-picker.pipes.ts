@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { IgxTimePickerComponent } from './time-picker.component';
 
 
 /**
@@ -36,10 +37,15 @@ export class TimeDisplayFormatPipe implements PipeTransform {
         if (this.timePicker.showAmPmList) {
             amPM = sections[sections.length - 1];
         }
+        const test = this.timePicker as IgxTimePickerComponent;
 
-        const format = this.timePicker.format;
-        const prompt = this.timePicker.promptChar;
-        const regExp = new RegExp(this.timePicker.promptChar, 'g');
+        const format = test.appliedFormat;
+        const prompt = test.dateTimeEditorRef.promptChar;
+        const regExp = new RegExp(test.dateTimeEditorRef.promptChar, 'g');
+
+        // const format = this.timePicker.format;
+        // const prompt = this.timePicker.promptChar;
+        // const regExp = new RegExp(this.timePicker.promptChar, 'g');
 
         if (format.indexOf('hh') !== -1 || format.indexOf('HH') !== -1 && hour.indexOf(prompt) !== -1) {
             hour = hour === prompt + prompt ? '00' : hour.replace(regExp, '0');
@@ -108,8 +114,9 @@ export class TimeInputFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
     public transform(value: any): string {
-        const prompt = this.timePicker.promptChar;
-        const regExp = new RegExp(prompt, 'g');
+        //const prompt = this.timePicker.promptChar;
+        const test = this.timePicker as IgxTimePickerComponent;
+        const regExp = new RegExp(test.dateTimeEditorRef.promptChar, 'g');
 
         let mask; let hour; let minutes; let seconds; let amPM;
 
