@@ -29,6 +29,7 @@ import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
 import { IColumnVisibilityChangingEventArgs } from '../../common/events';
+import { FormattedFilteringStrategy } from '../../../data-operations/filtering-strategy';
 
 /**
  * @hidden
@@ -539,19 +540,28 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private renderColumnValuesFromData() {
         let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
+        const isFormatterFilterStrategy = this.grid.filterStrategy instanceof FormattedFilteringStrategy;
 
         if (expressionsTree.filteringOperands.length) {
-            const state = { expressionsTree };
+            const state = { expressionsTree, strategy: this.grid.filterStrategy };
             data = DataUtil.filter(cloneArray(data), state, this.grid);
         }
 
         const columnField = this.column.field;
-        const columnValues = (this.column.dataType === DataType.Date) ?
+        let columnValues = (this.column.dataType === DataType.Date) ?
             data.map(record => {
                 const value = (resolveNestedPath(record, columnField));
                 const label = this.getFilterItemLabel(value);
                 return { label, value };
             }) : data.map(record => resolveNestedPath(record, columnField));
+
+        if (isFormatterFilterStrategy) {
+            const filterStrategy = this.grid.filterStrategy as FormattedFilteringStrategy;
+            if (filterStrategy.shouldApplyFormatter(this.column.field)) {
+                const columnFormatter = this.column.formatter;
+                columnValues = columnValues.map(colVal => columnFormatter ? columnFormatter(colVal) : colVal);
+            }
+        }
 
         this.renderValues(columnValues);
     }
@@ -596,11 +606,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.listData = new Array<FilterListItem>();
 
         const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
+        const filterStrategy = this.grid.filterStrategy instanceof FormattedFilteringStrategy ?
+            !this.grid.filterStrategy.shouldApplyFormatter(this.column.field) : true;
+
 
         if (this.column.dataType === DataType.Boolean) {
             this.addBooleanItems();
         } else {
-            this.addItems(shouldUpdateSelection);
+            this.addItems(shouldUpdateSelection, filterStrategy);
         }
 
         this.listData.sort((a, b) => this.sortData(a, b));
@@ -670,7 +683,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         });
     }
 
-    private addItems(shouldUpdateSelection: boolean) {
+    private addItems(shouldUpdateSelection: boolean, applyFormatter: boolean = true) {
         this.selectAllSelected = true;
         this.containsNullOrEmpty = false;
         this.selectAllIndeterminate = false;
@@ -701,7 +714,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 }
 
                 filterListItem.value = this.getFilterItemValue(element);
-                filterListItem.label = this.getFilterItemLabel(element);
+                filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
             }
@@ -760,19 +773,19 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
     }
 
-    private getFilterItemLabel(element: any) {
+    private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
         if (this.column.dataType === DataType.Date) {
-            return element && element.label ? element.label : this.column.formatter ?
+            return element && element.label ? element.label : this.column.formatter && applyFormatter ?
                 this.column.formatter(element) :
                 this.grid.datePipe.transform(element, this.column.pipeArgs.format, this.column.pipeArgs.timezone,
                     this.grid.locale);
         }
         if (this.column.dataType === DataType.Number) {
-            return this.column.formatter ?
+            return this.column.formatter && applyFormatter ?
                 this.column.formatter(element) :
                 this.grid.decimalPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
-        return this.column.formatter ?
+        return this.column.formatter && applyFormatter ?
             this.column.formatter(element) :
             element;
     }

@@ -76,6 +76,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instace: FilteringStrategy = null;
+    protected grid: GridType;
 
     constructor() {
         super();
@@ -91,6 +92,8 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         let rec;
         const len = data.length;
         const res: T[] = [];
+        this.grid = grid;
+
         if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
             return data;
         }
@@ -106,6 +109,25 @@ export class FilteringStrategy extends BaseFilteringStrategy {
     protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
         let value = resolveNestedPath(rec, fieldName);
         value = value && isDate ? parseDate(value) : value;
+        return value;
+    }
+}
+
+export class FormattedFilteringStrategy extends FilteringStrategy {
+    constructor(private fields?: string[]) {
+        super();
+    }
+
+    public shouldApplyFormatter(fieldName: string): boolean {
+        return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
+    }
+
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
+        let value = resolveNestedPath(rec, fieldName);
+        const column = this.grid.getColumnByName(fieldName);
+
+        value = value && isDate ? parseDate(value) : value;
+        value = this.shouldApplyFormatter(fieldName) && column.formatter ? column.formatter(value) : value;
         return value;
     }
 }
