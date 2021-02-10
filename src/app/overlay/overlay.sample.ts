@@ -21,37 +21,33 @@ import {
     templateUrl: './overlay.sample.html',
 })
 export class OverlaySampleComponent implements OnInit {
-    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('button', { static: true }) public button: ElementRef;
-    @ViewChild('container', { static: true }) public container: ElementRef;
-    @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
-    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
+    @ViewChild(IgxDropDownComponent, { static: true })
+    private igxDropDown: IgxDropDownComponent;
+    @ViewChild('button', { static: true })
+    private button: ElementRef;
+    @ViewChild(IgxDragDirective, { static: true })
+    private igxDrag: IgxDragDirective;
+    @ViewChild('outlet', { static: true })
+    private outletElement: ElementRef;
 
-    items = [];
-    itemsCount = 10;
-    dropDownWidth = 200;
-
-    horizontalDirections = ['Left', 'Center', 'Right'];
-    horizontalDirection = 'Center';
-
-    verticalDirections = ['Top', 'Middle', 'Bottom'];
-    verticalDirection = 'Middle';
-
-    horizontalStartPoints = ['Left', 'Center', 'Right'];
-    horizontalStartPoint = 'Left';
-
-    verticalStartPoints = ['Top', 'Middle', 'Bottom'];
-    verticalStartPoint = 'Top';
-
-    positionStrategies = ['Auto', 'Connected', 'Global', 'Container', 'Elastic'];
-    positionStrategy = 'Global';
-
-    scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
-    scrollStrategy = 'NoOp';
-
-    closeOnOutsideClick = true;
-    modal = true;
-    useOutlet = false;
+    public items = [];
+    public itemsCount = 10;
+    public dropDownWidth = 200;
+    public horizontalDirections = ['Left', 'Center', 'Right'];
+    public horizontalDirection = 'Center';
+    public verticalDirections = ['Top', 'Middle', 'Bottom'];
+    public verticalDirection = 'Middle';
+    public horizontalStartPoints = ['Left', 'Center', 'Right'];
+    public horizontalStartPoint = 'Left';
+    public verticalStartPoints = ['Top', 'Middle', 'Bottom'];
+    public verticalStartPoint = 'Top';
+    public positionStrategies = ['Auto', 'Connected', 'Global', 'Container', 'Elastic'];
+    public positionStrategy = 'Global';
+    public scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
+    public scrollStrategy = 'NoOp';
+    public closeOnOutsideClick = true;
+    public modal = true;
+    public useOutlet = false;
 
     private xAddition = 0;
     private yAddition = 0;
@@ -70,7 +66,7 @@ export class OverlaySampleComponent implements OnInit {
         }
     }
 
-    onChange(ev) {
+    public onChange(ev) {
         switch (ev.radio.name) {
             case 'ps':
                 this.removeSelectedClass('direction');
@@ -173,7 +169,7 @@ export class OverlaySampleComponent implements OnInit {
         }
     }
 
-    onChange2() { // WIP
+    public onChange2() { // WIP
         const stringMapping = {
             ScrollStrategy: {
                 Absolute: new AbsoluteScrollStrategy(),
@@ -229,7 +225,7 @@ export class OverlaySampleComponent implements OnInit {
         this._overlaySettings.outlet = this.useOutlet ? this.outletElement : null;
     }
 
-    onSwitchChange(ev) {
+    public onSwitchChange(ev) {
         switch (ev.switch.name) {
             case 'close':
                 this._overlaySettings.closeOnOutsideClick = ev.checked;
@@ -349,7 +345,7 @@ export class OverlaySampleComponent implements OnInit {
         this.igxDropDown.toggle(this._overlaySettings);
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.igxDrag.element.nativeElement.style.left = '300px';
         this.igxDrag.element.nativeElement.style.top = '300px';
     }

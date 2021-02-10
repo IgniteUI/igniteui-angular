@@ -1,7 +1,8 @@
 /* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, DoCheck
+  Renderer2, NgModule, Output, EventEmitter, Inject,
+  LOCALE_ID, OnChanges, SimpleChanges, DoCheck, HostListener
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -177,6 +178,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return this._value;
   }
 
+  /** @hidden @internal */
+  @Input()
+  public preventSpinOnWheel = false;
+
+  /** @hidden @internal */
+  @Input()
+  public suppressFocus = false;
+
   /**
    * Emitted when the editor's value has changed.
    *
@@ -254,6 +263,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.locale = this.locale || this._locale;
   }
 
+  @HostListener('wheel', ['$event'])
+  public onWheel(event: WheelEvent) {
+    if (this.preventSpinOnWheel) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.deltaY > 0) {
+      this.increment();
+    } else {
+      this.decrement();
+    }
+  }
+
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['inputFormat'] || changes['locale']) {
@@ -281,7 +304,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public increment(datePart?: DatePart): void {
     const targetDatePart = this.targetDatePart;
     if (!targetDatePart) {
-        return;
+      return;
     }
     const newValue = datePart
       ? this.spinValue(datePart, 1)
@@ -297,7 +320,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public decrement(datePart?: DatePart): void {
     const targetDatePart = this.targetDatePart;
     if (!targetDatePart) {
-        return;
+      return;
     }
     const newValue = datePart
       ? this.spinValue(datePart, -1)
@@ -336,19 +359,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /** @hidden @internal */
   public registerOnValidatorChange?(fn: () => void): void {
     this.onValidatorChange = fn;
-    }
+  }
 
   /** @hidden @internal */
   public registerOnChange(fn: any): void {
- this.onChangeCallback = fn;
-}
+    this.onChangeCallback = fn;
+  }
 
   /** @hidden @internal */
   public registerOnTouched(fn: any): void {
- this.onTouchCallback = fn;
-}
+    this.onTouchCallback = fn;
+  }
 
   /** @hidden @internal */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setDisabledState?(isDisabled: boolean): void { }
 
   /** @hidden @internal */
@@ -377,7 +401,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public onKeyDown(event: KeyboardEvent): void {
     super.onKeyDown(event);
     if (event.altKey) {
-        return;
+      return;
     }
     if (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE ||
       event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE) {
@@ -394,6 +418,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onFocus(): void {
+    if (this.suppressFocus) {
+      return;
+    }
     this._isFocused = true;
     this.onTouchCallback();
     this.updateMask();
@@ -416,8 +443,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public updateMask(): void {
     if (this._isFocused) {
       if (!this.value) {
-            return;
-        }
+        return;
+      }
       // store the cursor position as it will be moved during masking
       const cursor = this.selectionEnd;
       this.inputValue = this.getMaskedValue();
@@ -440,7 +467,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   // TODO: move parseDate to utils
   public parseDate(val: string): Date | null {
     if (!val) {
-        return null;
+      return null;
     }
     return DatePickerUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }
@@ -448,9 +475,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private getMaskedValue(): string {
     let mask = this.emptyMask;
     for (const part of this._inputDateParts) {
-        if (part.type === DatePart.Literal) {
-            continue;
-        }
+      if (part.type === DatePart.Literal) {
+        continue;
+      }
       const targetValue = this.getPartValue(part, part.format.length);
       mask = this.maskParser.replaceInMask(mask, targetValue, this.maskOptions, part.start, part.end).value;
     }
@@ -477,7 +504,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private valueInRange(value: Date): boolean {
     if (!value) {
-        return false;
+      return false;
     }
     const maxValueAsDate = this.isDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
     const minValueAsDate = this.isDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
@@ -497,7 +524,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private spinValue(datePart: DatePart, delta: number): Date {
     if (!this.value || !this.isValidDate(this.value)) {
-        return null;
+      return null;
     }
     const newDate = new Date(this.value.getTime());
     switch (datePart) {

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
 
 class Task {
-    title: string;
-    percentCompleted: number;
+    public title: string;
+    public percentCompleted: number;
 
     constructor(title: string, percentCompeted: number) {
         this.title = title;
@@ -85,7 +85,7 @@ export class SliderSampleComponent {
         }
     }
 
-    public tickLabel(value, primary, index, labels) {
+    public tickLabel(value, primary) {
         if (primary) {
             return Math.round(value);
         }

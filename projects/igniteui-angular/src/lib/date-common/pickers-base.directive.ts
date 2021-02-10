@@ -77,7 +77,8 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
 
     /**
      * Enables/Disables the picker.
-     *  @example
+     *
+     * @example
      * ```html
      * <igx-date-picker [disabled]="'true'"></igx-date-picker>
      * ```
@@ -144,7 +145,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public selecting: EventEmitter<IBaseCancelableBrowserEventArgs>;
+    public selecting = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after a selection has been done.
@@ -154,8 +155,8 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * <igx-date-picker (selected)="onSelection($event)"></igx-date-picker>
      * ```
      */
-    @Input()
-    public abstract selected: Date | DateRange;
+    @Output()
+    public abstract selected = new EventEmitter<Date | DateRange>();
 
     /**
      * Emitted when the calendar starts opening, cancelable.
@@ -166,7 +167,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public opening: EventEmitter<IBaseCancelableBrowserEventArgs>;
+    public opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted when the picker has opened.
@@ -177,7 +178,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public opened: EventEmitter<IBaseEventArgs>;
+    public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted when the calendar starts closing, cancelable.
@@ -188,7 +189,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public closing: EventEmitter<IBaseCancelableBrowserEventArgs>;
+    public closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted when the picker has closed.
@@ -199,7 +200,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public closed: EventEmitter<IBaseEventArgs>;
+    public closed = new EventEmitter<IBaseEventArgs>();
 
     protected _collapsed = true;
     protected _type: IgxInputGroupType;

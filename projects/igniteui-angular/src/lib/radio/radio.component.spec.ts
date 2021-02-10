@@ -133,32 +133,30 @@ describe('IgxRadio', () => {
         expect(nativeRadio.getAttribute('aria-label')).toMatch(fixture.componentInstance.label);
     });
 
-    it('Disabled state', () => {
+    it('Disabled state', fakeAsync(() => {
         const fixture = TestBed.createComponent(DisabledRadioComponent);
         fixture.detectChanges();
-
         const testInstance = fixture.componentInstance;
-        const radios = testInstance.radios.toArray();
 
         // get the disabled radio button
-        const radioInstance = radios[1];
-        const nativeRadio = radioInstance.nativeRadio.nativeElement;
-        const nativeLabel = radioInstance.nativeLabel.nativeElement;
-        const placeholderLabel = radioInstance.placeholderLabel.nativeElement;
+        const componentInstance = testInstance.radios.last;
+        const radio = componentInstance.nativeRadio.nativeElement;
 
-        expect(radios.length).toEqual(2);
-        expect(radioInstance.disabled).toBe(true);
-        expect(nativeRadio.disabled).toBe(true);
+        expect(componentInstance.disabled).toBe(true);
+        expect(radio.disabled).toBe(true);
 
-        nativeRadio.dispatchEvent(new Event('change'));
-        nativeLabel.click();
-        placeholderLabel.click();
+        fixture.detectChanges();
+
+        const btn = fixture.debugElement.queryAll(By.css('igx-radio'))[1];
+        btn.nativeElement.click();
+        tick();
         fixture.detectChanges();
 
         // Should not update
-        expect(nativeRadio.checked).toBe(false);
+        expect(componentInstance.nativeRadio.nativeElement.checked).toBe(false);
+        expect(radio.checked).toBe(false);
         expect(testInstance.selected).not.toEqual('Bar');
-    });
+    }));
 
     it('Required state', () => {
         const fixture = TestBed.createComponent(RequiredRadioComponent);

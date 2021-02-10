@@ -10,7 +10,6 @@ import {
     IgxExcelExporterOptions,
     DisplayDensityToken,
     DisplayDensity,
-    IgxHierarchicalGridComponent,
     IDisplayDensityOptions,
     GridSelectionMode,
     IPinningConfig,
@@ -31,12 +30,11 @@ import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
+    private grid1: IgxGridComponent;
 
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
+    @ViewChild(IgxGridStateDirective, { static: true })
+    private state: IgxGridStateDirective;
 
-    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     public options = {
@@ -53,19 +51,19 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     };
     public selectionMode;
 
-    data: any[];
-    hierarchicalData: any[];
-    columns: any[];
-    hColumns: any[];
-    treeColumns: any[];
-    treeData: any[];
+    public data: any[];
+    public hierarchicalData: any[];
+    public columns: any[];
+    public hColumns: any[];
+    public treeColumns: any[];
+    public treeData: any[];
 
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
                 private iconService: IgxIconService,
                 private excelExportService: IgxExcelExporterService) {
     }
 
-    onRowChange() {
+    public onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
             this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Top };
         } else {
@@ -73,7 +71,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onChange() {
+    public onChange() {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
             this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
         } else {
@@ -81,7 +79,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: '200px', hidden: true },
             { field: 'CompanyName', width: '200px', groupable: true },
@@ -184,12 +182,12 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         /* eslint-enable max-len */
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.iconService.addSvgIconFromText(pinLeft.name, pinLeft.value, 'imx-icons');
         this.iconService.addSvgIconFromText(unpinLeft.name, unpinLeft.value, 'imx-icons');
     }
 
-    togglePinRow(index) {
+    public togglePinRow(index) {
         const rec = this.data[index];
         if (this.grid1.isRecordPinned(rec)) {
             this.grid1.pinRow(this.data[index]);
@@ -198,7 +196,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    togglePining(row: IgxGridRowComponent, event) {
+    public togglePining(row: IgxGridRowComponent, event) {
         event.preventDefault();
         if (row.pinned) {
             row.unpin();
@@ -207,11 +205,11 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    clickUnpin() {
+    public clickUnpin() {
         this.grid1.unpinRow('aaaa');
     }
 
-    generateDataUneven(count: number, level: number, parendID: string = null) {
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
         let children;
@@ -255,7 +253,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         this.state.setState(state);
     }
 
-    toggleDensity() {
+    public toggleDensity() {
         switch (this.displayDensityOptions.displayDensity ) {
             case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
             case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;

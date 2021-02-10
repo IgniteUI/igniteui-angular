@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import {ControlsFunction} from '../../test-utils/controls-functions.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxDateTimeEditor', () => {
@@ -332,7 +332,10 @@ describe('IgxDateTimeEditor', () => {
     });
 
     describe('Integration tests', () => {
-        const dateTimeOptions = {day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+        const dateTimeOptions = {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric'
+        };
         let fixture;
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
@@ -538,7 +541,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date = new Date(169, 0, 1, 0, 0, 0);
-                const customOptions = {day: '2-digit', month: '2-digit', year: 'numeric' };
+                const customOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
                 result = ControlsFunction.formatDate(date, customOptions);
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
@@ -668,7 +671,7 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                const shortDateOptions = {day: 'numeric', month: 'numeric', year: '2-digit'};
+                const shortDateOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
                 const result = ControlsFunction.formatDate(date, shortDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
@@ -695,7 +698,7 @@ describe('IgxDateTimeEditor', () => {
 
                 date = new Date(2028, 7, 16, 0, 0, 0);
                 inputDate = '16/07/28';
-                const longDateOptions = {day: '2-digit', month: '2-digit', year: '2-digit'};
+                const longDateOptions = { day: '2-digit', month: '2-digit', year: '2-digit' };
                 inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -844,7 +847,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
 
-                const options = {day: '2-digit', month: '2-digit', year: '2-digit'};
+                const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
                 const result = ControlsFunction.formatDate(newDate, options, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(result);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
@@ -937,6 +940,19 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
+            it('should properly increment/decrement date-time portions on wheel', fakeAsync(() => {
+                fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
+                fixture.detectChanges();
+                const today = new Date();
+                dateTimeEditorDirective.value = today;
+
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
+                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: -1 }));
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(new Date().getDate() - 1);
+            }));
         });
 
         describe('Form control tests: ', () => {

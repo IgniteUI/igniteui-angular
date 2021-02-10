@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { IgxColumnComponent } from 'igniteui-angular';
+import { IgxColumnComponent, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-toolbar-custom-sample',
@@ -9,7 +9,14 @@ import { IgxColumnComponent } from 'igniteui-angular';
 })
 export class GridToolbarCustomSampleComponent {
 
-    data = [
+    showToolbar = true;
+    title = 'Custom Title';
+    hidingEnabled = true;
+    pinningEnabled = true;
+    csv = true;
+    excel = true;
+
+    public data = [
         {
             Name: 'Alice',
             Age: 25

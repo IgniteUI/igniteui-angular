@@ -8,14 +8,14 @@ import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode, ColumnPin
 })
 export class GridColumnGroupsSampleComponent implements AfterViewInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
     public collapse = true;
-    wid = '250px';
-    columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
-    s = true;
-    selectionMode;
+    public wid = '250px';
+    public columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+    public s = true;
+    public selectionMode;
     public pinningConfig = { columns: ColumnPinningPosition.Start};
-    data: any[] = [
+    public data: any[] = [
         /* eslint-disable max-len */
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
         { ID: 'ANATR', CompanyName: 'Ana Trujillo Emparedados y helados', ContactName: 'Ana Trujillo', ContactTitle: 'Owner', Address: 'Avda. de la Constitución 2222', City: 'México D.F.', Region: null, PostalCode: '05021', Country: 'Mexico', Phone: '(5) 555-4729', Fax: '(5) 555-3745' },
@@ -55,36 +55,38 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
         this.selectionMode = GridSelectionMode.none;
     }
 
-    pinGroup() {
+    public pinGroup() {
         const t = this.grid.getColumnByName('ContactName');
         t.visibleWhenCollapsed = !t.visibleWhenCollapsed;
     }
 
-    log() {
+    public log() {
         console.log(this.s);
     }
 
-    hideGroup() {
-/*         const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
+    public hideGroup() {
+        /*
+        const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
         col.hidden = !col.hidden;
         this.grid.getColumnByName('CompanyName').hidden = true;
-        console.log(this.grid.getColumnByName('CompanyName').parent); */
+        console.log(this.grid.getColumnByName('CompanyName').parent);\
+        */
         (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expanded =
         !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expanded;
 
     }
 
-    toggleCollapsible() {
-       // this.collapse = !this.collapse;
+    public toggleCollapsible() {
+        // this.collapse = !this.collapse;
         (this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible =
         !(this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible;
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         // this.grid.groupBy({ fieldName: 'Country', dir: 1, ignoreCase: false });
     }
 
-    toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
+    public toggleColumnGroup(columnGroup: IgxColumnGroupComponent) {
         const columns = columnGroup.children.toArray();
 
         if (columnGroup.header === 'General Information') {

@@ -16,7 +16,7 @@ import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -654,6 +654,75 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(row.cells.length).toEqual(4);
             }
         });
+
+        it('Should scroll horizontally when press shift + mouse wheel over grid headers', (async () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            for (let i = 2; i < 100; i++) {
+                fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
+            }
+            fix.componentInstance.columns[0].width = '400px';
+            fix.componentInstance.columns[1].width = '400px';
+            fix.componentInstance.columns.push(
+                { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
+            );
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
+            const initialHorScroll = grid.headerContainer.getScroll().scrollLeft;
+
+            const displayContainer = grid.headerContainer.dc.instance._viewContainer.element.nativeElement;
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, -240, true);
+            fix.detectChanges();
+            await wait(16);
+
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(initialHorScroll + 50);
+
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, 240, true);
+            fix.detectChanges();
+            await wait(16);
+
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
+            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(initialHorScroll);
+        }));
+
+
+        it('Should scroll horizontally when press shift + mouse wheel over grid data row', (async () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            for (let i = 2; i < 100; i++) {
+                fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
+            }
+            fix.componentInstance.columns[0].width = '400px';
+            fix.componentInstance.columns[1].width = '400px';
+            fix.componentInstance.columns.push(
+                { field: 'desc', header: 'desc', dataType: 'number', width: '400px', hasSummary: false },
+                { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
+            );
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
+            const initialHorScroll = grid.rowList.first.virtDirRow.getScroll().scrollLeft;
+
+            const cell = grid.getCellByColumn(3, 'value');
+            UIInteractions.simulateClickAndSelectEvent(cell);
+            fix.detectChanges();
+
+            const displayContainer = grid.rowList.first.virtDirRow.dc.instance._viewContainer.element.nativeElement;
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, -240, true);
+            fix.detectChanges();
+            await wait(16);
+
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(initialHorScroll + 50);
+
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, -240, true);
+            fix.detectChanges();
+            await wait(16);
+
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(initialScroll);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThanOrEqual(2 * (initialHorScroll + 50));
+        }));
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
