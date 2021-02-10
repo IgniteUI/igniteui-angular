@@ -3066,6 +3066,25 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the desired page index.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.paginate(1);
+     * ```
+     * @param val
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public paginate(val: number): void {
+        if (val < 0 || val > this.totalPages - 1) {
+            return;
+        }
+
+        this.page = val;
+    }
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Goes to the next page, if the grid is not already at the last page.
      *
      * @example
@@ -3385,12 +3404,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
-    }
-
-    /** @hidden @internal */
-    public _pagingDone() {
-        this.endEdit(true);
-        this.selectionService.clear(true);
     }
 
     /**
@@ -4282,25 +4295,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this._moveColumns(column, target, pos);
         this._columnsReordered(column, target);
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the desired page index.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.paginate(1);
-     * ```
-     * @param val
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
-            return;
-        }
-
-        this.page = val;
     }
 
     /**
