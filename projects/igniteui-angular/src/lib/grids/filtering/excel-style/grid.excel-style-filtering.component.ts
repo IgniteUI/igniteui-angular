@@ -28,7 +28,6 @@ import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
-import { IColumnVisibilityChangingEventArgs } from '../../common/events';
 
 /**
  * @hidden
@@ -80,7 +79,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     @HostBinding('class.igx-excel-filter')
-    public className = 'igx-excel-filter';
+    public defaultClass = true;
 
     /**
      * @hidden @internal

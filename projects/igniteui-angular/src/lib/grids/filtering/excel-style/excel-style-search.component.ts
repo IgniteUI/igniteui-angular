@@ -46,8 +46,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class')
-    public class = 'igx-excel-filter__menu-main';
+    @HostBinding('class.igx-excel-filter__menu-main')
+    public defaultClass = true;
 
     /**
      * @hidden @internal

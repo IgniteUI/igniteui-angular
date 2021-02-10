@@ -319,12 +319,12 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
         this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: any[], _: number): any[] {
+    public transform(_: any[], __: number): any[] {
         const grid =  this.gridAPI.grid;
         const primaryKey = grid.primaryKey;
         // using flattened data because origin data may be hierarchical.
-        collection = grid.flatData;
-        const res = collection.map(rec =>
+        const flatData = grid.flatData;
+        const res = flatData.map(rec =>
             ({
                     rowID: grid.primaryKey ? rec[primaryKey] : rec,
                     data: rec,
