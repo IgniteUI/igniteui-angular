@@ -317,9 +317,14 @@
         }
 
         input,
-        textarea {
+        textarea,
+        span {
             font: inherit;
             margin: 0;
+        }
+
+        input[type='file'] {
+            @include hide-default();
         }
 
         textarea {
@@ -431,6 +436,7 @@
         display: flex;
         align-items: center;
         flex-flow: row nowrap;
+        max-width: 100%;
         padding-top: rem(18px, map-get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 -1px 0 0 --var($theme, 'idle-bottom-line-color');
         transition: box-shadow $transition-timing, color $transition-timing;
@@ -867,6 +873,7 @@
     %form-group-bundle-main {
         position: relative;
         flex-grow: 1;
+        max-width: inherit;
     }
 
     %form-group-bundle-main--box {
@@ -991,13 +998,67 @@
         }
     }
 
+    %form-group-file-input {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        color: --var($theme, 'filled-text-color');
+        line-height: 1;
+
+        span {
+            @include ellipsis();
+            position: absolute;
+            display: inline-block;
+            width: inherit;
+            max-width: inherit;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
     %form-group-input--cosy {
+        height: rem(32px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %form-group-file-input--cosy {
         height: rem(32px, map-get($base-scale-size, 'cosy'));
     }
 
     %form-group-input--compact {
         font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
+    }
+
+    %form-group-file-input--compact {
+        height: rem(32px, map-get($base-scale-size, 'compact'));
+    }
+
+    %form-group-upload-button {
+        margin-bottom: rem(10px);
+    }
+
+    %form-group-clear-icon {
+        &:focus {
+            border-radius: 4px;
+            background-color: igx-color($palette, 'primary', 500);
+            color: igx-contrast-color($palette, 'primary', 500);
+
+            @if $variant == 'material' {
+                background-color: transparent;
+                color: igx-color($palette, 'secondary', 500);
+            }
+
+            @if $variant == 'fluent' {
+                border-radius: 0;
+            }
+
+            @if $variant == 'bootstrap' {
+                border-radius: 0;
+                color: igx-contrast-color($palette, 'primary', 600);
+            }
+        }
     }
 
     %chrome-autofill-fix {
@@ -1018,6 +1079,14 @@
 
     %form-group-input--box {
         transform: translateY(-25%);
+    }
+
+    %form-group-file-input--box {
+        span {
+            top: initial;
+            transform: none;
+            bottom: 0;
+        }
     }
 
     %form-group-input--hover {
@@ -1428,12 +1497,14 @@
             border-bottom-#{$right}-radius: --var($theme, 'box-border-radius');
         }
 
-        %bootstrap-input:not(:first-child) {
+        %bootstrap-input:not(:first-child),
+        %bootstrap-file-input:not(:first-child) {
             border-top-#{$left}-radius: 0;
             border-bottom-#{$left}-radius: 0;
         }
 
-        %bootstrap-input:not(:last-child) {
+        %bootstrap-input:not(:last-child),
+        %bootstrap-file-input:not(:last-child) {
             border-top-#{$right}-radius: 0;
             border-bottom-#{$right}-radius: 0;
         }
@@ -1583,6 +1654,14 @@
         border-radius: --var($theme, 'box-border-radius');
         border: 1px solid --var($theme, 'border-color');
         font-size: map-get($bootstrap-font-size, 'comfortable');
+        padding: map-get($bootstrap-padding, 'comfortable');
+    }
+
+    %bootstrap-file-input {
+        width: calc(100% - #{2 * nth(map-get($bootstrap-padding, 'comfortable'), 2)});
+        height: inherit;
+        border-radius: --var($theme, 'box-border-radius');
+        border: 1px solid --var($theme, 'border-color');
         padding: map-get($bootstrap-padding, 'comfortable');
     }
 
