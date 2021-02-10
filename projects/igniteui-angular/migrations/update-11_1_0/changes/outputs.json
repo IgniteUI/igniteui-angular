@@ -10,6 +10,22 @@
             }
         },
         {
+            "name": "onTabItemSelected",
+            "replaceWith": "tabItemSelected",
+            "owner": {
+                "selector": "igx-tabs",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onTabItemDeselected",
+            "replaceWith": "tabItemDeselected",
+            "owner": {
+                "selector": "igx-tabs",
+                "type": "component"
+            }
+        },
+        {
             "name": "onSelect",
             "replaceWith": "selected",
             "owner": {
@@ -30,6 +46,46 @@
             "replaceWith": "clicked",
             "owner": {
                 "selector": "igx-snackbar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onLeftPan",
+            "replaceWith": "leftPan",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRightPan",
+            "replaceWith": "rightPan",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onPanStateChange",
+            "replaceWith": "panStateChange",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onItemClicked",
+            "replaceWith": "itemClicked",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onAction",
+            "replaceWith": "action",
+            "owner": {
+                "selector": "igx-navbar",
                 "type": "component"
             }
         },
@@ -63,6 +119,22 @@
             "owner": {
                 "selector": "igx-toast",
                 "type": "component"
+            }
+        },
+        {
+            "name": "onTooltipShow",
+            "replaceWith": "tooltipShow",
+            "owner": {
+                "selector": "igxTooltipTarget",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onTooltipHide",
+            "replaceWith": "tooltipHide",
+            "owner": {
+                "selector": "igxTooltipTarget",
+                "type": "directive"
             }
         },
         {
