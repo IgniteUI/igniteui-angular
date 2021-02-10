@@ -66,8 +66,6 @@ describe('IgxPaginator with default settings', () => {
     it('should paginate data UI', () => {
         spyOn(paginator.paging, 'emit').and.callThrough();
         spyOn(paginator.pagingDone, 'emit').and.callThrough();
-        let cancelEvent = false;
-        let newPage: number;
 
         const sub = paginator.paging.subscribe((e: IPagingEventArgs) => {
             e.newPage = newPage ? newPage : e.newPage;
@@ -105,7 +103,7 @@ describe('IgxPaginator with default settings', () => {
         expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(4);
 
         // change page in event
-        newPage = 2;
+        const newPage = 2;
         PaginatorFunctions.navigateToNextPage(paginator.nativeElement);
         fix.detectChanges();
         verifyPager(fix, 15, '3\xA0of\xA03', [false, false, true, true]);
@@ -113,7 +111,7 @@ describe('IgxPaginator with default settings', () => {
         expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(5);
 
         // cancel event
-        cancelEvent = true;
+        const cancelEvent = true;
         PaginatorFunctions.navigateToFirstPage(paginator.nativeElement);
         fix.detectChanges();
         verifyPager(fix, 15, '3\xA0of\xA03', [false, false, true, true]);

@@ -656,7 +656,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
      * ```
      */
-    @DeprecateProperty('Use the corresponding event emiited by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
+    @DeprecateProperty('Use the corresponding event emiited by the `igx-paginator`.')
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
 
@@ -4091,7 +4091,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const totalPages = this.grid.totalPages;
      * ```
      */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public get totalPages(): number {
         if (this.pagingState) {
             return this.pagingState.metadata.countPages;
@@ -4108,7 +4108,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const firstPage = this.grid.isFirstPage;
      * ```
      */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public get isFirstPage(): boolean {
         return this._page === 0;
     }
@@ -4122,7 +4122,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.nextPage();
      * ```
      */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public nextPage(): void {
         this.paginate(this._page + 1);
     }
@@ -4136,7 +4136,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.previousPage();
      * ```
      */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public previousPage(): void {
         this.paginate(this._page - 1);
     }
@@ -4173,7 +4173,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const lastPage = this.grid.isLastPage;
      * ```
      */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`. See https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#angular-pagination-template')
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public get isLastPage(): boolean {
         return this._page + 1 >= this.totalPages;
     }
