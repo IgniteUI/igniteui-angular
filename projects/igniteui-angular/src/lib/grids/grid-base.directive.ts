@@ -3387,6 +3387,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
+    /** @hidden @internal */
+    public _pagingDone() {
+        this.endEdit(true);
+        this.selectionService.clear(true);
+    }
+
     /**
      * @hidden
      */
