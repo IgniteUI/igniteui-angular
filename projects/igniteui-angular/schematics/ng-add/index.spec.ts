@@ -157,7 +157,7 @@ describe('ng-add schematics', () => {
 
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts.length).toBe(0);
-    expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).not.toContain('./node_modules/hammerjs/hammer.min.js')
+    expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).not.toContain('./node_modules/hammerjs/hammer.min.js');
   });
 
   it('should add hammer.js to package.json dependencies', async () => {
