@@ -1,6 +1,7 @@
 import { isIE } from '../core/utils';
 import { DatePart, DatePartInfo } from '../directives/date-time-editor/date-time-editor.common';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
+import { ValidationErrors } from '@angular/forms';
 
 /**
  * This enum is used to keep the date validation result.
@@ -336,6 +337,29 @@ export abstract class DatePickerUtil {
         }
 
         return _value.getTime() < _minValue.getTime();
+    }
+
+    /**
+     * Validates a value within a given min and max value range.
+     *
+     * @param value The value to validate
+     * @param minValue The lowest possible value that `value` can take
+     * @param maxValue The largest possible value that `value` can take
+     */
+    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string): ValidationErrors | null {
+        const errors = {};
+        const min = DatePickerUtil.parseDate(minValue);
+        const max = DatePickerUtil.parseDate(maxValue);
+        if ((min && value && DatePickerUtil.lessThanMinValue(value, min, false))
+            || (min && value && DatePickerUtil.lessThanMinValue(value, min, false))) {
+            Object.assign(errors, { minValue: true });
+        }
+        if ((max && value && DatePickerUtil.greaterThanMaxValue(value, max, false))
+            || (max && value && DatePickerUtil.greaterThanMaxValue(value, max, false))) {
+            Object.assign(errors, { maxValue: true });
+        }
+
+        return errors;
     }
 
     /**
