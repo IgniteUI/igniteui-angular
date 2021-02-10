@@ -375,7 +375,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
-            checkbox.click();
+            const checkboxEl = ControlsFunction.getCheckboxElement('group1', columnChooserElement, fixture);
+            checkboxEl.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
@@ -384,7 +385,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
-            checkbox.click();
+            checkboxEl.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
@@ -510,20 +511,20 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             // should unpin parent and all child cols - 4 child + 1 parent
             expect(allArgs.length).toBe(5);
 
-            expect(allArgs[0].column.field).toBe('PostalCode');
-            expect(allArgs[0].isPinned).toBeFalsy();
+            expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
+            expect(allArgs[0].isPinned).toBeTrue();
 
-            expect(allArgs[1].column.field).toBe('City');
-            expect(allArgs[1].isPinned).toBeFalsy();
+            expect(allArgs[1].column.field).toBe('PostalCode');
+            expect(allArgs[1].isPinned).toBeTrue();
 
-            expect(allArgs[2].column.field).toBe('Country');
-            expect(allArgs[2].isPinned).toBeFalsy();
+            expect(allArgs[2].column.field).toBe('City');
+            expect(allArgs[2].isPinned).toBeTrue();
 
-            expect(allArgs[3].column.field).toBe('Address');
-            expect(allArgs[3].isPinned).toBeFalsy();
+            expect(allArgs[3].column.field).toBe('Country');
+            expect(allArgs[3].isPinned).toBeTrue();
 
-            expect(allArgs[4].column instanceof IgxColumnLayoutComponent).toBeTruthy();
-            expect(allArgs[4].isPinned).toBeFalsy();
+            expect(allArgs[4].column.field).toBe('Address');
+            expect(allArgs[4].isPinned).toBeTrue();
 
             allArgs = [];
             grid.pinColumn('ID');
@@ -532,19 +533,19 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(allArgs.length).toBe(5);
 
             expect(allArgs[0].column instanceof IgxColumnLayoutComponent).toBeTruthy();
-            expect(allArgs[0].isPinned).toBeTruthy();
+            expect(allArgs[0].isPinned).toBeFalse();
 
             expect(allArgs[1].column.field).toBe('ID');
-            expect(allArgs[1].isPinned).toBeTruthy();
+            expect(allArgs[1].isPinned).toBeFalse();
 
             expect(allArgs[2].column.field).toBe('CompanyName');
-            expect(allArgs[2].isPinned).toBeTruthy();
+            expect(allArgs[2].isPinned).toBeFalse();
 
             expect(allArgs[3].column.field).toBe('ContactName');
-            expect(allArgs[3].isPinned).toBeTruthy();
+            expect(allArgs[3].isPinned).toBeFalse();
 
             expect(allArgs[4].column.field).toBe('ContactTitle');
-            expect(allArgs[4].isPinned).toBeTruthy();
+            expect(allArgs[4].isPinned).toBeFalse();
 
         });
 
@@ -736,13 +737,14 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const column = grid.getColumnByName('group1');
             expect(column.pinned).toBeFalsy();
 
-            checkbox.click();
+            const checkboxEl = ControlsFunction.getCheckboxElement('group1', columnChooserElement, fixture);
+            checkboxEl.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
             expect(column.pinned).toBeTruthy();
 
-            checkbox.click();
+            checkboxEl.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
