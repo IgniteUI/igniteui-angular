@@ -607,9 +607,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             GridFunctions.navigateToLastPage(grid.nativeElement);
             fixture.detectChanges();
-            expect(grid.data.length).toBe(dataLength + 1);
-            const addedRow = grid.data[grid.data.length - 1];
-            expect(addedRow).toBe(grid.rowList.last.rowData);
+            expect(grid.data.length).toBe(dataLength);
         });
 
         it('Should save changes when changing page count', () => {
@@ -630,7 +628,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const selectList = fixture.debugElement.query(By.css('.igx-drop-down__list-scroll'));
             selectList.children[2].nativeElement.click();
             fixture.detectChanges();
-            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.data.length).toBe(dataLength);
         });
     });
 
@@ -903,7 +901,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
