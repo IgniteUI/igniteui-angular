@@ -235,7 +235,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.clearHighlight();
 
         if (this._observer !== null) {
@@ -248,7 +248,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.value && !changes.value.firstChange) {
             this._valueChanged = true;
         } else if ((changes.row !== undefined && !changes.row.firstChange) ||
@@ -264,7 +264,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.parentElement = this.renderer.parentNode(this.element.nativeElement);
 
         if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
@@ -287,7 +287,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
-    ngAfterViewChecked() {
+    public ngAfterViewChecked() {
         if (this._valueChanged) {
             this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
             this.activateIfNecessary();
@@ -443,7 +443,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
         if (exactMatch) {
             if (contentStringResolved === searchTextResolved) {
-                // eslint-disable-next-line max-len
                 this.appendSpan(`<span class="${this._defaultCssClass} ${this.cssClass ? this.cssClass : ''}">${stringValue}</span>`);
                 matchCount++;
             } else {

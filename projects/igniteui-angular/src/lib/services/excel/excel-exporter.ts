@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip';
 
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
@@ -43,15 +43,14 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     /**
      * This event is emitted when the export process finishes.
      * ```typescript
-     * this.exporterService.onExportEnded.subscribe((args: IExcelExportEndedEventArgs) => {
+     * this.exporterService.exportEnded.subscribe((args: IExcelExportEndedEventArgs) => {
      * // put event handler code here
      * });
      * ```
      *
      * @memberof IgxExcelExporterService
      */
-    @Output()
-    public onExportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
+    public exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
 
     private _xlsx: JSZip;
 
@@ -97,7 +96,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         .then(() => {
             this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
                 this.saveFile(result, options.fileName);
-                this.onExportEnded.emit({ xlsx: this._xlsx });
+                this.exportEnded.emit({ xlsx: this._xlsx });
             });
         });
     }

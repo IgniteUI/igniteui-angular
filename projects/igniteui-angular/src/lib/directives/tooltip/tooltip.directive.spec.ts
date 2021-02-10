@@ -1,4 +1,3 @@
-import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,7 +5,7 @@ import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
+import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';
@@ -264,64 +263,64 @@ describe('IgxTooltip', () => {
         describe('Tooltip events', () => {
         // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 hoverElement(button);
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
                 flush();
 
                 unhoverElement(button);
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalled();
                 flush();
             }));
 
             it('should emit the proper events when showing/hiding tooltip through API', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 tooltipTarget.showTooltip();
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
                 flush();
 
                 tooltipTarget.hideTooltip();
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalled();
                 flush();
             }));
 
             it('should emit the proper events with correct eventArgs when hover/unhover', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
 
                 hoverElement(button);
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
                 flush();
 
                 unhoverElement(button);
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
                 flush();
             }));
 
             it('should emit the proper events with correct eventArgs when show/hide through API', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
 
                 tooltipTarget.showTooltip();
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
                 flush();
 
                 tooltipTarget.hideTooltip();
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
                 flush();
             }));
 
