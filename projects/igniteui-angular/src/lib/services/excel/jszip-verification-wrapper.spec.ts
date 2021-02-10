@@ -59,23 +59,23 @@ export class JSZipWrapper {
         this._filesAndFolders = Object.keys(this._files).map(f => f);
     }
 
-    get templateFilesAndFolders(): string[] {
+    public get templateFilesAndFolders(): string[] {
         return this._filesAndFolders.filter((name) => JSZipFiles.templatesNames.indexOf(name) !== -1);
     }
 
-    get dataFilesAndFolders(): string[] {
+    public get dataFilesAndFolders(): string[] {
         return this._filesAndFolders.filter((name) => JSZipFiles.dataFilesAndFoldersNames.indexOf(name) !== -1);
     }
 
-    get dataFilesOnly(): string[] {
+    public get dataFilesOnly(): string[] {
         return this.getFiles(this.dataFilesAndFolders);
     }
 
-    get templateFilesOnly(): string[] {
+    public get templateFilesOnly(): string[] {
         return this.getFiles(this.templateFilesAndFolders);
     }
 
-    get hasValues() {
+    public get hasValues() {
         return this._hasValues;
     }
 
@@ -120,13 +120,13 @@ export class JSZipWrapper {
         await this.readFiles(actualTemplates);
     }
 
-    get templateFilesContent(): IFileContent[] {
+    public get templateFilesContent(): IFileContent[] {
         const actualTemplates = (this.hasValues) ? this.templateFilesOnly.filter((f) =>
                                 f !== JSZipFiles.templatesNames[11]) : this.templateFilesOnly;
         return this._filesContent.filter((c) => actualTemplates.indexOf(c.fileName) > -1);
     }
 
-    get dataFilesContent(): IFileContent[] {
+    public get dataFilesContent(): IFileContent[] {
         return this._filesContent.filter((c) => this.dataFilesOnly.indexOf(c.fileName) > -1);
     }
 
