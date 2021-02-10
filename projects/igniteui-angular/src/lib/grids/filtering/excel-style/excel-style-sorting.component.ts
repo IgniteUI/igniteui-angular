@@ -22,8 +22,8 @@ export class IgxExcelStyleSortingComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class')
-    public class = 'igx-excel-filter__sort';
+    @HostBinding('class.igx-excel-filter__sort')
+    public defaultClass = true;
 
     /**
      * @hidden @internal

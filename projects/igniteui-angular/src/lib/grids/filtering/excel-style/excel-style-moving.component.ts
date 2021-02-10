@@ -15,8 +15,8 @@ export class IgxExcelStyleMovingComponent {
     /**
      * @hidden @internal
      */
-    @HostBinding('class')
-    public class = 'igx-excel-filter__move';
+    @HostBinding('class.igx-excel-filter__move')
+    public defaultClass = true;
 
     constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
 
