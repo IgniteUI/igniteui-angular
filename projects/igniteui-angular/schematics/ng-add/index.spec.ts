@@ -103,13 +103,13 @@ describe('ng-add schematics', () => {
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
-  it('should NOT (no longer) add hammer.js to the main.ts file', async () => {
+  it('should NOT add hammer.js to the main.ts file', async () => {
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
     const mainTs = tree.read(`${sourceRoot}/main.ts`).toString();
     expect(mainTs).not.toContain('import \'hammerjs\';');
   });
 
-  it('should NOT (no longer) add hammer.js to the test.ts file', async () => {
+  it('should NOT add hammer.js to the test.ts file', async () => {
     await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
     const testTs = tree.read(`${sourceRoot}/test.ts`).toString();
     expect(testTs).not.toContain('import \'hammerjs\';');
@@ -127,7 +127,7 @@ describe('ng-add schematics', () => {
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts).toContain('./node_modules/hammerjs/hammer.min.js');
   });
 
-  it('should NOT add hammer.js in angular.json if it exists in angular.json build options', async () => {
+  it('should NOT duplicate hammer.js if it exists in angular.json build options', async () => {
     const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
     ngJsonConfig1.projects.testProj.architect.build.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
@@ -138,7 +138,7 @@ describe('ng-add schematics', () => {
     expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).toMatch('./node_modules/hammerjs/hammer.min.js');
   });
 
-  it('should NOT add hammer.js in angular.json if it exists in angular.json test options', async () => {
+  it('should NOT duplicate hammer.js if it exists in angular.json test options', async () => {
     const ngJsonConfig1 = JSON.parse(tree.read('/angular.json').toString());
     ngJsonConfig1.projects.testProj.architect.test.options.scripts.push('./node_modules/hammerjs/hammer.min.js');
     tree.overwrite('/angular.json', JSON.stringify(ngJsonConfig1));
@@ -147,6 +147,17 @@ describe('ng-add schematics', () => {
     const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts.length).toBe(1);
     expect(ngJsonConfigResult.projects.testProj.architect.test.options.scripts).toMatch('./node_modules/hammerjs/hammer.min.js');
+  });
+
+  it('should NOT add hammer.js to angular.json if it exists in main.ts options', async () => {
+    const mainTsPath = `${sourceRoot}/main.ts`;
+    const content = tree.read(mainTsPath).toString();
+    tree.overwrite(mainTsPath, 'import \'hammerjs\';\n' + content);
+    await runner.runSchematicAsync('ng-add', { normalizeCss: false }, tree).toPromise();
+
+    const ngJsonConfigResult = JSON.parse(tree.read('/angular.json').toString());
+    expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts.length).toBe(0);
+    expect(ngJsonConfigResult.projects.testProj.architect.build.options.scripts).not.toContain('./node_modules/hammerjs/hammer.min.js')
   });
 
   it('should add hammer.js to package.json dependencies', async () => {
