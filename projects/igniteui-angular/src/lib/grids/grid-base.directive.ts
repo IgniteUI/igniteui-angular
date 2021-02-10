@@ -3776,6 +3776,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._userOutletDirective = val;
     }
 
+    /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the next page, if the grid is not already at the last page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.nextPage();
+     * ```
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public nextPage(): void {
+        this.paginate(this._page + 1);
+    }
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding methods instead.
+     * Goes to the previous page, if the grid is not already at the first page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.previousPage();
+     * ```
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public previousPage(): void {
+        this.paginate(this._page - 1);
+    }
+
 
     /**
      * Gets the default row height.
@@ -4111,34 +4139,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public get isFirstPage(): boolean {
         return this._page === 0;
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the next page, if the grid is not already at the last page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.nextPage();
-     * ```
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public nextPage(): void {
-        this.paginate(this._page + 1);
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding methods instead.
-     * Goes to the previous page, if the grid is not already at the first page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.previousPage();
-     * ```
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public previousPage(): void {
-        this.paginate(this._page - 1);
     }
 
     /**
