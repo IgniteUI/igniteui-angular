@@ -1,7 +1,5 @@
 import { Directive, TemplateRef, EventEmitter, QueryList, Optional, Inject } from '@angular/core';
 import { DisplayDensityBase, IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
-// import { CurrentResourceStrings } from '../core/i18n/resources';
-// import { IListResourceStrings } from '../core/i18n/list-resources';
 
 export interface IListChild {
     index: number;
