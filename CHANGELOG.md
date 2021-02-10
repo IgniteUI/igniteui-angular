@@ -13,10 +13,9 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
+    - `onPagingDone` output is removed. Use the `paging` and `pagingDone` outputs exposed by the `IgxPaginator`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
-    - `pageChange` and `perPageChange` event is now hidden and for internal use only, it only serves two way data binding
-    - `page` setter no longer emits paging events. Only the `paginate` method will emit corresponding events.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
    _Note: validation of file type input is not yet supported._
 

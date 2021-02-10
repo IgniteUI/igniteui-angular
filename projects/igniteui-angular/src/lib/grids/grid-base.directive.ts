@@ -4279,6 +4279,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Goes to the desired page index.
      *
      * @example
@@ -4287,6 +4288,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param val
      */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1) {
             return;
