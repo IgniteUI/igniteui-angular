@@ -1,4 +1,3 @@
-import { ObjectComparer } from '../excel/jszip-verification-wrapper.spec';
 
 export class CSVWrapper {
     private _data: string;
@@ -15,7 +14,7 @@ export class CSVWrapper {
         expect(this._data).toBe(expectedData, message);
     }
 
-    get noHeadersStringData() {
+    public get noHeadersStringData() {
         return `Column 1${this._eor}` +
 `Terrance Orta${this._eor}` +
 `Richard Mahoney LongerName${this._eor}` +
@@ -24,21 +23,21 @@ export class CSVWrapper {
 `Dorothy H. Spencer${this._eor}`;
     }
 
-    get noHeadersObjectData() {
+    public get noHeadersObjectData() {
         return `value${this._eor}` +
 `1${this._eor}` +
 `2${this._eor}` +
 `3${this._eor}`;
     }
 
-    get noHeadersNumberData() {
+    public get noHeadersNumberData() {
         return `Column 1${this._eor}` +
 `10${this._eor}` +
 `20${this._eor}` +
 `30${this._eor}`;
     }
 
-    get noHeadersDateTimeData() {
+    public get noHeadersDateTimeData() {
         return `Column 1${this._eor}` +
 `${new Date('2018').toString()}${this._eor}` +
 `${new Date(2018, 3, 23).toString()}${this._eor}` +
@@ -46,13 +45,13 @@ export class CSVWrapper {
 `${new Date('2018/03/23').toString()}${this._eor}`;
     }
 
-    get contactsData() {
+    public get contactsData() {
         return `name${this._delimiter}phone${this._eor}Terrance Orta${this._delimiter}770-504-2217${this._eor}` +
                 `Richard Mahoney LongerName${this._delimiter}${this._eor}Donna Price${this._delimiter}859-496-2817${this._eor}` +
                 `${this._delimiter}901-747-3428${this._eor}Dorothy H. Spencer${this._delimiter}573-394-9254${this._eor}`;
     }
 
-    get contactsFunkyData() {
+    public get contactsFunkyData() {
         return `name${this._delimiter}phone${this._eor}Terrance Mc'Orta${this._delimiter}(+359)770-504-2217 | 2218${this._eor}` +
                 `Richard Mahoney /LongerName/${this._delimiter}${this._eor}"Donna${this._delimiter} /; Price"${this._delimiter}` +
                 `859 496 28**${this._eor}"\r\n"${this._delimiter}901-747-3428${this._eor}Dorothy "H." Spencer${this._delimiter}` +
@@ -60,12 +59,12 @@ export class CSVWrapper {
 
     }
 
-    get contactsPartialData() {
+    public get contactsPartialData() {
         return `name${this._delimiter}phone${this._eor}Terrance Orta${this._delimiter}770-504-2217${this._eor}` +
                 `Richard Mahoney LongerName${this._delimiter}${this._eor}${this._delimiter}780-555-1331${this._eor}`;
     }
 
-    get simpleGridData() {
+    public get simpleGridData() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._eor}` +
         `2${this._delimiter}Gilberto Todd${this._delimiter}Director${this._eor}` +
@@ -79,7 +78,7 @@ export class CSVWrapper {
         `10${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._eor}`;
     }
 
-    get simpleGridDataFormatted() {
+    public get simpleGridDataFormatted() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `1${this._delimiter}CASEY HOUSTON${this._delimiter}vice president${this._eor}` +
         `2${this._delimiter}GILBERTO TODD${this._delimiter}director${this._eor}` +
@@ -93,7 +92,7 @@ export class CSVWrapper {
         `10${this._delimiter}EDUARDO RAMIREZ${this._delimiter}manager${this._eor}`;
     }
 
-    get sortedSimpleGridData() {
+    public get sortedSimpleGridData() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._eor}` +
         `5${this._delimiter}Celia Martinez${this._delimiter}Senior Software Developer${this._eor}` +
@@ -107,7 +106,7 @@ export class CSVWrapper {
         `3${this._delimiter}Tanya Bennett${this._delimiter}Director${this._eor}`;
     }
 
-    get sortedDescSimpleGridData() {
+    public get sortedDescSimpleGridData() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `3${this._delimiter}Tanya Bennett${this._delimiter}Director${this._eor}` +
         `9${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._eor}` +
@@ -121,7 +120,7 @@ export class CSVWrapper {
         `1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._eor}`;
     }
 
-    get simpleGridRawData() {
+    public get simpleGridRawData() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}${this._eor}` +
         `1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}${this._eor}` +
         `2${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}${this._eor}` +
@@ -135,18 +134,18 @@ export class CSVWrapper {
         `10${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}${this._eor}`;
     }
 
-    get gridOneSeniorDev() {
+    public get gridOneSeniorDev() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `5${this._delimiter}Celia Martinez${this._delimiter}Senior Software Developer${this._eor}`;
     }
 
-    get gridTwoDirectors() {
+    public get gridTwoDirectors() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `2${this._delimiter}Gilberto Todd${this._delimiter}Director${this._eor}` +
         `3${this._delimiter}Tanya Bennett${this._delimiter}Director${this._eor}`;
     }
 
-    get gridNameJobTitle() {
+    public get gridNameJobTitle() {
         return `Name${this._delimiter}JobTitle${this._eor}` +
         `Casey Houston${this._delimiter}Vice President${this._eor}` +
         `Gilberto Todd${this._delimiter}Director${this._eor}` +
@@ -160,7 +159,7 @@ export class CSVWrapper {
         `Eduardo Ramirez${this._delimiter}Manager${this._eor}`;
     }
 
-    get gridNameJobTitleID() {
+    public get gridNameJobTitleID() {
         return `Name${this._delimiter}JobTitle${this._delimiter}ID${this._eor}` +
         `Casey Houston${this._delimiter}Vice President${this._delimiter}1${this._eor}` +
         `Gilberto Todd${this._delimiter}Director${this._delimiter}2${this._eor}` +
@@ -174,7 +173,7 @@ export class CSVWrapper {
         `Eduardo Ramirez${this._delimiter}Manager${this._delimiter}10${this._eor}`;
     }
 
-    get gridNameIDJobTitle() {
+    public get gridNameIDJobTitle() {
         return `Name${this._delimiter}ID${this._delimiter}JobTitle${this._eor}` +
         `Casey Houston${this._delimiter}1${this._delimiter}Vice President${this._eor}` +
         `Gilberto Todd${this._delimiter}2${this._delimiter}Director${this._eor}` +
@@ -188,7 +187,7 @@ export class CSVWrapper {
         `Eduardo Ramirez${this._delimiter}10${this._delimiter}Manager${this._eor}`;
     }
 
-    get gridWithAdvancedFilters() {
+    public get gridWithAdvancedFilters() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `6${this._delimiter}Erma Walsh${this._delimiter}CEO${this._eor}` +
         `7${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._eor}` +
@@ -196,7 +195,7 @@ export class CSVWrapper {
         `10${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._eor}`;
     }
 
-    get treeGridData() {
+    public get treeGridData() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
 `1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
 `2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
@@ -208,7 +207,7 @@ export class CSVWrapper {
 `9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}`;
     }
 
-    get treeGridDataFormatted() {
+    public get treeGridDataFormatted() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
 `1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}vice president${this._delimiter}384${this._eor}` +
 `2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}director${this._delimiter}492${this._eor}` +
@@ -220,7 +219,7 @@ export class CSVWrapper {
 `9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}associate software developer${this._delimiter}528${this._eor}`;
     }
 
-    get treeGridDataSorted() {
+    public get treeGridDataSorted() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
 `10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
 `9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}` +
@@ -232,7 +231,7 @@ export class CSVWrapper {
 `3${this._delimiter}2${this._delimiter}Tanya Bennett${this._delimiter}Director${this._delimiter}29${this._eor}`;
     }
 
-    get treeGridDataFiltered() {
+    public get treeGridDataFiltered() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
 `1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
 `2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
@@ -243,7 +242,7 @@ export class CSVWrapper {
 `9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}`;
     }
 
-    get treeGridDataFilterSorted() {
+    public get treeGridDataFilterSorted() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
 `6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
 `10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
@@ -254,7 +253,7 @@ export class CSVWrapper {
 `7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}`;
     }
 
-    get treeGridWithAdvancedFilters() {
+    public get treeGridWithAdvancedFilters() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
         `1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
         `2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +

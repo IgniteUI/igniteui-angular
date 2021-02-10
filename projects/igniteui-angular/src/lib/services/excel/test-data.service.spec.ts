@@ -147,46 +147,46 @@ export class ExportTestDataService {
     ];
     constructor() { }
 
-    get differentTypesData() {
+    public get differentTypesData() {
         return this._differentTypesData;
     }
 
-    get contactsData() {
+    public get contactsData() {
         return this._contactsData;
     }
-    get contactsPartialData() {
+    public get contactsPartialData() {
         return this._contactsPartial;
     }
-    get contactsFunkyData() {
+    public get contactsFunkyData() {
         return this._contactsFunkyData;
     }
-    get emptyObjectData() {
+    public get emptyObjectData() {
         return this._emptyObjectData;
     }
 
-    get noHeadersObjectData() {
+    public get noHeadersObjectData() {
         return this._noHeadersObjectData;
     }
 
-    get noHeadersStringData() {
+    public get noHeadersStringData() {
         return this._noHeadersStringData;
     }
-    get noHeadersNumberData() {
+    public get noHeadersNumberData() {
         return this._noHeadersNumberData;
     }
-    get noHeadersDateTimeData() {
+    public get noHeadersDateTimeData() {
         return this._noHeadersDateTime;
     }
 
-    get simpleGridData() {
+    public get simpleGridData() {
         return this._simpleGridData;
     }
 
-    get simpleGridDataFull() {
+    public get simpleGridDataFull() {
         return this._simpleGridDataFull;
     }
 
-    get personJobHoursDataPerformance() {
+    public get personJobHoursDataPerformance() {
         return this._personJobHoursDataPerformance;
     }
 
@@ -303,7 +303,6 @@ export class FileContentData {
             `<tableColumn id="3" name="JobTitle"/></tableColumns>`;
 
         this._worksheetData =
-        // eslint-disable-next-line max-len
         `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>6</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" t="s"><v>8</v></c><c r="C5" t="s"><v>9</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" t="s"><v>10</v></c><c r="C6" t="s"><v>11</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" t="s"><v>12</v></c><c r="C7" t="s"><v>13</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" t="s"><v>14</v></c><c r="C8" t="s"><v>15</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" t="s"><v>16</v></c><c r="C9" t="s"><v>17</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" t="s"><v>18</v></c><c r="C10" t="s"><v>15</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" t="s"><v>19</v></c><c r="C11" t="s"><v>20</v></c></row></sheetData>`;
 
         this._workbookData =  `<?xml version="1.0" encoding="UTF-8"?>
@@ -356,7 +355,7 @@ export class FileContentData {
         return this.create(this._worksheetData, this._tableData, this._sharedStringsData, this._workbookData, this._appData);
     }
 
-    get differentTypesDataContent() {
+    public get differentTypesDataContent() {
         this._sharedStringsData = `count="6" uniqueCount="6"><si><t>Column1</t></si><si><t>Terrance Orta</t></si><si><t>Richard Mahoney ` +
             `LongerName</t></si><si><t>Donna Price</t></si><si><t>Lisa Landers</t></si><si><t>Dorothy H. Spencer</t></si>`;
 
@@ -373,7 +372,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get contactsDataContent() {
+    public get contactsDataContent() {
         this._sharedStringsData = `count="12" uniqueCount="11"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance Orta</t></si><si>` +
             `<t>770-504-2217</t></si><si><t>Richard Mahoney LongerName</t></si><si><t></t></si><si><t>Donna Price</t></si>` +
             `<si><t>859-496-2817</t></si><si><t>901-747-3428</t></si><si><t>Dorothy H. Spencer</t></si><si><t>573-394-9254</t></si>`;
@@ -394,9 +393,8 @@ export class FileContentData {
         return this.createData();
     }
 
-    get contactsPartialDataContent() {
+    public get contactsPartialDataContent() {
         this._sharedStringsData =
-            // eslint-disable-next-line max-len
             `count="6" uniqueCount="6"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance Orta</t></si><si><t>770-504-2217</t></si><si><t>Richard Mahoney LongerName</t></si><si><t>780-555-1331</t></si>`;
 
         this._tableData = `ref="A1:B4" totalsRowShown="0">
@@ -404,13 +402,12 @@ export class FileContentData {
             `</tableColumns>`;
 
         this._worksheetData =
-            // eslint-disable-next-line max-len
             `<dimension ref="A1:B4"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c></row><row r="2"><c r="A2" t="s"><v>2</v></c><c r="B2" t="s"><v>3</v></c></row><row r="3"><c r="A3" t="s"><v>4</v></c><c r="B3" s="1"/></row><row r="4"><c r="A4" s="1"/><c r="B4" t="s"><v>5</v></c></row></sheetData>`;
 
         return this.createData();
     }
 
-    get contactsFunkyDataContent() {
+    public get contactsFunkyDataContent() {
         this._sharedStringsData = `count="14" uniqueCount="14"><si><t>name</t></si><si><t>phone</t></si><si><t>Terrance ` +
             `Mc&apos;Orta</t></si><si><t>(+359)770-504-2217 | 2218</t></si><si><t>Richard Mahoney /LongerName/</t></si><si><t></t>` +
             `</si><si><t>Donna, /; Price</t></si><si><t>859 496 28**</t></si><si><t>
@@ -433,7 +430,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get noHeadersStringDataContent() {
+    public get noHeadersStringDataContent() {
         this._sharedStringsData = `count="6" uniqueCount="6"><si><t>Column1</t></si><si><t>Terrance Orta</t></si>` +
             `<si><t>Richard Mahoney LongerName</t></si><si><t>Donna Price</t></si><si><t>Lisa Landers</t></si><si><t>` +
             `Dorothy H. Spencer</t></si>`;
@@ -450,7 +447,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get noHeadersNumberDataContent() {
+    public get noHeadersNumberDataContent() {
         this._sharedStringsData = `count="1" uniqueCount="1"><si><t>Column 1</t></si>`;
 
         this._tableData = `ref="A1:A4" totalsRowShown="0"><autoFilter ref="A1:A4"/><tableColumns count="1">` +
@@ -461,7 +458,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get noHeadersDateTimeContent() {
+    public get noHeadersDateTimeContent() {
         this._sharedStringsData = `count="1" uniqueCount="1"><si><t>Column 1</t></si>`;
 
         this._tableData = `ref="A1:A3" totalsRowShown="0"><autoFilter ref="A1:A3"/><tableColumns count="1">` +
@@ -476,7 +473,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get noHeadersObjectDataContent() {
+    public get noHeadersObjectDataContent() {
         this._sharedStringsData = `count="4" uniqueCount="4"><si><t>value</t></si><si><t>1</t></si><si><t>2</t></si>` +
             `<si><t>3</t></si>`;
 
@@ -491,7 +488,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridData() {
+    public get simpleGridData() {
         this._sharedStringsData =
             `count="23" uniqueCount="21"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
@@ -500,13 +497,12 @@ export class FileContentData {
             `<tableColumn id="3" name="JobTitle"/></tableColumns>`;
 
         this._worksheetData =
-            // eslint-disable-next-line max-len
             `<dimension ref="A1:C11"/><sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/><cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>2</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>3</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>6</v></c></row><row r="5"><c r="A5" s="1"><v>4</v></c><c r="B5" t="s"><v>8</v></c><c r="C5" t="s"><v>9</v></c></row><row r="6"><c r="A6" s="1"><v>5</v></c><c r="B6" t="s"><v>10</v></c><c r="C6" t="s"><v>11</v></c></row><row r="7"><c r="A7" s="1"><v>6</v></c><c r="B7" t="s"><v>12</v></c><c r="C7" t="s"><v>13</v></c></row><row r="8"><c r="A8" s="1"><v>7</v></c><c r="B8" t="s"><v>14</v></c><c r="C8" t="s"><v>15</v></c></row><row r="9"><c r="A9" s="1"><v>8</v></c><c r="B9" t="s"><v>16</v></c><c r="C9" t="s"><v>17</v></c></row><row r="10"><c r="A10" s="1"><v>9</v></c><c r="B10" t="s"><v>18</v></c><c r="C10" t="s"><v>15</v></c></row><row r="11"><c r="A11" s="1"><v>10</v></c><c r="B11" t="s"><v>19</v></c><c r="C11" t="s"><v>20</v></c></row></sheetData>`;
 
         return this.createData();
     }
 
-    get simpleGridDataFull() {
+    public get simpleGridDataFull() {
         this._sharedStringsData = `count="44" uniqueCount="42"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t>` +
             `</si><si><t>HireDate</t></si><si><t>1</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si>` +
             `<t>2017-06-19T11:43:07.714Z</t></si><si><t>2</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si>` +
@@ -546,7 +542,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridDataPage1() {
+    public get simpleGridDataPage1() {
         this._sharedStringsData = `count="16" uniqueCount="15"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si>` +
             `<si><t>HireDate</t></si><si><t>1</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>` +
             `2017-06-19T11:43:07.714Z</t></si><si><t>2</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>` +
@@ -569,7 +565,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridDataPage2() {
+    public get simpleGridDataPage2() {
         this._sharedStringsData = `count="16" uniqueCount="16"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si>` +
             `<t>HireDate</t></si><si><t>4</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>2008-12-18T11:23:17.714Z` +
             `</t></si><si><t>5</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>2007-12-19T11:23:17.714Z` +
@@ -592,7 +588,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridDataPage1FiveRows() {
+    public get simpleGridDataPage1FiveRows() {
         this._sharedStringsData = `count="24" uniqueCount="23"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si>` +
             `<t>HireDate</t></si><si><t>1</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>2017-06-19T11:43:07.714Z` +
             `</t></si><si><t>2</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>2015-12-18T11:23:17.714Z</t></si><si><t>3` +
@@ -620,7 +616,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridDataRecord5() {
+    public get simpleGridDataRecord5() {
         this._sharedStringsData = `count="5" uniqueCount="5"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si>`;
 
         this._tableData = `ref="A1:C2" totalsRowShown="0">
@@ -633,7 +629,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridDataDirectors() {
+    public get simpleGridDataDirectors() {
 
         this._sharedStringsData = `count="7" uniqueCount="6"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si>`;
 
@@ -646,7 +642,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridNameJobTitle() {
+    public get simpleGridNameJobTitle() {
         this._sharedStringsData = `count="22" uniqueCount="20"><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si>` +
             `<si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si>` +
             `<t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t>` +
@@ -673,7 +669,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridNameJobTitleWithFormatting() {
+    public get simpleGridNameJobTitleWithFormatting() {
         this._sharedStringsData = `count="33" uniqueCount="31"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>one</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>two</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>three</t></si><si><t>Tanya Bennett</t></si><si><t>four</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>five</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>six</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>seven</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>eight</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>nine</t></si><si><t>Leslie Hansen</t></si><si><t>ten</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
         this._tableData = `ref="A1:C11" totalsRowShown="0">
@@ -689,7 +685,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridNameJobTitleID() {
+    public get simpleGridNameJobTitleID() {
         this._sharedStringsData =
             `count="23" uniqueCount="21"><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>ID</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
@@ -702,7 +698,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get simpleGridSortByName() {
+    public get simpleGridSortByName() {
         this._sharedStringsData = `count="23" uniqueCount="21"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si>` +
             `<si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si>` +
             `<si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>` +
@@ -763,7 +759,7 @@ export class FileContentData {
         return wsSettings;
     }
 
-    get gridNameIDJobTitle() {
+    public get gridNameIDJobTitle() {
         this._sharedStringsData =
             `count="23" uniqueCount="21"><si><t>Name</t></si><si><t>ID</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
@@ -777,7 +773,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get gridNameFrozen() {
+    public get gridNameFrozen() {
         this._sharedStringsData =
             `count="23" uniqueCount="21"><si><t>Name</t></si><si><t>ID</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
@@ -790,7 +786,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get gridJobTitleIdFrozen() {
+    public get gridJobTitleIdFrozen() {
         this._sharedStringsData = `count="23" uniqueCount="21"><si><t>JobTitle</t></si><si><t>ID</t></si><si><t>Name</t></si><si><t>Vice President</t></si><si><t>Casey Houston</t></si><si><t>Director</t></si><si><t>Gilberto Todd</t></si><si><t>Tanya Bennett</t></si><si><t>Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Senior Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>CEO</t></si><si><t>Erma Walsh</t></si><si><t>Associate Software Developer</t></si><si><t>Debra Morton</t></si><si><t>Software Development Team Lead</t></si><si><t>Erika Wells</t></si><si><t>Leslie Hansen</t></si><si><t>Manager</t></si><si><t>Eduardo Ramirez</t></si>`;
 
         this._tableData = `ref="A1:C11" totalsRowShown="0">
@@ -805,7 +801,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridData() {
+    public get treeGridData() {
         this._sharedStringsData =
             `count="21" uniqueCount="19"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si>`;
 
@@ -823,7 +819,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridDataIgnoreFiltering() {
+    public get treeGridDataIgnoreFiltering() {
         this._sharedStringsData =
             `count="21" uniqueCount="19"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si>`;
 
@@ -840,7 +836,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridDataFormatted() {
+    public get treeGridDataFormatted() {
         this._sharedStringsData =
             `count="21" uniqueCount="19"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si>`;
 
@@ -858,7 +854,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridDataSorted() {
+    public get treeGridDataSorted() {
         this._sharedStringsData =
             `count="21" uniqueCount="19"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si><si><t>Associate Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Debra Morton</t></si><si><t>Tanya Bennett</t></si>`;
 
@@ -876,7 +872,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridDataFiltered() {
+    public get treeGridDataFiltered() {
         this._sharedStringsData =
             `count="19" uniqueCount="18"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si>`;
 
@@ -894,7 +890,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridDataFilteredSorted() {
+    public get treeGridDataFilteredSorted() {
         this._sharedStringsData =
             `count="19" uniqueCount="18"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si><si><t>Associate Software Developer</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Debra Morton</t></si>`;
 
@@ -912,7 +908,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get treeGridWithAdvancedFilters() {
+    public get treeGridWithAdvancedFilters() {
         this._sharedStringsData =
         `count="15" uniqueCount="14"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si>`;
 
@@ -929,7 +925,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get gridProductsWithFormatter() {
+    public get gridProductsWithFormatter() {
         this._sharedStringsData =
             `count="45" uniqueCount="35"><si><t>Product ID</t></si><si><t>ProductName</t></si><si><t>InStock</t></si><si><t>UnitsInStock</t></si><si><t>OrderDate</t></si><si><t>Chai</t></si><si><t>true</t></si><si><t>2760.00</t></si><si><t>Mon Mar 21 2005</t></si><si><t>Aniseed Syrup</t></si><si><t>false</t></si><si><t>198.00</t></si><si><t>Tue Jan 15 2008</t></si><si><t>Chef Antons Cajun Seasoning</t></si><si><t>52.00</t></si><si><t>Sat Nov 20 2010</t></si><si><t>Grandmas Boysenberry Spread</t></si><si><t>0.00</t></si><si><t>Thu Oct 11 2007</t></si><si><t>Uncle Bobs Dried Pears</t></si><si><t>Fri Jul 27 2001</t></si><si><t>Northwoods Cranberry Sauce</t></si><si><t>1098.00</t></si><si><t>Thu May 17 1990</t></si><si><t>Queso Cabrales</t></si><si><t>Thu Mar 03 2005</t></si><si><t>Tofu</t></si><si><t>7898.00</t></si><si><t>Sat Sep 09 2017</t></si><si><t>Teatime Chocolate Biscuits</t></si><si><t>6998.00</t></si><si><t>Thu Dec 25 2025</t></si><si><t>Chocolate</t></si><si><t>20000.00</t></si><si><t>Thu Mar 01 2018</t></si>`;
 
@@ -946,7 +942,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get gridProductsWithoutFormatter() {
+    public get gridProductsWithoutFormatter() {
         this._sharedStringsData =
             `count="35" uniqueCount="27"><si><t>Product ID</t></si><si><t>ProductName</t></si><si><t>InStock</t></si><si><t>UnitsInStock</t></si><si><t>OrderDate</t></si><si><t>Chai</t></si><si><t>true</t></si><si><t>Mon Mar 21 2005 02:00:00 GMT+0200 (Eastern European Standard Time)</t></si><si><t>Aniseed Syrup</t></si><si><t>false</t></si><si><t>Tue Jan 15 2008 02:00:00 GMT+0200 (Eastern European Standard Time)</t></si><si><t>Chef Antons Cajun Seasoning</t></si><si><t>Sat Nov 20 2010 02:00:00 GMT+0200 (Eastern European Standard Time)</t></si><si><t>Grandmas Boysenberry Spread</t></si><si><t>Thu Oct 11 2007 03:00:00 GMT+0300 (Eastern European Summer Time)</t></si><si><t>Uncle Bobs Dried Pears</t></si><si><t>Fri Jul 27 2001 03:00:00 GMT+0300 (Eastern European Summer Time)</t></si><si><t>Northwoods Cranberry Sauce</t></si><si><t>Thu May 17 1990 04:00:00 GMT+0400 (Eastern European Summer Time)</t></si><si><t>Queso Cabrales</t></si><si><t>Thu Mar 03 2005 02:00:00 GMT+0200 (Eastern European Standard Time)</t></si><si><t>Tofu</t></si><si><t>Sat Sep 09 2017 03:00:00 GMT+0300 (Eastern European Summer Time)</t></si><si><t>Teatime Chocolate Biscuits</t></si><si><t>Thu Dec 25 2025 02:00:00 GMT+0200 (Eastern European Standard Time)</t></si><si><t>Chocolate</t></si><si><t>Thu Mar 01 2018 02:00:00 GMT+0200 (Eastern European Standard Time)</t></si>`;
 
@@ -963,7 +959,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get gridWithEmptyColums() {
+    public get gridWithEmptyColums() {
         this._sharedStringsData =
             `count="25" uniqueCount="23"><si><t>Column1</t></si><si><t>ID</t></si><si><t>Column2</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Celia Martinez</t></si><si><t>Senior Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Leslie Hansen</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
@@ -980,7 +976,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get gridWithAdvancedFilters() {
+    public get gridWithAdvancedFilters() {
         this._sharedStringsData =
         `count="11" uniqueCount="11"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
 
@@ -996,7 +992,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get personJobHoursDataPerformance() {
+    public get personJobHoursDataPerformance() {
         this._sharedStringsData =
         `count="18" uniqueCount="15"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>WorkingHours</t></si><si><t>HireDate</t></si><si><t>Performance</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>2017-06-19T11:43:07.714Z</t></si><si><t>[object Object],[object Object],[object Object],[object Object]</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>2015-12-18T11:23:17.714Z</t></si><si><t>Tanya Bennett</t></si><si><t>2005-11-18T11:23:17.714Z</t></si>`;
 
@@ -1012,7 +1008,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get hireDate() {
+    public get hireDate() {
         this._sharedStringsData =
         `count="1" uniqueCount="1"><si><t>HireDate</t></si>`;
 
@@ -1028,7 +1024,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get exportGroupedData() {
+    public get exportGroupedData() {
         this._sharedStringsData =
             `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW (2)</t></si><si><t>Price: 150000 (1)</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price: 100000 (1)</t></si><si><t>Performance</t></si><si><t>Brand: Tesla (3)</t></si><si><t>Roadster</t></si><si><t>Price: 75000 (1)</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price: 65000 (1)</t></si><si><t>Base</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
 
@@ -1047,7 +1043,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get exportGroupedDataWithCollapsedRows() {
+    public get exportGroupedDataWithCollapsedRows() {
         this._sharedStringsData =
             `count="29" uniqueCount="20"><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW (2)</t></si><si><t>Price: 150000 (1)</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Price: 100000 (1)</t></si><si><t>Performance</t></si><si><t>Brand: Tesla (3)</t></si><si><t>Roadster</t></si><si><t>Price: 75000 (1)</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Price: 65000 (1)</t></si><si><t>Base</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>R Line</t></si><si><t>Business</t></si><si><t>Passat</t></si>`;
 
@@ -1066,7 +1062,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get exportGroupedDataWithIgnoreSorting() {
+    public get exportGroupedDataWithIgnoreSorting() {
         this._sharedStringsData =
             `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: Tesla (3)</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>100000</t></si><si><t>Roadster</t></si><si><t>Performance</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: BMW (2)</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
 
@@ -1085,7 +1081,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get exportGroupedDataWithIgnoreFiltering() {
+    public get exportGroupedDataWithIgnoreFiltering() {
         this._sharedStringsData =
             `count="30" uniqueCount="21"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>Brand: BMW (2)</t></si><si><t>150000</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>100000</t></si><si><t>Performance</t></si><si><t>Brand: Tesla (3)</t></si><si><t>75000</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Roadster</t></si><si><t>65000</t></si><si><t>Base</t></si><si><t>Brand: VW (3)</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
 
@@ -1104,7 +1100,7 @@ export class FileContentData {
         return this.createData();
     }
 
-    get exportGroupedDataWithIgnoreGrouping() {
+    public get exportGroupedDataWithIgnoreGrouping() {
         this._sharedStringsData =
             `count="19" uniqueCount="14"><si><t>Price</t></si><si><t>Model</t></si><si><t>Edition</t></si><si><t>M5</t></si><si><t>Competition</t></si><si><t>Performance</t></si><si><t>Model S</t></si><si><t>Sport</t></si><si><t>Roadster</t></si><si><t>Base</t></si><si><t>Arteon</t></si><si><t>Business</t></si><si><t>Passat</t></si><si><t>R Line</t></si>`;
 

@@ -2,17 +2,41 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 11.1.0
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
 
 ### New Features
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
+- `IgxInput` now supports `type="file"` and its styling upon all themes.  
+   _Note: validation of file type input is not yet supported._
+
 ### General
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
+    - `onSelection` is now `selected` 
+    - `onViewChanging` is now `viewChanging`
+    - `onDateSelection` is now `dateSelection`
+    - `onYearSelection` is now `yearSelection`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxYearsViewComponent`
+    - `onSelection` is now `selected`
+    - `onYearSelection` is now `yearSelection`
+- `IgxDaysViewComponent`
+    - `onDateSelection` is now `dateSelection`
+    - `onViewChanging` is now `viewChanging`
+- `IgxMonthsViewComponent`
+    - `onSelection` is now `selected`
+    - `onMonthSelection` is now `monthSelection`
+- `IgxMonthPickerComponent`
+    - `onSelection` is now `selected`
 - `IgxRadioGroup`
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
 - `IgxDialog`

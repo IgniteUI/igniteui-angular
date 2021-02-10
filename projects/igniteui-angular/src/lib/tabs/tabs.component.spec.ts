@@ -57,11 +57,9 @@ describe('IgxTabs', () => {
 
     describe('IgxTabs Html Attributes', () => {
         let fixture;
-        let tabs;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTestHtmlAttributesComponent);
-            tabs = fixture.componentInstance.tabs;
         }));
 
         it('should set the correct attributes on the html elements', fakeAsync(() => {
@@ -774,13 +772,11 @@ describe('IgxTabs', () => {
     });
 
     describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
-        let router;
         let fixture;
         let tabsComp;
         let theTabs;
 
         beforeEach(waitForAsync(() => {
-            router = TestBed.inject(Router);
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -870,7 +866,7 @@ class TabsTestComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 
-    public tabSelectedHandler(args) {
+    public tabSelectedHandler() {
     }
 }
 
