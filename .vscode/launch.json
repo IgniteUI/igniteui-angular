@@ -17,6 +17,21 @@
             "env": {
                 "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json"
             }
+        },
+        {
+            "name": "Run migration",
+            "request": "launch",
+            "type": "node",
+            "cwd": "<directory to apply migrations in>",
+            "args": [
+                "-r",
+                "ts-node/register",
+                "path/to/ng", "g",
+                "path/to/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-<number>"
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "path/to/igniteui-angular/projects/igniteui-angular/migrations/tsconfig.json"
+            }
         }
     ]
 }

@@ -1,0 +1,79 @@
+<div class="switches">
+    <igx-switch (change)='this.$sorting = !this.$sorting' style="padding-left: 20px">cancel sorting</igx-switch>
+    <igx-switch (change)='this.$filtering = !this.$filtering' style="padding-left: 20px">cancel filtering</igx-switch>
+    <igx-switch (change)='this.$pinning = !this.$pinning' style="padding-left: 20px">cancel pinning</igx-switch>
+    <igx-switch (change)='this.$resizing = !this.$resizing' style="padding-left: 20px">cancel resizing</igx-switch>
+    <igx-switch (change)='this.$onColumnSelectionChange = !this.$onColumnSelectionChange' style="padding-left: 20px">cancel onColumnSelectionChange</igx-switch>
+    <igx-switch (change)='this.$hiding = !this.$hiding' style="padding-left: 20px">cancel hiding</igx-switch>
+</div>
+<igx-input-group>
+    <input igxInput type="text" placeholder="Filter by product name" (input)="filter($event.target.value)">
+</igx-input-group><br>
+<igx-input-group>
+    <input igxInput type="text" placeholder="Filter global" (input)="filterGlobal($event.target.value)">
+</igx-input-group><br>
+
+<div class="sample-wrapper">
+    <div class="grid-wrapper">
+        <div>
+            <!-- <button (click)="changeFormatOptions()">Change formatting</button>
+            <button (click)="addFormatter()">Use formatter function for OrderDate col</button> -->
+            <igx-grid #grid1
+                width="900px" height="550px"
+                [data]="localData"
+                displayDensity="compact"
+                [primaryKey]="'ProductID'"
+                [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
+                [paging]="true"
+                columnSelection="single"
+                (onColumnMovingStart)="onColumnMovingStart($event)"
+                (onColumnMoving)="onColumnMoving($event)"
+                (onColumnMovingEnd)="onColumnMovingEnd($event)"
+                (sorting)="onSorting($event)"
+                (onSortingDone)="onSortingDone($event)"
+                (filtering)="onFiltering($event)"
+                (onFilteringDone)="onFilteringDone($event)"
+                (onPagingDone)="onPagingDone($event)"
+                (onColumnPinning)="onColumnPinning($event)"
+                (columnPinned)="columnPinned($event)"
+                (columnVisibilityChanging)="columnVisibilityChanging($event)"
+                (onColumnVisibilityChanged)="onColumnVisibilityChanged($event)"
+                (onColumnResized)="onColumnResized($event)"
+                (onColumnSelectionChange)="onColumnSelectionChange($event)">
+
+                <igx-grid-toolbar>
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                        <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+            
+                <igx-column field="ProductID" width="130px" [dataType]="'number'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
+                </igx-column>
+                <igx-column field="ProductName" width="200px" [dataType]="'string'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
+                </igx-column>
+                <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
+                </igx-column>
+                <igx-column field="ReorderLevel" width="100px" [sortable]="true" [filterable]="true" [resizable]="true" [dataType]="'number'" [movable]="true" [hasSummary]="false" [editable]="true">
+                </igx-column>
+                <igx-column field="UnitsInStock" header="UnitsInStock" width="130px" [dataType]="'number'" [resizable]="true" [sortable]="true" [movable]="true" [hasSummary]="false" [editable]="true">
+                </igx-column>
+                <igx-column field="Discontinued" header="UnitsInStock" width="130px" [dataType]="'boolean'" [resizable]="true" [sortable]="true" [hasSummary]="false" [editable]="true">
+                </igx-column>
+            </igx-grid>
+        </div>
+    </div>
+    <div class="log-wrapper">
+        <div class="selected-data-area">
+            <div class="logContainer">
+                <div class="highlight">
+                    <span>Events execution sequence</span>
+                    <button class="clearBtn" igxButton="flat" (click)="clearLog()"><igx-icon>clear</igx-icon>Clear log</button>
+                </div>
+                <hr />
+                <div #logger class="logger"></div>
+            </div>
+        </div>
+    </div>
+</div>

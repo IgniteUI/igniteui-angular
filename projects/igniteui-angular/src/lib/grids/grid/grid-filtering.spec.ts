@@ -660,6 +660,9 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('should correctly apply multiple filtering through API', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.onFilteringDone, 'emit');
+
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         gridExpressionsTree.filteringOperands = [
             { fieldName: 'Downloads', searchVal: 20, condition: IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo') },
@@ -667,7 +670,11 @@ describe('IgxGrid - Filtering actions #grid', () => {
         ];
 
         grid.filteringExpressionsTree = gridExpressionsTree;
+        tick(30);
         fix.detectChanges();
+
+        expect(grid.filtering.emit).toHaveBeenCalledTimes(0);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(0);
 
         expect(grid.rowList.length).toEqual(3);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(2);
@@ -677,6 +684,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(expression).toBeDefined();
 
         grid.clearFilter();
+        tick(30);
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(8);
@@ -684,12 +692,21 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('should correctly apply global filtering', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.onFilteringDone, 'emit');
+
         grid.filteringLogic = FilteringLogic.Or;
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
+        tick(30);
         fix.detectChanges();
 
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columns.length);
         expect(grid.rowList.length).toEqual(1);
+
+        const filteringExpressions = grid.filteringExpressionsTree;
+        const args = { owner: grid, cancel: false, filteringExpressions };
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
     }));
 
     it('Should render chip when filtering using the API.', fakeAsync(() => {
@@ -906,17 +923,21 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should always emit onFilteringDone with proper eventArgs, even when column does not exist', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
         spyOn(grid.onFilteringDone, 'emit');
+
         grid.filteringLogic = FilteringLogic.Or;
         grid.filter('Nonexisting', 'ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
         tick(100);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(0);
         const args = grid.filteringExpressionsTree.find('Nonexisting') as FilteringExpressionsTree;
+        expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: args });
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(args);
     }));
 
     it('Should emit onFilteringDone when filtering globally', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
         spyOn(grid.onFilteringDone, 'emit');
 
         grid.filteringLogic = FilteringLogic.Or;
@@ -924,10 +945,15 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick(100);
         fix.detectChanges();
 
+        const args = { owner: grid, cancel: false, filteringExpressions: grid.filteringExpressionsTree };
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree);
     }));
 
     it('Should keep existing expressionTree when filtering with a null expressionTree.', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.onFilteringDone, 'emit');
+
         const expression1 = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
         const expression11 = {
             fieldName: 'ProductName',
@@ -938,15 +964,24 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Verify results after filtering.
         expression1.filteringOperands.push(expression11);
         grid.filter('ProductName', null, expression1);
+        tick(30);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
         expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for Angular');
 
+        const args = { owner: grid, cancel: false, filteringExpressions: expression1 };
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(expression1);
+
         // Verify that passing null for expressionTree with a new searchVal will keep the existing expressionTree.
         grid.filter('ProductName', 'ignite', null);
+        tick(30);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
         expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for Angular');
+
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(expression1);
     }));
 
     it('Should throw descriptive error when filter() is called without condition', fakeAsync(() => {
@@ -957,10 +992,18 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 
     it('Should not clear previous filtering when filterGlobal() is called with invalid condition', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.onFilteringDone, 'emit');
+
         grid.filter('Downloads', 100, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
+        tick(30);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
+
+        const args = { owner: grid, cancel: false, filteringExpressions: grid.filteringExpressionsTree.find('Downloads') };
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.filteringExpressionsTree.find('Downloads'));
 
         // Execute global filtering with invalid condition.
         grid.filterGlobal(1000, null);
@@ -968,21 +1011,33 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
+
+        expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(1);
     }));
 
-    it('Should disable filtering feature when using NoopFilteringStrategy.', () => {
+    it('Should disable filtering feature when using NoopFilteringStrategy.', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.onFilteringDone, 'emit');
+
         // Use the NoopFilteringStrategy.
         grid.filterStrategy = NoopFilteringStrategy.instance();
         fix.detectChanges();
 
         grid.filter('ProductName', 'some value', IgxStringFilteringOperand.instance().condition('contains'));
+        tick(30);
         fix.detectChanges();
 
         // Verify the grid is not filtered, because of the noop filter strategy.
         expect(grid.rowList.length).toBe(8);
         expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
-    });
+
+        const filteringExpressions = grid.filteringExpressionsTree.find('ProductName');
+        const args = { owner: grid, cancel: false, filteringExpressions };
+        expect(grid.filtering.emit).toHaveBeenCalledWith(args);
+        expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+    }));
 });
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
@@ -1007,6 +1062,9 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     }));
 
     it('should correctly filter with \'filteringExpressionsTree\' binding', fakeAsync(() => {
+        spyOn(grid.filtering, 'emit');
+        spyOn(grid.onFilteringDone, 'emit');
+
         // Verify initially filtered 'Downloads > 200'
         expect(grid.rowList.length).toEqual(3);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
@@ -1016,6 +1074,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
 
         // Clear filter
         grid.clearFilter('Downloads');
+        tick(30);
         fix.detectChanges();
 
         // Verify filtering expressions tree binding state
