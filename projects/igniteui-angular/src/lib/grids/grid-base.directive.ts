@@ -117,7 +117,6 @@ import {
     IRowSelectionEventArgs,
     IPinColumnEventArgs,
     IGridEditEventArgs,
-    IPageEventArgs,
     IRowDataEventArgs,
     IColumnResizeEventArgs,
     IColumnMovingStartEventArgs,
@@ -644,21 +643,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
-
-    /**
-     * @deprecated Use `IgxPaginator` outputs instead.
-     *
-     * Emitted after paging is performed.
-     * @remarks
-     * Returns an object consisting of the previous and next pages.
-     * @example
-     * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
-     * ```
-     */
-    @DeprecateProperty('Use the corresponding event emiited by the `igx-paginator`.')
-    @Output()
-    public onPagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
      * Emitted when a row added through the API.
@@ -1429,7 +1413,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.selectionService.clear(true);
-        this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
         this.navigateTo(0);
@@ -3141,6 +3124,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the next page, if the grid is not already at the last page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.nextPage();
+     * ```
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public nextPage(): void {
+        this.paginate(this._page + 1);
+    }
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding methods instead.
+     * Goes to the previous page, if the grid is not already at the first page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.previousPage();
+     * ```
+     */
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
+    public previousPage(): void {
+        this.paginate(this._page - 1);
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -3271,11 +3282,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.notifyChanges(true);
                 });
             });
-
-        this.onPagingDone.pipe(destructor).subscribe(() => {
-            this.endEdit(true);
-            this.selectionService.clear(true);
-        });
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
@@ -3775,35 +3781,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set outlet(val: IgxOverlayOutletDirective) {
         this._userOutletDirective = val;
     }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the next page, if the grid is not already at the last page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.nextPage();
-     * ```
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public nextPage(): void {
-        this.paginate(this._page + 1);
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding methods instead.
-     * Goes to the previous page, if the grid is not already at the first page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.previousPage();
-     * ```
-     */
-    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
-    public previousPage(): void {
-        this.paginate(this._page - 1);
-    }
-
 
     /**
      * Gets the default row height.

@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree,
     ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
-    IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
+    IColumnResizeEventArgs, IColumnSelectionEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
     IColumnVisibilityChangingEventArgs, 
@@ -83,10 +83,6 @@ export class GridEventsComponent implements OnInit {
     public pagingDone(event: IPagingDoneEventArgs) {
         this.logAnEvent(`=> pagingDone`);
         this.paginator.paginate(event.newPage);
-    }
-
-    public onPagingDone(event: IPageEventArgs) {
-        this.logAnEvent(`=> onPagingDone`);
     }
 
     public onColumnPinning(event: IPinColumnCancellableEventArgs) {
