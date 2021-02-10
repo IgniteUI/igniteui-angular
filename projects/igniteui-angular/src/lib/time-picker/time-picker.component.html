@@ -38,12 +38,14 @@
  <!-- [igxTextSelection]="true" -->
 
 <!-- (mousedown)="mouseDown($event)" -->
-    <igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && open()">
+    <igx-input-group [suppressInputAutofocus]="this.isDropdown" (mousedown)="mouseDown($event)" (click)="!this.isDropdown && open()">
         <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text"
             [readonly]="!this.isDropdown" tabindex="0"
+            [preventSpinOnWheel]="!this.isDropdown"
             [value]="this.value"
             [displayFormat]="this.displayFormat"
             [placeholder]="this.placeholder"
+            [headerOrientation]="this.headerOrientation"
             role="combobox" aria-haspopup="dialog"
             [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
@@ -100,7 +102,7 @@
 
 
 <div #toggle="toggle" igxToggle class="igx-time-picker"
-    [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': vertical && !this.isDropdown}">
+    [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': this.isVertical && !this.isDropdown}">
     <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">

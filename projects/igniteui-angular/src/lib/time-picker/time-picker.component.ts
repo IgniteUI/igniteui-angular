@@ -62,6 +62,7 @@ import { DateRange, IgxPickerToggleComponent } from '../date-range-picker/public
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor/public_api';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { HeaderOrientation } from '../date-common/types';
 
 
 let NEXT_ID = 0;
@@ -121,7 +122,6 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     AfterViewChecked {
 
     // TODO
-    public selected: Date | DateRange;
     public select(value: Date | DateRange): void {
         throw new Error('Method not implemented.');
     }
@@ -230,12 +230,25 @@ export class IgxTimePickerComponent extends PickersBaseDirective
 
     /**
      * An @Input property that Gets/Sets the orientation of the `igxTimePicker`. By default `vertical` is set to false.
+    * @deprecated Use headerOrientation instead:
      * ```html
      * <igx-time-picker [vertical]="true" id="time-picker"></igx-time-picker>
      * ```
      */
+    @DeprecateProperty(`Use headerOrientation to set the dialog's header position:
+    <igx-time-picker [headerOrientation]="'vertical'"></igx-time-picker>`)
     @Input()
     public vertical = false;
+
+    /**
+     * An @Input property that sets the orientation of the `igxTimePicker` header in dialog mode. Default value is horizontal.
+     * ```html
+     * <igx-time-picker [headerOrientation]="'vertical'"></igx-time-picker>
+     * ```
+     */    
+    @Input()
+    public headerOrientation: HeaderOrientation = HeaderOrientation.Horizontal;
+
 
     // /**
     //  * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
@@ -433,6 +446,11 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         return this.mode === InteractionMode.DropDown;
     }
 
+    /** @hidden @internal */
+    public get isVertical(): boolean {
+        return this.headerOrientation === HeaderOrientation.Vertical;
+    }
+
     // /** @hidden @internal */
     // public get appliedFormat(): string {
     //     return DatePickerUtil.getLocaleDateFormat(this.locale, this.displayFormat)
@@ -503,7 +521,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * @hidden
      */
     public get showClearButton(): boolean {
-        return (this.mode === InteractionMode.DropDown && this.value && Object.keys(this.value).length == 0);
+        return (this.isDropdown && this.value && Object.keys(this.value).length == 0);
         // return (this.mode === InteractionMode.DropDown && this.displayValue && this.displayValue !== this.parseMask(false)) || this.isNotEmpty;
     }
 
@@ -859,7 +877,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
 
         this._value = value;
 
-        if (this.mode === InteractionMode.DropDown) {
+        if (this.isDropdown) {
             this.displayValue = this._formatTime(this.value, this.displayFormat);
         }
     }
@@ -934,11 +952,6 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * @hidden
      */
     public ngOnInit(): void {
-        this.opening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
-        this.opened = new EventEmitter<IBaseEventArgs>();
-        this.closing = new EventEmitter<IBaseCancelableBrowserEventArgs>();
-        this.closed = new EventEmitter<IBaseEventArgs>();
-
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
 
         this._defaultDropDownOverlaySettings = {
@@ -949,7 +962,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             positionStrategy: new AutoPositionStrategy()
         };
         this._overlaySettings = this.overlaySettings ? this.overlaySettings :
-            (this.mode === InteractionMode.Dialog ? this._defaultDialogOverlaySettings : this._defaultDropDownOverlaySettings);
+            (this.isDropdown ? this._defaultDropDownOverlaySettings : this._defaultDialogOverlaySettings);
 
         this._generateHours();
         this._generateMinutes();
@@ -1634,8 +1647,8 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * @hidden
      */
     public onFocus(event): void {
-        this.dateTimeEditorRef.onFocus();
-        // this.isNotEmpty = event.target.value !== this.parseMask(false);
+        // this.dateTimeEditorRef.onFocus();
+        this.isNotEmpty = event.target.value !== this.parseMask(false);
     }
 
     /**
@@ -1643,7 +1656,6 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      */
     public handleBlur(event): void {
         if (this.isDropdown) {
-            debugger;
             const inputValue = event.target.value;
             this.displayValue = inputValue;
 
@@ -1725,8 +1737,11 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     public spinOnEdit(event): void {
         event.preventDefault();
 
+        debugger;
+
         let sign: number;
         let displayVal: string;
+        const test = this.dateTimeEditorRef.value;
         const currentVal = new Date(this.value);
         const min = this.minValue ? this.parseToDate(this.minValue) : this.parseToDate('00:00');
         const max = this.maxValue ? this.parseToDate(this.maxValue) : this.parseToDate('24:00');
@@ -2172,7 +2187,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     // }
 
     private _updateEditableInput(): void {
-        if (this.mode === InteractionMode.DropDown) {
+        if (this.isDropdown) {
             this.displayValue = this._formatTime(this._getSelectedTime(), this.displayFormat);
         }
     }
@@ -2265,7 +2280,6 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         //     this.selectedAmPm = this._ampmItems[3];
         // }
 
-        debugger;
         this.selectedHour = this.value ? this.parseHours(this.value, this.displayFormat) :
             this.showHoursList ? `${this._hourItems[3]}` : '0';
         this.selectedMinute = this.value ? this.parseMinutes(this.value, this.displayFormat) : '0';
@@ -2313,20 +2327,9 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         let formattedHour;
 
         if (format.indexOf('h') !== -1) {
-            debugger;
             hour = hour % 12;
             hour = hour ? hour : 12; // the hour '0' should be '12'
             formattedHour = hour < 10 && format.indexOf('hh') !== -1 ? '0' + hour : `${hour}`;
-            // if (hour > 12) {
-            //     hour -= 12;
-            //     formattedHour = hour < 10 && format.indexOf('hh') !== -1 ? '0' + hour : `${hour}`;
-            // } else if (hour === 0) {
-            //     formattedHour = '12';
-            // } else if (hour < 10 && format.indexOf('hh') !== -1) {
-            //     formattedHour = '0' + hour;
-            // } else {
-            //     formattedHour = `${hour}`;
-            // }
         } else {
             formattedHour = hour < 10 && format.indexOf('HH') !== -1 ? '0' + hour : `${hour}`;
         }
@@ -2341,14 +2344,14 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     }
 
     private parseSeconds(value: Date, format: string): string {
-        const seconds = value.getMinutes();
+        const seconds = value.getSeconds();
         const formattedSeconds = seconds < 10 && format.indexOf('ss') !== -1 ? '0' + seconds : `${seconds}`;
         return formattedSeconds;
     }
 
     private parseAMPM(value: Date, format: string): string {
         let hour = value.getHours();
-        const ampm = hour >= 12 ? 'pm' : 'am';
+        const ampm = hour >= 12 ? 'PM' : 'AM';
         return ampm;
     }
 

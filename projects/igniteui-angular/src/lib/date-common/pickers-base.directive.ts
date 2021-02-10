@@ -62,7 +62,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public mode = InteractionMode.Dialog;
+    public mode: InteractionMode = InteractionMode.DropDown;
 
     /**
      * Custom overlay settings that will be used to display the calendar.
