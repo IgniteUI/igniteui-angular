@@ -40,8 +40,8 @@ export class TimeDisplayFormatPipe implements PipeTransform {
         const test = this.timePicker as IgxTimePickerComponent;
 
         const format = test.appliedFormat;
-        const prompt = test.dateTimeEditorRef.promptChar;
-        const regExp = new RegExp(test.dateTimeEditorRef.promptChar, 'g');
+        const prompt = test.dateTimeEditor.promptChar;
+        const regExp = new RegExp(test.dateTimeEditor.promptChar, 'g');
 
         // const format = this.timePicker.format;
         // const prompt = this.timePicker.promptChar;
@@ -116,7 +116,7 @@ export class TimeInputFormatPipe implements PipeTransform {
     public transform(value: any): string {
         //const prompt = this.timePicker.promptChar;
         const test = this.timePicker as IgxTimePickerComponent;
-        const regExp = new RegExp(test.dateTimeEditorRef.promptChar, 'g');
+        const regExp = new RegExp(test.dateTimeEditor.promptChar, 'g');
 
         let mask; let hour; let minutes; let seconds; let amPM;
 

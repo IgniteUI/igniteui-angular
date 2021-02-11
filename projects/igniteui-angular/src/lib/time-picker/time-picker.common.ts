@@ -22,7 +22,6 @@ export interface IgxTimePickerBase {
     selectedMinute: string;
     selectedSeconds: string;
     selectedAmPm: string;
-    
     cleared: boolean;
     mode: InteractionMode;
     showHoursList: boolean;
@@ -44,6 +43,5 @@ export interface IgxTimePickerBase {
     scrollSecondsIntoView(item: string): void;
     scrollAmPmIntoView(item: string): void;
     close(): void;
-    parseMask(preserveAmPm?: boolean): string;
 }
 

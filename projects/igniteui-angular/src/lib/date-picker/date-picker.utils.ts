@@ -39,7 +39,8 @@ const enum DateParts {
 /** @hidden */
 export abstract class DatePickerUtil {
     public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
-    static DEFAULT_TIME_INPUT_FORMAT = 'hh:mm a';
+    static DEFAULT_TIME_INPUT_FORMAT = 'hh:mm tt';
+    static DEFAULT_TIME_FORMAT = 'hh:mm a';
     // TODO: this is the def mask for the date-picker, should remove it during refactoring
     private static readonly SHORT_DATE_MASK = 'MM/dd/yy';
     private static readonly SEPARATOR = 'literal';

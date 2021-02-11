@@ -35,21 +35,18 @@
             (blur)="onBlur($event)" />
     </igx-input-group>
 </ng-template> -->
- <!-- [igxTextSelection]="true" -->
+ <!-- [igxT[headerOrientation]="this.headerOrientation"extSelection]="true" -->
 
 <!-- (mousedown)="mouseDown($event)" -->
-    <igx-input-group [suppressInputAutofocus]="this.isDropdown" (mousedown)="mouseDown($event)" (click)="!this.isDropdown && open()">
+    <igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && open()">
         <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text"
             [readonly]="!this.isDropdown" tabindex="0"
             [preventSpinOnWheel]="!this.isDropdown"
-            [value]="this.value"
             [displayFormat]="this.displayFormat"
             [placeholder]="this.placeholder"
-            [headerOrientation]="this.headerOrientation"
             role="combobox" aria-haspopup="dialog"
             [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
-            (wheel)="spinOnEdit($event)"
              />
 
             <igx-prefix *ngIf="!this.toggleComponents.length" (click)="open()">
