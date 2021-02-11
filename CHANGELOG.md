@@ -2,17 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 11.1.0
-### General
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
-    - **Behavioral Change** -
-    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
 
 ### New Features
 - `IgxDropDown`
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
+- `IgxPaginator`
+    - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
    _Note: validation of file type input is not yet supported._
 
@@ -57,6 +54,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
     - `GridPagingMode` enum members rename - `local` to `Local` and `remote` to `Remote`. Example:  `GridPagingMode.Local`.
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+        - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
+    - **Breaking Change**:
+        - `onPagingDone` output is removed. Use the `paging` and `pagingDone` outputs exposed by the `IgxPaginator`.
+        - `page`, `perPage`, `paginate`, `nextPage`, `previousPage` and `totalPages` in the grids are deprecated and will be removed. Use the corresponding `IgxPaginator` outputs/inputs. When using an external paginator, take care to provide the corresponding slice of data. See [`Paging with Custom Template`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging-with-custom-template)
+    
 
 ## 11.0.4
 
