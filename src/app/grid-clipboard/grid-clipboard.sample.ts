@@ -6,10 +6,9 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     templateUrl: './grid-clipboard.sample.html'
 })
 export class GridClipboardSampleComponent {
+    public data: any[];
 
-    data: any[];
-
-    options = {
+    public options = {
         enabled: true,
         copyHeaders: true,
         copyFormatters: true,
@@ -20,9 +19,9 @@ export class GridClipboardSampleComponent {
         this.data = SAMPLE_DATA.slice(0);
     }
 
-    formatter = (value: any) => `** ${value} **`;
+    public formatter = (value: any) => `** ${value} **`;
 
-    initColumn(column) {
+    public initColumn(column) {
         column.formatter = this.formatter;
         column.header = `🐱‍👤 ${column.field} 🐱‍🏍`;
     }

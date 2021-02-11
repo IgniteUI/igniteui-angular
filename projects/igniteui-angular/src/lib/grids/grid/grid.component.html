@@ -172,12 +172,12 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail='true' style="overflow:auto;width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)='detailsViewFocused(detailsContainer, rowIndex)' #detailsContainer [attr.data-rowindex]='rowIndex'
+            <div detail='true' style="overflow: auto; width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)='detailsViewFocused(detailsContainer, rowIndex)' #detailsContainer [attr.data-rowindex]='rowIndex'
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
-                <div class="igx-grid__hierarchical-indent" style='display:flex;'>
+                <div class="igx-grid__hierarchical-indent" style='display: flex;'>
                         <ng-container *ngIf="this.groupingExpressions.length > 0">
                                 <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
                         </ng-container>
@@ -279,7 +279,7 @@
 </ng-template>
 
 <ng-template #defaultDropArea>
-    <igx-icon fontSet="material" class="igx-drop-area__icon">group_work</igx-icon>
+    <igx-icon class="igx-drop-area__icon">group_work</igx-icon>
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
@@ -332,7 +332,7 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon fontSet="material">drag_indicator</igx-icon>
+    <igx-icon>drag_indicator</igx-icon>
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>

@@ -9,15 +9,15 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
-    navdrawer;
-
     @HostBinding('attr.id')
-    appId = 'igniteui-demo-app';
+    public appId = 'igniteui-demo-app';
+
+    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
+    public navdrawer;
 
     public urlString: string;
 
-    drawerState = {
+    public drawerState = {
         enableGestures: true,
         open: true,
         pin: false,
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
         miniVariant: false
     };
 
-    componentLinks = [
+    public componentLinks = [
         {
             link: '/action-strip',
             icon: 'view_list',
@@ -259,6 +259,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Formatting'
         },
         {
+            link: '/gridEvents',
+            icon: 'view_column',
+            name: 'Grid Events'
+        },
+        {
             link: '/gridFinJS',
             icon: 'view_column',
             name: 'Grid FinJS'
@@ -482,7 +487,7 @@ export class AppComponent implements OnInit {
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
-    directiveLinks = [
+    public directiveLinks = [
         {
             link: '/buttons',
             icon: 'radio_button_unchecked',
@@ -525,7 +530,7 @@ export class AppComponent implements OnInit {
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
-    styleLinks = [
+    public styleLinks = [
         {
             link: '/animations',
             icon: 'color_lens',
@@ -549,10 +554,10 @@ export class AppComponent implements OnInit {
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {
-        iconService.registerFontSetAlias('fa-solid', 'fa');
-        iconService.registerFontSetAlias('fa-brands', 'fab');
+        iconService.registerFamilyAlias('fa-solid', 'fa');
+        iconService.registerFamilyAlias('fa-brands', 'fab');
 
-        router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
+        router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
             for (const component of this.componentLinks) {
                 if (component.link === router.url) {
                     this.urlString = component.name;
@@ -561,7 +566,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.router.events.pipe(
             filter(x => x instanceof NavigationStart)
         )
