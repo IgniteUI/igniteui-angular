@@ -12,11 +12,11 @@ export class RootExcelFolder implements IExcelFolder {
         return  '';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.ContentTypesFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [
             ExcelFolderTypes.RootRelsExcelFolder,
             ExcelFolderTypes.DocPropsExcelFolder,
@@ -31,11 +31,11 @@ export class RootRelsExcelFolder implements IExcelFolder {
         return  '_rels';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.RootRelsFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [];
     }
 }
@@ -46,14 +46,14 @@ export class DocPropsExcelFolder implements IExcelFolder {
         return  'docProps';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [
             ExcelFileTypes.AppFile,
             ExcelFileTypes.CoreFile
         ];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [];
     }
 }
@@ -64,7 +64,7 @@ export class XLExcelFolder implements IExcelFolder {
         return  'xl';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles(data: WorksheetData) {
         const retVal = [
             ExcelFileTypes.StyleFile,
             ExcelFileTypes.WorkbookFile
@@ -77,7 +77,7 @@ export class XLExcelFolder implements IExcelFolder {
         return retVal;
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders(data: WorksheetData) {
         const retVal = [
             ExcelFolderTypes.XLRelsExcelFolder,
             ExcelFolderTypes.ThemeExcelFolder,
@@ -98,11 +98,11 @@ export class XLRelsExcelFolder implements IExcelFolder {
         return  '_rels';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.WorkbookRelsFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [];
     }
 }
@@ -113,11 +113,11 @@ export class ThemeExcelFolder implements IExcelFolder {
         return  'theme';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.ThemeFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [];
     }
 }
@@ -128,11 +128,11 @@ export class WorksheetsExcelFolder implements IExcelFolder {
         return  'worksheets';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.WorksheetFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders(data: WorksheetData) {
         return data.isEmpty || !data.options.exportAsTable ? [] : [ExcelFolderTypes.WorksheetsRelsExcelFolder];
     }
 }
@@ -143,11 +143,11 @@ export class TablesExcelFolder implements IExcelFolder {
         return 'tables';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.TablesFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [];
     }
 }
@@ -158,11 +158,11 @@ export class WorksheetsRelsExcelFolder implements IExcelFolder {
         return '_rels';
     }
 
-    childFiles(data: WorksheetData) {
+    public childFiles() {
         return [ExcelFileTypes.WorksheetRelsFile];
     }
 
-    childFolders(data: WorksheetData) {
+    public childFolders() {
         return [];
     }
 }
