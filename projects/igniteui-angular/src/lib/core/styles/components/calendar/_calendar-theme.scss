@@ -13,7 +13,7 @@
 /// - year/month hover/selected colors
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $content-background [null] - The main content background color.
 /// @param {Color} $content-text-color [null] - The main content text color.
@@ -78,7 +78,7 @@
 ///   // Pass the theme to the igx-calendar component mixin
 ///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $content-background: null,

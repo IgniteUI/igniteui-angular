@@ -26,7 +26,7 @@
 ///   // Pass the theme to the igx-avatar component mixin
 ///   @include igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $icon-background: null,
     $icon-color: null,

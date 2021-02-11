@@ -5,7 +5,7 @@
 ////
 
 /// Chip Theme
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {String} $border-radius [null] - The chip border-radius.
@@ -51,7 +51,7 @@
 ///   // Pass the theme to the igx-chip component mixin
 ///   @include igx-chip($my-chip-theme);
 @function igx-chip-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $elevations: $elevations,
     $border-radius: null,
