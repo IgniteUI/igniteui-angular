@@ -694,7 +694,7 @@ export class GridFunctions {
         UIInteractions.simulateClickAndSelectEvent(icon);
     }
 
-    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridComponent, columnField: string) {
+    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
         const event = { stopPropagation: () => { }, preventDefault: () => { } };
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
@@ -966,8 +966,8 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static getExcelStyleFilteringComponent(fix) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+    public static getExcelStyleFilteringComponent(fix, grid = 'igx-grid') {
+        const gridNativeElement = fix.debugElement.query(By.css(grid)).nativeElement;
         let excelMenu = gridNativeElement.querySelector(ESF_MENU_CLASS);
         if (!excelMenu) {
             excelMenu = fix.nativeElement.querySelector(ESF_MENU_CLASS);
@@ -1173,8 +1173,8 @@ export class GridFunctions {
         return loadingIndicator;
     }
 
-    public static getColumnCells(fix, columnKey) {
-        const allCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
+    public static getColumnCells(fix, columnKey, gridCell = 'igx-grid-cell') {
+        const allCells = fix.debugElement.queryAll(By.css(gridCell));
         return allCells.filter((cell) => cell.componentInstance.column.field === columnKey);
     }
 
