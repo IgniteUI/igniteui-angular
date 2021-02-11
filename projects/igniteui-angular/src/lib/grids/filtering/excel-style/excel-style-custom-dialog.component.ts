@@ -33,7 +33,6 @@ import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } fr
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
-import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -99,11 +98,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     constructor(private cdr: ChangeDetectorRef) {}
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;
     }
 
-    get template(): TemplateRef<any> {
+    public get template(): TemplateRef<any> {
         if (this.column.dataType === DataType.Date) {
             return this.dateExpressionTemplate;
         }
@@ -111,7 +110,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         return this.defaultExpressionTemplate;
     }
 
-    get grid(): any {
+    public get grid(): any {
         return this.filteringService.grid;
     }
 
