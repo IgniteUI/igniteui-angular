@@ -38,7 +38,7 @@
 ///   // Theming using css variables (not supported in IE11):
 ///   @include igx-css-vars($my-badge-theme);
 @function igx-badge-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $elevations: $elevations,
 
@@ -94,12 +94,12 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires rem
 /// @requires --var
 @mixin igx-badge($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
 

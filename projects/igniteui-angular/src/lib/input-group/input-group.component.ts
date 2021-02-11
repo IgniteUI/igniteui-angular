@@ -298,7 +298,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
             } else {
                 this._variant = this.document.defaultView
                     .getComputedStyle(this.element.nativeElement)
-                    .getPropertyValue('--igx-input-group-variant')
+                    .getPropertyValue('--theme')
                     .trim() as IgxInputGroupTheme;
             }
         }

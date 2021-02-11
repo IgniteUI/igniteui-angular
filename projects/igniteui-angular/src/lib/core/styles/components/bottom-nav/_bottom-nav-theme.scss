@@ -70,7 +70,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires igx-bottom-nav-theme
 /// @requires igx-color
@@ -79,7 +79,7 @@
 /// @requires $ease-in-out-quad
 /// @requires --var
 @mixin igx-bottom-nav($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $menu-height: 56px;
     $item-min-width: 80px;

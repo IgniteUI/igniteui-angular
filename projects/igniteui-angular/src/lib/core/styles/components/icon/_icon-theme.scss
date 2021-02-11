@@ -50,10 +50,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 @mixin igx-icon($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $igx-icon-font-size: --var($theme, 'size');
 

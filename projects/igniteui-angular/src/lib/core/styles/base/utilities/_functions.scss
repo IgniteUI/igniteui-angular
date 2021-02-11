@@ -531,9 +531,9 @@ $p-test: igx-palette(#fff, #000);
     @if map-has-key($map, $key) {
         @if not(legacy()) {
             @if not($fallback) {
-                @return var(--#{map-get($map, 'name')}-#{$key})
+                @return var(--#{$key})
             }
-            @return var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})
+            @return var(--#{$key}, #{$fallback})
         } @else {
             @return map-get($map, $key);
         }
@@ -849,7 +849,11 @@ $p-test: igx-palette(#fff, #000);
 @function str-replace($string, $search, $replace: '') {
     $index: str-index($string, $search);
     @if $index {
-        @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+        @return str-slice($string, 1, $index - 1) + $replace + str-replace(
+            str-slice($string, $index + str-length($search)),
+            $search,
+            $replace
+        );
     }
     @return $string;
 }

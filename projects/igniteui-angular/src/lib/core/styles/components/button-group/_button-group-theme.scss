@@ -74,6 +74,8 @@
     $selected-shadow-color: null
 ) {
     $name: 'igx-button-group';
+    $selector: 'igx-buttongroup';
+
     $button-group-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -145,6 +147,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
@@ -168,11 +171,11 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires --var
 @mixin igx-button-group($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);

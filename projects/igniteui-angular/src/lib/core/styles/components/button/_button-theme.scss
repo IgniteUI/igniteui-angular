@@ -171,6 +171,8 @@
     $disabled-background: null,
 ) {
     $name: 'igx-button';
+    $selector: '[igxButton]';
+
     $button-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -335,6 +337,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
 
         flat-border-radius: $flat-border-radius,
@@ -409,11 +412,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-button($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);

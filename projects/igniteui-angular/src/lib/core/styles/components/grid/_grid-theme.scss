@@ -228,6 +228,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid';
     $grid-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -457,6 +458,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
 
         header-background: $header-background,
@@ -567,7 +569,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires {mixin} _excel-filtering
 /// @requires igx-color
@@ -575,7 +577,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-grid($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     @include scale-in-ver-center();
 

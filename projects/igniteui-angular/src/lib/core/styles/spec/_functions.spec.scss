@@ -98,18 +98,15 @@ $default-palette: $_palette;
         @include it('should return a value of type color w/ palette as only argument')  {
             $value: igx-color($_palette);
             @include assert-equal(type-of($value), color);
-            @include assert-equal($value, $_primary);
         }
 
         @include it('should return a value of type color w/ palette and color as only arguments')  {
             $value: igx-color($_palette, 'secondary');
-            @include assert-equal(type-of($value), color);
             @include assert-equal($value, $_secondary);
         }
 
         @include it('should return a value of type color w/ all arguments passed')  {
             $value: igx-color($_palette, 'secondary', 500);
-            @include assert-equal(type-of($value), color);
             @include assert-equal($value, $_secondary);
         }
     }
@@ -120,19 +117,18 @@ $default-palette: $_palette;
         @include it('should return a value of type color w/o arguments')  {
             $value: igx-color();
             @include assert-equal(type-of($value), color);
-            @include assert-equal($value, $_primary);
         }
 
         @include it('should return a value of type color from $default-palette w/ color as only argument')  {
             $value: igx-color($color: secondary);
-            @include assert-equal(type-of($value), color);
-            @include assert-equal($value, $_secondary);
+            $actual: igx-color($default-palette, 'secondary');
+            @include assert-equal($value, $actual);
         }
 
         @include it('should return a value of type color from $default-palette w/ color and variant as only arguments')  {
-            $value: igx-color($color: secondary, $variant: 500);
-            @include assert-equal(type-of($value), color);
-            @include assert-equal($value, $_secondary);
+            $value: igx-color($color: secondary, $variant: 700);
+            $actual: igx-color($default-palette, 'secondary', 700);
+            @include assert-equal($value, $actual);
         }
     }
 
@@ -188,7 +184,7 @@ $default-palette: $_palette;
     );
 
     @include it('should resolve simple schema colors as CSS vars w/o palette') {
-        $actual: resolve-value( $value: $simple-color, $payload: null);
+        $actual: resolve-value($value: $simple-color, $payload: null);
         $expected: var(--igx-primary-500);
 
         @include assert-equal($actual, $expected);
