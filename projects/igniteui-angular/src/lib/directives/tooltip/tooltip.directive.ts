@@ -101,7 +101,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @Input('igxTooltipTarget')
-    set target(target: any) {
+    public set target(target: any) {
         if (target !== null && target !== '') {
             this._target = target;
         }
@@ -110,7 +110,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    get target(): any {
+    public get target(): any {
         if (typeof this._target === 'string') {
             return this._navigationService.get(this._target);
         }
@@ -151,12 +151,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <button [igxTooltipTarget]="tooltipRef"
-     *         (onTooltipShow)='tooltipShowing($event)'>Hover me</button>
+     *         (tooltipShow)='tooltipShowing($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
     @Output()
-    public onTooltipShow = new EventEmitter<ITooltipShowEventArgs>();
+    public tooltipShow = new EventEmitter<ITooltipShowEventArgs>();
 
     /**
      * Emits an event when the tooltip that is associated with this target starts hiding.
@@ -170,12 +170,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <button [igxTooltipTarget]="tooltipRef"
-     *         (onTooltipHide)='tooltipHiding($event)'>Hover me</button>
+     *         (tooltipHide)='tooltipHiding($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
     @Output()
-    public onTooltipHide = new EventEmitter<ITooltipHideEventArgs>();
+    public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
 
     private destroy$ = new Subject();
 
@@ -210,7 +210,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipShow.emit(showingArgs);
+        this.tooltipShow.emit(showingArgs);
 
         if (showingArgs.cancel) {
             return;
@@ -250,8 +250,8 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    @HostListener('touchstart', ['$event'])
-    public onTouchStart(event) {
+    @HostListener('touchstart')
+    public onTouchStart() {
         if (this.tooltipDisabled) {
             return;
         }
@@ -294,7 +294,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.onClosing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            this.tooltipHide.emit(hidingArgs);
 
             if (hidingArgs.cancel) {
                 event.cancel = true;
@@ -305,7 +305,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
     }
@@ -327,7 +327,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         }
 
         const showingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipShow.emit(showingArgs);
+        this.tooltipShow.emit(showingArgs);
 
         if (showingArgs.cancel) {
             return;

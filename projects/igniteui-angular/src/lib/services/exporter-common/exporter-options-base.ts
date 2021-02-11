@@ -74,7 +74,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    get fileName() {
+    public get fileName() {
         return this._fileName;
     }
 
@@ -86,7 +86,7 @@ export abstract class IgxExporterOptionsBase {
      *
      * @memberof IgxExporterOptionsBase
      */
-    set fileName(value) {
+    public set fileName(value) {
         this.setFileName(value);
     }
 

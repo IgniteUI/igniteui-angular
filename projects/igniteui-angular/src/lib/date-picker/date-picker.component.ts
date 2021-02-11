@@ -1367,7 +1367,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.monthsViewNumber;
         this.calendar.showWeekNumbers = this.showWeekNumbers;
-        this.calendar.onSelection.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
+        this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
 
         if (this.value) {
             this.calendar.value = this.value;
