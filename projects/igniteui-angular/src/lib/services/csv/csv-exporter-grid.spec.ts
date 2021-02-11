@@ -105,6 +105,7 @@ describe('CSV Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         grid.columns[0].hidden = true;
+        options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
