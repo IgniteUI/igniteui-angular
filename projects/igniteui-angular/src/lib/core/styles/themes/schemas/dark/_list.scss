@@ -8,17 +8,17 @@
 
 /// Generates a base dark list schema.
 /// @type {Map}
-/// @property {Map} item-background-hover [igx-color: ('grays', 400),  hexrgba: (#000)] - The list item hover background.
-/// @property {Map} item-background-active [igx-color: ('grays', 400),  hexrgba: (#000)] - The active list item background color.
+/// @property {Map} item-background-hover [igx-color: ('grays', 400),  to-opaque: (#000)] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('grays', 400),  to-opaque: (#000)] - The active list item background color.
 $_base-dark-list: (
     item-background-hover: (
         igx-color: ('grays', 400),
-        hexrgba: (#000)
+        to-opaque: (#000)
     ),
 
     item-background-active: (
         igx-color: ('grays', 400),
-        hexrgba: (#000)
+        to-opaque: (#000)
     ),
 );
 

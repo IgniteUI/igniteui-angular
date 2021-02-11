@@ -13,8 +13,8 @@
     [attr.aria-label]="ariaLabel"
     (change)="_onCheckboxChange($event)"
     (click)="_onCheckboxClick($event)"
-    (focus)="onFocus($event)"
-    (blur)="onBlur($event)" />
+    (focus)="onFocus()"
+    (blur)="onBlur()" />
 
 <div
     igxRipple
@@ -37,6 +37,6 @@
 <span #placeholderLabel
     [class]="labelClass"
     [id]="labelId"
-    (click)="_onLabelClick($event)">
+    (click)="_onLabelClick()">
     <ng-content></ng-content>
 </span>

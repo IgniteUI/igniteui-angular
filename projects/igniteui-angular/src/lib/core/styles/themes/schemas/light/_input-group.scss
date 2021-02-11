@@ -209,8 +209,8 @@ $_light-input-group: extend(
 ///
 /// @prop {Color} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
 ///
-/// @prop {Color} input-prefix-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of an input prefix of type line, box, border and fluent.
-/// @prop {Color} input-suffix-background [ igx-color: ('grays', 100), hexrgba: #fff] - The background color of an input suffix of type line, box, border and fluent.
+/// @prop {Color} input-prefix-background [igx-color: ('grays', 100), to-opaque: #fff] - The background color of an input prefix of type line, box, border and fluent.
+/// @prop {Color} input-suffix-background [ igx-color: ('grays', 100), to-opaque: #fff] - The background color of an input suffix of type line, box, border and fluent.
 ///
 /// @prop {Number} search-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
@@ -257,23 +257,23 @@ $_fluent-input-group: extend(
 
         input-prefix-background: (
             igx-color: ('grays', 100),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         input-suffix-background: (
             igx-color: ('grays', 100),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
     )
 );
 
 /// Generates a bootstrap input-group schema.
 /// @type {Map}
-/// @prop {Map} border-color [igx-color: ('grays', 400), hexrgba: #fff] - The border color for input groups of type border and fluent.
+/// @prop {Map} border-color [igx-color: ('grays', 400), to-opaque: #fff] - The border color for input groups of type border and fluent.
 /// @prop {Map} input-prefix-color [igx-color: ('grays', 800)] - The text color of an input prefix of type line, box and border.
 /// @prop {Map} idle-secondary-color [igx-color: ('grays', 800)] - The label color in the idle state.
 /// @prop {Map} input-suffix-color [igx-color: ('grays', 800)] - The text color of an input sufix of type line, box and border.
-/// @prop {Map} disabled-border-color [igx-color: ('grays', 300), hexrgba: #fff] - The disabled border color for input groups of type border and fluent.
+/// @prop {Map} disabled-border-color [igx-color: ('grays', 300), to-opaque: #fff] - The disabled border color for input groups of type border and fluent.
 /// @prop {Color} input-prefix-background [igx-color: ('grays', 300)] - The background color of an input prefix of type line, box, border and fluent.
 /// @prop {Color} input-suffix-background [ igx-color: ('grays', 300)] - The background color of an input suffix of type line, box, border and fluent.
 /// @prop {Number} box-border-radius [.2] - The border radius used for box input. Can be a fraction between 0 and 1, pixels, or percent.
@@ -290,7 +290,7 @@ $_bootstrap-input-group: extend(
 
         border-color: (
             igx-color: ('grays', 400),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         input-prefix-color: (
@@ -315,7 +315,7 @@ $_bootstrap-input-group: extend(
 
         disabled-border-color: (
             igx-color: ('grays', 300),
-            hexrgba: #fff
+            to-opaque: #fff
         )
     )
 );

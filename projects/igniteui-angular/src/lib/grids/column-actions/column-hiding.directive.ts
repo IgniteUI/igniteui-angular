@@ -2,12 +2,6 @@ import { Directive, Inject } from '@angular/core';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnActionsComponent } from './column-actions.component';
-import { IBaseEventArgs } from '../../core/utils';
-
-export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
-    column: any;
-    newValue: boolean;
-}
 
 @Directive({
     selector: '[igxColumnHiding]'
@@ -38,14 +32,15 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public checkAll() {
-        this.columnActions.filteredColumns.forEach(c => c.hidden = true);
+        this.columnActions.filteredColumns.forEach(c => c.toggleVisibility(true));
+
     }
 
     /**
      * @hidden @internal
      */
     public uncheckAll() {
-        this.columnActions.filteredColumns.forEach(c => c.hidden = false);
+        this.columnActions.filteredColumns.forEach(c => c.toggleVisibility(false));
     }
 
     /**
@@ -64,7 +59,7 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public toggleColumn(column: IgxColumnComponent) {
-        column.hidden = !column.hidden;
+        column.toggleVisibility();
     }
 
     public get allChecked() {

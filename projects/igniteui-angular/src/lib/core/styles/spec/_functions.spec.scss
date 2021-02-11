@@ -49,3 +49,176 @@
         @include assert-equal(round(contrast(#09f, black)), 7);
     }
 }
+
+@include describe('Meta introspection') {
+    @include it('legacy should return true with $legacy-support on') {
+        $igx-legacy-support: true !global;
+        @include assert-equal(legacy(), true);
+    }
+
+    @include it('legacy should return false with $legacy-support off') {
+        $igx-legacy-support: false !global;
+        @include assert-equal(legacy(), false);
+    }
+
+    @include it('is-root should return true if called from root') {
+        @include assert('when called from root') {
+            // Defined at root level
+            $check: is-root();
+
+            @include output() {
+                content: $check;
+            }
+            @include expect() {
+                content: true;
+            }
+        }
+    }
+
+    @include it('is-root should return false if called from within a selector') {
+        @include assert('when called inside a selector') {
+            @include output() {
+                // Defined locally
+                content: is-root();
+            }
+            @include expect() {
+                content: false;
+            }
+        }
+    }
+}
+
+$_primary: #09f;
+$_secondary: #97c;
+$_palette: igx-palette($_primary, $_secondary);
+$default-palette: $_palette;
+
+@include describe('Palette operations') {
+    @include describe('igx-color') {
+        @include it('should return a value of type color w/ palette as only argument')  {
+            $value: igx-color($_palette);
+            @include assert-equal(type-of($value), color);
+        }
+
+        @include it('should return a value of type color w/ palette and color as only arguments')  {
+            $value: igx-color($_palette, 'secondary');
+            @include assert-equal($value, $_secondary);
+        }
+
+        @include it('should return a value of type color w/ all arguments passed')  {
+            $value: igx-color($_palette, 'secondary', 500);
+            @include assert-equal($value, $_secondary);
+        }
+    }
+
+    @include describe('igx-color w/ legacy support') {
+        $igx-legacy-support: true !global;
+
+        @include it('should return a value of type color w/o arguments')  {
+            $value: igx-color();
+            @include assert-equal(type-of($value), color);
+        }
+
+        @include it('should return a value of type color from $default-palette w/ color as only argument')  {
+            $value: igx-color($color: secondary);
+            $actual: igx-color($default-palette, 'secondary');
+            @include assert-equal($value, $actual);
+        }
+
+        @include it('should return a value of type color from $default-palette w/ color and variant as only arguments')  {
+            $value: igx-color($color: secondary, $variant: 700);
+            $actual: igx-color($default-palette, 'secondary', 700);
+            @include assert-equal($value, $actual);
+        }
+    }
+
+    @include describe('igx-color w/o legacy support') {
+        $igx-legacy-support: false !global;
+
+        @include it('should return a value of type string as CSS var w/o arguments')  {
+            $value: igx-color();
+            @include assert-equal(type-of($value), string);
+            @include assert-equal($value, var(--igx-primary-500));
+        }
+
+        @include it('should return a value of type string as CSS var w/ color as only argument')  {
+            $value: igx-color($color: secondary);
+            @include assert-equal(type-of($value), string);
+            @include assert-equal($value, var(--igx-secondary-500));
+        }
+
+        @include it('should return a value of type string as CSS var w/ color and variant as only arguments')  {
+            $value: igx-color($color: secondary, $variant: 'A400');
+            @include assert-equal(type-of($value), string);
+            @include assert-equal($value, var(--igx-secondary-A400));
+        }
+    }
+}
+
+@include describe('Themes') {
+    $simple-color: (
+        igx-color: primary
+    );
+
+    $complex-color: (
+        igx-color: primary,
+        rgba: 1,
+        to-opaque: #222
+    );
+
+    $deep-color: (
+        igx-color: (grays, 300),
+        to-opaque: (
+            igx-color: (grays, 900),
+            rgba: .28,
+            text-contrast: (),
+            to-opaque: (
+                igx-color: surface,
+            )
+        )
+    );
+
+    $other-func: (
+        expand-shorthand: 12px,
+        map-keys-prefix: 'p'
+    );
+
+    @include it('should resolve simple schema colors as CSS vars w/o palette') {
+        $actual: resolve-value($value: $simple-color, $payload: null);
+        $expected: var(--igx-primary-500);
+
+        @include assert-equal($actual, $expected);
+    }
+
+    @include it('should always resolve complex schema colors as values of type color') {
+        $actual: resolve-value($value: $complex-color, $payload: $_palette);
+        $expected: $_primary;
+
+        @include assert-true(type-of($actual), color);
+        @include assert-equal($actual, $expected);
+
+        $actual: resolve-value($value: $complex-color, $payload: null);
+
+        @include assert-true(type-of($actual), color);
+        @include assert-equal($actual, $expected);
+    }
+
+    @include it('should always resolve deep schema colors as values of type color') {
+        $actual: resolve-value($value: $deep-color, $payload: $_palette);
+        @include assert-true(type-of($actual), color);
+
+        $actual: resolve-value($value: $deep-color, $payload: null);
+        @include assert-true(type-of($actual), color);
+    }
+
+    @include it('should resolve non-color functions') {
+        $actual: resolve-value($value: $other-func);
+        $expected: (
+            'p-margin-top': 12px,
+            'p-margin-right': 12px,
+            'p-margin-bottom': 12px,
+            'p-margin-left': 12px
+        );
+        @include assert-equal($actual, $expected);
+    }
+}

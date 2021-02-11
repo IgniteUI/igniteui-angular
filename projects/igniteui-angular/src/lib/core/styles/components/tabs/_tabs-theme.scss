@@ -207,7 +207,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
 /// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires igx-ripple-theme
@@ -217,7 +216,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-tabs($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';

@@ -43,6 +43,8 @@
     $shadow: null,
 ) {
     $name: 'igx-dialog';
+    $selector: '.igx-dialog';
+
     $dialog-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -74,6 +76,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         border-radius: $border-radius,
         background: $background,
@@ -85,11 +88,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-dialog($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 

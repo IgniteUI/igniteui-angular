@@ -65,7 +65,7 @@
     $item-hover-icon-color: null,
     $shadow: null
 ) {
-    $name: 'igx-navdrawer';
+    $name: 'igx-nav-drawer';
     $navdrawer-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -146,12 +146,12 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires $overlay-color
 /// @requires rem
 /// @requires --var
 @mixin igx-navdrawer($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);

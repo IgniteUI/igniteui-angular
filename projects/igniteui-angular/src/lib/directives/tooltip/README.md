@@ -110,5 +110,5 @@ Since the **IgxTooltip** directive extends the **IgxToggle** directive and there
 ### Events
 |Name|Description|Cancelable|Event arguments|
 |--|--|--|--|
-| onTooltipShow | Emitted when the tooltip starts showing. (This event is fired before the start of the countdown to showing the tooltip.) | True | ITooltipShowEventArgs |
-| onTooltipHide | Emitted when the tooltip starts hiding. (This event is fired before the start of the countdown to hiding the tooltip.) | True | ITooltipHideEventArgs |
+| tooltipShow | Emitted when the tooltip starts showing. (This event is fired before the start of the countdown to showing the tooltip.) | True | ITooltipShowEventArgs |
+| tooltipHide | Emitted when the tooltip starts hiding. (This event is fired before the start of the countdown to hiding the tooltip.) | True | ITooltipHideEventArgs |

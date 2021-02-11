@@ -1930,7 +1930,7 @@ export class GridFunctions {
 
     public static clickColumnChooserItem(columnChooserElement: DebugElement, name: string) {
         const item = this.getColumnChooserItemElement(columnChooserElement, name);
-        item.triggerEventHandler('change', new Event('change'));
+        item.triggerEventHandler('click', new Event('click'));
     }
 
     public static getColumnChooserItemInput(item: DebugElement): HTMLInputElement {

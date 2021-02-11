@@ -34,6 +34,8 @@
     $text-color: null
 ) {
     $name: 'igx-tooltip';
+    $selector: '.igx-tooltip--desktop, .igx-tooptip--mobile';
+
     $tooltip-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -54,6 +56,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $default-palette,
         background: $background,
         border-radius: $border-radius,
@@ -62,10 +65,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 @mixin igx-tooltip($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %tooltip-display {
         display: inline-flex;

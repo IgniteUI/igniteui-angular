@@ -65,6 +65,8 @@
     $dropdown-shadow: null
 ) {
     $name: 'igx-time-picker';
+    $selector: '.igx-time-picker';
+
     $time-picker-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -125,6 +127,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         text-color: $text-color,
         hover-text-color: $hover-text-color,
@@ -144,11 +147,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-time-picker($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';

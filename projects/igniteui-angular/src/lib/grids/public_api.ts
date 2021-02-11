@@ -8,7 +8,6 @@ export * from './grid-base.directive';
 export * from './grid.common';
 export * from './summaries/grid-summary';
 export * from './grid-common.module';
-export { IColumnVisibilityChangedEventArgs } from './column-actions/column-hiding.directive';
 export * from './column-actions/column-actions.module';
 export * from './state.directive';
 export * from './toolbar/grid-toolbar.component';

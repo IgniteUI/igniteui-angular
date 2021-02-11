@@ -85,6 +85,10 @@
     // Stores all excluded component styles
     $excluded: ();
 
+    @if not($legacy-support) {
+        @include igx-palette-vars($palette, $contrast: true);
+    }
+
     $default-palette: $palette !global;
     $igx-legacy-support: $legacy-support !global;
 
@@ -101,6 +105,12 @@
     }
 
     @if not(index($exclude, 'igx-avatar')) {
+        // Palette is no longer required, the component adjusts
+        // its colors based on the context in browsers with CSS vars
+        // support.
+        // In older browsers, the component defaults to the old
+        // behavior where hard-coded values from the $default-palette
+        // are used.
         @include igx-avatar(igx-avatar-theme($schema: $schema));
     }
 

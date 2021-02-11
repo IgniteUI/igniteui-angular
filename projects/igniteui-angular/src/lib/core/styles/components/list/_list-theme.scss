@@ -46,7 +46,6 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires hexrgba
 /// @requires text-contrast
 /// @requires round-borders
 /// @requires luminance
@@ -244,10 +243,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
+/// @requires igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-list($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';

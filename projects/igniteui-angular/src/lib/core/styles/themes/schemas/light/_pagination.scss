@@ -7,7 +7,7 @@
 /// Generates a light pagination schema.
 /// @type {Map}
 /// @prop {Map} text-color [igx-color: ('grays', 800)] - The text color.
-/// @prop {Map} background-color [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the paging panel.
+/// @prop {Map} background-color [igx-color: ('grays', 100), to-opaque: #fff] - The background color of the paging panel.
 /// @prop {Map} border-color [igx-color: ('grays', 400)] - The border color of the paging panel.
 /// @see $default-palette
 $_light-pagination: (
@@ -19,7 +19,7 @@ $_light-pagination: (
 
     background-color: (
         igx-color: ('grays', 100),
-        hexrgba: #fff
+        to-opaque: #fff
     ),
 
     border-color: (
