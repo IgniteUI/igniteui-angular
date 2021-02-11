@@ -19,6 +19,7 @@
 
 1. Date & Time Picker Refactoring
 2. Tabs and Bottom Nav Components Refactoring
+3. Tree component
 
 ## Milestone 14 (Released November 11th, 2020)
 
