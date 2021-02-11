@@ -1258,7 +1258,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
     });
 
-    fit('should correctly filter templated row island in hierarchical grid', fakeAsync(() => {
+    it('should correctly filter templated row island in hierarchical grid', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridCustomFilteringTemplateComponent);
         fixture.detectChanges();
 
@@ -1271,17 +1271,17 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         tick(200);
         fixture.detectChanges();
 
-        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fixture);
-        const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fixture, searchComponent);
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fixture, null, 'igx-hierarchical-grid');
+        const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fixture, searchComponent, 'igx-hierarchical-grid');
         UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'A4', fixture);
         tick(100);
         fixture.detectChanges();
 
-        GridFunctions.clickApplyExcelStyleFiltering(fixture);
+        GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-hierarchical-grid');
         tick(100);
         fixture.detectChanges();
 
-        const gridCellValues = GridFunctions.getColumnCells(fixture, 'ProductName')
+        const gridCellValues = GridFunctions.getColumnCells(fixture, 'ProductName', 'igx-hierarchical-grid-cell')
             .map(c => c.nativeElement.innerText)
             .sort();
 

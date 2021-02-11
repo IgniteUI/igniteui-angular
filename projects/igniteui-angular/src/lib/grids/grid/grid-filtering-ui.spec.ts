@@ -4953,7 +4953,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering dialog.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix, 'igx-hierarchical-grid');
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
 
             // Verify ESF is visible.
             expect(excelMenu).not.toBeNull();
@@ -4975,7 +4975,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            const gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads', 'igx-hierarchical-grid-cell')
+            const gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
                 .map(c => c.nativeElement.innerText)
                 .sort();
 

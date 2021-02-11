@@ -702,15 +702,15 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
-        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
         const applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
         return applyButton;
     }
 
-    public static clickApplyExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
-        const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, menu);
+    public static clickApplyExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
+        const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, menu, grid);
         applyButton.click();
     }
 
@@ -999,8 +999,8 @@ export class GridFunctions {
         return moveContainer.querySelectorAll('.igx-button--flat');
     }
 
-    public static getExcelStyleSearchComponent(fix, menu = null) {
-        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelStyleSearchComponent(fix, menu = null, grid = 'igx-grid') {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
         return searchComponent;
     }
@@ -1011,13 +1011,13 @@ export class GridFunctions {
         return scrollbar;
     }
 
-    public static getExcelStyleSearchComponentInput(fix, comp = null): HTMLInputElement {
-        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix);
+    public static getExcelStyleSearchComponentInput(fix, comp = null, grid = 'igx-grid'): HTMLInputElement {
+        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix, null, grid);
         return searchComponent.querySelector('.igx-input-group__input');
     }
 
-    public static getExcelStyleSearchComponentListItems(fix, comp = null): HTMLElement[] {
-        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix);
+    public static getExcelStyleSearchComponentListItems(fix, comp = null, grid = 'igx-grid'): HTMLElement[] {
+        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix, null, grid);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-list-item')));
     }
 
