@@ -58,6 +58,15 @@
             ]
         },
         {
+            "member": "onExportEnded",
+            "replaceWith": "exportEnded",
+            "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
+                "IgxBaseExporter"
+            ]
+        },
+        {
             "member": "onSelect",
             "replaceWith": "selected",
             "definedIn": [
