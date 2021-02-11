@@ -3065,6 +3065,57 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the desired page index.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.paginate(1);
+     * ```
+     * @param val
+     */
+    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    public paginate(val: number): void {
+        if (val < 0 || val > this.totalPages - 1) {
+            return;
+        }
+
+        this.page = val;
+    }
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the next page, if the grid is not already at the last page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.nextPage();
+     * ```
+     */
+    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    public nextPage(): void {
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
+    }
+
+    /**
+     * @deprecated Use `IgxPaginator` corresponding method instead.
+     * Goes to the previous page, if the grid is not already at the first page.
+     *
+     * @example
+     * ```typescript
+     * this.grid1.previousPage();
+     * ```
+     */
+    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    public previousPage(): void {
+        if (!this.isFirstPage) {
+            this.page -= 1;
+        }
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -4127,38 +4178,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the next page, if the grid is not already at the last page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.nextPage();
-     * ```
-     */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
-    public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the previous page, if the grid is not already at the first page.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.previousPage();
-     * ```
-     */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
-    public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
-    }
-
-    /**
      * Returns the total number of records.
      *
      * @remarks
@@ -4287,25 +4306,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this._moveColumns(column, target, pos);
         this._columnsReordered(column, target);
-    }
-
-    /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
-     * Goes to the desired page index.
-     *
-     * @example
-     * ```typescript
-     * this.grid1.paginate(1);
-     * ```
-     * @param val
-     */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
-    public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
-            return;
-        }
-
-        this.page = val;
     }
 
     /**
