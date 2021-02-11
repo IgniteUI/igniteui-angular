@@ -8,7 +8,6 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
-    - `onPagingDone` output is removed. Use the `paging` and `pagingDone` outputs exposed by the `IgxPaginator`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
@@ -59,7 +58,8 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** -
         - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
     - **Breaking Change**:
-        - The grids deprecate the `page` and `perPage` properties, also the `onPagingDone` output. Use the corresponding `IgxPaginator` outputs/inputs..
+        - `onPagingDone` output is removed. Use the `paging` and `pagingDone` outputs exposed by the `IgxPaginator`.
+        - `page`, `perPage`, `paginate`, `nextPage`, `previousPage` and `totalPages` in the grids are deprecated and will be removed. Use the corresponding `IgxPaginator` outputs/inputs. When using an external paginator, take care to provide the corresponding slice of data. See [`Paging with Custom Template`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging-with-custom-template)
     
 
 ## 11.0.4
