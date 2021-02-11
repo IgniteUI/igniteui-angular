@@ -139,7 +139,7 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
-const addHammerToConfig = async (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string): Promise<void> => {
+const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string) => {
     const projectOptions = getTargetedProjectOptions(project, config);
     const tsPath = getConfigFile(project, 'main', config);
     const hammerImport = 'import \'hammerjs\';\n';
