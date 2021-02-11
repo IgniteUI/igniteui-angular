@@ -338,11 +338,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)"></igx-list>
+     * <igx-list [allowLeftPanning]="true" (leftPan)="leftPan($event)"></igx-list>
      * ```
      */
     @Output()
-    public onLeftPan = new EventEmitter<IListItemPanningEventArgs>();
+    public leftPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      * Event emitted when a right pan gesture is executed on a list item.
@@ -352,11 +352,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list [allowRightPanning]="true" (onRightPan)="onRightPan($event)"></igx-list>
+     * <igx-list [allowRightPanning]="true" (rightPan)="rightPan($event)"></igx-list>
      * ```
      */
     @Output()
-    public onRightPan = new EventEmitter<IListItemPanningEventArgs>();
+    public rightPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      *
@@ -367,11 +367,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list (onPanStateChange)="onPanStateChange($event)"></igx-list>
+     * <igx-list (panStateChange)="panStateChange($event)"></igx-list>
      * ```
      */
     @Output()
-    public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
+    public panStateChange = new EventEmitter<IPanStateChangeEventArgs>();
 
     /**
      * Event emitted when a list item is clicked.
@@ -381,11 +381,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list (onItemClicked)="onItemClicked($event)"></igx-list>
+     * <igx-list (itemClicked)="onItemClicked($event)"></igx-list>
      * ```
      */
     @Output()
-    public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
+    public itemClicked = new EventEmitter<IListItemClickEventArgs>();
 
     /**
      * @hidden
@@ -408,14 +408,14 @@ export class IgxListComponent extends IgxListBaseDirective {
      * By default it uses EN resources.
      */
     @Input()
-    set resourceStrings(value: IListResourceStrings) {
+    public set resourceStrings(value: IListResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
      * Returns the resource strings.
      */
-    get resourceStrings(): IListResourceStrings {
+    public get resourceStrings(): IListResourceStrings {
         return this._resourceStrings;
     }
 

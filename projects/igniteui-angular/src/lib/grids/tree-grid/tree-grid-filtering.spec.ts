@@ -1,7 +1,7 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './public_api';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -397,7 +397,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
                 treeGrid.clearFilter();
                 fix.detectChanges();
-                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+
                 const customFilter = new CustomTreeGridFilterStrategy();
                 // apply the same filter condition but with custu
                 treeGrid.filterStrategy = customFilter;

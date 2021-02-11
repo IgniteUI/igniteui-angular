@@ -80,7 +80,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     @HostBinding('class.igx-excel-filter')
-    className = 'igx-excel-filter';
+    public defaultClass = true;
 
     /**
      * @hidden @internal
@@ -255,7 +255,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * Gets the minimum height.
      */
     @Input()
-    get minHeight(): string {
+    public get minHeight(): string {
         if (this._minHeight || this._minHeight === 0) {
             return this._minHeight;
         }
@@ -274,7 +274,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * Sets the minimum height.
      */
-    set minHeight(value: string) {
+    public set minHeight(value: string) {
         this._minHeight = value;
     }
 
@@ -299,7 +299,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     @Input()
     @HostBinding('style.max-height')
-    get maxHeight(): string {
+    public get maxHeight(): string {
         if (this._maxHeight) {
             return this._maxHeight;
         }
@@ -318,21 +318,21 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * Sets the maximum height.
      */
-    set maxHeight(value: string) {
+    public set maxHeight(value: string) {
         this._maxHeight = value;
     }
 
     /**
      * @hidden @internal
      */
-    get grid(): IgxGridBaseDirective {
+    public get grid(): IgxGridBaseDirective {
         return this.gridAPI?.grid ?? this.column?.grid;
     }
 
     /**
      * @hidden @internal
      */
-    get displayDensity() {
+    public get displayDensity() {
         return this.grid?.displayDensity;
     }
 
@@ -344,7 +344,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
