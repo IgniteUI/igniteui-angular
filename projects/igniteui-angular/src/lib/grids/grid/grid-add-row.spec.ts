@@ -961,8 +961,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 1);
-            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
+            expect(grid.data.length).toBe(dataLength);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(false);
         });
 
         it('Should exit add row mode when hiding a column', () => {

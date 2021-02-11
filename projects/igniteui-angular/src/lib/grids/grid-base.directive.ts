@@ -4321,7 +4321,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
-        this.endEdit(true, event);
+        this.endEdit(false, event);
         this.cancelAddMode = false;
         const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
         const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
