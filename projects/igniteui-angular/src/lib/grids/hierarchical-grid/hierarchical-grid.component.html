@@ -210,7 +210,7 @@
 
 <ng-template #defaultPaginator>
     <igx-paginator [overlaySettings]="paginatorSettings" [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords"
-        [(perPage)]="perPage">
+        [(perPage)]="perPage" (pagingDone)="_pagingDone()">
     </igx-paginator>
 </ng-template>
 
