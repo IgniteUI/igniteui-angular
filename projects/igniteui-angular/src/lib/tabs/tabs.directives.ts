@@ -20,17 +20,17 @@ export class IgxRightButtonStyleDirective {
     }
 
     @HostBinding('class.igx-tabs__header-button')
-    get visibleCSS(): boolean {
+    public get visibleCSS(): boolean {
         return (this.getRightButtonStyle() === TabScrollButtonStyle.Visible) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--hidden')
-    get hiddenCSS(): boolean {
+    public get hiddenCSS(): boolean {
         return (this.getRightButtonStyle() === TabScrollButtonStyle.Hidden) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--none')
-    get notDisplayedCSS(): boolean {
+    public get notDisplayedCSS(): boolean {
         return (this.getRightButtonStyle() === TabScrollButtonStyle.NotDisplayed) ? true : false;
     }
 
@@ -71,17 +71,17 @@ export class IgxLeftButtonStyleDirective {
     }
 
     @HostBinding('class.igx-tabs__header-button')
-    get visibleCSS(): boolean {
+    public get visibleCSS(): boolean {
         return (this.getLeftButtonStyle() === TabScrollButtonStyle.Visible) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--hidden')
-    get hiddenCSS(): boolean {
+    public get hiddenCSS(): boolean {
         return (this.getLeftButtonStyle() === TabScrollButtonStyle.Hidden) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--none')
-    get notDisplayedCSS(): boolean {
+    public get notDisplayedCSS(): boolean {
         return (this.getLeftButtonStyle() === TabScrollButtonStyle.NotDisplayed) ? true : false;
     }
 

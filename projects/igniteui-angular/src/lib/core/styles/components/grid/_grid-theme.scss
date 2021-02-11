@@ -408,8 +408,6 @@
         $drop-area-background: text-contrast($grouparea-background);
     }
 
-
-
     @if not($drop-area-on-drop-background) and $drop-area-background {
         $drop-area-on-drop-background: $drop-area-background;
     }
@@ -1409,10 +1407,14 @@
         padding: 0 !important;
 
         // Have a more stable visual editing experience
-        igx-input-group {
-            --igx-input-group-variant: fluent;
+        igx-input-group,
+        igx-select {
             width: 100%;
             height: 100%;
+        }
+
+        igx-input-group {
+            --igx-input-group-variant: fluent;
             padding-top: 0 !important;
         }
 

@@ -37,7 +37,7 @@ export class IgxCalendarYearDirective {
     public date: Date;
 
     @Output()
-    public onYearSelection = new EventEmitter<Date>();
+    public yearSelection = new EventEmitter<Date>();
 
     @HostBinding('class.igx-calendar__year')
     public get defaultCSS(): boolean {
@@ -77,7 +77,7 @@ export class IgxCalendarYearDirective {
 
     @HostListener('click')
     public onClick() {
-        this.onYearSelection.emit(this.value);
+        this.yearSelection.emit(this.value);
     }
 }
 
@@ -96,7 +96,7 @@ export class IgxCalendarMonthDirective {
     public index;
 
     @Output()
-    public onMonthSelection = new EventEmitter<Date>();
+    public monthSelection = new EventEmitter<Date>();
 
     @HostBinding('class.igx-calendar__month')
     public get defaultCSS(): boolean {
@@ -121,7 +121,7 @@ export class IgxCalendarMonthDirective {
     @HostListener('click')
     public onClick() {
         const date = new Date(this.value.getFullYear(), this.value.getMonth(), this.date.getDate());
-        this.onMonthSelection.emit(date);
+        this.monthSelection.emit(date);
     }
 }
 
