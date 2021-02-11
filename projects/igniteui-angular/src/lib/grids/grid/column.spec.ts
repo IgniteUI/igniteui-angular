@@ -22,7 +22,7 @@ import localeJA from '@angular/common/locales/ja';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
-fdescribe('IgxGrid - Column properties #grid', () => {
+describe('IgxGrid - Column properties #grid', () => {
     configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
