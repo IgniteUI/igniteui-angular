@@ -488,7 +488,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(unitsColumn.cells[3].nativeElement.innerText).toEqual('￥0');
         });
 
-        it('should display the currency symbol in edit mode correctly according the grid locale', () => {
+        it('should display the currency symbol in edit mode correctly according the grid locale', fakeAsync(() => {
             registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
@@ -516,6 +516,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             grid.locale = 'fr-FR';
+            tick(300);
             fix.detectChanges();
 
             firstCell = grid.getCellByColumn(0, 'UnitsInStock');
@@ -531,7 +532,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((input as any).value).toEqual('2760');
             expect(prefix).toBeNull();
             expect((suffix as HTMLElement).innerText).toEqual(getLocaleCurrencySymbol(grid.locale));
-        });
+        }));
 
         it('should display summaries correctly for currency column', () => {
             registerLocaleData(localeFR);
