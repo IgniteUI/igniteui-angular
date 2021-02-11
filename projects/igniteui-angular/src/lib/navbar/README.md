@@ -1,6 +1,6 @@
 # igx-navbar
 
-**igx-navbar** is position on top and represents current state and enables a user defined action.  
+**igx-navbar** is position on top and represents current state and enables a user defined action.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navbar)
 
 # Usage
@@ -21,7 +21,7 @@ You can be more descriptive and set title `title="User settings"`.
 <igx-navbar title="Settings"
             actionButtonIcon="arrow_back"
             [isActionButtonVisible]="canGoBack()"
-            (onAction)="navigateBack()">
+            (action)="navigateBack()">
 </igx-navbar>
 ```
 
@@ -33,7 +33,7 @@ You can set the action button icon of the navbar by setting `actionButtonIcon="a
 
 You can set the visible state of the navbar by setting `isActionButtonVisible="true"`;
 
-You can set the action of the navbar button by setting `(onAction)="executeAction()"`;
+You can set the action of the navbar button by setting `(action)="executeAction()"`;
 
 ## Navbar with custom action icon
 
@@ -43,7 +43,7 @@ The navbar component provides us with the ability to use a template for the acti
 <igx-navbar title="Settings"
             actionButtonIcon="arrow_back"
             [isActionButtonVisible]="canGoBack()"
-            (onAction)="navigateBack()">
+            (action)="navigateBack()">
     <igx-action-icon>
         Navigate back:
         <igx-icon>arrow_back</igx-icon>
@@ -51,4 +51,4 @@ The navbar component provides us with the ability to use a template for the acti
 </igx-navbar>
 ```
 
-If a custom `igx-action-icon` is provided, the default action icon will not be used. 
+If a custom `igx-action-icon` is provided, the default action icon will not be used.

@@ -91,7 +91,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
 const DEFAULT_COLUMN_WIDTH = 8.43;
 
 export abstract class IgxBaseExporter {
-    public onExportEnded = new EventEmitter<IBaseEventArgs>();
+    public exportEnded = new EventEmitter<IBaseEventArgs>();
 
     /**
      * This event is emitted when a row is exported.
