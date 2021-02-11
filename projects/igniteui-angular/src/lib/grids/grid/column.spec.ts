@@ -22,7 +22,7 @@ import localeJA from '@angular/common/locales/ja';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
-describe('IgxGrid - Column properties #grid', () => {
+fdescribe('IgxGrid - Column properties #grid', () => {
     configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -441,7 +441,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            const unitsColumn = grid.getColumnByName('UnitsInStock');
+            let unitsColumn = grid.getColumnByName('UnitsInStock');
 
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760');
             expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098');
@@ -455,6 +455,7 @@ describe('IgxGrid - Column properties #grid', () => {
               };
             fix.detectChanges();
 
+            unitsColumn = grid.getColumnByName('UnitsInStock');
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760.0000');
             expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098.0000');
             expect(unitsColumn.cells[6].nativeElement.innerText).toEqual('$000.0000');
@@ -487,9 +488,10 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(unitsColumn.cells[3].nativeElement.innerText).toEqual('￥0');
         });
 
-        it('should display the currency symbol in edit mode correctly according the grid locale', () => {
+        it('should display the currency symbol in edit mode correctly according the grid locale', fakeAsync(() => {
             registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
+            tick();
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
@@ -502,6 +504,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(firstCell.nativeElement.innerText).toEqual('$2,760');
 
             firstCell.setEditMode(true);
+            tick();
             fix.detectChanges();
 
             let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
@@ -512,14 +515,18 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(suffix).toBeNull();
 
             firstCell.setEditMode(false);
+            tick();
             fix.detectChanges();
 
             grid.locale = 'fr-FR';
+            tick();
             fix.detectChanges();
 
+            firstCell = unitsColumn.cells[0];
             expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
 
             firstCell.setEditMode(true);
+            tick();
             fix.detectChanges();
 
             firstCell = unitsColumn.cells[0];
@@ -529,7 +536,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((input as any).value).toEqual('2760');
             expect(prefix).toBeNull();
             expect((suffix as HTMLElement).innerText).toEqual(getLocaleCurrencySymbol(grid.locale));
-        });
+        }));
 
         it('should display summaries correctly for currency column', () => {
             registerLocaleData(localeFR);
