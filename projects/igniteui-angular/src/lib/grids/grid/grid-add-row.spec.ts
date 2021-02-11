@@ -920,7 +920,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
 
             row.beginAddRow();
@@ -930,7 +930,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 2);
+            expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
