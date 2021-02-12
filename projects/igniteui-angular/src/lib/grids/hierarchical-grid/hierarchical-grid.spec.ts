@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
@@ -11,8 +11,9 @@ import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IGridCellEventArgs } from '../grid/public_api';
+import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -1112,6 +1113,73 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     }));
 });
 
+describe('IgxHierarchicalGrid hide child columns', () => {
+    configureTestSuite();
+    let fixture: ComponentFixture<IgxHierarchicalGridHidingPinningColumnsComponent>;
+    let hierarchicalGrid: IgxHierarchicalGridComponent;
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridHidingPinningColumnsComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+    }));
+
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridHidingPinningColumnsComponent);
+        fixture.detectChanges();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+    }));
+
+    it('should fire hiddenChange and pinnedChange events for child grid.', fakeAsync(() => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(row.expander);
+        fixture.detectChanges();
+
+        const child1Grids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid'));
+
+        // Pinning
+
+        const childHeader1 = GridFunctions.getColumnHeaders(fixture)[2];
+
+        const firstHeaderIcon = childHeader1.query(By.css('.igx-icon'));
+
+        spyOn(child1Grid.componentInstance.columnList.first.pinnedChange, 'emit').and.callThrough();
+
+        expect(GridFunctions.isHeaderPinned(childHeader1.parent)).toBeFalsy();
+        expect(child1Grid.componentInstance.columnList.first.pinned).toBeFalsy();
+        expect(firstHeaderIcon).toBeDefined();
+
+        UIInteractions.simulateClickAndSelectEvent(firstHeaderIcon);
+        fixture.detectChanges();
+        tick();
+
+        expect(child1Grid.componentInstance.columnList.first.pinnedChange.emit).toHaveBeenCalledTimes(1);
+        expect(child1Grid.componentInstance.columnList.first.pinned).toBeTruthy();
+
+        // Hiding
+
+        const childHeader2 = GridFunctions.getColumnHeaders(fixture)[4];
+
+        const secondHeaderIcon = childHeader2.query(By.css('.igx-icon'));
+
+        spyOn(child1Grid.componentInstance.columnList.last.hiddenChange, 'emit').and.callThrough();
+
+        expect(child1Grid.componentInstance.columnList.last.hidden).toBeFalsy();
+        expect(secondHeaderIcon).toBeDefined();
+
+        UIInteractions.simulateClickAndSelectEvent(secondHeaderIcon);
+        fixture.detectChanges();
+        tick();
+
+        expect(child1Grid.componentInstance.columnList.last.hiddenChange.emit).toHaveBeenCalledTimes(1);
+        expect(child1Grid.componentInstance.columnList.last.hidden).toBeTruthy();
+    }));
+});
+
 describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
@@ -1490,3 +1558,40 @@ public toggleChildRI = true;
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 
+@Component({
+    template: `
+    <ng-template igxHeader let-column #pinTemplate>
+        <div class="title-inner">
+            <span style="float:left">{{column.header || column.field}}</span>
+            <igx-icon fontSet="material"(click)="pinColumn(column)">lock</igx-icon>
+        </div>
+    </ng-template>
+    <ng-template igxHeader let-column #hideTemplate>
+        <div class="title-inner">
+            <span style="float:left">{{column.header || column.field}}</span>
+            <igx-icon (click)="hideColumn(column)">hide_source</igx-icon>
+        </div>
+    </ng-template>
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [height]="'500px'" [width]="'800px'" >
+        <igx-column field="ID"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [height]="'350px'">
+            <igx-column field="ID" [headerTemplate]="pinTemplate"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-column field="Col1" [headerTemplate]="hideTemplate"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridHidingPinningColumnsComponent extends IgxHierarchicalGridTestBaseComponent {
+    constructor(public cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    public pinColumn(col: IgxColumnComponent) {
+        col.pin();
+    }
+
+    public hideColumn(col: IgxColumnComponent) {
+        col.hidden = true;
+    }
+}
