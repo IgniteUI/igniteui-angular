@@ -184,22 +184,267 @@ export class IconTestComponent {
         ).toEqual(expectedContent);
     });
 
-    it('should replace onToggle with collapsedChange ', async () => {
+    it('should replace on-prefixed outputs in chip and chips-area', async () => {
         appTree.create(
-            `/testSrc/appPrefix/component/splitter.component.html`,
-            `<igx-splitter style='height: 30vh;' [type]='0'>
-                <igx-splitter-pane (onToggle)="toggled()">
-                </igx-splitter-pane>
-            </igx-splitter>`
+            `/testSrc/appPrefix/component/chips.component.html`,
+            `<igx-chips-area #chipsAreaTo class="chipAreaTo"
+                (onReorder)="chipsOrderChangedTo($event)"
+                (onSelection)="chipsSelectionChanged($event)"
+                (onMoveStart)="chipsMoveStart($event)"
+                (onMoveEnd)="chipsMoveEnd($event)">
+                <igx-chip *ngFor="let chip of chipListTo"
+                    [id]="chip.id"
+                    [draggable]="true"
+                    (onClick)="chipClicked()"
+                    (onRemove)="chipRemoved()"
+                    (onKeyDown)="chipKeyDown()"
+                    (onDragEnter)="dragEnter()"
+                    (onSelection)="chipSelection()"
+                    (onSelectionDone)="chipSelectionDone()"
+                    (onMoveStart)="onMoveStartTo()"
+                    (onMoveEnd)="moveEndedTo()">
+                    <igx-avatar igxPrefix class="chip-area-avatar"></igx-avatar>
+                    <span>{{chip.text}}</span>
+                </igx-chip>
+            </igx-chips-area>`
+        );
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/chips.component.html'))
+            .toEqual(`<igx-chips-area #chipsAreaTo class="chipAreaTo"
+                (reorder)="chipsOrderChangedTo($event)"
+                (selectionChange)="chipsSelectionChanged($event)"
+                (moveStart)="chipsMoveStart($event)"
+                (moveEnd)="chipsMoveEnd($event)">
+                <igx-chip *ngFor="let chip of chipListTo"
+                    [id]="chip.id"
+                    [draggable]="true"
+                    (chipClick)="chipClicked()"
+                    (remove)="chipRemoved()"
+                    (keyDown)="chipKeyDown()"
+                    (dragEnter)="dragEnter()"
+                    (selectedChanging)="chipSelection()"
+                    (selectedChanged)="chipSelectionDone()"
+                    (moveStart)="onMoveStartTo()"
+                    (moveEnd)="moveEndedTo()">
+                    <igx-avatar igxPrefix class="chip-area-avatar"></igx-avatar>
+                    <span>{{chip.text}}</span>
+                </igx-chip>
+            </igx-chips-area>`);
+    });
+
+    it('should replace IgxTabsComponent event name onTabItemSelected with tabItemSelected', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/tabs.component.html`,
+            `<igx-tabs (onTabItemSelected)="tabSelected()"></igx-tabs>`
         );
 
-        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/tabs.component.html')
+        ).toEqual(`<igx-tabs (tabItemSelected)="tabSelected()"></igx-tabs>`);
+    });
 
-        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
-            .toEqual(`<igx-splitter style='height: 30vh;' [type]='0'>
-                <igx-splitter-pane (collapsedChange)="toggled()">
-                </igx-splitter-pane>
-            </igx-splitter>`);
+    it('should replace IgxTabsComponent event name onTabItemDeselected with tabItemDeselected', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/tabs.component.html`,
+            `<igx-tabs (onTabItemDeselected)="tabDeselected()"></igx-tabs>`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/tabs.component.html')
+        ).toEqual(`<igx-tabs (tabItemDeselected)="tabDeselected()"></igx-tabs>`);
+    });
+
+    it('should replace IgxListComponent event name onLeftPan with leftPan', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/list.component.html`,
+            `<igx-list [allowLeftPanning]="true" (onLeftPan)="leftPanPerformed($event)">`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/list.component.html')
+        ).toEqual(`<igx-list [allowLeftPanning]="true" (leftPan)="leftPanPerformed($event)">`);
+    });
+
+    it('should replace IgxListComponent event name onRightPan with rightPan', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/list.component.html`,
+            `<igx-list [allowRightPanning]="true" (onRightPan)="rightPanPerformed($event)">`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/list.component.html')
+        ).toEqual(`<igx-list [allowRightPanning]="true" (rightPan)="rightPanPerformed($event)">`);
+    });
+
+    it('should replace IgxListComponent event name onPanStateChange with panStateChange', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/list.component.html`,
+            `<igx-list (onPanStateChange)="panStateChange($event)"></igx-list>`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/list.component.html')
+        ).toEqual(`<igx-list (panStateChange)="panStateChange($event)"></igx-list>`);
+    });
+
+    it('should replace IgxListComponent event name OnItemClicked with itemClicked', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/list.component.html`,
+            `<igx-list (onItemClicked)="onItemClicked($event)"></igx-list>`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/list.component.html')
+        ).toEqual(`<igx-list (itemClicked)="onItemClicked($event)"></igx-list>`);
+    });
+
+    it('should replace IgxNavbarComponent event name onAction with action', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/navbar.component.html`,
+            `<igx-navbar (onAction)="actionExc($event)" title="Sample App" actionButtonIcon="menu"></igx-navbar>`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/navbar.component.html')
+        ).toEqual(`<igx-navbar (action)="actionExc($event)" title="Sample App" actionButtonIcon="menu"></igx-navbar>`);
+    });
+
+    it('should update Excel exporter onExportEnded event name to exportEnded', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/excel-export.component.ts',
+`import { Component } from '@angular/core';
+import { IgxExcelExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-excel-export",
+    styleUrls: ["./excel-export.component.scss"],
+    templateUrl: "./excel-export.component.html"
+})
+export class ExcelExportComponent {
+    constructor(private excelExportService: IgxExcelExporterService) {
+        this.excelExportService.onExportEnded.subscribe();
+    }
+}
+@NgModule({
+    declarations: [ExcelExportComponent],
+    exports: [ExcelExportComponent],
+    imports: [],
+    providers: [IgxExcelExporterService]
+});
+`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent =
+`import { Component } from '@angular/core';
+import { IgxExcelExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-excel-export",
+    styleUrls: ["./excel-export.component.scss"],
+    templateUrl: "./excel-export.component.html"
+})
+export class ExcelExportComponent {
+    constructor(private excelExportService: IgxExcelExporterService) {
+        this.excelExportService.exportEnded.subscribe();
+    }
+}
+@NgModule({
+    declarations: [ExcelExportComponent],
+    exports: [ExcelExportComponent],
+    imports: [],
+    providers: [IgxExcelExporterService]
+});
+`;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/excel-export.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
+
+    it('should update CSV exporter onExportEnded event name to exportEnded', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/csv-export.component.ts',
+`import { Component } from '@angular/core';
+import { IgxCsvExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-csv-export",
+    styleUrls: ["./csv-export.component.scss"],
+    templateUrl: "./csv-export.component.html"
+})
+export class CsvExportComponent {
+    constructor(private csvExportService: IgxCsvExporterService) {
+        this.csvExportService.onExportEnded.subscribe();
+    }
+}
+@NgModule({
+    declarations: [CsvExportComponent],
+    exports: [CsvExportComponent],
+    imports: [],
+    providers: [IgxCsvExporterService]
+});
+`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent =
+`import { Component } from '@angular/core';
+import { IgxCsvExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-csv-export",
+    styleUrls: ["./csv-export.component.scss"],
+    templateUrl: "./csv-export.component.html"
+})
+export class CsvExportComponent {
+    constructor(private csvExportService: IgxCsvExporterService) {
+        this.csvExportService.exportEnded.subscribe();
+    }
+}
+@NgModule({
+    declarations: [CsvExportComponent],
+    exports: [CsvExportComponent],
+    imports: [],
+    providers: [IgxCsvExporterService]
+});
+`;
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/csv-export.component.ts'
+            )
+        ).toEqual(expectedContent);
     });
 
     it('should replace onSelect and onUnselect with selected and deselected in igx-buttongroup', async () => {
@@ -259,6 +504,32 @@ export class IconTestComponent {
             >
             </igx-toast>`
         );
+    });
+
+    it('should replace IgxTooltipTargetDirective event names onTooltipShow and onTooltipHide with tooltipShow and tooltipHide',
+        async () => {
+            appTree.create(
+            `/testSrc/appPrefix/component/tooltip.component.html`,
+    `<button [igxTooltipTarget]="tooltipRef" (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
+        Hover me
+    </button>
+    <div igxTooltip #tooltipRef="tooltip">
+        Hello, I am a tooltip!
+    </div>`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/tooltip.component.html')
+        ).toEqual(
+    `<button [igxTooltipTarget]="tooltipRef" (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)">
+        Hover me
+    </button>
+    <div igxTooltip #tooltipRef="tooltip">
+        Hello, I am a tooltip!
+    </div>`);
     });
 
     it('should replace outputs with selected in igx-calendar', async () => {

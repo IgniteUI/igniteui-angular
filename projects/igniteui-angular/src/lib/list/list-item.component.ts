@@ -304,7 +304,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('click', ['$event'])
     public clicked(evt) {
-        this.list.onItemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
+        this.list.itemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
         this.lastPanDir = IgxListPanState.NONE;
     }
 
@@ -376,9 +376,9 @@ export class IgxListItemComponent implements IListChild {
         const args = { item: this, direction: dir, keepItem: false};
 
         if (dir === IgxListPanState.LEFT) {
-            this.list.onLeftPan.emit(args);
+            this.list.leftPan.emit(args);
         } else {
-            this.list.onRightPan.emit(args);
+            this.list.rightPan.emit(args);
         }
 
         if (args.keepItem === true) {
@@ -396,7 +396,7 @@ export class IgxListItemComponent implements IListChild {
 
         if (oldPanState !== this._panState) {
             const args2 = { oldState: oldPanState, newState: this._panState, item: this };
-            this.list.onPanStateChange.emit(args2);
+            this.list.panStateChange.emit(args2);
         }
         this.hideLeftAndRightPanTemplates();
     }
