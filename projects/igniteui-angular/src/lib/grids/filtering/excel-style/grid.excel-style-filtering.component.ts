@@ -30,6 +30,7 @@ import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
 import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
+import { getLocaleCurrencyCode } from '@angular/common';
 
 /**
  * @hidden
@@ -780,6 +781,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             return this.column.formatter ?
                 applyFormatter ? this.column.formatter(element) : element :
                 this.grid.decimalPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
+        }
+        if (this.column.dataType === DataType.Currency) {
+            return this.column.formatter ?
+                applyFormatter ? this.column.formatter(element) : element :
+                this.grid.currencyPipe.transform(element, this.column.pipeArgs.currencyCode ?
+                    this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale),
+                    this.column.pipeArgs.display, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
         return this.column.formatter && applyFormatter ?
             this.column.formatter(element) :
