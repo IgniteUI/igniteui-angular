@@ -46,6 +46,26 @@
         }
     }
 
+    @include e(file-input) {
+        @extend %form-group-file-input !optional;
+
+        &:hover {
+            @extend %form-group-input--hover !optional;
+        }
+
+        &:focus {
+            @extend %form-group-input--focus !optional;
+        }
+    }
+
+    @include e(clear-icon) {
+        @extend %form-group-clear-icon !optional;
+    }
+
+    @include e(upload-button) {
+        @extend %form-group-upload-button !optional;
+    }
+
     @include e(textarea) {
         @extend %form-group-input !optional;
         @extend %form-group-textarea !optional;
@@ -102,6 +122,12 @@
     }
 
     @include m(filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+        }
+    }
+
+    @include m(file) {
         @include e(label) {
             @extend %form-group-label--float !optional;
         }
@@ -169,6 +195,10 @@
         @include e(textarea) {
             @extend %form-group-textarea--disabled !optional;
         }
+
+        @include e(file-input) {
+            @extend %form-group-input--disabled !optional;
+        }
     }
 
     @include mx(disabled, required) {
@@ -189,6 +219,10 @@
         @include e(textarea) {
             @extend %form-group-textarea--disabled !optional;
         }
+
+        @include e(file-input) {
+            @extend %form-group-input--disabled !optional;
+        }
     }
 
     @include m(cosy) {
@@ -204,6 +238,10 @@
 
         @include e(input) {
             @extend %form-group-input--cosy !optional;
+        }
+
+        @include e(file-input) {
+            @extend %form-group-file-input--cosy !optional;
         }
 
         @include e(textarea) {
@@ -228,6 +266,10 @@
 
         @include e(input) {
             @extend %form-group-input--compact !optional;
+        }
+
+        @include e(file-input) {
+            @extend %form-group-file-input--compact !optional;
         }
 
         @include e(textarea) {
@@ -256,6 +298,11 @@
 
         @include e(input) {
             @extend %form-group-input--box !optional;
+        }
+
+        @include e(file-input) {
+            @extend %form-group-input--box !optional;
+            @extend %form-group-file-input--box !optional;
         }
 
         @include e(label) {
@@ -320,6 +367,10 @@
             @extend %form-group-input--box !optional;
         }
 
+        @include e(file-input) {
+            @extend %form-group-input--box !optional;
+        }
+
         @include e(label) {
             @extend %form-group-label--box !optional;
             @extend %form-group-label--border !optional;
@@ -331,6 +382,13 @@
     }
 
     @include mx(border, filled) {
+        @include e(label) {
+            @extend %form-group-label-float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
+    @include mx(border, file) {
         @include e(label) {
             @extend %form-group-label-float !optional;
             @extend %form-group-label--float-border !optional;
@@ -371,6 +429,14 @@
         }
     }
 
+    @include mx(border, cosy, file) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
     @include mx(border, cosy, focused) {
         @include e(label) {
             @extend %form-group-label--float !optional;
@@ -400,6 +466,14 @@
     }
 
     @include mx(border, compact, filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, file) {
         @include e(label) {
             @extend %form-group-label--float !optional;
             @extend %form-group-label--float-border !optional;
@@ -471,6 +545,10 @@
             @extend %fluent-input !optional;
         }
 
+        @include e(file-input) {
+            @extend %fluent-input !optional;
+        }
+
         @include e(label) {
             @extend %fluent-label !optional;
         }
@@ -515,12 +593,30 @@
             }
         }
 
+        @include e(file-input) {
+            @extend %fluent-input-disabled !optional;
+
+            &:hover {
+                @extend %fluent-input-disabled !optional
+            }
+
+            &:focus {
+                @extend %fluent-input-disabled !optional
+            }
+        }
+
         @include e(label) {
             @extend %fluent-label-disabled !optional;
         }
     }
 
     @include mx(filled, fluent) {
+        @include e(label) {
+            @extend %fluent-label-filled !optional;
+        }
+    }
+
+    @include mx(file, fluent) {
         @include e(label) {
             @extend %fluent-label-filled !optional;
         }
@@ -592,6 +688,10 @@
         }
 
         @include e(input) {
+            @extend %form-group-input--box !optional;
+        }
+
+        @include e(file-input) {
             @extend %form-group-input--box !optional;
         }
 
@@ -671,6 +771,10 @@
             @extend %form-group-input--disabled !optional;
         }
 
+        @include e(file-input) {
+            @extend %form-group-input--disabled !optional;
+        }
+
         @include e(hint) {
             @extend %form-group-helper--indigo--disabled !optional;
         }
@@ -697,6 +801,10 @@
             @extend %bootstrap-input !optional;
         }
 
+        @include e(file-input) {
+            @extend %bootstrap-file-input !optional;
+        }
+
         @include e(textarea) {
             @extend %bootstrap-input !optional;
         }
@@ -704,6 +812,10 @@
 
     @include mx(focused, bootstrap) {
         @include e(input) {
+            @extend %bootstrap-input--focus !optional;
+        }
+
+        @include e(file-input) {
             @extend %bootstrap-input--focus !optional;
         }
 
@@ -719,6 +831,14 @@
 
     @include mx(valid, bootstrap) {
         @include e(input) {
+            @extend %bootstrap-input--success !optional;
+
+            &:hover {
+                @extend %bootstrap-input--success !optional;
+            }
+        }
+
+        @include e(file-input) {
             @extend %bootstrap-input--success !optional;
 
             &:hover {
@@ -742,6 +862,14 @@
 
     @include mx(invalid, bootstrap) {
         @include e(input) {
+            @extend %bootstrap-input--error !optional;
+
+            &:hover {
+                @extend %bootstrap-input--error !optional;
+            }
+        }
+
+        @include e(file-input) {
             @extend %bootstrap-input--error !optional;
 
             &:hover {
@@ -778,6 +906,10 @@
         }
 
         @include e(input) {
+            @extend %bootstrap-input--disabled !optional;
+        }
+
+        @include e(file-input) {
             @extend %bootstrap-input--disabled !optional;
         }
 

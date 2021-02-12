@@ -67,8 +67,8 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
-        advancedFilteringExpressionsTree: IFilteringExpressionsTree, id: string,
-        pipeTrigger: number, filteringPipeTrigger: number, pinned?): ITreeGridRecord[] {
+        advancedFilteringExpressionsTree: IFilteringExpressionsTree,
+        _: number, __: number, pinned?): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const state: IFilteringState = {
             expressionsTree,

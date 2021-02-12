@@ -33,7 +33,7 @@
             (compositionstart)="onCompositionStart()"
             (compositionend)="onCompositionEnd()"
             (keydown)="onInputKeyDown($event)"
-            (keyup)="onInputKeyUp($event)"/>
+            (keyup)="onInputKeyUp()"/>
             <igx-suffix *ngIf="value || value === 0" >
                 <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
                 <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>

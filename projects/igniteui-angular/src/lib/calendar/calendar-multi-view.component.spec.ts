@@ -140,8 +140,8 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
         });
 
-        it('onSelection event should be fired when select a date', () => {
-            spyOn(calendar.onSelection, 'emit');
+        it('selected event should be fired when select a date', () => {
+            spyOn(calendar.selected, 'emit');
             const viewDate = new Date('2019-09-06');
             calendar.viewDate = viewDate;
             fixture.detectChanges();
@@ -150,7 +150,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateClickEvent(dateEls[15]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
@@ -159,7 +159,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateClickEvent(dateEls[21]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
@@ -168,7 +168,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateClickEvent(dateEls[19]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(3);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(3);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(1);
@@ -975,14 +975,14 @@ describe('Multi-View Calendar - ', () => {
 
 
         it('days should be selected in all month views, when hideOutsideDays is false and selection is single/multi', () => {
-            spyOn(calendar.onSelection, 'emit');
+            spyOn(calendar.selected, 'emit');
             expect(calendar.hideOutsideDays).toBe(false);
             const fistMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(fistMonthDates[29]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
 
@@ -1001,7 +1001,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateClickEvent(secondMonthDates[29]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(5);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(5);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(2);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(4);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(2);
@@ -1015,7 +1015,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('Multi Selection - Select/Deselect date from one view should also select/deselect the date in the another', () => {
-            spyOn(calendar.onSelection, 'emit');
+            spyOn(calendar.selected, 'emit');
             expect(calendar.hideOutsideDays).toBe(false);
             calendar.selection = 'multi';
             fixture.detectChanges();
@@ -1028,21 +1028,21 @@ describe('Multi-View Calendar - ', () => {
             calendar.selectDate(octoberfourth);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(2);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(2);
 
             UIInteractions.simulateClickEvent(secondMonthDates[3]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
 
             calendar.deselectDate([octoberthird]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
         });
@@ -1191,7 +1191,7 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('outside days should NOT be selected in all month views, when hideOutsideDays is false and selection is range', () => {
-            spyOn(calendar.onSelection, 'emit');
+            spyOn(calendar.selected, 'emit');
             calendar.selection = 'range';
             fixture.detectChanges();
 
@@ -1199,7 +1199,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateClickEvent(secondMonthDates[0]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(1);
 
             // TODO: check is this is by design
             /* HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).forEach((el) => {
@@ -1212,7 +1212,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateClickEvent(secondMonthDates[30]);
             fixture.detectChanges();
 
-            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(calendar.selected.emit).toHaveBeenCalledTimes(2);
             HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).forEach((el) => {
                 expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
             });

@@ -131,12 +131,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * ```
      */
     @Output()
-    public onTabItemDeselected = new EventEmitter();
+    public tabItemDeselected = new EventEmitter();
 
     /**
      * Emitted when a tab item is selected.
      * ```html
-     * <igx-tabs (onTabItemSelected)="itemSelected($event)">
+     * <igx-tabs (tabItemSelected)="itemSelected($event)">
      *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
      *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
      * </igx-tabs>
@@ -149,7 +149,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * ```
      */
     @Output()
-    public onTabItemSelected = new EventEmitter();
+    public tabItemSelected = new EventEmitter();
 
     /**
      * @hidden
@@ -328,7 +328,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * const selectedItem = this.myTabComponent.selectedTabItem;
      * ```
      */
-    get selectedTabItem(): IgxTabItemComponent {
+    public get selectedTabItem(): IgxTabItemComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
@@ -498,7 +498,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             oldTabRelatedGroup.setSelectedInternal(false);
         }
         this._selectedIndex = -1;
-        this.onTabItemDeselected.emit({ tab: oldTab, group: oldTabRelatedGroup });
+        this.tabItemDeselected.emit({ tab: oldTab, group: oldTabRelatedGroup });
     }
 
     private performSelection(newTab: IgxTabItemBase): void {
@@ -513,7 +513,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             }
         }
 
-        this.onTabItemSelected.emit({ tab: newTab, group: newTabRelatedGroup });
+        this.tabItemSelected.emit({ tab: newTab, group: newTabRelatedGroup });
 
         requestAnimationFrame(() => {
             const transitionDuration  =  this.disableAnimation ? 0 : 0.2;

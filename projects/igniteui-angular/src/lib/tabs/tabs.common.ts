@@ -2,36 +2,36 @@ import { ElementRef, QueryList, EventEmitter } from '@angular/core';
 
 /** @hidden */
 export abstract class IgxTabsBase {
-    selectedIndicator: ElementRef<any>;
-    tabs: QueryList<IgxTabItemBase>;
-    groups: QueryList<IgxTabsGroupBase>;
-    offset: number;
-    selectedIndex: number;
-    viewPort: ElementRef;
-    contentsContainer: ElementRef;
-    tabsContainer: ElementRef;
-    itemsContainer: ElementRef;
-    headerContainer: ElementRef;
-    onTabItemSelected: EventEmitter<any>; // TODO: Define event arg interface!
-    hasContentTabs: boolean;
-    scrollElement(element: any, scrollRight: boolean) {}
-    performSelectionChange(newTab: IgxTabItemBase) {}
-    transformContentAnimation(tab: IgxTabItemBase, duration: number) {}
-    transformIndicatorAnimation(element: HTMLElement, duration?: number) {}
+    public selectedIndicator: ElementRef<any>;
+    public tabs: QueryList<IgxTabItemBase>;
+    public groups: QueryList<IgxTabsGroupBase>;
+    public offset: number;
+    public selectedIndex: number;
+    public viewPort: ElementRef;
+    public contentsContainer: ElementRef;
+    public tabsContainer: ElementRef;
+    public itemsContainer: ElementRef;
+    public headerContainer: ElementRef;
+    public tabItemSelected: EventEmitter<any>; // TODO: Define event arg interface!
+    public hasContentTabs: boolean;
+    public abstract scrollElement(element: any, scrollRight: boolean);
+    public abstract performSelectionChange(newTab: IgxTabItemBase);
+    public abstract transformContentAnimation(tab: IgxTabItemBase, duration: number);
+    public abstract transformIndicatorAnimation(element: HTMLElement, duration?: number);
 }
 
 /** @hidden */
 export abstract class IgxTabItemBase {
-    abstract readonly nativeTabItem: ElementRef;
-    get index() {
+    public abstract readonly nativeTabItem: ElementRef;
+    public get index() {
         return 0;
     }
-    select(): void {}
-    setSelectedInternal(newValue: boolean) {}
+    public select(): void {}
+    public abstract setSelectedInternal(newValue: boolean);
 }
 
 /** @hidden */
 export abstract class IgxTabsGroupBase {
-    select(): void {}
-    setSelectedInternal(newValue: boolean) {}
+    public abstract select(): void;
+    public abstract setSelectedInternal(newValue: boolean);
 }
