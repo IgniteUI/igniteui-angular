@@ -169,7 +169,6 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 
-/* eslint max-len: ["error", { "ignoreComments": true }]*/
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
@@ -291,6 +290,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
+    /* eslint-disable max-len */
     /**
      * Emitted after the current page is changed.
      *
@@ -315,7 +315,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when `perPage` property value of the grid is changed.
      *
      * @deprecated `perPageChange` is deprecated. Use the `perPageChange` output exposed by the `IgxPaginator`.
-
      * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
@@ -331,6 +330,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @DeprecateProperty('`perPageChange` is deprecated. Use the `perPageChange` output exposed by the `IgxPaginator`.')
     @Output()
     public perPageChange = new EventEmitter<number>();
+    /* eslint-enable max-len */
 
     /**
      * Gets/Sets a custom `ng-template` for the pagination UI of the grid.
@@ -1427,6 +1427,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges(true);
     }
 
+    /* eslint-disable max-len */
     /**
      * Gets/Sets the current page index.
      *
@@ -1470,6 +1471,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
      * ```
      */
+    /* eslint-enable max-len */
     @DeprecateProperty('`perPage` is deprecated. Use the `perPage` input exposed by the `IgxPaginator`.')
     @Input()
     public get perPage(): number {
@@ -3071,6 +3073,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.detach();
     }
 
+    /* eslint-disable max-len */
     /**
      * Goes to the desired page index.
      *
@@ -3121,6 +3124,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.previousPage();
      * ```
      */
+    /* eslint-enable max-len */
     @DeprecateProperty('`previousPage` is deprecated. Use the `previousPage` method exposed by the `IgxPaginator`.')
     public previousPage(): void {
         if (!this.isFirstPage) {
@@ -4159,6 +4163,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.gridAPI.get_cell_by_key(rowSelector, columnField);
     }
 
+    /* eslint-disable max-len */
     /**
      * Gets the total number of pages.
      *
@@ -4228,6 +4233,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const lastPage = this.grid.isLastPage;
      * ```
      */
+    /* eslint-enable max-len */
     @DeprecateProperty('`isLastPage` is deprecated. Use the `isLastPage` getter exposed by the `IgxPaginator`.')
     public get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
