@@ -1,6 +1,6 @@
 <ng-template #emptyFilter>
     <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
-        <igx-chip #ghostChip [attr.draggable]="false" (chipClick)="onChipClicked()" [displayDensity]="displayDensity" tabIndex="-1">
+        <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" [displayDensity]="displayDensity" tabIndex="-1">
             <igx-icon [attr.draggable]="false" igxPrefix>filter_list</igx-icon>
             <span [attr.draggable]="false">{{filteringService.grid.resourceStrings.igx_grid_filter}}</span>
         </igx-chip>
@@ -14,7 +14,7 @@
                 [removable]="true"
                 tabIndex="-1"
                 [displayDensity]="displayDensity"
-                (chipClick)="onChipClicked(item.expression)"
+                (click)="onChipClicked(item.expression)"
                 (remove)="onChipRemoved($event, item)">
                 <igx-icon igxPrefix
                     family="imx-icons"
