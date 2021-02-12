@@ -10,7 +10,7 @@ import { createHost, getDefaultProject } from '../utils/util';
 
 const enablePolyfills = async (tree: Tree, context: SchematicContext): Promise<string> => {
   const project = await getDefaultProject(tree);
-  const targetFile = getConfigFile(project, 'polyfills');
+  const targetFile = getConfigFile(context, project, 'polyfills');
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
     return;
@@ -46,21 +46,25 @@ const readInput = (options: Options): Rule =>
     if (options.polyfills) {
       const targetProperty = 'es5BrowserSupport';
       const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
-      const polyfillsFile = getConfigFile(project, 'polyfills');
-      const build = project.targets.get('build');
-      let polyfillsData = tree.read(polyfillsFile).toString();
-      if (build.options[targetProperty] !== undefined) {
-        // If project targets angular cli version >= 7.3
-        build.options[targetProperty] = true;
-        enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
-        await workspaces.writeWorkspace(workspace, workspaceHost);
-      } else {
-        // If project targets angular cli version < 7.3
-        polyfillsData = await enablePolyfills(tree, context);
-        enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
+      const polyfillsFile = getConfigFile(context, project, 'polyfills');
+      if (polyfillsFile !== undefined) {
+          const build = project.targets.get('build');
+          let polyfillsData = tree.read(polyfillsFile).toString();
+          if (build.options[targetProperty] !== undefined) {
+            // If project targets angular cli version >= 7.3
+            build.options[targetProperty] = true;
+            enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
+            await workspaces.writeWorkspace(workspace, workspaceHost);
+          } else {
+            // If project targets angular cli version < 7.3
+            polyfillsData = await enablePolyfills(tree, context);
+            enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
+          }
+        } else {
+          context.logger.warn(`You may want to manually uncomment '// import 'web-animations-js' in polyfills.ts`);
       }
     }
-  };
+};
 
 const addNormalize = (options: Options): Rule =>
   async (tree: Tree, context: SchematicContext) => {
