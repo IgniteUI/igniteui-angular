@@ -168,6 +168,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
+
+/* eslint max-len: ["error", { "ignoreComments": true }]*/
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
@@ -313,6 +315,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when `perPage` property value of the grid is changed.
      *
      * @deprecated `perPageChange` is deprecated. Use the `perPageChange` output exposed by the `IgxPaginator`.
+
      * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
