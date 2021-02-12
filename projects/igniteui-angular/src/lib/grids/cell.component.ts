@@ -26,6 +26,7 @@ import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
+import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -52,7 +53,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostBinding('class.igx-grid__td--new')
-    get isEmptyAddRowCell() {
+    public get isEmptyAddRowCell() {
         return this.row.addRow && (this.value === undefined || this.value === null);
     }
 
@@ -593,6 +594,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activeHighlightClass = 'igx-highlight__active';
 
+    /** @hidden @internal */
+    public get currencyCode(): string {
+        return this.column.pipeArgs.currencyCode ?
+            this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale);
+    }
+
+    /** @hidden @internal */
+    public get currencyCodeSymbol(): string {
+        return getCurrencySymbol(this.currencyCode, 'wide', this.grid.locale);
+    }
+
     /** @hidden @internal @deprecated */
     public focused = this.active;
     protected compositionStartHandler;
@@ -926,7 +938,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.grid.onSelection.emit({ cell: this, event });
         }
     }
-
 
     /**
      * If the provided string matches the text in the cell, the text gets highlighted.
