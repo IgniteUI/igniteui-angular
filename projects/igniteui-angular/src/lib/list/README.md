@@ -4,7 +4,7 @@
 _Components_
 
 ## Description
-_Igx-List represents a list of identical items._  
+_Igx-List represents a list of identical items._
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list)
 
 - `IgxList` - since v7.3.4 The list component has been refactored. It now includes several new supporting directives:
@@ -26,7 +26,7 @@ Example using the new directives:
               <igx-icon igxListAction>info</igx-icon>
             </igx-list-item>
         </igx-list>
-        
+
         <igx-list>
           <igx-list-item [isHeader]="true">List items</igx-list-item>
           <igx-list-item>
@@ -36,7 +36,7 @@ Example using the new directives:
           </igx-list-item>
         </igx-list>
     ```
-    
+
 ## Usage
 ```html
 <igx-list>
@@ -60,8 +60,8 @@ The children components of the Igx-List are *Igx-List-Item* components. Based on
 - List item with `isHeader` set to **false** - interactive list item.
 - List item with `isHeader` set to **true** - non-interactive list item which role is to label, describe and unify the next list items, composed below it
 
-All list items implement `IListChild`.  
-In order to access its elements, the list provides the following: 
+All list items implement `IListChild`.
+In order to access its elements, the list provides the following:
 
 - a collection that contains all the children: items and headers
 - an array with items only
@@ -81,14 +81,14 @@ In order to use your own custom template, you can use the `igxEmptyList` directi
 ```
 
 ### List Items Panning
-The IgxList's items support left and right panning. You can enable this feature separately for each direction using the `allowLeftPanning` and `allowRightPanning` properties. There are separate templates for left and right panning shown under the panned list item. The templates are defined using **ng-template** and specifying the directives `igxListItemLeftPanning` and `igxListItemRightPanning`. When panning the list items beyond a certain threshold an event will be emitted. This threshold is specified using the `panEndTriggeringThreshold` property. By default this property has a value of 0.5 which means 50% of list item's width. The events emitted are `onLeftPan` and `onRightPan` and their event argument is of type `IListItemPanningEventArgs` and has the following fields:
+The IgxList's items support left and right panning. You can enable this feature separately for each direction using the `allowLeftPanning` and `allowRightPanning` properties. There are separate templates for left and right panning shown under the panned list item. The templates are defined using **ng-template** and specifying the directives `igxListItemLeftPanning` and `igxListItemRightPanning`. When panning the list items beyond a certain threshold an event will be emitted. This threshold is specified using the `panEndTriggeringThreshold` property. By default this property has a value of 0.5 which means 50% of list item's width. The events emitted are `leftPan` and `rightPan` and their event argument is of type `IListItemPanningEventArgs` and has the following fields:
 - item - a reference to the `IgxListItemComponent` being dragged
 - direction - field of type `IgxListPanState` showing the panning direction
-- keepItem - this property specifies whether the list item will be kept in the list after a successful panning. BY default it is `false`. May be set to `true` in the event handler.
+- keepItem - this property specifies whether the list item will be kept in the list after a successful panning. By default it is `false`. May be set to `true` in the event handler.
 
 ```html
 <igx-list [allowLeftPanning]="true" [allowRightPanning]="true"
-  (onLeftPan)="leftPanPerformed($event)" (onRightPan)="rightPanPerformed($event)">
+  (leftPan)="leftPanPerformed($event)" (rightPan)="rightPanPerformed($event)">
     <ng-template igxListItemLeftPanning>
         <div>Message</div>
     </ng-template>
@@ -165,10 +165,10 @@ this.list.displayDensity = "compact";
 | Name | Description |
 | :--- | :--- |
 | *Event emitters* | *Notify for a change* |
-| onPanStateChange  | Triggered when pan gesture is executed on list item  |
-| onLeftPan  | Triggered when left pan gesture is executed on list item  |
-| onRightPan  | Triggered when right pan gesture is executed on list item  |
-| onItemClicked  | Triggered when a list item has been clicked  |
+| panStateChange  | Triggered when pan gesture is executed on list item  |
+| leftPan  | Triggered when left pan gesture is executed on list item  |
+| rightPan  | Triggered when right pan gesture is executed on list item  |
+| itemClicked  | Triggered when a list item has been clicked  |
 
 
 ----------

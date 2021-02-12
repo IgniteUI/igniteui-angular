@@ -1292,7 +1292,7 @@ class DoubleIgxDropDownComponent implements OnInit {
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (onTabItemSelected)="toggleDropDown()" tabsType="fixed">
+    <igx-tabs (tabItemSelected)="toggleDropDown()" tabsType="fixed">
         <igx-tabs-group label="Tab111111111111111111111111">
             <ng-template igxTab>
                 <div>T1</div>
