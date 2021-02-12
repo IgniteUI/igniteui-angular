@@ -59,23 +59,22 @@ const getTargetedProjectOptions = (context: SchematicContext, project: workspace
         return projectTarget.options;
     }
 
-    context.logger.warn(`Could not find matching ${target} section ` +
-        `inside of the workspace config ${project.sourceRoot} ` +
-        `it could require you to manually add and update the ${target} section`);
+    context.logger.warn(`Could not find matching ${target} options ` +
+        `in Angular workspace ${project.sourceRoot}. ` +
+        `It could require you to manually add and update the ${target} section.`);
 };
 
 export const getConfigFile = (context: SchematicContext, project: workspaces.ProjectDefinition, option: string, configSection: string = 'build'): string => {
     const options = getTargetedProjectOptions(context, project, configSection);
     if (!options) {
-        context.logger.warn(`Could not find matching ${configSection} section ` +
-            `inside of the workspace config ${project.sourceRoot} ` +
-            `it could require you to manually add and update the ${configSection} section`);
+        context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +
+            `It could require you to manually add and update the ${configSection} options.`);
 
     }
     if (options) {
         if (!options[option]) {
-            context.logger.warn(`Could not find matching ${option} option under ${configSection} section - ` +
-                `it could require you to manually update the ${configSection} section with the corresponding ${option} option or it's equivalent`);
+            context.logger.warn(`Could not find a matching ${option} property under ${configSection} options in Angular workspace. ` +
+                `Some updates may not execute correctly.`);
         } else {
             return options[option];
         }
@@ -158,8 +157,8 @@ const addHammerToConfig = async (context: SchematicContext, project: workspaces.
             projectOptions.scripts.push(hammerjsFilePath);
             return;
         }
-        context.logger.warn(`Could not find a matching scripts array option under ${config} section - ` +
-            `it could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
+        context.logger.warn(`Could not find a matching scripts array property under ${config} options. ` +
+            `It could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
     }
 };
 
