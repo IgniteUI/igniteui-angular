@@ -390,12 +390,12 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
 
     /**
-      * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
-      *
-      * @param rowsToBeProcessed set of the rows (without their parents/children) to be selected/deselected
-      * @param visibleRowIDs list of all visible rowIds
-      * @returns a new set with all direct parents of the rows within rowsToBeProcessed set
-      */
+     * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
+     *
+     * @param rowsToBeProcessed set of the rows (without their parents/children) to be selected/deselected
+     * @param visibleRowIDs list of all visible rowIds
+     * @returns a new set with all direct parents of the rows within rowsToBeProcessed set
+     */
     private collectRowsChildrenAndDirectParents(rowsToBeProcessed: Set<any>, visibleRowIDs: any[]): Set<any> {
         const processedRowsParents = new Set<any>();
         Array.from(rowsToBeProcessed).forEach((rowID) => {
