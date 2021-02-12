@@ -399,7 +399,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     private collectRowsChildrenAndDirectParents(rowsToBeProcessed: Set<any>, visibleRowIDs: any[]): Set<any> {
         const processedRowsParents = new Set<any>();
         Array.from(rowsToBeProcessed).forEach((rowID) => {
-            rowsToBeProcessed.add(rowID);
             const rowTreeRecord = this.get_rec_by_id(rowID);
             const rowAndAllChildren = this.get_all_children(rowTreeRecord);
             rowAndAllChildren.forEach(row => {
@@ -489,9 +488,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return;
         }
         this.handleRowSelectionState(treeRow, visibleRowIDs);
-        if (!treeRow.parent) {
-            return;
-        } else {
+        if (treeRow.parent) {
             this.handleParentSelectionState(treeRow.parent, visibleRowIDs);
         }
     }
@@ -500,13 +497,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      * Handle the selection state of a given row based the selection states of its direct children
      */
     private handleRowSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
-        const visibleChildren = [];
+        let visibleChildren = [];
         if (treeRow && treeRow.children) {
-            treeRow.children.forEach(child => {
-                if (visibleRowIDs.indexOf(child.rowID) >= 0) {
-                    visibleChildren.push(child);
-                }
-            });
+            visibleChildren = treeRow.children.filter(child => visibleRowIDs.indexOf(child.rowID) >= 0);
         }
         if (visibleChildren.length) {
             if (visibleChildren.every(row => this.rowsToBeSelected.has(row.rowID))) {
