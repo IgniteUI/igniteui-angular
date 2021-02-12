@@ -97,7 +97,7 @@
                           (click)="onChipClick(expressionItem)"
                           (dblclick)="onChipDblClick(expressionItem)"
                           (remove)="onChipRemove(expressionItem)"
-                          (selectionDone)="onChipSelectionEnd()"
+                          (selectedChanged)="onChipSelectionEnd()"
                     >
                     <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.columnHeader || expressionItem.expression.fieldName }}</span>
                     <igx-prefix>
