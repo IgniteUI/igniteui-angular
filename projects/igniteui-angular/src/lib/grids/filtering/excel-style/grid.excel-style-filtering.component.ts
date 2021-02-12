@@ -19,8 +19,8 @@ import {
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { cloneArray, KEYS, resolveNestedPath, parseDate, uniqueDates } from '../../../core/utils';
-import { DataType, DataUtil } from '../../../data-operations/data-util';
+import { KEYS, resolveNestedPath, parseDate, uniqueDates } from '../../../core/utils';
+import { DataType } from '../../../data-operations/data-util';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -28,7 +28,7 @@ import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
-import { FormattedValuesFilteringStrategy, IFormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
+import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 
 /**
@@ -541,7 +541,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         return this.column.formatter &&
             (this.grid.filterStrategy instanceof FormattedValuesFilteringStrategy ||
              this.grid.filterStrategy instanceof TreeGridFormattedValuesFilteringStrategy) &&
-            (this.grid.filterStrategy as IFormattedValuesFilteringStrategy).shouldApplyFormatter(this.column.field);
+            this.grid.filterStrategy.shouldApplyFormatter(this.column.field);
     }
 
     private renderColumnValuesFromData() {

@@ -110,13 +110,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return value;
     }
 }
-
-/** @hidden */
-export interface IFormattedValuesFilteringStrategy {
-    shouldApplyFormatter(fieldName: string): boolean;
-}
-
-export class FormattedValuesFilteringStrategy extends FilteringStrategy implements IFormattedValuesFilteringStrategy {
+export class FormattedValuesFilteringStrategy extends FilteringStrategy {
     /**
      * Creates a new instance of FormattedValuesFilteringStrategy.
      *

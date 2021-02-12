@@ -1,7 +1,7 @@
 import { parseDate, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy, IFormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { GridType } from '../common/grid.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
@@ -46,7 +46,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 }
 
-export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringStrategy implements IFormattedValuesFilteringStrategy {
+export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringStrategy {
     /**
      * Creates a new instance of FormattedValuesFilteringStrategy.
      *
