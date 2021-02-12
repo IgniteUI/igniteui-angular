@@ -58,7 +58,7 @@ class TestChipSelectComponent extends TestChipComponent {
 @Component({
     template:
     `
-        <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)">
+        <igx-chips-area #chipsArea (reorder)="chipsOrderChanged($event)">
             <igx-chip #chipElem *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
                 [removable]="true" [selectable]="true" (remove)="chipRemoved($event)">
                 <igx-icon igxPrefix>drag_indicator</igx-icon>
@@ -106,7 +106,8 @@ describe('IgxChipsArea ', () => {
     const TEST_CHIP_AREA_CLASS = 'igx-chip-area customClass';
 
     let fix;
-    let chipArea;
+    let chipArea: IgxChipsAreaComponent;
+    let chipAreaElement;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -123,36 +124,36 @@ describe('IgxChipsArea ', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
-            chipArea = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
+            chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
         });
 
         it('should add chips when adding data items ', () => {
-            expect(chipArea.nativeElement.className).toEqual(TEST_CHIP_AREA_CLASS);
-            expect(chipArea.nativeElement.children.length).toEqual(2);
+            expect(chipAreaElement.nativeElement.className).toEqual(TEST_CHIP_AREA_CLASS);
+            expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
 
             fix.detectChanges();
 
-            expect(chipArea.nativeElement.children.length).toEqual(3);
+            expect(chipAreaElement.nativeElement.children.length).toEqual(3);
         });
 
         it('should remove chips when removing data items ', () => {
-            expect(chipArea.nativeElement.children.length).toEqual(2);
+            expect(chipAreaElement.nativeElement.children.length).toEqual(2);
 
             fix.componentInstance.chipList.pop();
             fix.detectChanges();
 
-            expect(chipArea.nativeElement.children.length).toEqual(1);
+            expect(chipAreaElement.nativeElement.children.length).toEqual(1);
         });
 
         it('should change data in chips when data item is changed', () => {
-            expect(chipArea.nativeElement.children[0].innerHTML).toContain('Country');
+            expect(chipAreaElement.nativeElement.children[0].innerHTML).toContain('Country');
 
             fix.componentInstance.chipList[0].text = 'New text';
             fix.detectChanges();
 
-            expect(chipArea.nativeElement.children[0].innerHTML).toContain('New text');
+            expect(chipAreaElement.nativeElement.children[0].innerHTML).toContain('New text');
         });
     });
 
@@ -173,16 +174,16 @@ describe('IgxChipsArea ', () => {
             expect(thirdChipComp.selected).toBe(false);
         });
 
-        it('should emit onSelection for the chipArea event when there are initially selected chips through their inputs', () => {
+        it('should emit selectionChange for the chipArea event when there are initially selected chips through their inputs', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.onSelection, 'emit');
+            spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
             const chipComponents = fix.componentInstance.chips.toArray();
-            expect(chipArea.onSelection.emit).toHaveBeenCalledWith({
+            expect(chipArea.selectionChange.emit).toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: chipArea,
                 newSelection: [chipComponents[0], chipComponents[1]]
@@ -306,12 +307,12 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             chipArea = fix.componentInstance.chipsArea;
 
-            spyOn(chipArea.onSelection, 'emit');
+            spyOn(chipArea.selectionChange, 'emit');
 
             fix.detectChanges();
 
             const chipComponents = fix.componentInstance.chips.toArray();
-            expect(chipArea.onSelection.emit).toHaveBeenCalledWith({
+            expect(chipArea.selectionChange.emit).toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: chipArea,
                 newSelection: [chipComponents[0], chipComponents[1]]
@@ -371,7 +372,7 @@ describe('IgxChipsArea ', () => {
             const secondChip = fix.componentInstance.chips.toArray()[1];
             const pointerUpEvt = new PointerEvent('pointerup');
 
-            spyOn(chipArea.onSelection, 'emit');
+            spyOn(chipArea.selectionChange, 'emit');
             fix.detectChanges();
 
             secondChip.onChipDragClicked({
@@ -381,8 +382,8 @@ describe('IgxChipsArea ', () => {
             });
             fix.detectChanges();
 
-            expect(chipArea.onSelection.emit).toHaveBeenCalled();
-            expect(chipArea.onSelection.emit).not.toHaveBeenCalledWith({
+            expect(chipArea.selectionChange.emit).toHaveBeenCalled();
+            expect(chipArea.selectionChange.emit).not.toHaveBeenCalledWith({
                 originalEvent: pointerUpEvt,
                 owner: chipArea,
                 newSelection: [secondChip]
@@ -393,8 +394,8 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            chipArea = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
-            const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
+            chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
+            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
             const secondChip = chipComponents[1].componentInstance;
 
             secondChip.animateOnRelease = false;
@@ -559,8 +560,8 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            chipArea = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
-            const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
+            chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
+            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
             const firstChip = chipComponents[0].componentInstance;
 
             UIInteractions.moveDragDirective(fix, firstChip.dragDirective, 50, 50, false);
@@ -572,8 +573,8 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            chipArea = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
-            const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
+            chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
+            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
             const secondChip = chipComponents[1].componentInstance;
             const secondChipElem = secondChip.chipArea.nativeElement;
 
@@ -596,9 +597,9 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
 
-            chipArea = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
+            chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
 
-            const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
+            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
             const firstChip = chipComponents[0].componentInstance;
             const secondChip = chipComponents[1].componentInstance;
 
@@ -622,8 +623,8 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
 
-            chipArea = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
-            const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
+            chipAreaElement = fix.debugElement.query(By.directive(IgxChipsAreaComponent));
+            const chipComponents = chipAreaElement.queryAll(By.directive(IgxChipComponent));
             const firstChip = chipComponents[0].componentInstance;
             const secondChip = chipComponents[1].componentInstance;
 

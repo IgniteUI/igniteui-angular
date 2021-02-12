@@ -2,14 +2,6 @@
     "$schema": "../../common/schema/binding.schema.json",
     "changes": [
         {
-            "name": "onToggle",
-            "replaceWith": "collapsedChange",
-            "owner": {
-                "selector": "igx-splitter-pane",
-                "type": "component"
-            }
-        },
-        {
             "name": "onTabItemSelected",
             "replaceWith": "tabItemSelected",
             "owner": {

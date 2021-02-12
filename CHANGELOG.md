@@ -61,7 +61,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
 - `IgxSplitter`
-    - **Breaking Change** - the `onToggle` output is renamed to `collapsedChange`. This allows for the `collapsed` state to be two-way bindable using the syntax ```[(collapsed)]="paneCollapse"```
+    - **Breaking Change** - the `onToggle` output is deprecated. A new output is introduced to replace it - `collapsedChange`. This allows for the `collapsed` state to be two-way bindable using the syntax ```[(collapsed)]="paneCollapse"```
 - `IgxChip`
     - **Breaking Change** - The following outputs are renamed:
         - `onMoveStart` to `moveStart`

@@ -58,13 +58,6 @@
             ]
         },
         {
-            "member": "onToggle",
-            "replaceWith": "collapsedChange",
-            "definedIn": [
-                "IgxSplitterPaneComponent"
-            ]
-        },
-        {
             "member": "onMoveStart",
             "replaceWith": "moveStart",
             "definedIn": [

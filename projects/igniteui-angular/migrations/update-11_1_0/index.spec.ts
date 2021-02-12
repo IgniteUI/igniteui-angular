@@ -184,24 +184,6 @@ export class IconTestComponent {
         ).toEqual(expectedContent);
     });
 
-    it('should replace onToggle with collapsedChange ', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/splitter.component.html`,
-            `<igx-splitter style='height: 30vh;' [type]='0'>
-                <igx-splitter-pane (onToggle)="toggled()">
-                </igx-splitter-pane>
-            </igx-splitter>`
-        );
-
-        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
-
-        expect(tree.readContent('/testSrc/appPrefix/component/splitter.component.html'))
-            .toEqual(`<igx-splitter style='height: 30vh;' [type]='0'>
-                <igx-splitter-pane (collapsedChange)="toggled()">
-                </igx-splitter-pane>
-            </igx-splitter>`);
-    });
-
     it('should replace on-prefixed outputs in chip and chips-area', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/chips.component.html`,

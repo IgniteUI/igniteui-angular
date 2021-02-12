@@ -1,4 +1,5 @@
 import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -73,12 +74,26 @@ export class IgxSplitterPaneComponent {
      * @example
      * ```html
      * <igx-splitter>
+     *  <igx-splitter-pane (onToggle)='onPaneToggle($event)'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
+     */
+    @DeprecateProperty(`Deprecated. Subscribe to the 'collapsedChange' output instead.`)
+    @Output()
+    public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
+
+    /**
+     * Event fired when collapsed state of pane is changed.
+     *
+     * @example
+     * ```html
+     * <igx-splitter>
      *  <igx-splitter-pane (collapsedChange)='paneCollapsedChange($event)'>...</igx-splitter-pane>
      * </igx-splitter>
      * ```
      */
     @Output()
-    public collapsedChange = new EventEmitter<IgxSplitterPaneComponent>();
+    public collapsedChange = new EventEmitter<boolean>();
 
     /** @hidden @internal */
     @HostBinding('style.order')
@@ -201,7 +216,8 @@ export class IgxSplitterPaneComponent {
         // reset sibling sizes when pane collapse state changes.
         this._getSiblings().forEach(sibling => sibling.size = 'auto');
         this.collapsed = !this.collapsed;
-        this.collapsedChange.emit(this);
+        this.onToggle.emit(this);
+        this.collapsedChange.emit(this.collapsed);
     }
 
     /** @hidden @internal */
