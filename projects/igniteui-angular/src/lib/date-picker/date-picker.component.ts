@@ -190,7 +190,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._label = v;
     }
 
-    public get labelTemp() {
+    public get labelInternal() {
         return this._label;
     }
 
