@@ -17,7 +17,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from '../common/events';
+import { IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
 import {
     HierarchicalTransaction,
     HierarchicalState,
@@ -361,20 +361,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
-        this.onRowAdded.subscribe(args => {
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === 'multipleCascade') {
-                let rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
+                let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
-                    // if batch editing is enabled
-                    (this.gridAPI as IgxTreeGridAPIService).updateCascadeSelectionOnFilterAndCRUD(
+                     this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
                         new Set([rec.parent]), true, undefined, rec.parent.rowID);
                 } else {
-                    // if batch editin is disabled
+                    // The record is still not available
+                    // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
-                        rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ?
+                        rec = this._gridAPI.get_rec_by_id(this.primaryKey ?
                             args.data[this.primaryKey] : args.data);
                         if (rec && rec.parent) {
-                            (this.gridAPI as IgxTreeGridAPIService).updateCascadeSelectionOnFilterAndCRUD(
+                            this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
                                 new Set([rec.parent]), true, undefined, rec.parent.rowID);
                         }
                         this.notifyChanges();
@@ -383,10 +383,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
 
-        this.onRowDeleted.subscribe(args => {
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === 'multipleCascade') {
                 if (args.data) {
-                    const rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(
+                    const rec = this._gridAPI.get_rec_by_id(
                         this.primaryKey ? args.data[this.primaryKey] : args.data);
                     this.handleCascadeSelection(args, rec);
                 } else {
@@ -397,6 +397,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                             leafRowsDirectParents.add(record.parent);
                         }
                     });
+                    // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
                         this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
                         this.notifyChanges();
@@ -405,7 +406,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
 
-        this.onFilteringDone.subscribe(() => {
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.rowSelection === 'multipleCascade') {
                 const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
@@ -429,7 +430,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
                 if (this.rowSelection === 'multipleCascade') {
                     if (event.actions[0].transaction.type === 'add') {
-                        const rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(event.actions[0].transaction.id);
+                        const rec = this._gridAPI.get_rec_by_id(event.actions[0].transaction.id);
                         this.handleCascadeSelection(event, rec);
                     } else {
                         this.handleCascadeSelection(event);
@@ -453,7 +454,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        if(this.rowSelection === 'multipleCascade' && this.selectedRows.length) {
+        if (this.rowSelection === 'multipleCascade' && this.selectedRows.length) {
             const selRows = this.selectedRows;
             this.selectionService.clearRowSelection();
             this.selectRows(selRows, true);
@@ -763,6 +764,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
         if (this.rowSelection === 'multipleCascade') {
+            // Force pipe triggering for building the data structure
             this.cdr.detectChanges();
             if (this.selectionService.isRowSelected(parentID)) {
                 this.selectionService.rowSelection.delete(parentID);
@@ -787,13 +789,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-    private handleCascadeSelection(event: any, rec?: ITreeGridRecord) {
+    private handleCascadeSelection(event: IRowDataEventArgs | StateUpdateEvent, rec: ITreeGridRecord = null) {
+        // Wait for the change detection to update records through the pipes
         requestAnimationFrame(() => {
-            if (!rec) {
-                rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(event.actions[0].transaction.id);
+            if (rec === null) {
+                rec = this._gridAPI.get_rec_by_id((event as StateUpdateEvent).actions[0].transaction.id);
             }
             if (rec && rec.parent) {
-                (this.gridAPI as IgxTreeGridAPIService).updateCascadeSelectionOnFilterAndCRUD(
+                this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
                     new Set([rec.parent]), true, undefined, rec.parent.rowID
                 );
                 this.notifyChanges();

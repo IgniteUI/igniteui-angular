@@ -381,7 +381,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     /**
-     * @hidden @internal
      * retrieve the rows which should be added/removed to/from the old selection
      */
     private handleAddedAndRemovedArgs(args: any) {
@@ -391,12 +390,12 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
 
     /**
-     * @hidden @internal
-     * expects a list of all visibleRowIDs
-     * expects rowsToBeProcessed set of the rows (without their parents/children) to be selected/deselected
-     * returns a new set with all direct parents of the rows within rowsToBeProcessed set
-     * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
-     */
+      * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
+      *
+      * @param rowsToBeProcessed set of the rows (without their parents/children) to be selected/deselected
+      * @param visibleRowIDs list of all visible rowIds
+      * @returns a new set with all direct parents of the rows within rowsToBeProcessed set
+      */
     private collectRowsChildrenAndDirectParents(rowsToBeProcessed: Set<any>, visibleRowIDs: any[]): Set<any> {
         const processedRowsParents = new Set<any>();
         Array.from(rowsToBeProcessed).forEach((rowID) => {
@@ -417,7 +416,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
 
     /**
-     * @hidden @internal
      * populates the rowsToBeSelected and rowsToBeIndeterminate sets
      * with the rows which will be eventually in selected/indeterminate state
      */
@@ -484,7 +482,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     /**
-     * @hidden @internal
      * recursively handle the selection state of the direct and indirect parents
      */
     private handleParentSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
@@ -500,7 +497,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     /**
-     * @hidden @internal
      * Handle the selection state of a given row based the selection states of its direct children
      */
     private handleRowSelectionState(treeRow: ITreeGridRecord, visibleRowIDs: any[]) {
