@@ -545,13 +545,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private renderColumnValuesFromData() {
-        let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
-
-        if (expressionsTree.filteringOperands.length) {
-            const state = { expressionsTree, strategy: this.grid.filterStrategy };
-            data = DataUtil.filter(cloneArray(data), state, this.grid);
-        }
+        const data = this.column.gridAPI.filterDataByExpressions(expressionsTree);
 
         const shouldFormatValues = this.shouldFormatValues();
         const columnField = this.column.field;

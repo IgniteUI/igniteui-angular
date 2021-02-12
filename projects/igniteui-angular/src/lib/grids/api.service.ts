@@ -605,6 +605,17 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public remove_grouping_expression(fieldName) {
     }
 
+    public filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
+        let data = this.get_all_data();
+
+        if (expressionsTree.filteringOperands.length) {
+            const state = { expressionsTree, strategy: this.grid.filterStrategy };
+            data = DataUtil.filter(cloneArray(data), state, this.grid);
+        }
+
+        return data;
+    }
+
     /**
      * Updates related row of provided grid's data source with provided new row value
      *
