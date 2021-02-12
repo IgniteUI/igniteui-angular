@@ -46,7 +46,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class') class = 'igx-excel-filter__menu-main';
+    @HostBinding('class.igx-excel-filter__menu-main')
+    public defaultClass = true;
 
     /**
      * @hidden @internal
@@ -168,7 +169,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         this.refreshSize();
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
@@ -264,7 +265,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    get applyButtonDisabled(): boolean {
+    public get applyButtonDisabled(): boolean {
         return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate ||
             this.displayedListData && this.displayedListData.length === 0;
     }
