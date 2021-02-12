@@ -13,7 +13,7 @@
             [attr.aria-label]="(getViewDate(obj.index) | date: 'LLLL') + ' ' + resourceStrings.igx_calendar_select_month"
             #monthsBtn
             (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)"
-            (click)="onActiveViewYear(getViewDate(obj.index), obj.index, $event)"
+            (click)="onActiveViewYear(getViewDate(obj.index), obj.index)"
             class="igx-calendar-picker__date">
             {{ formattedMonth(getViewDate(obj.index)) }}
         </span>
@@ -110,8 +110,8 @@
                 [specialDates]="specialDates"
                 [hideOutsideDays]="hideOutsideDays"
                 [showWeekNumbers]="showWeekNumbers"
-                (onViewChanging)="viewChanging($event)"
-                (onDateSelection)="childClicked($event)"
+                (viewChanging)="viewChanging($event)"
+                (dateSelection)="childClicked($event)"
                 (monthsViewBlur)="resetActiveDate()">
         </igx-days-view>
     </section>
@@ -125,7 +125,7 @@
                  [locale]="locale"
                  [formatView]="formatViews.month"
                  [monthFormat]="formatOptions.month"
-                 (onSelection)="changeMonth($event)">
+                 (selected)="changeMonth($event)">
 </igx-months-view>
 
 <igx-years-view *ngIf="isDecadeView"
@@ -136,5 +136,5 @@
                 [locale]="locale"
                 [formatView]="formatViews.year"
                 [yearFormat]="formatOptions.year"
-                (onSelection)="changeYear($event)">
+                (selected)="changeYear($event)">
 </igx-years-view>

@@ -65,7 +65,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
@@ -160,7 +160,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    get subMenuText() {
+    public get subMenuText() {
         switch (this.esf.column.dataType) {
             case DataType.Boolean:
                 return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
@@ -176,7 +176,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    get conditions() {
+    public get conditions() {
         return this.esf.column.filters.conditionList();
     }
 }
