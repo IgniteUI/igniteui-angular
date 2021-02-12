@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Support for `currency` type columns is added in the grid.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
@@ -27,7 +29,7 @@ All notable changes for each version of this project will be documented in this 
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
-    - `onSelection` is now `selected` 
+    - `onSelection` is now `selected`
     - `onViewChanging` is now `viewChanging`
     - `onDateSelection` is now `dateSelection`
     - `onYearSelection` is now `yearSelection`
@@ -48,12 +50,12 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDialog`
     - Added new `onOpened` and `onClosed` events.
 - `IgxIcon`
-    - **Deprecated** - The `color` input property has been deprecated. 
+    - **Deprecated** - The `color` input property has been deprecated.
     - **Renamed inputs**
         `isActive` to `active`
         `fontSet` to `family`
 - `IgxToast`
-    - **Breaking Change** - 
+    - **Breaking Change** -
     `show` and `hide` methods have been deprecated. `open` and `close` should be used instead.
     `onShowing`,`onShown`,`onHiding` and `onHiden` events have been deprecated. `onOpening`, `onOpened`, `onClosing` and `onClosed`should be used instead.
 - `IgxInputGroup`

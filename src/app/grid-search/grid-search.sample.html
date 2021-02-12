@@ -2,7 +2,7 @@
     <div class="sample-content">
         <div class="sample-column">
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
 
             <igx-grid
