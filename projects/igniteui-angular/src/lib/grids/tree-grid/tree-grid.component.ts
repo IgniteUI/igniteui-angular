@@ -366,7 +366,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
                      this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
-                        new Set([rec.parent]), true, undefined, rec.parent.rowID);
+                        new Set([rec.parent]), rec.parent.rowID);
                 } else {
                     // The record is still not available
                     // Wait for the change detection to update records through pipes
@@ -375,7 +375,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                             args.data[this.primaryKey] : args.data);
                         if (rec && rec.parent) {
                             this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
-                                new Set([rec.parent]), true, undefined, rec.parent.rowID);
+                                new Set([rec.parent]), rec.parent.rowID);
                         }
                         this.notifyChanges();
                     });
@@ -797,7 +797,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
             if (rec && rec.parent) {
                 this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
-                    new Set([rec.parent]), true, undefined, rec.parent.rowID
+                    new Set([rec.parent]), rec.parent.rowID
                 );
                 this.notifyChanges();
             }

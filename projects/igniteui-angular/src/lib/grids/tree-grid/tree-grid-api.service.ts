@@ -79,10 +79,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     public updateCascadeSelectionOnFilterAndCRUD(
         parents: Set<any>,
-        firstExecution: boolean = true,
-        visibleRowIDs?: any[],
-        crudRowID?: any) {
-        if (firstExecution) {
+        crudRowID?: any,
+        visibleRowIDs: any[] = null) {
+        if (visibleRowIDs === null) {
             // if the tree grid has flat structure
             // do not explicitly handle the selection state of the rows
             if (!parents.size) {
@@ -110,7 +109,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 newParents.add(parent.parent);
             }
         });
-        this.updateCascadeSelectionOnFilterAndCRUD(newParents, false, visibleRowIDs);
+        this.updateCascadeSelectionOnFilterAndCRUD(newParents, null, visibleRowIDs);
     }
 
     cascadeSelectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {
