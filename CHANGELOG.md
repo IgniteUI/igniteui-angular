@@ -16,6 +16,11 @@ All notable changes for each version of this project will be documented in this 
    _Note: validation of file type input is not yet supported._
 
 ### General
+- `IgxCheckbox, IgxRadio, IgxSwitch`
+    - Those components now follow Google Material specs for focus behavior.
+    - https://material.io/components/checkboxes
+    - https://material.io/components/radio-buttons
+    - https://material.io/components/switches
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
