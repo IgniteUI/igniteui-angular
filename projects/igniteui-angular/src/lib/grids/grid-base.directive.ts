@@ -2580,7 +2580,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @remarks
      * By default the row selection mode is none
-     * @param selectionMode: HierarchicalGridSelectionMode
      */
     @WatchChanges()
     @Input()

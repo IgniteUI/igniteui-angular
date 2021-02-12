@@ -77,7 +77,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public handleCascadeSelectionByFilteringAndCRUD(
+    public updateCascadeSelectionOnFilterAndCRUD(
         parents: Set<any>,
         firstExecution: boolean = true,
         visibleRowIDs?: any[],
@@ -110,7 +110,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 newParents.add(parent.parent);
             }
         });
-        this.handleCascadeSelectionByFilteringAndCRUD(newParents, false, visibleRowIDs);
+        this.updateCascadeSelectionOnFilterAndCRUD(newParents, false, visibleRowIDs);
     }
 
     cascadeSelectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {

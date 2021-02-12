@@ -38,8 +38,7 @@ export const HierarchicalGridSelectionMode = mkenum({
     ...GridSelectionMode,
     multipleCascade: 'multipleCascade'
 });
-export type HierarchicalGridSelectionMode = GridSelectionMode |
-    (typeof HierarchicalGridSelectionMode)[keyof typeof HierarchicalGridSelectionMode];
+export type HierarchicalGridSelectionMode = (typeof HierarchicalGridSelectionMode)[keyof typeof HierarchicalGridSelectionMode];
 
 export const ColumnDisplayOrder = mkenum({
     Alphabetical: 'Alphabetical',

@@ -37,7 +37,6 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { IgxTreeGridHierarchizingPipe } from './tree-grid.pipes';
 
 let NEXT_ID = 0;
 
@@ -367,7 +366,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 let rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
                     // if batch editing is enabled
-                    (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(
+                    (this.gridAPI as IgxTreeGridAPIService).updateCascadeSelectionOnFilterAndCRUD(
                         new Set([rec.parent]), true, undefined, rec.parent.rowID);
                 } else {
                     // if batch editin is disabled
@@ -375,7 +374,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                         rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(this.primaryKey ?
                             args.data[this.primaryKey] : args.data);
                         if (rec && rec.parent) {
-                            (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(
+                            (this.gridAPI as IgxTreeGridAPIService).updateCascadeSelectionOnFilterAndCRUD(
                                 new Set([rec.parent]), true, undefined, rec.parent.rowID);
                         }
                         this.notifyChanges();
@@ -399,7 +398,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                         }
                     });
                     requestAnimationFrame(() => {
-                        this._gridAPI.handleCascadeSelectionByFilteringAndCRUD(leafRowsDirectParents);
+                        this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
                         this.notifyChanges();
                     });
                 }
@@ -414,7 +413,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                         leafRowsDirectParents.add(record.parent);
                     }
                 });
-                this._gridAPI.handleCascadeSelectionByFilteringAndCRUD(leafRowsDirectParents);
+                this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
                 this.notifyChanges();
             }
         });
@@ -794,7 +793,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 rec = (this.gridAPI as IgxTreeGridAPIService).get_rec_by_id(event.actions[0].transaction.id);
             }
             if (rec && rec.parent) {
-                (this.gridAPI as IgxTreeGridAPIService).handleCascadeSelectionByFilteringAndCRUD(
+                (this.gridAPI as IgxTreeGridAPIService).updateCascadeSelectionOnFilterAndCRUD(
                     new Set([rec.parent]), true, undefined, rec.parent.rowID
                 );
                 this.notifyChanges();
