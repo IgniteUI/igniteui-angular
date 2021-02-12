@@ -326,7 +326,7 @@ describe('IgxChip', () => {
             expect(thirdChip.dragDirective.ghostElement.classList.contains(CHIP_GHOST_COMP_CLASS)).toBeTruthy();
         });
 
-        it('should fire onSelection event when selectable is true', () => {
+        it('should fire selectedChanging event when selectable is true', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
             spyOn(secondChipComp.selectedChanging, 'emit');
             spyOn(secondChipComp.selectedChanged, 'emit');
@@ -350,7 +350,7 @@ describe('IgxChip', () => {
             });
         });
 
-        it('should fire onSelectionDone event when selectable is true', (async () => {
+        it('should fire selectedChanged event when selectable is true', (async () => {
             pending('This should be tested in the e2e test');
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
@@ -377,7 +377,7 @@ describe('IgxChip', () => {
             });
         }));
 
-        it('should not fire onSelection event when selectable is false', () => {
+        it('should not fire selectedChanging event when selectable is false', () => {
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[0];
 
             spyOn(firstChipComp.selectedChanging, 'emit');
@@ -390,7 +390,7 @@ describe('IgxChip', () => {
             expect(firstChipComp.selectedChanged.emit).toHaveBeenCalledTimes(0);
         });
 
-        it('should not fire onSelection event when the remove button is clicked', () => {
+        it('should not fire selectedChanging event when the remove button is clicked', () => {
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
             spyOn(secondChipComp.selectedChanging, 'emit');

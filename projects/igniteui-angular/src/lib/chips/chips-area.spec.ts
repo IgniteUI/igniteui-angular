@@ -229,19 +229,19 @@ describe('IgxChipsArea ', () => {
             expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
         });
 
-        it('should fire onSelection event', () => {
+        it('should fire selectionChange event', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
             fix.componentInstance.cdr.detectChanges();
 
-            const secondChipComp = fix.componentInstance.chips.toArray()[1];
-            const chipAreaComp = fix.debugElement.query(By.directive(IgxChipsAreaComponent)).componentInstance;
-            spyOn(chipAreaComp.onSelection, 'emit');
+            const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
+            const chipAreaComp: IgxChipsAreaComponent = fix.debugElement.query(By.directive(IgxChipsAreaComponent)).componentInstance;
+            spyOn(chipAreaComp.selectionChange, 'emit');
 
             secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
 
-            expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            expect(chipAreaComp.selectionChange.emit).toHaveBeenCalledWith({
                 originalEvent: spaceKeyEvent,
                 owner: chipAreaComp,
                 newSelection: [secondChipComp]
@@ -254,7 +254,7 @@ describe('IgxChipsArea ', () => {
             secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
 
-            expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+            expect(chipAreaComp.selectionChange.emit).toHaveBeenCalledWith({
                 originalEvent: spaceKeyEvent,
                 owner: chipAreaComp,
                 newSelection: []
@@ -274,7 +274,7 @@ describe('IgxChipsArea ', () => {
             chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
             fix.detectChanges();
 
-            spyOn(chipAreaComponent.chipsArea.onSelection, `emit`);
+            spyOn(chipAreaComponent.chipsArea.selectionChange, `emit`);
             chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
             fix.detectChanges();
             chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
@@ -282,8 +282,8 @@ describe('IgxChipsArea ', () => {
 
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
             const thirdChipComp = fix.componentInstance.chips.toArray()[2];
-            expect(chipAreaComponent.chipsArea.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(chipAreaComponent.chipsArea.onSelection.emit).toHaveBeenCalledWith({
+            expect(chipAreaComponent.chipsArea.selectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(chipAreaComponent.chipsArea.selectionChange.emit).toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: chipAreaComponent.chipsArea,
                 newSelection: [secondChipComp, thirdChipComp]
@@ -644,16 +644,16 @@ describe('IgxChipsArea ', () => {
             expect(afterDropFirstChipLeft).not.toEqual(firstChipLeft);
         });
 
-        it('should fire onClick event', () => {
+        it('should fire chipClick event', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            const firstChipComp = fix.componentInstance.chips.toArray()[1];
-            spyOn(firstChipComp.onClick, 'emit');
+            const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
+            spyOn(firstChipComp.chipClick, 'emit');
 
             UIInteractions.clickDragDirective(fix, firstChipComp.dragDirective);
 
-            expect(firstChipComp.onClick.emit).toHaveBeenCalled();
+            expect(firstChipComp.chipClick.emit).toHaveBeenCalled();
         });
     });
 });
