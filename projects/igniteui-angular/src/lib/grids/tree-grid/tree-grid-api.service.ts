@@ -524,13 +524,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    private get_all_children(record: ITreeGridRecord, children?: any[]): any[] {
-        if (!children) {
-            children = [];
-        }
+    private get_all_children(record: ITreeGridRecord): any[] {
+        const children = [];
         if (record && record.children && record.children.length) {
             for (const child of record.children) {
-                this.get_all_children(child, children);
+                children.push(...this.get_all_children(child));
                 children.push(child);
             }
         }
