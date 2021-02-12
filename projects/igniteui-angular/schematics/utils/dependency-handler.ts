@@ -66,11 +66,19 @@ const getTargetedProjectOptions = (context: SchematicContext, project: workspace
 
 export const getConfigFile = (context: SchematicContext, project: workspaces.ProjectDefinition, option: string, configSection: string = 'build'): string => {
     const options = getTargetedProjectOptions(context, project, configSection);
+    if (!options) {
+        context.logger.warn(`Could not find matching ${configSection} section ` +
+            `inside of the workspace config ${project.sourceRoot} ` +
+            `it could require you to manually add and update the ${configSection} section`);
+
+    }
     if (options) {
-        return options[option];
-    } else {
-        context.logger.warn(`Could not find matching ${option} option under ${configSection} section - ` +
-            `it could require you to manually update the ${configSection} section with the corresponding ${option} option or it's equivalent`);
+        if (!options[option]) {
+            context.logger.warn(`Could not find matching ${option} option under ${configSection} section - ` +
+                `it could require you to manually update the ${configSection} section with the corresponding ${option} option or it's equivalent`);
+        } else {
+            return options[option];
+        }
     }
 };
 export const overwriteJsonFile = (tree: Tree, targetFile: string, data: any) =>
