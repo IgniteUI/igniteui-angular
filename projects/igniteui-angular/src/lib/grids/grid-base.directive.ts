@@ -3411,7 +3411,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public _pagingDone() {
-        this.endEdit(true);
+        this.endEdit(false);
         this.selectionService.clear(true);
     }
 
