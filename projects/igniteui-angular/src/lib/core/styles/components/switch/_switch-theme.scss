@@ -38,7 +38,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires round-borders
 ///
 /// @example scss Set custom track and thumb on colors
@@ -100,17 +99,17 @@
 
     @if not($resting-shadow) {
         $resting-elevation: map-get($switch-schema, 'resting-elevation');
-        $resting-shadow: igx-elevation($elevations, $resting-elevation);
+        $resting-shadow: igx-elevation($elevation: $resting-elevation);
     }
 
     @if not($hover-shadow) {
         $hover-elevation: map-get($switch-schema, 'hover-elevation');
-        $hover-shadow: igx-elevation($elevations, $hover-elevation);
+        $hover-shadow: igx-elevation($elevation: $hover-elevation);
     }
 
     @if not($disabled-shadow) {
         $disabled-elevation: map-get($switch-schema, 'disabled-elevation');
-        $disabled-shadow: igx-elevation($elevations, $disabled-elevation);
+        $disabled-shadow: igx-elevation($elevation: $disabled-elevation);
     }
 
     @return extend($theme, (

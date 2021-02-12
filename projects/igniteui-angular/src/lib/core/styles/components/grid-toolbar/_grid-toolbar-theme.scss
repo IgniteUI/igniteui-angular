@@ -7,7 +7,7 @@
 
 /// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
 /// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
@@ -35,7 +35,7 @@
 @function igx-grid-toolbar-theme(
     $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $background-color: null,
     $title-text-color: null,
@@ -306,7 +306,7 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
+        box-shadow: igx-elevation($elevation: 8);
     }
 
     %igx-grid-toolbar__dd-list-items {

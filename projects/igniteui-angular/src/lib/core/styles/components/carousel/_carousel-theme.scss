@@ -7,7 +7,7 @@
 
 /// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
@@ -42,7 +42,7 @@
 @function igx-carousel-theme(
     $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $button-shadow: null,
@@ -267,7 +267,7 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: --var($theme, 'indicator-border-color');
-            box-shadow: igx-elevation($elevations, 1);
+            box-shadow: igx-elevation($elevation: 1);
             opacity: .7;
         }
 
