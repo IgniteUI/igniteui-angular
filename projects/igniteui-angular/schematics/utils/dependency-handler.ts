@@ -46,7 +46,7 @@ function logIncludingDependency(context: SchematicContext, pkg: string, version:
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
-function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string) {
+function getTargetedProjectOptions(context: SchematicContext, project: WorkspaceProject<ProjectType>, target: string) {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
@@ -59,22 +59,29 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
         return project.architect[target].options;
     }
 
-    throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
+    context.logger.warn(`Could not find matching ${target} options ` +
+        `in Angular workspace ${project.sourceRoot}. ` +
+        `It could require you to manually add and update the ${target} section.`);
 }
 
-export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
-    const options = getTargetedProjectOptions(project, configSection);
+export function getConfigFile(
+    context: SchematicContext, project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
+    const options = getTargetedProjectOptions(context, project, configSection);
     if (!options) {
-        throw new SchematicsException(`Could not find matching ${configSection} section` +
-            `inside of the workspace config ${project.sourceRoot} `);
-    }
-    if (!options[option]) {
-        throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
-            `workspace config ${project.sourceRoot}`);
-    }
-    return options[option];
+        context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +
+            `It could require you to manually add and update the ${configSection} options.`);
 
+    }
+    if (options) {
+        if (!options[option]) {
+            context.logger.warn(`Could not find a matching ${option} property under ${configSection} options in Angular workspace. ` +
+                `Some updates may not execute correctly.`);
+        } else {
+            return options[option];
+        }
+    }
 }
+
 export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
 }
@@ -139,9 +146,9 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
-const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string) => {
-    const projectOptions = getTargetedProjectOptions(project, config);
-    const tsPath = getConfigFile(project, 'main', config);
+const addHammerToConfig = (context: SchematicContext, workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string) => {
+    const projectOptions = getTargetedProjectOptions(context, project, config);
+    const tsPath = getConfigFile(context, project, 'main', config);
     const hammerImport = 'import \'hammerjs\';\n';
     const tsContent = tree.read(tsPath).toString();
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
@@ -165,8 +172,8 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                addHammerToConfig(workspace, defaultProject, tree, 'build');
-                addHammerToConfig(workspace, defaultProject, tree, 'test');
+                addHammerToConfig(context, workspace, defaultProject, tree, 'build');
+                addHammerToConfig(context, workspace, defaultProject, tree, 'test');
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
