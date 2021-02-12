@@ -418,13 +418,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
      * with the rows which will be eventually in selected/indeterminate state
      */
     private calculateRowsNewSelectionState(args: any) {
-        this.rowsToBeSelected = new Set<any>();
-        this.rowsToBeIndeterminate = new Set<any>();
+        this.rowsToBeSelected = new Set<any>(args.oldSelection ? args.oldSelection : this.selectionService.getSelectedRows());
+        this.rowsToBeIndeterminate = new Set<any>(this.selectionService.getIndeterminateRows());
 
         const visibleRowIDs = this.selectionService.getRowIDs(this.selectionService.allData);
-        const oldSelection = args.oldSelection ? args.oldSelection : this.selectionService.getSelectedRows();
-        const oldIndeterminateRows = this.selectionService.getIndeterminateRows();
-
+       
         const removed = new Set(args.removed);
         const added = new Set(args.added);
 
@@ -433,16 +431,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
             removedRowsParents = this.collectRowsChildrenAndDirectParents(removed, visibleRowIDs);
 
-            oldSelection.forEach(x => {
-                if (!removed.has(x)) {
-                    this.rowsToBeSelected.add(x);
-                }
-            });
-
-            oldIndeterminateRows.forEach(x => {
-                if (!removed.has(x)) {
-                    this.rowsToBeIndeterminate.add(x);
-                }
+            removed.forEach(removedRow => {              
+                this.rowsToBeSelected.delete(removedRow);
+                this.rowsToBeIndeterminate.delete(removedRow);                
             });
 
             Array.from(removedRowsParents).forEach((parent) => {
@@ -455,23 +446,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
             addedRowsParents = this.collectRowsChildrenAndDirectParents(added, visibleRowIDs);
 
-            if (!this.rowsToBeSelected.size && !removed.size) {
-                oldSelection.forEach(x => this.rowsToBeSelected.add(x));
-            }
-
-            added.forEach(x => this.rowsToBeSelected.add(x));
-
-            if (!this.rowsToBeIndeterminate.size && !removed.size) {
-                oldIndeterminateRows.forEach(x => {
-                    if (!this.rowsToBeSelected.has(x)) {
-                        this.rowsToBeIndeterminate.add(x);
-                    }
-                });
-            } else {
-                added.forEach(x => {
-                    this.rowsToBeIndeterminate.delete(x);
-                });
-            }
+            added.forEach(addedRow => {
+                this.rowsToBeSelected.add(addedRow);
+                this.rowsToBeIndeterminate.delete(addedRow);
+            });            
 
             Array.from(addedRowsParents).forEach((parent) => {
                 this.handleParentSelectionState(parent, visibleRowIDs);
