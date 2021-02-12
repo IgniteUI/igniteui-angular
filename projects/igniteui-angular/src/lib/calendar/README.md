@@ -42,7 +42,7 @@ Instantiate a calendar component in single selection mode displaying the current
 A range selection calendar with first day of week set to Monday and an event
 handler when selection is done.
 ```html
-<igx-calendar weekStart="1" selection="range" (onSelection)="eventHandler($event)"></igx-calendar>
+<igx-calendar weekStart="1" selection="range" (selected)="eventHandler($event)"></igx-calendar>
 ```
 
 A multiple selection calendar with different locale and templating for the subheader.
@@ -170,7 +170,7 @@ Controls the visibility of the dates that do not belong to the current month.
 
 ### Outputs
 
-- `onSelection(): Date | Date[]`
+- `selected(): Date | Date[]`
 
 Event fired when a value is selected through UI interaction.
 Emits the selected value (depending on the type of selection).
@@ -190,7 +190,7 @@ Emits an CalendarView enum, indicating the `activeView` property value.
 
 - `selectedDate(value: Date | Date[]): void`
 
-Sets a new value for the calendar component. **Does not** trigger `onSelection` event.
+Sets a new value for the calendar component. **Does not** trigger `selected` event.
 
 ### Templating
 

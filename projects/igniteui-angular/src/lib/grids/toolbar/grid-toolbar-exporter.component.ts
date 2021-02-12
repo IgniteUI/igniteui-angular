@@ -141,7 +141,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
             return;
         }
 
-        exporter.onExportEnded.pipe(first()).subscribe(() => {
+        exporter.exportEnded.pipe(first()).subscribe(() => {
             this.exportEnded.emit();
             this.isExporting = false;
             this.toolbar.showProgress = false;
