@@ -436,7 +436,7 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Data type currency column tests', () => {
-        it('should display correctly the data when column dataType is currency', () => {
+        xit('should display correctly the data when column dataType is currency', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -453,10 +453,6 @@ describe('IgxGrid - Column properties #grid', () => {
                 currencyCode: 'USD',
                 display: 'symbol-narrow'
               };
-            fix.detectChanges();
-
-            (grid as any).pipeTrigger++;
-            grid.notifyChanges();
             fix.detectChanges();
 
             unitsColumn = grid.getColumnByName('UnitsInStock');
