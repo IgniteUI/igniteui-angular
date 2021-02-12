@@ -47,35 +47,32 @@ export const getWorkspacePath = (host: Tree): string => {
 const logIncludingDependency = (context: SchematicContext, pkg: string, version: string): void =>
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 
-const getTargetedProjectOptions = (project: workspaces.ProjectDefinition, target: string) => {
+const getTargetedProjectOptions = (context: SchematicContext, project: workspaces.ProjectDefinition, target: string) => {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
         return project.targets[target].options;
     }
 
-    const projectTarget = project.targets.get(target);
+    const projectTarget = project.targets?.get(target);
     if (projectTarget) {
         return projectTarget.options;
     }
 
-    throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
+    context.logger.warn(`Could not find matching ${target} section ` +
+        `inside of the workspace config ${project.sourceRoot} ` +
+        `it could require you to manually add and update the ${target} section`);
 };
 
-export const getConfigFile = (project: workspaces.ProjectDefinition, option: string, configSection: string = 'build'): string => {
-    const options = getTargetedProjectOptions(project, configSection);
-    if (!options) {
-        throw new SchematicsException(`Could not find matching ${configSection} section` +
-            `inside of the workspace config ${project.sourceRoot} `);
+export const getConfigFile = (context: SchematicContext, project: workspaces.ProjectDefinition, option: string, configSection: string = 'build'): string => {
+    const options = getTargetedProjectOptions(context, project, configSection);
+    if (options) {
+        return options[option];
+    } else {
+        context.logger.warn(`Could not find matching ${option} option under ${configSection} section - ` +
+            `it could require you to manually update the ${configSection} section with the corresponding ${option} option or it's equivalent`);
     }
-    if (!options[option]) {
-        throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
-            `workspace config ${project.sourceRoot}`);
-    }
-    return options[option];
-
 };
-
 export const overwriteJsonFile = (tree: Tree, targetFile: string, data: any) =>
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
 
@@ -140,15 +137,21 @@ export const getPropertyFromWorkspace = (targetProp: string, workspace: any, cur
     return null;
 };
 
-const addHammerToConfig = async (project: workspaces.ProjectDefinition, tree: Tree, config: string): Promise<void> => {
-    const projectOptions = getTargetedProjectOptions(project, config);
-    const tsPath = getConfigFile(project, 'main', config);
+const addHammerToConfig = async (context: SchematicContext, project: workspaces.ProjectDefinition, tree: Tree, config: string): Promise<void> => {
+    const projectOptions = getTargetedProjectOptions(context, project, config);
+    const tsPath = getConfigFile(context, project, 'main', config);
     const hammerImport = 'import \'hammerjs\';\n';
-    const tsContent = tree.read(tsPath).toString();
+    const tsContent = tree.read(tsPath)?.toString();
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
     // and the "main" file does not contain an import with hammerjs
-    if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !tsContent.includes(hammerImport)) {
-        projectOptions.scripts.push('./node_modules/hammerjs/hammer.min.js');
+    if (!projectOptions?.scripts?.some(el => el.includes('hammerjs')) && !tsContent?.includes(hammerImport)) {
+        const hammerjsFilePath = './node_modules/hammerjs/hammer.min.js';
+        if (projectOptions?.scripts) {
+            projectOptions.scripts.push(hammerjsFilePath);
+            return;
+        }
+        context.logger.warn(`Could not find a matching scripts array option under ${config} section - ` +
+            `it could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
     }
 };
 
@@ -166,8 +169,8 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                await addHammerToConfig(defaultProject, tree, 'build');
-                await addHammerToConfig(defaultProject, tree, 'test');
+                await addHammerToConfig(context, defaultProject, tree, 'build');
+                await addHammerToConfig(context, defaultProject, tree, 'test');
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
