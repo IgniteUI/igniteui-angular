@@ -422,7 +422,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         this.rowsToBeIndeterminate = new Set<any>(this.selectionService.getIndeterminateRows());
 
         const visibleRowIDs = this.selectionService.getRowIDs(this.selectionService.allData);
-       
+
         const removed = new Set(args.removed);
         const added = new Set(args.added);
 
@@ -431,9 +431,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
             removedRowsParents = this.collectRowsChildrenAndDirectParents(removed, visibleRowIDs);
 
-            removed.forEach(removedRow => {              
+            removed.forEach(removedRow => {
                 this.rowsToBeSelected.delete(removedRow);
-                this.rowsToBeIndeterminate.delete(removedRow);                
+                this.rowsToBeIndeterminate.delete(removedRow);
             });
 
             Array.from(removedRowsParents).forEach((parent) => {
@@ -449,7 +449,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             added.forEach(addedRow => {
                 this.rowsToBeSelected.add(addedRow);
                 this.rowsToBeIndeterminate.delete(addedRow);
-            });            
+            });
 
             Array.from(addedRowsParents).forEach((parent) => {
                 this.handleParentSelectionState(parent, visibleRowIDs);
