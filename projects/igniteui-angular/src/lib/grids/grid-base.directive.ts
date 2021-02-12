@@ -290,8 +290,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public onScroll = new EventEmitter<IGridScrollEventArgs>();
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding output instead.
      * Emitted after the current page is changed.
+     *
+     * @deprecated `pageChange` is deprecated. Use the `pageChange` output exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```html
@@ -303,13 +305,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
-    @DeprecateProperty('Use the corresponding output exposed by the `igx-paginator`.')
+    @DeprecateProperty('`pageChange` is deprecated. Use the `pageChange` output exposed by the `IgxPaginator`.')
     @Output()
     public pageChange = new EventEmitter<number>();
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding output instead.
      * Emitted when `perPage` property value of the grid is changed.
+     *
+     * @deprecated `perPageChange` is deprecated. Use the `perPageChange` output exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```html
@@ -321,7 +325,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
-    @DeprecateProperty('Use the corresponding output exposed by the `igx-paginator`.')
+    @DeprecateProperty('`perPageChange` is deprecated. Use the `perPageChange` output exposed by the `IgxPaginator`.')
     @Output()
     public perPageChange = new EventEmitter<number>();
 
@@ -1421,8 +1425,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Gets/Sets the current page index.
+     *
+     * @deprecated `page` is deprecated. Use the `page` input exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```html
@@ -1431,7 +1437,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Supports two-way binding.
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`page` is deprecated. Use the `page` input exposed by the `IgxPaginator`.')
     @Input()
     public get page(): number {
         return this._page;
@@ -1449,8 +1455,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Gets/Sets the number of visible items per page.
+     *
+     * @deprecated `perPage` is deprecated. Use the `perPage` input exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @remarks
      * The default is 15.
@@ -1459,7 +1467,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
      * ```
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`perPage` is deprecated. Use the `perPage` input exposed by the `IgxPaginator`.')
     @Input()
     public get perPage(): number {
         return this._perPage;
@@ -2414,14 +2422,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets whether the toolbar is shown.
      *
-     * @deprecated
      *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
      * ```
      */
-    @DeprecateProperty('`showToolbar` is deprecated')
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;
@@ -2433,14 +2439,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets the toolbar's title.
      *
-     * @deprecated
      *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
      * ```
      */
-    @DeprecateProperty('`toolbarTitle` is deprecated')
     @Input()
     public get toolbarTitle(): string {
         return this._toolbarTitle;
@@ -3065,8 +3069,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Goes to the desired page index.
+     *
+     * @deprecated `paginate` is deprecated. Use the `paginate` method exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```typescript
@@ -3074,7 +3080,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param val
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`paginate` is deprecated. Use the `paginate` method exposed by the `IgxPaginator`.')
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1) {
             return;
@@ -3084,15 +3090,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Goes to the next page, if the grid is not already at the last page.
+     *
+     * @deprecated `nextPage` is deprecated. Use the `nextPage` method exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```typescript
      * this.grid1.nextPage();
      * ```
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`nextPage` is deprecated. Use the `nextPage` method exposed by the `IgxPaginator`.')
     public nextPage(): void {
         if (!this.isLastPage) {
             this.page += 1;
@@ -3100,15 +3108,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Goes to the previous page, if the grid is not already at the first page.
+     *
+     * @deprecated `previousPage` is deprecated. Use the `previousPage` method exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```typescript
      * this.grid1.previousPage();
      * ```
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`previousPage` is deprecated. Use the `previousPage` method exposed by the `IgxPaginator`.')
     public previousPage(): void {
         if (!this.isFirstPage) {
             this.page -= 1;
@@ -4147,15 +4157,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Gets the total number of pages.
+     *
+     * @deprecated `totalPages` is deprecated. Use the `totalPages` getter exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```typescript
      * const totalPages = this.grid.totalPages;
      * ```
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`totalPages` is deprecated. Use the `totalPages` getter exposed by the `IgxPaginator`.')
     public get totalPages(): number {
         if (this.pagingState) {
             return this.pagingState.metadata.countPages;
@@ -4164,15 +4176,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Gets if the current page is the first page.
+     *
+     * @deprecated `isFirstPage` is deprecated. Use the `isFirstPage` getter exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
      * ```
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`isFirstPage` is deprecated. Use the `isFirstPage` getter exposed by the `IgxPaginator`.')
     public get isFirstPage(): boolean {
         return this.page === 0;
     }
@@ -4201,15 +4215,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @deprecated Use `IgxPaginator` corresponding method instead.
      * Returns if the current page is the last page.
+     *
+     * @deprecated `isLastPage` is deprecated. Use the `isLastPage` output exposed by the `IgxPaginator`.
+     * See [Paging with custom template](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations#remote-paging-with-custom-template) for more info.
      *
      * @example
      * ```typescript
      * const lastPage = this.grid.isLastPage;
      * ```
      */
-    @DeprecateProperty('Use the corresponding method exposed by the `igx-paginator`.')
+    @DeprecateProperty('`isLastPage` is deprecated. Use the `isLastPage` getter exposed by the `IgxPaginator`.')
     public get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
     }
