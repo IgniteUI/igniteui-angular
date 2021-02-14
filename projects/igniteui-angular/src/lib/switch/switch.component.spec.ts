@@ -152,9 +152,12 @@ describe('IgxSwitch', () => {
         const nativeCheckbox = switchInstance.nativeCheckbox.nativeElement;
         const nativeLabel = switchInstance.nativeLabel.nativeElement;
         const placeholderLabel = switchInstance.placeholderLabel.nativeElement;
-        fixture.detectChanges();
+        const switchEl = fixture.debugElement.query(By.directive(IgxSwitchComponent)).nativeElement;
 
-        nativeCheckbox.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+        expect(switchInstance.focused).toBe(false);
+
+        switchEl.dispatchEvent(new KeyboardEvent('keyup'));
         fixture.detectChanges();
         expect(switchInstance.focused).toBe(true);
 
