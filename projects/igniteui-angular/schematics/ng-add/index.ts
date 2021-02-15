@@ -22,7 +22,7 @@ function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchem
 function enablePolyfills(tree: Tree, context: SchematicContext): string {
   const workspace = getWorkspace(tree);
   const project = workspace.projects[workspace.defaultProject];
-  const targetFile = getConfigFile(context, project, 'polyfills');
+  const targetFile = getConfigFile(project, 'polyfills', context);
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
     return;
@@ -56,7 +56,7 @@ function readInput(options: Options): Rule {
       const workspace = getWorkspace(tree);
       const targetProperty = 'es5BrowserSupport';
       const project = workspace.projects[workspace.defaultProject];
-      const polyfillsFile = getConfigFile(context, project, 'polyfills');
+      const polyfillsFile = getConfigFile(project, 'polyfills', context);
       if (polyfillsFile !== undefined) {
         const propertyExists = propertyExistsInWorkspace(targetProperty, workspace);
         let polyfillsData = tree.read(polyfillsFile).toString();

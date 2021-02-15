@@ -65,7 +65,7 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
 }
 
 export function getConfigFile(
-    project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build', context: SchematicContext): string {
+    project: WorkspaceProject<ProjectType>, option: string, context: SchematicContext, configSection: string = 'build'): string {
     const options = getTargetedProjectOptions(project, configSection, context);
     if (!options) {
         context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +
@@ -148,7 +148,7 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
 
 const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string, context: SchematicContext) => {
     const projectOptions = getTargetedProjectOptions(project, config,context);
-    const tsPath = getConfigFile(project, 'main', config, context);
+    const tsPath = getConfigFile(project, 'main', context, config);
     const hammerImport = 'import \'hammerjs\';\n';
     const tsContent = tree.read(tsPath)?.toString();
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
