@@ -5,6 +5,8 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 
 @Injectable()
 export class IgxTreeGridSelectionService extends IgxGridSelectionService {
+    private rowsToBeSelected: Set<any>;
+    private rowsToBeIndeterminate: Set<any>;
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
@@ -31,49 +33,6 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         }
 
         super.emitRowSelectionEvent(newSelection, added, removed, event);
-    }
-
-    private rowsToBeSelected: Set<any>;
-    private rowsToBeIndeterminate: Set<any>;
-
-    public get selectionService(): IgxGridSelectionService {
-        return this.grid.selectionService;
-    }
-
-    private emitCascadeRowSelectionEvent(newSelection, added, removed, event?): boolean {
-        const currSelection = this.getSelectedRows();
-        if (this.areEqualCollections(currSelection, newSelection)) {
-            return;
-        }
-
-        const args = {
-            oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false
-        };
-
-        this.calculateRowsNewSelectionState(args);
-
-        args.newSelection = Array.from(this.rowsToBeSelected);
-
-        // retrieve rows/parents/children which has been added/removed from the selection
-        this.handleAddedAndRemovedArgs(args);
-
-        this.grid.onRowSelectionChange.emit(args);
-
-        if (args.cancel) {
-            return;
-        }
-
-        // if args.newSelection hasn't been modified
-        if (this.areEqualCollections(Array.from(this.rowsToBeSelected), args.newSelection)) {
-            this.rowSelection = new Set(this.rowsToBeSelected);
-            this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
-            this.clearHeaderCBState();
-            this.selectedRowsChange.next();
-        } else {
-            // select the rows within the modified args.newSelection with no event
-            this.cascadeSelectRowsWithNoEvent(args.newSelection, true);
-        }
     }
 
     public updateCascadeSelectionOnFilterAndCRUD(
@@ -141,6 +100,49 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
+
+    public get selectionService(): IgxGridSelectionService {
+        return this.grid.selectionService;
+    }
+
+    private emitCascadeRowSelectionEvent(newSelection, added, removed, event?): boolean {
+        const currSelection = this.getSelectedRows();
+        if (this.areEqualCollections(currSelection, newSelection)) {
+            return;
+        }
+
+        const args = {
+            oldSelection: currSelection, newSelection,
+            added, removed, event, cancel: false
+        };
+
+        this.calculateRowsNewSelectionState(args);
+
+        args.newSelection = Array.from(this.rowsToBeSelected);
+
+        // retrieve rows/parents/children which has been added/removed from the selection
+        this.handleAddedAndRemovedArgs(args);
+
+        this.grid.onRowSelectionChange.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
+        // if args.newSelection hasn't been modified
+        if (this.areEqualCollections(Array.from(this.rowsToBeSelected), args.newSelection)) {
+            this.rowSelection = new Set(this.rowsToBeSelected);
+            this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
+            this.clearHeaderCBState();
+            this.selectedRowsChange.next();
+        } else {
+            // select the rows within the modified args.newSelection with no event
+            this.cascadeSelectRowsWithNoEvent(args.newSelection, true);
+        }
+    }
+
+
+
 
     /**
      * retrieve the rows which should be added/removed to/from the old selection
