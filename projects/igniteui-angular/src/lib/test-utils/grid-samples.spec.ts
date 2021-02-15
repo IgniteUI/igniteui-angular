@@ -199,7 +199,7 @@ export class RowSelectionComponent extends BasicGridComponent {
         '', ColumnDefinitions.productBasicNumberID)
 })
 export class RowSelectionWithDisabledSelectRowOnClickComponent extends BasicGridComponent {
-    data = SampleTestData.foodProductDataExtended();
+    public data = SampleTestData.foodProductDataExtended();
     public width = '800px';
     public height = '600px';
     public selectedRows = [];
@@ -2357,5 +2357,5 @@ export class IgxAddRowComponent implements OnInit {
     template: GridTemplateStrings.declareGrid(` [hideGroupedColumns]="true"`, '', ColumnDefinitions.exportGroupedDataColumns)
 })
 export class GridExportGroupedDataComponent extends BasicGridComponent {
-    data = SampleTestData.exportGroupedDataColumns();
+    public data = SampleTestData.exportGroupedDataColumns();
 }

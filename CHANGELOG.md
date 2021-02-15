@@ -25,6 +25,7 @@ All notable changes for each version of this project will be documented in this 
     ng update igniteui-angular --migrate-only
     ```
     This will ensure your application is updated to use the new output names.
+- `IgxCheckbox, IgxRadio, IgxSwitch` now follow the Google Material spec for focus behavior. See [checkbox](https://material.io/components/checkboxes), [radio](https://material.io/components/radio-buttons), and [switch](https://material.io/components/switches).
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
