@@ -27,6 +27,7 @@ import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
+import { DataType } from '../data-operations/data-util';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -289,6 +290,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('class.igx-grid__td--bool-true')
     public get booleanClass() {
         return this.column.dataType === 'boolean' && this.value;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-grid__td--negative-percent')
+    public get percentNegativeClass() {
+        return this.column.dataType === DataType.Percent && this.value < 0;
     }
 
     /**
