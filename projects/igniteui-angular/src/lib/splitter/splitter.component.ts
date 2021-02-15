@@ -246,7 +246,7 @@ export class IgxSplitterComponent implements AfterContentInit {
         this.sibling.dragSize = null;
 
         const args: ISplitterBarResizeEventArgs = { pane: this.pane, sibling: this.sibling };
-        this.resizing.emit(args);
+        this.resizeEnd.emit(args);
     }
 
     /** @hidden @internal */
