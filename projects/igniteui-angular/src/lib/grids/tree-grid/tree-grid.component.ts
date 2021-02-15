@@ -273,7 +273,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @memberof IgxTreeGridComponent
      */
-    get filteredData() {
+    public get filteredData() {
         return this._filteredData;
     }
 
@@ -288,7 +288,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @memberof IgxTreeGridComponent
      */
-    set filteredData(value) {
+    public set filteredData(value) {
         this._filteredData = value;
     }
 
@@ -297,7 +297,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *
      * @experimental @hidden
      */
-    get transactions() {
+    public get transactions() {
         return this._transactions;
     }
 
@@ -324,7 +324,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
      * ```html
      * <ng-template #rowLoadingTemplate>
-     *     <igx-icon fontSet="material">loop</igx-icon>
+     *     <igx-icon>loop</igx-icon>
      * </ng-template>
      *
      * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="'ID'" [foreignKey]="'parentID'"
@@ -375,7 +375,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
     }
 
-    ngDoCheck() {
+    public ngDoCheck() {
         super.ngDoCheck();
     }
 

@@ -78,7 +78,7 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /** Event Handlers */
 
-    public onChange(event: any) {
+    public onChange() {
         if (this.grid.groupingExpressions.length > 0) {
             this.grid.groupingExpressions = [];
         } else {
@@ -149,7 +149,7 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     private changeNegative = (rowData: any): boolean => rowData['Change(%)'] < 0 && rowData['Change(%)'] > -1;
     private changePositive = (rowData: any): boolean => rowData['Change(%)'] > 0 && rowData['Change(%)'] < 1;
     private strongPositive = (rowData: any): boolean => rowData['Change(%)'] >= 1;
-    private strongNegative = (rowData: any, key: string): boolean => rowData['Change(%)'] <= -1;
+    private strongNegative = (rowData: any): boolean => rowData['Change(%)'] <= -1;
 
     /* eslint-disable @typescript-eslint/member-ordering */
     public trends = {
@@ -169,7 +169,7 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     /* eslint-enable @typescript-eslint/member-ordering */
 
-    get grouped(): boolean {
+    public get grouped(): boolean {
         return this.grid.groupingExpressions.length > 0;
     }
 }

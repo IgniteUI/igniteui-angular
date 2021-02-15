@@ -1,7 +1,7 @@
 <div class="hgrid-sample">
     <h4 class="sample-title">Sample One</h4>
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"
+        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"
             style="display: block; width: 500px"></igx-buttongroup>
     </div>
     <button igxButton="raised" (click)="getState()">Get state</button>
@@ -15,16 +15,16 @@
             <igx-column field="ProductName" hasSummary='true'></igx-column>
         </igx-column-group>
         <ng-template igxHeaderCollapsedIndicator>
-            <igx-icon role="button" fontSet="material">add</igx-icon>
+            <igx-icon role="button">add</igx-icon>
         </ng-template>
         <ng-template igxHeaderExpandedIndicator>
-            <igx-icon role="button" fontSet="material">remove</igx-icon>
+            <igx-icon role="button">remove</igx-icon>
         </ng-template>
         <ng-template igxRowExpandedIndicator>
-            <igx-icon role="button" fontSet="material">remove</igx-icon>
+            <igx-icon role="button">remove</igx-icon>
         </ng-template>
         <ng-template igxRowCollapsedIndicator>
-            <igx-icon role="button" fontSet="material">add</igx-icon>
+            <igx-icon role="button">add</igx-icon>
         </ng-template>
         <igx-row-island [rowDraggable]="true" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'"
             [autoGenerate]="false" [allowFiltering]='false' [rowSelection]='selectionMode'
@@ -36,7 +36,7 @@
             </igx-column-group>
             <ng-template let-data igxRowDragGhost>
                 <div class="dragGhost">
-                    <igx-icon fontSet="material"></igx-icon>
+                    <igx-icon></igx-icon>
                     Moving child {{data.ProductName}}!
                 </div>
             </ng-template>
@@ -67,7 +67,7 @@
         </igx-row-island>  -->
         <ng-template let-data igxRowDragGhost>
             <div class="dragGhost">
-                <igx-icon fontSet="material"></igx-icon>
+                <igx-icon></igx-icon>
                 Moving parent {{data.ProductName}}!
             </div>
         </ng-template>

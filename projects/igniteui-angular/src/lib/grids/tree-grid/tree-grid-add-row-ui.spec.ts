@@ -1,7 +1,7 @@
 
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent, IGridEditDoneEventArgs } from './public_api';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -69,7 +69,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions[1].componentInstance.iconName).toBe('add-child');
             const addChildBtn = editActions[1].componentInstance;
-            addChildBtn.onActionClick.emit();
+            addChildBtn.actionClick.emit();
             fix.detectChanges();
             endTransition();
 

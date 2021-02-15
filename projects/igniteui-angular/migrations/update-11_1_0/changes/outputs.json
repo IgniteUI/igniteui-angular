@@ -1,0 +1,325 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onTabItemSelected",
+            "replaceWith": "tabItemSelected",
+            "owner": {
+                "selector": "igx-tabs",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onTabItemDeselected",
+            "replaceWith": "tabItemDeselected",
+            "owner": {
+                "selector": "igx-tabs",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelect",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-buttongroup",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onUnselect",
+            "replaceWith": "deselected",
+            "owner": {
+                "selector": "igx-buttongroup",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onAction",
+            "replaceWith": "clicked",
+            "owner": {
+                "selector": "igx-snackbar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onLeftPan",
+            "replaceWith": "leftPan",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRightPan",
+            "replaceWith": "rightPan",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onPanStateChange",
+            "replaceWith": "panStateChange",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onItemClicked",
+            "replaceWith": "itemClicked",
+            "owner": {
+                "selector": "igx-list",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onAction",
+            "replaceWith": "action",
+            "owner": {
+                "selector": "igx-navbar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onShowing",
+            "replaceWith": "showing",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onShown",
+            "replaceWith": "shown",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onHiding",
+            "replaceWith": "hiding",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onHidden",
+            "replaceWith": "hidden",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onTooltipShow",
+            "replaceWith": "tooltipShow",
+            "owner": {
+                "selector": "igxTooltipTarget",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onTooltipHide",
+            "replaceWith": "tooltipHide",
+            "owner": {
+                "selector": "igxTooltipTarget",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "owner": {
+                "selector": "igx-calendar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-years-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "owner": {
+                "selector": "igx-years-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "owner": {
+                "selector": "igx-days-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "owner": {
+                "selector": "igx-days-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-month-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-months-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "owner": {
+                "selector": "igx-months-view",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onReorder",
+            "replaceWith": "reorder",
+            "owner": {
+                "selector": "igx-chips-area",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selectionChange",
+            "owner": {
+                "selector": "igx-chips-area",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMoveStart",
+            "replaceWith": "moveStart",
+            "owner": {
+                "selector": "igx-chips-area",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "owner": {
+                "selector": "igx-chips-area",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMoveStart",
+            "replaceWith": "moveStart",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRemove",
+            "replaceWith": "remove",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClick",
+            "replaceWith": "chipClick",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selectedChanging",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelectionDone",
+            "replaceWith": "selectedChanged",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onKeyDown",
+            "replaceWith": "keyDown",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDragEnter",
+            "replaceWith": "dragEnter",
+            "owner": {
+                "selector": "igx-chip",
+                "type": "component"
+            }
+        }
+    ]
+}

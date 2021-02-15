@@ -14,7 +14,8 @@ import {
     GridIDNameJobTitleComponent,
     ProductsComponent,
     GridIDNameJobTitleHireDataPerformanceComponent,
-    GridHireDateComponent
+    GridHireDateComponent,
+    GridExportGroupedDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -43,9 +44,10 @@ describe('Excel Exporter', () => {
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                GridWithEmtpyColumnsComponent,
+                GridWithEmptyColumnsComponent,
                 GridIDNameJobTitleHireDataPerformanceComponent,
-                GridHireDateComponent
+                GridHireDateComponent,
+                GridExportGroupedDataComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -214,7 +216,6 @@ describe('Excel Exporter', () => {
 
         it('should honor all pinned columns.', async () => {
             const result = await TestMethods.createGridAndPinColumn(2, 0);
-            const fix = result.fixture;
             const grid = result.grid;
 
             const wrapper = await getExportedData(grid, options);
@@ -256,7 +257,7 @@ describe('Excel Exporter', () => {
 
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(
-                actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
+                actualData.simpleGridSortByNameDesc(), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
             grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
@@ -458,7 +459,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export columns without header', async () => {
-            const fix = TestBed.createComponent(GridWithEmtpyColumnsComponent);
+            const fix = TestBed.createComponent(GridWithEmptyColumnsComponent);
             fix.detectChanges();
             await wait();
 
@@ -539,6 +540,97 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.hireDate);
         });
+
+        it('Should export grouped grid', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.groupBy({ fieldName: 'Price', dir: SortingDirection.Desc, ignoreCase: false });
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedData);
+        });
+
+        it('Should export grouped grid with collapsed rows', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.groupBy({ fieldName: 'Price', dir: SortingDirection.Desc, ignoreCase: false });
+
+            fix.detectChanges();
+
+            const groupRows = grid.groupsRowList.toArray();
+
+            grid.toggleGroup(groupRows[2].groupRow);
+            grid.toggleGroup(groupRows[3].groupRow);
+            grid.toggleGroup(groupRows[6].groupRow);
+
+            fix.detectChanges();
+
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithCollapsedRows);
+        });
+
+        it('Should export grouped grid with ignored sorting', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.sort({fieldName: 'Price', dir: SortingDirection.Desc});
+
+            options.ignoreSorting = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreSorting);
+        });
+
+        it('Should export grouped grid with ignored filtering', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+
+            grid.filter('Model', 'Model', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
+
+            options.ignoreFiltering = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreFiltering);
+        });
+
+        it('Should export grouped grid with ignored grouping', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+
+            options.ignoreGrouping = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreGrouping);
+        });
     });
 
     describe('', () => {
@@ -605,6 +697,22 @@ describe('Excel Exporter', () => {
             treeGrid.collapseAll();
             fix.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridDataExpDepth(0));
+        });
+
+        it('should export tree grid with ignore filtering properly.', async () => {
+            treeGrid.filter('Age', 52, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            options.ignoreFiltering = true;
+            fix.detectChanges();
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataIgnoreFiltering);
+        });
+
+        it('should export tree grid with ignore sorting properly.', async () => {
+            treeGrid.sort({fieldName: 'Age', dir: SortingDirection.Desc});
+            options.ignoreSorting = true;
+            fix.detectChanges();
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
         });
 
         it('should throw an exception when nesting level is greater than 8.', async () => {
@@ -703,7 +811,7 @@ describe('Excel Exporter', () => {
 
     const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
@@ -769,7 +877,7 @@ describe('Excel Exporter', () => {
     </igx-grid>`
 })
 
-export class GridWithEmtpyColumnsComponent {
+export class GridWithEmptyColumnsComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personJobDataFull();

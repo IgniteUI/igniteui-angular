@@ -10,7 +10,7 @@
                 </igx-input-group>
             </div>
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
             <igx-grid
                 #grid1
@@ -18,9 +18,9 @@
                 [data]="data"
                 [displayDensity]="density"
                 [allowFiltering]="true"
-                (onColumnMovingStart)="onColumnMovingStart($event)"
-                (onColumnMoving)="onColumnMoving($event)"
-                (onColumnMovingEnd)="onColumnMovingEnd($event)"
+                (onColumnMovingStart)="onColumnMovingStart()"
+                (onColumnMoving)="onColumnMoving()"
+                (onColumnMovingEnd)="onColumnMovingEnd()"
                 [rowSelection] ="'multiple'"
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
@@ -42,8 +42,8 @@
                 </igx-column>
                 <igx-grid-footer>
                     <div class="references">
-                       <p>Test</p> 
-                       <p>Test2</p> 
+                       <p>Test</p>
+                       <p>Test2</p>
                     </div>
                 </igx-grid-footer>
             </igx-grid>
@@ -145,7 +145,7 @@
                     </igx-grid>
                 </section>
             </div>
-            
+
         </div>
     </div>
 </div>

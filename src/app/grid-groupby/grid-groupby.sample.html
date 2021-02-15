@@ -2,7 +2,7 @@
     <igx-switch [(ngModel)]="hideGroupedColumns" (change)="toggleGroupedVisibility($event)">Toggle Hiding Of Grouped
         Columns</igx-switch>
     <br />
-    <igx-switch (change)="toggleSummaryPosition($event)">Toggle Summary Position</igx-switch>
+    <igx-switch (change)="toggleSummaryPosition()">Toggle Summary Position</igx-switch>
     <br />
     <button igxButton="raised" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse">
         {{ grid1.showSummaryOnCollapse }}</button> - Show summary on collapse
@@ -24,7 +24,7 @@
         </igx-drop-down-item>
     </igx-drop-down>
     <div class="density-chooser" style="margin-bottom: 16px">
-        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)"
+        <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"
             style="display: block; width: 500px"></igx-buttongroup>
     </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [cellSelection]="'single'" [width]="'1200px'"

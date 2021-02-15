@@ -12,7 +12,7 @@
                 </igx-drop-down>
             </div>
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
 
 
@@ -83,7 +83,7 @@
                 </igx-column-group>
             </igx-grid>
             <div class="sample-buttons">
-                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)">
+                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (selected)="selectFilterMode($event)">
                 </igx-buttongroup>
             </div>
             <div class="sample-buttons">

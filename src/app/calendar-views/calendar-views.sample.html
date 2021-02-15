@@ -6,7 +6,7 @@
                 <igx-card>
                     <igx-months-view [(ngModel)]="date"
                         [locale]="locale"
-                        (onSelection)="onSelection($event)">
+                        (selected)="onSelection($event)">
                     </igx-months-view>
                 </igx-card>
             </div>
@@ -17,7 +17,7 @@
             <igx-card>
                 <igx-years-view [(ngModel)]="date"
                     [locale]="locale"
-                    (onSelection)="onSelection($event)">
+                    (selected)="onSelection($event)">
                 </igx-years-view>
             </igx-card>
         </article>
@@ -30,7 +30,7 @@
                     [viewDate]="date || selection"
                     [locale]="locale"
                     [selection]="'single'"
-                    (onSelection)="onSelection($event)">
+                    (selected)="onSelection($event)">
                 </igx-days-view>
             </igx-card>
             <div class="calendar-sample-buttons">

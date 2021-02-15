@@ -784,7 +784,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         if (this.selection === 'multi') {
             this.deselectDateInMonthViews(instance.date);
         }
-        this.onSelection.emit(this.selectedDates);
+        this.selected.emit(this.selectedDates);
     }
 
     /**
@@ -826,7 +826,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    public onActiveViewYear(args: Date, activeViewIdx: number, event?): void {
+    public onActiveViewYear(args: Date, activeViewIdx: number): void {
         this.activeView = IgxCalendarView.Year;
         this.activeViewIdx = activeViewIdx;
         requestAnimationFrame(() => {
@@ -842,7 +842,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     public onActiveViewYearKB(args: Date, event, activeViewIdx: number): void {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.onActiveViewYear(args, activeViewIdx, event);
+            this.onActiveViewYear(args, activeViewIdx);
         }
     }
 

@@ -19,7 +19,7 @@
     [displayDensity]="'cosy'">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-prefix>
         <igx-select-item>None</igx-select-item>
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
@@ -39,7 +39,7 @@
 
     <div>
         <h4>Display Density</h4>
-        <igx-buttongroup (onSelect)="setDensity($event)">
+        <igx-buttongroup (selected)="setDensity($event)">
             <button igxButton value="compact">Compact</button>
             <button igxButton value="cosy">Cosy</button>
             <button igxButton value="comfortable">Comfortable</button>
@@ -59,10 +59,10 @@
                 [type]="'box'">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">favorite</igx-icon>
+            <igx-icon>favorite</igx-icon>
         </igx-prefix>
         <igx-suffix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-suffix>
         <igx-hint>I am a Hint</igx-hint>
         <igx-select-item>None</igx-select-item>
@@ -101,7 +101,7 @@
                 [disabled]="false">
         <label igxLabel>Group</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-prefix>
         <igx-select-item value="1">OutsideGroup</igx-select-item>
         <igx-select-item-group label="Group">
@@ -124,7 +124,7 @@
                 <igx-select formControlName="citiesSelect" #selectReactive [placeholder]="'City'">
                     <label igxLabel>Choose a city</label>
                     <igx-prefix igxPrefix>
-                        <igx-icon fontSet="material">alarm</igx-icon>
+                        <igx-icon>alarm</igx-icon>
                     </igx-prefix>
                     <igx-select-item *ngFor="let city of cities; let inx=index" [value]="city">
                         {{ city }}
