@@ -147,7 +147,7 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
 }
 
 const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string, context: SchematicContext) => {
-    const projectOptions = getTargetedProjectOptions(project, config,context);
+    const projectOptions = getTargetedProjectOptions(project, config, context);
     const tsPath = getConfigFile(project, 'main', context, config);
     const hammerImport = 'import \'hammerjs\';\n';
     const tsContent = tree.read(tsPath)?.toString();
