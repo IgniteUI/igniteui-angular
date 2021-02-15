@@ -409,14 +409,9 @@
 }
 
 /// @access private
-@mixin _icon-w-margin($margin, $left, $right) {
-    igx-icon {
-        @content;
-        margin-#{$right}: $margin;
-    }
-
-    * + igx-icon {
-        margin-#{$right}: 0;
+@mixin _icon-w-margin($margin, $left) {
+    * + igx-icon,
+    igx-icon + *:not(igx-icon) {
         margin-#{$left}: $margin;
     }
 }
@@ -627,8 +622,7 @@
 
         @include _icon-w-margin(
             map-get($icon-in-button-margin, 'comfortable'),
-            $left,
-            $right
+            $left
         );
     }
 
@@ -637,8 +631,7 @@
         min-height: map-get($button-size, 'cosy');
         @include _icon-w-margin(
             map-get($icon-in-button-margin, 'cosy'),
-            $left,
-            $right
+            $left
         );
     }
 
@@ -647,8 +640,7 @@
         min-height: map-get($button-size, 'compact');
         @include _icon-w-margin(
             map-get($icon-in-button-margin, 'compact'),
-            $left,
-            $right
+            $left
         );
     }
 
@@ -730,8 +722,7 @@
         min-height: map-get($button-size, 'cosy');
         @include _icon-w-margin(
             map-get($icon-in-button-margin, 'cosy'),
-            $left,
-            $right
+            $left
         );
     }
 
@@ -740,8 +731,7 @@
         min-height: map-get($button-size, 'compact');
         @include _icon-w-margin(
             map-get($icon-in-button-margin, 'compact'),
-            $left,
-            $right
+            $left
         );
     }
 
