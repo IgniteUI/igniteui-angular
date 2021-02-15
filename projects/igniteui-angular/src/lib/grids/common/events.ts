@@ -70,14 +70,6 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
 export interface IPinColumnCancellableEventArgs extends IPinColumnEventArgs, CancelableEventArgs {
 }
 
-/**
- * The event arguments after a page is changed.
- */
-export interface IPageEventArgs extends IBaseEventArgs {
-    previous: number;
-    current: number;
-}
-
 export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
 }
