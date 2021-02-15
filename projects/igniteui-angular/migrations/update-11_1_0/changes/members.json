@@ -296,6 +296,69 @@
             "definedIn": [
                 "IgxBaseExporter"
             ]
+        },
+        {
+            "member": "onAction",
+            "replaceWith": "action",
+            "definedIn": [
+                "IgxNavbarComponent"
+            ]
+        },
+        {
+            "member": "onLeftPan",
+            "replaceWith": "leftPan",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onRightPan",
+            "replaceWith": "rightPan",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onPanStateChange",
+            "replaceWith": "panStateChange",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onItemClicked",
+            "replaceWith": "itemClicked",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onTabItemSelected",
+            "replaceWith": "tabItemSelected",
+            "definedIn": [
+                "IgxTabsComponent"
+            ]
+        },
+        {
+            "member": "onTabItemDeselected",
+            "replaceWith": "tabItemDeselected",
+            "definedIn": [
+                "IgxTabsComponent"
+            ]
+        },
+        {
+            "member": "onTooltipShow",
+            "replaceWith": "tooltipShow",
+            "definedIn": [
+                "IgxTooltipTargetDirective"
+            ]
+        },
+        {
+            "member": "onTooltipHide",
+            "replaceWith": "tooltipHide",
+            "definedIn": [
+                "IgxTooltipTargetDirective"
+            ]
         }
     ]
 }
