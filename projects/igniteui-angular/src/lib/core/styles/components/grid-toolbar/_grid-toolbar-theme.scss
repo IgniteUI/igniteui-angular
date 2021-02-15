@@ -173,14 +173,6 @@
                     display: none;
                 }
             }
-
-            > * {
-                margin-#{$left}: rem(8px);
-
-                &:first-child {
-                    margin-#{$left}: 0;
-                }
-            }
         }
 
         &[dir='rtl'] {
@@ -196,15 +188,6 @@
 
             %igx-grid-toolbar__button-space {
                 text-align: #{$right};
-
-                > * {
-                    margin-#{$left}: 0;
-                    margin-#{$right}: rem(8px);
-                }
-
-                > *:last-child {
-                    margin-#{$left}: 0;
-                }
             }
         }
     }

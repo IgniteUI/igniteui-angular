@@ -136,13 +136,6 @@
             font-size: rem(18px);
             width: rem(18px);
             height: rem(18px);
-            margin-right: rem(8px);
-        }
-
-        @include if-rtl() {
-            igx-icon {
-                margin-left: rem(8px);
-            }
         }
     }
 
@@ -208,11 +201,6 @@
             font-size: rem(18px);
             width: rem(18px);
             height: rem(18px);
-        }
-
-        igx-icon + span,
-        span + igx-icon {
-            margin-left: rem(8px);
         }
     }
 
@@ -307,10 +295,6 @@
 
             igx-buttongroup {
                 width: rem(208px);
-
-                [igxButton] > igx-icon + span {
-                    margin-#{$left}: rem(8px);
-                }
             }
         }
 
