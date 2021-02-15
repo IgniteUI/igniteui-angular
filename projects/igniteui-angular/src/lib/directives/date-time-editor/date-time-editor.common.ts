@@ -25,3 +25,14 @@ export interface DatePartInfo {
     end: number;
     format: string;
 }
+
+/** Delta values used for spin actions. */
+export interface DatePartDeltas {
+    date: number;
+    month: number;
+    year: number;
+    hour: number;
+    minute: number;
+    second: number;
+    ampm: number;
+}

@@ -107,6 +107,30 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.value.getDate()).toEqual(date);
             });
 
+            it('should correctly increment / decrement date portions with passed in spinDeltas', () => {
+                inputFormat = 'dd/MM/yyyy';
+                inputDate = '12/10/2015';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                const date = new Date(2015, 11, 12, 14, 35, 12);
+                dateTimeEditor.value = date;
+                dateTimeEditor.spinDeltas = { date: 2, month: 2, year: 2, hour: 2, minute: 2, second: 2, ampm: 2 };
+                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+
+                dateTimeEditor.increment();
+                expect(dateTimeEditor.value.getDate()).toEqual(14);
+
+                dateTimeEditor.decrement();
+                expect(dateTimeEditor.value.getDate()).toEqual(12);
+
+                dateTimeEditor.increment(DatePart.Minutes);
+                expect(dateTimeEditor.value.getMinutes()).toEqual(date.getMinutes() + 2);
+
+                dateTimeEditor.decrement(DatePart.Hours);
+                expect(dateTimeEditor.value.getHours()).toEqual(date.getHours() - 2);
+            });
+
             it('should not loop over to next month when incrementing date', () => {
                 inputFormat = 'dd/MM/yyyy';
                 inputDate = '29/02/2020';
