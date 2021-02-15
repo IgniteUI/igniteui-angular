@@ -47,7 +47,7 @@ export const getWorkspacePath = (host: Tree): string => {
 const logIncludingDependency = (context: SchematicContext, pkg: string, version: string): void =>
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 
-const getTargetedProjectOptions = (context: SchematicContext, project: workspaces.ProjectDefinition, target: string) => {
+const getTargetedProjectOptions = (project: workspaces.ProjectDefinition, target: string, context: SchematicContext) => {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
@@ -65,8 +65,8 @@ const getTargetedProjectOptions = (context: SchematicContext, project: workspace
 };
 
 export const getConfigFile =
-    (context: SchematicContext, project: workspaces.ProjectDefinition, option: string, configSection: string = 'build'): string => {
-        const options = getTargetedProjectOptions(context, project, configSection);
+    (project: workspaces.ProjectDefinition, option: string, context: SchematicContext, configSection: string = 'build'): string => {
+        const options = getTargetedProjectOptions(project, configSection, context);
         if (!options) {
             context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +
                 `It could require you to manually add and update the ${configSection} options.`);
@@ -146,9 +146,9 @@ export const getPropertyFromWorkspace = (targetProp: string, workspace: any, cur
 };
 
 const addHammerToConfig =
-    async (context: SchematicContext, project: workspaces.ProjectDefinition, tree: Tree, config: string): Promise<void> => {
-        const projectOptions = getTargetedProjectOptions(context, project, config);
-        const tsPath = getConfigFile(context, project, 'main', config);
+    async (project: workspaces.ProjectDefinition, tree: Tree, config: string, context: SchematicContext): Promise<void> => {
+        const projectOptions = getTargetedProjectOptions(project, config, context);
+        const tsPath = getConfigFile(project, 'main', context, config);
         const hammerImport = 'import \'hammerjs\';\n';
         const tsContent = tree.read(tsPath)?.toString();
         // if there are no elements in the architect[config]options.scripts array that contain hammerjs
@@ -178,8 +178,8 @@ const includeDependencies = async (pkgJson: any, context: SchematicContext, tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                await addHammerToConfig(context, defaultProject, tree, 'build');
-                await addHammerToConfig(context, defaultProject, tree, 'test');
+                await addHammerToConfig(defaultProject, tree, 'build', context);
+                await addHammerToConfig(defaultProject, tree, 'test', context);
                 break;
             default:
                 logIncludingDependency(context, pkg, version);

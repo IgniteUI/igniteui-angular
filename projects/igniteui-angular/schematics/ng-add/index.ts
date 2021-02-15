@@ -10,7 +10,7 @@ import { createHost, getDefaultProject } from '../utils/util';
 
 const enablePolyfills = async (tree: Tree, context: SchematicContext): Promise<string> => {
   const project = await getDefaultProject(tree);
-  const targetFile = getConfigFile(context, project, 'polyfills');
+  const targetFile = getConfigFile(project, 'polyfills', context);
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
     return;
@@ -46,7 +46,7 @@ const readInput = (options: Options): Rule =>
     if (options.polyfills) {
       const targetProperty = 'es5BrowserSupport';
       const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
-      const polyfillsFile = getConfigFile(context, project, 'polyfills');
+      const polyfillsFile = getConfigFile(project, 'polyfills', context);
       if (polyfillsFile !== undefined) {
           const build = project.targets.get('build');
           let polyfillsData = tree.read(polyfillsFile).toString();
