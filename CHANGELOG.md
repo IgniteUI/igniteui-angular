@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Support for `currency` type columns is added in the grid.
+    - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
