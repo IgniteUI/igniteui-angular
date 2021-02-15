@@ -116,7 +116,7 @@ describe('Excel Exporter', () => {
 
     const getExportedData = (data: any[], exportOptions: IgxExcelExporterOptions) => {
         const result = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });

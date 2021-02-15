@@ -8,7 +8,7 @@ import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxButtonGroupModule, IgxActionStripModule, GridBaseAPIService
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -141,6 +141,7 @@ import { GridFinJSComponent } from './grid-finjs/grid-finjs.component';
 import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
+import { GridEventsComponent } from './grid-events/grid-events.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -254,6 +255,7 @@ const components = [
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
     GridFormattingComponent,
+    GridEventsComponent,
     GridFilteringComponent,
     GridFinJSComponent,
     MainComponent,

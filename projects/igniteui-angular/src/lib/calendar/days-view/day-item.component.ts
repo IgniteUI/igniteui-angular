@@ -57,7 +57,7 @@ export class IgxDayItemComponent {
     public isWithinRange = false;
 
     @Output()
-    public onDateSelection = new EventEmitter<ICalendarDate>();
+    public dateSelection = new EventEmitter<ICalendarDate>();
 
     public get isCurrentMonth(): boolean {
         return this.date.isCurrentMonth;
@@ -168,6 +168,6 @@ export class IgxDayItemComponent {
     @HostListener('keydown.enter', ['$event'])
     public onSelect(event) {
         event.stopPropagation();
-        this.onDateSelection.emit(this.date);
+        this.dateSelection.emit(this.date);
     }
 }

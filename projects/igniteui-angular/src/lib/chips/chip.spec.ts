@@ -22,7 +22,7 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
             [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
+                <igx-icon igxPrefix>drag_indicator</igx-icon>
             </igx-chip>
             <igx-chip #chipElem tabIndex="1" [id]="tabChipAttr">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>

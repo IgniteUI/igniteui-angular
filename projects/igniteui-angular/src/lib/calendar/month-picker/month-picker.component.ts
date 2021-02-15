@@ -233,7 +233,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public selectMonth(event: Date) {
         this.selectDate(event);
-        this.onSelection.emit(this.selectedDates);
+        this.selected.emit(this.selectedDates);
     }
 
     /**

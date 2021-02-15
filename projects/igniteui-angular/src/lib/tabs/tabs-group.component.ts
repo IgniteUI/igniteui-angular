@@ -112,7 +112,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * }
      * ```
      */
-    get relatedTab(): IgxTabItemComponent {
+    public get relatedTab(): IgxTabItemComponent {
         if (this._tabs.tabs) {
             return this._tabs.tabs.toArray()[this.index] as IgxTabItemComponent;
         }
@@ -128,7 +128,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * }
      * ```
      */
-    get index(): number {
+    public get index(): number {
         if (this._tabs.groups) {
             return this._tabs.groups.toArray().indexOf(this);
         }
@@ -138,14 +138,14 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * @hidden
      */
-    get customTabTemplate(): TemplateRef<any> {
+    public get customTabTemplate(): TemplateRef<any> {
         return this._tabTemplate;
     }
 
     /**
      * @hidden
      */
-    set customTabTemplate(template: TemplateRef<any>) {
+    public set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
     }
 

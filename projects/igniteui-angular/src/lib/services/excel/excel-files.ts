@@ -9,7 +9,7 @@ import { yieldingLoop } from '../../core/utils';
  * @hidden
  */
 export class RootRelsFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip) {
         folder.file('.rels', ExcelStrings.getRels());
     }
 }
@@ -27,7 +27,7 @@ export class AppFile implements IExcelFile {
  * @hidden
  */
 export class CoreFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip) {
         folder.file('core.xml', ExcelStrings.getCore());
     }
 }
@@ -46,7 +46,7 @@ export class WorkbookRelsFile implements IExcelFile {
  * @hidden
  */
 export class ThemeFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip) {
         folder.file('theme1.xml', ExcelStrings.getTheme());
     }
 }
@@ -61,10 +61,10 @@ export class WorksheetFile implements IExcelFile {
     private freezePane = '';
     private rowHeight = '';
 
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {}
+    public writeElement() {}
 
     public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
 
@@ -287,7 +287,7 @@ export class TablesFile implements IExcelFile {
  * @hidden
  */
 export class WorksheetRelsFile implements IExcelFile {
-    public writeElement(folder: JSZip, worksheetData: WorksheetData) {
+    public writeElement(folder: JSZip) {
         folder.file('sheet1.xml.rels', ExcelStrings.getWorksheetRels());
     }
 }

@@ -15,7 +15,7 @@ export class GridDeclarationComponent {
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
-    data = new ExportTestDataService().simpleGridData;
+    public data = new ExportTestDataService().simpleGridData;
 }
 
 @Component({

@@ -2847,12 +2847,12 @@ class IgxSelectBottomComponent {
     template: `
     <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
     <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">favorite</igx-icon>
-            <igx-icon fontSet="material">home</igx-icon>
-            <igx-icon fontSet="material">search</igx-icon>
+            <igx-icon>favorite</igx-icon>
+            <igx-icon>home</igx-icon>
+            <igx-icon>search</igx-icon>
         </igx-prefix>
         <igx-suffix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-suffix>
     <igx-hint>I am a Hint</igx-hint>
     <igx-select-item *ngFor="let item of items" [value]="item">
@@ -2889,7 +2889,7 @@ class IgxSelectAffixComponent {
     <igx-select formControlName="optionsSelect" #selectReactive>
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-prefix>
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
             {{ item }}
@@ -2967,7 +2967,7 @@ class IgxSelectReactiveFormComponent {
     <igx-select #selectInForm [(ngModel)]="model.option" [required]="isRequired" name="option">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-prefix>
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
             {{ item }}
@@ -3011,7 +3011,7 @@ class IgxSelectTemplateFormComponent {
         [displayDensity]="'cosy'">
             <label igxLabel>Sample Label</label>
             <igx-prefix igxPrefix>
-                <igx-icon fontSet="material">alarm</igx-icon>
+                <igx-icon>alarm</igx-icon>
             </igx-prefix>
             <igx-select-item>None</igx-select-item>
             <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">

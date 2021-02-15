@@ -63,12 +63,12 @@ const detailsFactory = (params: any): Idetails => ({
 })
 export class CardSampleComponent {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
-    public panel: IgxExpansionPanelComponent;
+    private panel: IgxExpansionPanelComponent;
 
     public horizontal = false;
     public volume = 10;
 
-    details = [
+    public details = [
         detailsFactory({
             value: '12%',
             icon: 'rain',
@@ -81,7 +81,7 @@ export class CardSampleComponent {
         })
     ];
 
-    days = [
+    public days = [
         listFactory({
             day: 'Tuesday',
             icon: 'wb_cloudy',
@@ -122,7 +122,7 @@ export class CardSampleComponent {
         }),
     ];
 
-    cards = [
+    public cards = [
         cardFactory({
             content: `New York City comprises 5 boroughs sitting where the
             Hudson River meets the Atlantic Ocean. At its core is Manhattan,
