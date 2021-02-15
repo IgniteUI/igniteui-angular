@@ -6,7 +6,7 @@ import { DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
-import { TreeGridFilteringStrategy } from '../../grids/tree-grid/tree-grid.filtering.pipe';
+import { TreeGridFilteringStrategy } from '../../grids/tree-grid/tree-grid.filtering.strategy';
 import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
