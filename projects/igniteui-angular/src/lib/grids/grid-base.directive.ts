@@ -2427,12 +2427,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets whether the toolbar is shown.
      *
+     * @deprecated
      *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
      * ```
      */
+    @DeprecateProperty('`showToolbar` is deprecated')
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;
@@ -2444,12 +2446,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets the toolbar's title.
      *
+     * @deprecated
      *
      * @example
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`toolbarTitle` is deprecated')
     @Input()
     public get toolbarTitle(): string {
         return this._toolbarTitle;
