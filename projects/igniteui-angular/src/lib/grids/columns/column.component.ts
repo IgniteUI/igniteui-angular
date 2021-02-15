@@ -35,7 +35,7 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand } from '../summaries/grid-summary';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand, IgxCurrencySummaryOperand } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -1533,6 +1533,9 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
                     break;
+                case DataType.Currency:
+                    this.summaries = IgxCurrencySummaryOperand;
+                    break;
                 default:
                     this.summaries = IgxSummaryOperand;
                     break;
@@ -1544,6 +1547,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.filters = IgxBooleanFilteringOperand.instance();
                     break;
                 case DataType.Number:
+                case DataType.Currency:
                     this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
@@ -1743,7 +1747,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         const grid = (this.grid as any);
-
         if (this._pinned) {
             return false;
         }
@@ -1770,7 +1773,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        grid.endEdit(true);
+        grid.endEdit(false);
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
@@ -1861,7 +1864,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this.grid.endEdit(true);
+        this.grid.endEdit(false);
 
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);

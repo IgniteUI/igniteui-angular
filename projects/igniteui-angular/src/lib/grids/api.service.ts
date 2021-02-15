@@ -511,7 +511,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
         if (grid.rowEditable) {
-            grid.endEdit(true);
+            grid.endEdit(false);
         }
     }
 
