@@ -812,10 +812,6 @@ export class IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
-        if (this.grid && this.grid.rowSelection === 'multipleCascade') {
-            (this.grid.gridAPI as IgxTreeGridAPIService).cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
-            return;
-        }
         if (clearPrevSelection) {
             this.rowSelection.clear();
         }
@@ -826,10 +822,6 @@ export class IgxGridSelectionService {
 
     /** Deselect specified rows. No event is emitted. */
     deselectRowsWithNoEvent(rowIDs: any[]): void {
-        if (this.grid.rowSelection === 'multipleCascade') {
-            (this.grid.gridAPI as IgxTreeGridAPIService).cascadeDeselectRowsWithNoEvent(rowIDs);
-            return;
-        }
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
@@ -888,10 +880,6 @@ export class IgxGridSelectionService {
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
-        if (this.grid.rowSelection === 'multipleCascade') {
-            (this.grid.gridAPI as IgxTreeGridAPIService).emitRowSelectionEvent(newSelection, added, removed, event);
-            return;
-        }
         const currSelection = this.getSelectedRows();
         if (this.areEqualCollections(currSelection, newSelection)) {
             return;
@@ -1065,7 +1053,7 @@ export class IgxGridSelectionService {
         this.columnSelection.clear();
     }
 
-    public areEqualCollections(first, second): boolean {
+    protected areEqualCollections(first, second): boolean {
         return first.length === second.length && new Set(first.concat(second)).size === first.length;
     }
 

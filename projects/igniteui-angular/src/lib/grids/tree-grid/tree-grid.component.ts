@@ -37,6 +37,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 
 let NEXT_ID = 0;
 
@@ -62,10 +63,10 @@ let NEXT_ID = 0;
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [
-        IgxGridSelectionService,
         IgxGridCRUDService,
         IgxGridSummaryService,
         IgxGridNavigationService,
+        { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
@@ -365,7 +366,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             if (this.rowSelection === 'multipleCascade') {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
-                     this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
+                    this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
                         new Set([rec.parent]), rec.parent.rowID);
                 } else {
                     // The record is still not available
@@ -374,7 +375,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                         rec = this._gridAPI.get_rec_by_id(this.primaryKey ?
                             args.data[this.primaryKey] : args.data);
                         if (rec && rec.parent) {
-                            this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
+                            this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
                                 new Set([rec.parent]), rec.parent.rowID);
                         }
                         this.notifyChanges();
@@ -399,7 +400,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     });
                     // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
-                        this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
+                        this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
                         this.notifyChanges();
                     });
                 }
@@ -414,7 +415,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                         leafRowsDirectParents.add(record.parent);
                     }
                 });
-                this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
+                this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
                 this.notifyChanges();
             }
         });
@@ -454,12 +455,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
+        // TODO: pipesExectured event 
+        // run after change detection in super triggers pipes for records structure
         if (this.rowSelection === 'multipleCascade' && this.selectedRows.length) {
             const selRows = this.selectedRows;
             this.selectionService.clearRowSelection();
             this.selectRows(selRows, true);
+            this.cdr.detectChanges();
         }
-        this.cdr.detectChanges();
     }
 
     /**
@@ -796,7 +799,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 rec = this._gridAPI.get_rec_by_id((event as StateUpdateEvent).actions[0].transaction.id);
             }
             if (rec && rec.parent) {
-                this._gridAPI.updateCascadeSelectionOnFilterAndCRUD(
+                this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
                     new Set([rec.parent]), rec.parent.rowID
                 );
                 this.notifyChanges();
