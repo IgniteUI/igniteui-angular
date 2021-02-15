@@ -455,7 +455,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        // TODO: pipesExectured event 
+        // TODO: pipesExectured event
         // run after change detection in super triggers pipes for records structure
         if (this.rowSelection === 'multipleCascade' && this.selectedRows.length) {
             const selRows = this.selectedRows;

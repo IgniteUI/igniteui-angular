@@ -5,12 +5,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 
 @Injectable()
 export class IgxTreeGridSelectionService extends IgxGridSelectionService {
-    private rowsToBeSelected: Set<any>;
-    private rowsToBeIndeterminate: Set<any>;
 
-    public get selectionService(): IgxGridSelectionService {
-        return this.grid.selectionService;
-    }
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
         if (this.grid && this.grid.rowSelection === 'multipleCascade') {
@@ -28,6 +23,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         }
         super.deselectRowsWithNoEvent(rowIDs);
     }
+
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         if (this.grid.rowSelection === 'multipleCascade') {
             this.emitCascadeRowSelectionEvent(newSelection, added, removed, event);
@@ -35,7 +31,13 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         }
 
         super.emitRowSelectionEvent(newSelection, added, removed, event);
+    }
 
+    private rowsToBeSelected: Set<any>;
+    private rowsToBeIndeterminate: Set<any>;
+
+    public get selectionService(): IgxGridSelectionService {
+        return this.grid.selectionService;
     }
 
     private emitCascadeRowSelectionEvent(newSelection, added, removed, event?): boolean {
@@ -147,7 +149,6 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         args.removed = args.oldSelection.filter(x => args.newSelection.indexOf(x) < 0);
         args.added = args.newSelection.filter(x => args.oldSelection.indexOf(x) < 0);
     }
-
 
     /**
      * adds to rowsToBeProcessed set all visible children of the rows which was initially within the rowsToBeProcessed set
@@ -271,5 +272,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
             }
         }
         return children;
+
     }
+
 }
