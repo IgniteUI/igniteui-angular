@@ -31,8 +31,8 @@ export interface IExportRecord {
 }
 
 /**
- * onRowExport event arguments
- * this.exporterService.onRowExport.subscribe((args: IRowExportingEventArgs) => {
+ * rowExporting event arguments
+ * this.exporterService.rowExporting.subscribe((args: IRowExportingEventArgs) => {
  * // set args properties here
  * })
  */
@@ -54,9 +54,9 @@ export interface IRowExportingEventArgs extends IBaseEventArgs {
 }
 
 /**
- * onColumnExport event arguments
+ * columnExporting event arguments
  * ```typescript
- * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+ * this.exporterService.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
  * // set args properties here
  * });
  * ```
@@ -96,26 +96,26 @@ export abstract class IgxBaseExporter {
     /**
      * This event is emitted when a row is exported.
      * ```typescript
-     * this.exporterService.onRowExport.subscribe((args: IRowExportingEventArgs) => {
+     * this.exporterService.rowExporting.subscribe((args: IRowExportingEventArgs) => {
      * // put event handler code here
      * });
      * ```
      *
      * @memberof IgxBaseExporter
      */
-    public onRowExport = new EventEmitter<IRowExportingEventArgs>();
+    public rowExporting = new EventEmitter<IRowExportingEventArgs>();
 
     /**
      * This event is emitted when a column is exported.
      * ```typescript
-     * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+     * this.exporterService.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
      * // put event handler code here
      * });
      * ```
      *
      * @memberof IgxBaseExporter
      */
-    public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
+    public columnExporting = new EventEmitter<IColumnExportingEventArgs>();
 
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
@@ -236,7 +236,7 @@ export abstract class IgxBaseExporter {
                     cancel: false,
                     skipFormatter: false
                 };
-                this.onColumnExport.emit(columnExportArgs);
+                this.columnExporting.emit(columnExportArgs);
 
                 column.header = columnExportArgs.header;
                 column.skip = columnExportArgs.cancel;
@@ -301,7 +301,7 @@ export abstract class IgxBaseExporter {
             cancel: false
         };
 
-        this.onRowExport.emit(rowArgs);
+        this.rowExporting.emit(rowArgs);
 
         if (!rowArgs.cancel) {
             data.push(record);
