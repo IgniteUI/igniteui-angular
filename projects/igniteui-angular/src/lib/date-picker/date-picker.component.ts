@@ -65,10 +65,10 @@ import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-pic
 import { IDatePicker } from './date-picker.common';
 import { KEYS, isIE, isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
-import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 
 let NEXT_ID = 0;
 
@@ -1380,8 +1380,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.datePickerActions = this.datePickerActionsDirective;
 
-        componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
-        componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
+        // componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
+        // componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
     }
 
     // Focus a date, after the calendar appearance into DOM.
