@@ -22,31 +22,31 @@ const schematicsPackage = '@igniteui/angular-schematics';
  * unnecessary packages to the consuming project's deps
  */
 export const DEPENDENCIES_MAP: PackageEntry[] = [
-        // dependencies
-        { name: 'hammerjs', target: PackageTarget.REGULAR },
-        { name: 'jszip', target: PackageTarget.REGULAR },
-        { name: 'tslib', target: PackageTarget.NONE },
-        { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
-        { name: '@types/hammerjs', target: PackageTarget.DEV },
-        { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
-        { name: 'lodash.mergewith', target: PackageTarget.NONE },
-        { name: 'uuid', target: PackageTarget.NONE },
-        { name: 'web-animations-js', target: PackageTarget.REGULAR },
-        { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
-        // peerDependencies
-        { name: '@angular/forms', target: PackageTarget.NONE },
-        { name: '@angular/common', target: PackageTarget.NONE },
-        { name: '@angular/core', target: PackageTarget.NONE },
-        { name: '@angular/animations', target: PackageTarget.NONE },
-        // igxDevDependencies
-        { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
+    // dependencies
+    { name: 'hammerjs', target: PackageTarget.REGULAR },
+    { name: 'jszip', target: PackageTarget.REGULAR },
+    { name: 'tslib', target: PackageTarget.NONE },
+    { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
+    { name: '@types/hammerjs', target: PackageTarget.DEV },
+    { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
+    { name: 'lodash.mergewith', target: PackageTarget.NONE },
+    { name: 'uuid', target: PackageTarget.NONE },
+    { name: 'web-animations-js', target: PackageTarget.REGULAR },
+    { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
+    // peerDependencies
+    { name: '@angular/forms', target: PackageTarget.NONE },
+    { name: '@angular/common', target: PackageTarget.NONE },
+    { name: '@angular/core', target: PackageTarget.NONE },
+    { name: '@angular/animations', target: PackageTarget.NONE },
+    // igxDevDependencies
+    { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
 
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
-function getTargetedProjectOptions(context: SchematicContext, project: WorkspaceProject<ProjectType>, target: string) {
+function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string, context: SchematicContext) {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
@@ -65,8 +65,8 @@ function getTargetedProjectOptions(context: SchematicContext, project: Workspace
 }
 
 export function getConfigFile(
-    context: SchematicContext, project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
-    const options = getTargetedProjectOptions(context, project, configSection);
+    project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build', context: SchematicContext): string {
+    const options = getTargetedProjectOptions(project, configSection, context);
     if (!options) {
         context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +
             `It could require you to manually add and update the ${configSection} options.`);
@@ -146,16 +146,21 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
-const addHammerToConfig = (context: SchematicContext, workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string) => {
-    const projectOptions = getTargetedProjectOptions(context, project, config);
-    const tsPath = getConfigFile(context, project, 'main', config);
+const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string, context: SchematicContext) => {
+    const projectOptions = getTargetedProjectOptions(project, config,context);
+    const tsPath = getConfigFile(project, 'main', config, context);
     const hammerImport = 'import \'hammerjs\';\n';
-    const tsContent = tree.read(tsPath).toString();
+    const tsContent = tree.read(tsPath)?.toString();
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
     // and the "main" file does not contain an import with hammerjs
-    if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !tsContent.includes(hammerImport)) {
-        projectOptions.scripts.push('./node_modules/hammerjs/hammer.min.js');
-        overwriteJsonFile(tree, 'angular.json', workspace);
+    if (!projectOptions?.scripts?.some(el => el.includes('hammerjs')) && !tsContent?.includes(hammerImport)) {
+        const hammerjsFilePath = './node_modules/hammerjs/hammer.min.js';
+        if (projectOptions?.scripts) {
+            projectOptions.scripts.push(hammerjsFilePath);
+            return;
+        }
+        context.logger.warn(`Could not find a matching scripts array property under ${config} options. ` +
+            `It could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
     }
 };
 
@@ -172,8 +177,8 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                addHammerToConfig(context, workspace, defaultProject, tree, 'build');
-                addHammerToConfig(context, workspace, defaultProject, tree, 'test');
+                addHammerToConfig(workspace, defaultProject, tree, 'build', context);
+                addHammerToConfig(workspace, defaultProject, tree, 'test', context);
                 break;
             default:
                 logIncludingDependency(context, pkg, version);

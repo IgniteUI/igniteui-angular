@@ -282,14 +282,14 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
 // import 'classlist.js';  // Run \`npm install --save classlist.js\`.
 
 // import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
-    `;
+  `;
 
     const result = `
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run \`npm install --save classlist.js\`.
 
 import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
-    `;
+  `;
 
     tree.create(`${sourceRoot}/polyfills.ts`, polyfills);
     const newJson: any = JSON.parse(tree.read('/angular.json').toString());

@@ -1,8 +1,10 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
-import { logSuccess, addDependencies, overwriteJsonFile,
-    getPropertyFromWorkspace, getConfigFile } from '../utils/dependency-handler';
+import {
+  logSuccess, addDependencies, overwriteJsonFile,
+  getPropertyFromWorkspace, getConfigFile
+} from '../utils/dependency-handler';
 
 import { addResetCss } from './add-normalize';
 import { getWorkspace } from '@schematics/angular/utility/config';
@@ -49,30 +51,30 @@ function enableWebAnimationsAndGridSupport(tree: Tree, targetFile: string, polyf
 }
 
 function readInput(options: Options): Rule {
-    return (tree: Tree, context: SchematicContext) => {
-        if (options.polyfills) {
-            const workspace = getWorkspace(tree);
-            const targetProperty = 'es5BrowserSupport';
-            const project = workspace.projects[workspace.defaultProject];
-            const polyfillsFile = getConfigFile(context, project, 'polyfills');
-            if (polyfillsFile !== undefined) {
-                const propertyExists = propertyExistsInWorkspace(targetProperty, workspace);
-                let polyfillsData = tree.read(polyfillsFile).toString();
-                if (propertyExists) {
-                    // If project targets angular cli version >= 7.3
-                    workspace.projects[workspace.defaultProject].architect.build.options[targetProperty] = true;
-                    enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
-                    overwriteJsonFile(tree, 'angular.json', workspace);
-                } else {
-                    // If project targets angular cli version < 7.3
-                    polyfillsData = enablePolyfills(tree, context);
-                    enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
-                }
-            } else {
-                context.logger.warn(`You may want to manually uncomment '// import 'web-animations-js' in polyfills.ts`);
-            }
+  return (tree: Tree, context: SchematicContext) => {
+    if (options.polyfills) {
+      const workspace = getWorkspace(tree);
+      const targetProperty = 'es5BrowserSupport';
+      const project = workspace.projects[workspace.defaultProject];
+      const polyfillsFile = getConfigFile(context, project, 'polyfills');
+      if (polyfillsFile !== undefined) {
+        const propertyExists = propertyExistsInWorkspace(targetProperty, workspace);
+        let polyfillsData = tree.read(polyfillsFile).toString();
+        if (propertyExists) {
+          // If project targets angular cli version >= 7.3
+          workspace.projects[workspace.defaultProject].architect.build.options[targetProperty] = true;
+          enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
+          overwriteJsonFile(tree, 'angular.json', workspace);
+        } else {
+          // If project targets angular cli version < 7.3
+          polyfillsData = enablePolyfills(tree, context);
+          enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
         }
-    };
+      } else {
+        context.logger.warn(`You may want to manually uncomment '// import 'web-animations-js' in polyfills.ts`);
+      }
+    }
+  };
 }
 
 function addNormalize(options: Options): Rule {
