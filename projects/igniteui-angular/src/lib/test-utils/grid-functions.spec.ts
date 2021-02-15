@@ -220,7 +220,7 @@ export class GridFunctions {
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
-    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise<void>(async (resolve, reject) => {
+    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise<void>(async (resolve) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
         UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
         await wait(debounceTime);
@@ -1060,7 +1060,7 @@ export class GridFunctions {
     }
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
-        return fix.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS))[3];
+        return fix.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS))[index];
     }
 
 
@@ -2032,7 +2032,7 @@ export class GridSummaryFunctions {
     public static calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
         let maxSummaryLength = 0;
         let index = 0;
-        columnList.filter((col) => col.hasSummary).forEach((column) => {
+        columnList.filter((col) => col.hasSummary).forEach(() => {
             const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
             if (maxSummaryLength < currentLength) {
                 maxSummaryLength = currentLength;
