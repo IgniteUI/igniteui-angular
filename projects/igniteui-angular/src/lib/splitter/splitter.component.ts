@@ -102,10 +102,10 @@ export class IgxSplitterComponent implements AfterContentInit {
      * ```
      */
     @Input()
-    get type() {
+    public get type() {
         return this._type;
     }
-    set type(value) {
+    public set type(value) {
         this._type = value;
         if (this.panes) {
             // if type is changed runtime, should reset sizes.

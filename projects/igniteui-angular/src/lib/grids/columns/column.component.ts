@@ -1747,7 +1747,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         const grid = (this.grid as any);
-
         if (this._pinned) {
             return false;
         }
@@ -1774,7 +1773,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        grid.endEdit(true);
+        grid.endEdit(false);
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
@@ -1865,7 +1864,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this.grid.endEdit(true);
+        this.grid.endEdit(false);
 
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);
