@@ -22,31 +22,31 @@ const schematicsPackage = '@igniteui/angular-schematics';
  * unnecessary packages to the consuming project's deps
  */
 export const DEPENDENCIES_MAP: PackageEntry[] = [
-        // dependencies
-        { name: 'hammerjs', target: PackageTarget.REGULAR },
-        { name: 'jszip', target: PackageTarget.REGULAR },
-        { name: 'tslib', target: PackageTarget.NONE },
-        { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
-        { name: '@types/hammerjs', target: PackageTarget.DEV },
-        { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
-        { name: 'lodash.mergewith', target: PackageTarget.NONE },
-        { name: 'uuid', target: PackageTarget.NONE },
-        { name: 'web-animations-js', target: PackageTarget.REGULAR },
-        { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
-        // peerDependencies
-        { name: '@angular/forms', target: PackageTarget.NONE },
-        { name: '@angular/common', target: PackageTarget.NONE },
-        { name: '@angular/core', target: PackageTarget.NONE },
-        { name: '@angular/animations', target: PackageTarget.NONE },
-        // igxDevDependencies
-        { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
+    // dependencies
+    { name: 'hammerjs', target: PackageTarget.REGULAR },
+    { name: 'jszip', target: PackageTarget.REGULAR },
+    { name: 'tslib', target: PackageTarget.NONE },
+    { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
+    { name: '@types/hammerjs', target: PackageTarget.DEV },
+    { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
+    { name: 'lodash.mergewith', target: PackageTarget.NONE },
+    { name: 'uuid', target: PackageTarget.NONE },
+    { name: 'web-animations-js', target: PackageTarget.REGULAR },
+    { name: '@igniteui/material-icons-extended', target: PackageTarget.REGULAR },
+    // peerDependencies
+    { name: '@angular/forms', target: PackageTarget.NONE },
+    { name: '@angular/common', target: PackageTarget.NONE },
+    { name: '@angular/core', target: PackageTarget.NONE },
+    { name: '@angular/animations', target: PackageTarget.NONE },
+    // igxDevDependencies
+    { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
 ];
 
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
-function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string) {
+function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string, context: SchematicContext) {
     if (project.targets &&
         project.targets[target] &&
         project.targets[target].options) {
@@ -59,22 +59,29 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
         return project.architect[target].options;
     }
 
-    throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
+    context.logger.warn(`Could not find matching ${target} options ` +
+        `in Angular workspace ${project.sourceRoot}. ` +
+        `It could require you to manually add and update the ${target} section.`);
 }
 
-export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
-    const options = getTargetedProjectOptions(project, configSection);
+export function getConfigFile(
+    project: WorkspaceProject<ProjectType>, option: string, context: SchematicContext, configSection: string = 'build'): string {
+    const options = getTargetedProjectOptions(project, configSection, context);
     if (!options) {
-        throw new SchematicsException(`Could not find matching ${configSection} section` +
-            `inside of the workspace config ${project.sourceRoot} `);
-    }
-    if (!options[option]) {
-        throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
-            `workspace config ${project.sourceRoot}`);
-    }
-    return options[option];
+        context.logger.warn(`Could not find matching ${configSection} options in Angular workspace. ` +
+            `It could require you to manually add and update the ${configSection} options.`);
 
+    }
+    if (options) {
+        if (!options[option]) {
+            context.logger.warn(`Could not find a matching ${option} property under ${configSection} options in Angular workspace. ` +
+                `Some updates may not execute correctly.`);
+        } else {
+            return options[option];
+        }
+    }
 }
+
 export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
 }
@@ -139,24 +146,31 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
-function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, config: string) {
-    const projectOptions = getTargetedProjectOptions(project, config);
-    const tsPath = getConfigFile(project, 'main', config);
+const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tree: Tree, config: string, context: SchematicContext) => {
+    const projectOptions = getTargetedProjectOptions(project, config, context);
+    const tsPath = getConfigFile(project, 'main', context, config);
     const hammerImport = 'import \'hammerjs\';\n';
-    const tsContent = tree.read(tsPath).toString();
+    const tsContent = tree.read(tsPath)?.toString();
     // if there are no elements in the architect[config]options.scripts array that contain hammerjs
     // and the "main" file does not contain an import with hammerjs
-    if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !tsContent.includes(hammerImport)) {
-        // import hammerjs in the specified by config main file
-        const mainContents = hammerImport + tsContent;
-        tree.overwrite(tsPath, mainContents);
+    if (!projectOptions?.scripts?.some(el => el.includes('hammerjs')) && !tsContent?.includes(hammerImport)) {
+        const hammerjsFilePath = './node_modules/hammerjs/hammer.min.js';
+        if (projectOptions?.scripts) {
+            projectOptions.scripts.push(hammerjsFilePath);
+            overwriteJsonFile(tree, 'angular.json', workspace);
+            return;
+        }
+        context.logger.warn(`Could not find a matching scripts array property under ${config} options. ` +
+            `It could require you to manually update it to 'scripts': [ ${hammerjsFilePath}] `);
     }
-}
+};
 
 function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree) {
     Object.keys(pkgJson.dependencies).forEach(pkg => {
         const version = pkgJson.dependencies[pkg];
         const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
+        const workspace = getWorkspace(tree);
+        const defaultProject = workspace.projects[workspace.defaultProject];
         if (!entry || entry.target === PackageTarget.NONE) {
             return;
         }
@@ -164,10 +178,8 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-                const workspace = getWorkspace(tree);
-                const project = workspace.projects[workspace.defaultProject];
-                addHammerToConfig(project, tree, 'build');
-                addHammerToConfig(project, tree, 'test');
+                addHammerToConfig(workspace, defaultProject, tree, 'build', context);
+                addHammerToConfig(workspace, defaultProject, tree, 'test', context);
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
