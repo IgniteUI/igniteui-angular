@@ -282,6 +282,20 @@
             "definedIn": [
                 "IgxMonthsViewComponent"
             ]
+        },
+        {
+            "member": "onRowExport",
+            "replaceWith": "rowExporting",
+            "definedIn": [
+                "IgxBaseExporter"
+            ]
+        },
+        {
+            "member": "onColumnExport",
+            "replaceWith": "columnExporting",
+            "definedIn": [
+                "IgxBaseExporter"
+            ]
         }
     ]
 }
