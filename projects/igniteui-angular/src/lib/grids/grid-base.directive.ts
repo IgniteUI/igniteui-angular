@@ -1477,7 +1477,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.totalPages !== 0 && this._page >= this.totalPages) {
             this.page = this.totalPages - 1;
         }
-        this.endEdit(true);
+        this.endEdit(false);
         this.notifyChanges();
     }
 
@@ -1963,7 +1963,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set summaryCalculationMode(value: GridSummaryCalculationMode) {
         this._summaryCalculationMode = value;
         if (!this._init) {
-            this.endEdit(true);
+            this.endEdit(false);
             this.summaryService.resetSummaryHeight();
             this.notifyChanges(true);
         }
@@ -3357,8 +3357,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
         });
 
-        this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
-        this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
+        this.onColumnMovingEnd.pipe(destructor).subscribe(() => this.endEdit(false));
 
         this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
@@ -3426,7 +3425,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
-            this.endEdit(true);
+            this.endEdit(false);
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
@@ -3434,7 +3433,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public _pagingDone() {
-        this.endEdit(true);
+        this.endEdit(false);
         this.selectionService.clear(true);
     }
 
@@ -4298,7 +4297,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
 
-        this.endEdit(true);
         if (column.level) {
             this._moveChildColumns(column.parent, column, target, pos);
         }
@@ -4328,6 +4326,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this._moveColumns(column, target, pos);
         this._columnsReordered(column, target);
+
+        this.onColumnMovingEnd.emit({ source: column, target });
     }
 
     /**
@@ -4760,7 +4760,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
 
-        this.endEdit(true);
+        this.endEdit(false);
 
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
@@ -4793,7 +4793,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row
         };
         this.onRowPinning.emit(eventArgs);
-        this.endEdit(true);
+        this.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
@@ -6948,13 +6948,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // after reordering is done reset cached column collections.
         this.resetColumnCollections();
         column.resetCaches();
-
-        const args = {
-            source: column,
-            target
-        };
-
-        this.onColumnMovingEnd.emit(args);
     }
 
     private _applyWidthHostBinding() {

@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Support for `currency` type columns is added in the grid.
+    - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
@@ -25,6 +26,7 @@ All notable changes for each version of this project will be documented in this 
     ng update igniteui-angular --migrate-only
     ```
     This will ensure your application is updated to use the new output names.
+- `IgxCheckbox, IgxRadio, IgxSwitch` now follow the Google Material spec for focus behavior. See [checkbox](https://material.io/components/checkboxes), [radio](https://material.io/components/radio-buttons), and [switch](https://material.io/components/switches).
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
