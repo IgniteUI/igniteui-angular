@@ -58,6 +58,99 @@
             ]
         },
         {
+            "member": "onMoveStart",
+            "replaceWith": "moveStart",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onRemove",
+            "replaceWith": "remove",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onClick",
+            "replaceWith": "chipClick",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectedChanging",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onSelectionDone",
+            "replaceWith": "selectedChanged",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onKeyDown",
+            "replaceWith": "keyDown",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onDragEnter",
+            "replaceWith": "dragEnter",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onReorder",
+            "replaceWith": "reorder",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectionChange",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onMoveStart",
+            "replaceWith": "moveStart",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onExportEnded",
+            "replaceWith": "exportEnded",
+            "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
+                "IgxBaseExporter"
+            ]
+        },
+        {
             "member": "onSelect",
             "replaceWith": "selected",
             "definedIn": [
@@ -104,6 +197,90 @@
             "replaceWith": "hidden",
             "definedIn": [
                 "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxYearsViewComponent"
+            ]
+        },
+        {
+            "member": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "definedIn": [
+                "IgxYearsViewComponent"
+            ]
+        },
+        {
+            "member": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "definedIn": [
+                "IgxDaysViewComponent"
+            ]
+        },
+        {
+            "member": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "definedIn": [
+                "IgxDaysViewComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxMonthPickerComponent"
+            ]
+        },
+        {
+            "member": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "definedIn": [
+                "IgxMonthsViewComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxMonthsViewComponent"
             ]
         }
     ]

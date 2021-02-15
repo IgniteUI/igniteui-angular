@@ -31,8 +31,8 @@ export class CharSeparatedValueData {
         this._isSpecialData = ExportUtilities.isSpecialData(this._data);
         this._escapeCharacters.push(this._delimiter);
 
-        this._headerRecord = this.processHeaderRecord(keys, this._escapeCharacters);
-        this._dataRecords = this.processDataRecords(this._data, keys, this._escapeCharacters);
+        this._headerRecord = this.processHeaderRecord(keys);
+        this._dataRecords = this.processDataRecords(this._data, keys);
 
         return this._headerRecord + this._dataRecords;
     }
@@ -51,8 +51,8 @@ export class CharSeparatedValueData {
         this._isSpecialData = ExportUtilities.isSpecialData(this._data);
         this._escapeCharacters.push(this._delimiter);
 
-        this._headerRecord = this.processHeaderRecord(keys, this._escapeCharacters);
-        this.processDataRecordsAsync(this._data, keys, this._escapeCharacters, (dr) => {
+        this._headerRecord = this.processHeaderRecord(keys);
+        this.processDataRecordsAsync(this._data, keys, (dr) => {
             done(this._headerRecord + dr);
         });
     }
@@ -65,7 +65,7 @@ export class CharSeparatedValueData {
         return safeValue + this._delimiter;
     }
 
-    private processHeaderRecord(keys, escapeChars): string {
+    private processHeaderRecord(keys): string {
         let recordData = '';
         for (const keyName of keys) {
             recordData += this.processField(keyName, this._escapeCharacters);
@@ -74,7 +74,7 @@ export class CharSeparatedValueData {
         return recordData.slice(0, -this._delimiterLength) + this._eor;
     }
 
-    private processRecord(record, keys, escapeChars): string {
+    private processRecord(record, keys): string {
         const recordData = new Array(keys.length);
         for (let index = 0; index < keys.length; index++) {
             const value = (record[keys[index]] !== undefined) ? record[keys[index]] : this._isSpecialData ? record : '';
@@ -84,24 +84,24 @@ export class CharSeparatedValueData {
         return recordData.join('').slice(0, -this._delimiterLength) + this._eor;
     }
 
-    private processDataRecords(currentData, keys, escapeChars) {
+    private processDataRecords(currentData, keys) {
         const dataRecords = new Array(currentData.length);
 
         for (let i = 0; i < currentData.length; i++) {
             const row = currentData[i];
-            dataRecords[i] = this.processRecord(row, keys, escapeChars);
+            dataRecords[i] = this.processRecord(row, keys);
         }
 
         return dataRecords.join('');
     }
 
-    private processDataRecordsAsync(currentData, keys, escapeChars, done: (result: string) => void) {
+    private processDataRecordsAsync(currentData, keys, done: (result: string) => void) {
         const dataRecords = new Array(currentData.length);
 
         yieldingLoop(currentData.length, 1000,
             (i) => {
                 const row = currentData[i];
-                dataRecords[i] = this.processRecord(row, keys, escapeChars);
+                dataRecords[i] = this.processRecord(row, keys);
             },
             () => {
                 done(dataRecords.join(''));
