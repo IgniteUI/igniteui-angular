@@ -157,6 +157,7 @@ const addHammerToConfig = (workspace, project: WorkspaceProject<ProjectType>, tr
         const hammerjsFilePath = './node_modules/hammerjs/hammer.min.js';
         if (projectOptions?.scripts) {
             projectOptions.scripts.push(hammerjsFilePath);
+            overwriteJsonFile(tree, 'angular.json', workspace);
             return;
         }
         context.logger.warn(`Could not find a matching scripts array property under ${config} options. ` +
