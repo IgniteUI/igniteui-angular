@@ -595,6 +595,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public activeHighlightClass = 'igx-highlight__active';
 
     /** @hidden @internal */
+    public get step(): number {
+        const digitsInfo = this.column.pipeArgs.digitsInfo;
+        if (!digitsInfo) {
+            return 1;
+        }
+        const step = +digitsInfo.substr(digitsInfo.indexOf('.') + 1, 1);
+        return 1 / (Math.pow(10, step));
+    }
+
+    /** @hidden @internal */
     public get currencyCode(): string {
         return this.column.pipeArgs.currencyCode ?
             this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale);

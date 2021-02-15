@@ -48,7 +48,7 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'number'">
         <igx-input-group displayDensity="compact">
-            <input igxInput [(ngModel)]="editValue" [igxFocus]="true"  type="number">
+            <input igxInput [(ngModel)]="editValue" [igxFocus]="true" [step]="step"  type="number">
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
@@ -63,14 +63,14 @@
         <igx-input-group displayDensity="compact">
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input  igxInput [value]="editValue" (input)="editValue = $event.target.value"
-                [igxFocus]="true" type="number"/>
+                [igxFocus]="true" [step]="step" type="number"/>
             <igx-suffix *ngIf="!grid.currencyPositionLeft" >{{ currencyCodeSymbol }}</igx-suffix>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'percent'">
         <igx-input-group displayDensity="compact">
             <input igxInput [value]="editValue"
-                (input)="editValue = $event.target.value"
+                (input)="editValue = $event.target.value" [step]="step"
                 [igxFocus]="true" type="number"/>
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>

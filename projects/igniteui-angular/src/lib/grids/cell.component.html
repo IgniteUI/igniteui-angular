@@ -86,6 +86,7 @@
                 [value]="editValue"
                 (input)="editValue = $event.target.value"
                 [igxFocus]="true"
+                [step]="step"
                 type="number"
             />
         </igx-input-group>
@@ -119,6 +120,7 @@
                 [value]="editValue"
                 (input)="editValue = $event.target.value"
                 [igxFocus]="true"
+                [step]="step"
                 type="number"
             />
             <igx-suffix *ngIf="!grid.currencyPositionLeft" >{{ currencyCodeSymbol }}</igx-suffix>
@@ -131,6 +133,7 @@
                 [value]="editValue"
                 (input)="editValue = $event.target.value"
                 [igxFocus]="true"
+                [step]="step"
                 type="number"
             />
             <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
