@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Pipe, PipeTransform, ɵbypassSanitizationTrustResourceUrl, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Pipe, PipeTransform } from '@angular/core';
 import {
     IgxGridComponent,
     OverlaySettings,
@@ -32,7 +32,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
     public columns: Array<any>;
-    selectionModes = ['none', 'single', 'multiple'];
+    public selectionModes = ['none', 'single', 'multiple'];
     // public data = [];
     public filterModes = [
         {
@@ -63,7 +63,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         closeOnOutsideClick: true
     };
 
-    log(event) {
+    public log(event) {
         console.log(event);
     }
 
@@ -107,11 +107,11 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         this.grid1.columnSelection = selection;
     }
 
-    getGridSelectedColunsData() {
+    public getGridSelectedColunsData() {
         const data = this.grid1.getSelectedColumnsData();
         console.log(data);
     }
-    deselectCol() {
+    public deselectCol() {
         this.grid1.getColumnByName('ID').selected = true;
     }
 
@@ -122,15 +122,15 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         this.columnSelectionDropdown.toggle(this._overlaySettings);
     }
 
-    onColumnSelection(event) {
+    public onColumnSelection(event) {
         console.log(event);
     }
 
-    getGridSelectedColumns() {
+    public getGridSelectedColumns() {
         console.log(this.grid1.selectedColumns());
     }
 
-    selectedColumns() {
+    public selectedColumns() {
         this.grid1.selectColumns(['ID', 'Name', 'aaaa']);
     }
 

@@ -1,5 +1,6 @@
 import { ElementRef, EventEmitter, Inject, LOCALE_ID, Optional, Input, Directive, Output } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { EditorProvider } from '../core/edit-provider';
 import { InteractionMode } from '../core/enums';
 import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
@@ -9,7 +10,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_a
 import { OverlaySettings } from '../services/overlay/utilities';
 
 @Directive()
-export abstract class PickersBaseDirective extends DisplayDensityBase implements IToggleView {
+export abstract class PickersBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider {
     /**
      * The expected user input format and placeholder.
      *
@@ -231,4 +232,5 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
     public abstract open(settings?: OverlaySettings): void;
     public abstract toggle(settings?: OverlaySettings): void;
     public abstract close(): void;
+    public abstract getEditElement();
 }

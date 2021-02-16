@@ -1,9 +1,9 @@
 <ng-template #defaultDatePickerActions>
     <div *ngIf="cancelButtonLabel || todayButtonLabel" class="igx-date-picker__buttons">
-        <button #closeButton *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="closeCalendar()">
+        <button #closeButton *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="close()">
             {{ cancelButtonLabel }}
         </button>
-        <button #todayButton *ngIf="todayButtonLabel" igxButton="flat" igxRipple (click)="triggerTodaySelection()">
+        <button #todayButton *ngIf="todayButtonLabel" igxButton="flat" igxRipple (click)="selectToday()">
             {{ todayButtonLabel }}
         </button>
     </div>

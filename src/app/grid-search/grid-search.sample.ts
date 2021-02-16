@@ -479,7 +479,7 @@ export class GridSearchComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    toggleColumn(name: string) {
+    public toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;
     }

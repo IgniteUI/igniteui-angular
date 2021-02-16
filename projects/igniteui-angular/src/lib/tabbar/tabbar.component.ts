@@ -195,7 +195,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      *
      * @memberof IgxBottomNavComponent
      */
-    get selectedTab(): IgxTabComponent {
+    public get selectedTab(): IgxTabComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
@@ -362,7 +362,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      * @memberof IgxTabPanelComponent
      */
     @HostBinding('class.igx-bottom-nav__panel')
-    get styleClass(): boolean {
+    public get styleClass(): boolean {
         return (!this.isSelected);
     }
 
@@ -421,7 +421,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      *
      * @memberof IgxTabPanelComponent
      */
-    get relatedTab(): IgxTabComponent {
+    public get relatedTab(): IgxTabComponent {
         if (this._tabBar.tabs) {
             return this._tabBar.tabs.toArray()[this.index];
         }
@@ -432,7 +432,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      *
      * @memberof IgxTabComponent
      */
-    get changesCount(): number {
+    public get changesCount(): number {
         return this.relatedTab ? this.relatedTab.changesCount : 0;
     }
 
@@ -444,7 +444,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      *
      * @memberof IgxTabPanelComponent
      */
-    get index() {
+    public get index() {
         if (this._tabBar.panels) {
             return this._tabBar.panels.toArray().indexOf(this);
         }
@@ -458,7 +458,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      *
      * @memberof IgxTabPanelComponent
      */
-    get customTabTemplate(): TemplateRef<any> {
+    public get customTabTemplate(): TemplateRef<any> {
         return this._tabTemplate;
     }
 
@@ -470,7 +470,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      *
      * @memberof IgxTabPanelComponent
      */
-    set customTabTemplate(template: TemplateRef<any>) {
+    public set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
     }
 
@@ -653,7 +653,7 @@ export class IgxTabComponent {
      *
      * @memberof IgxTabComponent
      */
-    get changesCount(): number {
+    public get changesCount(): number {
         return this._changesCount;
     }
 
@@ -668,10 +668,10 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     @Input()
-    get disabled(): boolean {
+    public get disabled(): boolean {
         return this.relatedPanel ? this.relatedPanel.disabled : this._disabled;
     }
-    set disabled(newValue: boolean) {
+    public set disabled(newValue: boolean) {
         if (this.relatedPanel) {
             this.relatedPanel.disabled = newValue;
         } else {
@@ -690,7 +690,7 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     @Input()
-    set isSelected(newValue: boolean) {
+    public set isSelected(newValue: boolean) {
         if (this.relatedPanel) {
             this.relatedPanel.isSelected = newValue;
         } else if (this._selected !== newValue) {
@@ -700,7 +700,7 @@ export class IgxTabComponent {
             }
         }
     }
-    get isSelected(): boolean {
+    public get isSelected(): boolean {
         return this.relatedPanel ? this.relatedPanel.isSelected : this._selected;
     }
 

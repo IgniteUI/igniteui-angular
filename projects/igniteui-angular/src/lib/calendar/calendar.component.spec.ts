@@ -470,13 +470,13 @@ describe('IgxCalendar - ', () => {
                     new Date(2017, 5, 13).toDateString()
                 );
 
-                spyOn(calendar.onSelection, 'emit');
+                spyOn(calendar.selected, 'emit');
 
                 // Select 14th
                 weekDays[3].nativeElement.click();
                 fixture.detectChanges();
 
-                expect(calendar.onSelection.emit).toHaveBeenCalled();
+                expect(calendar.selected.emit).toHaveBeenCalled();
                 expect((calendar.value as Date).toDateString()).toMatch(
                     nextDay.toDateString()
                 );

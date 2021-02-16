@@ -39,10 +39,10 @@ import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_a
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IPositionStrategy } from './position/IPositionStrategy';
-import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
 import { ContainerPositionStrategy } from './position';
 import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
+import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';

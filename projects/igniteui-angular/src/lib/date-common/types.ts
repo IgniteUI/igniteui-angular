@@ -1,8 +1,6 @@
 import { mkenum } from '../core/utils';
 
-/**
- * Header orientation in `dialog` mode.
- */
+/** Header orientation in `dialog` mode. */
 export const HeaderOrientation = mkenum({
     Horizontal: 'horizontal',
     Vertical: 'vertical'

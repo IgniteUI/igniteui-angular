@@ -69,7 +69,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const editActions = fix.debugElement.queryAll(By.css(`igx-grid-action-button`));
             expect(editActions[1].componentInstance.iconName).toBe('add-child');
             const addChildBtn = editActions[1].componentInstance;
-            addChildBtn.onActionClick.emit();
+            addChildBtn.actionClick.emit();
             fix.detectChanges();
             endTransition();
 

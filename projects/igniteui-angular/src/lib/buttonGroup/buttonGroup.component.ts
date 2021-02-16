@@ -97,7 +97,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * <igx-buttongroup [itemContentCssClass]="style1" [multiSelection]="!multi" [values]="alignOptions">
      * ```
      */
-    @Input() set itemContentCssClass(value: string) {
+    @Input()
+    public set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
     }
 
@@ -111,7 +112,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * }
      * ```
      */
-    get itemContentCssClass(): string {
+    public get itemContentCssClass(): string {
         return this._itemContentCssClass;
     }
 
@@ -180,7 +181,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment"></igx-buttongroup>
      * ```
      */
-    @Input() set alignment(value: ButtonGroupAlignment) {
+    @Input()
+    public set alignment(value: ButtonGroupAlignment) {
         this._isVertical = value === ButtonGroupAlignment.vertical;
     }
     /**
@@ -193,7 +195,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * }
      * ```
      */
-    get alignment(): ButtonGroupAlignment {
+    public get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
     }
 
@@ -202,34 +204,36 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```typescript
      * @ViewChild("toast")
      * private toast: IgxToastComponent;
-     * public onSelect(buttongroup){
+     * public selectedHandler(buttongroup) {
      *     this.toast.open()
      * }
      *  //...
      * ```
      * ```html
-     * <igx-buttongroup #MyChild [multiSelection]="!multi" (onSelect)="onSelect($event)"></igx-buttongroup>
+     * <igx-buttongroup #MyChild [multiSelection]="!multi" (selected)="selectedHandler($event)"></igx-buttongroup>
      * <igx-toast #toast message="You have made a selection!"></igx-toast>
      * ```
      */
-    @Output() public onSelect = new EventEmitter<IButtonGroupEventArgs>();
+    @Output()
+    public selected = new EventEmitter<IButtonGroupEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is deselected.
      * ```typescript
      *  @ViewChild("toast")
      *  private toast: IgxToastComponent;
-     *  public onUnselect(buttongroup){
+     *  public deselectedHandler(buttongroup){
      *     this.toast.open()
      * }
      *  //...
      * ```
      * ```html
-     * <igx-buttongroup> #MyChild [multiSelection]="multi" (onUnselect)="onUnselect($event)"></igx-buttongroup>
+     * <igx-buttongroup> #MyChild [multiSelection]="multi" (deselected)="deselectedHandler($event)"></igx-buttongroup>
      * <igx-toast #toast message="You have deselected a button!"></igx-toast>
      * ```
      */
-    @Output() public onUnselect = new EventEmitter<IButtonGroupEventArgs>();
+    @Output()
+    public deselected = new EventEmitter<IButtonGroupEventArgs>();
 
     @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
     @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
@@ -281,9 +285,8 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * }
      * ```
      */
-    get selectedButtons(): IgxButtonDirective[] {
-        return this.buttons.filter((b, i) => this.selectedIndexes.indexOf(i) !== -1);
-
+    public get selectedButtons(): IgxButtonDirective[] {
+        return this.buttons.filter((_, i) => this.selectedIndexes.indexOf(i) !== -1);
     }
 
     /**
@@ -313,7 +316,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'true');
         this._renderer.addClass(buttonElement, 'igx-button-group__item--selected');
 
-        this.onSelect.emit({ button, index });
+        this.selected.emit({ button, index });
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
         if (indexInViewButtons !== -1) {
@@ -322,7 +325,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 1) {
-            this.buttons.forEach((b, i) => {
+            this.buttons.forEach((_, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
                 }
@@ -357,7 +360,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(buttonElement, 'aria-pressed', 'false');
         this._renderer.removeClass(buttonElement, 'igx-button-group__item--selected');
 
-        this.onUnselect.emit({ button, index });
+        this.deselected.emit({ button, index });
 
         const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
         if (indexInViewButtons !== -1) {
@@ -424,7 +427,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * @hidden
      */
-    public _clickHandler(event, i) {
+    public _clickHandler(_: MouseEvent, i: number) {
         if (this.selectedIndexes.indexOf(i) !== -1) {
             this.deselectButton(i);
         } else {
