@@ -284,7 +284,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.value;
+        return this.editMode || this.cellTemplate ? '' : this.column.dataType === DataType.Percent ?
+        this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
+        this.column.dataType === DataType.Currency ?
+        this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
+            this.column.pipeArgs.digitsInfo, this.grid.locale) :
+        this.value;
     }
 
     @HostBinding('class.igx-grid__td--bool-true')
