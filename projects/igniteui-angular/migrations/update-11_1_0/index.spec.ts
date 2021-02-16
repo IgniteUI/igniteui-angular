@@ -630,4 +630,123 @@ export class CsvExportComponent {
 ></igx-month-picker>`
         );
     });
+
+    it('should update Excel exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/excel-export.component.ts',
+`import { Component } from '@angular/core';
+import { IgxExcelExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-excel-export",
+    styleUrls: ["./excel-export.component.scss"],
+    templateUrl: "./excel-export.component.html"
+})
+export class ExcelExportComponent {
+    constructor(private excelExportService: IgxExcelExporterService) {
+        this.excelExportService.onColumnExport.subscribe();
+        this.excelExportService.onRowExport.subscribe();
+    }
+}
+@NgModule({
+    declarations: [ExcelExportComponent],
+    exports: [ExcelExportComponent],
+    imports: [],
+    providers: [IgxExcelExporterService]
+});
+`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent =
+`import { Component } from '@angular/core';
+import { IgxExcelExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-excel-export",
+    styleUrls: ["./excel-export.component.scss"],
+    templateUrl: "./excel-export.component.html"
+})
+export class ExcelExportComponent {
+    constructor(private excelExportService: IgxExcelExporterService) {
+        this.excelExportService.columnExporting.subscribe();
+        this.excelExportService.rowExporting.subscribe();
+    }
+}
+@NgModule({
+    declarations: [ExcelExportComponent],
+    exports: [ExcelExportComponent],
+    imports: [],
+    providers: [IgxExcelExporterService]
+});
+`;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/excel-export.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
+
+    it('should update CSV exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/csv-export.component.ts',
+`import { Component } from '@angular/core';
+import { IgxCsvExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-csv-export",
+    styleUrls: ["./csv-export.component.scss"],
+    templateUrl: "./csv-export.component.html"
+})
+export class CsvExportComponent {
+    constructor(private csvExportService: IgxCsvExporterService) {
+        this.csvExportService.onColumnExport.subscribe();
+        this.csvExportService.onRowExport.subscribe();
+    }
+}
+@NgModule({
+    declarations: [CsvExportComponent],
+    exports: [CsvExportComponent],
+    imports: [],
+    providers: [IgxCsvExporterService]
+});
+`);
+
+        const tree = await runner
+            .runSchematicAsync('migration-19', {}, appTree)
+            .toPromise();
+
+        const expectedContent =
+`import { Component } from '@angular/core';
+import { IgxCsvExporterService } from "igniteui-angular";
+
+@Component({
+    selector: "app-csv-export",
+    styleUrls: ["./csv-export.component.scss"],
+    templateUrl: "./csv-export.component.html"
+})
+export class CsvExportComponent {
+    constructor(private csvExportService: IgxCsvExporterService) {
+        this.csvExportService.columnExporting.subscribe();
+        this.csvExportService.rowExporting.subscribe();
+    }
+}
+@NgModule({
+    declarations: [CsvExportComponent],
+    exports: [CsvExportComponent],
+    imports: [],
+    providers: [IgxCsvExporterService]
+});
+`;
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/csv-export.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
 });
