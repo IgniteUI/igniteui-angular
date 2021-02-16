@@ -1771,6 +1771,20 @@ export class IgxGridCurrencyColumnComponent extends BasicGridComponent {
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px">
+        <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
+        <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
+        <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'currency'" width="150px"></igx-column>
+        <igx-column field="Discount" header="Order Date" [dataType]="'percent'" width="200px"></igx-column>
+    </igx-grid>`,
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+})
+export class IgxGridPercentColumnComponent extends BasicGridComponent {
+    public data = SampleTestData.foodPercentProductData();
+}
+@Component({
+    template: `
         <igx-grid
             [width]='width'
             [height]='height'
