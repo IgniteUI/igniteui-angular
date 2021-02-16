@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { GridSelectionMode } from '../common/enums';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
@@ -10,7 +11,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
-        if (this.grid && this.grid.rowSelection === 'multipleCascade') {
+        if (this.grid && this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
             return;
         }
@@ -19,7 +20,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
 
     /** Deselect specified rows. No event is emitted. */
     deselectRowsWithNoEvent(rowIDs: any[]): void {
-        if (this.grid.rowSelection === 'multipleCascade') {
+        if (this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeDeselectRowsWithNoEvent(rowIDs);
             return;
         }
@@ -27,7 +28,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
-        if (this.grid.rowSelection === 'multipleCascade') {
+        if (this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.emitCascadeRowSelectionEvent(newSelection, added, removed, event);
             return;
         }
