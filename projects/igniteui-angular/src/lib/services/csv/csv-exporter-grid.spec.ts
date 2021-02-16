@@ -105,7 +105,6 @@ describe('CSV Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         grid.columns[0].hidden = true;
-        options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
@@ -495,17 +494,12 @@ describe('CSV Grid Exporter', () => {
 
     const getExportedData = (grid, csvOptions: IgxCsvExporterOptions) => {
         const result = new Promise<CSVWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
                 resolve(wrapper);
             });
             exporter.export(grid, csvOptions);
         });
         return result;
-    };
-
-    const exportAndVerify = async (component, csvOptions, expectedData, errorMessage = '') => {
-        const wrapper = await getExportedData(component, csvOptions);
-        wrapper.verifyData(expectedData, errorMessage);
     };
 });
