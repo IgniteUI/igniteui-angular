@@ -13,16 +13,10 @@
     @extend %igx-avatar-display !optional;
 
     @include e(image) {
-        @extend %igx-avatar-inner !optional;
         @extend %igx-avatar-image !optional;
     }
 
-    @include m(image) {
-        @extend %igx-avatar--image !optional;
-    }
-
     @include m(rounded) {
-        @extend %igx-avatar-display !optional;
         @extend %igx-avatar--rounded !optional;
     }
 
@@ -39,7 +33,6 @@
     }
 
     @include m(initials) {
-        @extend %igx-avatar--initials !optional;
         @extend %igx-avatar-initials--small !optional;
     }
 
