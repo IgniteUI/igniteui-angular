@@ -163,18 +163,6 @@
             margin-#{$left}: rem(16);
         }
 
-        %igx-grid-toolbar__button-space {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            span {
-                &:empty {
-                    display: none;
-                }
-            }
-        }
-
         &[dir='rtl'] {
             text-align: #{$right};
 
@@ -184,10 +172,6 @@
             %igx-button--icon{
                 margin-#{$left}: 0;
                 margin-#{$right}: rem(8);
-            }
-
-            %igx-grid-toolbar__button-space {
-                text-align: #{$right};
             }
         }
     }
