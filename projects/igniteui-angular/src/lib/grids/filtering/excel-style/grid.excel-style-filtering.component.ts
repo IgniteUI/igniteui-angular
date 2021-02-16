@@ -19,8 +19,8 @@ import {
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { cloneArray, KEYS, resolveNestedPath, parseDate, uniqueDates } from '../../../core/utils';
-import { DataType, DataUtil } from '../../../data-operations/data-util';
+import { KEYS, resolveNestedPath, parseDate, uniqueDates } from '../../../core/utils';
+import { DataType } from '../../../data-operations/data-util';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -28,6 +28,8 @@ import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
+import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
+import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { getLocaleCurrencyCode } from '@angular/common';
 
 /**
@@ -536,22 +538,28 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         });
     }
 
+    private shouldFormatValues() {
+        return this.column.formatter &&
+            (this.grid.filterStrategy instanceof FormattedValuesFilteringStrategy ||
+             this.grid.filterStrategy instanceof TreeGridFormattedValuesFilteringStrategy) &&
+            this.grid.filterStrategy.shouldApplyFormatter(this.column.field);
+    }
+
     private renderColumnValuesFromData() {
-        let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
+        const data = this.column.gridAPI.filterDataByExpressions(expressionsTree);
 
-        if (expressionsTree.filteringOperands.length) {
-            const state = { expressionsTree };
-            data = DataUtil.filter(cloneArray(data), state, this.grid);
-        }
-
+        const shouldFormatValues = this.shouldFormatValues();
         const columnField = this.column.field;
         const columnValues = (this.column.dataType === DataType.Date) ?
             data.map(record => {
                 const value = (resolveNestedPath(record, columnField));
                 const label = this.getFilterItemLabel(value);
                 return { label, value };
-            }) : data.map(record => resolveNestedPath(record, columnField));
+            }) : data.map(record => {
+                const value = resolveNestedPath(record, columnField);
+                return shouldFormatValues ? this.column.formatter(value) : value;
+            });
 
         this.renderValues(columnValues);
     }
@@ -675,6 +683,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.containsNullOrEmpty = false;
         this.selectAllIndeterminate = false;
 
+        const applyFormatter = !this.shouldFormatValues();
+
         this.uniqueValues.forEach(element => {
             const hasValue = (element !== undefined && element !== null && element !== '' && this.column.dataType !== DataType.Date)
                 || !!(element && element.label);
@@ -701,7 +711,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 }
 
                 filterListItem.value = this.getFilterItemValue(element);
-                filterListItem.label = this.getFilterItemLabel(element);
+                filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
             }
@@ -760,26 +770,26 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
     }
 
-    private getFilterItemLabel(element: any) {
+    private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
         if (this.column.dataType === DataType.Date) {
             return element && element.label ? element.label : this.column.formatter ?
-                this.column.formatter(element) :
+                applyFormatter ? this.column.formatter(element) : element :
                 this.grid.datePipe.transform(element, this.column.pipeArgs.format, this.column.pipeArgs.timezone,
                     this.grid.locale);
         }
         if (this.column.dataType === DataType.Number) {
             return this.column.formatter ?
-                this.column.formatter(element) :
+                applyFormatter ? this.column.formatter(element) : element :
                 this.grid.decimalPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
         if (this.column.dataType === DataType.Currency) {
-            return  this.column.formatter ?
-            this.column.formatter(element) :
-            this.grid.currencyPipe.transform(element, this.column.pipeArgs.currencyCode ?
-                this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale),
-                this.column.pipeArgs.display, this.column.pipeArgs.digitsInfo, this.grid.locale);
+            return this.column.formatter ?
+                applyFormatter ? this.column.formatter(element) : element :
+                this.grid.currencyPipe.transform(element, this.column.pipeArgs.currencyCode ?
+                    this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale),
+                    this.column.pipeArgs.display, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
-        return this.column.formatter ?
+        return this.column.formatter && applyFormatter ?
             this.column.formatter(element) :
             element;
     }

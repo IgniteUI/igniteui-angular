@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Support for `currency` type columns is added in the grid.
+    - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.  
@@ -90,6 +91,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change**:
         - `onPagingDone` output is removed. Use the `paging` and `pagingDone` outputs exposed by the `IgxPaginator`.
         - `page`, `perPage`, `paginate`, `nextPage`, `previousPage` and `totalPages` in the grids are deprecated and will be removed. Use the corresponding `IgxPaginator` outputs/inputs. When using an external paginator, take care to provide the corresponding slice of data. See [`Paging with Custom Template`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging-with-custom-template)
+- IgxButton
+    - IgxIcon(s) placed in a button now include margin if there are one or more sibling elements to give them some breathing room. The amount of margin applied depends on the display density of the button.
     
 
 ## 11.0.4
