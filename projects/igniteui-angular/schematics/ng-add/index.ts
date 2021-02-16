@@ -11,6 +11,7 @@ import { createHost, getDefaultProject } from '../utils/util';
 const enablePolyfills = async (tree: Tree, context: SchematicContext): Promise<string> => {
   const project = await getDefaultProject(tree);
   const targetFile = getConfigFile(project, 'polyfills');
+  context.logger.warn('enablePolyfills --> targetFile is: /n ' + targetFile);
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
     return;
@@ -30,6 +31,24 @@ const enablePolyfills = async (tree: Tree, context: SchematicContext): Promise<s
   return polyfillsData;
 };
 
+const enableIESupport = (tree: Tree, context: SchematicContext) => {
+    const targetFile = '/.browserslistrc';
+    let updateFile = false;
+    let browserslistrcContent = (tree.read(targetFile)?.toString());
+    while (browserslistrcContent?.includes('not IE')) {
+        browserslistrcContent = browserslistrcContent.replace('not IE', 'IE');
+        updateFile = true;
+    }
+    if (updateFile) {
+        tree.overwrite(targetFile, browserslistrcContent);
+    } else {
+        context.logger.warn(
+            `Commented out IE section not found.
+            Either IE support is already enabled OR you may need to update ${targetFile} file manually.`);
+    }
+};
+
+// Only required if AnimationBuilder is used (igniteui-angular does) & using IE/Edge or Safari
 const enableWebAnimationsAndGridSupport = (tree: Tree, targetFile: string, polyfillsData: any): void => {
   // Target the web-animations-js commented import statement and uncomment it.
   const webAnimationsLine = '// import \'web-animations-js\';';
@@ -47,18 +66,26 @@ const readInput = (options: Options): Rule =>
       const targetProperty = 'es5BrowserSupport';
       const project = workspace.projects.get(workspace.extensions['defaultProject'] as string);
       const polyfillsFile = getConfigFile(project, 'polyfills');
-      const build = project.targets.get('build');
       let polyfillsData = tree.read(polyfillsFile).toString();
-      if (build.options[targetProperty] !== undefined) {
-        // If project targets angular cli version >= 7.3
-        build.options[targetProperty] = true;
-        enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
-        await workspaces.writeWorkspace(workspace, workspaceHost);
-      } else {
-        // If project targets angular cli version < 7.3
-        polyfillsData = await enablePolyfills(tree, context);
-        enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
+      const build = project.targets.get('build');
+      const browserslistrcFile = (tree.read('/.browserslistrc'));
+      // If project targets angular cli version >= 10.0
+      if (browserslistrcFile !== undefined) {
+        context.logger.warn('browserslistrcFile is TRUE');
+        enableIESupport(tree, context);
       }
+      // If project targets angular cli version >= 7.3 < 10.0
+      if (build.options[targetProperty] !== undefined) {
+        context.logger.warn('es5BrowserSupport is TRUE');
+        build.options[targetProperty] = true;
+        await workspaces.writeWorkspace(workspace, workspaceHost);
+      }
+      // If project targets angular cli version < 7.3
+      if (browserslistrcFile === undefined && build.options[targetProperty] === undefined) {
+        context.logger.warn('angular cli version < 7.3 is TRUE');
+        polyfillsData = await enablePolyfills(tree, context);
+      }
+      enableWebAnimationsAndGridSupport(tree, polyfillsFile, polyfillsData);
     }
   };
 

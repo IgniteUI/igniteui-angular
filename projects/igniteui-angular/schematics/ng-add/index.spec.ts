@@ -150,6 +150,7 @@ describe('ng-add schematics', () => {
     expect(pkgJsonData.dependencies['@igniteui/angular-schematics']).toBeFalsy();
   });
 
+  // TODO remove OR update?
   it('should properly add polyfills', async () => {
     const polyfills = `
 // import 'core-js/es6/object';
