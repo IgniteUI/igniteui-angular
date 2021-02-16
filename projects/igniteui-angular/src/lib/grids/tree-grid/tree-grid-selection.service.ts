@@ -10,7 +10,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     private rowsToBeIndeterminate: Set<any>;
 
     /** Select specified rows. No event is emitted. */
-    selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
+    public selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
         if (this.grid && this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeSelectRowsWithNoEvent(rowIDs, clearPrevSelection);
             return;
@@ -19,7 +19,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
     }
 
     /** Deselect specified rows. No event is emitted. */
-    deselectRowsWithNoEvent(rowIDs: any[]): void {
+    public deselectRowsWithNoEvent(rowIDs: any[]): void {
         if (this.grid.rowSelection === GridSelectionMode.multipleCascade) {
             this.cascadeDeselectRowsWithNoEvent(rowIDs);
             return;
@@ -56,7 +56,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         if (!parents.size) {
             this.rowSelection = new Set(this.rowsToBeSelected);
             this.indeterminateRows = new Set(this.rowsToBeIndeterminate);
-            // TO DO: emit selectionChangeD event, calculate its args through the handleAddedAndRemovedArgs method
+            // TODO: emit selectionChangeD event, calculate its args through the handleAddedAndRemovedArgs method
             this.clearHeaderCBState();
             this.selectedRowsChange.next();
             return;
@@ -71,7 +71,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         this.updateCascadeSelectionOnFilterAndCRUD(newParents, null, visibleRowIDs);
     }
 
-    cascadeSelectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {
+    private cascadeSelectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?: boolean): void {
         if (clearPrevSelection) {
             this.indeterminateRows.clear();
             this.rowSelection.clear();
@@ -92,7 +92,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         this.selectedRowsChange.next();
     }
 
-    cascadeDeselectRowsWithNoEvent(rowIDs: any[]): void {
+    private cascadeDeselectRowsWithNoEvent(rowIDs: any[]): void {
         const args = { added: [], removed: rowIDs };
         this.calculateRowsNewSelectionState(args);
 
@@ -141,8 +141,6 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
             this.cascadeSelectRowsWithNoEvent(args.newSelection, true);
         }
     }
-
-
 
 
     /**

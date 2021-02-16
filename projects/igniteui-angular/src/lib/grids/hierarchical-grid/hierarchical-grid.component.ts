@@ -36,7 +36,6 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
-import { GridSelectionMode } from '../common/enums';
 
 let NEXT_ID = 0;
 

@@ -4,7 +4,6 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { IgxGridBaseDirective } from '../grid/public_api';
-import { IgxTreeGridAPIService } from '../tree-grid/public_api';
 
 export interface GridSelectionRange {
     rowStart: number;
