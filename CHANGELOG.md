@@ -20,7 +20,7 @@ All notable changes for each version of this project will be documented in this 
     - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
-- `IgxInput` now supports `type="file"` and its styling upon all themes.  
+- `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
 
 ### General
@@ -100,7 +100,27 @@ All notable changes for each version of this project will be documented in this 
         - `page`, `perPage`, `paginate`, `nextPage`, `previousPage` and `totalPages` in the grids are deprecated and will be removed. Use the corresponding `IgxPaginator` outputs/inputs. When using an external paginator, take care to provide the corresponding slice of data. See [`Paging with Custom Template`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging-with-custom-template)
 - IgxButton
     - IgxIcon(s) placed in a button now include margin if there are one or more sibling elements to give them some breathing room. The amount of margin applied depends on the display density of the button.
-    
+- `IgxListComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onLeftPan` to `leftPan`
+        - `onRightPan` to `rightPan`
+        - `onPanStateChange` to `panStateChange`
+        - `onItemClicked` to `itemClicked`
+- `IgxNavbarComponent`
+    - **Breaking Change** - The `onAction` output is renamed to `action`.
+- `IgxTabsComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onTabItemSelected` to `tabItemSelected`
+        - `onTabItemDeselected` to `tabItemDeselected`
+- `IgxTooltipTargetDirective`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onTooltipShow` to `tooltipShow`
+        - `onTooltipHide` to `tooltipHide`
+- `IgxBaseExporter`, `IgxExcelExporterService`, `IgxCsvExporterService`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onColumnExport` to `columnExporting`
+        - `onRowExport` to `rowExporting`
+        - `onExportEnded` to `exportEnded`
 
 ## 11.0.4
 
