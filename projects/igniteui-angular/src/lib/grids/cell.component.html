@@ -24,6 +24,8 @@
                 ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
                 : column.dataType === 'currency'
                 ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
+                : column.dataType === 'percent'
+                ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
                 : value
         "
         [row]="rowData"
@@ -39,6 +41,8 @@
                 ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
                 : column.dataType === 'currency'
                 ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
+                : column.dataType === 'percent'
+                ? (value | percent:column.pipeArgs.digitsInfo:grid.locale)
                 : value
         }}</div>
     <igx-icon
@@ -54,8 +58,9 @@
     [groupName]="gridID"
     [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ?
         (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ?
-        (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency'?
-        (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : value"
+        (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency' ?
+        (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
+        (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value"
     [row]="rowData"
     [column]="this.column.field"
     [containerClass]="'igx-grid__td-text'"
@@ -81,6 +86,7 @@
                 [value]="editValue"
                 (input)="editValue = $event.target.value"
                 [igxFocus]="true"
+                [step]="step"
                 type="number"
             />
         </igx-input-group>
@@ -114,9 +120,23 @@
                 [value]="editValue"
                 (input)="editValue = $event.target.value"
                 [igxFocus]="true"
+                [step]="step"
                 type="number"
             />
             <igx-suffix *ngIf="!grid.currencyPositionLeft" >{{ currencyCodeSymbol }}</igx-suffix>
+        </igx-input-group>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'percent'">
+        <igx-input-group displayDensity="compact">
+            <input
+                igxInput
+                [value]="editValue"
+                (input)="editValue = $event.target.value"
+                [igxFocus]="true"
+                [step]="step"
+                type="number"
+            />
+            <igx-suffix> {{ editValue | percent:column.pipeArgs.digitsInfo:grid.locale }} </igx-suffix>
         </igx-input-group>
     </ng-container>
 </ng-template>
