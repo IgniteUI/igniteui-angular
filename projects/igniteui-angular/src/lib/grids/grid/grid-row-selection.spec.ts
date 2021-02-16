@@ -1855,21 +1855,18 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(grid, false, true);
         }));
 
-        it('Should bind selectedRows properly', fakeAsync(() => {
+        it('Should bind selectedRows properly', () => {
             fix.componentInstance.selectedRows = [1, 2, 3];
             fix.detectChanges();
-            tick(100);
             expect(grid.getRowByIndex(0).selected).toBeTrue();
             expect(grid.getRowByIndex(4).selected).toBeFalse();
 
             fix.componentInstance.selectedRows = [4, 5, 6];
             fix.detectChanges();
 
-            tick(100);
-
             expect(grid.getRowByIndex(3).selected).toBeTrue();
             expect(grid.getRowByIndex(0).selected).toBeFalse();
-        }));
+        });
 
         it('Row Pinning: should update checkbox status correctly when there is pinned row and groupBy', () => {
             grid.pinRow(2);

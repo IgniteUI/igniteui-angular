@@ -1264,28 +1264,25 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
         });
 
-        it('Should bind selectedRows properly', fakeAsync(() => {
+        it('Should bind selectedRows properly', () => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.componentInstance.selectedRows = ['0', '2', '3'];
             fix.detectChanges();
-            tick(100);
 
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
             expect(hierarchicalGrid.getRowByKey('1').selected).toBeFalse();
 
             fix.componentInstance.selectedRows = ['2'];
             fix.detectChanges();
-            tick(100);
 
             expect(hierarchicalGrid.getRowByKey('2').selected).toBeTrue();
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeFalse();
-        }));
+        });
 
-        it('Should not clear root selection state when changing selection mode of child grid', fakeAsync(() => {
+        it('Should not clear root selection state when changing selection mode of child grid', () => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.componentInstance.selectedRows = ['0', '1'];
             fix.detectChanges();
-            tick(100);
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
 
             const thirdRow = hierarchicalGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
@@ -1295,7 +1292,6 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const childGrid = rowIsland1.rowIslandAPI.getChildGrids()[0];
             childGrid.selectedRows = ['20', '21'];
             fix.detectChanges();
-            tick(100);
             expect(hierarchicalGrid.selectedRows.length).toEqual(2);
             expect(childGrid.selectedRows.length).toEqual(2);
 
@@ -1303,7 +1299,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
             expect(hierarchicalGrid.selectedRows.length).toEqual(2);
             expect(childGrid.selectedRows.length).toEqual(0);
-        }));
+        });
     });
 
     describe('Row Selection CRUD', () => {
