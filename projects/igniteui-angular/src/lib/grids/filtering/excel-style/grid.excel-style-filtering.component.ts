@@ -789,6 +789,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale),
                     this.column.pipeArgs.display, this.column.pipeArgs.digitsInfo, this.grid.locale);
         }
+        if (this.column.dataType === DataType.Percent) {
+            return this.column.formatter ?
+                applyFormatter ? this.column.formatter(element) : element :
+                this.grid.percentPipe.transform(element, this.column.pipeArgs.digitsInfo, this.grid.locale);
+            }
         return this.column.formatter && applyFormatter ?
             this.column.formatter(element) :
             element;
