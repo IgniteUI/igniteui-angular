@@ -8,6 +8,13 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-drop-down-item` now allows for `igxPrefix`, `igxSuffix` and `igx-divider` directives to be passed as `ng-content` and they will be renderer accordingly in the item's content.
 - `IgxGrid`
     - Added support for exporting grouped data.
+- `IgxTreeGrid`
+    - Added `multipleCascade` row selection mode. A cascading selection, resulting in the selection of all children in the tree below the record that the user selects with user interaction. In this mode when a parent has some selected and some deselected children, its checkbox is in an indeterminate state. 
+
+        ```html
+        <igx-tree-grid [rowSelection]="'multipleCascade'">           
+        </igx-tree-grid>
+        ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Support for `currency` type columns is added in the grid.
     - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.

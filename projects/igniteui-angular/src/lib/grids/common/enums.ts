@@ -30,15 +30,10 @@ export type GridKeydownTargetType =
 export const GridSelectionMode = mkenum({
     none: 'none',
     single: 'single',
-    multiple: 'multiple'
-});
-export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
-
-export const HierarchicalGridSelectionMode = mkenum({
-    ...GridSelectionMode,
+    multiple: 'multiple',
     multipleCascade: 'multipleCascade'
 });
-export type HierarchicalGridSelectionMode = (typeof HierarchicalGridSelectionMode)[keyof typeof HierarchicalGridSelectionMode];
+export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
 export const ColumnDisplayOrder = mkenum({
     Alphabetical: 'Alphabetical',

@@ -38,6 +38,7 @@ import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
+import { GridSelectionMode } from '../common/enums';
 
 let NEXT_ID = 0;
 
@@ -363,7 +364,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
-            if (this.rowSelection === 'multipleCascade') {
+            if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
                     this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(
@@ -385,7 +386,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
 
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
-            if (this.rowSelection === 'multipleCascade') {
+            if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 if (args.data) {
                     const rec = this._gridAPI.get_rec_by_id(
                         this.primaryKey ? args.data[this.primaryKey] : args.data);
@@ -408,7 +409,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
 
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.rowSelection === 'multipleCascade') {
+            if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
                     if (record && !record.children && record.parent) {
@@ -424,12 +425,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             let actions = [];
             if (event.origin === TransactionEventOrigin.REDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
-                if (this.rowSelection === 'multipleCascade') {
+                if (this.rowSelection === GridSelectionMode.multipleCascade) {
                     this.handleCascadeSelection(event);
                 }
             } else if (event.origin === TransactionEventOrigin.UNDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
-                if (this.rowSelection === 'multipleCascade') {
+                if (this.rowSelection === GridSelectionMode.multipleCascade) {
                     if (event.actions[0].transaction.type === 'add') {
                         const rec = this._gridAPI.get_rec_by_id(event.actions[0].transaction.id);
                         this.handleCascadeSelection(event, rec);
@@ -457,7 +458,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterViewInit();
         // TODO: pipesExectured event
         // run after change detection in super triggers pipes for records structure
-        if (this.rowSelection === 'multipleCascade' && this.selectedRows.length) {
+        if (this.rowSelection === GridSelectionMode.multipleCascade && this.selectedRows.length) {
             const selRows = this.selectedRows;
             this.selectionService.clearRowSelection();
             this.selectRows(selRows, true);
@@ -766,7 +767,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
-        if (this.rowSelection === 'multipleCascade') {
+        if (this.rowSelection === GridSelectionMode.multipleCascade) {
             // Force pipe triggering for building the data structure
             this.cdr.detectChanges();
             if (this.selectionService.isRowSelected(parentID)) {

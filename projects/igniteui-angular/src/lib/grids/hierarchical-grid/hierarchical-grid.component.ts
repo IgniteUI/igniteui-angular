@@ -123,11 +123,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public parent = null;
 
-    /**
-     * @hidden
-     */
-    protected _rowSelectionMode: GridSelectionMode;
-
     private _data;
     private _filteredData = null;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -286,33 +281,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get hasExpandableChildren() {
         return !!this.childLayoutKeys.length;
-    }
-
-    /**
-     * Gets/Sets row selection mode
-     *
-     * @remarks
-     * By default the row selection mode is none
-     * @param selectionMode: FlatGridSelectionMode
-     */
-    @Input()
-    get rowSelection() {
-        return this._rowSelectionMode;
-    }
-
-    set rowSelection(selectionMode: GridSelectionMode) {
-        this._rowSelectionMode = selectionMode;
-        if (!this._init) {
-            this.selectionService.clearAllSelectedRows();
-            this.notifyChanges(true);
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get isMultiRowSelectionEnabled(): boolean {
-        return this.rowSelection === GridSelectionMode.multiple;
     }
 
     /**

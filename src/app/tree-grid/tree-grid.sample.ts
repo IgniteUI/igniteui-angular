@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
-    IgxCsvExporterOptions, IgxExcelExporterOptions, CsvFileTypes, HierarchicalGridSelectionMode } from 'igniteui-angular';
+    IgxCsvExporterOptions, IgxExcelExporterOptions, CsvFileTypes, GridSelectionMode } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -18,7 +18,7 @@ export class TreeGridSampleComponent implements OnInit {
     public selectionMode;
     public density = '';
     public displayDensities;
-    public selectionModes: HierarchicalGridSelectionMode[] = ['none', 'single', 'multiple', 'multipleCascade'];
+    public selectionModes: GridSelectionMode[] = ['none', 'single', 'multiple', 'multipleCascade'];
 
     private nextRow = 1;
 
@@ -26,7 +26,7 @@ export class TreeGridSampleComponent implements OnInit {
         private csvExporterService: IgxCsvExporterService) {
 }
     public ngOnInit(): void {
-        this.selectionMode = HierarchicalGridSelectionMode.multiple;
+        this.selectionMode = GridSelectionMode.multiple;
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },

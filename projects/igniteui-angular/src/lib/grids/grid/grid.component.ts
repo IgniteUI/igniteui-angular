@@ -260,38 +260,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected groupingDiffer;
-    protected _rowSelectionMode: GridSelectionMode;
     private _data;
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
-
-    /**
-     * Gets/Sets row selection mode
-     *
-     * @remarks
-     * By default the row selection mode is none
-     * @param selectionMode: FlatGridSelectionMode
-     */
-    @Input()
-    get rowSelection() {
-        return this._rowSelectionMode;
-    }
-
-    set rowSelection(selectionMode: GridSelectionMode) {
-        this._rowSelectionMode = selectionMode;
-        if (!this._init) {
-            this.selectionService.clearAllSelectedRows();
-            this.notifyChanges(true);
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get isMultiRowSelectionEnabled(): boolean {
-        return this.rowSelection === GridSelectionMode.multiple;
-    }
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.

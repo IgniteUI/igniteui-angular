@@ -110,8 +110,7 @@ import {
     FilterMode,
     ColumnPinningPosition,
     RowPinningPosition,
-    GridPagingMode,
-    HierarchicalGridSelectionMode
+    GridPagingMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -2587,7 +2586,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets row selection mode
      *
      * @remarks
-     * By default the row selection mode is none
+     * By default the row selection mode is 'none'
+     * Note that in IgxGrid and IgxHierarchicalGrid 'multipleCascade' behaves like 'multiple'
      */
     @WatchChanges()
     @Input()
@@ -2595,7 +2595,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowSelectionMode;
     }
 
-    public set rowSelection(selectionMode: HierarchicalGridSelectionMode) {
+    public set rowSelection(selectionMode: GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (!this._init) {
             this.selectionService.clearAllSelectedRows();
@@ -2843,12 +2843,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _userOutletDirective: IgxOverlayOutletDirective;
 
     /**
-     * TypeScript dosn't allow overriding property with superset
-     * so we use the hierarchical enum in the grid-base and flat-grid overrides with a subset.
-     */
-    protected _rowSelectionMode: HierarchicalGridSelectionMode = HierarchicalGridSelectionMode.none;
-
-    /**
      * @hidden @internal
      */
     public get scrollSize() {
@@ -2922,6 +2916,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _summaryCalculationMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _showSummaryOnCollapse = false;
     private _cellSelectionMode: GridSelectionMode = GridSelectionMode.multiple;
+    private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _selectRowOnClick = true;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
 
@@ -3041,8 +3036,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get isMultiRowSelectionEnabled(): boolean {
-        return this.rowSelection === HierarchicalGridSelectionMode.multiple
-            || this.rowSelection === HierarchicalGridSelectionMode.multipleCascade;
+        return this.rowSelection === GridSelectionMode.multiple
+            || this.rowSelection === GridSelectionMode.multipleCascade;
     }
 
     /**

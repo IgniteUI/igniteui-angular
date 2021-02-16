@@ -16,7 +16,7 @@ import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from '../grid/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { HierarchicalGridSelectionMode } from '../common/enums';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
@@ -992,7 +992,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             it('check row selection when expand a row', async () => {
-                treeGrid.rowSelection = HierarchicalGridSelectionMode.multiple;
+                treeGrid.rowSelection = GridSelectionMode.multiple;
                 fix.detectChanges();
 
                 treeGrid.selectAllRows();
@@ -1023,7 +1023,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             it('check row selection within multipleCascade selection mode when expand a row', fakeAsync(() => {
-                treeGrid.rowSelection = HierarchicalGridSelectionMode.multipleCascade;
+                treeGrid.rowSelection = GridSelectionMode.multipleCascade;
                 fix.detectChanges();
 
                 treeGrid.selectRows([1]);
