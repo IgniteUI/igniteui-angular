@@ -292,12 +292,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return this.column.dataType === 'boolean' && this.value;
     }
 
-    /** @hidden @internal */
-    @HostBinding('class.igx-grid__td--negative-percent')
-    public get percentNegativeClass() {
-        return this.column.dataType === DataType.Percent && this.value < 0;
-    }
-
     /**
      * Returns a reference to the nativeElement of the cell.
      * ```typescript
