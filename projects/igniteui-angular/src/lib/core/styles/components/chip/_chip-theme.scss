@@ -7,7 +7,7 @@
 /// Chip Theme
 /// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {String} $border-radius [null] - The chip border-radius.
 ///
 /// @param {Color} $text-color [null] - The chip text color.
@@ -53,7 +53,7 @@
 @function igx-chip-theme(
     $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
     $border-radius: null,
 
     $text-color: null,

@@ -7,7 +7,7 @@
 
 /// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The navigation drawer background color.
 /// @param {Color} $border-color [null] - The navigation drawer right border color.
@@ -44,7 +44,7 @@
 @function igx-navdrawer-theme(
     $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $item-border-radius: null,

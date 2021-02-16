@@ -95,7 +95,7 @@
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
 
-    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
+    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
 
     @if not($item-text-color) and $item-background {
         @if type-of($item-background) == 'color' {
@@ -212,7 +212,6 @@
 /// @requires igx-ripple-theme
 /// @requires {mixin} igx-ripple
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires rem
 /// @requires --var
 @mixin igx-tabs($theme) {
@@ -485,7 +484,7 @@
         color: --var($theme, 'button-color');
         outline: 0;
         @if not $indigo-theme {
-            box-shadow: igx-elevation($elevations, 4);
+            box-shadow: igx-elevation($elevation: 4);
         }
 
         &:hover {

@@ -39,7 +39,7 @@
 @function igx-card-theme(
     $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $background: null,

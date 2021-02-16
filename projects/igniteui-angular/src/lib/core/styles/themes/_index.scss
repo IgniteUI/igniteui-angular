@@ -81,12 +81,17 @@
     $legacy-support: false,
     $roundness: null,
     $elevation: true,
+    $elevations: $igx-elevations,
 ) {
     // Stores all excluded component styles
     $excluded: ();
 
     @if not($legacy-support) {
         @include igx-palette-vars($palette, $contrast: true);
+
+        @if $elevation {
+            @include igx-elevation-vars($elevations);
+        }
     }
 
     $default-palette: $palette !global;
