@@ -9,7 +9,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`
     - Added support for exporting grouped data.
 - `IgxTreeGrid`
-    - Added `multipleCascade` row selection mode. A cascading selection, resulting in the selection of all children in the tree below the record that the user selects with user interaction. In this mode when a parent has some selected and some deselected children, its checkbox is in an indeterminate state. 
+    - Added `multipleCascade` row selection mode. In this mode, selecting a record results in the selection of all its children recursively. When only some children are selected, their parent's checkbox is in an indeterminate state.
+ 
 
         ```html
         <igx-tree-grid [rowSelection]="'multipleCascade'">           
