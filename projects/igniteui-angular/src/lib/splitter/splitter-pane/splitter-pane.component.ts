@@ -1,4 +1,5 @@
 import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -77,8 +78,22 @@ export class IgxSplitterPaneComponent {
      * </igx-splitter>
      * ```
      */
+    @DeprecateProperty(`Deprecated. Subscribe to the 'collapsedChange' output instead.`)
     @Output()
     public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
+
+    /**
+     * Event fired when collapsed state of pane is changed.
+     *
+     * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane (collapsedChange)='paneCollapsedChange($event)'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
+     */
+    @Output()
+    public collapsedChange = new EventEmitter<IgxSplitterPaneComponent>();
 
     /** @hidden @internal */
     @HostBinding('style.order')
@@ -120,25 +135,25 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    get size() {
+    public get size() {
         return this._size;
     }
 
-    set size(value) {
+    public set size(value) {
         this._size = value;
         this.el.nativeElement.style.flex = this.flex;
     }
 
     /** @hidden @internal */
-    get isPercentageSize() {
+    public get isPercentageSize() {
         return this.size === 'auto' || this.size.indexOf('%') !== -1;
     }
 
     /** @hidden @internal */
-    get dragSize() {
+    public get dragSize() {
         return this._dragSize;
     }
-    set dragSize(val) {
+    public set dragSize(val) {
         this._dragSize = val;
         this.el.nativeElement.style.flex = this.flex;
     }
@@ -202,6 +217,7 @@ export class IgxSplitterPaneComponent {
         this._getSiblings().forEach(sibling => sibling.size = 'auto');
         this.collapsed = !this.collapsed;
         this.onToggle.emit(this);
+        this.collapsedChange.emit(this);
     }
 
     /** @hidden @internal */

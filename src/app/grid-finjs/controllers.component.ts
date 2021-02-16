@@ -47,9 +47,13 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private selectedButton;
     private volumeChanged$;
 
+    public get buttonSelected(): number {
+        return this.selectedButton || this.selectedButton === 0 ? this.selectedButton : -1;
+    }
+
     public ngOnInit() {
         this.volumeChanged$ = this.volumeSlider.onValueChange.pipe(debounce(() => timer(200)));
-        this.volumeChanged$.subscribe(x => this.volumeChanged.emit(this.volumeSlider.value));
+        this.volumeChanged$.subscribe(() => this.volumeChanged.emit(this.volumeSlider.value));
     }
 
     public onButtonSelected(event: any) {
@@ -99,9 +103,5 @@ export class ControllerComponent implements OnInit, OnDestroy {
                 this.playButtons.buttons[1].disabled = disableButtons;
             }
         });
-    }
-
-    get buttonSelected(): number {
-        return this.selectedButton || this.selectedButton === 0 ? this.selectedButton : -1;
     }
 }

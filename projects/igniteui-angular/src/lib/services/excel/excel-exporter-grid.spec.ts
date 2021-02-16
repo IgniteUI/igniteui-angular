@@ -216,7 +216,6 @@ describe('Excel Exporter', () => {
 
         it('should honor all pinned columns.', async () => {
             const result = await TestMethods.createGridAndPinColumn(2, 0);
-            const fix = result.fixture;
             const grid = result.grid;
 
             const wrapper = await getExportedData(grid, options);
@@ -812,7 +811,7 @@ describe('Excel Exporter', () => {
 
     const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });

@@ -185,14 +185,14 @@ describe('IgxMonthPicker', () => {
 
         const months = dom.queryAll(By.css('.igx-calendar__month'));
 
-        spyOn(monthPicker.onSelection, 'emit');
+        spyOn(monthPicker.selected, 'emit');
 
         months[1].nativeElement.click();
         fixture.detectChanges();
 
         const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
 
-        expect(monthPicker.onSelection.emit).toHaveBeenCalled();
+        expect(monthPicker.selected.emit).toHaveBeenCalled();
         expect(currentMonth.nativeElement.textContent.trim()).toEqual('Mar');
 
         const nextDay = new Date(2019, 2, 1);
@@ -311,13 +311,13 @@ describe('IgxMonthPicker', () => {
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
     }));
 
-    it('should not emit onSelection when navigating to the next year', () => {
+    it('should not emit selected when navigating to the next year', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.onSelection, 'emit').and.callThrough();
+        spyOn(monthPicker.selected, 'emit').and.callThrough();
 
         const next = dom.query(By.css('.igx-calendar-picker__next'));
         let yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
@@ -328,18 +328,18 @@ describe('IgxMonthPicker', () => {
         UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
         fixture.detectChanges();
 
-        expect(monthPicker.onSelection.emit).toHaveBeenCalledTimes(0);
+        expect(monthPicker.selected.emit).toHaveBeenCalledTimes(0);
         yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2021');
     });
 
-    it('should not emit onSelection when navigating to the previous year', () => {
+    it('should not emit selected when navigating to the previous year', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.onSelection, 'emit').and.callThrough();
+        spyOn(monthPicker.selected, 'emit').and.callThrough();
 
         const prev = dom.query(By.css('.igx-calendar-picker__prev'));
         let yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
@@ -350,18 +350,18 @@ describe('IgxMonthPicker', () => {
         UIInteractions.simulateClickEvent(prev.nativeElement);
         fixture.detectChanges();
 
-        expect(monthPicker.onSelection.emit).toHaveBeenCalledTimes(0);
+        expect(monthPicker.selected.emit).toHaveBeenCalledTimes(0);
         yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2017');
     });
 
-    it('should not emit onSelection when changing the year', () => {
+    it('should not emit selected when changing the year', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
         const monthPicker = fixture.componentInstance.monthPicker;
-        spyOn(monthPicker.onSelection, 'emit').and.callThrough();
+        spyOn(monthPicker.selected, 'emit').and.callThrough();
 
         let yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
@@ -373,7 +373,7 @@ describe('IgxMonthPicker', () => {
         UIInteractions.simulateClickEvent(year);
         fixture.detectChanges();
 
-        expect(monthPicker.onSelection.emit).toHaveBeenCalledTimes(0);
+        expect(monthPicker.selected.emit).toHaveBeenCalledTimes(0);
         yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2016');
     });
@@ -472,7 +472,7 @@ export class IgxMonthPickerSampleComponent {
     public viewDate = new Date(2019, 1, 7);
     public locale = 'en';
 
-    formatOptions = {
+    public formatOptions = {
         day: 'numeric',
         month: 'short',
         weekday: 'short',

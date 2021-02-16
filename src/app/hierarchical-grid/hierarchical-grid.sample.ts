@@ -2,7 +2,6 @@ import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
-    IPathSegment,
     IGridCellEventArgs,
     GridSelectionMode
 } from 'igniteui-angular';
@@ -14,41 +13,26 @@ import {
 })
 export class HierarchicalGridSampleComponent implements AfterViewInit {
     @ViewChild('layout1', { static: true })
-    layout1: IgxRowIslandComponent;
-
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
+    private layout1: IgxRowIslandComponent;
 
     @ViewChild('hGrid2', { static: true })
-    hGrid2: IgxHierarchicalGridComponent;
+    private hGrid2: IgxHierarchicalGridComponent;
 
-    localData = [];
-    localData1 = [];
-    data1 = [];
-    data2 = [];
-    selectionMode;
-    firstLevelExpanded = false;
-    rootExpanded = false;
-    density = 'comfortable';
-    displayDensities;
-    riToggle = true;
-    hgridState = [];
-
+    public localData = [];
+    public localData1 = [];
+    public data1 = [];
+    public data2 = [];
+    public selectionMode;
+    public firstLevelExpanded = false;
+    public rootExpanded = false;
+    public density = 'comfortable';
+    public displayDensities;
+    public riToggle = true;
+    public hgridState = [];
     public columns;
     public childColumns;
 
     constructor(private cdr: ChangeDetectorRef) {
-        // this.localData.push({ ID: -1, Name: ''});
-        // for (let i = 0; i < 10000; i++) {
-        //     const prods = [];
-        //     for (let j = 0; j < 3; j++) {
-        //         prods.push({
-        //         ID: j, ProductName: 'A' + i + '_' + j,
-        //         SubProducts: [{ID: -2, ProductName: 'Test', SubSubProducts: [{ID: 100, ProductName: 'Test2'}]}]});
-        //     }
-        //     this.localData.push({ ID: i, Name: 'A' + i, Products: prods});
-        // }
-
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
@@ -73,11 +57,11 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         }
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.cdr.detectChanges();
     }
 
-    generateData(count: number, level: number) {
+    public generateData(count: number, level: number) {
         const prods = [];
         const currLevel = level;
         let children;
@@ -99,15 +83,15 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         return prods;
     }
 
-    getState() {
+    public getState() {
         console.log(this.hgridState);
     }
 
-    changeHeaderRI(ri, index) {
+    public changeHeaderRI(ri, index) {
         ri.childColumns.toArray()[index].header = 'New';
     }
 
-    generateDataUneven(count: number, level: number, parendID: string = null) {
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
         let children;
@@ -132,30 +116,30 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
         return prods;
     }
 
-    setterChange() {
+    public setterChange() {
         this.layout1.rowSelection = this.layout1.rowSelection === GridSelectionMode.multiple
          ? GridSelectionMode.none : GridSelectionMode.multiple;
     }
 
-    setterBindingChange() {
+    public setterBindingChange() {
         this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
-    toggleRootLevel() {
+    public toggleRootLevel() {
         this.rootExpanded = !this.rootExpanded;
     }
 
-    toggleFirstIsland() {
+    public toggleFirstIsland() {
         this.firstLevelExpanded = !this.firstLevelExpanded;
     }
 
-    testApis() {}
+    public testApis() {}
 
-    selectDensity(event) {
+    public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }
 
-    cellClick($evt: IGridCellEventArgs) {
+    public cellClick($evt: IGridCellEventArgs) {
         console.log('Cell Click', $evt);
     }
 

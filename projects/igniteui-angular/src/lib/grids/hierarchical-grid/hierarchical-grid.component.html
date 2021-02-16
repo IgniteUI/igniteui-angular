@@ -147,7 +147,7 @@
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
-            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
+            <div style="overflow: auto; width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
@@ -209,7 +209,8 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [overlaySettings]="paginatorSettings" [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
+    <igx-paginator [overlaySettings]="paginatorSettings" [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords"
+        [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>
 
@@ -245,11 +246,11 @@
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon role="button" fontSet="material">unfold_more</igx-icon>
+    <igx-icon role="button">unfold_more</igx-icon>
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" [isActive]='hasExpandedRecords() && hasExpandableChildren' fontSet="material">unfold_less</igx-icon>
+    <igx-icon role="button" [active]='hasExpandedRecords() && hasExpandableChildren'>unfold_less</igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
@@ -284,7 +285,7 @@
 </ng-template>
 
 <ng-template #dragIndicatorIconBase>
-    <igx-icon fontSet="material">drag_indicator</igx-icon>
+    <igx-icon>drag_indicator</igx-icon>
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>

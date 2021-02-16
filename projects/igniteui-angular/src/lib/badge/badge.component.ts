@@ -155,7 +155,7 @@ export class IgxBadgeComponent {
      * @internal
      */
     @HostBinding('attr.aria-roledescription')
-    get roleDescription() {
+    public get roleDescription() {
         if (this.icon) {
             return this.type + ' type badge with icon type ' + this.icon;
         } else if (this.value || this.value === 0) {
