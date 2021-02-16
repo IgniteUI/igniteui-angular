@@ -5,32 +5,21 @@
 ////
 
 ///@type Map
-/// @prop {Number} border-radius-round [1] - The border radius used for round avatar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-square [0] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
-$_default-shape-avatar: (
-    border-radius-round: 1,
-    border-radius-square: 0
-);
-
-/// @type Map
-/// @prop {Number} border-radius-round [1] - The border radius used for round avatar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-square [.25] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [1] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
 $_round-shape-avatar: (
-    border-radius-round: 1,
-    border-radius-square: .25
+    border-radius: 1,
 );
 
-/// @type Map
-/// @prop {Number} border-radius-round [.75] - The border radius used for round avatar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-square [0] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
+///@type Map
+/// @prop {Number} border-radius [0] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
 $_square-shape-avatar: (
-    border-radius-round: .75,
-    border-radius-square: 0
+    border-radius: 0,
 );
 
 /// @type Map
-/// @prop {Number} border-radius-round [1] - The border radius used for round avatar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-square [.25] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [.25] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_round-shape-avatar
-$_bootstrap-shape-avatar: extend($_round-shape-avatar);
+$_bootstrap-shape-avatar: (
+    border-radius: .25
+);
