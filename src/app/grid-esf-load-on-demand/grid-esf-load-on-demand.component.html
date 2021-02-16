@@ -5,8 +5,7 @@
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
       </div>
       <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'800px'" [displayDensity]="density"
-                [allowFiltering]="true" [rowSelection]="selectionMode"
-                [filterMode]="'excelStyleFilter'"
+                [allowFiltering]="true" [rowSelection]="selectionMode" [filterMode]="'excelStyleFilter'"
                 [uniqueColumnValuesStrategy]="columnValuesStrategy">
         <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
           <igx-grid-toolbar-actions>
