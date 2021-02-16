@@ -287,6 +287,8 @@
             "member": "onRowExport",
             "replaceWith": "rowExporting",
             "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
                 "IgxBaseExporter"
             ]
         },
@@ -294,6 +296,8 @@
             "member": "onColumnExport",
             "replaceWith": "columnExporting",
             "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
                 "IgxBaseExporter"
             ]
         },
