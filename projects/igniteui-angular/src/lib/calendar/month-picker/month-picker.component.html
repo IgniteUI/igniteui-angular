@@ -16,7 +16,7 @@
             role="button"
             [attr.aria-label]="'Previous Year ' + getPreviousYear()"
             data-action="prev">
-            <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
+            <igx-icon>keyboard_arrow_left</igx-icon>
         </div>
         <div [style.width.%]="100">
             <span
@@ -39,7 +39,7 @@
             [attr.aria-label]="'Next Year ' + getNextYear()"
             data-action="next">
 
-            <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
+            <igx-icon>keyboard_arrow_right</igx-icon>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
                      [locale]="locale"
                      [formatView]="formatViews.month"
                      [monthFormat]="formatOptions.month"
-                     (onSelection)="selectMonth($event)">
+                     (selected)="selectMonth($event)">
     </igx-months-view>
 </div>
 <igx-years-view *ngIf="isDecadeView" [@animateView]="activeView" #decade (@animateView.done)="viewRendered($event)"
@@ -58,5 +58,5 @@
                 [locale]="locale"
                 [formatView]="formatViews.year"
                 [yearFormat]="formatOptions.year"
-                (onSelection)="selectYear($event)">
+                (selected)="selectYear($event)">
 </igx-years-view>

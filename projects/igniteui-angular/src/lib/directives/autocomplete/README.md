@@ -184,7 +184,7 @@ Using the `igxDropDown` as `igxAutocomplete` options provider allows the develop
 
 ```html
 <igx-input-group class="group">
-    <igx-prefix igxRipple><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
+    <igx-prefix igxRipple><igx-icon>place</igx-icon> </igx-prefix>
     <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
         [igxAutocomplete]='townsPanel'/>
     <label igxLabel for="towns">Towns</label>

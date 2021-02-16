@@ -272,6 +272,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Sorting: Should be able to sort a column with the keyboard', fakeAsync (() => {
+            spyOn(grid.sorting, 'emit').and.callThrough();
             spyOn(grid.onSortingDone, 'emit').and.callThrough();
             grid.getColumnByName('ID').sortable = true;
             fix.detectChanges();
@@ -292,6 +293,12 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions.length).toEqual(1);
             expect(grid.sortingExpressions[0].fieldName).toEqual('ID');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
+
+            expect(grid.sorting.emit).toHaveBeenCalledWith({
+                cancel: false,
+                sortingExpressions: grid.sortingExpressions,
+                owner: grid
+            });
 
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
@@ -350,6 +357,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderSortIndicator(header, false, false, false);
             expect(grid.sortingExpressions.length).toEqual(0);
 
+            expect(grid.sorting.emit).toHaveBeenCalledTimes(5);
             expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(5);
         }));
 
