@@ -10,10 +10,11 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Support for `currency` type columns is added in the grid.
+    - Support for `percent` type columns is added in the grid.
     - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
 - `IgxPaginator`
     - `paging` and `pagingDone` events are now emitted.
-- `IgxInput` now supports `type="file"` and its styling upon all themes.  
+- `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
 
 ### General
@@ -30,6 +31,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDialog`
     - The dialog content has been moved inside the dialog window container in the template. This means that if you have added something in-between the opening and closing tags of the dialog, you may have to adjust its styling a bit since that content is now rendered inside a container that has padding on it.
 - `IgxCalendar`
+    - **Breaking Change**
     - A new string enumeration `IgxCalendarView` is exported. Either the new one or the current `CalendarView` can be used. `CalendarView` will be deprecated in a future release.
     - `onSelection` is now `selected`
     - `onViewChanging` is now `viewChanging`
@@ -37,15 +39,19 @@ All notable changes for each version of this project will be documented in this 
     - `onYearSelection` is now `yearSelection`
     - `onMonthSelection` is now `monthSelection`
 - `IgxYearsViewComponent`
+    - **Breaking Change**
     - `onSelection` is now `selected`
     - `onYearSelection` is now `yearSelection`
 - `IgxDaysViewComponent`
+    - **Breaking Change**
     - `onDateSelection` is now `dateSelection`
     - `onViewChanging` is now `viewChanging`
 - `IgxMonthsViewComponent`
+    - **Breaking Change**
     - `onSelection` is now `selected`
     - `onMonthSelection` is now `monthSelection`
 - `IgxMonthPickerComponent`
+    - **Breaking Change**
     - `onSelection` is now `selected`
 - `IgxRadioGroup`
     - Added new property `alignment` that determines the radio group alignment. Available options are `horizontal` (default) and `vertical`.
@@ -93,7 +99,27 @@ All notable changes for each version of this project will be documented in this 
         - `page`, `perPage`, `paginate`, `nextPage`, `previousPage` and `totalPages` in the grids are deprecated and will be removed. Use the corresponding `IgxPaginator` outputs/inputs. When using an external paginator, take care to provide the corresponding slice of data. See [`Paging with Custom Template`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging-with-custom-template)
 - IgxButton
     - IgxIcon(s) placed in a button now include margin if there are one or more sibling elements to give them some breathing room. The amount of margin applied depends on the display density of the button.
-    
+- `IgxListComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onLeftPan` to `leftPan`
+        - `onRightPan` to `rightPan`
+        - `onPanStateChange` to `panStateChange`
+        - `onItemClicked` to `itemClicked`
+- `IgxNavbarComponent`
+    - **Breaking Change** - The `onAction` output is renamed to `action`.
+- `IgxTabsComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onTabItemSelected` to `tabItemSelected`
+        - `onTabItemDeselected` to `tabItemDeselected`
+- `IgxTooltipTargetDirective`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onTooltipShow` to `tooltipShow`
+        - `onTooltipHide` to `tooltipHide`
+- `IgxBaseExporter`, `IgxExcelExporterService`, `IgxCsvExporterService`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onColumnExport` to `columnExporting`
+        - `onRowExport` to `rowExporting`
+        - `onExportEnded` to `exportEnded`
 
 ## 11.0.4
 
