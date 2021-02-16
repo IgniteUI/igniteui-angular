@@ -51,14 +51,14 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, IBaseEventArgs } from '../core/utils';
+import { KEYS, IBaseEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';
-import { DateRange, IgxPickerToggleComponent } from '../date-range-picker/public_api';
+import { IgxPickerToggleComponent } from '../date-range-picker/public_api';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
-import { DatePart, IgxDateTimeEditorEventArgs } from '../directives/date-time-editor/public_api';
+import { DatePart } from '../directives/date-time-editor/public_api';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { HeaderOrientation } from '../date-common/types';
 
@@ -118,14 +118,6 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     OnDestroy,
     AfterViewInit,
     AfterViewChecked {
-
-    // TODO
-    public selected: EventEmitter<Date | DateRange>;
-    public select(value: Date | DateRange): void {
-        throw new Error('Method not implemented.');
-
-    }
-
     /**
      * An @Input property that sets the value of the `id` attribute.
      * ```html
@@ -248,6 +240,55 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      */
     @Input()
     public headerOrientation: HeaderOrientation = HeaderOrientation.Horizontal;
+
+    /**
+     * Emitted after a selection has been done.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker (selected)="onSelection($event)"></igx-time-picker>
+     * ```
+     */
+    @Output()
+    public selected = new EventEmitter<Date>();
+
+    /**
+     * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
+     * ```typescript
+     *  @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public valueChanged(timepicker){
+     *     this.toast.open()
+     * }
+     *  //...
+     *  ```
+     *  ```html
+     * <igx-time-picker (valueChanged)="valueChanged($event)"></igx-time-picker>
+     * <igx-toast #toast message="The value has been changed!"></igx-toast>
+     * ```
+     */
+    @Output()
+    public valueChanged = new EventEmitter<IgxTimePickerValueChangedEventArgs>();
+
+    /**
+     * Emitted when an invalid value is being set. Returns {`timePicker`: `any`, `currentValue`: `Date`, `setThroughUI`: `boolean`}
+     * ```typescript
+     * public min: string = "09:00";
+     * public max: string = "18:00";
+     *  @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public validationFailed(timepicker){
+     *     this.toast.open();
+     * }
+     *  //...
+     *  ```
+     *  ```html
+     * <igx-time-picker [minValue]="min" [maxValue]="max" (validationFailed)="validationFailed($event)"></igx-time-picker>
+     * <igx-toast #toast message="Value must be between 09:00 and 18:00!"></igx-toast>
+     * ```
+     */
+    @Output()
+    public validationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
 
     /**
      * @hidden
@@ -554,7 +595,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     private _ampmView = [];
 
     private _dateFromModel: Date;
-    private _destroy$ = new Subject<boolean>();
+    private destroy$ = new Subject<boolean>();
     private _statusChanges$: Subscription;
     private _defaultDropDownOverlaySettings: OverlaySettings;
     private _defaultDialogOverlaySettings: OverlaySettings = {};
@@ -594,10 +635,26 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      */
     @Input()
     public set value(value: Date) {
-        this._value = value ? value : null;
+        this._value = value || null;
         this.dateTimeEditor.value = value;
-        // this.updateInputValue(value);
         this._onChangeCallback(value);
+
+        // if (this.valueInRange(value, this.parseToDate(this.minValue), this.parseToDate(this.maxValue))) {
+        //     const oldVal = this._value;
+
+        //     this._value = value;
+        //     this.dateTimeEditor.value = value;
+        //     this._onChangeCallback(value);
+
+        //     this.emitValueChangedEvent(oldVal, this._value);
+        // } else {
+        //     const args: IgxTimePickerValidationFailedEventArgs = {
+        //         timePicker: this,
+        //         currentValue: value,
+        //         setThroughUI: false
+        //     };
+        //     this.validationFailed.emit(args);
+        // }
     }
 
 
@@ -735,12 +792,8 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
         // against the real value when initializing the component and value is bound via ngModel
         this._dateFromModel = value;
-
-        this._value = value;
-
-        // if (this.isDropdown) {
-        //     this.displayValue = this.parseDateToTimestring(this.value, this.displayFormat);
-        // }
+        this._value = value || null;
+        this.updateInputValue(value);
     }
 
     /** @hidden @internal */
@@ -843,6 +896,15 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
+        if (this.value) {
+            if (this.valueInRange(this.value, this.parseToDate(this.minValue), this.parseToDate(this.maxValue))) {
+                this.emitValueChangedEvent(null, this.value);
+            } else {
+                const oldValue = this.value;
+                this.value = null;
+                this.emitValidationFailedEvent(oldValue);
+            }
+        }
     }
 
     public ngAfterViewChecked() {
@@ -877,8 +939,8 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * @hidden
      */
     public ngOnDestroy(): void {
-        this._destroy$.next(true);
-        this._destroy$.complete();
+        this.destroy$.next(true);
+        this.destroy$.complete();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
@@ -1153,6 +1215,37 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     }
 
     /**
+    * Selects time from the igxTimePicker.
+     *
+     * @example
+     * ```typescript
+     * this.timePicker.select(date);
+     * 
+     * @param date Date object containing the time to be selected.
+     */
+    public select(date: Date): void {
+        if (this.shouldCancelSelecting()) {
+            return;
+        }
+
+        if (!date) {
+            this.clear();
+        } else {
+            const oldValue = new Date(this.value);
+            if (this.value.getTime() === oldValue.getTime()) {
+                this.value = date;
+                this.emitValueChangedEvent(oldValue, this.value);
+            }
+        }
+
+        this.selected.emit(date);
+
+        if (!this.valueInRange(date, this.parseToDate(this.minValue), this.parseToDate(this.maxValue))) {
+            this.emitValidationFailedEvent(date);
+        }
+    }
+
+    /**
      * If current value is valid selects it, closes the dialog and returns true, otherwise returns false.
      * ```html
      * <igx-dialog class="igx-time-picker__dialog-popup" [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="okButtonClick()">
@@ -1161,18 +1254,20 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * ```
      */
     public okButtonClick(): boolean {
-        const selectedTime = this.getSelectedTime();
-        if (this.valueInRange(selectedTime, this.parseToDate(this.minValue), this.parseToDate(this.maxValue))) {
+        const selectedValue = this.getSelectedTime();
+
+        if (this.value.getTime() === selectedValue.getTime()) {
+            return;
+        }
+
+        if (this.valueInRange(selectedValue, this.parseToDate(this.minValue), this.parseToDate(this.maxValue))) {
             this.close();
-            this.value = selectedTime;
+            const oldValue = new Date(this.value);
+            this.value = selectedValue;
+            this.emitValueChangedEvent(oldValue, this.value);
             return true;
         } else {
-            const args: IgxDateTimeEditorEventArgs = {
-                oldValue: this.value,
-                newValue: selectedTime,
-                userInput: selectedTime.toDateString()
-            };
-            this.dateTimeEditor.validationFailed.emit(args);
+            this.emitValidationFailedEvent(selectedValue, true);
             this.dateTimeEditor.value = this.value;
             return false;
         }
@@ -1285,9 +1380,8 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             const oldValue = new Date(this.value);
             this.value.setHours(0, 0, 0);
             if (oldValue.getTime() !== this.value.getTime()) {
-                //this.value = new Date(this.value.valueOf());
+                this.emitValueChangedEvent(oldValue, this.value);
                 this.dateTimeEditor.value.setHours(0, 0, 0);
-                this.dateTimeEditor.valueChange.emit(this.value);
             }
         } else {
             this.close();
@@ -1337,6 +1431,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             this.dateTimeEditor.value.setMonth(this.value.getMonth());
             this.dateTimeEditor.value.setFullYear(this.value.getFullYear());
             const newValue = this.dateTimeEditor.value;
+            const oldValue = new Date(this.value);
 
             if (this.value.getTime() === newValue.getTime()) {
                 return;
@@ -1346,13 +1441,9 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             const maxDate: Date = this.parseToDate(this.maxValue);
             if (this.valueInRange(newValue, minDate, maxDate)) {
                 this.value = newValue;
+                this.emitValueChangedEvent(oldValue, newValue);
             } else {
-                const args: IgxDateTimeEditorEventArgs = {
-                    oldValue: this.value,
-                    newValue: inputValue,
-                    userInput: inputValue
-                };
-                this.dateTimeEditor.validationFailed.emit(args);
+                this.emitValidationFailedEvent(inputValue);
             }
         }
 
@@ -1813,23 +1904,44 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         const minDate: Date = this.parseToDate(this.minValue);
         const maxDate: Date = this.parseToDate(this.maxValue);
 
-        if (this.valueInRange(newValue, minDate, maxDate)) {
-            if (oldValue.getTime() !== newValue.getTime()) {
-                this.value = newValue;
-            }
-        } else {
-            const args: IgxDateTimeEditorEventArgs = {
-                oldValue: oldValue,
-                newValue: newValue,
-                userInput: this.parseDateToTimestring(newValue, this.displayFormat)
-            };
-            this.dateTimeEditor.validationFailed.emit(args);
+        if (this.value.getTime() === newValue.getTime()) {
+            return;
         }
+
+        if (this.valueInRange(newValue, minDate, maxDate)) {
+            this.value = newValue;
+            this.emitValueChangedEvent(oldValue, newValue)
+        } else {
+            this.emitValidationFailedEvent(newValue, true);
+        }
+    }
+
+    private shouldCancelSelecting(): boolean {
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, cancel: false };
+        this.selecting.emit(args);
+        return args.cancel;
+    }
+
+    private emitValueChangedEvent(oldValue: Date, newValue: Date) {
+        const args: IgxTimePickerValueChangedEventArgs = {
+            oldValue: oldValue,
+            newValue: newValue
+        };
+        this.valueChanged.emit(args);
+    }
+
+    private emitValidationFailedEvent(currentValue: Date, setThroughUI = false) {
+        const args: IgxTimePickerValidationFailedEventArgs = {
+            timePicker: this,
+            currentValue: currentValue,
+            setThroughUI: setThroughUI
+        };
+        this.validationFailed.emit(args);
     }
 
     private updateValidityOnBlur() {
         this._onTouchedCallback();
-        if (this.inputDirective) {
+        if (this.inputDirective && this._ngControl) {
             if (!this._ngControl.valid) {
                 this.inputDirective.valid = IgxInputState.INVALID;
             } else {
@@ -1848,26 +1960,40 @@ export class IgxTimePickerComponent extends PickersBaseDirective
 
         return true;
     }
+
     private attachOnKeydown(): void {
         fromEvent(this.element.nativeElement, 'keydown')
-            .pipe(takeUntil(this._destroy$))
+            .pipe(takeUntil(this.destroy$))
             .subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
     }
 
     private subscribeToDateEditorEvents(): void {
-        if (this.dateTimeEditor) {
-            fromEvent(this.dateTimeEditor.nativeElement, 'blur')
-                .pipe(takeUntil(this._destroy$))
-                .subscribe((event) => {
-                    this.handleBlur(event);
-                });
+        fromEvent(this.dateTimeEditor.nativeElement, 'blur')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((event) => {
+                this.handleBlur(event);
+            });
 
-            fromEvent(this.dateTimeEditor.nativeElement, 'wheel')
-                .pipe(takeUntil(this._destroy$))
-                .subscribe((event) => {
-                    this.spinOnEdit(event);
-                });
-        }
+        fromEvent(this.dateTimeEditor.nativeElement, 'wheel')
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((event) => {
+                this.spinOnEdit(event);
+            });
+
+        // this.dateTimeEditor.valueChange.pipe(
+        //     takeUntil(this.destroy$)).subscribe(newValue => {
+        //         this.emitValueChangedEvent(this.value, newValue)
+        //         this.value = newValue;
+        //     });
+
+        // this.dateTimeEditor.validationFailed.pipe(
+        //     takeUntil(this.destroy$)).subscribe(() => {
+        //         this.validationFailed.emit({
+        //             timePicker: this,
+        //             currentValue: this.value,
+        //             setThroughUI: true
+        //         });
+        //     });
     }
 
     private subscribeToToggleDirectiveEvents(): void {
@@ -1880,18 +2006,18 @@ export class IgxTimePickerComponent extends PickersBaseDirective
                 owner: this
             };
 
-            this.toggleRef.onOpening.pipe(takeUntil(this._destroy$)).subscribe((event) => {
+            this.toggleRef.onOpening.pipe(takeUntil(this.destroy$)).subscribe((event) => {
                 this.opening.emit(event);
                 if (event.cancel) {
                     return;
                 }
             });
 
-            this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this.toggleRef.onOpened.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.opened.emit(args);
             });
 
-            this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 if (this.isDropdown) {
                     this.handleDropDownClosed();
                 }
@@ -1899,7 +2025,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
                 this.closed.emit(args);
             });
 
-            this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
+            this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
                 this.closing.emit(event);
                 if (event.cancel) {
                     return;
