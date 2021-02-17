@@ -57,7 +57,6 @@ function readInput(options: Options): Rule {
       } else {
         context.logger.warn('.browserslistrc file not found. You may want to manually add it and enable IE support.');
       }
-      // let polyfillsData = tree.read(polyfillsFilePath).toString();
       if (polyfillsFilePath) {
         const polyfillsData = tree.read(polyfillsFilePath)?.toString();
         if (polyfillsData) {
