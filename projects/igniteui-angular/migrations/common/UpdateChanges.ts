@@ -323,7 +323,7 @@ export class UpdateChanges {
                         const name = change.name.replace('$', '\\$');
                         const replaceWith = change.replaceWith?.replace('$', '\\$');
                         const reg = new RegExp(String.raw`^\s*${name}:`);
-                        const existing = new RegExp(String.raw`${replaceWith}[^:]*`);
+                        const existing = new RegExp(String.raw`${replaceWith}:`);
                         const opening = `${change.owner}(`;
                         const closing = /\s*\);$/.exec(match).pop();
                         const body = match.substr(opening.length, match.length - opening.length - closing.length);
