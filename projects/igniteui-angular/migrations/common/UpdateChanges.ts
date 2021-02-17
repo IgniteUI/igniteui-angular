@@ -329,7 +329,9 @@ export class UpdateChanges {
                         let params = this.splitFunctionProps(body);
                         params = params.reduce((arr, param) => {
                             if (reg.test(param)) {
-                                if (!change.remove) {
+                                const duplicates = arr.filter(p => p.indexOf(change.replaceWith) !== -1);
+
+                                if (!change.remove && duplicates.length === 0) {
                                     arr.push(param.replace(change.name, change.replaceWith));
                                 }
                             } else {
