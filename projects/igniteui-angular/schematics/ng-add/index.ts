@@ -22,13 +22,13 @@ function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchem
 const enableIESupport = (tree: Tree, context: SchematicContext) => {
     const targetFile = '/.browserslistrc';
     let updateFile = false;
-    let browserslistrcContent = (tree.read(targetFile)?.toString());
-    while (browserslistrcContent?.includes('not IE')) {
-      browserslistrcContent = browserslistrcContent.replace('not IE', 'IE');
+    let content = (tree.read(targetFile)?.toString());
+    while (content?.includes('not IE')) {
+      content = content.replace('not IE', 'IE');
       updateFile = true;
     }
     if (updateFile) {
-      tree.overwrite(targetFile, browserslistrcContent);
+      tree.overwrite(targetFile, content);
     } else {
       context.logger.warn(`Either IE support is already enabled OR you may need to update ${targetFile} file manually.`);
     }
