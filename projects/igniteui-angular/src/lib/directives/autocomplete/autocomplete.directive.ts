@@ -247,6 +247,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('keydown.Tab')
     @HostListener('keydown.Shift.Tab')
     onTab() {
+        this._shouldBeOpen = false;
         this.close();
     }
 
@@ -290,7 +291,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Closes autocomplete drop down
      */
     public close() {
-        this._shouldBeOpen = false;
         if (this.collapsed) {
             return;
         }
@@ -326,6 +326,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (args.cancel) {
             return;
         }
+        this._shouldBeOpen = false;
         this.close();
         this.nativeElement.focus();
 
