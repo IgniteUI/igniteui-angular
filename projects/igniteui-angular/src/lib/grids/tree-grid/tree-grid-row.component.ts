@@ -134,6 +134,13 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     /**
      * @hidden
      */
+    get indeterminate(): boolean {
+        return this.selectionService.isRowInIndeterminateState(this.rowID);
+    }
+
+    /**
+     * @hidden
+     */
     public ngDoCheck() {
         this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.rowID) : false;
         super.ngDoCheck();
