@@ -40,7 +40,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const row = grid.records.get(rowID);
         if (row.expanded === expanded ||
             ((!row.children || !row.children.length) && (!grid.loadChildrenOnDemand ||
-            (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
+                (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
             return false;
         }
         return true;
@@ -84,10 +84,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public deleteRowById(rowID: any) {
         const treeGrid = this.grid;
         const flatDataWithCascadeOnDeleteAndTransactions =
-        treeGrid.primaryKey &&
-        treeGrid.foreignKey &&
-        treeGrid.cascadeOnDelete &&
-        treeGrid.transactions.enabled;
+            treeGrid.primaryKey &&
+            treeGrid.foreignKey &&
+            treeGrid.cascadeOnDelete &&
+            treeGrid.transactions.enabled;
 
         if (flatDataWithCascadeOnDeleteAndTransactions) {
             treeGrid.transactions.startPending();
@@ -180,7 +180,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             if (!parentRecord) {
                 throw Error('Invalid parent row ID!');
             }
-            this.grid.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
+            this.grid.summaryService.clearSummaryCache({ rowID: parentRecord.rowID });
             if (this.grid.primaryKey && this.grid.foreignKey) {
                 data[this.grid.foreignKey] = parentRowID;
                 super.addRowToData(data);
